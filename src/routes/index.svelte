@@ -1,6 +1,9 @@
 <script>
 	import Component from '$lib/Component.svelte';
+	import GraphView from '$lib/GraphView/index.svelte';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
 </script>
 
 <Component />
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+<Svelvet />
