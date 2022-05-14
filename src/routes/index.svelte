@@ -22,7 +22,7 @@
 			id: '3',
 			type: 'output',
 			data: { label: 'Output Node' },
-			position: { x: 250, y: 250 }
+			position: { x: 200, y: 250 }
 		}
 	];
 </script>
