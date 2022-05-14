@@ -1,10 +1,10 @@
-<script lang="typescript">
-	// import React, { memo } from 'react';
+<script lang="typescript" context="module">
 	import type { EdgeProps } from '../types';
 	import { Position } from '../types';
 	import BaseEdge from './BaseEdge.svelte';
 
-	export let {
+	export let propsObj: any;
+	const {
 		sourceX,
 		sourceY,
 		targetX,
@@ -20,7 +20,7 @@
 		style,
 		markerEnd,
 		markerStart
-	}: EdgeProps;
+	}: EdgeProps = propsObj;
 
 	export interface GetSimpleBezierPathParams {
 		sourceX: number;
