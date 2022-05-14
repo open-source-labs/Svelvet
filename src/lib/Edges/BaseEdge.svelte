@@ -33,5 +33,11 @@
 	) : null;
 </script>
 
-<path {style} d={path} class="react-flow__edge-path" {markerEnd} {markerStart} />
+<path
+	{style}
+	d={path}
+	class="react-flow__edge-path"
+	marker-end={markerEnd}
+	marker-start={markerStart}
+/>
 {text}
