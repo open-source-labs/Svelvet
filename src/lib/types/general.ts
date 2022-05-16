@@ -129,6 +129,7 @@ export interface ViewportHelperFunctions {
 }
 
 export type ReactFlowStore = {
+	//change to SvelvetStore later
 	width: number;
 	height: number;
 	transform: Transform;
@@ -187,6 +188,7 @@ export type ReactFlowStore = {
 };
 
 export type ReactFlowActions = {
+	//change to SvelvetActions later
 	setNodes: (nodes: Node[]) => void;
 	setEdges: (edges: Edge[]) => void;
 	setDefaultNodesAndEdges: (nodes?: Node[], edges?: Edge[]) => void;
@@ -203,7 +205,7 @@ export type ReactFlowActions = {
 	reset: () => void;
 };
 
-export type ReactFlowState = ReactFlowStore & ReactFlowActions;
+export type ReactFlowState = ReactFlowStore & ReactFlowActions; //change to SvelvetState later
 
 export type UpdateNodeInternals = (nodeId: string) => void;
 

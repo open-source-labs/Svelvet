@@ -1,8 +1,9 @@
-<script lang="typescript" context="module">
-	import type { EdgeProps } from '../types';
-	import { Position } from '../types';
+<script lang="typescript">
+	import type { EdgeProps } from '$lib/types';
+	import { Position } from '$lib/types';
 	import BaseEdge from './BaseEdge.svelte';
 
+	// export let test: any;
 	export let propsObj: any;
 	const {
 		sourceX,
@@ -22,7 +23,7 @@
 		markerStart
 	}: EdgeProps = propsObj;
 
-	export interface GetSimpleBezierPathParams {
+	interface GetSimpleBezierPathParams {
 		sourceX: number;
 		sourceY: number;
 		sourcePosition?: Position;
@@ -132,9 +133,19 @@
 	};
 	const path = getSimpleBezierPath(params);
 	const [centerX, centerY] = getSimpleBezierCenter(params);
+
+	// temoporary props object
+	const baseEdgeProps = {
+		...propsObj,
+		path: path,
+		centerX: centerY,
+		centerY: centerY
+	};
 </script>
 
-<BaseEdge
+<BaseEdge {baseEdgeProps} />
+<!-- <BaseEdge
+	{baseEdgeProps}
 	{path}
 	{centerX}
 	{centerY}
@@ -147,4 +158,4 @@
 	{style}
 	{markerEnd}
 	{markerStart}
-/>
+/> -->

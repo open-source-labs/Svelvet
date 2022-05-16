@@ -36,7 +36,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@neodrag/svelte": "^1.1.4",
-		"svelte-agnostic-draggable": "^0.1.11"
+		"classcat": "^5.0.3"
 	}
 }

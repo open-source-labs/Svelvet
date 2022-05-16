@@ -1,5 +1,5 @@
 <script>
-	import GraphView from '$lib/GraphView/index.svelte';
+	import GraphView from '$lib/Containers/GraphView/index.svelte';
 	import InputNode from '$lib/Nodes/InputNode/index.svelte';
 	import OutputNode from '$lib/Nodes/OutputNode/index.svelte';
 	import DefaultNode from '$lib/Nodes/DefaultNode/index.svelte';
