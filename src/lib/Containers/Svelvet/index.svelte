@@ -9,8 +9,8 @@
 	export let nodes;
 </script>
 
-<GraphView>
-	{#each nodes as node}
+<!-- <GraphView> -->
+	<!-- {#each nodes as node}
 		{#if node.type === 'input'}
 			<InputNode {node}>{node.data.label}</InputNode>
 		{:else if node.type === 'output'}
@@ -18,7 +18,9 @@
 		{:else if node.type === 'default'}
 			<DefaultNode {node}>{node.data.label}</DefaultNode>
 		{/if}
-	{/each}
+	{/each} -->
 	<!-- <StraightEdge /> -->
-	<!-- <BasicEdge /> -->
-</GraphView>
+	<!-- <BasicEdge /> --> 
+<!-- </GraphView>  -->
+
+<GraphView />
