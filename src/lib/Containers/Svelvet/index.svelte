@@ -3,8 +3,8 @@
 	import InputNode from '$lib/Nodes/InputNode/index.svelte';
 	import OutputNode from '$lib/Nodes/OutputNode/index.svelte';
 	import DefaultNode from '$lib/Nodes/DefaultNode/index.svelte';
-	import StraightEdge from '$lib/Edges/StraightEdge/index.svelte';
-	import BasicEdge from '$lib/Edges/BasicEdge/index.svelte';
+	// import StraightEdge from '$lib/Edges/StraightEdge/index.svelte';
+	// import BasicEdge from '$lib/Edges/BasicEdge/index.svelte';
 
 	export let nodes;
 </script>

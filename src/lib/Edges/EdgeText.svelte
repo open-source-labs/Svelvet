@@ -24,7 +24,6 @@
 
 	const edgeRef: any = null; //when you set type to SVGTextElement as it was there is a type error, look into later
 	let edgeTextBbox: Rect = { x: 0, y: 0, width: 0, height: 0 };
-	// const [edgeTextBbox, setEdgeTextBbox]: Rect = { x: 0, y: 0, width: 0, height: 0 };
 	const edgeTextClasses = cc(['react-flow__edge-textwrapper', className]);
 
 	onMount(() => {
@@ -67,7 +66,7 @@
 			href={edgeRef}
 			style={labelStyle}
 		>
-			Yay we passed data down to EdgeText: {label}
+			{label}
 		</text>
 		{children}
 	</g>

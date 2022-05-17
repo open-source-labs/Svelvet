@@ -20,18 +20,6 @@
 		markerStart
 	} = baseEdgeProps;
 
-	// const text = label ? (
-	// 	<EdgeText
-	// 		x={centerX}
-	// 		y={centerY}
-	// 		label={label}
-	// 		labelStyle={labelStyle}
-	// 		labelShowBg={labelShowBg}
-	// 		labelBgStyle={labelBgStyle}
-	// 		labelBgPadding={labelBgPadding}
-	// 		labelBgBorderRadius={labelBgBorderRadius}
-	// 	/>
-	// ) : null;
 	const edgeTextProps = {
 		x: centerX,
 		y: centerY,
@@ -44,8 +32,6 @@
 	};
 </script>
 
-This is the path in BaseEdge {path}
-<br />
 <path
 	{style}
 	d={path}

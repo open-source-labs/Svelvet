@@ -1,6 +1,6 @@
 <script lang="typescript">
 	// import React, { memo, ComponentType, useCallback, useState, useMemo } from 'react';
-	// import cc from 'classcat';
+	import cc from 'classcat';
 	// import shallow from 'zustand/shallow';
 
 	// import { useStore, useStoreApi } from '../../store';

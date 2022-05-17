@@ -18,29 +18,29 @@ import { rectToBox } from '$lib/utils';
 export type CreateEdgeTypes = (edgeTypes: EdgeTypes) => EdgeTypesWrapped;
 
 // DO WE EVEN NEED THIS FUNCTION??
-// export function createEdgeTypes(edgeTypes: EdgeTypes): EdgeTypesWrapped {
-// 	const standardTypes: EdgeTypesWrapped = {
-// 		// default: new wrapEdge((edgeTypes.default || BezierEdge) as ComponentType<EdgeProps>),
-// 		// straight: wrapEdge((edgeTypes.bezier || StraightEdge) as ComponentType<EdgeProps>),
-// 		// step: wrapEdge((edgeTypes.step || StepEdge) as ComponentType<EdgeProps>),
-// 		// smoothstep: wrapEdge((edgeTypes.step || SmoothStepEdge) as ComponentType<EdgeProps>),
-// 		simplebezier: wrapEdge(edgeTypes.simplebezier || SimpleBezierEdge) // error will be fixed once we set up wrapEdge correctly in svelte to call as a function
-// 	};
+export function createEdgeTypes(edgeTypes: EdgeTypes): EdgeTypesWrapped {
+	const standardTypes: EdgeTypesWrapped = {
+		// default: new wrapEdge((edgeTypes.default || BezierEdge) as ComponentType<EdgeProps>),
+		// straight: wrapEdge((edgeTypes.bezier || StraightEdge) as ComponentType<EdgeProps>),
+		// step: wrapEdge((edgeTypes.step || StepEdge) as ComponentType<EdgeProps>),
+		// smoothstep: wrapEdge((edgeTypes.step || SmoothStepEdge) as ComponentType<EdgeProps>),
+		simplebezier: wrapEdge(edgeTypes.simplebezier || SimpleBezierEdge) // error will be fixed once we set up wrapEdge correctly in svelte to call as a function
+	};
 
-// 	const wrappedTypes = {} as EdgeTypesWrapped;
-// 	const specialTypes: EdgeTypesWrapped = Object.keys(edgeTypes)
-// 		.filter((k) => !['default', 'bezier'].includes(k))
-// 		.reduce((res, key) => {
-// 			res[key] = wrapEdge(edgeTypes[key] || SimpleBezierEdge);
+	const wrappedTypes = {} as EdgeTypesWrapped;
+	const specialTypes: EdgeTypesWrapped = Object.keys(edgeTypes)
+		.filter((k) => !['default', 'bezier'].includes(k))
+		.reduce((res, key) => {
+			res[key] = wrapEdge(edgeTypes[key] || SimpleBezierEdge);
 
-// 			return res;
-// 		}, wrappedTypes);
+			return res;
+		}, wrappedTypes);
 
-// 	return {
-// 		...standardTypes,
-// 		...specialTypes
-// 	};
-// }
+	return {
+		...standardTypes,
+		...specialTypes
+	};
+}
 
 export function getHandlePosition(
 	position: Position,

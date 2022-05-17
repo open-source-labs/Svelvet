@@ -138,7 +138,7 @@
 	const baseEdgeProps = {
 		...propsObj,
 		path: path,
-		centerX: centerY,
+		centerX: centerX,
 		centerY: centerY
 	};
 </script>
