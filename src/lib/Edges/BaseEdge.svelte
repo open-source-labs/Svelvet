@@ -4,7 +4,8 @@
 	import EdgeText from './EdgeText.svelte';
 	import type { BaseEdgeProps } from '../types';
 
-	export let {
+	export let baseEdgeProps: BaseEdgeProps;
+	const {
 		path,
 		centerX,
 		centerY,
@@ -17,20 +18,18 @@
 		style,
 		markerEnd,
 		markerStart
-	}: BaseEdgeProps;
+	} = baseEdgeProps;
 
-	const text = label ? (
-		<EdgeText
-			x={centerX}
-			y={centerY}
-			label={label}
-			labelStyle={labelStyle}
-			labelShowBg={labelShowBg}
-			labelBgStyle={labelBgStyle}
-			labelBgPadding={labelBgPadding}
-			labelBgBorderRadius={labelBgBorderRadius}
-		/>
-	) : null;
+	const edgeTextProps = {
+		x: centerX,
+		y: centerY,
+		label: label,
+		labelStyle: labelStyle,
+		labelShowBg: labelShowBg,
+		labelBgStyle: labelBgStyle,
+		labelBgPadding: labelBgPadding,
+		labelBgBorderRadius: labelBgBorderRadius
+	};
 </script>
 
 <path
@@ -40,4 +39,7 @@
 	marker-end={markerEnd}
 	marker-start={markerStart}
 />
-{text}
+{#if label}
+	<EdgeText {edgeTextProps} />
+{/if}
+<!-- {text} -->
