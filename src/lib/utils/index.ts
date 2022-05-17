@@ -1,10 +1,21 @@
-import type { Dimensions, Rect, Box } from '../types';
+import type { Dimensions, Rect, Box, XYPosition, CoordinateExtent } from '../types';
 
 // Defines the dimensions of the node
 export const getDimensions = (node: HTMLDivElement): Dimensions => ({
 	width: node.offsetWidth,
 	height: node.offsetHeight
 });
+
+export const clamp = (val: number, min: number = 0, max: number = 1): number =>
+	Math.min(Math.max(val, min), max);
+
+export const clampPosition = (position: XYPosition, extent: CoordinateExtent) => ({
+	x: clamp(position.x, extent[0][0], extent[1][0]),
+	y: clamp(position.y, extent[0][1], extent[1][1])
+});
+
+export const getHostForElement = (element: HTMLElement): Document | ShadowRoot =>
+	(element.getRootNode?.() as Document | ShadowRoot) || window?.document;
 
 // Defines the corner coordinates surrounding box1 and box2 (a box around the 2 boxes)
 export const getBoundsOfBoxes = (box1: Box, box2: Box): Box => ({
