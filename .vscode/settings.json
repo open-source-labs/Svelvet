@@ -1,0 +1,6 @@
+{
+  "explorer.fileNesting.enabled": false,
+  "search.useGlobalIgnoreFiles": true,
+  "scm.alwaysShowRepositories": true,
+  "scm.defaultViewMode": "tree"
+}
