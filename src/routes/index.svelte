@@ -1,39 +1,21 @@
 <script>
-	// import Component from '$lib/Component.svelte';
-	// import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
-	// import { Position } from '$lib/types';
-	// import GraphView from '$lib/Containers/GraphView/index.svelte';
-	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-
-	// This is data that should be provided by the developer using the library
-	const initialNodes = [
-		{
-			id: '1',
-			type: 'input',
-			data: { label: 'Input Node' },
-			position: { x: 75, y: 50 }
-		},
-		{
-			id: '2',
-			type: 'default',
-			data: { label: 'Default Node' },
-			position: { x: 150, y: 150 }
-		},
-		{
-			id: '3',
-			type: 'output',
-			data: { label: 'Output Node' },
-			position: { x: 200, y: 250 }
-		}
-	];
-
-	const initialEdges = [
-		{ id: 'e1-2', source: '1', target: '2', animated: true },
-		{ id: 'e1-3', source: '2', target: '3' }
-	];
 </script>
 
-<!-- <Component /> -->
-<!-- <SimpleBezierEdge {propsObj} /> -->
+<svelte:head>
+	<title>Svelvet</title>
+</svelte:head>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<div class="flex flex-col justify-center items-center w-auto mt-32 mx-16 text-center">
+	<h1 class="text-6xl text-center font-bold m-10">
+		Rapidly build modern websites without ever leaving your HTML.
+	</h1>
+	<p class="text-lg mx-16">
+		A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90
+		that can be compose to build any design, directly in your markup.
+	</p>
+	<button class="border">Get Started</button>
+	<input type="text" placeholder="Quick search..." name="" id="" />
+</div>
+
+<style>
+</style>
