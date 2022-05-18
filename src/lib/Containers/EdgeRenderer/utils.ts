@@ -17,7 +17,6 @@ import { rectToBox } from '$lib/utils';
 
 export type CreateEdgeTypes = (edgeTypes: EdgeTypes) => EdgeTypesWrapped;
 
-// DO WE EVEN NEED THIS FUNCTION??
 export function createEdgeTypes(edgeTypes: EdgeTypes): EdgeTypesWrapped {
 	const standardTypes: EdgeTypesWrapped = {
 		// default: new wrapEdge((edgeTypes.default || BezierEdge) as ComponentType<EdgeProps>),

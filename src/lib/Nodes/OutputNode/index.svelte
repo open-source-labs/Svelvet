@@ -7,8 +7,6 @@
 
 	let x1 = left + 50;
 	let y1 = top;
-	let x2 = 100;
-	let y2 = 200;
 
 	let moving = false;
 
@@ -37,14 +35,8 @@
 	<slot />
 </section>
 
-<!-- SVG for the edge  -->
-<!-- <svg viewBox="0 0 400 400" style="overflow:visible">
-	<line {x1} {y1} {x2} {y2} stroke="black" stroke-width="2" />
-</svg> -->
-
 <div class="Handle" style="left:{x1 - 5}px; top:{y1 - 5}px" />
 
-<!-- <div class="draggable Handle" style="left:{x2 - 5}px; top:{y2 - 5}px" /> -->
 <style>
 	.draggable {
 		background: white;

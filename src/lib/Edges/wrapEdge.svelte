@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	// import React, { memo, ComponentType, useCallback, useState, useMemo } from 'react';
 	import cc from 'classcat';
 	// import shallow from 'zustand/shallow';
@@ -253,7 +253,7 @@
 	}
 </script>
 
-<!-- <script lang="typescript">
+<!-- <script lang="ts">
 	// import React, { memo, ComponentType, useCallback, useState, useMemo } from 'react';
 	// import cc from 'classcat';
 	// import shallow from 'zustand/shallow';

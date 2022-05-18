@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	// import React from 'react';
 
 	import EdgeText from './EdgeText.svelte';
@@ -38,8 +38,9 @@
 	class="react-flow__edge-path"
 	marker-end={markerEnd}
 	marker-start={markerStart}
+	fill="transparent"
+	stroke="black"
 />
 {#if label}
 	<EdgeText {edgeTextProps} />
 {/if}
-<!-- {text} -->

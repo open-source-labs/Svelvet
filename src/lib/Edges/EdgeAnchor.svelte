@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	// import React, { FC, HTMLAttributes } from 'react';
 	import cc from 'classcat';
 

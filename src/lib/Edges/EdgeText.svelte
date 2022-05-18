@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	// import React, { memo, useRef, useState, useEffect, FC, PropsWithChildren } from 'react';
 	import { onMount } from 'svelte';
 	import cc from 'classcat';
@@ -13,7 +13,7 @@
 		y,
 		label,
 		labelStyle = {},
-		labelShowBg = true,
+		labelShowBg = false,
 		labelBgStyle = {},
 		labelBgPadding = [2, 4],
 		labelBgBorderRadius = 2,
@@ -26,17 +26,17 @@
 	let edgeTextBbox: Rect = { x: 0, y: 0, width: 0, height: 0 };
 	const edgeTextClasses = cc(['react-flow__edge-textwrapper', className]);
 
-	onMount(() => {
-		if (edgeRef.current) {
-			const textBbox = edgeRef.current.getBBox();
-			edgeTextBbox = {
-				x: textBbox.x,
-				y: textBbox.y,
-				width: textBbox.width,
-				height: textBbox.height
-			};
-		}
-	}); //the typescript error on this line will be fixed once EdgeTextProps is uncommented
+	// onMount(() => {
+	// 	if (edgeRef.current) {
+	// 		const textBbox = edgeRef.current.getBBox();
+	// 		edgeTextBbox = {
+	// 			x: textBbox.x,
+	// 			y: textBbox.y,
+	// 			width: textBbox.width,
+	// 			height: textBbox.height
+	// 		};
+	// 	}
+	// }); //the typescript error on this line will be fixed once EdgeTextProps is uncommented
 </script>
 
 {#if typeof label === 'undefined' || !label}
@@ -71,17 +71,13 @@
 		{children}
 	</g>
 {/if}
-<!-- const EdgeText: any = ({
-	// 	//FC<PropsWithChildren<EdgeTextProps>>
-	// 	x,
-	// 	y,
-	// 	label,
-	// 	labelStyle = {},
-	// 	labelShowBg = true,
-	// 	labelBgStyle = {},
-	// 	labelBgPadding = [2, 4],
-	// 	labelBgBorderRadius = 2,
-	// 	children,
-	// 	className,
-	// 	...rest
-	// }) => { -->
+
+<style>
+	.react-flow__edge-text {
+		font-size: 16px;
+	}
+
+	.react-flow__edge-textbg {
+		fill: white;
+	}
+</style>
