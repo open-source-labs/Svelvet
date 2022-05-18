@@ -1,6 +1,4 @@
-<script>
-	// export let left = 100;
-	// export let top = 100;
+<script lang="ts">
 	export let node;
 	let left = node.position.x;
 	let top = node.position.y;
@@ -38,11 +36,6 @@
 <section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;" class="draggable">
 	<slot />
 </section>
-
-<!-- SVG for the edge  -->
-<!-- <svg viewBox="0 0 400 400" style="overflow:visible">
-	<line {x1} {y1} {x2} {y2} stroke="black" stroke-width="2" />
-</svg> -->
 
 <div class="Handle" style="left:{x1 - 5}px; top:{y1 - 5}px" />
 

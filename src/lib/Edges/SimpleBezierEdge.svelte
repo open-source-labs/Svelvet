@@ -1,28 +1,4 @@
-<script lang="typescript">
-	import type { EdgeProps } from '$lib/types';
-	import { Position } from '$lib/types';
-	import BaseEdge from './BaseEdge.svelte';
-
-	// export let test: any;
-	export let propsObj: any;
-	const {
-		sourceX,
-		sourceY,
-		targetX,
-		targetY,
-		sourcePosition = Position.Bottom,
-		targetPosition = Position.Top,
-		label,
-		labelStyle,
-		labelShowBg,
-		labelBgStyle,
-		labelBgPadding,
-		labelBgBorderRadius,
-		style,
-		markerEnd,
-		markerStart
-	}: EdgeProps = propsObj;
-
+<script context="module" lang="ts">
 	interface GetSimpleBezierPathParams {
 		sourceX: number;
 		sourceY: number;
@@ -60,7 +36,6 @@
 		}
 		return [ctX, ctY];
 	}
-
 	export function getSimpleBezierPath({
 		sourceX,
 		sourceY,
@@ -122,6 +97,32 @@
 		const yOffset = Math.abs(centerY - sourceY);
 		return [centerX, centerY, xOffset, yOffset];
 	}
+</script>
+
+<script lang="ts">
+	import type { EdgeProps } from '$lib/types';
+	import { Position } from '$lib/types';
+	import BaseEdge from './BaseEdge.svelte';
+
+	// export let test: any;
+	export let edge: any;
+	const {
+		sourceX,
+		sourceY,
+		targetX,
+		targetY,
+		sourcePosition = Position.Bottom,
+		targetPosition = Position.Top,
+		label,
+		labelStyle,
+		labelShowBg,
+		labelBgStyle,
+		labelBgPadding,
+		labelBgBorderRadius,
+		style,
+		markerEnd,
+		markerStart
+	}: EdgeProps = edge;
 
 	const params = {
 		sourceX,
@@ -136,14 +137,16 @@
 
 	// temoporary props object
 	const baseEdgeProps = {
-		...propsObj,
+		...edge,
 		path: path,
 		centerX: centerX,
 		centerY: centerY
 	};
 </script>
 
+<!-- Iterate through the edges array -->
 <BaseEdge {baseEdgeProps} />
+
 <!-- <BaseEdge
 	{baseEdgeProps}
 	{path}

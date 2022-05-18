@@ -8,15 +8,15 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter(),
-		vite: {
-			server: {
-				watch: { 
-					usePolling: true 
-				}
-			}
-		}
-	},
+		adapter: adapter()
+		// vite: {
+		// 	server: {
+		// 		watch: {
+		// 			usePolling: true
+		// 		}
+		// 	}
+		// }
+	}
 };
 
 export default config;

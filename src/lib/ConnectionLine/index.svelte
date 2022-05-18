@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	// import React, { useRef, CSSProperties } from 'react';
 	// import shallow from 'zustand/shallow';
 
