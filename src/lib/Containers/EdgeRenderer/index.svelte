@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 // import React, { memo, CSSProperties } from 'react';
 import shallow from 'zustand/shallow';
 import cc from 'classcat';
@@ -79,12 +79,11 @@ const EdgeRenderer = (props: EdgeRendererProps) => {
 
 EdgeRenderer.displayName = 'EdgeRenderer';
 
-export default memo(EdgeRenderer);
 </script>
 
 
 return (
-    <>
+
       {edgeTree.map(({ level, edges, isMaxLevel }) => (
         <svg
           key={level}
@@ -203,5 +202,5 @@ return (
           </g>
         </svg>
       ))}
-    </>
+
   );

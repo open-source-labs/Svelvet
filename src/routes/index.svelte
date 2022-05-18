@@ -1,10 +1,11 @@
 <script>
-	import Component from '$lib/Component.svelte';
-	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
-	import { Position } from '$lib/types';
+	// import Component from '$lib/Component.svelte';
+	// import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
+	// import { Position } from '$lib/types';
 	// import GraphView from '$lib/Containers/GraphView/index.svelte';
-	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
 
+	// This is data that should be provided by the developer using the library
 	const initialNodes = [
 		{
 			id: '1',
@@ -16,7 +17,6 @@
 		{
 			id: '2',
 			type: 'default',
-
 			data: { label: 'Default Node' },
 			position: { x: 150, y: 150 }
 		},
@@ -30,21 +30,22 @@
 
 	const initialEdges = [
 		{ id: 'e1-2', source: '1', target: '2', animated: true },
-		{ id: 'e1-3', source: '1', target: '3' }
+		{ id: 'e1-3', source: '2', target: '3' }
 	];
 
-	const propsObj = {
-		sourceX: 2,
-		sourceY: 5,
-		targetX: 10,
-		targetY: 2,
-		sourcePosition: Position.Bottom,
-		targetPosition: Position.Top,
-		label: 'LABEL'
-	};
+	// This is dummy data that should eventually come from the store
+	// const propsObj = {
+	// 	sourceX: 20,
+	// 	sourceY: 20,
+	// 	targetX: 300,
+	// 	targetY: 200,
+	// 	sourcePosition: Position.Bottom,
+	// 	targetPosition: Position.Top,
+	// 	label: 'yay bezier!'
+	// };
 </script>
 
-<Component />
-<SimpleBezierEdge {propsObj} />
+<!-- <Component /> -->
+<!-- <SimpleBezierEdge {propsObj} /> -->
 
-<!-- <Svelvet nodes={initialNodes} /> -->
+<Svelvet nodes={initialNodes} edges={initialEdges} />
