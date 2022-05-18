@@ -1,6 +1,8 @@
 <script>
 	// export let left = 100;
 	// export let top = 100;
+	// import { onMouseMove } from '$lib/stores/store';
+
 	export let node;
 	let left = node.position.x;
 	let top = node.position.y;
@@ -30,6 +32,12 @@
 </script>
 
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
+<!-- <svelte:window
+	on:mouseup={onMouseUp}
+	on:mousemove={(e) => {
+		if (moving) onMouseMove(e, node.id);
+	}}
+/> -->
 
 <section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;" class="draggable">
 	<slot />

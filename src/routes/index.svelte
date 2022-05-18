@@ -13,7 +13,6 @@
 			data: { label: 'Input Node' },
 			position: { x: 75, y: 50 }
 		},
-
 		{
 			id: '2',
 			type: 'default',
@@ -32,17 +31,6 @@
 		{ id: 'e1-2', source: '1', target: '2', animated: true },
 		{ id: 'e1-3', source: '2', target: '3' }
 	];
-
-	// This is dummy data that should eventually come from the store
-	// const propsObj = {
-	// 	sourceX: 20,
-	// 	sourceY: 20,
-	// 	targetX: 300,
-	// 	targetY: 200,
-	// 	sourcePosition: Position.Bottom,
-	// 	targetPosition: Position.Top,
-	// 	label: 'yay bezier!'
-	// };
 </script>
 
 <!-- <Component /> -->

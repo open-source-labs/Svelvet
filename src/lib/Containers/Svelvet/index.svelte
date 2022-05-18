@@ -8,7 +8,7 @@
 	// import BasicEdge from '$lib/Edges/BasicEdge/index.svelte';
 	import { Position } from '$lib/types';
 
-	import { nodesStore, edgesStore, setNodes, setEdges } from '$lib/stores/store';
+	import { nodesStore, edgesStore, updatedEdges } from '$lib/stores/store';
 	import { onMount } from 'svelte';
 
 	export let nodes: any;
@@ -16,8 +16,8 @@
 
 	// Set each node and edge to the node store (update)
 	onMount(() => {
-		setNodes(nodes);
-		setEdges(edges);
+		$nodesStore = nodes;
+		$edgesStore = edges;
 	});
 	// This is dummy data that should eventually come from the store
 	// const propsObj = {
@@ -32,7 +32,7 @@
 </script>
 
 <svg width="400" height="400">
-	{#each $edgesStore as edge}
+	{#each $updatedEdges as edge}
 		<SimpleBezierEdge {edge} />
 	{/each}
 </svg>
