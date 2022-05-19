@@ -17,8 +17,8 @@
 	</div>
 	<div>
 		<p class="my-4 text-gray-700">
-			Or yarn:
-			<strong>npm</strong>:
+			Or
+			<strong>yarn</strong>:
 		</p>
 		<code class="block w-auto rounded-md p-3 bg-rose-100 text-rose-600"
 			><span class="text-rose-800">yarn add</span> svelvet

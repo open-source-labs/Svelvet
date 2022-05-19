@@ -1,2 +1,2 @@
-import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+import Svelvet from './Containers/Svelvet/index.svelte';
 export default Svelvet;

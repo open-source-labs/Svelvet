@@ -19,20 +19,43 @@
 		>Get Started</a
 	>
 </div>
-<div class="h-96 w-screen bg-gradient-to-r from-purple-400 to-rose-400 text-white">
-	<div class="flex h-full">
-		<div class="w-1/2 h-full p-12 flex flex-col justify-center">
+<div class="h-96 w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
+	<div class="flex h-full m-24">
+		<div class="w-1/2 h-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4">Beautiful flow diagrams</h3>
-			<p class="mb-4">
+			<p class="mb-4 text-gray-100">
 				Svelvet allows you to easily create intuitive flow diagrams using pre-built nodes and edges,
 				all with seamless zooming and panning.
 			</p>
-			<a href="/docs/installation" class="">Documentation</a>
+			<a
+				href="/docs/installation"
+				class=" w-fit border border-white mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
+				>Documentation</a
+			>
 		</div>
-		<div class="w-1/2 h-full p-12 flex flex-col justify-center">insert flow diagram</div>
+		<div class="w-1/2 h-full flex flex-col justify-center text-center">
+			insert beautiful flow diagram here
+		</div>
 	</div>
 </div>
-<footer class="flex justify-around mt-40 py-10 mr-10 border-t text-sm">
+<div class="h-96 w-screen ">
+	<div class="flex h-full m-24">
+		<div class="w-1/2 h-full flex flex-col justify-center">insert customized flow diagram</div>
+		<div class="w-1/2 h-full flex flex-col justify-center">
+			<h3 class="text-4xl font-bold mb-4 text-gray-700">Highly Customizable</h3>
+			<p class="mb-4 text-gray-500">
+				Choose from different edge types, add animations, and create custom nodes. Within your
+				nodes, you can render anything you want!
+			</p>
+			<a
+				href="/docs/installation"
+				class=" w-fit border mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-rose-400 hover:bg-transparent bg-rose-400 text-white border-rose-400"
+				>Documentation</a
+			>
+		</div>
+	</div>
+</div>
+<footer class="flex justify-around mt-40 py-10 border-t text-sm">
 	<div class="flex flex-col space-y-3 text-gray-600">
 		<a href="/" class="text-gray-700 font-semibold">Getting Started</a>
 		<a href="/">Installation</a>
