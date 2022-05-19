@@ -1,15 +1,7 @@
-<script>
-	// export let left = 100;
-	// export let top = 100;
-	// import { onMouseMove } from '$lib/stores/store';
-
+<script> 
 	export let node;
-	let left = node.position.x;
-	let top = node.position.y;
-
-	let x1 = left + 50;
-	let y1 = top;
-
+	import { onMouseMove } from '$lib/stores/store' 
+	
 	let moving = false;
 
 	function onMouseDown() {
@@ -17,58 +9,29 @@
 	}
 	function onMouseUp() {
 		moving = false;
-	}
-
-	function onMouseMove(e) {
-		if (moving) {
-			left += e.movementX;
-			top += e.movementY;
-			x1 += e.movementX;
-			y1 += e.movementY;
-		}
-	}
-
-	// $: console.log(moving);
+	}	
 </script>
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
-<!-- <svelte:window
-	on:mouseup={onMouseUp}
-	on:mousemove={(e) => {
-		if (moving) onMouseMove(e, node.id);
-	}}
-/> -->
-
-<section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;" class="draggable">
-	<slot />
-</section>
-
-<div class="Handle" style="left:{x1 - 5}px; top:{y1 - 5}px" />
-
+<svelte:window on:mouseup={onMouseUp} on:mousemove={(e) => { 
+		if (moving)	onMouseMove(e, node.id)
+  }
+} />	
+	
+<div on:mousedown={onMouseDown} class="Node" style="left: {node.position.x}px; top: {node.position.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor}; font-size:24px;">
+	<slot/>
+</div>
+	
 <style>
-	.draggable {
-		background: white;
+	.Node {
+	    position: absolute;
+		display: grid;
 		user-select: none;
 		cursor: move;
-		border: solid 1px gray;
-		position: absolute;
-		border-radius: 10px;
-		min-width: 100px;
-		min-height: 50px;
-		display: flex;
 		justify-content: center;
 		align-items: center;
+		text-align: center;
+		border: solid 1px gray;
+		border-radius: 10px;
 		box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
-	}
-
-	.Handle {
-		display: block;
-		position: absolute;
-		width: 8px;
-		height: 8px;
-		border: solid 1px black;
-		background: yellow;
-		cursor: move;
-		border-radius: 50%;
 	}
 </style>
