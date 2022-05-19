@@ -1,4 +1,5 @@
 <script lang="ts">
+	import logo from '../assets/svelvet-logo.png';
 	let activeLink = 'home';
 
 	const setActiveLink = (e: MouseEvent) => {
@@ -9,7 +10,7 @@
 <div class="static flex justify-between px-8 py-3 w-screen border-b h-16 bg-white">
 	<div class="flex items-center justify-center">
 		<!-- <svelte:component this={Logo} /> -->
-		<img src="src/assets/svelvet-logo.png" alt="Logo" class="aspect-ratio-auto h-8" />
+		<img src={logo} alt="Logo" class="aspect-ratio-auto h-8" />
 		<a href="/" class="text-3xl font-medium tracking-wide ml-3 mr-6">svelvet</a>
 		<p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v1.0.0</p>
 	</div>

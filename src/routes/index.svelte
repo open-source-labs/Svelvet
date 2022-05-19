@@ -4,17 +4,18 @@
 <svelte:head>
 	<title>Svelvet</title>
 </svelte:head>
+<div class="css-blurry-gradient" />
 
 <div class="flex flex-col justify-center items-center w-auto my-56 mx-16 text-center ">
-	<h1 class="text-6xl text-center font-bold text-gray-800 max-w-screen-md">
-		Mapping out your ideas has never been easier
+	<h1 class="text-6xl text-center font-bold text-gray-800 max-w-screen-lg">
+		Mapping out your ideas with Svelte has never been easier
 	</h1>
 	<p class="text-lg mx-16 my-8 text-gray-500">
 		A light-weight Svelte component library for building node-based editors and interactive diagrams
 	</p>
 	<a
 		href="/docs/installation"
-		class="border rounded-full px-6 py-3 hover:ease-in duration-100 hover:text-rose-400 hover:bg-white bg-rose-400 text-white border-rose-400"
+		class="border rounded-full px-6 py-3 hover:ease-in duration-100 hover:text-rose-400 hover:bg-transparent bg-rose-400 text-white border-rose-400"
 		>Get Started</a
 	>
 </div>
@@ -31,32 +32,46 @@
 		<div class="w-1/2 h-full p-12 flex flex-col justify-center">insert flow diagram</div>
 	</div>
 </div>
-<footer class="flex justify-around mt-40 py-10 border-t">
+<footer class="flex justify-around mt-40 py-10 mr-10 border-t text-sm">
 	<div class="flex flex-col space-y-3 text-gray-600">
-		<a class="text-gray-700 font-semibold">Getting Started</a>
-		<a>Installation</a>
-		<a>Core Concepts</a>
-		<a>Themes</a>
-		<a>Custom Nodes</a>
-		<a>Panning and Zooming</a>
+		<a href="/" class="text-gray-700 font-semibold">Getting Started</a>
+		<a href="/">Installation</a>
+		<a href="/">Core Concepts</a>
+		<a href="/">Themes</a>
+		<a href="/">Custom Nodes</a>
+		<a href="/">Panning and Zooming</a>
 	</div>
 	<div class="flex flex-col space-y-3 text-gray-600">
-		<a class="text-gray-700 font-semibold">Core Concepts</a>
-		<a>Installation</a>
-		<a>Core Concepts</a>
-		<a>Themes</a>
-		<a>Custom Nodes</a>
-		<a>Panning and Zooming</a>
+		<a href="/" class="text-gray-700 font-semibold">Core Concepts</a>
+		<a href="/">Installation</a>
+		<a href="/">Core Concepts</a>
+		<a href="/">Themes</a>
+		<a href="/">Custom Nodes</a>
+		<a href="/">Panning and Zooming</a>
 	</div>
 	<div class="flex flex-col space-y-3 text-gray-600">
-		<a class="text-gray-700 font-semibold">Customization</a>
-		<a>Installation</a>
-		<a>Core Concepts</a>
-		<a>Themes</a>
-		<a>Custom Nodes</a>
-		<a>Panning and Zooming</a>
+		<a href="/" class="text-gray-700 font-semibold">Customization</a>
+		<a href="/">Installation</a>
+		<a href="/">Core Concepts</a>
+		<a href="/">Themes</a>
+		<a href="/">Custom Nodes</a>
+		<a href="/">Panning and Zooming</a>
 	</div>
+	<div />
 </footer>
 
 <style>
+	.css-blurry-gradient {
+		position: absolute;
+		top: 60%;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		width: 800px;
+		height: 800px;
+		border-radius: 50% 22% 40% 80%;
+		filter: blur(120px);
+		background: radial-gradient(circle at 50% 50%, rgb(247, 85, 56), rgba(205, 203, 211, 0));
+		opacity: 0.3;
+		z-index: -1;
+	}
 </style>

@@ -1,3 +1,7 @@
+<script>
+	import copyIcon from '../../assets/copyclipboard.svg';
+</script>
+
 <div class="m-12">
 	<div>
 		<h2 class="text-3xl font-semibold my-4">Installation</h2>
@@ -17,17 +21,8 @@
 			<strong>npm</strong>:
 		</p>
 		<code class="block w-auto rounded-md p-3 bg-rose-100 text-rose-600"
-			><span class="text-rose-800">yarn add</span> svelvet</code
-		>
+			><span class="text-rose-800">yarn add</span> svelvet
+			<!-- <button><img src={copyIcon} alt="" /></button> -->
+		</code>
 	</div>
 </div>
-
-<style>
-	code {
-		/* background-color: rgb(255, 231, 230);
-		border-radius: 10px;
-		padding: 2px;
-		font-size: 16px;
-		border: 1px solid rgb(252, 193, 190); */
-	}
-</style>
