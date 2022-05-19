@@ -3,7 +3,7 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			inter: ['Inter', 'sans-serif'],
-			koulen: ['Koulen', 'cursive']
+			nunito: ['Nunito', 'sans-serif']
 		},
 		extend: {}
 	},
