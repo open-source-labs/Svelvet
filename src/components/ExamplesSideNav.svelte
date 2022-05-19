@@ -12,48 +12,52 @@
 		['CustomEdge', 'examples/custom-edge']
 	];
 
-	let activeLink = '';
+	let activeLink = 'basicUsage';
 
 	const setActiveLink = (e: MouseEvent) => {
 		if (e.target.id) activeLink = e.target.id;
 	};
 </script>
 
-<nav class="border-r h-screen">
-	<div class="flex flex-col my-5 text-sm">
-		<a href="/basic-usage" class="font-medium text-gray-700 leading-9">Basic Usage</a>
+<div class="flex flex-col my-5 text-sm">
+	<a
+		href="/examples"
+		class="font-medium text-gray-700 leading-9 border-l px-4 hover:border-rose-300 {activeLink ===
+		'basicUsage'
+			? 'text-rose-500 hover:text-rose-500 border-rose-300'
+			: 'hover:text-gray-700 border-gray-100'}">Basic Usage</a
+	>
+</div>
+<div class="flex flex-col my-5 text-sm">
+	<p class="font-medium text-gray-700 leading-9">Nodes</p>
+	<div class="flex flex-col leading-9 text-gray-500 ">
+		{#each nodesLinks as link}
+			<a
+				on:click={setActiveLink}
+				id={link[0]}
+				href={link[1]}
+				class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
+					? 'text-rose-500 hover:text-rose-500 border-rose-300'
+					: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
+			>
+		{/each}
 	</div>
-	<div class="flex flex-col my-5 text-sm">
-		<p class="font-medium text-gray-700 leading-9">Nodes</p>
-		<div class="flex flex-col leading-9 text-gray-500 ">
-			{#each nodesLinks as link}
-				<a
-					on:click={setActiveLink}
-					id={link[0]}
-					href={link[1]}
-					class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
-						? 'text-rose-500 hover:text-rose-500 border-rose-300'
-						: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
-				>
-			{/each}
-		</div>
+</div>
+<div class="flex flex-col my-5 text-sm">
+	<p class="font-medium text-gray-700 leading-9">Edges</p>
+	<div class="flex flex-col leading-9 text-gray-500 ">
+		{#each edgesLinks as link}
+			<a
+				on:click={setActiveLink}
+				id={link[0]}
+				href={link[1]}
+				class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
+					? 'text-rose-500 hover:text-rose-500 border-rose-300'
+					: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
+			>
+		{/each}
 	</div>
-	<div class="flex flex-col my-5 text-sm">
-		<p class="font-medium text-gray-700 leading-9">Edges</p>
-		<div class="flex flex-col leading-9 text-gray-500 ">
-			{#each edgesLinks as link}
-				<a
-					on:click={setActiveLink}
-					id={link[0]}
-					href={link[1]}
-					class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
-						? 'text-rose-500 hover:text-rose-500 border-rose-300'
-						: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
-				>
-			{/each}
-		</div>
-	</div>
-</nav>
+</div>
 
 <style>
 </style>
