@@ -1,5 +1,11 @@
-<script>
+<script lang="ts">
 	import Logo from '../assets/logo.svelte';
+
+	let activeLink = '';
+
+	const setActiveLink = (e: MouseEvent) => {
+		if (e.target.id) activeLink = e.target.id;
+	};
 </script>
 
 <div class="static flex justify-between px-8 py-3 w-screen border-b h-16">
@@ -15,7 +21,8 @@
 		</button> -->
 	</div>
 	<nav class="space-x-7 text-sm text-gray-500 font-medium flex items-center">
-		<a href="/docs" class="hover:text-rose-500">Docs</a>
+		<a href="/" class="hover:text-rose-500">Home</a>
+		<a href="/docs/installation" class="hover:text-rose-500">Docs</a>
 		<a href="/examples" class="hover:text-rose-500">Examples</a>
 		<a href="/blog" class="hover:text-rose-500">Blog</a>
 		<a href="https://github.com/oslabs-beta/Svelvet" class="hover:text-rose-500 border-r pr-5"
