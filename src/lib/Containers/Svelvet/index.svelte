@@ -4,49 +4,49 @@
 	import OutputNode from '$lib/Nodes/OutputNode/index.svelte';
 	import DefaultNode from '$lib/Nodes/DefaultNode/index.svelte';
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
-	// import StraightEdge from '$lib/Edges/StraightEdge/index.svelte';
-	// import BasicEdge from '$lib/Edges/BasicEdge/index.svelte';
-	import { Position } from '$lib/types';
-
-	import { nodesStore, edgesStore, updatedEdges } from '$lib/stores/store';
+	import { nodesStore, edgesStore, derivedEdges } from '$lib/stores/store';
 	import { onMount } from 'svelte';
 
 	export let nodes: any;
 	export let edges: any;
 
-	// Set each node and edge to the node store (update)
 	onMount(() => {
 		$nodesStore = nodes;
 		$edgesStore = edges;
 	});
-	// This is dummy data that should eventually come from the store
-	// const propsObj = {
-	// 	sourceX: 20,
-	// 	sourceY: 20,
-	// 	targetX: 300,
-	// 	targetY: 200,
-	// 	sourcePosition: Position.Bottom,
-	// 	targetPosition: Position.Top,
-	// 	label: 'yay bezier!'
-	// };
 </script>
 
-<svg width="400" height="400">
-	{#each $updatedEdges as edge}
-		<SimpleBezierEdge {edge} />
+<GraphView>
+	<!-- <svg width="1000px" height="1000px"> -->
+	<div class="Nodes">
+	{#each $nodesStore as node}
+		{#if node.type === 'input'}
+			<InputNode {node}>{node.data.label}</InputNode>
+		{:else if node.type === 'output'}
+			<OutputNode {node}>{node.data.label}</OutputNode>
+		{:else if node.type === 'default'}
+			<DefaultNode {node}>{node.data.label}</DefaultNode>
+		{/if}
 	{/each}
-</svg>
 
-{#each $nodesStore as node}
-	{#if node.type === 'input'}
-		<InputNode {node}>{node.data.label}</InputNode>
-	{:else if node.type === 'output'}
-		<OutputNode {node}>{node.data.label}</OutputNode>
-	{:else if node.type === 'default'}
-		<DefaultNode {node}>{node.data.label}</DefaultNode>
-	{/if}
-{/each}
+	</div>
+	<svg class="Edges" width="1000px" height="1000px">
+		{#each $derivedEdges as edge}
+			<SimpleBezierEdge {edge} />
+		{/each}
+	</svg>
+</GraphView>
 
-<!-- <GraphView /> -->
 <style>
+	.Edges {
+		border: 1px solid black;
+	}
+	.Nodes {
+		display: grid;
+		width: 1000px;
+		height: 1000px;
+		position: absolute;
+		overflow: hidden;
+		font-family: 'Segoe UI', sans-serif;
+	}
 </style>
