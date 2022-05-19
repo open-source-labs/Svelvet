@@ -45,7 +45,6 @@
 		{ id: 'e2-3', source: 2, target: 3 },
 		{ id: 'e2-4', source: 2, target: 4 }
 	];
-
 </script>
 
 <Svelvet nodes={initialNodes} edges={initialEdges} />
