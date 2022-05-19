@@ -1,8 +1,5 @@
 <script lang="ts">
-	// import React, { FC, HTMLAttributes } from 'react';
-	import cc from 'classcat';
-
-	import { Position } from '../types';
+	import { Position } from '$lib/types/types';
 
 	const shiftX = (x: number, shift: number, position: Position): number => {
 		if (position === Position.Left) return x - shift;
@@ -28,7 +25,6 @@
 </script>
 
 <circle
-	class={cc(['react-flow__edgeupdater', className])}
 	cx={shiftX(centerX, radius, position)}
 	cy={shiftY(centerY, radius, position)}
 	r={radius}

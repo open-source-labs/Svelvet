@@ -1,46 +1,19 @@
-<script lang="ts">
-	// import React from 'react';
+<script>
+	// import EdgeText from '$lib/Edges/EdgeText.svelte';
+	export let baseEdgeProps;
 
-	import EdgeText from './EdgeText.svelte';
-	import type { BaseEdgeProps } from '../types';
-
-	export let baseEdgeProps: BaseEdgeProps;
-	const {
-		path,
-		centerX,
-		centerY,
-		label,
-		labelStyle,
-		labelShowBg,
-		labelBgStyle,
-		labelBgPadding,
-		labelBgBorderRadius,
-		style,
-		markerEnd,
-		markerStart
-	} = baseEdgeProps;
-
-	const edgeTextProps = {
-		x: centerX,
-		y: centerY,
-		label: label,
-		labelStyle: labelStyle,
-		labelShowBg: labelShowBg,
-		labelBgStyle: labelBgStyle,
-		labelBgPadding: labelBgPadding,
-		labelBgBorderRadius: labelBgBorderRadius
-	};
+	$: ({ path } = baseEdgeProps);
 </script>
 
-<path
-	{style}
-	d={path}
-	class="react-flow__edge-path"
-	marker-end={markerEnd}
-	marker-start={markerStart}
-	fill="transparent"
-	stroke="black"
-/>
-{#if label}
+<g> 
+	<path
+		d={path}
+		fill="transparent"
+		stroke="black"
+	/>
+
+<!-- {#if label}
 	<EdgeText {edgeTextProps} />
-{/if}
+{/if} -->
+
+</g> 
