@@ -1,5 +1,4 @@
 <script lang="ts">
-	import GraphView from '$lib/Containers/GraphView/index.svelte';
 	import InputNode from '$lib/Nodes/InputNode/index.svelte';
 	import OutputNode from '$lib/Nodes/OutputNode/index.svelte';
 	import DefaultNode from '$lib/Nodes/DefaultNode/index.svelte';
@@ -16,9 +15,8 @@
 	});
 </script>
 
-<GraphView>
-	<!-- <svg width="1000px" height="1000px"> -->
-	<div class="Nodes">
+<!-- <svg width="1000px" height="1000px"> -->
+<div class="Nodes">
 	{#each $nodesStore as node}
 		{#if node.type === 'input'}
 			<InputNode {node}>{node.data.label}</InputNode>
@@ -28,24 +26,20 @@
 			<DefaultNode {node}>{node.data.label}</DefaultNode>
 		{/if}
 	{/each}
-
-	</div>
-	<svg class="Edges" width="1000px" height="1000px">
-		{#each $derivedEdges as edge}
-			<SimpleBezierEdge {edge} />
-		{/each}
-	</svg>
-</GraphView>
+</div>
+<svg class="Edges" width="1000px" height="1000px">
+	{#each $derivedEdges as edge}
+		<SimpleBezierEdge {edge} />
+	{/each}
+</svg>
 
 <style>
-	.Edges {
-		border: 1px solid black;
-	}
 	.Nodes {
+		border: 1px solid black;
 		display: grid;
 		width: 1000px;
 		height: 1000px;
-		position: absolute;
+		/* position: absolute; */
 		overflow: hidden;
 		font-family: 'Segoe UI', sans-serif;
 	}
