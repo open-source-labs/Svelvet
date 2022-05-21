@@ -1,42 +1,39 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+
 	const gettingStartedLinks = [
-		['Installation', '/installation'],
-		['Core Concepts', '/core-concepts'],
-		['Plugin Components', '/plugin-components']
+		['Installation', 'installation'],
+		['Basic Usage', 'basic-usage'],
+		['Core Concepts', 'core-concepts']
 	];
 
 	const guideLinks = [
-		['Custom nodes', '/custom-nodes'],
-		['Sub Flows', '/subflows'],
-		['Uncontrolled Flow', '/uncontrolled-flow'],
-		['Panning and Zooming', '/pan-and-zoom'],
-		['Usage with Typescript', '/typescript'],
-		['Theming', '/theming']
+		['Custom nodes', 'custom-nodes'],
+		['Sub Flows', 'subflows'],
+		['Panning and Zooming', 'pan-and-zoom'],
+		['Usage with Typescript', 'typescript'],
+		['Theming', 'theming'],
+		['Testing', 'testing']
 	];
 
 	const APIReferenceLinks = [
-		['Nodes', '/nodes'],
-		['Edges', '/edges']
+		['Nodes', 'api-nodes'],
+		['Edges', 'api-edges']
 	];
 
-	let activeLink = 'Installation';
-
-	const setActiveLink = (e: MouseEvent) => {
-		if (e.target.id) activeLink = e.target.id;
-	};
+	$: activeLink = `${$page.url.pathname}`;
 </script>
 
 <!-- <nav class="border-r h-screen w-80 px-8 overflow-y-auto"> -->
 <!-- {#if $page.url.pathname === '/docs'} -->
-<div class="flex flex-col my-5 text-sm">
+<div class="flex flex-col my-5 text-sm w-full">
 	<p class="font-medium text-gray-700 leading-9">Getting Started</p>
 	<div class="flex flex-col leading-9 text-gray-500 ">
 		{#each gettingStartedLinks as link}
 			<a
-				on:click={setActiveLink}
 				id={link[0]}
-				href="/docs{link[1]}"
-				class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
+				href="/docs/{link[1]}"
+				class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
 					? 'text-rose-500 hover:text-rose-500 border-rose-300'
 					: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
 			>
@@ -48,10 +45,9 @@
 	<div class="flex flex-col leading-9 text-gray-500 ">
 		{#each guideLinks as link}
 			<a
-				on:click={setActiveLink}
 				id={link[0]}
-				href="/docs{link[1]}"
-				class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
+				href="/docs/{link[1]}"
+				class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
 					? 'text-rose-500 hover:text-rose-500 border-rose-300'
 					: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
 			>
@@ -63,10 +59,9 @@
 	<div class="flex flex-col leading-9 text-gray-500 ">
 		{#each APIReferenceLinks as link}
 			<a
-				on:click={setActiveLink}
 				id={link[0]}
-				href="/docs{link[1]}"
-				class="border-l px-4 hover:border-rose-300  {activeLink === link[0]
+				href="/docs/{link[1]}"
+				class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
 					? 'text-rose-500 hover:text-rose-500 border-rose-300'
 					: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
 			>
@@ -109,8 +104,3 @@
 	{/if} -->
 
 <!-- </nav> -->
-<style>
-	a {
-		/* font-family: Inter; */
-	}
-</style>
