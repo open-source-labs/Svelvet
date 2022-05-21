@@ -1,4 +1,5 @@
 <script>
+	import Footer from '../components/Footer.svelte';
 	import '../app.css';
 	import TopNav from '../components/TopNav.svelte';
 </script>
@@ -7,5 +8,6 @@
 	<TopNav />
 </div>
 <slot />
+<Footer />
 
 <style></style>

@@ -19,8 +19,8 @@
 		>Get Started</a
 	>
 </div>
-<div class="h-96 w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
-	<div class="flex h-full m-24">
+<div class="h-[420px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
+	<div class="flex h-full m-24 gap-10">
 		<div class="w-1/2 h-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4">Beautiful flow diagrams</h3>
 			<p class="mb-4 text-gray-100">
@@ -33,8 +33,14 @@
 				>Documentation</a
 			>
 		</div>
-		<div class="w-1/2 h-full flex flex-col justify-center text-center">
-			insert beautiful flow diagram here
+		<div class="w-1/2 h-full py-12 flex flex-col justify-center text-center ">
+			<iframe
+				src="https://codesandbox.io/embed/recursing-rgb-lde6vt?autoresize=1&codemirror=1&fontsize=12&hidenavigation=1&module=%2FApp.svelte&theme=light&view=preview&editorsize=50&hidedevtools=1"
+				style="width:100%; height:600px; border:0; border-radius: 8px; overflow:hidden;"
+				title="recursing-rgb-lde6vt"
+				allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+				sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+			/>
 		</div>
 	</div>
 </div>
@@ -55,33 +61,6 @@
 		</div>
 	</div>
 </div>
-<footer class="flex justify-around mt-40 py-10 border-t text-sm">
-	<div class="flex flex-col space-y-3 text-gray-600">
-		<a href="/" class="text-gray-700 font-semibold">Getting Started</a>
-		<a href="/">Installation</a>
-		<a href="/">Core Concepts</a>
-		<a href="/">Themes</a>
-		<a href="/">Custom Nodes</a>
-		<a href="/">Panning and Zooming</a>
-	</div>
-	<div class="flex flex-col space-y-3 text-gray-600">
-		<a href="/" class="text-gray-700 font-semibold">Core Concepts</a>
-		<a href="/">Installation</a>
-		<a href="/">Core Concepts</a>
-		<a href="/">Themes</a>
-		<a href="/">Custom Nodes</a>
-		<a href="/">Panning and Zooming</a>
-	</div>
-	<div class="flex flex-col space-y-3 text-gray-600">
-		<a href="/" class="text-gray-700 font-semibold">Customization</a>
-		<a href="/">Installation</a>
-		<a href="/">Core Concepts</a>
-		<a href="/">Themes</a>
-		<a href="/">Custom Nodes</a>
-		<a href="/">Panning and Zooming</a>
-	</div>
-	<div />
-</footer>
 
 <style>
 	.css-blurry-gradient {
