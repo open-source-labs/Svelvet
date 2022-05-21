@@ -39,13 +39,16 @@
 		</svg>
 	</button>
 </div>
-<div class:hidden class="md:hidden absolute w-screen mobile-menu border px-8 bg-gray-100 ">
+<div
+	class:hidden
+	class="md:hidden absolute w-screen mobile-menu border drop-shadow-md px-8 bg-gray-100 text-gray-700"
+>
 	<ul class="text-center">
 		<li>
 			<a on:click={toggleMenu} href="/" class="block py-6">Home</a>
 		</li>
 		<li>
-			<a on:click={toggleMenu} href="/docs" class="block py-6">Docs</a>
+			<a on:click={toggleMenu} href="/docs" class="block py-6">Documentation</a>
 		</li>
 		<li>
 			<a on:click={toggleMenu} href="/blog" class="block py-6">Blog</a>

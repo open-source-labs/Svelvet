@@ -17,8 +17,8 @@
 	];
 
 	const APIReferenceLinks = [
-		['Nodes', 'nodesapi'],
-		['Edges', 'edges']
+		['Nodes', 'api-nodes'],
+		['Edges', 'api-edges']
 	];
 
 	$: activeLink = `${$page.url.pathname}`;

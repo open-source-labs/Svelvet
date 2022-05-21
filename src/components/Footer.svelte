@@ -1,4 +1,4 @@
-<footer class="flex justify-around py-10 border-t text-sm">
+<footer class="hidden md:flex justify-around py-10 border-t text-sm">
 	<div class="flex flex-col space-y-3 text-gray-600">
 		<a href="/" class="text-gray-700 font-semibold">Getting Started</a>
 		<a href="/">Installation</a>
