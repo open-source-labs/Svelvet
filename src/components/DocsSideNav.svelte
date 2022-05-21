@@ -104,8 +104,3 @@
 	{/if} -->
 
 <!-- </nav> -->
-<style>
-	a {
-		/* font-family: Inter; */
-	}
-</style>
