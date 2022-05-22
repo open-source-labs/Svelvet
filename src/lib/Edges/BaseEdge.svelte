@@ -5,7 +5,7 @@
 	$: ({ path } = baseEdgeProps);
 </script>
 
-<g> 
+<!-- <g>  -->
 	<path
 		d={path}
 		fill="transparent"
@@ -16,4 +16,4 @@
 	<EdgeText {edgeTextProps} />
 {/if} -->
 
-</g> 
+<!-- </g>  -->
