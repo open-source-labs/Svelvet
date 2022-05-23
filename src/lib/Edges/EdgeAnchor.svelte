@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Position } from '$lib/types/types';
+	import { Position } from '$lib/types/utils';
 
 	const shiftX = (x: number, shift: number, position: Position): number => {
 		if (position === Position.Left) return x - shift;

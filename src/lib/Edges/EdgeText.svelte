@@ -1,5 +1,8 @@
 <script lang="ts">
+	import ApiEdges from 'src/routes/docs/api-edges.svelte';
+
 	import { onMount } from 'svelte';
+	import type { Rect } from '../types/utils';
 
 	// import Rect from types...
 
@@ -7,7 +10,7 @@
 	const {
 		x,
 		y,
-		label,
+		label
 		// labelStyle = {},
 		// labelShowBg = false,
 		// labelBgStyle = {},
@@ -37,15 +40,8 @@
 {#if typeof label === 'undefined' || !label}
 	{null}
 {:else}
-	<g
-		transform={`translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`}
-	>
-		<text
-			class="EdgeText"
-			y={edgeTextBbox.height / 2}
-			dy="0.3em"
-			href={edgeRef}
-		>
+	<g transform={`translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`}>
+		<text class="EdgeText" y={edgeTextBbox.height / 2} dy="0.3em" href={edgeRef}>
 			{label}
 		</text>
 	</g>
