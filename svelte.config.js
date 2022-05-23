@@ -9,13 +9,13 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		vite: {
-			server: {
-				watch: {
-					usePolling: true
-				}
-			}
-		}
+		// vite: {
+		// 	server: {
+		// 		watch: {
+		// 			usePolling: true
+		// 		}
+		// 	}
+		// }
 	}
 };
 
