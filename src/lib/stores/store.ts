@@ -14,7 +14,13 @@ export const defaultNode: Node = {
 export const nodesStore = writable([]);
 export const edgesStore = writable([]);
 
+<<<<<<< HEAD
 export const onMouseMove = (e, nodeID: Node) => {
+=======
+export const nodeSelected = writable(false);
+
+export const onMouseMove = (e, nodeID) => {
+>>>>>>> main
 	nodesStore.update((n) => {
 		n.forEach((node) => {
 			if (node.id === nodeID) {

@@ -1,21 +1,26 @@
 <script> 
 	export let node;
-	import { onMouseMove } from '$lib/stores/store';
+	import { onMouseMove, nodeSelected } from '$lib/stores/store';
 	
 	let moving = false;
 
 	function onMouseDown() {
 		moving = true;
+        $nodeSelected = true;
 	}
+
 	function onMouseUp() {
 		moving = false;
+        $nodeSelected = false; 
 	}	
 </script>
 
 <svelte:window on:mouseup={onMouseUp} on:mousemove={(e) => { 
-	if (moving) onMouseMove(e, node.id);
-}
+	    if (moving) onMouseMove(e, node.id);
+    }
 } />
+
+<!-- <svelte:window on:mouseup={onMouseUp} /> -->
 
 <div on:mousedown={onMouseDown} class="Node" style="left: {node.position.x}px; top: {node.position.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};">
 	<slot/>

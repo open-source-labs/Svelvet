@@ -21,7 +21,7 @@
 	// }
 
 	export let EdgeAnchor: any;
-	const { className, position, centerX, centerY, radius = 10 } = EdgeAnchor;
+	const { position, centerX, centerY, radius = 10 } = EdgeAnchor;
 </script>
 
 <circle
