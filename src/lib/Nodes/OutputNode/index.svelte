@@ -12,7 +12,6 @@
 	}
 </script>
 
-<<<<<<< HEAD
 <svelte:window
 	on:mouseup={onMouseUp}
 	on:mousemove={(e) => {
@@ -24,18 +23,9 @@
 	on:mousedown={onMouseDown}
 	class="Node"
 	style="left: {node.position.x}px; top: {node.position
-		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor}; font-size:24px;"
+		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};"
 >
 	<slot />
-=======
-<svelte:window on:mouseup={onMouseUp} on:mousemove={(e) => { 
-		if (moving)	onMouseMove(e, node.id)
-  }
-} />	
-	
-<div on:mousedown={onMouseDown} class="Node" style="left: {node.position.x}px; top: {node.position.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};">
-	<slot/>
->>>>>>> 813c55f1c9aef53fe2bf80c0435ae1df4db804c8
 </div>
 
 <style>
