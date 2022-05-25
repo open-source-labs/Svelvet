@@ -12,6 +12,8 @@ import { writable, derived } from 'svelte/store';
 export const nodesStore = writable([]);
 export const edgesStore = writable([]);
 
+export const nodeSelected = writable(false);
+
 export const onMouseMove = (e, nodeID) => {
 	nodesStore.update((n) => {
 		n.forEach((node) => {
