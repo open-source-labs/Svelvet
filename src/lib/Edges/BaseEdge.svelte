@@ -5,11 +5,7 @@
 	$: ({ path } = baseEdgeProps);
 </script>
 
-	<path
-		d={path}
-		fill="transparent"
-		stroke="black"
-	/>
+<path d={path} fill="transparent" stroke="black" aria-label="svg-path" />
 
 <!-- {#if label}
 	<EdgeText {edgeTextProps} />

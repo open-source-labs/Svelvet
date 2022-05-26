@@ -8,6 +8,9 @@ export default defineConfig({
 		environment: 'jsdom',
 		setupFiles: 'tests/setupTests.ts'
 	},
+	alias: {
+		$lib: '/src/lib'
+	},
 	plugins: [
 		svelte({
 			configFile: './svelte.config.js',
