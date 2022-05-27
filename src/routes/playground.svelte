@@ -15,7 +15,7 @@
 		{
 			id: 2,
 			type: 'default',
-			position: { x: 200, y: 250 },
+			position: { x: 350, y: 250 },
 			data: { label: 'Default' },
 			width: 175,
 			height: 40,
@@ -24,32 +24,44 @@
 		{
 			id: 3,
 			type: 'output',
-			position: { x: 100, y: 550 },
+			position: { x: 40, y: 400 },
 			data: { label: 'Output' },
 		 	width: 175,
 			height: 40,
 			bgColor: 'white'
 		},
-		// {
-		// 	id: 4,
-		// 	type: 'output',
-		// 	position: { x: 400, y: 550 },
-		// 	data: { label: 'Bye!' },
-		// 	width: 175,
-		// 	height: 40,
-		// 	bgColor: 'white'
-		// }
+		{
+			id: 4,
+			type: 'output',
+			position: { x: 400, y: 500 },
+			data: { label: 'Bye!' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 5,
+			type: 'output',
+			position: { x: 50, y: 200 },
+			data: { label: 'another Output!' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		}
 	];
 
+	// data: { label: 'yay!' } 
+
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, target: 2, data: { label: 'yay!' } },
-		{ id: 'e2-3', source: 2, target: 3 },
-		// { id: 'e2-4', source: 2, target: 4 }
+		{ id: 'e1-2', source: 1, target: 2, label: 'Top'},
+		{ id: 'e2-3', source: 2, target: 3, label: 'Bottom bottom'},
+		{ id: 'e2-4', source: 2, target: 4, label: 'HI this is a label again again again again'},
+		{ id: 'e1-5', source: 1, target: 5}
 	];
 </script>
 <h1>Hello, this is a h1 element</h1>
 <div class="Example">This is a div element</div>
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} />
 <h1>Goodbye</h1>
 <div class="Example">Another div element</div>
 
