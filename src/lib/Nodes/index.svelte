@@ -47,6 +47,6 @@
 		text-align: center;
 		border: solid 1px black;
 		border-radius: 5px;
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+		box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
 	}
 </style>

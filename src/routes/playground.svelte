@@ -50,8 +50,6 @@
 		}
 	];
 
-	// data: { label: 'yay!' }
-
 	const initialEdges = [
 		{ id: 'e1-2', source: 1, target: 2, label: 'labeled edge' },
 		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
