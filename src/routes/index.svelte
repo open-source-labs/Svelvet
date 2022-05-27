@@ -1,4 +1,49 @@
 <script>
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	const initialNodes = [
+		{
+			id: 1,
+			type: 'input',
+			position: { x: 215, y: 40 },
+			data: { label: 'Input Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 2,
+			type: 'default',
+			position: { x: 380, y: 160 },
+			data: { label: 'Default Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 3,
+			type: 'output',
+			position: { x: 215, y: 260 },
+			data: { label: 'Output Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 4,
+			type: 'output',
+			position: { x: 50, y: 160 },
+			data: { label: 'Drag me!' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		}
+	];
+
+	const initialEdges = [
+		{ id: 'e1-2', source: 1, target: 2, label: 'labeled edge' },
+		{ id: 'e2-3', source: 2, target: 3, animate: true },
+		{ id: 'e1-5', source: 1, target: 4 }
+	];
 </script>
 
 <svelte:head>
@@ -36,15 +81,16 @@
 			>
 		</div>
 		<div
-			class="w-full md:w-1/2 h-[350px] md:h-full mb-8 md:py-12 flex flex-col justify-center text-center "
+			class="w-full md:w-1/2 h-[350px] md:h-full mb-8 md:py-12 flex flex-col justify-center text-center"
 		>
-			<iframe
-				src="https://codesandbox.io/embed/recursing-rgb-lde6vt?autoresize=1&codemirror=1&fontsize=12&hidenavigation=1&module=%2FApp.svelte&theme=light&view=preview&editorsize=50&hidedevtools=1"
-				style="width:100%; height:400px; border:0; border-radius: 8px; overflow:hidden;"
-				title="recursing-rgb-lde6vt"
-				allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-				sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-			/>
+			<div class="bg-white max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md">
+				<Svelvet nodes={initialNodes} edges={initialEdges} />
+			</div>
+			<!-- <div
+				class="sm:hidden bg-white max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md"
+			>
+				<Svelvet nodes={otherNodes} edges={otherEdges} />
+			</div> -->
 		</div>
 	</div>
 </div>
@@ -53,13 +99,9 @@
 		<div
 			class="w-full md:w-1/2 h-[350px] md:h-full mb-8 md:py-12 flex flex-col justify-center text-center "
 		>
-			<iframe
-				src="https://codesandbox.io/embed/recursing-rgb-lde6vt?autoresize=1&codemirror=1&fontsize=12&hidenavigation=1&module=%2FApp.svelte&theme=light&view=preview&editorsize=50&hidedevtools=1"
-				style="width:100%; height:400px; border:0; border-radius: 8px; overflow:hidden;"
-				title="recursing-rgb-lde6vt"
-				allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-				sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-			/>
+			<div class="max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md self-end">
+				<Svelvet nodes={initialNodes} edges={initialEdges} />
+			</div>
 		</div>
 		<div class="w-full md:w-1/2 h-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 mt-8 text-center md:text-left text-gray-700">

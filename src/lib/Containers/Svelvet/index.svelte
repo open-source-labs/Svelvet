@@ -23,7 +23,7 @@
 <style>
 	.Flow {
 		position: relative;
-		border: 1px solid black;
+		/* border: 1px solid black; */
 		/* width: 600px;
 		height: 600px;	 */
 		overflow: hidden;

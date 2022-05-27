@@ -3,52 +3,41 @@
 
 	export let edgeTextProps: any;
 
-	$: ({
-		x, 
-		y,
-		label,
-	} = edgeTextProps);
+	$: ({ x, y, label } = edgeTextProps);
 
 	let labelLength = 0;
-	let textWidth = 0; 
+	let textWidth = 0;
 
 	onMount(() => {
-		let labelText = document.querySelectorAll('.EdgeText')
-		labelText.forEach(el => {
+		let labelText = document.querySelectorAll('.EdgeText');
+		labelText.forEach((el) => {
 			if (el.innerHTML === label) {
-				textWidth = el.getComputedTextLength();  
+				textWidth = el.getComputedTextLength();
 			}
-		})
-		if (textWidth <= 50) labelLength = textWidth * 2; 
+		});
+		if (textWidth <= 50) labelLength = textWidth * 2;
 		if (textWidth > 50 && textWidth < 60) {
 			labelLength = textWidth * 0.5;
 		}
 		if (textWidth >= 60) {
-			textWidth <= 175 ? labelLength = textWidth * -0.2 : labelLength = textWidth * -0.8; 
+			textWidth <= 175 ? (labelLength = textWidth * -0.2) : (labelLength = textWidth * -0.8);
 		}
 	});
-	
 </script>
 
 {#if typeof label === 'undefined' || !label}
 	{null}
 {:else}
 	<g>
-		<rect 
-			class="InvisibleBox" 
-			fill=white 
-			x={x + (labelLength/2)} 
-			y={y-15} 
-			width = {textWidth} 
-			height= {25} 
-		> 
-		</rect>
-		<text
-			class="EdgeText"
-			x={x + (labelLength/2)}
-			y={y}
-			dy="0.3em"
-		>
+		<rect
+			class="InvisibleBox"
+			fill="white"
+			x={x + labelLength / 2}
+			y={y - 15}
+			width={textWidth}
+			height={25}
+		/>
+		<text class="EdgeText" x={x + labelLength / 2} {y} dy="0.3em">
 			{label}
 		</text>
 	</g>
@@ -56,6 +45,7 @@
 
 <style>
 	.EdgeText {
-		font-size: 16px;
-	}	
+		font-size: 14px;
+		z-index: 10;
+	}
 </style>
