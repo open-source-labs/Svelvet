@@ -1,15 +1,13 @@
 import { writable, derived } from 'svelte/store';
-import type { Node } from '../types/types';
 
-export const defaultNode: Node = {
-	id: 0,
-	position: { x: 20, y: 20 },
-	type: 'default',
-	data: null,
-	width: 100,
-	height: 50,
-	bgColor: 'white'
-};
+// const defaultNode = {
+// 	id: null,
+// 	type: null,
+// 	position: {x: 10, y: 10},
+// 	width: 100px,
+// 	height: 50px,
+// 	backgroundColor: white,
+// }
 
 export const nodesStore = writable([]);
 export const edgesStore = writable([]);
