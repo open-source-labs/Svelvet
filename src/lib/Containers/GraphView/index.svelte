@@ -3,8 +3,9 @@
 	import { zoom, zoomTransform } from 'd3-zoom';
 	import { select, selectAll } from 'd3-selection';
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
+	import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
 	import Node from '$lib/Nodes/index.svelte';
-	import { nodeSelected } from '$lib/stores/store';
+	import { nodeSelected, widthStore, heightStore } from '$lib/stores/store';
 
 	let d3 = {
 		zoom,
@@ -42,7 +43,7 @@
 	}
 </script>
 
-<div class="Nodes">
+<div class="Nodes" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
 	<div class="Node">
 		{#each $nodesStore as node}
 			<Node {node}>{node.data.label}</Node>
@@ -50,22 +51,19 @@
 	</div>
 </div>
 
-<svg class="Edges" viewBox="0 0 600 600">
+<svg class="Edges" viewBox={`0 0 ${$widthStore} ${$heightStore}`}>
 	<title>svg container</title>
 	<g>
 		{#each $derivedEdges as edge}
+			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
 			<SimpleBezierEdge {edge} />
+			<EdgeAnchor x={edge.targetX} y={edge.targetY} />
 		{/each}
 	</g>
 </svg>
 
 <style>
-	.Edges {
-		border: 1px solid red;
-	}
 	.Nodes {
-		width: 600px;
-		height: 600px;
 		position: absolute;
 	}
 	.Node {
