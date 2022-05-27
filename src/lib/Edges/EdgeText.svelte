@@ -1,29 +1,13 @@
 <script lang="ts">
-	import ApiEdges from 'src/routes/docs/api-edges.svelte';
-
 	import { onMount } from 'svelte';
-	import type { Rect } from '../types/utils';
 
 	export let edgeTextProps: any;
 
 	$: ({
 		x, 
 		y,
-<<<<<<< HEAD
-		label
-		// labelStyle = {},
-		// labelShowBg = false,
-		// labelBgStyle = {},
-		// labelBgPadding = [2, 4],
-		// labelBgBorderRadius = 2,
-		// children,
-		// className,
-		// ...rest
-	} = edgeTextProps;
-=======
 		label,
 	} = edgeTextProps);
->>>>>>> main
 
 	let labelLength = 0;
 	let textWidth = 0; 
@@ -49,10 +33,6 @@
 {#if typeof label === 'undefined' || !label}
 	{null}
 {:else}
-<<<<<<< HEAD
-	<g transform={`translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`}>
-		<text class="EdgeText" y={edgeTextBbox.height / 2} dy="0.3em" href={edgeRef}>
-=======
 	<g>
 		<rect 
 			class="InvisibleBox" 
@@ -69,7 +49,6 @@
 			y={y}
 			dy="0.3em"
 		>
->>>>>>> main
 			{label}
 		</text>
 	</g>
