@@ -26,7 +26,7 @@
 			type: 'output',
 			position: { x: 40, y: 400 },
 			data: { label: 'Output' },
-		 	width: 175,
+			width: 175,
 			height: 40,
 			bgColor: 'white'
 		},
@@ -50,27 +50,28 @@
 		}
 	];
 
-	// data: { label: 'yay!' } 
+	// data: { label: 'yay!' }
 
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, target: 2, label: 'Top'},
-		{ id: 'e2-3', source: 2, target: 3, label: 'Bottom bottom'},
-		{ id: 'e2-4', source: 2, target: 4, label: 'HI this is a label again again again again'},
-		{ id: 'e1-5', source: 1, target: 5}
+		{ id: 'e1-2', source: 1, target: 2, label: 'labeled edge' },
+		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
+		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true },
+		{ id: 'e1-5', source: 1, target: 5 }
 	];
 </script>
+
 <h1>Hello, this is a h1 element</h1>
 <div class="Example">This is a div element</div>
-<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} />
+<Svelvet nodes={initialNodes} edges={initialEdges} />
 <h1>Goodbye</h1>
 <div class="Example">Another div element</div>
 
 <style>
 	.Example {
-		display: grid; 
+		display: grid;
 		width: 100px;
 		height: 50px;
-		border: 2px solid black; 
+		border: 2px solid black;
 		position: relative;
 	}
 </style>

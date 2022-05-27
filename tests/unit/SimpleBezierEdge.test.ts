@@ -14,7 +14,7 @@ const mockEdge = {
 	}
 };
 
-test('should produce the correct bezier path string', () => {
+test('should calculate the correct bezier path string', () => {
 	render(SimpleBezierEdge, { props: { edge: mockEdge } });
 	const pathElement = screen.getByLabelText('svg-path');
 
