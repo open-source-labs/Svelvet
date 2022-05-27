@@ -10,27 +10,23 @@
 	} = edgeTextProps);
 
 	let labelLength = 0;
-	let labelWidth = 0; 
+	let textWidth = 0; 
 
-		onMount(() => {
-			let labelText = document.querySelectorAll('.EdgeText')
-			console.log(labelText);
-			labelText.forEach(el => {
-				if (el.innerHTML === label) {
-					labelLength = el.getComputedTextLength();
-					labelWidth = labelLength; 
-					if(labelLength > 50){
-						if(labelLength < 100){
-							labelLength = labelLength *-.2;
-						}
-						else{
-							labelLength = labelLength*-1;
-						}
-					}
-					console.log(labelLength);
-				}
-			})
-		});
+	onMount(() => {
+		let labelText = document.querySelectorAll('.EdgeText')
+		labelText.forEach(el => {
+			if (el.innerHTML === label) {
+				textWidth = el.getComputedTextLength();  
+			}
+		})
+		if (textWidth <= 50) labelLength = textWidth * 2; 
+		if (textWidth > 50 && textWidth < 60) {
+			labelLength = textWidth * 0.5;
+		}
+		if (textWidth >= 60) {
+			textWidth <= 175 ? labelLength = textWidth * -0.2 : labelLength = textWidth * -0.8; 
+		}
+	});
 	
 </script>
 
@@ -43,7 +39,7 @@
 			fill=white 
 			x={x + (labelLength/2)} 
 			y={y-15} 
-			width = {labelWidth} 
+			width = {textWidth} 
 			height= {25} 
 		> 
 		</rect>

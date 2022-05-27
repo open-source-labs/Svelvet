@@ -1,30 +1,32 @@
 <script lang="ts">
 	import GraphView from '$lib/Containers/GraphView/index.svelte'
-	import { nodesStore, edgesStore, derivedEdges } from '$lib/stores/store';
+	import { nodesStore, edgesStore, derivedEdges, widthStore, heightStore } from '$lib/stores/store';
 	import { onMount } from 'svelte';
 
 	export let nodes: any;
 	export let edges: any;
+	export let width: any;
+	export let height: any;
+
 	onMount(() => {
 		$nodesStore = nodes;
 		$edgesStore = edges;
+		$widthStore = width;
+		$heightStore = height; 
 	});
 
 </script>
 
-<div class="Flow">
+<div class="Flow" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
 	<GraphView nodesStore={nodesStore} derivedEdges={derivedEdges} />
 </div>
 
 <style>
-	.Edges {
-		border: 1px solid red;
-	}
 	.Flow {
 		position: relative;	
 		border: 1px solid black;
-		width: 600px;
-		height: 600px;	
+		/* width: 600px;
+		height: 600px;	 */
 		overflow: hidden;
 		display: grid;
 		font-family: 'Segoe UI', sans-serif;

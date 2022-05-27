@@ -5,7 +5,7 @@
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
 	import EdgeAnchor from "$lib/Edges/EdgeAnchor.svelte";
 	import Node from '$lib/Nodes/index.svelte';
-	import { nodeSelected } from '$lib/stores/store';
+	import { nodeSelected, widthStore, heightStore } from '$lib/stores/store';
 
 	let d3 = {
 		zoom,
@@ -39,7 +39,7 @@
 
 </script>
 
-<div class="Nodes">
+<div class="Nodes" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
 	<div class="Node">
 		{#each $nodesStore as node}
 			<Node {node}>{node.data.label}</Node>
@@ -47,7 +47,7 @@
 	</div>
 </div>
 
-<svg class="Edges" viewBox="0 0 600 600">
+<svg class="Edges" viewBox={`0 0 ${$widthStore} ${$heightStore}`}>
 	<g>
 		{#each $derivedEdges as edge}
 			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
@@ -59,8 +59,6 @@
 
 <style>
 	.Nodes {
-		width: 600px;
-		height: 600px; 
 		position: absolute;
 	}
 	.Node {
