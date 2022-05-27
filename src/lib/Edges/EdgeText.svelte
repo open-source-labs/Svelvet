@@ -4,12 +4,12 @@
 	import { onMount } from 'svelte';
 	import type { Rect } from '../types/utils';
 
-	// import Rect from types...
-
 	export let edgeTextProps: any;
-	const {
-		x,
+
+	$: ({
+		x, 
 		y,
+<<<<<<< HEAD
 		label
 		// labelStyle = {},
 		// labelShowBg = false,
@@ -20,28 +20,56 @@
 		// className,
 		// ...rest
 	} = edgeTextProps;
+=======
+		label,
+	} = edgeTextProps);
+>>>>>>> main
 
-	const edgeRef: any = null; //when you set type to SVGTextElement as it was there is a type error, look into later
-	let edgeTextBbox: Rect = { x: 0, y: 0, width: 0, height: 0 };
+	let labelLength = 0;
+	let textWidth = 0; 
 
-	// onMount(() => {
-	// 	if (edgeRef.current) {
-	// 		const textBbox = edgeRef.current.getBBox();
-	// 		edgeTextBbox = {
-	// 			x: textBbox.x,
-	// 			y: textBbox.y,
-	// 			width: textBbox.width,
-	// 			height: textBbox.height
-	// 		};
-	// 	}
-	// }); //the typescript error on this line will be fixed once EdgeTextProps is uncommented
+	onMount(() => {
+		let labelText = document.querySelectorAll('.EdgeText')
+		labelText.forEach(el => {
+			if (el.innerHTML === label) {
+				textWidth = el.getComputedTextLength();  
+			}
+		})
+		if (textWidth <= 50) labelLength = textWidth * 2; 
+		if (textWidth > 50 && textWidth < 60) {
+			labelLength = textWidth * 0.5;
+		}
+		if (textWidth >= 60) {
+			textWidth <= 175 ? labelLength = textWidth * -0.2 : labelLength = textWidth * -0.8; 
+		}
+	});
+	
 </script>
 
 {#if typeof label === 'undefined' || !label}
 	{null}
 {:else}
+<<<<<<< HEAD
 	<g transform={`translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`}>
 		<text class="EdgeText" y={edgeTextBbox.height / 2} dy="0.3em" href={edgeRef}>
+=======
+	<g>
+		<rect 
+			class="InvisibleBox" 
+			fill=white 
+			x={x + (labelLength/2)} 
+			y={y-15} 
+			width = {textWidth} 
+			height= {25} 
+		> 
+		</rect>
+		<text
+			class="EdgeText"
+			x={x + (labelLength/2)}
+			y={y}
+			dy="0.3em"
+		>
+>>>>>>> main
 			{label}
 		</text>
 	</g>
@@ -50,6 +78,5 @@
 <style>
 	.EdgeText {
 		font-size: 16px;
-		fill: white;
-	}
+	}	
 </style>

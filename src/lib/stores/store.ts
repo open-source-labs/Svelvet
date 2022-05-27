@@ -13,6 +13,8 @@ export const defaultNode: Node = {
 
 export const nodesStore = writable([]);
 export const edgesStore = writable([]);
+export const widthStore = writable(600);
+export const heightStore = writable(600);
 
 export const nodeSelected = writable(false);
 
