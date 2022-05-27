@@ -2,6 +2,7 @@ import GraphView from '../../src/lib/Containers/GraphView/index.svelte';
 import { render, screen } from '@testing-library/svelte';
 
 test('should mount the svg element', () => {
+	// expect(screen.getByTitle('svg container')).toBeInTheDocument();
 	// const nodesStore = [
 	// 	// {
 	// 	// 	id: 1,

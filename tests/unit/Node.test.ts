@@ -1,4 +1,4 @@
-import Node from '../../src/lib/Nodes/index.svelte';
+import Node from '$lib/Nodes/index.svelte';
 import TestNode from './TestNodeSlot.svelte';
 import { render, screen } from '@testing-library/svelte';
 
@@ -23,7 +23,7 @@ const mockNodes = [
 	}
 ];
 
-test('should mount the wrapper div', () => {
+test('should mount the node wrapper div', () => {
 	const { container } = render(Node, { node: mockNodes[0] });
 	expect(container.getElementsByClassName('Node')).toBeTruthy();
 });

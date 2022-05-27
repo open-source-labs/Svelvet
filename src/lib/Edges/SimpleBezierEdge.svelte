@@ -1,5 +1,5 @@
 <script>
-	import BaseEdge from '$lib/Edges/BaseEdge.svelte';	
+	import BaseEdge from '$lib/Edges/BaseEdge.svelte';
 	import { Position } from '$lib/types/types';
 
 	function getControl({ pos, x1, y1, x2, y2 }) {
@@ -23,15 +23,8 @@
 		}
 		return [ctX, ctY];
 	}
-	
-	function getSimpleBezierPath({
-		srcX,
-		srcY,
-		sourcePosition,
-		trgX,
-		trgY,
-		targetPosition
-	}) {
+
+	function getSimpleBezierPath({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
 		const [sourceControlX, sourceControlY] = getControl({
 			pos: sourcePosition,
 			x1: srcX,
@@ -48,9 +41,9 @@
 		});
 		return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
 	}
-	
-		export let edge;
-	
+
+	export let edge;
+
 	$: params = {
 		srcX: edge.sourceX,
 		srcY: edge.sourceY,
@@ -59,12 +52,12 @@
 		trgY: edge.targetY,
 		targetPosition: Position.Bottom
 	};
-	
+
 	$: path = getSimpleBezierPath(params);
 
 	$: baseEdgeProps = {
 		...edge,
-		path: path,
+		path: path
 	};
 </script>
 
