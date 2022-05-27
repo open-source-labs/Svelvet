@@ -1,50 +1,57 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	// import Rect from types...
-
 	export let edgeTextProps: any;
-	const {
-		x,
+
+	$: ({
+		x, 
 		y,
 		label,
-		// labelStyle = {},
-		// labelShowBg = false,
-		// labelBgStyle = {},
-		// labelBgPadding = [2, 4],
-		// labelBgBorderRadius = 2,
-		// children,
-		// className,
-		// ...rest
-	} = edgeTextProps;
+	} = edgeTextProps);
 
-	const edgeRef: any = null; //when you set type to SVGTextElement as it was there is a type error, look into later
-	let edgeTextBbox: Rect = { x: 0, y: 0, width: 0, height: 0 };
+	let labelLength = 0;
+	let labelWidth = 0; 
 
-	// onMount(() => {
-	// 	if (edgeRef.current) {
-	// 		const textBbox = edgeRef.current.getBBox();
-	// 		edgeTextBbox = {
-	// 			x: textBbox.x,
-	// 			y: textBbox.y,
-	// 			width: textBbox.width,
-	// 			height: textBbox.height
-	// 		};
-	// 	}
-	// }); //the typescript error on this line will be fixed once EdgeTextProps is uncommented
+		onMount(() => {
+			let labelText = document.querySelectorAll('.EdgeText')
+			console.log(labelText);
+			labelText.forEach(el => {
+				if (el.innerHTML === label) {
+					labelLength = el.getComputedTextLength();
+					labelWidth = labelLength; 
+					if(labelLength > 50){
+						if(labelLength < 100){
+							labelLength = labelLength *-.2;
+						}
+						else{
+							labelLength = labelLength*-1;
+						}
+					}
+					console.log(labelLength);
+				}
+			})
+		});
+	
 </script>
 
 {#if typeof label === 'undefined' || !label}
 	{null}
 {:else}
-	<g
-		transform={`translate(${x - edgeTextBbox.width / 2} ${y - edgeTextBbox.height / 2})`}
-	>
+	<g>
+		<rect 
+			class="InvisibleBox" 
+			fill=white 
+			x={x + (labelLength/2)} 
+			y={y-15} 
+			width = {labelWidth} 
+			height= {25} 
+		> 
+		</rect>
 		<text
 			class="EdgeText"
-			y={edgeTextBbox.height / 2}
+			x={x + (labelLength/2)}
+			y={y}
 			dy="0.3em"
-			href={edgeRef}
 		>
 			{label}
 		</text>
@@ -54,6 +61,5 @@
 <style>
 	.EdgeText {
 		font-size: 16px;
-		fill: white;
-	}
+	}	
 </style>
