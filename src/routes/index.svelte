@@ -81,10 +81,7 @@
 	<div class=" h-full m-12 md:m-24">
 		<div class=" h-full w-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 text-center">Get In Contact</h3>
-			<p class="mb-4 text-gray-100 text-center">
-				Svelvet allows you to easily create intuitive flow diagrams using pre-built nodes and edges,
-				all with seamless zooming and panning.
-			</p>
+			<p class="mb-4 text-gray-100 text-center">in progress</p>
 			<a
 				href="/docs/installation"
 				class="self-center w-fit border border-white mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
