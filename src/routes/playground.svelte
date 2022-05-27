@@ -41,9 +41,11 @@
 		// }
 	];
 
+	// data: { label: 'yay!' } 
+
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, target: 2, data: { label: 'yay!' } },
-		{ id: 'e2-3', source: 2, target: 3 },
+		{ id: 'e1-2', source: 1, target: 2, label: 'Top Top Top'},
+		{ id: 'e2-3', source: 2, target: 3, label: 'Bottom Bottom Bottom Bo'},
 		// { id: 'e2-4', source: 2, target: 4 }
 	];
 </script>

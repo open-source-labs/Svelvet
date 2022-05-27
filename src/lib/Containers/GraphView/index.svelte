@@ -3,6 +3,7 @@
 	import { zoom, zoomTransform } from "d3-zoom";
 	import { select, selectAll } from "d3-selection";
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
+	import EdgeAnchor from "$lib/Edges/EdgeAnchor.svelte";
 	import Node from '$lib/Nodes/index.svelte';
 	import { nodeSelected } from '$lib/stores/store';
 
@@ -49,15 +50,14 @@
 <svg class="Edges" viewBox="0 0 600 600">
 	<g>
 		{#each $derivedEdges as edge}
+			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
 			<SimpleBezierEdge {edge} />
+			<EdgeAnchor x={edge.targetX} y={edge.targetY} />
 		{/each}
 	</g>
 </svg>
 
 <style>
-	.Edges {
-		border: 1px solid red;
-	}
 	.Nodes {
 		width: 600px;
 		height: 600px; 
