@@ -49,7 +49,38 @@
 		return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
 	}
 	
-		export let edge;
+	function getSimpleBezierCenter({
+		srcX,
+		srcY,
+		sourcePosition,
+		trgX,
+		trgY,
+		targetPosition
+	}) {
+		const [sourceControlX, sourceControlY] = getControl({
+			pos: sourcePosition,
+			x1: srcX,
+			y1: srcY,
+			x2: trgX,
+			y2: trgY,
+		});
+		const [targetControlX, targetControlY] = getControl({
+			pos: targetPosition,
+			x1: trgX,
+			y1: trgY,
+			x2: srcX,
+			y2: srcY,
+  		});
+  // cubic bezier t=0.5 mid point, not the actual mid point, but easy to calculate
+  // https://stackoverflow.com/questions/67516101/how-to-find-distance-mid-point-of-bezier-curve
+		const centerX = srcX * 0.1125 + sourceControlX * 0.3375 + targetControlX * 0.3375 + trgX * 0.1125;
+		const centerY = srcY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + trgY * 0.125;
+		const xOffset = Math.abs(centerX - srcX);
+		const yOffset = Math.abs(centerY - srcY); 
+		return [centerX, centerY, xOffset, yOffset];
+	}
+	
+	export let edge;
 	
 	$: params = {
 		srcX: edge.sourceX,
@@ -62,10 +93,17 @@
 	
 	$: path = getSimpleBezierPath(params);
 
+	$: [centerX, centerY, xOffset, yOffset] = getSimpleBezierCenter(params);
+
 	$: baseEdgeProps = {
 		...edge,
 		path: path,
+		centerX: centerX,
+		centerY: centerY,
+		xOffset: xOffset, 
+		yOffset: yOffset,
 	};
+	
 </script>
 
 <BaseEdge {baseEdgeProps} />

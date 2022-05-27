@@ -1,8 +1,16 @@
 <script>
-	// import EdgeText from '$lib/Edges/EdgeText.svelte';
+	import EdgeText from '$lib/Edges/EdgeText.svelte';
 	export let baseEdgeProps;
 
-	$: ({ path } = baseEdgeProps);
+	$: ({ sourceX, sourceY, targetX, targetY, path, centerX, centerY, xOffset, yOffset } = baseEdgeProps);
+	$: edgeTextProps = {
+		x: centerX,
+		y: centerY,
+		// xOffset: xOffset, 
+		// yOffset: yOffset,
+		// label: baseEdgeProps.data.label
+		label: baseEdgeProps.label
+	};
 </script>
 
 	<path
@@ -11,6 +19,12 @@
 		stroke="black"
 	/>
 
-<!-- {#if label}
+{#if edgeTextProps.label}
 	<EdgeText {edgeTextProps} />
-{/if} -->
+{/if}
+
+<!-- <style>
+	path {
+		position: absolute;
+	}
+</style> -->
