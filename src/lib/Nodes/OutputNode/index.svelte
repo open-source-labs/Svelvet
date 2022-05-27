@@ -1,7 +1,7 @@
-<script> 
+<script>
 	export let node;
-	import { onMouseMove } from '$lib/stores/store' 
-	
+	import { onMouseMove } from '$lib/stores/store';
+
 	let moving = false;
 
 	function onMouseDown() {
@@ -9,21 +9,28 @@
 	}
 	function onMouseUp() {
 		moving = false;
-	}	
+	}
 </script>
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove={(e) => { 
-		if (moving)	onMouseMove(e, node.id)
-  }
-} />	
-	
-<div on:mousedown={onMouseDown} class="Node" style="left: {node.position.x}px; top: {node.position.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};">
-	<slot/>
+<svelte:window
+	on:mouseup={onMouseUp}
+	on:mousemove={(e) => {
+		if (moving) onMouseMove(e, node.id);
+	}}
+/>
+
+<div
+	on:mousedown={onMouseDown}
+	class="Node"
+	style="left: {node.position.x}px; top: {node.position
+		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};"
+>
+	<slot />
 </div>
-	
+
 <style>
 	.Node {
-	    position: absolute;
+		position: absolute;
 		display: grid;
 		user-select: none;
 		cursor: move;
