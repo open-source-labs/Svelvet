@@ -159,7 +159,8 @@
 				Svelvet is open source and has room for many more features. We welcome contributors!
 			</p>
 			<a
-				href="/docs/installation"
+				href="https://github.com/oslabs-beta/Svelvet"
+				target="_blank"
 				class="self-center w-fit border border-white mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
 				>See Our GitHub</a
 			>
