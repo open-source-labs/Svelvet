@@ -26,7 +26,7 @@
 		Svelvet components are built with unit, integration and regression tests using <a
 			class="text-rose-600 underline underline-offset-1"
 			target="_blank"
-			href="https://jestjs.io/">@jest</a
+			href="https://vitest.dev/">@vitest</a
 		>,
 		<a
 			class="text-rose-600 underline underline-offset-1"

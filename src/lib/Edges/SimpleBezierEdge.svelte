@@ -1,6 +1,6 @@
 <script>
 	import BaseEdge from '$lib/Edges/BaseEdge.svelte';
-	import { Position } from '$lib/types/types';
+	import { Position } from '$lib/types/utils';
 
 	function getControl({ pos, x1, y1, x2, y2 }) {
 		let ctX;

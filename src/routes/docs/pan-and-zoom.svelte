@@ -1,18 +1,72 @@
 <script lang="ts">
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+
+	// Example data for how library is to be used
+	const initialNodes = [
+		{
+			id: 11,
+			type: 'input',
+			position: { x: 100, y: 50 },
+			data: { label: 'Input Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 12,
+			type: 'default',
+			position: { x: 350, y: 250 },
+			data: { label: 'Default Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 13,
+			type: 'output',
+			position: { x: 40, y: 400 },
+			data: { label: 'Another Output!' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		},
+		{
+			id: 14,
+			type: 'output',
+			position: { x: 400, y: 530 },
+			data: { label: 'You found me!' },
+			width: 175,
+			height: 40,
+			bgColor: '#D3FFC3',
+			textColor: '#FF7C70'
+		},
+		{
+			id: 15,
+			type: 'output',
+			position: { x: 50, y: 200 },
+			data: { label: 'Output Node' },
+			width: 175,
+			height: 40,
+			bgColor: 'white'
+		}
+	];
+
+	const initialEdges = [
+		{ id: 'e1-2', source: 11, target: 12, label: 'labeled edge' },
+		{ id: 'e2-3', source: 12, target: 13, label: 'animated edge', animate: true },
+		{ id: 'e2-4', source: 12, target: 14, label: 'pan to see below!', animate: true },
+		{ id: 'e1-5', source: 11, target: 15 }
+	];
 </script>
 
 <h2 class="text-4xl font-semibold mb-8">Panning and Zooming</h2>
 <p class="my-8 text-gray-600">
 	The pan and zoom feature of Svelvet allows you to pan by dragging and zoom by scrolling.
+	<br />
+	Play around with the flow diagram below!
 </p>
-<div class="my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
-	<iframe
-		src="https://codesandbox.io/embed/recursing-rgb-lde6vt?autoresize=1&codemirror=1&fontsize=12&hidenavigation=1&module=%2FApp.svelte&theme=light&view=split&editorsize=50&hidedevtools=1"
-		style="width:100%; height:600px; border:0; border-radius: 8px; overflow:hidden;"
-		title="recursing-rgb-lde6vt"
-		allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-		sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-	/>
+<div class="overflow-hidden my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
+	<Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} />
 </div>
 
 <style>

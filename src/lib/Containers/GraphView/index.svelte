@@ -6,6 +6,7 @@
 	import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
 	import Node from '$lib/Nodes/index.svelte';
 	import { nodeSelected, widthStore, heightStore } from '$lib/stores/store';
+	import StraightEdge from '$lib/Edges/StraightEdge.svelte';
 
 	let d3 = {
 		zoom,
@@ -56,7 +57,11 @@
 	<g>
 		{#each $derivedEdges as edge}
 			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
-			<SimpleBezierEdge {edge} />
+			{#if edge.type === 'straight'}
+				<StraightEdge {edge} />
+			{:else}
+				<SimpleBezierEdge {edge} />
+			{/if}
 			<EdgeAnchor x={edge.targetX} y={edge.targetY} />
 		{/each}
 	</g>
