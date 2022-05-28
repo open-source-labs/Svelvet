@@ -29,7 +29,7 @@
 	on:mousedown={onMouseDown}
 	class="Node"
 	style="left: {node.position.x}px; top: {node.position
-		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor};"
+		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor}; border-color: {node.borderColor}; color: {node.textColor};"
 >
 	<slot />
 </div>

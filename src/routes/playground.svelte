@@ -58,18 +58,7 @@
 	];
 </script>
 
-<h1>Hello, this is a h1 element</h1>
-<div class="Example">This is a div element</div>
 <Svelvet nodes={initialNodes} edges={initialEdges} />
-<h1>Goodbye</h1>
-<div class="Example">Another div element</div>
 
 <style>
-	.Example {
-		display: grid;
-		width: 100px;
-		height: 50px;
-		border: 2px solid black;
-		position: relative;
-	}
 </style>
