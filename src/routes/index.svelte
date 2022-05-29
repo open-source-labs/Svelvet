@@ -1,9 +1,10 @@
 <script>
 	import avatar from '../assets/avatar.png';
-	import linkedin from '../assets/linkedin.svg';
-	import github from '../assets/github.svg';
+	import linkedin from '../assets/linkedin-svgrepo-com.svg';
+	import github from '../assets/github-svgrepo-com.svg';
 	import anu from '../assets/profiles/Anu-small.png';
 	import andrew from '../assets/profiles/Andrew-small.png';
+	import alexander from '../assets/profiles/Alexander-small.png';
 
 	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
 	// import Svelvet from 'svelvet';
@@ -12,7 +13,7 @@
 		{
 			id: 1,
 			type: 'input',
-			position: { x: 215, y: 40 },
+			position: { x: 190, y: 40 },
 			data: { label: 'Input Node' },
 			width: 175,
 			height: 40,
@@ -21,7 +22,7 @@
 		{
 			id: 2,
 			type: 'default',
-			position: { x: 380, y: 160 },
+			position: { x: 355, y: 160 },
 			data: { label: 'Default Node' },
 			width: 175,
 			height: 40,
@@ -30,7 +31,7 @@
 		{
 			id: 3,
 			type: 'output',
-			position: { x: 215, y: 260 },
+			position: { x: 190, y: 260 },
 			data: { label: 'Output Node' },
 			width: 175,
 			height: 40,
@@ -39,7 +40,7 @@
 		{
 			id: 4,
 			type: 'output',
-			position: { x: 50, y: 160 },
+			position: { x: 25, y: 160 },
 			data: { label: 'Drag me!' },
 			width: 175,
 			height: 40,
@@ -48,7 +49,7 @@
 		{
 			id: 5,
 			type: 'output',
-			position: { x: 380, y: 360 },
+			position: { x: 355, y: 360 },
 			data: { label: 'Custom Node' },
 			width: 175,
 			height: 40,
@@ -57,7 +58,7 @@
 		{
 			id: 6,
 			type: 'output',
-			position: { x: 97.5, y: 360 },
+			position: { x: 72.5, y: 360 },
 			data: { label: 'Important Square!' },
 			width: 80,
 			height: 80,
@@ -91,32 +92,32 @@
 	</p>
 	<a
 		href="/docs/installation"
-		class="border shadow-lg hover:shadow-transparent rounded-full px-6 py-3 hover:ease-in duration-100 hover:text-rose-400 hover:bg-transparent bg-rose-400 text-white border-rose-400"
+		class="border shadow-lg hover:shadow-transparent rounded-full px-6 py-3 hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561]"
 		>Get Started</a
 	>
 </div>
 <div class="h-[700px] md:h-[600px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
 	<div class="flex flex-col md:flex-row h-full m-12 md:m-24 md:gap-10">
 		<div class="w-full md:w-1/2 h-full flex flex-col justify-center">
-			<h3 class="text-4xl font-bold mb-4 mt-8 text-center md:text-right">
-				Beautiful and Customizable
-			</h3>
-			<p class="mb-4 text-gray-100 text-center md:text-right">
+			<h3 class="text-4xl font-bold my-4 text-center md:text-right">Beautiful and Customizable</h3>
+			<p class=" text-gray-100 text-center md:text-right">
 				Svelvet allows you to easily create intuitive flow diagrams using pre-built components with
 				seamless zooming and panning, draggable interactivity, customizable edges and nodes and
 				more!
 			</p>
 			<a
 				href="/docs/custom-nodes"
-				class="hidden shadow-md hover:shadow-transparent md:flex self-end w-fit border border-white mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
-				>See How to Customize</a
+				class="hidden shadow-md hover:shadow-transparent md:flex self-end w-fit border-2 border-transparent hover:border-white mt-5 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
+				>Learn More</a
 			>
 		</div>
 		<div
-			class="w-full md:w-1/2 h-[350px] md:h-full mb-8 md:py-12 flex flex-col justify-center text-center"
+			class="w-full md:w-1/2 h-[350px] md:h-full mb-16 md:py-12 flex flex-col justify-center text-center"
 		>
-			<div class="bg-white max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md">
-				<Svelvet nodes={initialNodes} edges={initialEdges} />
+			<div
+				class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
+			>
+				<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} />
 			</div>
 		</div>
 	</div>
@@ -148,79 +149,91 @@
 			</p>
 			<a
 				href="/docs/installation"
-				class="hidden md:flex shadow-md hover:shadow-transparent w-fit border mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-rose-400 hover:bg-transparent bg-rose-400 text-white border-rose-400"
-				>Installation</a
+				class="hidden md:flex shadow-md hover:shadow-transparent w-fit border mt-5 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561]"
+				>Install Now</a
 			>
 		</div>
 	</div>
 </div>
-<div class="h-[420px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
-	<div class=" h-full my-12 md:m-24">
+<div class="h-[640px] md:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
+	<div class=" h-full m-12 md:m-24">
 		<div class=" h-full w-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
 
-			<div class="flex justify-around mx-24 my-4">
-				<div class="text-center grid place-items-center">
-					<img src={anu} alt="" class="h-28 rounded-xl" />
-					<p class="mt-3 text-lg">Anu Sharma</p>
-					<p class="mb-3 text-sm"><em>co-creator</em></p>
-					<div class="flex gap-3">
-						<a target="_blank" href="https://www.linkedin.com/in/anu-sharma-6936a686/"
-							><img src={linkedin} alt="LinkedIn Icon" /></a
-						>
-						<a target="_blank" href="https://github.com/anulepau"
-							><img src={github} alt="GitHub Icon" /></a
-						>
+			<div class="flex flex-col md:flex-row my-4 items-center">
+				<div class="flex justify-around w-1/2 m-2 gap-2 md:gap-0">
+					<div
+						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
+					>
+						<img src={anu} alt="" class="hidden md:block h-28 rounded-full" />
+						<p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
+						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+						<div class="flex gap-3 ml-3">
+							<a target="_blank" href="https://www.linkedin.com/in/anu-sharma-6936a686/"
+								><img src={linkedin} alt="LinkedIn Icon" /></a
+							>
+							<a target="_blank" href="https://github.com/anulepau"
+								><img src={github} alt="GitHub Icon" /></a
+							>
+						</div>
+					</div>
+					<div
+						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
+					>
+						<img src={andrew} alt="" class="hidden md:block h-28 rounded-full" />
+						<p class="mt-3 mb-1 text-lg leading-6">Andrew <br />Widjaja</p>
+						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+						<div class="flex gap-3 ml-3">
+							<a target="_blank" href="https://www.linkedin.com/in/andrew-widjaja/"
+								><img src={linkedin} alt="LinkedIn Icon" /></a
+							>
+							<a target="_blank" href="https://github.com/andrew-widjaja"
+								><img src={github} alt="GitHub Icon" /></a
+							>
+						</div>
 					</div>
 				</div>
-				<div class="text-center grid place-items-center">
-					<img src={andrew} alt="" class="h-28 rounded-xl" />
-					<p class="mt-3 text-lg">Andrew Widjaja</p>
-					<p class="mb-3 text-sm"><em>co-creator</em></p>
-					<div class="flex gap-3">
-						<a target="_blank" href="https://www.linkedin.com/in/andrew-widjaja/"
-							><img src={linkedin} alt="LinkedIn Icon" /></a
-						>
-						<a target="_blank" href="https://github.com/andrew-widjaja"
-							><img src={github} alt="GitHub Icon" /></a
-						>
+				<div class="flex justify-around w-1/2 gap-2 md:gap-0">
+					<div
+						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
+					>
+						<img src={avatar} alt="" class="hidden md:block h-28 rounded-full" />
+						<p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
+						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+						<div class="flex gap-3 ml-3">
+							<a target="_blank" href="https://www.linkedin.com/in/awillettnyc/"
+								><img src={linkedin} alt="LinkedIn Icon" /></a
+							>
+							<a target="_blank" href="https://github.com/awillettnyc"
+								><img src={github} alt="GitHub Icon" /></a
+							>
+						</div>
 					</div>
-				</div>
-				<div class="text-center grid place-items-center">
-					<img src={avatar} alt="" class="h-28 rounded-xl" />
-					<p class="mt-3 text-lg">Aaron Willet</p>
-					<p class="mb-3 text-sm"><em>co-creator</em></p>
-					<div class="flex gap-3">
-						<a target="_blank" href="https://www.linkedin.com/in/awillettnyc/"
-							><img src={linkedin} alt="LinkedIn Icon" /></a
-						>
-						<a target="_blank" href="https://github.com/awillettnyc"
-							><img src={github} alt="GitHub Icon" /></a
-						>
-					</div>
-				</div>
-				<div class="text-center grid place-items-center">
-					<img src={avatar} alt="" class="h-28 rounded-xl" />
-					<p class="mt-3 text-lg">Alexander Zambrano</p>
-					<p class="mb-3 text-sm"><em>co-creator</em></p>
-					<div class="flex gap-3">
-						<a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
-							><img src={linkedin} alt="LinkedIn Icon" /></a
-						>
-						<a target="_blank" href="https://github.com/azambran21"
-							><img src={github} alt="GitHub Icon" /></a
-						>
+					<div
+						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
+					>
+						<img src={alexander} alt="" class="hidden md:block h-28 rounded-full" />
+						<p class="mt-3 mb-1 text-lg leading-6">Alexander <br />Zambrano</p>
+						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+						<div class="flex gap-3 ml-3">
+							<a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
+								><img src={linkedin} alt="LinkedIn Icon" /></a
+							>
+							<a target="_blank" href="https://github.com/azambran21"
+								><img src={github} alt="GitHub Icon" /></a
+							>
+						</div>
 					</div>
 				</div>
 			</div>
-			<p class=" text-gray-100 text-center">
+			<p class=" text-gray-100 text-center mt-5 md:mb-0">
 				Svelvet is open source and has room for many more features. We welcome contributors!
 			</p>
 			<a
 				href="https://github.com/oslabs-beta/Svelvet"
 				target="_blank"
-				class="self-center w-fit border border-white mt-4 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
-				>See Our GitHub</a
+				class="self-center w-fit border-2 border-transparent hover:border-white mt-4 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
+				>See Svelvet on GitHub</a
 			>
 		</div>
 	</div>
