@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	import Svelvet from 'svelvet';
 
 	// Example data for how library is to be used
 	const initialNodes = [

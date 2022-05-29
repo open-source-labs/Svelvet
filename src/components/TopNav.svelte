@@ -1,7 +1,6 @@
 <script lang="ts">
 	import logo from '../assets/Logo 1.svg';
 	import { page } from '$app/stores';
-	import { fade } from 'svelte/transition';
 	import MobileHomeNav from './MobileHomeNav.svelte';
 	import MobileDocsNav from './MobileDocsNav.svelte';
 
@@ -23,7 +22,6 @@
 	class="static hidden md:flex justify-between px-8 py-3 w-screen border-b h-16 bg-white"
 >
 	<div class="flex items-center justify-center">
-		<!-- <svelte:component this={Logo} /> -->
 		<img src={logo} alt="Logo" class="aspect-ratio-auto h-8" />
 		<a
 			id="home"
@@ -33,7 +31,7 @@
 			}}
 			class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6">svelvet</a
 		>
-		<p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v0.0.5</p>
+		<p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v0.0.6</p>
 	</div>
 	<nav class="space-x-7 text-sm text-gray-500 font-medium flex items-center">
 		<a href="/" id="home" class="hover:text-rose-500 {activeLink === '/' ? 'text-rose-500' : ''}"

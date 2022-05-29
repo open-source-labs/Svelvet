@@ -23,8 +23,6 @@
 	$: activeLink = `${$page.url.pathname}`;
 </script>
 
-<!-- <nav class="border-r h-screen w-80 px-8 overflow-y-auto"> -->
-<!-- {#if $page.url.pathname === '/docs'} -->
 <div class="hidden md:block">
 	<div class="flex flex-col my-5 text-sm w-full">
 		<p class="font-medium text-gray-700 leading-9">Getting Started</p>
@@ -69,39 +67,3 @@
 		</div>
 	</div>
 </div>
-<!-- {/if} -->
-
-<!-- Examples page Side Nav
-	{#if $page.url.pathname === '/examples'}
-		<div class="flex flex-col my-5 text-sm">
-			<a href="/basic-usage" class="font-medium text-gray-700 leading-9">Basic Usage</a>
-		</div>
-		<div class="flex flex-col my-5 text-sm">
-			<p class="font-medium text-gray-700 leading-9">Nodes</p>
-			<div class="flex flex-col leading-9 text-gray-500 ">
-				{#each nodesLinks as link}
-					<a
-						id={link[0]}
-						href={link[1]}
-						class="border-l border-gray-100 px-4 hover:border-rose-300 hover:text-gray-700"
-						>{link[0]}</a
-					>
-				{/each}
-			</div>
-		</div>
-		<div class="flex flex-col my-5 text-sm">
-			<p class="font-medium text-gray-700 leading-9">Edges</p>
-			<div class="flex flex-col leading-9 text-gray-500 ">
-				{#each edgesLinks as link}
-					<a
-						id={link[0]}
-						href={link[1]}
-						class="border-l border-gray-100 px-4 hover:border-rose-300 hover:text-gray-700"
-						>{link[0]}</a
-					>
-				{/each}
-			</div>
-		</div>
-	{/if} -->
-
-<!-- </nav> -->

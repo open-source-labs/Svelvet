@@ -56,12 +56,12 @@
 	<title>svg container</title>
 	<g>
 		{#each $derivedEdges as edge}
-			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
 			{#if edge.type === 'straight'}
 				<StraightEdge {edge} />
 			{:else}
 				<SimpleBezierEdge {edge} />
 			{/if}
+			<EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
 			<EdgeAnchor x={edge.targetX} y={edge.targetY} />
 		{/each}
 	</g>

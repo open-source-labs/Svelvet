@@ -11,12 +11,6 @@
 
 	$: path = `M ${edge.sourceX},${edge.sourceY}L ${edge.targetX},${edge.targetY}`;
 
-	// $: [centerX, centerY, xOffset, yOffset] = [
-	//     (edge.targetX < edge.sourceX ? edge.targetX + xOffset : edge.targetX - xOffset),
-	//     (edge.targetY < edge.sourceY ? edge.targetY + yOffset : edge.targetY - yOffset),
-	//     (Math.abs(edge.targetX - edge.sourceX) / 2),
-	//     (Math.abs(edge.targetY - edge.sourceY) / 2)
-
 	$: baseEdgeProps = {
 		...edge,
 		path: path,
