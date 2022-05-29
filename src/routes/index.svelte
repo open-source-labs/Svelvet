@@ -1,5 +1,13 @@
 <script>
+	import avatar from '../assets/avatar.png';
+	import linkedin from '../assets/linkedin.svg';
+	import github from '../assets/github.svg';
+	import anu from '../assets/profiles/Anu-small.png';
+	import andrew from '../assets/profiles/Andrew-small.png';
+
 	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from 'svelvet';
+
 	const initialNodes = [
 		{
 			id: 1,
@@ -110,11 +118,6 @@
 			<div class="bg-white max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md">
 				<Svelvet nodes={initialNodes} edges={initialEdges} />
 			</div>
-			<!-- <div
-				class="sm:hidden bg-white max-w-[600px] h-full overflow-hidden border rounded-xl shadow-md"
-			>
-				<Svelvet nodes={otherNodes} edges={otherEdges} />
-			</div> -->
 		</div>
 	</div>
 </div>
@@ -151,16 +154,72 @@
 		</div>
 	</div>
 </div>
-<div class="h-[320px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
-	<div class=" h-full m-12 md:m-24">
+<div class="h-[420px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
+	<div class=" h-full my-12 md:m-24">
 		<div class=" h-full w-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
-			<p class="mb-4 text-gray-100 text-center">
+
+			<div class="flex justify-around mx-24 my-4">
+				<div class="text-center grid place-items-center">
+					<img src={anu} alt="" class="h-28 rounded-xl" />
+					<p class="mt-3 text-lg">Anu Sharma</p>
+					<p class="mb-3 text-sm"><em>co-creator</em></p>
+					<div class="flex gap-3">
+						<a target="_blank" href="https://www.linkedin.com/in/anu-sharma-6936a686/"
+							><img src={linkedin} alt="LinkedIn Icon" /></a
+						>
+						<a target="_blank" href="https://github.com/anulepau"
+							><img src={github} alt="GitHub Icon" /></a
+						>
+					</div>
+				</div>
+				<div class="text-center grid place-items-center">
+					<img src={andrew} alt="" class="h-28 rounded-xl" />
+					<p class="mt-3 text-lg">Andrew Widjaja</p>
+					<p class="mb-3 text-sm"><em>co-creator</em></p>
+					<div class="flex gap-3">
+						<a target="_blank" href="https://www.linkedin.com/in/andrew-widjaja/"
+							><img src={linkedin} alt="LinkedIn Icon" /></a
+						>
+						<a target="_blank" href="https://github.com/andrew-widjaja"
+							><img src={github} alt="GitHub Icon" /></a
+						>
+					</div>
+				</div>
+				<div class="text-center grid place-items-center">
+					<img src={avatar} alt="" class="h-28 rounded-xl" />
+					<p class="mt-3 text-lg">Aaron Willet</p>
+					<p class="mb-3 text-sm"><em>co-creator</em></p>
+					<div class="flex gap-3">
+						<a target="_blank" href="https://www.linkedin.com/in/awillettnyc/"
+							><img src={linkedin} alt="LinkedIn Icon" /></a
+						>
+						<a target="_blank" href="https://github.com/awillettnyc"
+							><img src={github} alt="GitHub Icon" /></a
+						>
+					</div>
+				</div>
+				<div class="text-center grid place-items-center">
+					<img src={avatar} alt="" class="h-28 rounded-xl" />
+					<p class="mt-3 text-lg">Alexander Zambrano</p>
+					<p class="mb-3 text-sm"><em>co-creator</em></p>
+					<div class="flex gap-3">
+						<a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
+							><img src={linkedin} alt="LinkedIn Icon" /></a
+						>
+						<a target="_blank" href="https://github.com/azambran21"
+							><img src={github} alt="GitHub Icon" /></a
+						>
+					</div>
+				</div>
+			</div>
+			<p class=" text-gray-100 text-center">
 				Svelvet is open source and has room for many more features. We welcome contributors!
 			</p>
 			<a
-				href="/docs/installation"
-				class="self-center w-fit border border-white mt-5 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
+				href="https://github.com/oslabs-beta/Svelvet"
+				target="_blank"
+				class="self-center w-fit border border-white mt-4 py-1 px-4 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-rose-700 "
 				>See Our GitHub</a
 			>
 		</div>
@@ -211,11 +270,6 @@
 		font-size: 16px;
 	}
 
-	/* @keyframes typing {
-		from {
-			width: 0;
-		}
-	} */
 	@keyframes typing {
 		0% {
 			width: 0%;

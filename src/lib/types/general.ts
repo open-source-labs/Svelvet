@@ -30,4 +30,3 @@ export interface Connection {
 
 // // type for zoom in and
 // export type ZoomInOut = (options?: ViewportHelperFunctionOptions) => void;
-

@@ -1,7 +1,6 @@
 <script>
 	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
 
-	// Example data for how library is to be used
 	const initialNodes = [
 		{
 			id: 1,
@@ -38,27 +37,13 @@
 			width: 175,
 			height: 40,
 			bgColor: 'white'
-		},
-		{
-			id: 5,
-			type: 'output',
-			position: { x: 50, y: 200 },
-			data: { label: 'another Output!' },
-			width: 175,
-			height: 40,
-			bgColor: 'white'
 		}
 	];
-
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, target: 2, label: 'labeled edge' },
+		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'labeled edge' },
 		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
-		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true },
-		{ id: 'e1-5', source: 1, target: 5 }
+		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true }
 	];
 </script>
 
 <Svelvet nodes={initialNodes} edges={initialEdges} />
-
-<style>
-</style>
