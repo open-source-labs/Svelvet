@@ -6,7 +6,6 @@
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
 	import StraightEdge from '$lib/Edges/StraightEdge.svelte';
 	import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
-	import EdgeArrow from '$lib/Edges/EdgeArrow.svelte';
 	import Node from '$lib/Nodes/index.svelte';
 	import { nodeSelected, widthStore, heightStore } from '$lib/stores/store';
 
