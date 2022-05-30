@@ -2,11 +2,13 @@
 	import { onMount } from 'svelte';
 	import { zoom, zoomTransform } from 'd3-zoom';
 	import { select, selectAll } from 'd3-selection';
+
 	import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
+	import StraightEdge from '$lib/Edges/StraightEdge.svelte';
 	import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
+	import EdgeArrow from '$lib/Edges/EdgeArrow.svelte';
 	import Node from '$lib/Nodes/index.svelte';
 	import { nodeSelected, widthStore, heightStore } from '$lib/stores/store';
-	import StraightEdge from '$lib/Edges/StraightEdge.svelte';
 
 	let d3 = {
 		zoom,
@@ -53,7 +55,6 @@
 </div>
 
 <svg class="Edges" viewBox={`0 0 ${$widthStore} ${$heightStore}`}>
-	<title>svg container</title>
 	<g>
 		{#each $derivedEdges as edge}
 			{#if edge.type === 'straight'}

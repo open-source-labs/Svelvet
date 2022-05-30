@@ -23,12 +23,9 @@
 <style>
 	.Flow {
 		position: relative;
-		/* border: 1px solid black; */
-		/* width: 600px;
-		height: 600px;	 */
 		overflow: hidden;
 		display: grid;
 		font-family: 'Segoe UI', sans-serif;
-		/* background-color: white; */
+		background-color: white;
 	}
 </style>

@@ -2,15 +2,20 @@
 	import EdgeText from '$lib/Edges/EdgeText.svelte';
 	export let baseEdgeProps;
 
-	$: ({ sourceX, sourceY, targetX, targetY, path, centerX, centerY, xOffset, yOffset, animate } =
-		baseEdgeProps);
+	$: ({ sourceX, sourceY, targetX, targetY, path, animate, 
+		// centerX, centerY, xOffset, yOffset 
+		} = baseEdgeProps);
 	$: edgeTextProps = {
-		x: centerX,
-		y: centerY,
+		// x: centerX,
+		// y: centerY,
+		sourceX: sourceX,
+		sourceY: sourceY,
+		targetX: targetX,
+		targetY: targetY,
+		label: baseEdgeProps.label
 		// xOffset: xOffset,
 		// yOffset: yOffset,
 		// label: baseEdgeProps.data.label
-		label: baseEdgeProps.label
 	};
 </script>
 

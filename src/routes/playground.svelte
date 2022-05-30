@@ -40,7 +40,7 @@
 		}
 	];
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'labeled edge' },
+		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'label' },
 		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
 		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true }
 	];
