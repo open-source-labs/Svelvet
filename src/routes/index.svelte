@@ -88,15 +88,14 @@
 		Mapping out your ideas with Svelte has never been easier
 	</h1>
 	<p class="text-lg md:mx-16 my-8 text-gray-500">
-		A light-weight Svelte component library for building node-based editors and interactive diagrams
+		<code class="bg-rose-100 rounded-lg p-1">Svelvet</code> is a lightweight Svelte component library
+		for building interactive node-based flow diagrams
 	</p>
-	<a
-		href="/docs/installation"
-		class="border shadow-lg hover:shadow-transparent rounded-full px-6 py-3 hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561]"
-		>Get Started</a
-	>
+	<a href="/docs/installation" class="px-6 py-3 btn-primary">Get Started</a>
 </div>
-<div class="h-[700px] md:h-[600px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
+<div
+	class="h-[700px] md:h-[600px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white shadow-xl"
+>
 	<div class="flex flex-col md:flex-row h-full m-12 md:m-24 md:gap-10">
 		<div class="w-full md:w-1/2 h-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold my-4 text-center md:text-right">Beautiful and Customizable</h3>
@@ -147,25 +146,21 @@
 				<code class="bg-rose-100 rounded-lg p-1">Svelvet</code> component and you're ready to show off
 				your interactive diagram - no extra configuration needed!
 			</p>
-			<a
-				href="/docs/installation"
-				class="hidden md:flex shadow-md hover:shadow-transparent w-fit border mt-5 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561]"
-				>Install Now</a
-			>
+			<a href="/docs/installation" class="hidden md:flex mt-5 py-2 px-5 btn-primary">Install Now</a>
 		</div>
 	</div>
 </div>
-<div class="h-[640px] md:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white">
-	<div class=" h-full m-12 md:m-24">
+<div
+	class="h-[640px] contributors:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white shadow-xl"
+>
+	<div class=" h-full m-12 contributors:m-24">
 		<div class=" h-full w-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
 
-			<div class="flex flex-col md:flex-row my-4 items-center">
-				<div class="flex justify-around w-1/2 m-2 gap-2 md:gap-0">
-					<div
-						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
-					>
-						<img src={anu} alt="" class="hidden md:block h-28 rounded-full" />
+			<div class="flex flex-col contributors:flex-row my-4 items-center">
+				<div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0">
+					<div class="contributor-card">
+						<img src={anu} alt="" class="hidden contributors:block h-28 rounded-full" />
 						<p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
 						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
 						<div class="flex gap-3 ml-3">
@@ -177,10 +172,8 @@
 							>
 						</div>
 					</div>
-					<div
-						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
-					>
-						<img src={andrew} alt="" class="hidden md:block h-28 rounded-full" />
+					<div class="contributor-card">
+						<img src={andrew} alt="" class="hidden contributors:block h-28 rounded-full" />
 						<p class="mt-3 mb-1 text-lg leading-6">Andrew <br />Widjaja</p>
 						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
 						<div class="flex gap-3 ml-3">
@@ -193,11 +186,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="flex justify-around w-1/2 gap-2 md:gap-0">
-					<div
-						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
-					>
-						<img src={avatar} alt="" class="hidden md:block h-28 rounded-full" />
+				<div class="flex justify-around w-1/2 gap-2 contributors:gap-0">
+					<div class="contributor-card">
+						<img src={avatar} alt="" class="hidden contributors:block h-28 rounded-full" />
 						<p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
 						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
 						<div class="flex gap-3 ml-3">
@@ -209,10 +200,8 @@
 							>
 						</div>
 					</div>
-					<div
-						class=" min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg"
-					>
-						<img src={alexander} alt="" class="hidden md:block h-28 rounded-full" />
+					<div class="contributor-card">
+						<img src={alexander} alt="" class="hidden contributors:block h-28 rounded-full" />
 						<p class="mt-3 mb-1 text-lg leading-6">Alexander <br />Zambrano</p>
 						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
 						<div class="flex gap-3 ml-3">

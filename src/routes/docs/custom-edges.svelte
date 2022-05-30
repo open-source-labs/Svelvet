@@ -6,10 +6,10 @@
 </div>
 
 <p class="text-gray-600">
-	Svelvet also allows you to customize your edges. Currently, there are two path types - straight
-	and bezier. You can also turn on animation by setting <code class="bg-rose-100 rounded-lg p-1"
-		>animation: true</code
-	>. Lastly, optionally annotate your edges by providing a
+	<code class="bg-rose-100 rounded-lg p-1">Svelvet</code> also allows you to customize your edges.
+	Currently, there are two path types - straight and bezier. You can also turn on animation by
+	setting <code class="bg-rose-100 rounded-lg p-1">animation: true</code>. Lastly, optionally
+	annotate your edges by providing a
 	<code class="bg-rose-100 rounded-lg p-1">label</code>.
 </p>
 

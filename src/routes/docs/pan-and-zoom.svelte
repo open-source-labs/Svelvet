@@ -62,7 +62,8 @@
 
 <h2 class="text-4xl font-semibold mb-8">Panning and Zooming</h2>
 <p class="my-8 text-gray-600">
-	The pan and zoom feature of Svelvet allows you to pan by dragging and zoom by scrolling.
+	The pan and zoom feature of <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows you to
+	pan by dragging and zoom by scrolling.
 	<br />
 	Play around with the flow diagram below!
 </p>

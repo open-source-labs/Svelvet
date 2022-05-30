@@ -3,8 +3,9 @@
 
 <h2 class="text-4xl font-semibold mb-8">Basic Usage</h2>
 <p class="my-8 text-gray-600">
-	This is a typical example of a Svelvet graph with multiple nodes and edges. You can see different
-	node types (input, default, output), the default edge type (bezier) and edge labels.
+	This is a typical example of a <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> graph with multiple
+	nodes and edges. You can see different node types (input, default, output), the default edge type (bezier)
+	and edge labels.
 </p>
 <div class="my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
 	<iframe

@@ -42,6 +42,7 @@
 			<li class:bg-rose-100={activeLink === '/'}>
 				<a on:click={toggleMenu} href="/" class="block py-5 font-medium text-gray-800">Home</a>
 			</li>
+
 			<li>
 				<p class="block py-5 font-medium text-gray-800">Getting Started</p>
 			</li>
@@ -54,6 +55,7 @@
 			<li class:bg-rose-100={activeLink.includes('core-concepts')}>
 				<a on:click={toggleMenu} href="/docs/core-concepts" class="block py-5">Core Concepts</a>
 			</li>
+
 			<li>
 				<p class="block py-5 font-medium text-gray-800">Guides</p>
 			</li>
@@ -69,6 +71,7 @@
 			<li class:bg-rose-100={activeLink.includes('testing')}>
 				<a on:click={toggleMenu} href="/docs/testing" class="block py-5">Testing</a>
 			</li>
+
 			<li class:bg-rose-100={activeLink.includes('blog')}>
 				<a on:click={toggleMenu} href="/blog" class="block py-5 font-medium text-gray-800">Blog</a>
 			</li>
