@@ -14,18 +14,35 @@
 	</p>
 </div>
 <div>
-	<h3 class="text-xl font-semibold mt-12">Quick Start</h3>
+	<h3 class="text-xl font-semibold mt-12">Use Cases</h3>
 	<p class="my-4 text-gray-600">
-		Here's a quick example to get you started. Two arrays and the <code
-			class="bg-rose-100 rounded-lg p-1">Svelvet</code
-		> component are all you need! Simply alter the node and edge properties to your liking.
+		There are many reasons why you may want to include a flow diagram in your application or
+		website. Some of these use cases include:
+	</p>
+	<ul class="ml-8 text-gray-600">
+		<li>User flows</li>
+		<li>Project management</li>
+		<li>HR organization charts</li>
+		<li>Operational procedures</li>
+		<li>Business planning</li>
+		<li>... and so much more!</li>
+	</ul>
+	<p class="my-4 text-gray-600">
+		Below is a quick example of using <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> to display
+		a diagram mapping out user flow in an application.
 	</p>
 </div>
+
 <iframe
-	src="https://codesandbox.io/embed/quick-start-71vweu?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=light&view=split"
-	style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-	title="quick-start"
+	src="https://codesandbox.io/embed/core-concepts-yixl8c?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark&view=preview"
+	style="width:100%; height:600px; border:0; border-radius: 8px; overflow:hidden;"
+	title="core-concepts"
 	allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
 	sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-	class="my-4"
 />
+
+<style>
+	li {
+		list-style-type: circle;
+	}
+</style>
