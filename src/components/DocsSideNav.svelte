@@ -15,9 +15,11 @@
 		['Testing', 'testing']
 	];
 
-	const APIReferenceLinks = [
-		['Nodes', 'api-nodes'],
-		['Edges', 'api-edges']
+	const communityLinks = [
+		['Blog', '/blog'],
+		['GitHub', 'https://github.com/oslabs-beta/Svelvet'],
+		['LinkedIn', 'https://www.linkedin.com/company/svelvet/'],
+		['Twitter', 'https://twitter.com/Svelvet_OSLabs']
 	];
 
 	$: activeLink = `${$page.url.pathname}`;
@@ -52,13 +54,17 @@
 			{/each}
 		</div>
 	</div>
+
+	<!-- Uncomment Once API Docs are Implemented -->
+
 	<div class="flex flex-col my-5 text-sm">
-		<p class="font-medium text-gray-700 leading-9">API Reference</p>
+		<p class="font-medium text-gray-700 leading-9">Community</p>
 		<div class="flex flex-col leading-9 text-gray-500 ">
-			{#each APIReferenceLinks as link}
+			{#each communityLinks as link}
 				<a
 					id={link[0]}
-					href="/docs/{link[1]}"
+					href={link[1]}
+					target="_blank"
 					class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
 						? 'text-rose-500 hover:text-rose-500 border-rose-300'
 						: 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
