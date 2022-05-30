@@ -4,11 +4,13 @@
 <h2 class="text-4xl font-semibold mb-8">Basic Usage</h2>
 <p class="my-8 text-gray-600">
 	This is a typical example of a <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> graph with multiple
-	nodes and edges. You can see different node types (input, default, output), the default edge type (bezier)
+	nodes and edges. Notice the different node types (input, default, output), the default edge type (bezier)
 	and edge labels.
 </p>
 <p class="my-8 text-gray-600">
-	Two arrays and the
+	A <code class="bg-rose-100 rounded-lg p-1">nodes</code> array, an
+	<code class="bg-rose-100 rounded-lg p-1">edges</code>
+	array and the
 	<code class="bg-rose-100 rounded-lg p-1">Svelvet</code> component are all you need! Simply alter the
 	node and edge properties to your liking.
 </p>

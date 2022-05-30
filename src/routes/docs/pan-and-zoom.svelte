@@ -53,8 +53,8 @@
 	];
 
 	const initialEdges = [
-		{ id: 'e1-2', source: 11, target: 12, label: 'labeled edge' },
-		{ id: 'e2-3', source: 12, target: 13, label: 'animated edge', animate: true },
+		{ id: 'e1-2', source: 11, target: 12 },
+		{ id: 'e2-3', source: 12, target: 13, animate: true },
 		{ id: 'e2-4', source: 12, target: 14, label: 'pan to see below!', animate: true },
 		{ id: 'e1-5', source: 11, target: 15 }
 	];
@@ -63,7 +63,7 @@
 <h2 class="text-4xl font-semibold mb-8">Panning and Zooming</h2>
 <p class="my-8 text-gray-600">
 	The pan and zoom feature of <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows you to
-	pan by dragging and zoom by scrolling.
+	pan by <strong>dragging</strong> and zoom by <strong>scrolling</strong>.
 	<br />
 	Play around with the flow diagram below!
 </p>

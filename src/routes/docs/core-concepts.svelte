@@ -29,7 +29,7 @@
 	</ul>
 	<p class="my-4 text-gray-600">
 		Below is a quick example of using <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> to display
-		a diagram mapping out user flow in an application.
+		a diagram mapping out the purchase flow of an application.
 	</p>
 </div>
 
