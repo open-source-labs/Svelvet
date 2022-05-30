@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { zoom, zoomTransform } from 'd3-zoom';
 	import { select, selectAll } from 'd3-selection';

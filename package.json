@@ -1,7 +1,15 @@
 {
 	"name": "svelvet",
-	"version": "0.0.6",
+	"version": "0.0.7",
+	"description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
 	"authors": "Anu, Aaron, Alexander, Andrew",
+	"license": "MIT",
+	"bugs": "https://github.com/oslabs-beta/Svelvet/issues",
+	"homepage": "https://github.com/oslabs-beta/Svelvet",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/oslabs-beta/Svelvet"
+	},
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
@@ -23,12 +31,12 @@
 		"@sveltejs/svelte-repl": "^0.4.1",
 		"@testing-library/jest-dom": "^5.16.4",
 		"@testing-library/svelte": "^3.1.1",
+		"@types/d3-zoom": "^3.0.1",
 		"@types/jest": "^27.5.1",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"@typescript-eslint/parser": "^5.10.1",
 		"autoprefixer": "^10.4.7",
 		"d3-selection": "^3.0.0",
-		"d3-zoom": "^3.0.0",
 		"eslint": "^8.12.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -40,6 +48,7 @@
 		"svelte-check": "^2.2.6",
 		"svelte-preprocess": "^4.10.1",
 		"svelte2tsx": "^0.5.9",
+		"svelvet": "^0.0.7",
 		"tailwindcss": "^3.0.24",
 		"tslib": "^2.3.1",
 		"typescript": "~4.6.2",
@@ -48,6 +57,6 @@
 	"type": "module",
 	"main": "./index.js",
 	"dependencies": {
-		"svelvet": "^0.0.6"
+		"d3-zoom": "^3.0.0"
 	}
 }

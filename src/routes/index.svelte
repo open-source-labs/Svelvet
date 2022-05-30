@@ -6,8 +6,8 @@
 	import andrew from '../assets/profiles/Andrew-small.png';
 	import alexander from '../assets/profiles/Alexander-small.png';
 
-	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	// import Svelvet from 'svelvet';
+	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	import Svelvet from 'svelvet';
 
 	const initialNodes = [
 		{
