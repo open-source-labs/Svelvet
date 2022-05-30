@@ -5,9 +5,9 @@
 	<h2 class="text-4xl font-semibold mb-12">Core Concepts</h2>
 	<h3 class="text-xl font-semibold">How Does Svelvet Work?</h3>
 	<p class="my-4 text-gray-600">
-		A Svelvet flow component consists of nodes and edges (or just nodes). You can pass arrays of <code
-			class="bg-rose-100 rounded-lg p-1">nodes</code
-		>
+		A <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> flow component consists of nodes and
+		edges (or just nodes). You can pass arrays of
+		<code class="bg-rose-100 rounded-lg p-1">nodes</code>
 		and <code class="bg-rose-100 rounded-lg p-1">edges</code> as props to the Svelvet component. All
 		node and edge ids need to be unique. A node requires a position and a label and an edge requires
 		a source (node id) and a target (node id).
@@ -16,8 +16,9 @@
 <div>
 	<h3 class="text-xl font-semibold mt-12">Quick Start</h3>
 	<p class="my-4 text-gray-600">
-		Here's a quick example to get you started. Two arrays and the Svelvet component are all you
-		need! Simply alter the node and edge properties to your liking.
+		Here's a quick example to get you started. Two arrays and the <code
+			class="bg-rose-100 rounded-lg p-1">Svelvet</code
+		> component are all you need! Simply alter the node and edge properties to your liking.
 	</p>
 </div>
 <iframe

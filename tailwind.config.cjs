@@ -5,7 +5,11 @@ module.exports = {
 			inter: ['Inter', 'sans-serif'],
 			nunito: ['Nunito', 'sans-serif']
 		},
-		extend: {}
+		extend: {
+			screens: {
+				contributors: { raw: '(min-width: 935px)' }
+			}
+		}
 	},
 	plugins: []
 };

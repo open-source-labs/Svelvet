@@ -14,11 +14,11 @@
 		<a href="/docs/testing">Testing</a>
 	</div>
 	<div class="flex flex-col space-y-3 text-gray-600">
-		<a href="/" class="text-gray-700 font-semibold">Community</a>
-		<a href="/">Blog</a>
-		<a href="/">GitHub</a>
-		<a href="/">LinkedIn</a>
-		<a href="/">Twitter</a>
+		<a href="/blog" class="text-gray-700 font-semibold">Community</a>
+		<a href="/blog">Blog</a>
+		<a target="_blank" href="https://github.com/oslabs-beta/Svelvet">GitHub</a>
+		<a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
+		<a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
 	</div>
 	<div />
 </footer>
