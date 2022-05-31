@@ -10,8 +10,14 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			fallback: 'app.html'
-		})
+			pages: 'build',
+			assets: 'build',
+			fallback: null,
+			precompress: false
+		}),
+		prerender: {
+			default: true
+		}
 		// vite: {
 		// 	server: {
 		// 		watch: {
