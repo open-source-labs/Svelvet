@@ -1,35 +1,36 @@
 <script>
 	export let node;
 	import { onMouseMove, nodeSelected } from '$lib/stores/store';
-	// import { onMouseMove, nodeSelected } from '../stores/store';
 
+	// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
+	// moving local boolean specific to node selected, to change position of individual node once selected
 	let moving = false;
-
-	function onMouseDown() {
-		moving = true;
-		$nodeSelected = true;
-	}
-
-	function onMouseUp() {
-		moving = false;
-		$nodeSelected = false;
-	}
 </script>
 
 <svelte:window
-	on:mouseup={onMouseUp}
+	on:mouseup={() => {
+		moving = false;
+		$nodeSelected = false; 
+	}}
 	on:mousemove={(e) => {
 		if (moving) onMouseMove(e, node.id);
 	}}
 />
 
-<!-- <svelte:window on:mouseup={onMouseUp} /> -->
-
 <div
-	on:mousedown={onMouseDown}
-	class="Node"
-	style="left: {node.position.x}px; top: {node.position
-		.y}px; width: {node.width}px; height: {node.height}px; background-color: {node.bgColor}; border-color: {node.borderColor}; color: {node.textColor};"
+	on:mousedown={() => {
+		moving = true;
+		$nodeSelected = true;
+	}}
+	class='Node'
+	style=
+		"left: {node.position.x}px; 
+		top: {node.position.y}px; 
+		width: {node.width}px; 
+		height: {node.height}px; 
+		background-color: {node.bgColor}; 
+		border-color: {node.borderColor}; 
+		color: {node.textColor};"
 >
 	<slot />
 </div>

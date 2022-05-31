@@ -13,9 +13,11 @@ export const nodesStore = writable([]);
 export const edgesStore = writable([]);
 export const widthStore = writable(600);
 export const heightStore = writable(600);
+export const backgroundStore = writable(false);
 
 export const nodeSelected = writable(false);
 
+// update position of selected node
 export const onMouseMove = (e, nodeID) => {
 	nodesStore.update((n) => {
 		n.forEach((node) => {
@@ -28,8 +30,10 @@ export const onMouseMove = (e, nodeID) => {
 	});
 };
 
-// example to show that the $nodes values in here is accurate to the node.position.x and node.position.y changes in real time
-// eachEdge has access to node.position.x and node.position.y changes inside of this derived function
+// derive from nodesStore and edgesStore, pass in array value from each store
+// updates edgesStore with new object properties (edge,sourceX, edge.targetY, etc) for edgesArray
+	// $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
+	// so derivedEdges has access to node.position.x and node.position.y changes inside of this function
 export const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
 	$edgesStore.forEach((edge) => {
 		let sourceNode;

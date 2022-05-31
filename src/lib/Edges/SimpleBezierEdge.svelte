@@ -2,6 +2,7 @@
 	import BaseEdge from '$lib/Edges/BaseEdge.svelte';
 	import { Position } from '$lib/types/utils';
 
+	// how to create a smooth, controlled beizer edge - referenced from ReactFlow.dev
 	function getControl({ pos, x1, y1, x2, y2 }) {
 		let ctX;
 		let ctY;
@@ -24,6 +25,7 @@
 		return [ctX, ctY];
 	}
 
+	// returns string to pass into edge 'path' svg d attribute (where to be drawn)
 	function getSimpleBezierPath({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
 		const [sourceControlX, sourceControlY] = getControl({
 			pos: sourcePosition,
@@ -42,30 +44,28 @@
 		return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
 	}
 
-	function getSimpleBezierCenter({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
-		const [sourceControlX, sourceControlY] = getControl({
-			pos: sourcePosition,
-			x1: srcX,
-			y1: srcY,
-			x2: trgX,
-			y2: trgY
-		});
-		const [targetControlX, targetControlY] = getControl({
-			pos: targetPosition,
-			x1: trgX,
-			y1: trgY,
-			x2: srcX,
-			y2: srcY
-		});
-		// cubic bezier t=0.5 mid point, not the actual mid point, but easy to calculate
-		// https://stackoverflow.com/questions/67516101/how-to-find-distance-mid-point-of-bezier-curve
-		const centerX =
-			srcX * 0.1125 + sourceControlX * 0.3375 + targetControlX * 0.3375 + trgX * 0.1125;
-		const centerY = srcY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + trgY * 0.125;
-		const xOffset = Math.abs(centerX - srcX);
-		const yOffset = Math.abs(centerY - srcY);
-		return [centerX, centerY, xOffset, yOffset];
-	}
+	// function getSimpleBezierCenter({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
+	// 	const [sourceControlX, sourceControlY] = getControl({
+	// 		pos: sourcePosition,
+	// 		x1: srcX,
+	// 		y1: srcY,
+	// 		x2: trgX,
+	// 		y2: trgY
+	// 	});
+	// 	const [targetControlX, targetControlY] = getControl({
+	// 		pos: targetPosition,
+	// 		x1: trgX,
+	// 		y1: trgY,
+	// 		x2: srcX,
+	// 		y2: srcY
+	// 	});
+	// 	const centerX =
+	// 		srcX * 0.1125 + sourceControlX * 0.3375 + targetControlX * 0.3375 + trgX * 0.1125;
+	// 	const centerY = srcY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + trgY * 0.125;
+	// 	const xOffset = Math.abs(centerX - srcX);
+	// 	const yOffset = Math.abs(centerY - srcY);
+	// 	return [centerX, centerY, xOffset, yOffset];
+	// }
 
 	export let edge;
 
@@ -78,17 +78,20 @@
 		targetPosition: Position.Bottom
 	};
 
+	// pass in params to function that returns a string value for SVG path d attribute
 	$: path = getSimpleBezierPath(params);
 
-	$: [centerX, centerY, xOffset, yOffset] = getSimpleBezierCenter(params);
+	// $: [centerX, centerY, xOffset, yOffset] = getSimpleBezierCenter(params);
 
+	// pass necessary values to BaseEdge component
+	// BaseEdge renders a 'base' path that can be customized by parent Edge components
 	$: baseEdgeProps = {
 		...edge,
 		path: path,
-		centerX: centerX,
-		centerY: centerY,
-		xOffset: xOffset,
-		yOffset: yOffset
+		// centerX: centerX,
+		// centerY: centerY,
+		// xOffset: xOffset,
+		// yOffset: yOffset
 	};
 </script>
 

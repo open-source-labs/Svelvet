@@ -6,8 +6,8 @@
 	import andrew from '../assets/profiles/Andrew-small.png';
 	import alexander from '../assets/profiles/Alexander-small.png';
 
-	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	import Svelvet from 'svelvet';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from 'svelvet';
 
 	const initialNodes = [
 		{
@@ -116,7 +116,13 @@
 			<div
 				class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
 			>
-				<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} />
+				<Svelvet
+					nodes={initialNodes}
+					edges={initialEdges}
+					width={600}
+					height={600}
+					background={true}
+				/>
 			</div>
 		</div>
 	</div>
