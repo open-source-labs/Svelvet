@@ -105,7 +105,7 @@
 				more!
 			</p>
 			<a
-				href="/docs/custom-nodes"
+				href="/docs/core-concepts"
 				class="hidden shadow-md hover:shadow-transparent md:flex self-end w-fit border-2 border-transparent hover:border-white mt-5 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
 				>Learn More</a
 			>

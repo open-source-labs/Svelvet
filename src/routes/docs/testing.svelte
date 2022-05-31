@@ -54,6 +54,7 @@
 			class="text-rose-600 underline underline-offset-1"
 			target="_blank"
 			href="https://playwright.dev/docs/intro">@playwright</a
-		> so iterations and usage could be done with confidence.
+		> along with an integrated CI/CD pipeline. Therefore, package version updates and usage could be
+		done with confidence.
 	</p>
 </div>
