@@ -72,7 +72,7 @@
 		{ id: 'e1-2', source: 1, target: 2, label: 'edge label' },
 		{ id: 'e2-3', source: 2, target: 3, animate: true },
 		{ id: 'e1-4', source: 1, target: 4 },
-		{ id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true },
+		{ id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
 		{ id: 'e2-5', source: 4, target: 6, type: 'straight' },
 		{ id: 'e2-5', source: 3, target: 6 }
 	];
