@@ -70,7 +70,12 @@
 				<a on:click={toggleMenu} href="/docs/installation" class="block py-6">Documentation</a>
 			</li>
 			<li>
-				<a on:click={toggleMenu} href="/blog" class="block py-6">Blog</a>
+				<a
+					on:click={toggleMenu}
+					target="_blank"
+					href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+					class="block py-6">Blog</a
+				>
 			</li>
 			<li>
 				<a
