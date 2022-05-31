@@ -1,6 +1,6 @@
 <script>
-	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	import Svelvet from 'svelvet';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from 'svelvet';
 	import logo from '../assets/Logo 1 white.svg';
 
 	const initialNodes = [
@@ -58,7 +58,8 @@
 	];
 </script>
 
-<!-- <Svelvet nodes={initialNodes} edges={initialEdges} /> -->
+<Svelvet nodes={initialNodes} edges={initialEdges} width={1000} background={true} />
+
 <div
 	class="flex items-center justify-center p-16 w-[400px] bg-gradient-to-r from-[#F66F52] to-rose-400"
 >
