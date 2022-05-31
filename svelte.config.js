@@ -9,6 +9,7 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
+		trailingSlash: 'never',
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
