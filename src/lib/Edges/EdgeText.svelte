@@ -9,7 +9,7 @@
 	// let textWidth = 0;
 	// let labelText;
 
-	onMount(() => {
+	// onMount(() => {
 		// labelText = document.querySelectorAll('.EdgeText');
 		// labelText.forEach((el) => {
 		// 	if (el.innerHTML === label) {
@@ -23,13 +23,12 @@
 		// if (textWidth >= 60) {
 		// 	textWidth <= 175 ? (labelLength = textWidth * -0.2) : (labelLength = textWidth * -0.8);
 		// }
-	});
+	// });
 
 </script>
 
 {#if typeof label === 'undefined' || !label}
 	{null}
-
 {:else}
 	<g>
 		<!-- <rect
@@ -48,7 +47,7 @@
 			{label}
 		</text> -->
 		
-		<text class="EdgeText" 
+		<!-- <text class="EdgeText" 
 			x={sourceX + (targetX - sourceX)/2}
 			y={sourceY + (targetY - sourceY)/2}
 			dominant-baseline="central" 
@@ -57,15 +56,15 @@
 			style="stroke:white; stroke-width:0.3em; stroke-linejoin:round;"
 		>
 			{label}
-		</text>
-		<!-- <rect
-			class="InvisibleBox"
+		</text> -->
+		<rect
+			class="EdgeTextBg"
 			fill="white"
-			x={sourceX + (targetX - sourceX)/2 - (label.length*7)/2}
+			x={sourceX + (targetX - sourceX)/2 - (label.length * 7)/2}
 			y={sourceY + (targetY - sourceY)/2 - 6}
 			width={label.length * 7}
 			height={15}
-		/> -->
+		/>
 		<text class="EdgeText" 
 			x={sourceX + (targetX - sourceX)/2}
 			y={sourceY + (targetY - sourceY)/2}

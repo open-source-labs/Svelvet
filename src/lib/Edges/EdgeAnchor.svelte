@@ -4,11 +4,11 @@
 </script>
 
 <circle 
-	cx={x} 
-	cy={y} 
-	r={5} 
-	stroke="white" 
-	fill="black" 
+    cx={x} 
+    cy={y} 
+    r={5} 
+    stroke="white" 
+    fill="black" 
 />
 
 <style>
