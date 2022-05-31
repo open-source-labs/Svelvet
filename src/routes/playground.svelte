@@ -48,7 +48,7 @@
 	];
 </script>
 
-<!-- <Svelvet nodes={initialNodes} edges={initialEdges} /> -->
+<Svelvet nodes={initialNodes} edges={initialEdges} />
 <div
 	class="flex items-center justify-center p-16 w-[400px] bg-gradient-to-r from-[#F66F52] to-rose-400"
 >

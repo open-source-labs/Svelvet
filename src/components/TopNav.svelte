@@ -54,7 +54,6 @@
 			target="_blank"
 			class="hover:text-rose-500 border-r pr-5">Github</a
 		>
-		<input type="text" placeholder="Quick search" class="border rounded-full px-2" />
 	</nav>
 </div>
 
