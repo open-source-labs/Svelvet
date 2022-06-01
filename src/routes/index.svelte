@@ -139,7 +139,7 @@
 				<div class="typing-demo my-3">npm install svelvet</div>
 			</div>
 		</div>
-		<div class="w-full md:w-1/2 h-full flex flex-col justify-center">
+		<div class="mt-12 sm:mt-0 w-full md:w-1/2 h-full flex flex-col justify-center">
 			<h3 class="text-4xl font-bold mb-4 mt-8 text-center md:text-left text-gray-700">
 				Get Started Easily
 			</h3>
