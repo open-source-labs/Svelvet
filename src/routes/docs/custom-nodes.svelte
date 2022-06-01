@@ -32,7 +32,7 @@
 </p>
 
 <h3 class="text-xl font-semibold mt-12">Node Properties</h3>
-<div class="w-3/4 text-gray-600">
+<div class="w-full md:w-3/4 lg:w-1/2 text-gray-600">
 	<ul>
 		<li class="flex items-center justify-between py-2 border-b-2">
 			<div class="font-semibold">key</div>
