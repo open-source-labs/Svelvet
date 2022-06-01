@@ -39,7 +39,7 @@
 	</p>
 
 	<div class="flex">
-		<code class="block rounded-md p-3 bg-rose-100 text-rose-600 w-1/2"
+		<code class="block rounded-md p-3 bg-rose-100 text-rose-600 w-3/4 md:w-1/2"
 			><span class="text-rose-800">yarn add</span> svelvet
 		</code>
 		<img

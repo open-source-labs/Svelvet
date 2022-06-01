@@ -1,12 +1,12 @@
 <script>
 	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	// import Svelvet from 'svelvet';
 	import logo from '../assets/Logo 1 white.svg';
+	// import Svelvet from 'svelvet';
 
 	const initialNodes = [
 		{
 			id: 1,
-			position: { x: 350, y: 50 },
+			position: { x: 300, y: 50 },
 			data: { label: 'Input Node' },
 			width: 175,
 			height: 40,
@@ -14,31 +14,25 @@
 		},
 		{
 			id: 2,
-			position: { x: 350, y: 250 },
-			data: { label: 'Default Node' },
+			position: { x: 125, y: 150 },
+			data: { label: 'Option #1' },
 			width: 175,
 			height: 40,
-			bgColor: 'white'
+			bgColor: '#B8FFC6',
+			borderColor: 'transparent'
 		},
 		{
 			id: 3,
-			position: { x: 40, y: 400 },
-			data: { label: 'Output Node' },
+			position: { x: 475, y: 150 },
+			data: { label: 'Option #2' },
 			width: 175,
 			height: 40,
-			bgColor: 'white'
+			bgColor: '#FFB8B8',
+			borderColor: 'transparent'
 		},
 		{
 			id: 4,
-			position: { x: 400, y: 500 },
-			data: { label: 'Output Node' },
-			width: 175,
-			height: 40,
-			bgColor: 'white'
-		},
-		{
-			id: 5,
-			position: { x: 700, y: 450 },
+			position: { x: 300, y: 250 },
 			data: { label: 'Output Node' },
 			width: 175,
 			height: 40,
@@ -46,11 +40,60 @@
 		}
 	];
 	const initialEdges = [
-		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'label', arrow: true },
-		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
-		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true },
-		{ id: 'e2-5', source: 2, target: 5, arrow: true }
+		{ id: 'e1-2', source: 1, target: 2, label: ' YES ' },
+		{ id: 'e2-3', source: 1, target: 3, label: ' NO ' },
+		{ id: 'e2-4', source: 2, target: 4, animate: true },
+		{ id: 'e2-5', source: 3, target: 4, animate: true }
 	];
+
+	// const initialNodes = [
+	// 	{
+	// 		id: 1,
+	// 		position: { x: 350, y: 50 },
+	// 		data: { label: 'Input Node' },
+	// 		width: 175,
+	// 		height: 40,
+	// 		bgColor: 'white'
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		position: { x: 350, y: 150 },
+	// 		data: { label: 'Default Node' },
+	// 		width: 175,
+	// 		height: 40,
+	// 		bgColor: 'white'
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		position: { x: 200, y: 275 },
+	// 		data: { label: 'Output Node #1' },
+	// 		width: 175,
+	// 		height: 40,
+	// 		bgColor: 'white'
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		position: { x: 500, y: 275 },
+	// 		data: { label: 'Output Node #2' },
+	// 		width: 175,
+	// 		height: 40,
+	// 		bgColor: 'white'
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		position: { x: 350, y: 350 },
+	// 		data: { label: 'Output Node #3' },
+	// 		width: 175,
+	// 		height: 40,
+	// 		bgColor: 'white'
+	// 	}
+	// ];
+	// const initialEdges = [
+	// 	{ id: 'e1-2', source: 1, target: 2, type: 'straight', label: 'label', arrow: true },
+	// 	{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
+	// 	{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true },
+	// 	{ id: 'e2-5', source: 2, target: 5, arrow: true }
+	// ];
 </script>
 
 <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} background={true} />
@@ -65,13 +108,6 @@
 		class="text-3xl text-white font-nunito font-medium tracking-wide ml-2 mr-6 svelvet">svelvet</a
 	>
 </div>
-<iframe
-	src="https://codesandbox.io/embed/basic-usage-71vweu?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=light"
-	style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-	title="basic-usage"
-	allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-	sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/> -->
 
 <style>
 	/* .svelvet {

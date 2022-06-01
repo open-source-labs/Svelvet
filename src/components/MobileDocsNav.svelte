@@ -73,7 +73,12 @@
 			</li>
 
 			<li class:bg-rose-100={activeLink.includes('blog')}>
-				<a on:click={toggleMenu} href="/blog" class="block py-5 font-medium text-gray-800">Blog</a>
+				<a
+					on:click={toggleMenu}
+					target="_blank"
+					href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+					class="block py-5 font-medium text-gray-800">Blog</a
+				>
 			</li>
 			<li>
 				<a

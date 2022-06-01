@@ -43,7 +43,8 @@
 			class="hover:text-rose-500 {activeLink.includes('docs') ? 'text-rose-500' : ''}">Docs</a
 		>
 		<a
-			href="/blog"
+			target="_blank"
+			href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
 			id="blog"
 			class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
 		>
@@ -53,7 +54,6 @@
 			target="_blank"
 			class="hover:text-rose-500 border-r pr-5">Github</a
 		>
-		<input type="text" placeholder="Quick search" class="border rounded-full px-2" />
 	</nav>
 </div>
 
