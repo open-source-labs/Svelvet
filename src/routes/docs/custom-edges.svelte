@@ -6,7 +6,8 @@
 		['type', '"straight" / set to "bezier" if not specified'],
 		['label', 'string'],
 		['animate', 'boolean'],
-		['arrow', 'boolean']
+		['arrow', 'boolean'],
+		['handle', 'boolean']
 	];
 </script>
 
