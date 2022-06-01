@@ -1,5 +1,6 @@
 <div align="center">
-![readme-header](./src/assets/banner.png)
+
+![banner](./src/assets/banner.png)
 
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
@@ -18,10 +19,10 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 - **Easy to use:** All you need to [start](https://svelvet.io/docs/basic-usage/) with Svelvet is the data for the nodes and edges you want to render
 - **Customizable:** Svelvet provides developers the abilities to customize their nodes and edges 
--**Fast rendering:** Nodes only re-render based on changes to their initial values
+- **Fast rendering:** Nodes only re-render based on changes to their initial values
 - **Reliable:** Svelvet is written with Typescript and is tested with [playwright](https://playwright.dev/) and the [svelte testing library](https://testing-library.com/docs/svelte-testing-library/intro/)
 
-![screenshot](./src/assets/svelvet-gif.gif)
+![screenshot](./src/assets/svelvet.gif)
 
 ## Installation 
 Svelvet is available as both an npm and a yarn package. You can install it by running one of the two commands: 
@@ -49,14 +50,14 @@ A Svelvet component consists of nodes and edges (or just nodes). You can pass no
 Visit our [website](svelvet.io) to learn more on how to customize your nodes and edges to your liking! 
 
 ## Testing
-Testing is done with Vitest and the Svelte Testing Library. You can find the tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests)folder. In order to run the tests do:
+Testing is done with Vitest and the Svelte Testing Library. You can find the tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests do:
 ```bash
 npm run test
 ```
 
 ## The Svelvet Team 
 
-* Aaron Willet • [LinkedIn](https://www.linkedin.com/in/awillettnyc/) • [Github](https://github.com/awillettnyc)
+* Aaron Willett • [LinkedIn](https://www.linkedin.com/in/awillettnyc/) • [Github](https://github.com/awillettnyc)
 * Alexander Zambrano • [LinkedIn](https://www.linkedin.com/in/alexander-z-8b7716b0/) • [Github](https://github.com/azambran21)
 * Andrew Widjaja • [LinkedIn](https://www.linkedin.com/in/andrew-widjaja/) • [Github](https://github.com/andrew-widjaja)
 * Anu Sharma • [LinkedIn](https://www.linkedin.com/in/anu-sharma-6936a686/) • [Github](https://github.com/anulepau)
