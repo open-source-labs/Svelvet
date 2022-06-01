@@ -17,8 +17,8 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 ## Key Features
 
-- **Easy to use:** All you need to [start](https://svelvet.io/docs/basic-usage/) with Svelvet is the data for the nodes and edges you want to render
-- **Customizable:** Svelvet provides developers the abilities to customize their nodes and edges 
+- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is the data for the nodes and edges you want to render
+- **Customizable:** Svelvet provides developers the ability to customize their nodes and edges 
 - **Fast rendering:** Nodes only re-render based on changes to their initial values
 - **Reliable:** Svelvet is written with Typescript and is tested with [playwright](https://playwright.dev/) and the [svelte testing library](https://testing-library.com/docs/svelte-testing-library/intro/)
 
@@ -50,7 +50,7 @@ A Svelvet component consists of nodes and edges (or just nodes). You can pass no
 Visit our [website](svelvet.io) to learn more on how to customize your nodes and edges to your liking! 
 
 ## Testing
-Testing is done with Vitest and the Svelte Testing Library. You can find the tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests do:
+Testing is done with Vitest and the Svelte Testing Library. You can find the tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
 ```bash
 npm run test
 ```
@@ -63,7 +63,7 @@ npm run test
 * Anu Sharma • [LinkedIn](https://www.linkedin.com/in/anu-sharma-6936a686/) • [Github](https://github.com/anulepau)
 
 ## How to Contribute 
-The following is a list of features and improvements for future open-source developers that the Svelvet team has either started or would like to see implemented. If you have additional new ideas, feel free to implement those as well!
+The following is a list of features and improvements that any open source developer can iterate on. If you have any additional, feel free to implement those as well!
 
 - Custom error handling
 - Increase test coverage for scalability 
@@ -74,8 +74,8 @@ The following is a list of features and improvements for future open-source deve
 
 ## Credits
 
-Svelvet was developed to offer another tool for the Svelte community, and inspired by [React Flow](reactflow.dev). Under the hood, Svelvet depends on the [d3-zoom](https://github.com/d3/d3-zoom) library to zoom and pan across the graph! 
+Inspired by [React Flow](reactflow.dev), Svelvet expands the tools available to Svelte developers and makes Svelte more inviting to both new and seasoned software engineers. Under the hood, Svelvet depends on the [d3-zoom](https://github.com/d3/d3-zoom) library to zoom and pan across the graph. 
 
 ## License
 
-Svelvet is [MIT licensed](https://github.com/oslabs-beta/Svelvet/blob/main/LICENSE). 
+Svelvet is developed under the [MIT license](https://github.com/oslabs-beta/Svelvet/blob/main/LICENSE). 
