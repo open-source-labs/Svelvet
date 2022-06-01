@@ -236,6 +236,7 @@
 
 <style>
 	.css-blurry-gradient {
+		overflow-x: hidden;
 		position: absolute;
 		top: 60%;
 		left: 50%;
