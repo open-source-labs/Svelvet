@@ -33,7 +33,7 @@
 		>
 		<p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v0.0.7</p>
 	</div>
-	<nav class="space-x-7 text-sm text-gray-500 font-medium flex items-center">
+	<nav class="space-x-11 text-sm text-gray-500 font-medium flex items-center">
 		<a href="/" id="home" class="hover:text-rose-500 {activeLink === '/' ? 'text-rose-500' : ''}"
 			>Home</a
 		>
@@ -52,7 +52,7 @@
 			href="https://github.com/oslabs-beta/Svelvet"
 			id="github"
 			target="_blank"
-			class="hover:text-rose-500 border-r pr-5">Github</a
+			class="hover:text-rose-500 pr-5">Github</a
 		>
 	</nav>
 </div>
