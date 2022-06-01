@@ -48,7 +48,7 @@
 	const initialEdges = [
 		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'label', arrow: true },
 		{ id: 'e2-3', source: 2, target: 3, label: 'another label' },
-		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true },
+		{ id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true, noHandle: true },
 		{ id: 'e2-5', source: 2, target: 5, arrow: true }
 	];
 </script>
