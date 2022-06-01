@@ -54,7 +54,8 @@
 			data: { label: 'Custom Node' },
 			width: 175,
 			height: 40,
-			bgColor: '#C8FFC7'
+			bgColor: '#C8FFC7',
+			borderColor: 'transparent'
 		},
 		{
 			id: 6,
