@@ -3,8 +3,8 @@
 	import { nodesStore, edgesStore, derivedEdges, widthStore, heightStore, backgroundStore } from '$lib/stores/store';
 	import { onMount } from 'svelte';
 
-	export let nodes: any;
-	export let edges: any;
+	export let nodes;
+	export let edges;
 	export let width: number = 600;
 	export let height: number = 600;
 	export let background: boolean = false; 
