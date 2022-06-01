@@ -5,6 +5,7 @@
 	import anu from '../assets/profiles/Anu-small.png';
 	import andrew from '../assets/profiles/Andrew-small.png';
 	import alexander from '../assets/profiles/Alexander-small.png';
+	import aaron from '../assets/profiles/Aaron-small.png';
 
 	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
 	// import Svelvet from 'svelvet';
@@ -194,7 +195,7 @@
 				</div>
 				<div class="flex justify-around w-1/2 gap-2 contributors:gap-0">
 					<div class="contributor-card">
-						<img src={avatar} alt="" class="hidden contributors:block h-28 rounded-full" />
+						<img src={aaron} alt="" class="hidden contributors:block h-28 rounded-full" />
 						<p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
 						<p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
 						<div class="flex gap-3 ml-3">
@@ -241,18 +242,21 @@
 		top: 60%;
 		left: 50%;
 		transform: translate(-50%, 0%);
-		width: 800px;
-		height: 800px;
+		will-change: transform;
+		width: 100%;
+		height: 100%;
 		border-radius: 50% 22% 40% 80%;
 		filter: blur(120px);
 		background: radial-gradient(circle at 50% 50%, rgb(247, 85, 56), rgba(205, 203, 211, 0));
-		opacity: 0.3;
+		opacity: 0.4;
 		z-index: -1;
 	}
 
 	@media (max-width: 768px) {
 		.css-blurry-gradient {
-			opacity: 0.6;
+			opacity: 1;
+			top: 50%;
+			/* opacity: 0.6; */
 		}
 	}
 
@@ -277,6 +281,11 @@
 		border-right: 3px solid;
 		font-family: monospace;
 		font-size: 16px;
+	}
+	@media (max-width: 768px) {
+		.typing-demo {
+			animation: blink 0.5s step-end infinite alternate;
+		}
 	}
 
 	@keyframes typing {

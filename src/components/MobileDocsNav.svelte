@@ -62,6 +62,9 @@
 			<li class:bg-rose-100={activeLink.includes('custom-nodes')}>
 				<a on:click={toggleMenu} href="/docs/custom-nodes" class="block py-5">Custom Nodes</a>
 			</li>
+			<li class:bg-rose-100={activeLink.includes('custom-edges')}>
+				<a on:click={toggleMenu} href="/docs/custom-edges" class="block py-5">Custom Edges</a>
+			</li>
 			<li class:bg-rose-100={activeLink.includes('pan-and-zoom')}>
 				<a on:click={toggleMenu} href="/docs/pan-and-zoom" class="block py-5">Pan and Zoom</a>
 			</li>
