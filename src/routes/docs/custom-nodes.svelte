@@ -1,7 +1,6 @@
 <script>
 	const nodeProps = [
 		['id', '(required)'],
-		['type', '(required) "default", "input", "output"'],
 		['data', '(required) { label: string }'],
 		['position', '(required) { x: number, y: number }'],
 		['width', '(required) number'],
@@ -24,7 +23,6 @@
 </p>
 <p class="text-gray-600 mt-2">
 	Current customizations include node
-	<code class="code">type</code>,
 	<code class="code">position</code>,
 	<code class="code">width</code>,
 	<code class="code">height</code>,
@@ -50,14 +48,7 @@
 </div>
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Implementing Custom Nodes</h3>
-<!-- <iframe
-	src="https://codesandbox.io/embed/quick-start-71vweu?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=light&view=split"
-	style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-	title="quick-start"
-	allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-	sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-	class="my-4"
-/> -->
+
 <iframe
 	src="https://codesandbox.io/embed/custom-nodes-gl35z6?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark&view=split&editorsize=50"
 	style="width:100%; height:500px; border:0; border-radius: 8px; overflow:hidden;"

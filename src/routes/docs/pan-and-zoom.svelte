@@ -1,6 +1,6 @@
 <script lang="ts">
-	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	import Svelvet from 'svelvet';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from 'svelvet';
 
 	// Example data for how library is to be used
 	const initialNodes = [
@@ -68,7 +68,7 @@
 	Play around with the flow diagram below!
 </p>
 <div class="overflow-hidden my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
-	<Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} />
+	<Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} background={true} />
 </div>
 
 <style>

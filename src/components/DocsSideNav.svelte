@@ -16,7 +16,10 @@
 	];
 
 	const communityLinks = [
-		['Blog', '/blog'],
+		[
+			'Blog',
+			'https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243'
+		],
 		['GitHub', 'https://github.com/oslabs-beta/Svelvet'],
 		['LinkedIn', 'https://www.linkedin.com/company/svelvet/'],
 		['Twitter', 'https://twitter.com/Svelvet_OSLabs']

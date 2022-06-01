@@ -6,8 +6,8 @@
 	import andrew from '../assets/profiles/Andrew-small.png';
 	import alexander from '../assets/profiles/Alexander-small.png';
 
-	// import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-	import Svelvet from 'svelvet';
+	import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+	// import Svelvet from 'svelvet';
 
 	const initialNodes = [
 		{
@@ -72,7 +72,7 @@
 		{ id: 'e1-2', source: 1, target: 2, label: 'edge label' },
 		{ id: 'e2-3', source: 2, target: 3, animate: true },
 		{ id: 'e1-4', source: 1, target: 4 },
-		{ id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true },
+		{ id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
 		{ id: 'e2-5', source: 4, target: 6, type: 'straight' },
 		{ id: 'e2-5', source: 3, target: 6 }
 	];
@@ -116,7 +116,13 @@
 			<div
 				class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
 			>
-				<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} />
+				<Svelvet
+					nodes={initialNodes}
+					edges={initialEdges}
+					width={600}
+					height={600}
+					background={true}
+				/>
 			</div>
 		</div>
 	</div>
@@ -230,6 +236,7 @@
 
 <style>
 	.css-blurry-gradient {
+		overflow-x: hidden;
 		position: absolute;
 		top: 60%;
 		left: 50%;

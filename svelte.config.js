@@ -9,15 +9,15 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		trailingSlash: 'never',
+		trailingSlash: 'always',
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: null,
+			fallback: '200.html',
 			precompress: false
 		}),
 		prerender: {
-			default: true
+			default: false
 		}
 		// vite: {
 		// 	server: {
