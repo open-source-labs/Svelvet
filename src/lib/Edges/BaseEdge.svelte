@@ -1,6 +1,6 @@
 <script>
 	import EdgeText from '$lib/Edges/EdgeText.svelte';
-	
+
 	export let baseEdgeProps;
 
 	$: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label } = baseEdgeProps);
@@ -11,20 +11,15 @@
 		sourceY: sourceY,
 		targetX: targetX,
 		targetY: targetY,
-		label: label,
+		label: label
 	};
-	
-	const defaultArrow = `0 0, 9 4.5, 0 9`;
 
+	const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
 
 <defs>
-	<marker id="arrow" markerWidth="9" markerHeight="9" 
-	refX="8" refY="4" orient="auto">
-		<polygon 
-			points={defaultArrow}
-			fill="gray"
-		/>
+	<marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto">
+		<polygon points={defaultArrow} fill="gray" />
 	</marker>
 </defs>
 
@@ -36,7 +31,7 @@
 		stroke="gray"
 		marker-end="url(#arrow)"
 		aria-label="svg-path"
-	/>	
+	/>
 {:else}
 	<path
 		class={animate ? 'animate' : ''}
@@ -46,7 +41,6 @@
 		aria-label="svg-path"
 	/>
 {/if}
-
 
 {#if edgeTextProps.label}
 	<EdgeText {edgeTextProps} />
