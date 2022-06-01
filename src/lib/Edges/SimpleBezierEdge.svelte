@@ -2,7 +2,8 @@
 	import BaseEdge from '$lib/Edges/BaseEdge.svelte';
 	import { Position } from '$lib/types/utils';
 
-	// how to create a smooth, controlled beizer edge - referenced from ReactFlow.dev
+	// how to create a smooth, controlled beizer edge from source and target positions
+		// referenced from ReactFlow.dev
 	function getControl({ pos, x1, y1, x2, y2 }) {
 		let ctX;
 		let ctY;
@@ -25,7 +26,8 @@
 		return [ctX, ctY];
 	}
 
-	// returns string to pass into edge 'path' svg d attribute (where to be drawn), referenced from ReactFlow.dev
+	// returns string to pass into edge 'path' svg d attribute (where to be drawn)
+		// referenced from ReactFlow.dev
 	function getSimpleBezierPath({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
 		const [sourceControlX, sourceControlY] = getControl({
 			pos: sourcePosition,
