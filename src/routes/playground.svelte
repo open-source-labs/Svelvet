@@ -98,7 +98,7 @@
 
 <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} background={true} />
 
-<div
+<!-- <div
 	class="flex items-center justify-center p-16 w-[400px] bg-gradient-to-r from-[#F66F52] to-rose-400"
 >
 	<img src={logo} alt="Logo" class="aspect-ratio-auto h-8" />
@@ -110,11 +110,11 @@
 </div>
 
 <style>
-	.svelvet {
+	/* .svelvet {
 		text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 	}
 
 	img {
 		filter: drop-shadow(1px 1px 1px rgb(0, 0, 0, 0.2));
-	}
+	} */
 </style>
