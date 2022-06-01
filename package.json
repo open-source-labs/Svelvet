@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
 	"authors": "Anu, Aaron, Alexander, Andrew",
 	"license": "MIT",
@@ -27,6 +27,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.21.0",
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.34",
 		"@sveltejs/kit": "next",
 		"@sveltejs/svelte-repl": "^0.4.1",
 		"@testing-library/jest-dom": "^5.16.4",
@@ -57,7 +58,6 @@
 	"type": "module",
 	"main": "./index.js",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^1.0.0-next.34",
 		"d3-zoom": "^3.0.0"
 	}
 }
