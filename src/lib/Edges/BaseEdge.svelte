@@ -1,31 +1,24 @@
 <script>
 	import EdgeText from '$lib/Edges/EdgeText.svelte';
+	
 	export let baseEdgeProps;
 
-	$: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, type,
-		// centerX, centerY, xOffset, yOffset 
-		} = baseEdgeProps);
+	$: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label } = baseEdgeProps);
 
 	// pass necessary values to EdgeText component
 	$: edgeTextProps = {
-		// x: centerX,
-		// y: centerY,
 		sourceX: sourceX,
 		sourceY: sourceY,
 		targetX: targetX,
 		targetY: targetY,
-		label: baseEdgeProps.label
-		// xOffset: xOffset,
-		// yOffset: yOffset,
-		// label: baseEdgeProps.data.label
+		label: label,
 	};
-
-	const defaultArrow = "0 0, 9 4.5, 0 9";
+	
+	const defaultArrow = `0 0, 9 4.5, 0 9`;
 
 </script>
 
 <defs>
-	<!-- default arrow -->
 	<marker id="arrow" markerWidth="9" markerHeight="9" 
 	refX="8" refY="4" orient="auto">
 		<polygon 
@@ -43,7 +36,7 @@
 		stroke="gray"
 		marker-end="url(#arrow)"
 		aria-label="svg-path"
-	/>
+	/>	
 {:else}
 	<path
 		class={animate ? 'animate' : ''}

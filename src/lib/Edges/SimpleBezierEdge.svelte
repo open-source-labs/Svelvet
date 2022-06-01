@@ -25,7 +25,7 @@
 		return [ctX, ctY];
 	}
 
-	// returns string to pass into edge 'path' svg d attribute (where to be drawn)
+	// returns string to pass into edge 'path' svg d attribute (where to be drawn), referenced from ReactFlow.dev
 	function getSimpleBezierPath({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
 		const [sourceControlX, sourceControlY] = getControl({
 			pos: sourcePosition,
@@ -44,29 +44,6 @@
 		return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
 	}
 
-	// function getSimpleBezierCenter({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
-	// 	const [sourceControlX, sourceControlY] = getControl({
-	// 		pos: sourcePosition,
-	// 		x1: srcX,
-	// 		y1: srcY,
-	// 		x2: trgX,
-	// 		y2: trgY
-	// 	});
-	// 	const [targetControlX, targetControlY] = getControl({
-	// 		pos: targetPosition,
-	// 		x1: trgX,
-	// 		y1: trgY,
-	// 		x2: srcX,
-	// 		y2: srcY
-	// 	});
-	// 	const centerX =
-	// 		srcX * 0.1125 + sourceControlX * 0.3375 + targetControlX * 0.3375 + trgX * 0.1125;
-	// 	const centerY = srcY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + trgY * 0.125;
-	// 	const xOffset = Math.abs(centerX - srcX);
-	// 	const yOffset = Math.abs(centerY - srcY);
-	// 	return [centerX, centerY, xOffset, yOffset];
-	// }
-
 	export let edge;
 
 	$: params = {
@@ -81,17 +58,11 @@
 	// pass in params to function that returns a string value for SVG path d attribute
 	$: path = getSimpleBezierPath(params);
 
-	// $: [centerX, centerY, xOffset, yOffset] = getSimpleBezierCenter(params);
-
 	// pass necessary values to BaseEdge component
 	// BaseEdge renders a 'base' path that can be customized by parent Edge components
 	$: baseEdgeProps = {
 		...edge,
-		path: path,
-		// centerX: centerX,
-		// centerY: centerY,
-		// xOffset: xOffset,
-		// yOffset: yOffset
+		path: path
 	};
 </script>
 

@@ -73,8 +73,14 @@
 
 <svg class="Edges" viewBox="0 0 {$widthStore} {$heightStore}">
 	<defs>
-		<pattern id="background"
-				x="0" y="0" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse" >
+		<pattern 
+			id="background"
+			x="0" 
+			y="0" 
+			width={gridSize} 
+			height={gridSize} 
+			patternUnits="userSpaceOnUse" 
+		>
 			<circle
 				id="dot" 
 				cx={(gridSize / 2) - (dotSize / 2)} 
@@ -85,7 +91,11 @@
 	</defs>
 
 	{#if $backgroundStore} 
-		<rect width="100%" height="100%" style="fill: url(#background);" />
+		<rect 
+			width="100%" 
+			height="100%" 
+			style="fill: url(#background);" 
+		/>
 	{/if}
 
 	<g>
