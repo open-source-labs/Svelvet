@@ -6,7 +6,8 @@
 		['type', '"straight" / set to "bezier" if not specified'],
 		['label', 'string'],
 		['animate', 'boolean'],
-		['arrow', 'boolean']
+		['arrow', 'boolean'],
+		['handle', 'boolean']
 	];
 </script>
 
@@ -22,7 +23,7 @@
 </p>
 
 <h3 class="text-xl font-semibold mt-12">Edge Properties</h3>
-<div class="w-3/4 md:w-1/2 text-gray-600">
+<div class="w-full sm:w-3/4 md:w-3/4 lg:w-1/2 text-gray-600">
 	<ul>
 		<li class="flex items-center justify-between py-2 border-b-2">
 			<div class="font-semibold">key</div>

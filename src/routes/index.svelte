@@ -54,7 +54,8 @@
 			data: { label: 'Custom Node' },
 			width: 175,
 			height: 40,
-			bgColor: '#C8FFC7'
+			bgColor: '#C8FFC7',
+			borderColor: 'transparent'
 		},
 		{
 			id: 6,
@@ -95,7 +96,7 @@
 	<a href="/docs/installation" class="px-6 py-3 btn-primary">Get Started</a>
 </div>
 <div
-	class="h-[700px] md:h-[600px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white shadow-xl"
+	class="h-[700px] md:h-[600px] w-screen bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
 	<div class="flex flex-col md:flex-row h-full m-12 md:m-24 md:gap-10">
 		<div class="w-full md:w-1/2 h-full flex flex-col justify-center">
@@ -117,13 +118,7 @@
 			<div
 				class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
 			>
-				<Svelvet
-					nodes={initialNodes}
-					edges={initialEdges}
-					width={600}
-					height={600}
-					background={true}
-				/>
+				<Svelvet nodes={initialNodes} edges={initialEdges} width={600} height={600} background />
 			</div>
 		</div>
 	</div>
@@ -158,7 +153,7 @@
 	</div>
 </div>
 <div
-	class="h-[640px] contributors:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] to-rose-400 text-white shadow-xl"
+	class="h-[640px] contributors:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
 	<div class=" h-full m-12 contributors:m-24">
 		<div class=" h-full w-full flex flex-col justify-center">
@@ -254,7 +249,7 @@
 
 	@media (max-width: 768px) {
 		.css-blurry-gradient {
-			opacity: 1;
+			opacity: 0.8;
 			top: 50%;
 			/* opacity: 0.6; */
 		}

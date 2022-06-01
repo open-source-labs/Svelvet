@@ -9,8 +9,8 @@
 	<slot />
 {:else}
 	<div class="overflow-x-hidden">
-		<!-- <div class="sticky top-0 left-0 right-0 z-50"> -->
-		<div class="top-0 sticky">
+		<div class="sticky top-0 left-0 right-0 z-50">
+			<!-- <div class="top-0 sticky"> -->
 			<TopNav />
 		</div>
 		<slot />
