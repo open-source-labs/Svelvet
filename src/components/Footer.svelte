@@ -27,7 +27,12 @@
     </div>
   </div>
   <div class="flex flex-col items-center mt-10 text-gray-500">
-    <div class="text-xs">&copy; 2022 Svelvet</div>
+    <div class="text-xs">
+      &copy; 2022 Svelvet | <a
+        target="_blank"
+        href="https://github.com/oslabs-beta/Svelvet/blob/main/LICENSE">MIT License</a
+      >
+    </div>
     <div class="text-xs">
       Website designed by <a
         href="https://www.wendyhuynh.info/"
