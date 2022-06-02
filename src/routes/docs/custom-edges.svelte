@@ -7,7 +7,7 @@
     ['label', 'string'],
     ['animate', 'boolean'],
     ['arrow', 'boolean'],
-    ['handle', 'boolean']
+    ['noHandle', 'boolean']
   ];
 </script>
 
