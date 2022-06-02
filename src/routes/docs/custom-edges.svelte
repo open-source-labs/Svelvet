@@ -40,10 +40,6 @@
 
 <div>
   <h3 class="text-xl font-semibold mt-12 mb-6">Implementing Custom Edges</h3>
-  <!-- <p class="my-4 text-gray-600">
-		Here's a quick example to get you started. Two arrays and the Svelvet component are all you
-		need! Simply alter the node and edge properties to your liking.
-	</p> -->
 </div>
 
 <iframe

@@ -1,6 +1,6 @@
 {
   "name": "svelvet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "authors": "Anu, Aaron, Alexander, Andrew",
   "license": "MIT",
@@ -48,7 +48,7 @@
     "svelte-check": "^2.2.6",
     "svelte-preprocess": "^4.10.1",
     "svelte2tsx": "^0.5.9",
-    "svelvet": "^0.0.7",
+    "svelvet": "^1.0.1",
     "tailwindcss": "^3.0.24",
     "tslib": "^2.3.1",
     "typescript": "~4.6.2",
