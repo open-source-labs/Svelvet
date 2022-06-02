@@ -16,10 +16,10 @@
 </div>
 
 <p class="text-gray-600">
-  A powerful feature of <code class="code">Svelvet</code> is the ability to add custom nodes. Within
-  your custom nodes you can display your desired text, change colors (background, border and text), define
-  multiple source and target handles, and set your own dimensions. In this section we will render nodes
-  with varying customizations.
+  <code class="code">Svelvet</code> provides the ability to customize each node to your liking. To customize
+  your nodes, provide any of the following properties below in the node object. You can display your
+  desired text, change colors (background, border and text), define multiple source and target handles,
+  and set your own dimensions. Below you can find example implementations of these properties.
 </p>
 <p class="text-gray-600 mt-2">
   Current customizations include node
