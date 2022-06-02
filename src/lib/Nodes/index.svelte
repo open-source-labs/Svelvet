@@ -1,6 +1,6 @@
 <script>
   import { onMouseMove, nodeSelected } from '$lib/stores/store';
-	
+
   export let node;
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -11,10 +11,10 @@
 <svelte:window
   on:mouseup={() => {
     moving = false;
-    $nodeSelected = false; 
+    $nodeSelected = false;
   }}
   on:mousemove={(e) => {
-	  if (moving) onMouseMove(e, node.id);
+    if (moving) onMouseMove(e, node.id);
   }}
 />
 
@@ -23,9 +23,8 @@
     moving = true;
     $nodeSelected = true;
   }}
-  class='Node'
-  style=
-    "left: {node.position.x}px; 
+  class="Node"
+  style="left: {node.position.x}px; 
     top: {node.position.y}px; 
     width: {node.width}px; 
     height: {node.height}px; 
