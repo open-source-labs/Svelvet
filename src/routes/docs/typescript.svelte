@@ -53,8 +53,8 @@
 <Gist src="https://gist.github.com/andrew-widjaja/33aee7aedbb37a7f168525e109415968" />
 
 <p class="my-4 text-gray-600">The diagram renders as below:</p>
-<div class="border rounded-lg shadow-md w-3/4 overflow-hidden">
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={400} background />
+<div class="border rounded-lg shadow-md w-full overflow-hidden">
+  <Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={400} background />
 </div>
 <!-- <iframe
   src="https://codesandbox.io/embed/typescript-m9t27b?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark&view=split&editorsize=50"
