@@ -23,8 +23,3 @@
     @apply bg-rose-100 rounded-lg p-1 inline;
   }
 }
-
-html,
-body {
-  /* overflow-x: hidden; */
-}

@@ -31,7 +31,7 @@ Svelvet is available as both an npm and a yarn package. You can install it by ru
 npm install svelvet
 ```
 ```bash
-yarn install svelvet
+yarn add svelvet
 ```
 
 ## Quick Start
@@ -50,7 +50,7 @@ A Svelvet component consists of nodes and edges (or just nodes). You can pass no
 Visit our [website](svelvet.io) to learn more on how to customize your nodes and edges to your liking! 
 
 ## Testing
-Testing is done with Vitest and the Svelte Testing Library. You can find the tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
+Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
 ```bash
 npm run test
 ```
