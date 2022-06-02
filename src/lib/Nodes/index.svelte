@@ -1,7 +1,10 @@
-<script>
-  import { onMouseMove, nodeSelected } from '$lib/stores/store';
+<script lang="ts">
+  import BaseEdge from '$lib/Edges/BaseEdge.svelte';
 
-  export let node;
+  import { onMouseMove, nodeSelected } from '$lib/stores/store';
+  import type { Node } from '$lib/types/types';
+
+  export let node: Node;
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected

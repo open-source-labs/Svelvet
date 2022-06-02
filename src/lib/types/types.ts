@@ -1,3 +1,4 @@
+import type { Position } from 'postcss';
 import type { XYPosition } from './utils';
 
 // interface for all nodes
@@ -10,14 +11,35 @@ export interface Node<T = any> {
   height?: number;
   bgColor?: string;
   fontSize?: number;
+  borderColor?: string;
+  textColor?: string;
 }
 
-// interface for basic edge
-export interface Edges<T = any> {
+export interface Edge<T = any> {
   id: string;
   source: number;
   target: number;
-  data?: T;
+  label?: string;
+  animate?: boolean;
+  noHandle?: boolean;
+  arrow?: boolean;
+}
+
+// interface for basic edge
+export interface DerivedEdge<T = any> {
+  sourceX: number;
+  sourceY: number;
+  sourcePosition: Position;
+  targetX: number;
+  targetY: number;
+  targetPosition: Position;
+}
+
+export interface EdgeProps<T = any> {
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
 }
 
 // handle type of either source or target

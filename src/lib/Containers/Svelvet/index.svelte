@@ -9,9 +9,10 @@
     backgroundStore
   } from '$lib/stores/store';
   import { onMount } from 'svelte';
+  import type { Node, DerivedEdge } from '$lib/types/index.js';
 
-  export let nodes;
-  export let edges;
+  export let nodes: Node;
+  export let edges: DerivedEdge;
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = false;
