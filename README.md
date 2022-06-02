@@ -73,10 +73,16 @@ The following is a list of features and improvements for future open source deve
 
 - Custom error handling
 - Increase test coverage for scalability
-- Interactive editing and controls
+- Contenxtual menus
 - Integration with mobile (click and drag nodes on your phone/tablet)
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
 - Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
+
+Additional feature requests from the Svelte community: 
+
+- Customize nodes via html templates
+- Customize edges (source/target) with icons 
+- Multiple sockets and socket compatibility for links
 
 ## Credits
 
