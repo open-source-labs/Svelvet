@@ -5,12 +5,15 @@
   <h2 class="text-4xl font-semibold mb-12">Core Concepts</h2>
   <h3 class="text-xl font-semibold">How Does Svelvet Work?</h3>
   <p class="my-4 text-gray-600">
-    A <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> flow component consists of nodes and
-    edges (or just nodes). You can pass arrays of
+    A <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> flow component renders any number of
+    nodes and edges. As a user of the component, you can pass arrays of
     <code class="bg-rose-100 rounded-lg p-1">nodes</code>
-    and <code class="bg-rose-100 rounded-lg p-1">edges</code> as props to the Svelvet component. All
-    node and edge ids need to be unique. A node requires a position and a label and an edge requires
-    a source (node id) and a target (node id).
+    and <code class="bg-rose-100 rounded-lg p-1">edges</code> as props to the Svelvet component.
+    Under the hood, Svelvet will render the nodes with information provided in the
+    <code class="bg-rose-100 rounded-lg p-1">nodes</code> array and connect them with edges
+    depending on its source and target IDs provided in the
+    <code class="bg-rose-100 rounded-lg p-1">edges</code> array, which correspond to the IDs of the nodes
+    to connect.
   </p>
 </div>
 <div>

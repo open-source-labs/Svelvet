@@ -31,7 +31,7 @@
       }}
       class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6">svelvet</a
     >
-    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v1.0.0</p>
+    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v1.0.1</p>
   </div>
   <nav class="space-x-11 text-sm text-gray-500 font-medium flex items-center">
     <a href="/" id="home" class="hover:text-rose-500 {activeLink === '/' ? 'text-rose-500' : ''}"

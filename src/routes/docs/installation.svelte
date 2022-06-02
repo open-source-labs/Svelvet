@@ -59,11 +59,14 @@
 <div>
   <h3 class="text-xl font-semibold mt-12">Terms</h3>
   <p class="my-4 text-gray-600">
-    Throughout the documentation we use the following terms for parts of a Svelvet flow diagram:
+    We use the following terms to describe parts of a Svelvet flow diagram:
   </p>
   <p class="my-4 ml-4 text-gray-600">
     <strong>Node:</strong> A node is a draggable element that can be connected to other nodes.
     <br />
     <strong>Edge:</strong> An edge is the connecting line between two nodes.
+    <br />
+    <strong>Handle:</strong> A handle is the element or shape that appears at the start or end of each
+    edge (e.g. semi-circle or arrowhead).
   </p>
 </div>
