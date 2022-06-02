@@ -47,7 +47,7 @@ A Svelvet component consists of nodes and edges (or just nodes). You can pass no
 <Svelvet nodes={nodes} edges={edges} />
 ```
 
-Visit our [website](svelvet.io) to learn more on how to customize your nodes and edges to your liking! 
+Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking! 
 
 ## Testing
 Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
