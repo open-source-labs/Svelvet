@@ -69,15 +69,7 @@ npm run test
 
 ## How to Contribute
 
-<<<<<<< HEAD
-The following is a list of features and improvements that any open source developer can iterate on. If you have any additional ideas, feel free to implement those as well!
-=======
-
-## How to Contribute
-
 The following is a list of features and improvements for future open source developers. If you have any additional ideas, feel free to implement those as well!
-
-> > > > > > > bf54416e04f3e58d545245e7e41c26fada7fd8ae
 
 - Custom error handling
 - Increase test coverage for scalability
