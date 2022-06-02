@@ -63,7 +63,7 @@ npm run test
 * Anu Sharma • [LinkedIn](https://www.linkedin.com/in/anu-sharma-6936a686/) • [Github](https://github.com/anulepau)
 
 ## How to Contribute 
-The following is a list of features and improvements that any open source developer can iterate on. If you have any additional ideas, feel free to implement those as well!
+The following is a list of features and improvements for future open source developers. If you have any additional ideas, feel free to implement those as well!
 
 - Custom error handling
 - Increase test coverage for scalability 
