@@ -1,6 +1,7 @@
 <script>
   import BaseEdge from '$lib/Edges/BaseEdge.svelte';
   import { Position } from '$lib/types/utils';
+  import type { Edges } from './types/types';
 
   // how to create a smooth, controlled beizer edge from source and target positions
   // referenced from ReactFlow.dev
@@ -46,7 +47,7 @@
     return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
   }
 
-  export let edge;
+  export let edge: Edges;
 
   $: params = {
     srcX: edge.sourceX,

@@ -3,7 +3,7 @@
 
   $: ({ sourceX, sourceY, targetX, targetY, label } = edgeTextProps);
 
-  const shiftRectY = 7;
+  const shiftRectY: number = 7;
   $: pxRatio = label.length < 3 ? 9 : 7;
 
   $: textCenterX = sourceX + (targetX - sourceX) / 2;

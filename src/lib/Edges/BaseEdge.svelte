@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import EdgeText from '$lib/Edges/EdgeText.svelte';
 
   export let baseEdgeProps;
