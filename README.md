@@ -20,7 +20,7 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 - **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is the data for the nodes and edges you want to render
 - **Customizable:** Svelvet provides developers the ability to customize their nodes and edges
 - **Fast rendering:** Nodes only re-render based on changes to their initial values
-- **Reliable:** Svelvet is written with Typescript and is tested with [playwright](https://playwright.dev/) and the [svelte testing library](https://testing-library.com/docs/svelte-testing-library/intro/)
+- **Reliable:** Svelvet is written with Typescript and is tested with [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/)
 
 ![screenshot](./src/assets/readme-gif.gif)
 
@@ -50,7 +50,7 @@ A Svelvet component consists of nodes and edges (or just nodes). You can pass no
 <Svelvet nodes={nodes} edges={edges} />
 ```
 
-Visit our [website](svelvet.io) to learn more on how to customize your nodes and edges to your liking!
+Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking!
 
 ## Testing
 
@@ -69,7 +69,15 @@ npm run test
 
 ## How to Contribute
 
+<<<<<<< HEAD
 The following is a list of features and improvements that any open source developer can iterate on. If you have any additional ideas, feel free to implement those as well!
+=======
+
+## How to Contribute
+
+The following is a list of features and improvements for future open source developers. If you have any additional ideas, feel free to implement those as well!
+
+> > > > > > > bf54416e04f3e58d545245e7e41c26fada7fd8ae
 
 - Custom error handling
 - Increase test coverage for scalability
