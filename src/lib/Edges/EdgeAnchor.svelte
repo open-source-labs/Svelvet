@@ -3,13 +3,7 @@
   export let y: number;
 </script>
 
-<circle 
-  cx={x} 
-  cy={y} 
-  r={5} 
-  stroke="white" 
-  fill="black" 
-/>
+<circle cx={x} cy={y} r={5} stroke="white" fill="black" />
 
 <style>
   circle {

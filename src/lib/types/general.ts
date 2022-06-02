@@ -10,17 +10,17 @@ export type SvelvetInitialState = {};
 
 // type for Viewport
 export type Viewport = {
-	x: number;
-	y: number;
-	zoom: number;
+  x: number;
+  y: number;
+  zoom: number;
 };
 
 // interface for Connection (edges)
 export interface Connection {
-	source: string | null;
-	target: string | null;
-	sourceHandle: string | null;
-	targetHandle: string | null;
+  source: string | null;
+  target: string | null;
+  sourceHandle: string | null;
+  targetHandle: string | null;
 }
 
 // // type for Viewport Helper function option
