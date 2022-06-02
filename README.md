@@ -73,7 +73,7 @@ The following is a list of features and improvements for future open source deve
 
 - Custom error handling
 - Increase test coverage for scalability
-- Contenxtual menus
+- Contextual menus
 - Integration with mobile (click and drag nodes on your phone/tablet)
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
 - Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
