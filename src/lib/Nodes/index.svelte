@@ -1,6 +1,4 @@
 <script lang="ts">
-  import BaseEdge from '$lib/Edges/BaseEdge.svelte';
-
   import { onMouseMove, nodeSelected } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
 
@@ -33,6 +31,7 @@
     height: {node.height}px; 
     background-color: {node.bgColor}; 
     border-color: {node.borderColor}; 
+    border-radius: {node.borderRadius}px;
     color: {node.textColor};"
 >
   <slot />
