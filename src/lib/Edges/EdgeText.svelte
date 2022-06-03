@@ -1,5 +1,7 @@
 <script lang="ts">
-  export let edgeTextProps;
+  import type { EdgeTextProps } from '$lib/types/types';
+
+  export let edgeTextProps: EdgeTextProps;
 
   $: ({ sourceX, sourceY, targetX, targetY, label } = edgeTextProps);
 
