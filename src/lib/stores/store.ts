@@ -1,18 +1,9 @@
 import { writable, derived } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { Node, DerivedEdge } from '../types/types';
+import type { Node, Edge } from '../types/types';
 
-// const defaultNode = {
-// 	id: null,
-// 	type: null,
-// 	position: {x: 10, y: 10},
-// 	width: 100px,
-// 	height: 50px,
-// 	backgroundColor: white,
-// }
-
-export const nodesStore: Writable<[]> = writable([]);
-export const edgesStore: Writable<[]> = writable([]);
+export const nodesStore: Writable<Node[]> = writable([]);
+export const edgesStore: Writable<Edge[]> = writable([]);
 export const widthStore: Writable<number> = writable(600);
 export const heightStore: Writable<number> = writable(600);
 export const backgroundStore: Writable<boolean> = writable(false);
@@ -37,9 +28,10 @@ export const onMouseMove = (e: any, nodeID: number) => {
 // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
 // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
 export const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
-  $edgesStore.forEach((edge: DerivedEdge) => {
-    let sourceNode: any; // should follow type Node
-    let targetNode: any;
+  $edgesStore.forEach((edge: any) => {
+    // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
+    let sourceNode: any; // any -> should follow type Node
+    let targetNode: any; // any -> should follow type Node
     $nodesStore.forEach((node: Node) => {
       if (edge.source === node.id) sourceNode = node;
       if (edge.target === node.id) targetNode = node;

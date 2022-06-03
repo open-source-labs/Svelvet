@@ -1,7 +1,8 @@
 <script lang="ts">
   import EdgeText from '$lib/Edges/EdgeText.svelte';
+  import type { EdgeProps } from '$lib/types/types';
 
-  export let baseEdgeProps;
+  export let baseEdgeProps: EdgeProps;
 
   $: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label } = baseEdgeProps);
 
