@@ -17,10 +17,10 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 ## Key Features
 
-- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is the data for the nodes and edges you want to render
+- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is the data for nodes and edges
 - **Customizable:** Svelvet provides developers the ability to customize their nodes and edges
-- **Fast rendering:** Nodes only re-render based on changes to their initial values
-- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/).
+- **Fast rendering:** Re-rendering is based on changes to your initial values for your nodes, edges and optional background
+- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/)
 
 ![screenshot](./src/assets/readme-gif.gif)
 
@@ -44,10 +44,10 @@ Start by importing Svelvet into your application:
 import Svelvet from 'svelvet';
 ```
 
-A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!
+A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. You can add a dot-grid background like the example below. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!
 
 ```bash
-<Svelvet nodes={nodes} edges={edges} />
+<Svelvet nodes={nodes} edges={edges} background />
 ```
 
 Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking!
@@ -71,6 +71,7 @@ npm run test
 
 The following is a list of features and improvements for future open source developers. If you have any additional ideas, feel free to implement those as well!
 
+- Default values for nodes
 - Custom error handling
 - Increase test coverage for scalability
 - Contextual menus
@@ -78,10 +79,12 @@ The following is a list of features and improvements for future open source deve
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
 - Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
 
-Additional feature requests from the Svelte community: 
+Additional feature and improvement requests from the Svelte community: 
 
-- Customize nodes via html templates
+- Customize nodes via html templates/Svelte components
+- Standardize node drag movement when zooming in and out
 - Customize edges (source/target) with icons 
+- Include left and right to anchor locations 
 - Multiple sockets and socket compatibility for links
 
 ## Credits
