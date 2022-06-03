@@ -20,7 +20,7 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 - **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is the data for the nodes and edges you want to render
 - **Customizable:** Svelvet provides developers the ability to customize their nodes and edges
 - **Fast rendering:** Nodes only re-render based on changes to their initial values
-- **Reliable:** Svelvet is written with Typescript and is tested with [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/)
+- **Reliable:** Svelvet is tested with [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/)
 
 ![screenshot](./src/assets/readme-gif.gif)
 
