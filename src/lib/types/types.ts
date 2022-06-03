@@ -11,6 +11,7 @@ export interface Node<T = any> {
   bgColor?: string;
   fontSize?: number;
   borderColor?: string;
+  borderRadius?: number;
   textColor?: string;
 }
 
