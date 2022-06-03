@@ -73,14 +73,20 @@ The following is a list of features and improvements for future open source deve
 
 - Custom error handling
 - Increase test coverage for scalability
-- Interactive editing and controls
+- Contextual menus
 - Integration with mobile (click and drag nodes on your phone/tablet)
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
 - Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
 
+Additional feature requests from the Svelte community: 
+
+- Customize nodes via html templates
+- Customize edges (source/target) with icons 
+- Multiple sockets and socket compatibility for links
+
 ## Credits
 
-Inspired by [React Flow](reactflow.dev), Svelvet expands the tools available to Svelte developers and makes Svelte more inviting to both new and seasoned software engineers. Under the hood, Svelvet depends on the [d3-zoom](https://github.com/d3/d3-zoom) library to zoom and pan across the graph.
+Inspired by [React Flow](https://github.com/wbkd/react-flow), Svelvet expands the tools available to Svelte developers and makes Svelte more inviting to both new and seasoned software engineers. Under the hood, Svelvet depends on the [d3-zoom](https://github.com/d3/d3-zoom) library to zoom and pan across the graph.
 
 ## License
 

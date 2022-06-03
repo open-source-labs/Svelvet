@@ -55,10 +55,11 @@
     {
       id: 6,
       position: { x: 72.5, y: 360 },
-      data: { label: 'Important Square!' },
+      data: { label: 'Important Circle!' },
       width: 80,
       height: 80,
       borderColor: '#FF4121',
+      borderRadius: 40,
       bgColor: 'white',
       textColor: '#FF4121'
     }

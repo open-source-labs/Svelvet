@@ -25,7 +25,7 @@
   const dotSize = 10;
 
   onMount(() => {
-    d3.select('svg').call(d3Zoom);
+    d3.select('.Edges').call(d3Zoom);
     d3.select('.Nodes').call(d3Zoom);
   });
 
@@ -49,7 +49,7 @@
         .attr('opacity', Math.min(e.transform.k, 1));
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
-    d3.select('svg g').attr('transform', e.transform);
+    d3.select('.Edges g').attr('transform', e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
     // selects and transforms all node divs from class 'Node'

@@ -7,6 +7,7 @@
     ['height', '(required) number'],
     ['bgColor', 'string of color name or hexcode'],
     ['borderColor', 'string of color name or hexcode'],
+    ['borderRadius', 'number'],
     ['textColor', 'string of color name or hexcode']
   ];
 </script>
@@ -23,12 +24,11 @@
 </p>
 <p class="text-gray-600 mt-2">
   Current customizations include node
-  <code class="code">position</code>,
-  <code class="code">width</code>,
-  <code class="code">height</code>,
-  <code class="code">bgColor</code>,
-  <code class="code">borderColor</code>, and
-  <code class="code">textColor</code>.
+  {#each nodeProps as [key], i}
+    <code class="code">{key}</code>{#if i < nodeProps.length - 2}{', '}
+    {:else if i === nodeProps.length - 2}{', and '}
+    {:else}.{/if}
+  {/each}
 </p>
 
 <h3 class="text-xl font-semibold mt-12">Node Properties</h3>
