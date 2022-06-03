@@ -1,4 +1,6 @@
-<script>
+<!-- COMMENT BACK IN AFTER VERSION UPDATE -->
+<h2 class="text-4xl font-semibold mb-12">TypeScript COMING SOON</h2>
+<!-- <script>
   import Gist from '../../components/Gist.svelte';
   import Svelvet from 'svelvet';
 
@@ -54,4 +56,4 @@
 <p class="my-4 text-gray-600">The diagram renders as below:</p>
 <div class="border rounded-lg shadow-md w-full overflow-hidden">
   <Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={400} background />
-</div>
+</div> -->

@@ -11,7 +11,8 @@
     ['Custom Nodes', 'custom-nodes'],
     ['Custom Edges', 'custom-edges'],
     ['Panning and Zooming', 'pan-and-zoom'],
-    ['Usage with Typescript', 'typescript'],
+    // COMMENT BACK IN AFTER NEXT VERSION UPDATE
+    // ['Usage with Typescript', 'typescript'],
     ['Testing', 'testing']
   ];
 
