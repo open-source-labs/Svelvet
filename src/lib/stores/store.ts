@@ -1,4 +1,6 @@
 import { writable, derived } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import type { Node, DerivedEdge } from '../types/types';
 
 // const defaultNode = {
 // 	id: null,
@@ -9,18 +11,18 @@ import { writable, derived } from 'svelte/store';
 // 	backgroundColor: white,
 // }
 
-export const nodesStore = writable([]);
-export const edgesStore = writable([]);
-export const widthStore = writable(600);
-export const heightStore = writable(600);
-export const backgroundStore = writable(false);
+export const nodesStore: Writable<[]> = writable([]);
+export const edgesStore: Writable<[]> = writable([]);
+export const widthStore: Writable<number> = writable(600);
+export const heightStore: Writable<number> = writable(600);
+export const backgroundStore: Writable<boolean> = writable(false);
 
-export const nodeSelected = writable(false);
+export const nodeSelected: Writable<boolean> = writable(false);
 
 // update position of selected node
-export const onMouseMove = (e, nodeID) => {
+export const onMouseMove = (e: any, nodeID: number) => {
   nodesStore.update((n) => {
-    n.forEach((node) => {
+    n.forEach((node: Node) => {
       if (node.id === nodeID) {
         node.position.x += e.movementX;
         node.position.y += e.movementY;
@@ -35,10 +37,10 @@ export const onMouseMove = (e, nodeID) => {
 // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
 // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
 export const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
-  $edgesStore.forEach((edge) => {
-    let sourceNode;
-    let targetNode;
-    $nodesStore.forEach((node) => {
+  $edgesStore.forEach((edge: DerivedEdge) => {
+    let sourceNode: any; // should follow type Node
+    let targetNode: any;
+    $nodesStore.forEach((node: Node) => {
       if (edge.source === node.id) sourceNode = node;
       if (edge.target === node.id) targetNode = node;
     });

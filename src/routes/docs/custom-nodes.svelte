@@ -1,6 +1,6 @@
 <script>
   const nodeProps = [
-    ['id', '(required)'],
+    ['id', '(required) number'],
     ['data', '(required) { label: string }'],
     ['position', '(required) { x: number, y: number }'],
     ['width', '(required) number'],

@@ -1,5 +1,4 @@
-<script>
-  import avatar from '../assets/avatar.png';
+<script lang="ts">
   import linkedin from '../assets/linkedin-svgrepo-com.svg';
   import github from '../assets/github-svgrepo-com.svg';
   import anu from '../assets/profiles/Anu-small.png';
@@ -8,12 +7,12 @@
   import aaron from '../assets/profiles/Aaron-small.png';
 
   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+  import type { Node, Edge } from '$lib/types/types';
   // import Svelvet from 'svelvet';
 
-  const initialNodes = [
+  const initialNodes: Node[] = [
     {
       id: 1,
-      type: 'input',
       position: { x: 190, y: 40 },
       data: { label: 'Input Node' },
       width: 175,
@@ -22,7 +21,6 @@
     },
     {
       id: 2,
-      type: 'default',
       position: { x: 355, y: 160 },
       data: { label: 'Default Node' },
       width: 175,
@@ -31,7 +29,6 @@
     },
     {
       id: 3,
-      type: 'output',
       position: { x: 190, y: 260 },
       data: { label: 'Output Node' },
       width: 175,
@@ -40,7 +37,6 @@
     },
     {
       id: 4,
-      type: 'output',
       position: { x: 25, y: 160 },
       data: { label: 'Drag me!' },
       width: 175,
@@ -49,7 +45,6 @@
     },
     {
       id: 5,
-      type: 'output',
       position: { x: 355, y: 360 },
       data: { label: 'Custom Node' },
       width: 175,
@@ -59,7 +54,6 @@
     },
     {
       id: 6,
-      type: 'output',
       position: { x: 72.5, y: 360 },
       data: { label: 'Important Square!' },
       width: 80,
@@ -70,7 +64,7 @@
     }
   ];
 
-  const initialEdges = [
+  const initialEdges: Edge[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
     { id: 'e2-3', source: 2, target: 3, animate: true },
     { id: 'e1-4', source: 1, target: 4 },

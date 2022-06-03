@@ -1,6 +1,6 @@
 <script>
   const edgeProps = [
-    ['id', '(required)'],
+    ['id', '(required) string'],
     ['source', '(required) node id'],
     ['target', '(required) node id'],
     ['type', '"straight" / set to "bezier" if not specified'],

@@ -19,13 +19,14 @@ export interface Edge<T = any> {
   source: number;
   target: number;
   label?: string;
+  type?: string;
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
 }
 
 // interface for basic edge
-export interface DerivedEdge<T = any> {
+export interface DerivedEdge extends Edge {
   sourceX: number;
   sourceY: number;
   sourcePosition: Position;
