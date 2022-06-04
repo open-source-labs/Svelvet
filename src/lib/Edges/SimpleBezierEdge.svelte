@@ -1,11 +1,28 @@
 <script lang="ts">
   import BaseEdge from '$lib/Edges/BaseEdge.svelte';
   import { Position } from '$lib/types/utils';
-  import type { Edge } from '$lib/types/types';
+  import type { DerivedEdge } from '$lib/types/types';
 
   // how to create a smooth, controlled beizer edge from source and target positions
   // referenced from ReactFlow.dev
-  function getControl({ pos, x1, y1, x2, y2 }) {
+  interface GetSimpleBezierPathParams {
+    srcX: number;
+    srcY: number;
+    sourcePosition?: Position;
+    trgX: number;
+    trgY: number;
+    targetPosition?: Position;
+  }
+
+  interface GetControlParams {
+    pos?: Position;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }
+
+  function getControl({ pos, x1, y1, x2, y2 }: GetControlParams): [number?, number?] {
     let ctX;
     let ctY;
     switch (pos) {
@@ -29,7 +46,14 @@
 
   // returns string to pass into edge 'path' svg d attribute (where to be drawn)
   // referenced from ReactFlow.dev
-  function getSimpleBezierPath({ srcX, srcY, sourcePosition, trgX, trgY, targetPosition }) {
+  function getSimpleBezierPath({
+    srcX,
+    srcY,
+    sourcePosition,
+    trgX,
+    trgY,
+    targetPosition
+  }: GetSimpleBezierPathParams): string {
     const [sourceControlX, sourceControlY] = getControl({
       pos: sourcePosition,
       x1: srcX,
@@ -47,7 +71,7 @@
     return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
   }
 
-  export let edge: Edge;
+  export let edge: DerivedEdge;
 
   $: params = {
     srcX: edge.sourceX,

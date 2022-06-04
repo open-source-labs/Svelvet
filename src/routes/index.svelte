@@ -6,9 +6,10 @@
   import alexander from '../assets/profiles/Alexander-small.png';
   import aaron from '../assets/profiles/Aaron-small.png';
 
-  import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-  import type { Node, Edge } from '$lib/types/types';
-  // import Svelvet from 'svelvet';
+  // import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+  // import type { Node, Edge } from '$lib/types/types';
+  import type { Node, Edge } from 'svelvet';
+  import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
@@ -50,16 +51,17 @@
       width: 175,
       height: 40,
       bgColor: '#C8FFC7',
-      borderColor: 'transparent'
+      borderColor: 'transparent',
+      borderRadius: 0
     },
     {
       id: 6,
       position: { x: 72.5, y: 360 },
-      data: { label: 'Important Circle!' },
+      data: { label: 'Custom Node' },
       width: 80,
       height: 80,
       borderColor: '#FF4121',
-      borderRadius: 40,
+      borderRadius: 30,
       bgColor: 'white',
       textColor: '#FF4121'
     }
@@ -118,7 +120,7 @@
     </div>
   </div>
 </div>
-<!-- <div class="h-[380px] md:h-[420px] w-screen"> -->
+
 <div class="h-fit md:ml-8 md:mr-8 md:w-fit">
   <div class="flex flex-col-reverse items-center md:flex-row h-full mx-12 my-20 md:my-32 md:gap-10">
     <div
@@ -247,7 +249,6 @@
     .css-blurry-gradient {
       opacity: 0.8;
       top: 50%;
-      /* opacity: 0.6; */
     }
   }
 

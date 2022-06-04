@@ -1,6 +1,6 @@
 import { writable, derived } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { Node, Edge } from '../types/types';
+import type { Node, Edge, DerivedEdge } from '../types/types';
 
 export const nodesStore: Writable<Node[]> = writable([]);
 export const edgesStore: Writable<Edge[]> = writable([]);
