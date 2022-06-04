@@ -35,7 +35,7 @@ Shout out to our contributors! Here's what's new:
 - **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon! 
 - **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background.
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
-- **Iterable:** There is so much room for improvement and new features - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
+- **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
 ![screenshot](./src/assets/readme-gif.gif)
 
