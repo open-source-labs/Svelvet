@@ -17,10 +17,12 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 ## Version Updates 
 
-### Changelog v1.0.2 
+### Changelog 
+<details><summary>v1.0.2</summary>
 - Fixed bug with importing types for TypeScript applications
 - Added a 'borderRadius' customization option for nodes
 - Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only) 
+</details>
 
 ## Key Features
 
