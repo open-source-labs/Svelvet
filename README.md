@@ -5,6 +5,7 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
 ![GitHub Stars](https://img.shields.io/github/stars/oslabs-beta/svelvet?color=%23fb7182)
+![GitHub Forks](https://img.shields.io/github/forks/oslabs-beta/Svelvet?color=%23fb7182)
 ![NPM Version](https://img.shields.io/npm/v/svelvet?color=%23fb7182&label=version)
 
 # Simplify Diagramming with Svelvet!
