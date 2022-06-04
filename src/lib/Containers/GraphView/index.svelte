@@ -29,13 +29,15 @@
     d3.select('.Nodes').call(d3Zoom);
   });
 
-  let d3Zoom = d3
+  // @TODO: Update d3Zoom type (refer to d3Zoom docs)
+  let d3Zoom: any = d3
     .zoom()
     .filter(() => !$nodeSelected)
     .scaleExtent([0.4, 2])
     .on('zoom', handleZoom);
 
-  function handleZoom(e) {
+  // @TODO: Update mouse event type
+  function handleZoom(e: any) {
     // should not run d3.select below if backgroundStore is false
     if ($backgroundStore) {
       d3.select('#background')

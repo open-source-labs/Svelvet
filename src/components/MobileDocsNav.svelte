@@ -119,10 +119,9 @@
               >Pan and Zoom</a
             >
           </li>
-          <!-- COMMENT BACK IN WHEN TYPESCRIPT ISSUE IS RESOLVED IN NEXT VERSION UPDATE -->
-          <!-- <li class:bg-rose-100={activeLink.includes('typescript')}>
+          <li class:bg-rose-100={activeLink.includes('typescript')}>
             <a on:click={toggleMenu} href="/docs/typescript" class="block py-4 px-12">TypeScript</a>
-          </li> -->
+          </li>
           <li class:bg-rose-100={activeLink.includes('testing')}>
             <a on:click={toggleMenu} href="/docs/testing" class="block py-4 px-12">Testing</a>
           </li>
