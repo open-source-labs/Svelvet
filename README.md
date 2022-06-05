@@ -85,23 +85,20 @@ npm run test
 
 ## How to Contribute
 
-The following is a list of features and improvements for future open source developers. If you have any additional ideas, feel free to implement those as well!
+The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
-- Default values for nodes
+- Default values for nodes and edges
+- Constant node drag speed regardless of zoom in/out
+- Add left and right anchor locations 
 - Contextual menus
+- Customize edges (source/target) with icons 
+- Customize nodes via html templates/Svelte components
+- Multiple sockets and socket compatibility for links
 - Custom error handling
 - Increase test coverage for scalability
 - Integration with mobile (click and drag nodes on your phone/tablet)
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
 - Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
-
-Additional feature and improvement requests from the Svelte community: 
-
-- Customize nodes via html templates/Svelte components
-- Constant node drag speed when zooming in and out
-- Customize edges (source/target) with icons 
-- Include left and right anchor locations 
-- Multiple sockets and socket compatibility for links
 
 ## Credits
 
