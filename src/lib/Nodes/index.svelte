@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { onMouseMove, nodeSelected } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
 
   export let node: Node;
+  export let key: string;
+
+  const { onMouseMove, nodeSelected } = findOrCreateStore(key);
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected

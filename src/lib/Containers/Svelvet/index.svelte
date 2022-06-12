@@ -1,13 +1,6 @@
 <script lang="ts">
   import GraphView from '$lib/Containers/GraphView/index.svelte';
-  import {
-    nodesStore,
-    edgesStore,
-    derivedEdges,
-    widthStore,
-    heightStore,
-    backgroundStore
-  } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/stores/store';
   import { onMount } from 'svelte';
   import type { Node, Edge } from '$lib/types/index.js';
 
@@ -17,17 +10,22 @@
   export let height: number = 600;
   export let background: boolean = false;
 
+  const key = (Math.random() + 1).toString(36).substring(7);
+  const svelvetStore = findOrCreateStore(key);
+
+  const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
+
   onMount(() => {
-    $nodesStore = nodes;
-    $edgesStore = edges;
-    $widthStore = width;
-    $heightStore = height;
-    $backgroundStore = background;
+    svelvetStore.nodesStore.set(nodes);
+    svelvetStore.edgesStore.set(edges);
+    svelvetStore.widthStore.set(width);
+    svelvetStore.heightStore.set(height);
+    svelvetStore.backgroundStore.set(background);
   });
 </script>
 
 <div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
-  <GraphView {nodesStore} {derivedEdges} />
+  <GraphView {nodesStore} {derivedEdges} {key} />
 </div>
 
 <style>
