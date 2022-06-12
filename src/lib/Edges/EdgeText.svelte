@@ -25,6 +25,7 @@
   <g>
     <rect
       class="EdgeTextBg"
+      data-testid="edge-text-bg"
       fill="white"
       x={textCenterX - labelPx / 2}
       y={textCenterY - shiftRectY}
