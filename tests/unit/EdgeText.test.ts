@@ -14,14 +14,12 @@ beforeEach(() => {
 
 describe('edgeText label', () => {
   test('should render the label text', () => {
-    //   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
     const label = screen.getByText('edge text test');
 
     expect(label).toBeInTheDocument();
   });
 
   test('should render the label at the correct coordinates', () => {
-    //   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
     const label = screen.getByText('edge text test');
 
     expect(label).toHaveAttribute('x', '100');
@@ -29,7 +27,6 @@ describe('edgeText label', () => {
   });
 
   test('should render the edge text background', () => {
-    //   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
     const label = screen.getByTestId('edge-text-bg');
 
     expect(label).toHaveAttribute('x', '58');
