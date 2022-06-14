@@ -70,7 +70,7 @@
   Play around with the flow diagram below!
 </p>
 <div class="overflow-hidden my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} background={true} />
+  <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} background />
 </div>
 
 <style>

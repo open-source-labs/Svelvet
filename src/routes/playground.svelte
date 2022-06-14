@@ -44,6 +44,50 @@
     { id: 'e2-4', source: 2, target: 4, animate: true },
     { id: 'e2-5', source: 3, target: 4, animate: true }
   ];
+
+  const otherNodes = [
+    {
+      id: 1,
+      position: { x: 300, y: 50 },
+      data: { label: 'New Input Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
+    },
+    {
+      id: 2,
+      position: { x: 125, y: 150 },
+      data: { label: 'New Option #1' },
+      width: 175,
+      height: 40,
+      bgColor: '#B8FFC6',
+      borderColor: 'transparent'
+    },
+    {
+      id: 3,
+      position: { x: 475, y: 150 },
+      data: { label: 'New Option #2' },
+      width: 175,
+      height: 40,
+      bgColor: '#FFB8B8',
+      borderColor: 'transparent'
+    },
+    {
+      id: 4,
+      position: { x: 300, y: 250 },
+      data: { label: 'New Output Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
+    }
+  ];
+  const otherEdges = [
+    { id: 'e1-2', source: 1, target: 2, label: '  Correct  ', animate: true },
+    { id: 'e2-3', source: 1, target: 3, label: '  Wrong  ', animate: true },
+    { id: 'e2-4', source: 2, target: 4, noHandle: true },
+    { id: 'e2-5', source: 3, target: 4, noHandle: true }
+  ];
 </script>
 
 <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} background />
+<Svelvet nodes={otherNodes} edges={otherEdges} width={1000} background />

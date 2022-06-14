@@ -8,7 +8,7 @@
   import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
   import Node from '$lib/Nodes/index.svelte';
 
-  import { nodeSelected, backgroundStore, widthStore, heightStore } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/stores/store';
 
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -20,13 +20,17 @@
 
   export let nodesStore: any;
   export let derivedEdges: any;
+  export let key: string;
+
+  const svelvetStore = findOrCreateStore(key);
+  const { nodeSelected, backgroundStore, widthStore, heightStore } = svelvetStore;
 
   const gridSize = 15;
   const dotSize = 10;
 
   onMount(() => {
-    d3.select('.Edges').call(d3Zoom);
-    d3.select('.Nodes').call(d3Zoom);
+    d3.select(`.Edges-${key}`).call(d3Zoom);
+    d3.select(`.Nodes-${key}`).call(d3Zoom);
   });
 
   // @TODO: Update d3Zoom type (refer to d3Zoom docs)
@@ -40,7 +44,7 @@
   function handleZoom(e: any) {
     // should not run d3.select below if backgroundStore is false
     if ($backgroundStore) {
-      d3.select('#background')
+      d3.select(`#background-${key}`)
         .attr('x', e.transform.x)
         .attr('y', e.transform.y)
         .attr('width', gridSize * e.transform.k)
@@ -51,11 +55,11 @@
         .attr('opacity', Math.min(e.transform.k, 1));
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
-    d3.select('.Edges g').attr('transform', e.transform);
+    d3.select(`.Edges-${key} g`).attr('transform', e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
     // selects and transforms all node divs from class 'Node'
-    d3.select('.Node')
+    d3.select(`.Node-${key}`)
       .style(
         'transform',
         'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')'
@@ -64,18 +68,18 @@
   }
 </script>
 
-<div class="Nodes">
-  <div class="Node">
+<div class={`Nodes Nodes-${key}`}>
+  <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
-      <Node {node}>{node.data.label}</Node>
+      <Node {node} {key}>{node.data.label}</Node>
     {/each}
   </div>
 </div>
 
-<svg class="Edges" viewBox="0 0 {$widthStore} {$heightStore}">
+<svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}">
   <defs>
     <pattern
-      id="background"
+      id={`background-${key}`}
       x="0"
       y="0"
       width={gridSize}
@@ -93,7 +97,7 @@
   </defs>
 
   {#if $backgroundStore}
-    <rect width="100%" height="100%" style="fill: url(#background);" />
+    <rect width="100%" height="100%" style="fill: url(#background-{key});" />
   {/if}
 
   <g>
