@@ -97,7 +97,7 @@
   </defs>
 
   {#if $backgroundStore}
-    <rect width="100%" height="100%" style="fill: url(#background);" />
+    <rect width="100%" height="100%" style="fill: url(#background-{key});" />
   {/if}
 
   <g>
