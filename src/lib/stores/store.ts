@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import type { Readable, Writable } from 'svelte/store';
 import type { Node, Edge, DerivedEdge } from '../types/types';
 
@@ -8,11 +8,12 @@ interface CoreSvelvetStore {
   widthStore: Writable<number>;
   heightStore: Writable<number>;
   backgroundStore: Writable<boolean>;
-  nodeSelected: Writable<boolean>;
+  nodeSelected: Writable<number>;
 }
 
 interface SvelvetStore extends CoreSvelvetStore {
   onMouseMove: (e: any, nodeID: number) => void;
+  onNodeClick: (e: any, nodeID: number) => void;
   derivedEdges: Readable<Edge[]>;
 }
 
@@ -30,7 +31,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     widthStore: writable(600),
     heightStore: writable(600),
     backgroundStore: writable(false),
-    nodeSelected: writable(false)
+    nodeSelected: writable(-1)
   };
 
   // update position of selected node
@@ -45,7 +46,15 @@ export function findOrCreateStore(key: string): SvelvetStore {
       return [...n];
     });
   };
+  const nodeSelected = coreSvelvetStore.nodeSelected;
+  const onNodeClick = (e: any, nodeID: number) => {
+    get(nodesStore).forEach((node) => {
+            if (node.id === get(nodeSelected)) {
+                node.clickCallback?.(node.id, node.data.label)
+            }
 
+    })
+}
   const edgesStore = coreSvelvetStore.edgesStore;
   const nodesStore = coreSvelvetStore.nodesStore;
 
@@ -83,6 +92,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
   const svelvetStore = {
     ...coreSvelvetStore,
     onMouseMove,
+    onNodeClick,
     derivedEdges
   };
 
