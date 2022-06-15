@@ -50,7 +50,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
   const onNodeClick = (e: any, nodeID: number) => {
     get(nodesStore).forEach((node) => {
             if (node.id === get(nodeSelected)) {
-                node.clickCallback?.(node.id, node.data.label)
+                node.clickCallback?.(node)
             }
 
     })
