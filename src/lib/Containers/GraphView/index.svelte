@@ -36,7 +36,7 @@
   // @TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom: any = d3
     .zoom()
-    .filter(() => $nodeSelected !== -1)
+    .filter(() => !$nodeSelected)
     .scaleExtent([0.4, 2])
     .on('zoom', handleZoom);
 
