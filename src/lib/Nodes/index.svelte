@@ -5,7 +5,7 @@
   export let node: Node;
   export let key: string;
 
-  const { onMouseMove, onNodeClick, nodeSelected } = findOrCreateStore(key);
+  const { onMouseMove, onNodeClick, nodeSelected, nodeIdSelected} = findOrCreateStore(key);
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
@@ -16,9 +16,9 @@
 <svelte:window
   on:mouseup={(e) => {
     moving = false;
-    if(!moved && node.id == $nodeSelected){
+    $nodeSelected = false;
+    if(!moved && node.id == $nodeIdSelected){
       onNodeClick(e, node.id)
-      $nodeSelected = -1;
     }
     moved = false;
   }}
@@ -33,7 +33,8 @@
 <div
   on:mousedown={() => {
     moving = true;
-    $nodeSelected = node.id;
+    $nodeIdSelected = node.id;
+    $nodeSelected = true;
   }}
   class="Node"
   style="left: {node.position.x}px; 
