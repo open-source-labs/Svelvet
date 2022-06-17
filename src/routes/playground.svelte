@@ -2,6 +2,9 @@
   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
   // import Svelvet from 'svelvet';
 
+  const handleClick = (e) => {
+    console.log(e);
+  };
   const initialNodes = [
     {
       id: 1,
@@ -9,7 +12,8 @@
       data: { label: 'Input Node' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      clickCallback: handleClick
     },
     {
       id: 2,
@@ -18,7 +22,8 @@
       width: 175,
       height: 40,
       bgColor: '#B8FFC6',
-      borderColor: 'transparent'
+      borderColor: 'transparent',
+      clickCallback: handleClick
     },
     {
       id: 3,
@@ -27,7 +32,8 @@
       width: 175,
       height: 40,
       bgColor: '#FFB8B8',
-      borderColor: 'transparent'
+      borderColor: 'transparent',
+      clickCallback: handleClick
     },
     {
       id: 4,
@@ -35,7 +41,8 @@
       data: { label: 'Output Node' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      clickCallback: handleClick
     }
   ];
   const initialEdges = [
@@ -52,7 +59,8 @@
       data: { label: 'New Input Node' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      clickCallback: handleClick
     },
     {
       id: 2,
@@ -61,7 +69,8 @@
       width: 175,
       height: 40,
       bgColor: '#B8FFC6',
-      borderColor: 'transparent'
+      borderColor: 'transparent',
+      clickCallback: handleClick
     },
     {
       id: 3,
@@ -70,7 +79,8 @@
       width: 175,
       height: 40,
       bgColor: '#FFB8B8',
-      borderColor: 'transparent'
+      borderColor: 'transparent',
+      clickCallback: handleClick
     },
     {
       id: 4,
@@ -78,7 +88,8 @@
       data: { label: 'New Output Node' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      clickCallback: handleClick
     }
   ];
   const otherEdges = [
@@ -89,5 +100,5 @@
   ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} width={1000} background />
-<Svelvet nodes={otherNodes} edges={otherEdges} width={1000} background />
+<Svelvet nodes={initialNodes} edges={initialEdges} width={600} background />
+<Svelvet nodes={otherNodes} edges={otherEdges} width={600} background />
