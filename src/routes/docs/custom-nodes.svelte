@@ -7,8 +7,9 @@
     ['height', '(required) number'],
     ['bgColor', 'string of color name or hexcode'],
     ['borderColor', 'string of color name or hexcode'],
+    ['textColor', 'string of color name or hexcode'],
     ['borderRadius', 'number'],
-    ['textColor', 'string of color name or hexcode']
+    ['clickCallback', 'Function']
   ];
 </script>
 

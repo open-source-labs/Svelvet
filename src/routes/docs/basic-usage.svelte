@@ -10,7 +10,7 @@
 <p class="my-8 text-gray-600">
   The dimensions of the rendered component itself is set to 600 x 600 by default, but can be altered
   by providing <code class="code">width</code> and
-  <code class="code">height</code> properties to <code class="code">Svelvet</code>.
+  <code class="code">height</code> attributes to <code class="code">Svelvet</code>.
 </p>
 <p class="my-8 text-gray-600">
   A <code class="code">nodes</code> array, an
