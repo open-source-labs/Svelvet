@@ -12,6 +12,7 @@ export interface Node<T = any> {
   borderColor?: string;
   borderRadius?: number;
   textColor?: string;
+  clickCallback?: Function;
 }
 
 export interface Edge {
