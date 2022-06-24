@@ -21,6 +21,13 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 Shout out to our contributors! Here's what's new: 
 
 ### Changelog 
+<details><summary>v1.0.3</summary>
+<ul>
+  <li>Fixed bug with running tests</li>
+  <li>Added ability to render multiple unique Svelvet components</li> 
+  <li>Added a 'clickCallback' customization option for nodes</li>
+</ul>
+</details>
 <details><summary>v1.0.2</summary>
 <ul>
   <li>Fixed bug with importing types for TypeScript applications</li>
