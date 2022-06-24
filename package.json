@@ -4,11 +4,11 @@
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "authors": "Anu, Aaron, Alexander, Andrew",
   "license": "MIT",
-  "bugs": "https://github.com/oslabs-beta/Svelvet/issues",
-  "homepage": "https://github.com/oslabs-beta/Svelvet",
+  "bugs": "https://github.com/open-source-labs/Svelvet/issues",
+  "homepage": "https://github.com/open-source-labs/Svelvet",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oslabs-beta/Svelvet"
+    "url": "https://github.com/open-source-labs/Svelvet"
   },
   "scripts": {
     "dev": "svelte-kit dev",

@@ -21,7 +21,7 @@
         href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
         >Blog</a
       >
-      <a target="_blank" href="https://github.com/oslabs-beta/Svelvet">GitHub</a>
+      <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
       <a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
     </div>
@@ -30,7 +30,7 @@
     <div class="text-xs">
       &copy; 2022 Svelvet | <a
         target="_blank"
-        href="https://github.com/oslabs-beta/Svelvet/blob/main/LICENSE">MIT License</a
+        href="https://github.com/open-source-labs/Svelvet/blob/main/LICENSE">MIT License</a
       >
     </div>
     <div class="text-xs">

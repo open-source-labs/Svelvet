@@ -139,7 +139,7 @@
       <li>
         <a
           on:click={toggleMenu}
-          href="https://github.com/oslabs-beta/Svelvet"
+          href="https://github.com/open-source-labs/Svelvet"
           target="_blank"
           class="block py-5 px-12 font-medium text-gray-800">Github</a
         >
