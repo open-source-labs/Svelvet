@@ -75,6 +75,17 @@
 		if (editor) editor.getAllMarks().forEach(m => m.clear());
 	}
 
+	export function getCodeEditorValue() {
+		// get code from the editor
+		const codeToSave = editor.getValue();
+		// console.log(codeToSave);
+		// instead of returning codeToSave -> send to database
+		// we'd probably want to create an object with user information
+		// and add codeToSave as a property on our object
+		// {user: userID, code: codeToSave}
+		return codeToSave;
+	}
+
 	const modes = {
 		js: {
 			name: 'javascript',

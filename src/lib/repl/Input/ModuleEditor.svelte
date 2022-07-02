@@ -33,6 +33,11 @@
 			warnings = $bundle.warnings;
 		}, 400);
 	}
+
+
+
+	// const getValue = getCodeEditorValue();
+
 </script>
 
 <style>
@@ -71,6 +76,7 @@
 			on:change={handle_change}
 		/>
 	</div>
+	<button on:click={() => console.log(editor.getCodeEditorValue())}>TESTING SAVE BUTTON</button>
 
 	<div class="info">
 		{#if error}
@@ -82,3 +88,4 @@
 		{/if}
 	</div>
 </div>
+
