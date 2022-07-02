@@ -2,7 +2,6 @@
   import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
   import { logDOM } from '@testing-library/svelte';
-import { prevent_default } from 'svelte/internal';
 
 
 
@@ -35,7 +34,7 @@ import { prevent_default } from 'svelte/internal';
     }
   }}
   on:touchstart={(e) => {
-    e.preventDefault()
+    e.preventDefault();
     console.log('touchstart event--->', e)
     console.log('div location--->', e.target.getBoundingClientRect())
     moving = true;
@@ -46,6 +45,7 @@ import { prevent_default } from 'svelte/internal';
     $nodeSelected = false;
   }}
   on:mousedown={(e) => {
+    console.log('mouse event-->', e)
     e.preventDefault(); //need this?
     moving = true;
     $nodeIdSelected = node.id;

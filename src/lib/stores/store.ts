@@ -54,18 +54,18 @@ export function findOrCreateStore(key: string): SvelvetStore {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if(node.id === nodeID) {
-          // working great, concerned about performance of getBoundingClientRect
+          // Not working perfectly, concerned about performance of getBoundingClientRect
           // maybe call tweening to smooth node movement?
-          const bcr = e.target.getBoundingClientRect();
-          const x = e.changedTouches[0].pageX - bcr.x;
-          const y = e.changedTouches[0].pageY - bcr.y;
-          if(x > 1 || x < -1 || y > 1 || y < -1){
-            node.position.x += x - (node.width / 2);
-            node.position.y += y - (node.height / 2);
-          } else {
-          node.position.x += x;
-          node.position.y += y;
-          }
+          // const bcr = e.target.getBoundingClientRect();
+          // const x = e.changedTouches[0].pageX - bcr.x;
+          // const y = e.changedTouches[0].pageY - bcr.y;
+          // if(x > 1 || x < -1 || y > 1 || y < -1){
+          //   node.position.x += x - (node.width / 2);
+          //   node.position.y += y - (node.height / 2);
+          // } else {
+          // node.position.x += x;
+          // node.position.y += y;
+          // }
           /* THIS ONE CREATES AN OFFSET
           // const bcr = e.target.getBoundingClientRect();
           // const x = e.changedTouches[0].pageX - bcr.x;
@@ -74,7 +74,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           // node.position.y += y;
           */
 
-          /* currently working but much more verbose, NEEDS TO BE REMOVED BEFORE PRODUCTION!!!!!
+          // currently working but much more verbose, NEEDS TO BE REMOVED BEFORE PRODUCTION!!!!!
           const {x, y, width, height} = e.target.getBoundingClientRect();
           const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
@@ -85,7 +85,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           } else {
           node.position.x += offsetX;
           node.position.y += offsetY;
-          } */
+          } 
         }
       });
       return [...n];
