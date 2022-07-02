@@ -17,7 +17,7 @@
     select,
     selectAll
   };
-
+  //typescript -> nodestore can be any data type?
   export let nodesStore: any;
   export let derivedEdges: any;
   export let key: string;
@@ -32,7 +32,7 @@
     d3.select(`.Edges-${key}`).call(d3Zoom);
     d3.select(`.Nodes-${key}`).call(d3Zoom);
   });
-
+  // Ask Team : What was implemented to try to get d3 selection to work on mobile?
   // @TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom: any = d3
     .zoom()
@@ -68,6 +68,7 @@
   }
 </script>
 
+<!-- Ask Team: about use of destiny operator within forEach loop -->
 <div class={`Nodes Nodes-${key}`}>
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}

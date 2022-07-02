@@ -21,12 +21,14 @@ interface SvelvetStore extends CoreSvelvetStore {
 
 const svelvetStores: { [key: string]: SvelvetStore } = {};
 
+// refer to svelvet/index, if key does not exist, then create one.
+//Creates one svelvet with a key
 export function findOrCreateStore(key: string): SvelvetStore {
   const existing = svelvetStores[key];
   if (existing) {
     return existing;
   }
-
+  //Setting defaults of core svelvet store and making them a store using writable
   const coreSvelvetStore: CoreSvelvetStore = {
     nodesStore: writable([]),
     edgesStore: writable([]),
@@ -38,6 +40,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
   };
 
   // update position of selected node
+  // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
   const onMouseMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
@@ -50,6 +53,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
       return [...n];
     });
   };
+
   const onTouchMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
@@ -94,12 +98,12 @@ export function findOrCreateStore(key: string): SvelvetStore {
   const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
   const onNodeClick = (e: any, nodeID: number) => {
     get(nodesStore).forEach((node) => {
-            if (node.id === get(nodeIdSelected)) {
-                node.clickCallback?.(node)
-            }
-
-    })
-}
+      if (node.id === get(nodeIdSelected)) {
+        node.clickCallback?.(node);
+      }
+    });
+  };
+  //ANSWER: setting edges and nodes for the store
   const edgesStore = coreSvelvetStore.edgesStore;
   const nodesStore = coreSvelvetStore.nodesStore;
 
@@ -107,6 +111,8 @@ export function findOrCreateStore(key: string): SvelvetStore {
   // updates edgesStore with new object properties (edge,sourceX, edge.targetY, etc) for edgesArray
   // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
   // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
+
+  //ANSWER: Taking the information and adding other properties such as x,y, target x and y, so that the edge has enough information to create the line. In order to create any edge we need starting point and ending point of each line. All we give to the edges array is a source and a target.
   const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
     $edgesStore.forEach((edge: any) => {
       // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
@@ -116,6 +122,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) targetNode = node;
       });
+      //
       if (sourceNode) {
         let left = sourceNode.position.x;
         let top = sourceNode.position.y;
@@ -133,7 +140,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     });
     return [...$edgesStore];
   });
-
+  //Puts everything together as the svelvet store and use the key so that it can be used.
   const svelvetStore = {
     ...coreSvelvetStore,
     onTouchMove,

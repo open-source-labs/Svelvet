@@ -1,3 +1,4 @@
+<!-- Codesandbox and properties of nodes / customization -->
 <script>
   const nodeProps = [
     ['id', '(required) number'],

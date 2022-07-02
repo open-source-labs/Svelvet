@@ -69,6 +69,10 @@
       <li>
         <a on:click={toggleMenu} href="/docs/installation" class="block py-6">Documentation</a>
       </li>
+      <!-- //TODO create button for create page -->
+      <li>
+        <a on:click={toggleMenu} href="/playground" class="block py-6">Playground</a>
+      </li>
       <li>
         <a
           on:click={toggleMenu}
