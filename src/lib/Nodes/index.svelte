@@ -50,6 +50,7 @@
 </div>
 
 <style>
+  /* default we could just add 2 liner width and height, 175, 140 */
   .Node {
     position: absolute;
     display: grid;

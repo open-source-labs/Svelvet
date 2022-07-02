@@ -1,3 +1,4 @@
+<!-- Basic properties and how to change styles of edges  -->
 <script>
   const edgeProps = [
     ['id', '(required) string'],
