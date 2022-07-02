@@ -8,7 +8,7 @@
   const initialNodes = [
     {
       id: 1,
-      position: { x: 300, y: 50 },
+      position: { x: 300, y: 150 },
       data: { label: 'Input Node' },
       width: 175,
       height: 40,
@@ -17,7 +17,7 @@
     },
     {
       id: 2,
-      position: { x: 125, y: 150 },
+      position: { x: 200, y: 250 },
       data: { label: 'Option #1' },
       width: 175,
       height: 40,

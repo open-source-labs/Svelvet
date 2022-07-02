@@ -80,6 +80,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
           console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
           if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+            //this is upset because I removed the require from the Node types
             node.position.x += offsetX - (node.width / 2);
             node.position.y += offsetY - (node.height / 2);
           } else {

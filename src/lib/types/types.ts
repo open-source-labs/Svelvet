@@ -3,7 +3,7 @@ import type { XYPosition } from './utils';
 
 export interface Node<T = any> {
   id: number;
-  position: XYPosition;
+  position?: XYPosition;
   data: T;
   width?: number;
   height?: number;

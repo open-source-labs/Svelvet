@@ -34,9 +34,7 @@
     }
   }}
   on:touchstart={(e) => {
-    e.preventDefault();
-    console.log('touchstart event--->', e)
-    console.log('div location--->', e.target.getBoundingClientRect())
+    e.preventDefault(); // is this neccessary?
     moving = true;
     $nodeSelected = true;
   }}
