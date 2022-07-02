@@ -54,6 +54,13 @@
       target="_blank"
       class="hover:text-rose-500 pr-5">Github</a
     >
+    <a
+      href="/playground"
+      id="playground"
+      class="hover:text-rose-500 {activeLink.includes('playground') ? 'text-rose-500' : ''}">Playground</a
+    >
+    <!-- Add logic for OAuth and conditionally render if the user is logged in, change button text to sign out and vice versa -->
+    <button>Log in TESTING</button>
   </nav>
 </div>
 
