@@ -15,6 +15,7 @@ interface CoreSvelvetStore {
 interface SvelvetStore extends CoreSvelvetStore {
   onMouseMove: (e: any, nodeID: number) => void;
   onNodeClick: (e: any, nodeID: number) => void;
+  onTouchMove: (e: any, nodeID: number) => void;
   derivedEdges: Readable<Edge[]>;
 }
 
@@ -44,6 +45,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
+          //console.log(`node.position.x --> ${node.position.x}`)
           node.position.x += e.movementX;
           node.position.y += e.movementY;
         }
@@ -52,7 +54,47 @@ export function findOrCreateStore(key: string): SvelvetStore {
     });
   };
 
-  //ANSWER: has to do with click function, pull request has made it so when you click a node you can have a function that is invoked (clickCallback) and be able to tell which node is clicked
+  const onTouchMove = (e: any, nodeID: number) => {
+    coreSvelvetStore.nodesStore.update((n) => {
+      n.forEach((node: Node) => {
+        if(node.id === nodeID) {
+          // Not working perfectly, concerned about performance of getBoundingClientRect
+          // maybe call tweening to smooth node movement?
+          // const bcr = e.target.getBoundingClientRect();
+          // const x = e.changedTouches[0].pageX - bcr.x;
+          // const y = e.changedTouches[0].pageY - bcr.y;
+          // if(x > 1 || x < -1 || y > 1 || y < -1){
+          //   node.position.x += x - (node.width / 2);
+          //   node.position.y += y - (node.height / 2);
+          // } else {
+          // node.position.x += x;
+          // node.position.y += y;
+          // }
+          /* THIS ONE CREATES AN OFFSET
+          // const bcr = e.target.getBoundingClientRect();
+          // const x = e.changedTouches[0].pageX - bcr.x;
+          // const y = e.changedTouches[0].pageY - bcr.y;
+          // node.position.x += x;
+          // node.position.y += y;
+          */
+
+          // currently working but much more verbose, NEEDS TO BE REMOVED BEFORE PRODUCTION!!!!!
+          const {x, y, width, height} = e.target.getBoundingClientRect();
+          const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
+          const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
+          console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
+          if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+            node.position.x += offsetX - (node.width / 2);
+            node.position.y += offsetY - (node.height / 2);
+          } else {
+          node.position.x += offsetX;
+          node.position.y += offsetY;
+          } 
+        }
+      });
+      return [...n];
+    });
+  };
   const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
   const onNodeClick = (e: any, nodeID: number) => {
     get(nodesStore).forEach((node) => {
@@ -101,6 +143,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
   //Puts everything together as the svelvet store and use the key so that it can be used.
   const svelvetStore = {
     ...coreSvelvetStore,
+    onTouchMove,
     onMouseMove,
     onNodeClick,
     derivedEdges
