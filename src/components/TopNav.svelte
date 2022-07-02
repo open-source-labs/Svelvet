@@ -49,7 +49,7 @@
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >
     <a
-      href="https://github.com/oslabs-beta/Svelvet"
+      href="https://github.com/open-source-labs/Svelvet"
       id="github"
       target="_blank"
       class="hover:text-rose-500 pr-5">Github</a

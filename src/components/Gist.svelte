@@ -1,3 +1,4 @@
+<!-- Embedding GitHub Gists using iframe -->
 <script lang="ts">
   export let src = '';
   export let title = '';

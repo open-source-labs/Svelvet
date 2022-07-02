@@ -4,8 +4,8 @@
 
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
-![GitHub Stars](https://img.shields.io/github/stars/oslabs-beta/svelvet?color=%23fb7182)
-![GitHub Forks](https://img.shields.io/github/forks/oslabs-beta/Svelvet?color=%23fb7182)
+![GitHub Stars](https://img.shields.io/github/stars/open-source-labs/svelvet?color=%23fb7182)
+![GitHub Forks](https://img.shields.io/github/forks/open-source-labs/Svelvet?color=%23fb7182)
 ![NPM Version](https://img.shields.io/npm/v/svelvet?color=%23fb7182&label=version)
 
 # Simplify Diagramming with Svelvet!
@@ -18,9 +18,10 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 ## Version Updates
 
-Shout out to our contributors! Here's what's new: 
+Shout out to our contributors! Here's what's new:
 
-### Changelog 
+### Changelog
+
 <details><summary>v1.0.3</summary>
 <ul>
   <li>Fixed bug with running tests</li>
@@ -38,9 +39,9 @@ Shout out to our contributors! Here's what's new:
 
 ## Key Features
 
-- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart! 
+- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
-- **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon! 
+- **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
 - **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background.
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
@@ -77,7 +78,7 @@ Visit our [website](https://svelvet.io) to learn more on how to customize your n
 
 ## Testing
 
-Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/oslabs-beta/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
+Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
 
 ```bash
 npm run test
@@ -96,9 +97,9 @@ The following is a list of features and improvements by ourselves and the larger
 
 - Default values for nodes and edges
 - Constant node drag speed regardless of zoom in/out
-- Add left and right anchor locations 
+- Add left and right anchor locations
 - Contextual menus
-- Customize edges (source/target) with icons 
+- Customize edges (source/target) with icons
 - Customize nodes via html templates/Svelte components
 - Multiple sockets and socket compatibility for links
 - Custom error handling
@@ -113,4 +114,4 @@ Inspired by [React Flow](https://github.com/wbkd/react-flow), Svelvet expands th
 
 ## License
 
-Svelvet is developed under the [MIT license](https://github.com/oslabs-beta/Svelvet/blob/main/LICENSE).
+Svelvet is developed under the [MIT license](https://github.com/open-source-labs/Svelvet/blob/main/LICENSE).

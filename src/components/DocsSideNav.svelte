@@ -1,3 +1,4 @@
+<!-- Complete sidebar rendering with routes -->
 <script lang="ts">
   import { page } from '$app/stores';
 
@@ -20,7 +21,7 @@
       'Blog',
       'https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243'
     ],
-    ['GitHub', 'https://github.com/oslabs-beta/Svelvet'],
+    ['GitHub', 'https://github.com/open-source-labs/Svelvet'],
     ['LinkedIn', 'https://www.linkedin.com/company/svelvet/'],
     ['Twitter', 'https://twitter.com/Svelvet_OSLabs']
   ];
@@ -28,6 +29,7 @@
   $: activeLink = `${$page.url.pathname}`;
 </script>
 
+<!-- Ask Team: about implementation of foreach loop for links/routes -->
 <div class="hidden md:block">
   <div class="flex flex-col my-5 text-sm w-full">
     <p class="font-medium text-gray-700 leading-9">Getting Started</p>
