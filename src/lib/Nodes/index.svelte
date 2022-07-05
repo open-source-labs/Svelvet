@@ -43,7 +43,7 @@
     $nodeSelected = false;
   }}
   on:mousedown={(e) => {
-    console.log('mouse event-->', e)
+    //console.log('mouse event-->', e)
     e.preventDefault(); //need this?
     moving = true;
     $nodeIdSelected = node.id;
@@ -58,7 +58,6 @@
     moved = false;
   }}
   class='Node'
-  id={`${node.id}`}
   style="left: {node.position.x}px; 
     top: {node.position.y}px; 
     width: {node.width}px; 
@@ -68,8 +67,29 @@
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
 >
+{#if node.image}
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg" 
+	     alt='a cat'
+			 style ="width: {node.width}px; 
+			 height: {node.height}px;">
+	{/if}
   <slot />
 </div>
+
+	<!--  
+		height: {node.height}px;
+		
+	class="Node"
+	alt='a cat'
+	style="left: {node.position.x}px; 
+	top: {node.position.y}px; 
+	width: {node.width}px; 
+	height: {node.height}px; 
+	background-color: {node.bgColor}; 
+	border-color: {node.borderColor}; 
+	border-radius: {node.borderRadius}px;
+	color: {node.textColor};" > -->
+
 
 <style>
   /* default we could just add 2 liner width and height, 175, 140 */
