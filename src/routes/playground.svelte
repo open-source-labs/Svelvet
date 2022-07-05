@@ -13,7 +13,9 @@
       width: 175,
       height: 40,
       bgColor: 'white',
-      clickCallback: handleClick
+      clickCallback: handleClick,
+      image: true,
+      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg",
     },
     {
       id: 2,

@@ -13,6 +13,8 @@ export interface Node<T = any> {
   borderRadius?: number;
   textColor?: string;
   clickCallback?: Function;
+  image?: boolean;
+  src?: string;
 }
 
 export interface Edge {
