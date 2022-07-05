@@ -3,9 +3,42 @@
   import { page } from '$app/stores';
   import MobileHomeNav from './MobileHomeNav.svelte';
   import MobileDocsNav from './MobileDocsNav.svelte';
+  // import supabase from supabase-db file
+  import {supabase, logout, testSession} from '../supabase-db';
+  import {session} from '$app/stores';
+
+
 
   $: activeLink = `${$page.url.pathname}`;
   let y: number;
+
+  $: user = null;
+
+  async function signInWithGithub() {
+  const { user, session, error } = await supabase.auth.signIn({
+    provider: 'github',
+  })
+  // ?.user?.id;
+    // .then(console.log("session ->", session))
+    // .catch(console.log("error ->", error));
+  
+   
+  console.log("user ->", user);
+  
+}
+
+
+
+
+// const { user, error } = async () => {await supabase.auth.api.getUser(
+//   JWT_TOKEN
+// )
+// console.log(user);
+// }
+
+// console.log(user);
+
+
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -60,9 +93,17 @@
       class="hover:text-rose-500 {activeLink.includes('playground') ? 'text-rose-500' : ''}">Playground</a
     >
     <!-- Add logic for OAuth and conditionally render if the user is logged in, change button text to sign out and vice versa -->
-    <button>Log in TESTING</button>
+    
+    <div class="login-container">
+      <button on:click={signInWithGithub}>Log in{testSession}</button>
+      <!-- <span>{console.log(user)}</span> -->
+    </div>
+    <button on:click={() => logout()}>logout</button>
   </nav>
 </div>
 
 <style>
+.login-container{
+  display: flex;
+}
 </style>
