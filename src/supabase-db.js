@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { user, logged_in } from '$lib/stores/authStore.js'
 
 
 // this will be the root of all of our supabase functionalities. We will export these into the __layout.svelte file, which is a top layer component that sits on top of our whole page (it will be easier to keep user state this way)
@@ -14,23 +15,32 @@ export const logout = async function signout() {
   const { error } = await supabase.auth.signOut()
 };
 
-// export const signInWithGithub = async function signInWithGithub() {
-//   const { user, session, error } = await supabase.auth.signIn({
-//     provider: 'github',
-//   })
-// }
+export const signInWithGithub = async function signInWithGithub() {
+  const { user, session, error } = await supabase.auth.signIn({
+    provider: 'github',
+  })
+}
 
 // this returns the current logged in user
-export const user = supabase.auth.user();
+export const userInfo = supabase.auth.user();
 
 
-export let testSession;
 // this is basically an event listener. I think this would be useful for listening to when the login happens when the user logs in.
 export default supabase.auth.onAuthStateChange((event, session) => {
   // if (event == 'SIGNED_IN') testSession = event; //console.log('SIGNED_IN', session)
   if(event === 'SIGNED_IN') {
     console.log('SIGNED_IN, testing return', session);
-    return session;
+    user.set(session?.user);
+    logged_in.set(true);
+    if(session?.user) {
+      // redirect to saved diagrams page or playground?
+      // load saved diagrams
+    }
+  }
+  if(event === 'SIGNED_OUT') {
+    console.log('SIGNED_OUT', session);
+    user.set(null);
+    logged_in.set(false);
   }
 });
 
