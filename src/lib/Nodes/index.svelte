@@ -69,10 +69,17 @@
 >
 <!-- TODO play with the styling to get the image to sit correctly in the div -->
 {#if node.image}
-  <img src="{node.src}" 
+  <!-- <img src="{node.src}" 
 	     alt='a cat'
 			 style ="width: 100%; 
-			 height: 100%">
+			 height: 100%;
+       overflow: hidden;"> -->
+       <img src="{node.src}" 
+	     alt='a cat'
+			 style ="width: {node.width * 0.75}px; 
+			 height: {node.height * 0.75}px;
+       overflow: hidden;">
+
 	{/if}
   <slot />
 </div>
@@ -101,13 +108,3 @@
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
   }
 </style>
-
-<!-- on:touchstart={(e)=>{
-  alert('hello')
-  // moving = true;
-  // $nodeIdSelected = node.id;
-
-  // onNodeClick(e, node.id);
-  //  $nodeIdSelected = node.id;
-  //  $nodeSelected = true;
-}} -->
