@@ -230,7 +230,6 @@
 	.iframe-container {
 		position: absolute;
 		background-color: white;
-		/* background-color: gray; */
 		border: none;
 		width: 100%;
 		height: 100%;
