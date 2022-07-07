@@ -41,9 +41,15 @@ const config = {
 					'codemirror/addon/fold/markdown-fold.js',
 					'codemirror/addon/fold/comment-fold.js'
 				]
-			}
+			},
+			/* server: {
+    		fs: {
+      		// Allow serving files from one level up to the project root
+      		allow: ['..']
+				}
+			} */
 		}
 	}
-};
+}
 
 export default config;

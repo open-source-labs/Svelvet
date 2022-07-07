@@ -271,6 +271,11 @@
 
 <svelte:window on:beforeunload={beforeUnload} />
 
+<div class="editor-navbar">
+	<button on:click={() => console.log(module_editor.getCodeEditorValue())}>TESTING SAVE BUTTON</button>
+</div>
+
+
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
 	<div class="viewport" class:output={show_output}>
 		<SplitPane

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { user, logged_in } from '$lib/stores/authStore.js'
+import { user, logged_in, user_avatar, user_name } from '$lib/stores/authStore.js'
 
 
 // this will be the root of all of our supabase functionalities. We will export these into the __layout.svelte file, which is a top layer component that sits on top of our whole page (it will be easier to keep user state this way)
@@ -30,7 +30,15 @@ export default supabase.auth.onAuthStateChange((event, session) => {
   // if (event == 'SIGNED_IN') testSession = event; //console.log('SIGNED_IN', session)
   if(event === 'SIGNED_IN') {
     console.log('SIGNED_IN, testing return', session);
+    const avatar = supabase.auth.user().identities[0].identity_data.avatar_url;
+    console.log(avatar);
+    user_avatar.set(avatar);
+    // console.log(supabase.auth.user().identities[0].identity_data.avatar_url);
+    // user.set(session?.user);
     user.set(session?.user);
+    const username = supabase.auth.user().identities[0].identity_data.user_name;
+    user_name.set(username);
+    // logged_in.set(true);
     logged_in.set(true);
     if(session?.user) {
       // redirect to saved diagrams page or playground?
@@ -39,8 +47,10 @@ export default supabase.auth.onAuthStateChange((event, session) => {
   }
   if(event === 'SIGNED_OUT') {
     console.log('SIGNED_OUT', session);
+    // user.set(null);
     user.set(null);
     logged_in.set(false);
+    user_name.set(null);
   }
 });
 
