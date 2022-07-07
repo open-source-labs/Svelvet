@@ -3,7 +3,7 @@ import type { XYPosition } from './utils';
 
 export interface Node<T = any> {
   id: number;
-  position: XYPosition;
+  position?: XYPosition;
   data: T;
   width?: number;
   height?: number;
@@ -13,6 +13,8 @@ export interface Node<T = any> {
   borderRadius?: number;
   textColor?: string;
   clickCallback?: Function;
+  image?: boolean;
+  src?: string;
 }
 
 export interface Edge {
