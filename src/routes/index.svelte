@@ -11,10 +11,10 @@
   import walter from '../assets/profiles/Walter-small.png';
   import ali from '../assets/profiles/Ali-small.png';
 
-  // import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
   // import type { Node, Edge } from '$lib/types/types';
   import type { Node, Edge } from 'svelvet';
-  import Svelvet from 'svelvet';
+  //import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
