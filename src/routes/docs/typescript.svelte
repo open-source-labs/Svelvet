@@ -35,27 +35,6 @@
     { id: 'e2-3', source: 1, target: 3, label: ' NO ', animate: true }
   ];
 
-  // REPL
-  import { onMount } from "svelte";
-	import { browser } from "$app/env";
-
-	import Repl from "$lib/repl";
-
-	const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
-	const svelteUrl = `https://unpkg.com/svelte@3`;
-
-	let repl = null;
-
-	onMount(() => repl.set({
-		components: [
-			{
-				name: "App",
-				type: "svelte",
-				source: ``
-			}
-		]
-	}));
-
 
 </script>
 
@@ -77,11 +56,4 @@
 <p class="my-4 text-gray-600">The diagram renders as below:</p>
 <div class="border rounded-lg shadow-md w-full overflow-hidden">
   <Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={400} background />
-</div>
-
-<!-- REPL -->
-<div style="inline-size: 400px; block-size: 400px;">
-	{#if browser}
-		<Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
-	{/if}
 </div>
