@@ -120,24 +120,118 @@ export function findOrCreateStore(key: string): SvelvetStore {
       let sourceNode: any; // any -> should follow type Node
       let targetNode: any; // any -> should follow type Node
       $nodesStore.forEach((node: Node) => {
+      //console.log('node',node.sourcePosition);
         if (edge.source === node.id) sourceNode = node;
-        if (edge.target === node.id) targetNode = node;
+        if (edge.target === node.id) {
+          console.log('edge.target-->', edge.target)
+          targetNode = node
+        };
       });
       //
       if (sourceNode) {
-        let left = sourceNode.position.x;
-        let top = sourceNode.position.y;
-        let middle = sourceNode.width / 2;
-        edge.sourceX = left + middle;
-        edge.sourceY = top + sourceNode.height;
+        //console.log('sourceNode.sourcePosition is...', sourceNode.sourcePosition);
+        if (sourceNode.sourcePosition === 'top'){
+          //console.log('top source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + middle
+          edge.sourceY = top
+        }
+        // if (sourceNode.sourcePosition === 'bottom'){
+        //   console.log('bottom source was registered')
+        //   let left = sourceNode.position.x;
+        //   let top = sourceNode.position.y;        
+        //   let middle = sourceNode.width / 2;      
+        //   edge.sourceX = left + middle;            
+        //   edge.sourceY = top + sourceNode.height;
+        // }
+        else if (sourceNode.sourcePosition === 'left'){
+          //console.log('left source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left
+          edge.sourceY = top + sourceNode.height/2
+        }
+        else if (sourceNode.sourcePosition === 'right'){
+          //console.log('right source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + sourceNode.width
+          edge.sourceY = top + sourceNode.height/2
+        }
+        //Default sourcePosition to bottom if sourcePosition not defined
+        else if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + middle;
+          edge.sourceY = top + sourceNode.height;
+        }
       }
       if (targetNode) {
-        let left = targetNode.position.x;
-        let top = targetNode.position.y;
-        let middle = targetNode.width / 2;
-        edge.targetX = left + middle;
-        edge.targetY = top;
+        console.log('targetNode.targetPosition is...', targetNode.targetPosition);
+        // if (targetNode.targetPosition === 'top'){
+        //   console.log('top target was registered')
+        //   let left = sourceNode.position.x;
+        //   let top = sourceNode.position.y;
+        //   let middle = sourceNode.width / 2;
+        //   edge.sourceX = left + middle
+        //   edge.sourceY = top
+        // }
+        if (targetNode.targetPosition === 'bottom'){
+          //console.log('bottom target was registered')
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;        
+          let middle = targetNode.width / 2;      
+          edge.targetX = left + middle;            
+          edge.targetY = top + targetNode.height;
+
+        }
+        else if (targetNode.targetPosition === 'left'){
+          console.log(targetNode.targetPosition,  'left target was registered')
+          console.log(`${sourceNode.sourcePosition}`, 'should throw error, sourceNode.sourcePosition');
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;
+          let middle = targetNode.width / 2;
+          edge.targetX = left
+          edge.targetY = top + targetNode.height/2
+          //console.log('edge.targetX')
+        }
+        else if (targetNode.targetPosition === 'right'){
+          //console.log('right target was registered')
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;
+          let middle = targetNode.width / 2;
+          edge.targetX = left + targetNode.width
+          edge.targetY = top + targetNode.height/2
+          
+        }
+        //Default to top targetPosition no targetPosition defined
+        else if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
+          let left = targetNode.position.x;
+         let top = targetNode.position.y;
+         let middle = targetNode.width / 2;
+          edge.targetX = left + middle;
+         edge.targetY = top;
+        }
       }
+      // if (sourceNode) {
+      //   let left = sourceNode.position.x;
+      //   let top = sourceNode.position.y;
+      //   let middle = sourceNode.width / 2;
+      //   edge.sourceX = left + middle;
+      //   edge.sourceY = top + sourceNode.height;
+      // }
+      // if (targetNode) {
+      //   let left = targetNode.position.x;
+      //   let top = targetNode.position.y;
+      //   let middle = targetNode.width / 2;
+      //   edge.targetX = left + middle;
+      //   edge.targetY = top;
+      // }
     });
     return [...$edgesStore];
   });
