@@ -10,10 +10,11 @@
       id: 1,
       position: { x: 300, y: 150 },
       data: { label: 'Input Node' },
-      width: 175,
-      height: 40,
+      width: 100,
+      height: 200,
       bgColor: 'white',
       clickCallback: handleClick,
+      borderColor: 'transparent',
       image: true,
       src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg",
     },
@@ -48,7 +49,7 @@
     }
   ];
   const initialEdges = [
-    { id: 'e1-2', source: 1, target: 2, type: 'straight', label: '  YES  ', animate: true},
+    { id: 'e1-2', source: 1, target: 2, type: 'step', label: '  YES  ', animate: true},
     { id: 'e2-3', source: 1, target: 3, label: '  NO  ' },
     { id: 'e2-4', source: 2, target: 4, animate: true },
     { id: 'e2-5', source: 3, target: 4, animate: true }

@@ -67,15 +67,20 @@
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
 >
+<!-- TODO play with the styling to get the image to sit correctly in the div -->
 {#if node.image}
   <img src="{node.src}" 
 	     alt='a cat'
-			 style ="width: {node.width}px; 
-			 height: {node.height}px;">
+			 style ="width: 100%; 
+			 height: 100%">
 	{/if}
   <slot />
 </div>
 
+<!-- <div>
+	<img alt='a cat'/>
+	<slot />
+</div> -->
 
 
 

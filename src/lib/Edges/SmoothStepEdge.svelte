@@ -126,6 +126,7 @@ export function getSmoothStepPath({
   return `M ${srcX},${srcY}${firstCornerPath}${secondCornerPath}L ${trgX},${trgY}`;
 }
 export let edge: DerivedEdge;
+export let borderRadius = 5;
 
 $: params = {
     srcX: edge.sourceX,
@@ -134,7 +135,7 @@ $: params = {
     trgX: edge.targetX,
     trgY: edge.targetY,
     targetPosition: Position.Top,
-    borderRadius: 5
+    borderRadius: borderRadius
   };
 
 $: path = getSmoothStepPath(params);
