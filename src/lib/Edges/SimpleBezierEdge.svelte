@@ -73,14 +73,18 @@
 
   export let edge: DerivedEdge;
 
+//TODO - Check for errors regarding source position and Target Positon, changed from source Position.Top to bottom, and target Position from Bottom to Top.
+
   $: params = {
     srcX: edge.sourceX,
     srcY: edge.sourceY,
-    sourcePosition: Position.Top,
+    sourcePosition: Position.Bottom,
     trgX: edge.targetX,
     trgY: edge.targetY,
-    targetPosition: Position.Bottom
+    targetPosition: Position.Top
   };
+
+
 
   // pass in params to function that returns a string value for SVG path d attribute
   $: path = getSimpleBezierPath(params);

@@ -34,9 +34,7 @@
     }
   }}
   on:touchstart={(e) => {
-    e.preventDefault();
-    console.log('touchstart event--->', e)
-    console.log('div location--->', e.target.getBoundingClientRect())
+    e.preventDefault(); // is this neccessary?
     moving = true;
     $nodeSelected = true;
   }}
@@ -45,7 +43,7 @@
     $nodeSelected = false;
   }}
   on:mousedown={(e) => {
-    console.log('mouse event-->', e)
+    //console.log('mouse event-->', e)
     e.preventDefault(); //need this?
     moving = true;
     $nodeIdSelected = node.id;
@@ -60,7 +58,6 @@
     moved = false;
   }}
   class='Node'
-  id={`${node.id}`}
   style="left: {node.position.x}px; 
     top: {node.position.y}px; 
     width: {node.width}px; 
@@ -70,8 +67,22 @@
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
 >
+<!-- TODO play with the styling to get the image to sit correctly in the div -->
+{#if node.image}
+  <img src="{node.src}" 
+	     alt='a cat'
+			 style ="width: 100%; 
+			 height: 100%">
+	{/if}
   <slot />
 </div>
+
+<!-- <div>
+	<img alt='a cat'/>
+	<slot />
+</div> -->
+
+
 
 <style>
   /* default we could just add 2 liner width and height, 175, 140 */

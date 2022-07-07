@@ -5,6 +5,8 @@
 
   import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '$lib/Edges/StraightEdge.svelte';
+  import SmoothStepEdge from '$lib/Edges/SmoothStepEdge.svelte';
+  import StepEdge from '$lib/Edges/StepEdge.svelte';
   import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
   import Node from '$lib/Nodes/index.svelte';
 
@@ -105,6 +107,10 @@
     {#each $derivedEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge {edge} />
+      {:else if edge.type === 'smoothstep'}
+        <SmoothStepEdge {edge} />
+      {:else if edge.type === 'step'}
+        <StepEdge {edge} />
       {:else}
         <SimpleBezierEdge {edge} />
       {/if}
