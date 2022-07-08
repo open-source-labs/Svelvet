@@ -45,6 +45,7 @@
     border-color: {node.borderColor}; 
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
+  id="svelvet-{node.id}"
 >
   <slot />
 </div>
