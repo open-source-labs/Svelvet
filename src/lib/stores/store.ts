@@ -82,7 +82,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           const {x, y, width, height} = e.target.getBoundingClientRect();
           const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
-          console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
+          //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
           if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
             //this is upset because I removed the require from the Node types
             node.position.x += offsetX - (node.width / 2);
@@ -123,7 +123,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
       //console.log('node',node.sourcePosition);
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) {
-          console.log('edge.target-->', edge.target)
+          //console.log('edge.target-->', edge.target)
           targetNode = node
         };
       });
@@ -137,6 +137,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let middle = sourceNode.width / 2;
           edge.sourceX = left + middle
           edge.sourceY = top
+          edge.sourcePosition = sourceNode.sourcePosition;
         }
         // if (sourceNode.sourcePosition === 'bottom'){
         //   console.log('bottom source was registered')
@@ -152,7 +153,9 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let top = sourceNode.position.y;
           let middle = sourceNode.width / 2;
           edge.sourceX = left
-          edge.sourceY = top + sourceNode.height/2
+          edge.sourceY = top + sourceNode.height/2;
+          edge.sourcePosition = sourceNode.sourcePosition;
+
         }
         else if (sourceNode.sourcePosition === 'right'){
           //console.log('right source was registered')
@@ -161,6 +164,8 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let middle = sourceNode.width / 2;
           edge.sourceX = left + sourceNode.width
           edge.sourceY = top + sourceNode.height/2
+          edge.sourcePosition = sourceNode.sourcePosition;
+
         }
         //Default sourcePosition to bottom if sourcePosition not defined
         else if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
@@ -169,10 +174,11 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let middle = sourceNode.width / 2;
           edge.sourceX = left + middle;
           edge.sourceY = top + sourceNode.height;
+          edge.sourcePosition = 'bottom';
         }
       }
       if (targetNode) {
-        console.log('targetNode.targetPosition is...', targetNode.targetPosition);
+        //console.log('targetNode.targetPosition is...', targetNode.targetPosition);
         // if (targetNode.targetPosition === 'top'){
         //   console.log('top target was registered')
         //   let left = sourceNode.position.x;
@@ -188,16 +194,18 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let middle = targetNode.width / 2;      
           edge.targetX = left + middle;            
           edge.targetY = top + targetNode.height;
+          edge.targetPosition = targetNode.targetPosition;
 
         }
         else if (targetNode.targetPosition === 'left'){
-          console.log(targetNode.targetPosition,  'left target was registered')
-          console.log(`${sourceNode.sourcePosition}`, 'should throw error, sourceNode.sourcePosition');
+          //console.log(targetNode.targetPosition,  'left target was registered')
+          //console.log(`${sourceNode.sourcePosition}`, 'should throw error, sourceNode.sourcePosition');
           let left = targetNode.position.x;
           let top = targetNode.position.y;
           let middle = targetNode.width / 2;
           edge.targetX = left
           edge.targetY = top + targetNode.height/2
+          edge.targetPosition = targetNode.targetPosition;
           //console.log('edge.targetX')
         }
         else if (targetNode.targetPosition === 'right'){
@@ -207,6 +215,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           let middle = targetNode.width / 2;
           edge.targetX = left + targetNode.width
           edge.targetY = top + targetNode.height/2
+          edge.targetPosition = targetNode.targetPosition;
           
         }
         //Default to top targetPosition no targetPosition defined
@@ -216,6 +225,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
          let middle = targetNode.width / 2;
           edge.targetX = left + middle;
          edge.targetY = top;
+         edge.targetPosition = 'top';
         }
       }
       // if (sourceNode) {

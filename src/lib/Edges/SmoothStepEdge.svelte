@@ -127,20 +127,33 @@ export function getSmoothStepPath({
 }
 export let edge: DerivedEdge;
 export let borderRadius = 5;
+console.log('edge-->', edge);
 
-$: params = {
+// $: params = {
+//     srcX: edge.sourceX,
+//     srcY: edge.sourceY,
+//     sourcePosition: Position.Bottom,
+//     trgX: edge.targetX,
+//     trgY: edge.targetY,
+//     targetPosition: Position.Top,
+//     borderRadius: borderRadius
+//   };
+
+  $: params = {
     srcX: edge.sourceX,
     srcY: edge.sourceY,
-    sourcePosition: Position.Bottom,
+    sourcePosition: edge.sourcePosition,
     trgX: edge.targetX,
     trgY: edge.targetY,
-    targetPosition: Position.Top,
+    targetPosition: edge.targetPosition,
     borderRadius: borderRadius
   };
+  //const [centerX, centerY] = getCenter({ srcX, srcY, trgX, trgY, sourcePosition, targetPosition });
+  //const [centerX, centerY] = getCenter(params);
+//  console.log('centerX-->', centerX, 'centerY-->', centerY)
 
 $: path = getSmoothStepPath(params);
 //const {srcX, srcY, trgX, trgY, sourcePosition, targetPosition} = params
-//const [centerX, centerY] = getCenter({ srcX, srcY, trgX, trgY, sourcePosition, targetPosition });
 
 $: baseEdgeProps = {
   ...edge,

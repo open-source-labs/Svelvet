@@ -5,10 +5,14 @@
   const handleClick = (e) => {
     console.log(e);
   };
+
+
+  
   const initialNodes = [
     {
       id: 1,
       position: { x: 0, y: 80 },
+
       data: { label: 'Input Node' },
       width: 100,
       height: 200,
@@ -21,8 +25,9 @@
     },
     {
       id: 2,
-      position: { x: 250, y: 0 },
       data: { label: 'Option #1' },
+      position: { x: 250, y: 0 },
+
       width: 175,
       height: 40,
       bgColor: '#B8FFC6',
@@ -41,7 +46,7 @@
       borderColor: 'transparent',
       clickCallback: handleClick,
       sourcePosition: 'right',
-      targetPosition: 'left'
+      targetPosition: 'top'
     },
     {
       id: 4,
@@ -56,8 +61,8 @@
     }
   ];
   const initialEdges = [
-    { id: 'e1-2', source: 1, target: 2, type: 'straight', label: '  YES  ', animate: true},
-    { id: 'e2-3', source: 1, target: 3, label: '  NO  ' },
+    { id: 'e1-2', source: 1, target: 2, type: 'step', label: '  YES  ', animate: true},
+    { id: 'e2-3', source: 1, target: 3, type: 'step', label: '  NO  ' },
     { id: 'e2-4', source: 2, target: 4, animate: true },
     { id: 'e2-5', source: 3, target: 4, animate: true }
   ];

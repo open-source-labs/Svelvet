@@ -1,4 +1,6 @@
 import { Position } from '$lib/types/utils';
+//import { Node } from '$lib/types/types';
+
 
 
 export interface GetCenterParams {
@@ -44,3 +46,22 @@ export const getCenter = ({
 
   return [centerX, centerY, xOffset, yOffset];
 };
+
+export const addDefaultPositions = (nodeArray: Node[]) :void => {
+  //create a counter that increments to add values to the unassigned node positions
+  let newPostionsObject = {
+    x: 50,
+    y: 50
+  };
+  //iterate through the nodes Array and check if any node where !node.position
+  nodeArray.forEach((element: Node) => {
+    if(!element.position){
+    // assign an {x: , y:}
+      const {x, y} = newPostionsObject;
+      element.position = {x: x, y: y};
+    }
+    //increment the assignments so they don't spawn on top of one another
+    newPostionsObject.x += 80;
+    newPostionsObject.y += 80;
+  });
+}

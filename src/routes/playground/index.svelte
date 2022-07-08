@@ -25,9 +25,9 @@ onMount(() => repl.set({
 
 <!-- if there's a username, render the name in the playground? else just have playground? follow the svelvet font on the top left? -->
 {#if $user_name}
-  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6" style="padding-right: 2em;">{$user_name}'S PLAYGR<img src={black_logo}/>ND</div>
+  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6" style="padding-right: 2em;">{$user_name}'S PLAYGR<img src={black_logo}/>UND</div>
 {:else}
-<div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6" style="padding-right: 2em;">PLAYGR<img src={black_logo}/>ND</div>
+<div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6" style="padding-right: 2em;">PLAYGR<img src={black_logo}/>UND</div>
 {/if}
 
 
