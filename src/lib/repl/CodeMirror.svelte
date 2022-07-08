@@ -2,6 +2,9 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Message from './Message.svelte';
+	import { addCodeToDB, getCodeFromDB } from '../../supabase-db.js';
+	import { user_email } from '$lib/stores/authStore.js'
+
 
 	const dispatch = createEventDispatcher();
 
@@ -83,7 +86,13 @@
 		// we'd probably want to create an object with user information
 		// and add codeToSave as a property on our object
 		// {user: userID, code: codeToSave}
-		return codeToSave;
+		// 
+		// const dbObject = {};
+		// dbObject.code = JSON.stringify(codeToSave);
+		// dbObject.created_by = //
+	  addCodeToDB(codeToSave, $user_email);
+		// console.log('email logged from codemirror', user_email);
+		// getCodeFromDB();
 	}
 
 	const modes = {
