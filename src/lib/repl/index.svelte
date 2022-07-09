@@ -272,7 +272,8 @@
 <svelte:window on:beforeunload={beforeUnload} />
 
 <div class="editor-navbar">
-	<button on:click={() => console.log(module_editor.getCodeEditorValue())}>TESTING SAVE BUTTON</button>
+	<button on:click={() => module_editor.getCodeEditorValue()}>TESTING SAVE BUTTON</button>
+	<button on:click={() => module_editor.loadSavedCode()}>TEST LOAD BUTTON</button>
 </div>
 
 
