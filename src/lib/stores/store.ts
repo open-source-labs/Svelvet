@@ -41,11 +41,12 @@ export function findOrCreateStore(key: string): SvelvetStore {
 
   // update position of selected node
   // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
+  //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
   const onMouseMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
-          //console.log(`node.position.x --> ${node.position.x}`)
+          console.log(`node.position.x --> ${e.movementX}`)
           node.position.x += e.movementX;
           node.position.y += e.movementY;
         }
@@ -82,7 +83,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
           const {x, y, width, height} = e.target.getBoundingClientRect();
           const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
-          console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
+          //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
           if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
             //this is upset because I removed the require from the Node types
             node.position.x += offsetX - (node.width / 2);
@@ -120,24 +121,128 @@ export function findOrCreateStore(key: string): SvelvetStore {
       let sourceNode: any; // any -> should follow type Node
       let targetNode: any; // any -> should follow type Node
       $nodesStore.forEach((node: Node) => {
+      //console.log('node',node.sourcePosition);
         if (edge.source === node.id) sourceNode = node;
-        if (edge.target === node.id) targetNode = node;
+        if (edge.target === node.id) {
+          //console.log('edge.target-->', edge.target)
+          targetNode = node
+        };
       });
       //
       if (sourceNode) {
-        let left = sourceNode.position.x;
-        let top = sourceNode.position.y;
-        let middle = sourceNode.width / 2;
-        edge.sourceX = left + middle;
-        edge.sourceY = top + sourceNode.height;
+        //console.log('sourceNode.sourcePosition is...', sourceNode.sourcePosition);
+        if (sourceNode.sourcePosition === 'top'){
+          //console.log('top source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + middle
+          edge.sourceY = top
+          edge.sourcePosition = sourceNode.sourcePosition;
+        }
+        // if (sourceNode.sourcePosition === 'bottom'){
+        //   console.log('bottom source was registered')
+        //   let left = sourceNode.position.x;
+        //   let top = sourceNode.position.y;        
+        //   let middle = sourceNode.width / 2;      
+        //   edge.sourceX = left + middle;            
+        //   edge.sourceY = top + sourceNode.height;
+        // }
+        else if (sourceNode.sourcePosition === 'left'){
+          //console.log('left source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left
+          edge.sourceY = top + sourceNode.height/2;
+          edge.sourcePosition = sourceNode.sourcePosition;
+
+        }
+        else if (sourceNode.sourcePosition === 'right'){
+          //console.log('right source was registered')
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + sourceNode.width
+          edge.sourceY = top + sourceNode.height/2
+          edge.sourcePosition = sourceNode.sourcePosition;
+
+        }
+        //Default sourcePosition to bottom if sourcePosition not defined
+        else if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
+          let left = sourceNode.position.x;
+          let top = sourceNode.position.y;
+          let middle = sourceNode.width / 2;
+          edge.sourceX = left + middle;
+          edge.sourceY = top + sourceNode.height;
+          edge.sourcePosition = 'bottom';
+        }
       }
       if (targetNode) {
-        let left = targetNode.position.x;
-        let top = targetNode.position.y;
-        let middle = targetNode.width / 2;
-        edge.targetX = left + middle;
-        edge.targetY = top;
+        //console.log('targetNode.targetPosition is...', targetNode.targetPosition);
+        // if (targetNode.targetPosition === 'top'){
+        //   console.log('top target was registered')
+        //   let left = sourceNode.position.x;
+        //   let top = sourceNode.position.y;
+        //   let middle = sourceNode.width / 2;
+        //   edge.sourceX = left + middle
+        //   edge.sourceY = top
+        // }
+        if (targetNode.targetPosition === 'bottom'){
+          //console.log('bottom target was registered')
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;        
+          let middle = targetNode.width / 2;      
+          edge.targetX = left + middle;            
+          edge.targetY = top + targetNode.height;
+          edge.targetPosition = targetNode.targetPosition;
+
+        }
+        else if (targetNode.targetPosition === 'left'){
+          //console.log(targetNode.targetPosition,  'left target was registered')
+          //console.log(`${sourceNode.sourcePosition}`, 'should throw error, sourceNode.sourcePosition');
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;
+          let middle = targetNode.width / 2;
+          edge.targetX = left
+          edge.targetY = top + targetNode.height/2
+          edge.targetPosition = targetNode.targetPosition;
+          //console.log('edge.targetX')
+        }
+        else if (targetNode.targetPosition === 'right'){
+          //console.log('right target was registered')
+          let left = targetNode.position.x;
+          let top = targetNode.position.y;
+          let middle = targetNode.width / 2;
+          edge.targetX = left + targetNode.width
+          edge.targetY = top + targetNode.height/2
+          edge.targetPosition = targetNode.targetPosition;
+          
+        }
+        //Default to top targetPosition no targetPosition defined
+        else if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
+          let left = targetNode.position.x;
+         let top = targetNode.position.y;
+         let middle = targetNode.width / 2;
+          edge.targetX = left + middle;
+         edge.targetY = top;
+         edge.targetPosition = 'top';
+        }
       }
+      // if (sourceNode) {
+      //   let left = sourceNode.position.x;
+      //   let top = sourceNode.position.y;
+      //   let middle = sourceNode.width / 2;
+      //   edge.sourceX = left + middle;
+      //   edge.sourceY = top + sourceNode.height;
+      // }
+      // if (targetNode) {
+      //   let left = targetNode.position.x;
+      //   let top = targetNode.position.y;
+      //   let middle = targetNode.width / 2;
+      //   edge.targetX = left + middle;
+      //   edge.targetY = top;
+      // }
     });
     return [...$edgesStore];
   });

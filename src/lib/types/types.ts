@@ -1,6 +1,6 @@
 import type { Position } from 'postcss';
 import type { XYPosition } from './utils';
-
+// TODO Add limitations to sourcePosition and targetPostion
 export interface Node<T = any> {
   id: number;
   position?: XYPosition;
@@ -15,6 +15,8 @@ export interface Node<T = any> {
   clickCallback?: Function;
   image?: boolean;
   src?: string;
+  sourcePosition?: string;
+  targetPosition?: string;
 }
 
 export interface Edge {
@@ -39,6 +41,8 @@ export interface DerivedEdge extends Edge {
 
 export interface EdgeProps extends DerivedEdge {
   path: string;
+  centerX?: number;
+  centerY?: number;
 }
 
 export interface EdgeTextProps {
@@ -47,6 +51,8 @@ export interface EdgeTextProps {
   targetX: number;
   targetY: number;
   label?: any;
+  centerX?: number;
+  centerY?: number;
 }
 
 export type HandleType = 'source' | 'target';

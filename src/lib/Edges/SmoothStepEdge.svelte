@@ -7,11 +7,11 @@ import type { DerivedEdge } from '$lib/types';
 
 
 /*  React           Svelte  This is for Bezier Path
-    srcX         srcX
-    srcY         srcY
+    sourceX         sourceX
+    sourceY         sourceY
     sourcePositon   same
-    trgX         trgX
-    trgY         trgY
+    targetX         targetX
+    targetY         targetY
     targetPosition  same
     
 */
@@ -33,11 +33,11 @@ const topRightCorner = (x: number, y: number, size: number): string => `L ${x},$
 const rightTopCorner = (x: number, y: number, size: number): string => `L ${x - size},${y}Q ${x},${y} ${x},${y + size}`;
 
 interface GetSmoothStepPathParams {
-  srcX: number;
-  srcY: number;
+  sourceX: number;
+  sourceY: number;
   sourcePosition?: Position;
-  trgX: number;
-  trgY: number;
+  targetX: number;
+  targetY: number;
   targetPosition?: Position;
   borderRadius?: number;
   centerX?: number;
@@ -45,19 +45,19 @@ interface GetSmoothStepPathParams {
 }
 
 export function getSmoothStepPath({
-  srcX,
-  srcY,
+  sourceX,
+  sourceY,
   sourcePosition = Position.Bottom,
-  trgX,
-  trgY,
+  targetX,
+  targetY,
   targetPosition = Position.Top,
   borderRadius = 5,
   centerX,
   centerY,
 }: GetSmoothStepPathParams): string {
-  const [_centerX, _centerY, offsetX, offsetY] = getCenter({ srcX, srcY, trgX, trgY });
-  const cornerWidth = Math.min(borderRadius, Math.abs(trgX - srcX));
-  const cornerHeight = Math.min(borderRadius, Math.abs(trgY - srcY));
+  const [_centerX, _centerY, offsetX, offsetY] = getCenter({ sourceX, sourceY, targetX, targetY });
+  const cornerWidth = Math.min(borderRadius, Math.abs(targetX - sourceX));
+  const cornerHeight = Math.min(borderRadius, Math.abs(targetY - sourceY));
   const cornerSize = Math.min(cornerWidth, cornerHeight, offsetX, offsetY);
   const leftAndRight = [Position.Left, Position.Right];
   const cX = typeof centerX !== 'undefined' ? centerX : _centerX;
@@ -66,85 +66,102 @@ export function getSmoothStepPath({
   let firstCornerPath = null;
   let secondCornerPath = null;
 
-  if (srcX <= trgX) {
+  if (sourceX <= targetX) {
     firstCornerPath =
-      srcY <= trgY ? bottomLeftCorner(srcX, cY, cornerSize) : topLeftCorner(srcX, cY, cornerSize);
+      sourceY <= targetY ? bottomLeftCorner(sourceX, cY, cornerSize) : topLeftCorner(sourceX, cY, cornerSize);
     secondCornerPath =
-      srcY <= trgY ? rightTopCorner(trgX, cY, cornerSize) : rightBottomCorner(trgX, cY, cornerSize);
+      sourceY <= targetY ? rightTopCorner(targetX, cY, cornerSize) : rightBottomCorner(targetX, cY, cornerSize);
   } else {
     firstCornerPath =
-      srcY < trgY ? bottomRightCorner(srcX, cY, cornerSize) : topRightCorner(srcX, cY, cornerSize);
+      sourceY < targetY ? bottomRightCorner(sourceX, cY, cornerSize) : topRightCorner(sourceX, cY, cornerSize);
     secondCornerPath =
-      srcY < trgY ? leftTopCorner(trgX, cY, cornerSize) : leftBottomCorner(trgX, cY, cornerSize);
+      sourceY < targetY ? leftTopCorner(targetX, cY, cornerSize) : leftBottomCorner(targetX, cY, cornerSize);
   }
 
   if (leftAndRight.includes(sourcePosition) && leftAndRight.includes(targetPosition)) {
-    if (srcX <= trgX) {
+    if (sourceX <= targetX) {
       firstCornerPath =
-        srcY <= trgY ? rightTopCorner(cX, srcY, cornerSize) : rightBottomCorner(cX, srcY, cornerSize);
+        sourceY <= targetY ? rightTopCorner(cX, sourceY, cornerSize) : rightBottomCorner(cX, sourceY, cornerSize);
       secondCornerPath =
-        srcY <= trgY ? bottomLeftCorner(cX, trgY, cornerSize) : topLeftCorner(cX, trgY, cornerSize);
+        sourceY <= targetY ? bottomLeftCorner(cX, targetY, cornerSize) : topLeftCorner(cX, targetY, cornerSize);
     } else if (
       (sourcePosition === Position.Right && targetPosition === Position.Left) ||
       (sourcePosition === Position.Left && targetPosition === Position.Right) ||
       (sourcePosition === Position.Left && targetPosition === Position.Left)
     ) {
-      // and srcX > trgX
+      // and sourceX > targetX
       firstCornerPath =
-        srcY <= trgY ? leftTopCorner(cX, srcY, cornerSize) : leftBottomCorner(cX, srcY, cornerSize);
+        sourceY <= targetY ? leftTopCorner(cX, sourceY, cornerSize) : leftBottomCorner(cX, sourceY, cornerSize);
       secondCornerPath =
-        srcY <= trgY ? bottomRightCorner(cX, trgY, cornerSize) : topRightCorner(cX, trgY, cornerSize);
+        sourceY <= targetY ? bottomRightCorner(cX, targetY, cornerSize) : topRightCorner(cX, targetY, cornerSize);
     }
   } else if (leftAndRight.includes(sourcePosition) && !leftAndRight.includes(targetPosition)) {
-    if (srcX <= trgX) {
+    if (sourceX <= targetX) {
       firstCornerPath =
-        srcY <= trgY
-          ? rightTopCorner(trgX, srcY, cornerSize)
-          : rightBottomCorner(trgX, srcY, cornerSize);
+        sourceY <= targetY
+          ? rightTopCorner(targetX, sourceY, cornerSize)
+          : rightBottomCorner(targetX, sourceY, cornerSize);
     } else {
       firstCornerPath =
-        srcY <= trgY
-          ? leftTopCorner(trgX, srcY, cornerSize)
-          : leftBottomCorner(trgX, srcY, cornerSize);
+        sourceY <= targetY
+          ? leftTopCorner(targetX, sourceY, cornerSize)
+          : leftBottomCorner(targetX, sourceY, cornerSize);
     }
     secondCornerPath = '';
   } else if (!leftAndRight.includes(sourcePosition) && leftAndRight.includes(targetPosition)) {
-    if (srcX <= trgX) {
+    if (sourceX <= targetX) {
       firstCornerPath =
-        srcY <= trgY
-          ? bottomLeftCorner(srcX, trgY, cornerSize)
-          : topLeftCorner(srcX, trgY, cornerSize);
+        sourceY <= targetY
+          ? bottomLeftCorner(sourceX, targetY, cornerSize)
+          : topLeftCorner(sourceX, targetY, cornerSize);
     } else {
       firstCornerPath =
-        srcY <= trgY
-          ? bottomRightCorner(srcX, trgY, cornerSize)
-          : topRightCorner(srcX, trgY, cornerSize);
+        sourceY <= targetY
+          ? bottomRightCorner(sourceX, targetY, cornerSize)
+          : topRightCorner(sourceX, targetY, cornerSize);
     }
     secondCornerPath = '';
   }
 
-  return `M ${srcX},${srcY}${firstCornerPath}${secondCornerPath}L ${trgX},${trgY}`;
+  return `M ${sourceX},${sourceY}${firstCornerPath}${secondCornerPath}L ${targetX},${targetY}`;
 }
 export let edge: DerivedEdge;
 export let borderRadius = 5;
+//console.log('edge-->', edge);
 
-$: params = {
-    srcX: edge.sourceX,
-    srcY: edge.sourceY,
-    sourcePosition: Position.Bottom,
-    trgX: edge.targetX,
-    trgY: edge.targetY,
-    targetPosition: Position.Top,
+// $: params = {
+//     sourceX: edge.sourceX,
+//     sourceY: edge.sourceY,
+//     sourcePosition: Position.Bottom,
+//     targetX: edge.targetX,
+//     targetY: edge.targetY,
+//     targetPosition: Position.Top,
+//     borderRadius: borderRadius
+//   };
+
+  $: params = {
+    sourceX: edge.sourceX,
+    sourceY: edge.sourceY,
+    targetX: edge.targetX,
+    targetY: edge.targetY,
+    sourcePosition: edge.sourcePosition,
+    targetPosition: edge.targetPosition,
     borderRadius: borderRadius
   };
+  //const [centerX, centerY] = getCenter({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
+  //$: console.log('params-->',params)
+   //const {sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition} = params
+  $: [centerX, centerY] = getCenter(params);
+  // console.log('centerX-->', centerX, 'centerY-->', centerY)
 
 $: path = getSmoothStepPath(params);
-//const {srcX, srcY, trgX, trgY, sourcePosition, targetPosition} = params
-//const [centerX, centerY] = getCenter({ srcX, srcY, trgX, trgY, sourcePosition, targetPosition });
+//const {sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition} = params
 
 $: baseEdgeProps = {
   ...edge,
-  path: path
+  path: path,
+  centerX: centerX,
+  centerY: centerY
 };
 
 

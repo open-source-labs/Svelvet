@@ -11,19 +11,23 @@
   import walter from '../assets/profiles/Walter-small.png';
   import ali from '../assets/profiles/Ali-small.png';
 
-  // import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
   // import type { Node, Edge } from '$lib/types/types';
   import type { Node, Edge } from 'svelvet';
-  import Svelvet from 'svelvet';
+  //import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
       id: 1,
-      position: { x: 190, y: 40 },
-      data: { label: 'Input Node' },
-      width: 175,
-      height: 40,
-      bgColor: 'white'
+      position: { x: 190, y: 10 },
+      data: { label: 'Add Images!' },
+      width: 100,
+      height: 100,
+      bgColor: 'white',
+      borderColor: 'transparent',
+      image: true,
+      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+      //sourcePosition: 'bottom'
     },
     {
       id: 2,
@@ -31,7 +35,8 @@
       data: { label: 'Default Node' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      targetPosition: 'left'
     },
     {
       id: 3,
@@ -47,7 +52,8 @@
       data: { label: 'Drag me!' },
       width: 175,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      targetPosition: 'right'
     },
     {
       id: 5,
@@ -68,17 +74,18 @@
       borderColor: '#FF4121',
       borderRadius: 30,
       bgColor: 'white',
-      textColor: '#FF4121'
+      textColor: '#FF4121',
+      //targetPosition: 'right'
     }
   ];
 
   const initialEdges: Edge[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
     { id: 'e2-3', source: 2, target: 3, animate: true },
-    { id: 'e1-4', source: 1, target: 4 },
+    { id: 'e1-4', source: 1, target: 4, type: 'step' , animate: true, label: 'new feature'},
     { id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
-    { id: 'e2-5', source: 4, target: 6, type: 'straight' },
-    { id: 'e2-5', source: 3, target: 6 }
+    { id: 'e2-5', source: 4, target: 6, type: 'straight', label: 'test' },
+    { id: 'e2-5', source: 3, target: 6 , type: 'step', label: 'it works', animate: true,}
   ];
 </script>
 

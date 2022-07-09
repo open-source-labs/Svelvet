@@ -4,7 +4,7 @@
 
   export let baseEdgeProps: EdgeProps;
 
-  $: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label } = baseEdgeProps);
+  $: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label, centerX, centerY } = baseEdgeProps);
 
   // pass necessary values to EdgeText component
   $: edgeTextProps = {
@@ -12,7 +12,9 @@
     sourceY: sourceY,
     targetX: targetX,
     targetY: targetY,
-    label: label
+    label: label,
+    centerX: centerX,
+    centerY: centerY
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
