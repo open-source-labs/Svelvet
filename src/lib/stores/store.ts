@@ -41,11 +41,12 @@ export function findOrCreateStore(key: string): SvelvetStore {
 
   // update position of selected node
   // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
+  //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
   const onMouseMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
-          //console.log(`node.position.x --> ${node.position.x}`)
+          console.log(`node.position.x --> ${e.movementX}`)
           node.position.x += e.movementX;
           node.position.y += e.movementY;
         }
