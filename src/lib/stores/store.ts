@@ -42,18 +42,68 @@ export function findOrCreateStore(key: string): SvelvetStore {
   // update position of selected node
   // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
   //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
+  // const onMouseMove = (e: any, nodeID: number) => {
+  //   coreSvelvetStore.nodesStore.update((n) => {
+  //     n.forEach((node: Node) => {
+  //       if (node.id === nodeID) {
+  //         console.log('event.offsetX in Mouse -->', e.offsetX)
+  //         node.position.x += e.movementX;
+  //         node.position.y += e.movementY;
+  //       }
+  //     });
+  //     return [...n];
+  //   });
+  // };
   const onMouseMove = (e: any, nodeID: number) => {
+
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
+        // e.stopImmediatePropagation(); // attempt to stop mouse from staying "clicked" when it moves outside of playground causing node to go crazy
         if (node.id === nodeID) {
-          console.log(`node.position.x --> ${e.movementX}`)
-          node.position.x += e.movementX;
-          node.position.y += e.movementY;
+          // console.log(e.clientX, '<--clientX');
+          // console.log(e.clientY, '<--clientY');
+
+          // console.log('e.target.offsetWidth', e.target.offsetWidth)
+          const {x, y, width, height} = e.target.getBoundingClientRect();
+          const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
+          const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
+          console.log('offsetX from Bound-->', offsetX)
+          console.log('offsetX from event-->', e.offsetX)
+          if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+            //this is upset because I removed the require from the Node types
+            node.position.x += offsetX - (node.width / 2);
+            node.position.y += offsetY - (node.height / 2);
+          } else {
+          node.position.x += offsetX;
+          node.position.y += offsetY;
+          }
+          console.log('node.position.x-->', node.position.x) 
         }
       });
       return [...n];
     });
   };
+  // const onMouseMove = (e: any, nodeID: number) => {
+  //   coreSvelvetStore.nodesStore.update((n) => {
+  //     n.forEach((node: Node) => {
+  //       if (node.id === nodeID) {
+  //         console.log('e.target.offsetWidth', e.target.offsetWidth)
+  //         const {x, y, width, height} = e.target.getBoundingClientRect();
+  //         const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
+  //         const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
+  //         if(e.offsetX > 1 || e.offsetX < -1 || e.offsetY > 1 || e.offsetY < -1){
+  //           //this is upset because I removed the require from the Node types
+  //           node.position.x += e.offsetX - (node.width / 2);
+  //           node.position.y += e.offsetY - (node.height / 2);
+  //         } else {
+  //         node.position.x += e.offsetX;
+  //         node.position.y += e.offsetY;
+  //         } 
+  //       }
+  //     });
+  //     return [...n];
+  //   });
+  // };
 
   const onTouchMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
@@ -83,7 +133,11 @@ export function findOrCreateStore(key: string): SvelvetStore {
           const {x, y, width, height} = e.target.getBoundingClientRect();
           const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
+
+          console.log('offsetX in touch --->', offsetX)
+          console.log(e, 'touch object');
           //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
+          
           if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
             //this is upset because I removed the require from the Node types
             node.position.x += offsetX - (node.width / 2);
