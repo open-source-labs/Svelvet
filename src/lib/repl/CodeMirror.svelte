@@ -3,7 +3,8 @@
 	import { writable } from 'svelte/store';
 	import Message from './Message.svelte';
 	import { addCodeToDB, getCodeFromDB } from '../../supabase-db.js';
-	import { user_email } from '$lib/stores/authStore.js'
+	import { user_email } from '$lib/stores/authStore.js';
+	// import page from '@playwright/test';
 
 
 	const dispatch = createEventDispatcher();
@@ -78,22 +79,27 @@
 		if (editor) editor.getAllMarks().forEach(m => m.clear());
 	}
 
-	export function getCodeEditorValue() {
+	export async function getCodeEditorValue() {
 		// get code from the editor
 		const codeToSave = editor.getValue();
-		// console.log(codeToSave);
-		// instead of returning codeToSave -> send to database
-		// we'd probably want to create an object with user information
-		// and add codeToSave as a property on our object
-		// {user: userID, code: codeToSave}
-		// 
-		// const dbObject = {};
-		// dbObject.code = JSON.stringify(codeToSave);
-		// dbObject.created_by = //
 	  addCodeToDB(codeToSave, $user_email);
-		// console.log('email logged from codemirror', user_email);
-		// getCodeFromDB();
+	  const canvas = document.getElementById('.s-UBc7zV9kI3Rx');
+		const dataURL = canvas?.getContext('2d')
+		console.log(dataURL);
 	}
+	
+	export async function loadSavedCode() {
+		// grab and load saved code into the editor
+		// const codeToSave = editor.getValue();
+		getCodeFromDB($user_email)
+			.then(data => editor.setValue(data[2].code));
+	
+		// editor.setValue(codeToLoad[0].code);
+		// await page.locator('body').screenshot({ path: 'screenshot.png' });
+	}
+	
+	// const playwright = require('playwright')
+	// await page.g
 
 	const modes = {
 		js: {
@@ -311,3 +317,4 @@
 		</div>
 	{/if}
 </div>
+

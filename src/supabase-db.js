@@ -31,7 +31,7 @@ export default supabase.auth.onAuthStateChange((event, session) => {
   if(event === 'SIGNED_IN') {
     console.log('SIGNED_IN, testing return', session);
     const avatar = supabase.auth.user().identities[0].identity_data.avatar_url;
-    console.log(avatar);
+    // console.log(avatar);
     user_avatar.set(avatar);
     // console.log(supabase.auth.user().identities[0].identity_data.avatar_url);
     // user.set(session?.user);
@@ -39,7 +39,7 @@ export default supabase.auth.onAuthStateChange((event, session) => {
     const username = supabase.auth.user().identities[0].identity_data.user_name;
     // console.log(supabase.auth.user().identities[0].identity_data)
     const email = supabase.auth.user().identities[0].identity_data.email;
-    console.log('email just after declaration-->', email);
+    // console.log('email just after declaration-->', email);
     user_name.set(username);
     user_email.set(email);
     // logged_in.set(true);
@@ -75,8 +75,8 @@ export default supabase.auth.onAuthStateChange((event, session) => {
       if(error) console.log('ERROR: ', error);
       console.log("data", data, "was added to DB")
 } */
-export const addCodeToDB = async function addCodeToDB(code, test_email) {
-   console.log('test_email inside addCodeToDb-->', test_email);
+export const addCodeToDB = async (code, test_email) => {
+  console.log('test_email inside addCodeToDb-->', test_email);
   const {data, error} = await supabase
 			.from('user_saved_projects')
 			.insert([
@@ -86,14 +86,16 @@ export const addCodeToDB = async function addCodeToDB(code, test_email) {
       console.log("data", data, "was added to DB")
 }
 
-export const getCodeFromDB = async () => {
+export const getCodeFromDB = async (user_email) => {
   const {data, error} = await supabase
   .from('user_saved_projects')
-  .select('code')
+  .select('code', 'created_by')
+  .in('created_by', [user_email])
   if(error) {
     return console.error(error);
   }
   console.log(data);
+  return data;
 };
 
 

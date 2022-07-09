@@ -273,6 +273,7 @@
 
 <div class="editor-navbar">
 	<button on:click={() => module_editor.getCodeEditorValue()}>TESTING SAVE BUTTON</button>
+	<button on:click={() => module_editor.loadSavedCode()}>TEST LOAD BUTTON</button>
 </div>
 
 
