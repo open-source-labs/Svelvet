@@ -4,20 +4,20 @@ import { Position } from '$lib/types/utils';
 
 
 export interface GetCenterParams {
-    srcX: number;
-    srcY: number;
-    trgX: number;
-    trgY: number;
+    sourceX: number;
+    sourceY: number;
+    targetX: number;
+    targetY: number;
     sourcePosition?: Position;
     targetPosition?: Position;
 }
 const LeftOrRight = [Position.Left, Position.Right];
 
 export const getCenter = ({
-  srcX,
-  srcY,
-  trgX,
-  trgY,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
   sourcePosition = Position.Bottom,
   targetPosition = Position.Top,
 }: GetCenterParams): [number, number, number, number] => {
@@ -29,20 +29,20 @@ export const getCenter = ({
   const mixedEdge = (sourceIsLeftOrRight && !targetIsLeftOrRight) || (targetIsLeftOrRight && !sourceIsLeftOrRight);
 
   if (mixedEdge) {
-    const xOffset = sourceIsLeftOrRight ? Math.abs(trgX - srcX) : 0;
-    const centerX = srcX > trgX ? srcX - xOffset : srcX + xOffset;
+    const xOffset = sourceIsLeftOrRight ? Math.abs(targetX - sourceX) : 0;
+    const centerX = sourceX > targetX ? sourceX - xOffset : sourceX + xOffset;
 
-    const yOffset = sourceIsLeftOrRight ? 0 : Math.abs(trgY - srcY);
-    const centerY = srcY < trgY ? srcY + yOffset : srcY - yOffset;
+    const yOffset = sourceIsLeftOrRight ? 0 : Math.abs(targetY - sourceY);
+    const centerY = sourceY < targetY ? sourceY + yOffset : sourceY - yOffset;
 
     return [centerX, centerY, xOffset, yOffset];
   }
 
-  const xOffset = Math.abs(trgX - srcX) / 2;
-  const centerX = trgX < srcX ? trgX + xOffset : trgX - xOffset;
+  const xOffset = Math.abs(targetX - sourceX) / 2;
+  const centerX = targetX < sourceX ? targetX + xOffset : targetX - xOffset;
 
-  const yOffset = Math.abs(trgY - srcY) / 2;
-  const centerY = trgY < srcY ? trgY + yOffset : trgY - yOffset;
+  const yOffset = Math.abs(targetY - sourceY) / 2;
+  const centerY = targetY < sourceY ? targetY + yOffset : targetY - yOffset;
 
   return [centerX, centerY, xOffset, yOffset];
 };

@@ -38,7 +38,7 @@
     },
     {
       id: 3,
-      position: { x: 250, y: 160 },
+      position: { x: 250, y: 260 },
       data: { label: 'Option #2' },
       width: 175,
       height: 40,
@@ -63,7 +63,7 @@
   const initialEdges = [
     { id: 'e1-2', source: 1, target: 2, type: 'step', label: '  YES  ', animate: true},
     { id: 'e2-3', source: 1, target: 3, type: 'step', label: '  NO  ' },
-    { id: 'e2-4', source: 2, target: 4, animate: true },
+    { id: 'e2-4', source: 2, target: 4, label: 'test', animate: true },
     { id: 'e2-5', source: 3, target: 4, animate: true }
   ];
 

@@ -41,6 +41,8 @@ export interface DerivedEdge extends Edge {
 
 export interface EdgeProps extends DerivedEdge {
   path: string;
+  centerX?: number;
+  centerY?: number;
 }
 
 export interface EdgeTextProps {
@@ -49,6 +51,8 @@ export interface EdgeTextProps {
   targetX: number;
   targetY: number;
   label?: any;
+  centerX?: number;
+  centerY?: number;
 }
 
 export type HandleType = 'source' | 'target';
