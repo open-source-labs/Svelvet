@@ -14,6 +14,7 @@ interface CoreSvelvetStore {
 
 interface SvelvetStore extends CoreSvelvetStore {
   onMouseMove: (e: any, nodeID: number) => void;
+  //onMouseMove: (e: any, nodeID: number, pos1: number, pos2: number, pos3: number, pos4: number) => void;
   onNodeClick: (e: any, nodeID: number) => void;
   onTouchMove: (e: any, nodeID: number) => void;
   derivedEdges: Readable<Edge[]>;
@@ -42,47 +43,84 @@ export function findOrCreateStore(key: string): SvelvetStore {
   // update position of selected node
   // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
   //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
-  // const onMouseMove = (e: any, nodeID: number) => {
-  //   coreSvelvetStore.nodesStore.update((n) => {
-  //     n.forEach((node: Node) => {
-  //       if (node.id === nodeID) {
-  //         console.log('event.offsetX in Mouse -->', e.offsetX)
-  //         node.position.x += e.movementX;
-  //         node.position.y += e.movementY;
-  //       }
-  //     });
-  //     return [...n];
-  //   });
-  // };
   const onMouseMove = (e: any, nodeID: number) => {
-
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
-        // e.stopImmediatePropagation(); // attempt to stop mouse from staying "clicked" when it moves outside of playground causing node to go crazy
         if (node.id === nodeID) {
-          // console.log(e.clientX, '<--clientX');
-          // console.log(e.clientY, '<--clientY');
-
-          // console.log('e.target.offsetWidth', e.target.offsetWidth)
-          const {x, y, width, height} = e.target.getBoundingClientRect();
-          const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
-          const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
-          console.log('offsetX from Bound-->', offsetX)
-          console.log('offsetX from event-->', e.offsetX)
-          if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
-            //this is upset because I removed the require from the Node types
-            node.position.x += offsetX - (node.width / 2);
-            node.position.y += offsetY - (node.height / 2);
+          console.log('parent?-->', e)
+          console.log('parent?-->', e.target.parentElement.style.transform)
+          const d3Container = document.querySelector('#d3-Container');
+          console.log('d3Container.style',d3Container.style);
+          // let nums = e.target.parentElement.style.transform.replace(/\(|\)|scale/g,'');
+          //let nums = e.target.parentElement.style.transform.match(/\(([^)]+)\)/g);
+          if(d3Container.style.transform !== ''){
+            let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
+            let scale = Number(nums[1].slice(1, -1));
+            console.log('scale', d3Container.style.transform);
+            console.log('e.movementX / scale-->', e.movementX / scale);
+            node.position.x += e.movementX / scale;
+            node.position.y += e.movementY / scale;
           } else {
-          node.position.x += offsetX;
-          node.position.y += offsetY;
+            node.position.x += e.movementX;
+            node.position.y += e.movementY;
           }
-          console.log('node.position.x-->', node.position.x) 
+
+
+          //node.position.x += e.movementX / scale;
+          //node.position.y += e.movementY / scale;
+          //console.log('node.position.x-->', node.position.x, 'e.movementX-->', e.movementX)
         }
       });
       return [...n];
     });
   };
+  //  const onMouseMove = (e: any, nodeID: number, pos1: number, pos2: number, pos3: number, pos4: number) => {
+  //   coreSvelvetStore.nodesStore.update((n) => {
+  //     n.forEach((node: Node) => {
+  //       // e.stopImmediatePropagation(); // attempt to stop mouse from staying "clicked" when it moves outside of playground causing node to go crazy
+  //       if (node.id === nodeID) {
+  //         // console.log(e.clientX, '<--clientX');
+  //         // console.log(e.clientY, '<--clientY');
+  //         // const {x, y, width, height} = e.target.getBoundingClientRect();
+  //         // const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
+  //         // const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
+  //         // console.log('x-->', x, 'y-->', y, 'width-->', width, 'height-->', height)
+  //         // console.log('e.clientX-->', e.clientX, 'e.clientX - x-->', e.clientX-x, 'e.target.offsetWidth-->', e.target.offsetWidth,'width * e.target.offsetWidth-->', width * e.target.offsetWidth)
+  //         // console.log('offsetX-->', offsetX)
+  //         // console.log('e.offsetX-->', e.offsetX)
+  //         // console.log('offsetX from Bound-->', offsetX)
+  //          //console.log('offsetX from event.target-->', e)
+  //          //console.log('----break-----')
+  //          pos1 = pos3 - e.clientX;
+  //          pos2 = pos4 - e.clientY;
+  //          pos3 = e.clientX;
+  //          pos4 = e.clientY;
+  //          console.log('elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";-->', e.target.offsetLeft - pos1)
+  //         node.position.x = e.target.offsetLeft - pos1;
+  //         node.position.y = e.target.offsetTop - pos2;
+  //         //  if(e.offsetX >= 1 || e.offsetX <= -1 || e.offsetY >= 1 || e.offsetY <= -1){
+  //         // //   //this is upset because I removed the require from the Node types
+  //         // //   console.log('offsetX inside of if statement',offsetX)
+            
+  //         //   //console.log('event -->', e);
+
+
+  //         //   node.position.x += e.offsetX - (node.width / 2);
+  //         //   node.position.y += e.offsetY - (node.height / 2);
+  //         //   // node.position.x += offsetX
+  //         //   // node.position.y += offsetY
+  //         //   //console.log('offsetX -->', e.offsetX, 'node.position.x-->', node.position.x);
+  //         //   } else {
+  //         //     console.log('something is wrong')
+  //         //     node.position.x += e.offsetX;
+  //         //      node.position.y += e.offsetY;
+  //         //  }
+  //         // console.log('node.position.x-->', node.position.x) 
+  //       }
+  //     });
+  //     return [...n];
+  //   });
+  // };
   // const onMouseMove = (e: any, nodeID: number) => {
   //   coreSvelvetStore.nodesStore.update((n) => {
   //     n.forEach((node: Node) => {
@@ -134,15 +172,19 @@ export function findOrCreateStore(key: string): SvelvetStore {
           const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
           const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
 
-          console.log('offsetX in touch --->', offsetX)
-          console.log(e, 'touch object');
+          // console.log('offsetX in touch --->', offsetX)
+          // console.log(e, 'touch object');
           //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
           
           if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+            console.log(e.touches[0].clientX)
+            console.log('offsetX inside of if statement',offsetX)
             //this is upset because I removed the require from the Node types
             node.position.x += offsetX - (node.width / 2);
             node.position.y += offsetY - (node.height / 2);
           } else {
+            console.log('offsetX outside of if statement',offsetX)
+            
           node.position.x += offsetX;
           node.position.y += offsetY;
           } 

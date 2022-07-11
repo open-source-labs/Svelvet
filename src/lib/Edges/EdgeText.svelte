@@ -3,7 +3,6 @@
   import { getCenter } from './utils';
 
   export let edgeTextProps: EdgeTextProps;
-console.log('edgeTextProps-->', edgeTextProps)
   $: ({ sourceX, sourceY, targetX, targetY, label, centerX, centerY } = edgeTextProps);
 
   const shiftRectY: number = 7;

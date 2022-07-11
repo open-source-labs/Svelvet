@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { findOrCreateStore } from '$lib/stores/store';
+  import AstNode from '$lib/repl/Output/AstNode.svelte';
+import AstView from '$lib/repl/Output/AstView.svelte';
+import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
   import { logDOM } from '@testing-library/svelte';
 
@@ -14,12 +16,15 @@
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
+    e.preventDefault();
     if (moving) {
+      //onMouseMove(e, node.id, pos1, pos2, pos3, pos4);
       onMouseMove(e, node.id);
       moved = true;
     }
@@ -44,7 +49,13 @@
   }}
   on:mousedown={(e) => {
     //console.log('mouse event-->', e)
-    e.preventDefault(); //need this?
+    e.preventDefault();
+    //additions
+    
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    console.log('pos3-->', pos3)
+    // end additions
     moving = true;
     $nodeIdSelected = node.id;
     $nodeSelected = true;

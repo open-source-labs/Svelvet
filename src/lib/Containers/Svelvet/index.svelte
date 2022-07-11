@@ -2,7 +2,7 @@
 <script lang="ts">
   import GraphView from '$lib/Containers/GraphView/index.svelte';
   import { findOrCreateStore } from '$lib/stores/store';
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import type { Node, Edge } from '$lib/types/index.js';
   import { addDefaultPositions } from '$lib/Edges/utils';
   // Declaring variables for Svelvet components which will be usable in other files
@@ -23,6 +23,13 @@
   const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
 
   onMount(() => {
+    svelvetStore.nodesStore.set(nodes);
+    svelvetStore.edgesStore.set(edges);
+    svelvetStore.widthStore.set(width);
+    svelvetStore.heightStore.set(height);
+    svelvetStore.backgroundStore.set(background);
+  });
+  afterUpdate(() => {
     svelvetStore.nodesStore.set(nodes);
     svelvetStore.edgesStore.set(edges);
     svelvetStore.widthStore.set(width);
