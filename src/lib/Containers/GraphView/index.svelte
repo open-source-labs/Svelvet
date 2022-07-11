@@ -25,7 +25,7 @@
   export let key: string;
 
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, widthStore, heightStore } = svelvetStore;
+  const { nodeSelected, backgroundStore, widthStore, heightStore, d3Scale } = svelvetStore;
 
   const gridSize = 15;
   const dotSize = 10;
@@ -55,6 +55,7 @@
         .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
         .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
         .attr('opacity', Math.min(e.transform.k, 1));
+
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
     d3.select(`.Edges-${key} g`).attr('transform', e.transform);
@@ -67,12 +68,16 @@
         'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')'
       )
       .style('transform-origin', '0 0');
+      //add a store that contains the current stored value of zoom
+      d3Scale.set(e.transform.k);
+
+
   }
 </script>
 
 <!-- Ask Team: about use of destiny operator within forEach loop -->
-<div class={`Nodes Nodes-${key}`}>
-  <div class={`Node Node-${key}`} id='d3-Container'>
+<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
+  <div class={`Node Node-${key}`} id={`d3-Container-${key}`} >
     {#each $nodesStore as node}
       <Node {node} {key}>{node.data.label}</Node>
     {/each}

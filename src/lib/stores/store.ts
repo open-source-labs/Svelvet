@@ -10,11 +10,11 @@ interface CoreSvelvetStore {
   backgroundStore: Writable<boolean>;
   nodeIdSelected: Writable<number>;
   nodeSelected: Writable<boolean>;
+  d3Scale: Writable<number>;
 }
 
 interface SvelvetStore extends CoreSvelvetStore {
   onMouseMove: (e: any, nodeID: number) => void;
-  //onMouseMove: (e: any, nodeID: number, pos1: number, pos2: number, pos3: number, pos4: number) => void;
   onNodeClick: (e: any, nodeID: number) => void;
   onTouchMove: (e: any, nodeID: number) => void;
   derivedEdges: Readable<Edge[]>;
@@ -37,25 +37,32 @@ export function findOrCreateStore(key: string): SvelvetStore {
     heightStore: writable(600),
     backgroundStore: writable(false),
     nodeSelected: writable(false),
-    nodeIdSelected: writable(-1)
+    nodeIdSelected: writable(-1),
+    d3Scale: writable(1),
   };
 
   // update position of selected node
   // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
   //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
+
   const onMouseMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
-          console.log('parent?-->', e)
-          console.log('parent?-->', e.target.parentElement.style.transform)
-          const d3Container = document.querySelector('#d3-Container');
-          console.log('d3Container.style',d3Container.style);
+          const scale = get(coreSvelvetStore.d3Scale);
+          console.log('in mousemove',scale);
+
+          // console.log('parent?-->', e)
+          // console.log('parent?-->', e.target.parentElement.style.transform)
+          const d3Container = document.querySelector(`#d3-Container-${key}`);
+          
+          // console.log('d3Container.style',d3Container.style);
           // let nums = e.target.parentElement.style.transform.replace(/\(|\)|scale/g,'');
           //let nums = e.target.parentElement.style.transform.match(/\(([^)]+)\)/g);
+
           if(d3Container.style.transform !== ''){
-            let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
-            let scale = Number(nums[1].slice(1, -1));
+            //let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
+            //let scale = Number(nums[1].slice(1, -1));
             console.log('scale', d3Container.style.transform);
             console.log('e.movementX / scale-->', e.movementX / scale);
             node.position.x += e.movementX / scale;
