@@ -41,41 +41,31 @@ export function findOrCreateStore(key: string): SvelvetStore {
     d3Scale: writable(1),
   };
 
-  // update position of selected node
-  // ANSWER: controls node position based on x,y position and add that to node position so it can follow the mouse
-  //TODO try changing the movement functionality to match touch event functionality to fix the unresponsiveness of node movement on mouse movement
-
+  // This is the function handler for the mouseMove event to update the position of the selected node.
   const onMouseMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
+          //retrieve d3Scale value from store
           const scale = get(coreSvelvetStore.d3Scale);
-          console.log('in mousemove',scale);
-
-          // console.log('parent?-->', e)
-          // console.log('parent?-->', e.target.parentElement.style.transform)
+          //select the container that contains the current Svelvet component
           const d3Container = document.querySelector(`#d3-Container-${key}`);
-          
-          // console.log('d3Container.style',d3Container.style);
-          // let nums = e.target.parentElement.style.transform.replace(/\(|\)|scale/g,'');
-          //let nums = e.target.parentElement.style.transform.match(/\(([^)]+)\)/g);
-
-          if(d3Container.style.transform !== ''){
-            //let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
-            //let scale = Number(nums[1].slice(1, -1));
-            console.log('scale', d3Container.style.transform);
-            console.log('e.movementX / scale-->', e.movementX / scale);
-            node.position.x += e.movementX / scale;
-            node.position.y += e.movementY / scale;
-          } else {
-            node.position.x += e.movementX;
-            node.position.y += e.movementY;
-          }
+          // divide the movement value by scale to keep it proportional to d3Zoom transformations
+          node.position.x += e.movementX / scale;
+          node.position.y += e.movementY / scale;
 
 
-          //node.position.x += e.movementX / scale;
-          //node.position.y += e.movementY / scale;
-          //console.log('node.position.x-->', node.position.x, 'e.movementX-->', e.movementX)
+          // if(d3Container.style.transform !== ''){
+          //   //let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
+          //   //let scale = Number(nums[1].slice(1, -1));
+          //   console.log('scale', d3Container.style.transform);
+          //   console.log('e.movementX / scale-->', e.movementX / scale);
+          //   node.position.x += e.movementX / scale;
+          //   node.position.y += e.movementY / scale;
+          // } else {
+            // node.position.x += e.movementX / scale;
+            // node.position.y += e.movementY / scale;
+          //}
         }
       });
       return [...n];
@@ -154,6 +144,35 @@ export function findOrCreateStore(key: string): SvelvetStore {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if(node.id === nodeID) {
+          //calculates the location of the selected node
+          const {x, y, width, height} = e.target.getBoundingClientRect();
+          const offsetX = (e.touches[0].clientX - x) / width * e.target.offsetWidth;
+          const offsetY = (e.touches[0].clientY - y) / height * e.target.offsetHeight;
+          // centers the node consistently under the user's touch
+          node.position.x += offsetX - (node.width / 2);
+          node.position.y += offsetY - (node.height / 2);
+
+          //this if statement centers the touched node so that it is immediately placed under the user's finger
+          // if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+          //   node.position.x += offsetX - (node.width / 2);
+          //   node.position.y += offsetY - (node.height / 2);
+          // } else {
+          // //adjust the node to the current touch of the user
+          // console.log('hello')
+          // node.position.x += offsetX;
+          // node.position.y += offsetY;
+          // } 
+
+          // if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
+            // node.position.x += offsetX - (node.width / 2);
+            // node.position.y += offsetY - (node.height / 2);
+          // } else {
+          //adjust the node to the current touch of the user
+          // console.log('')
+          // node.position.x += offsetX;
+          // node.position.y += offsetY;
+          // } 
+
           // Not working perfectly, concerned about performance of getBoundingClientRect
           // maybe call tweening to smooth node movement?
           // const bcr = e.target.getBoundingClientRect();
@@ -175,32 +194,18 @@ export function findOrCreateStore(key: string): SvelvetStore {
           */
 
           // currently working but much more verbose, NEEDS TO BE REMOVED BEFORE PRODUCTION!!!!!
-          const {x, y, width, height} = e.target.getBoundingClientRect();
-          const offsetX = (e.touches[0].clientX-x)/width*e.target.offsetWidth;
-          const offsetY = (e.touches[0].clientY-y)/height*e.target.offsetHeight;
+
 
           // console.log('offsetX in touch --->', offsetX)
           // console.log(e, 'touch object');
           //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
-          
-          if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
-            console.log(e.touches[0].clientX)
-            console.log('offsetX inside of if statement',offsetX)
-            //this is upset because I removed the require from the Node types
-            node.position.x += offsetX - (node.width / 2);
-            node.position.y += offsetY - (node.height / 2);
-          } else {
-            console.log('offsetX outside of if statement',offsetX)
-            
-          node.position.x += offsetX;
-          node.position.y += offsetY;
-          } 
         }
       });
       return [...n];
     });
   };
   const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
+  // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
   const onNodeClick = (e: any, nodeID: number) => {
     get(nodesStore).forEach((node) => {
       if (node.id === get(nodeIdSelected)) {
@@ -219,17 +224,13 @@ export function findOrCreateStore(key: string): SvelvetStore {
 
   //ANSWER: Taking the information and adding other properties such as x,y, target x and y, so that the edge has enough information to create the line. In order to create any edge we need starting point and ending point of each line. All we give to the edges array is a source and a target.
   const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
-    $edgesStore.forEach((edge: any) => {
+    $edgesStore.forEach((edge: Edge) => {
       // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
-      let sourceNode: any; // any -> should follow type Node
-      let targetNode: any; // any -> should follow type Node
+      let sourceNode: Node; // any -> should follow type Node
+      let targetNode: Node; // any -> should follow type Node
       $nodesStore.forEach((node: Node) => {
-      //console.log('node',node.sourcePosition);
         if (edge.source === node.id) sourceNode = node;
-        if (edge.target === node.id) {
-          //console.log('edge.target-->', edge.target)
-          targetNode = node
-        };
+        if (edge.target === node.id) targetNode = node;
       });
       //
       if (sourceNode) {

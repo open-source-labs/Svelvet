@@ -31,6 +31,51 @@
 
 />
 
+{#if node.image}
+<img
+  on:touchmove={(e) => {
+    if (moving){
+     onTouchMove(e, node.id);
+    }
+  }}
+  on:touchstart={(e) => {
+    e.preventDefault(); // is this neccessary?
+    moving = true;
+    $nodeSelected = true;
+  }}
+  on:touchend={(e) => {
+    moving =false
+    $nodeSelected = false;
+  }}
+  on:mousedown={(e) => {
+    e.preventDefault();
+    moving = true;
+    $nodeIdSelected = node.id;
+    $nodeSelected = true;
+  }}
+  on:mouseup={(e) => {
+    moving = false;
+    $nodeSelected = false;
+    if (!moved && node.id == $nodeIdSelected) {
+      onNodeClick(e, node.id);
+    }
+    moved = false;
+  }}
+  class='Node'
+  style="left: {node.position.x}px; 
+    top: {node.position.y}px; 
+    width: {node.width}px; 
+    height: {node.height}px; 
+    background-color: {node.bgColor}; 
+    border-color: {node.borderColor}; 
+    border-radius: {node.borderRadius}px;
+    color: {node.textColor};"
+  src="{node.src}"
+  alt=""
+>
+<slot />
+
+{:else}
 <div
   on:touchmove={(e) => {
     if (moving){
@@ -71,21 +116,21 @@
     color: {node.textColor};"
 >
 <!-- TODO play with the styling to get the image to sit correctly in the div -->
-{#if node.image}
+<!-- {#if node.image}
   <!-- <img src="{node.src}" 
 	     alt='a cat'
 			 style ="width: 100%; 
 			 height: 100%;
-       overflow: hidden;"> -->
+       overflow: hidden;"> --
        <img src="{node.src}" 
 	     alt='a cat'
 			 style ="width: {node.width * 0.75}px; 
 			 height: {node.height * 0.75}px;
        overflow: hidden;">
-	{/if}
+	{/if} -->
   <slot />
 </div>
-
+	{/if}
 
 
 
