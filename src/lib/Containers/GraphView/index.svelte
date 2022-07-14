@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
+  //import type { Node } from '$lib/types/index.js';
+  //import type { D3ZoomEvent } from '@types/d3-zoom';
 
   import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '$lib/Edges/StraightEdge.svelte';
@@ -9,6 +11,7 @@
   import StepEdge from '$lib/Edges/StepEdge.svelte';
   import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
   import Node from '$lib/Nodes/index.svelte';
+  import ImageNode from '$lib/Nodes/ImageNode.svelte';
 
   import { findOrCreateStore } from '$lib/stores/store';
 
@@ -24,9 +27,10 @@
   export let derivedEdges: any;
   export let key: string;
 
+  // here we lookup the store using the unique key 
   const svelvetStore = findOrCreateStore(key);
   const { nodeSelected, backgroundStore, widthStore, heightStore, d3Scale } = svelvetStore;
-
+  // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
 
@@ -34,7 +38,7 @@
     d3.select(`.Edges-${key}`).call(d3Zoom);
     d3.select(`.Nodes-${key}`).call(d3Zoom);
   });
-  // Ask Team : What was implemented to try to get d3 selection to work on mobile?
+
   // @TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom: any = d3
     .zoom()
@@ -43,7 +47,9 @@
     .on('zoom', handleZoom);
 
   // @TODO: Update mouse event type
-  function handleZoom(e: any) {
+  function handleZoom(e: any): void {
+    //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
+    d3Scale.set(e.transform.k);
     // should not run d3.select below if backgroundStore is false
     if ($backgroundStore) {
       d3.select(`#background-${key}`)
@@ -55,7 +61,6 @@
         .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
         .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
         .attr('opacity', Math.min(e.transform.k, 1));
-
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
     d3.select(`.Edges-${key} g`).attr('transform', e.transform);
@@ -68,18 +73,20 @@
         'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')'
       )
       .style('transform-origin', '0 0');
-      //add a store that contains the current stored value of zoom
-      d3Scale.set(e.transform.k);
-
-
   }
 </script>
 
-<!-- Ask Team: about use of destiny operator within forEach loop -->
+<!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
-  <div class={`Node Node-${key}`} id={`d3-Container-${key}`} >
+  <!-- This container is transformed by d3zoom -->
+  <div class={`Node Node-${key}`}>
+    <!-- Iterating through the nodesStore Array -->
     {#each $nodesStore as node}
-      <Node {node} {key}>{node.data.label}</Node>
+      {#if node.image && !node.data.label}
+        <ImageNode {node} {key}></ImageNode>
+      {:else}
+        <Node {node} {key}>{node.data.label}</Node>
+      {/if}
     {/each}
   </div>
 </div>
@@ -109,6 +116,7 @@
   {/if}
 
   <g>
+    <!-- Iterating through the derivedEdges array -->
     {#each $derivedEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge {edge} />
@@ -124,7 +132,8 @@
         <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
         {#if !edge.arrow}
           <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-        {/if}
+      {/if}
+      
       {/if}
     {/each}
   </g>

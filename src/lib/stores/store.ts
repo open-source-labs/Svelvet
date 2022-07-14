@@ -48,13 +48,12 @@ export function findOrCreateStore(key: string): SvelvetStore {
         if (node.id === nodeID) {
           //retrieve d3Scale value from store
           const scale = get(coreSvelvetStore.d3Scale);
-          //select the container that contains the current Svelvet component
-          const d3Container = document.querySelector(`#d3-Container-${key}`);
           // divide the movement value by scale to keep it proportional to d3Zoom transformations
           node.position.x += e.movementX / scale;
           node.position.y += e.movementY / scale;
 
-
+          //select the container that contains the current Svelvet component
+          //const d3Container = document.querySelector(`#d3-Container-${key}`);
           // if(d3Container.style.transform !== ''){
           //   //let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
           //   //let scale = Number(nums[1].slice(1, -1));
@@ -213,7 +212,8 @@ export function findOrCreateStore(key: string): SvelvetStore {
       }
     });
   };
-  //ANSWER: setting edges and nodes for the store
+
+
   const edgesStore = coreSvelvetStore.edgesStore;
   const nodesStore = coreSvelvetStore.nodesStore;
 
@@ -234,9 +234,22 @@ export function findOrCreateStore(key: string): SvelvetStore {
       });
       //
       if (sourceNode) {
-        //console.log('sourceNode.sourcePosition is...', sourceNode.sourcePosition);
-        if (sourceNode.sourcePosition === 'top'){
-          //console.log('top source was registered')
+        //Default sourcePosition to bottom if sourcePosition not defined
+        if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
+          //left side of the node selected
+          let left = sourceNode.position.x;
+          //top of the node selected
+          let top = sourceNode.position.y;
+          //declaring the middle point of the node
+          let middle = sourceNode.width / 2;
+          //the x coordinate of the middle of the node
+          edge.sourceX = left + middle;
+          //the y coordinate of the bottom of the node
+          edge.sourceY = top + sourceNode.height;
+          //assign sourcePosition to the edge for usage in the various edge components
+          edge.sourcePosition = 'bottom';
+        }
+        else if (sourceNode.sourcePosition === 'top'){
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
           let middle = sourceNode.width / 2;
@@ -244,109 +257,62 @@ export function findOrCreateStore(key: string): SvelvetStore {
           edge.sourceY = top
           edge.sourcePosition = sourceNode.sourcePosition;
         }
-        // if (sourceNode.sourcePosition === 'bottom'){
-        //   console.log('bottom source was registered')
-        //   let left = sourceNode.position.x;
-        //   let top = sourceNode.position.y;        
-        //   let middle = sourceNode.width / 2;      
-        //   edge.sourceX = left + middle;            
-        //   edge.sourceY = top + sourceNode.height;
-        // }
         else if (sourceNode.sourcePosition === 'left'){
-          //console.log('left source was registered')
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
-          let middle = sourceNode.width / 2;
           edge.sourceX = left
           edge.sourceY = top + sourceNode.height/2;
           edge.sourcePosition = sourceNode.sourcePosition;
 
         }
         else if (sourceNode.sourcePosition === 'right'){
-          //console.log('right source was registered')
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
-          let middle = sourceNode.width / 2;
           edge.sourceX = left + sourceNode.width
           edge.sourceY = top + sourceNode.height/2
           edge.sourcePosition = sourceNode.sourcePosition;
-
-        }
-        //Default sourcePosition to bottom if sourcePosition not defined
-        else if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
-          let left = sourceNode.position.x;
-          let top = sourceNode.position.y;
-          let middle = sourceNode.width / 2;
-          edge.sourceX = left + middle;
-          edge.sourceY = top + sourceNode.height;
-          edge.sourcePosition = 'bottom';
         }
       }
       if (targetNode) {
-        //console.log('targetNode.targetPosition is...', targetNode.targetPosition);
-        // if (targetNode.targetPosition === 'top'){
-        //   console.log('top target was registered')
-        //   let left = sourceNode.position.x;
-        //   let top = sourceNode.position.y;
-        //   let middle = sourceNode.width / 2;
-        //   edge.sourceX = left + middle
-        //   edge.sourceY = top
-        // }
-        if (targetNode.targetPosition === 'bottom'){
-          //console.log('bottom target was registered')
+        //Default to top targetPosition if targetPosition undefined
+        if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
+          //left side of the node selected
+          let left = targetNode.position.x;
+          //top of the node selected
+          let top = targetNode.position.y;
+          //declaring the middle point of the node
+          let middle = targetNode.width / 2;
+          //the x coordinate of the middle of the node
+          edge.targetX = left + middle;
+          //the y coordinate of the bottom of the node
+          edge.targetY = top;
+          //assign sourcePosition to the edge for usage in the various edge components
+          edge.targetPosition = 'top';
+        }
+        else if (targetNode.targetPosition === 'bottom') {
           let left = targetNode.position.x;
           let top = targetNode.position.y;        
           let middle = targetNode.width / 2;      
-          edge.targetX = left + middle;            
+          edge.targetX = left + middle;
           edge.targetY = top + targetNode.height;
           edge.targetPosition = targetNode.targetPosition;
 
         }
-        else if (targetNode.targetPosition === 'left'){
-          //console.log(targetNode.targetPosition,  'left target was registered')
-          //console.log(`${sourceNode.sourcePosition}`, 'should throw error, sourceNode.sourcePosition');
+        else if (targetNode.targetPosition === 'left') {
           let left = targetNode.position.x;
           let top = targetNode.position.y;
-          let middle = targetNode.width / 2;
           edge.targetX = left
-          edge.targetY = top + targetNode.height/2
+          edge.targetY = top + targetNode.height / 2
           edge.targetPosition = targetNode.targetPosition;
-          //console.log('edge.targetX')
         }
-        else if (targetNode.targetPosition === 'right'){
-          //console.log('right target was registered')
+        else if (targetNode.targetPosition === 'right') {
           let left = targetNode.position.x;
           let top = targetNode.position.y;
-          let middle = targetNode.width / 2;
           edge.targetX = left + targetNode.width
-          edge.targetY = top + targetNode.height/2
+          edge.targetY = top + targetNode.height / 2
           edge.targetPosition = targetNode.targetPosition;
-          
-        }
-        //Default to top targetPosition no targetPosition defined
-        else if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
-          let left = targetNode.position.x;
-         let top = targetNode.position.y;
-         let middle = targetNode.width / 2;
-          edge.targetX = left + middle;
-         edge.targetY = top;
-         edge.targetPosition = 'top';
         }
       }
-      // if (sourceNode) {
-      //   let left = sourceNode.position.x;
-      //   let top = sourceNode.position.y;
-      //   let middle = sourceNode.width / 2;
-      //   edge.sourceX = left + middle;
-      //   edge.sourceY = top + sourceNode.height;
-      // }
-      // if (targetNode) {
-      //   let left = targetNode.position.x;
-      //   let top = targetNode.position.y;
-      //   let middle = targetNode.width / 2;
-      //   edge.targetX = left + middle;
-      //   edge.targetY = top;
-      // }
     });
     return [...$edgesStore];
   });

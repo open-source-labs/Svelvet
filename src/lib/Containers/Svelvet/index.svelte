@@ -15,9 +15,10 @@
   //this method assumes !node.position and assigns default positions
   addDefaultPositions(nodes);
 
-  //Ask Team: What was purpose of using Math.random here? What if we need to lookup the store and cannot access the randomly generated key?
-  // - ANSWER :
+  // generates a random unique string
   const key = (Math.random() + 1).toString(36).substring(7);
+  // creates a store that uses the unique sting as the key to create and look up the corresponding store
+  // this way we can have multiple Svelvet Componets on the same page and prevent overlap of information
   const svelvetStore = findOrCreateStore(key);
   // stores (state) within stores, so that we cannot access values from everywhere
   const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
@@ -37,7 +38,7 @@
     svelvetStore.backgroundStore.set(background);
   });
 </script>
-
+<!-- Now that a store has been created from the initial nodes and initial edges we drill the the store down to the D3 GraphView along with the unique key -->
 <div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
   <GraphView {nodesStore} {derivedEdges} {key} />
 </div>
@@ -48,6 +49,6 @@
     overflow: hidden;
     display: grid;
     font-family: 'Segoe UI', sans-serif;
-    background-color: white;
+    background-color: 'white';
   }
 </style>
