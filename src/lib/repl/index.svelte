@@ -8,6 +8,8 @@
 	import Output from './Output/index.svelte';
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
+	// import the user and user saved projects from the store;
+	import { user, diagrams } from '$lib/stores/authStore.js';
 
 	export let packagesUrl = 'https://unpkg.com';
 	export let svelteUrl = `${packagesUrl}/svelte`;
@@ -267,14 +269,60 @@
 	$: mobile = width < 540;
 
 	$: $toggleable = mobile && orientation === 'columns';
+
+	// let codeName = '';
+	// fill with the objects from the db
+	let diagramSelected;
+
+	// $: diagrams // trigger rerender
+	// let savedClicked = false;
+
+	const placeholder_value = () => {
+		module_editor.loadSavedCode(diagramSelected.code);
+		console.log('placeholder is being called')
+		// if(!diagramSelected.diagram_name) {
+		// 	console.log('hi im working')
+		// 	document.getElementById("project-name").value = '';
+		// }
+		document.getElementById("project-name").value = diagramSelected.diagram_name;
+		console.log(diagramSelected.id);
+	}
+
 </script>
 
 <svelte:window on:beforeunload={beforeUnload} />
 
+
+	<!-- dropdown -->
+	{#if $user}
+	<!-- {#each $diagrams as diagram} -->
+	<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={placeholder_value} required>
+		<option value="" disabled selected>Previously Saved Projects</option>
+			{#each $diagrams as diagram}
+			<option value={diagram}>
+				Name {diagram.diagram_name}, Created at {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))} 
+			</option>
+	{/each}
+	</select>
+<!-- <p>selected question {selected ? selected.id : '[waiting...]'}</p> -->
+	<!-- call load projects from db method which updates the user_projects store -->
+	<!-- need diagram_name and created_at fields -->
+	<!-- pass down user_projects to dropdown that we create -->
+	{:else}
+	   <!-- put text in dropdown that tells them to sign in to see saved projects -->
+	{/if}
+	<!-- TODO: add logic to save button to limit user to 5 projects -->
+<!-- TODO: give user ability to delete projects in case that they have more than 5 -->
+<!-- TODO: give user ability to update previously saved projects and reflect changes in db -->
 <div class="editor-navbar">
-	<button on:click={() => module_editor.getCodeEditorValue()}>TESTING SAVE BUTTON</button>
-	<button on:click={() => module_editor.loadSavedCode()}>TEST LOAD BUTTON</button>
+	<input id="project-name" placeholder="Enter project name..." required/>
+	<button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button>
+	<!-- <button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button> -->
+	<button on:click={() => module_editor.deleteCode(diagramSelected.id)}>Delete Current Diagram</button>
+	<button on:click={() => module_editor.copyCodeEditor()}>Copy to Clipboard</button>
 </div>
+
+
 
 
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
@@ -341,4 +389,8 @@
 	.toggleable .viewport.output {
 		transform: translate(-50%);
 	}
+
+	select:invalid{
+        color: gray;
+    }
 </style>
