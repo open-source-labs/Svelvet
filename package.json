@@ -67,6 +67,7 @@
     "d3-zoom": "^3.0.0",
     "dotenv": "^16.0.1",
     "estree-walker": "^3.0.1",
+    "html2canvas": "^1.4.1",
     "marked": "^4.0.17",
     "svelte-json-tree": "^1.0.0",
     "yootils": "^0.3.1"
