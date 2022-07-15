@@ -1,4 +1,6 @@
 <script lang="ts">
+  import AstNode from '$lib/repl/Output/AstNode.svelte';
+  import AstView from '$lib/repl/Output/AstView.svelte';
   import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
   import { logDOM } from '@testing-library/svelte';
@@ -15,10 +17,12 @@
   let moving = false;
   let moved = false;
 
+
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
+    e.preventDefault();
     if (moving) {
       onMouseMove(e, node.id);
       moved = true;
@@ -43,8 +47,7 @@
     $nodeSelected = false;
   }}
   on:mousedown={(e) => {
-    //console.log('mouse event-->', e)
-    e.preventDefault(); //need this?
+    e.preventDefault();
     moving = true;
     $nodeIdSelected = node.id;
     $nodeSelected = true;
@@ -67,27 +70,22 @@
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
 >
-<!-- TODO play with the styling to get the image to sit correctly in the div -->
+
 {#if node.image}
+<!-- Make a decision on styling the images -->
   <!-- <img src="{node.src}" 
-	     alt='a cat'
+	     alt=''
 			 style ="width: 100%; 
 			 height: 100%;
        overflow: hidden;"> -->
        <img src="{node.src}" 
-	     alt='a cat'
+	     alt=''
 			 style ="width: {node.width * 0.75}px; 
 			 height: {node.height * 0.75}px;
        overflow: hidden;">
-
 	{/if}
   <slot />
 </div>
-
-<!-- <div>
-	<img alt='a cat'/>
-	<slot />
-</div> -->
 
 
 

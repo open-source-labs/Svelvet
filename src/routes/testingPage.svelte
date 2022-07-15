@@ -58,13 +58,47 @@
       clickCallback: handleClick,
       sourcePosition: 'right',
       targetPosition: 'left'
+    },
+    {
+      id: 5,
+      position: { x: 300, y: 200 },
+      data: { label: 'top' },
+      width: 175,
+      height: 40,
+      bgColor: 'white',
+      clickCallback: handleClick,
+      sourcePosition: 'top',
+    },
+    {
+      id: 6,
+      position: { x: 400, y: 100 },
+      data: { label: 'left' },
+      width: 175,
+      height: 40,
+      bgColor: 'white',
+      clickCallback: handleClick,
+      targetPosition: 'left'
+    },
+    {
+      id: 7,
+      position: { x: 200, y: 100 },
+      data: { label: 'right' },
+      width: 175,
+      height: 40,
+      bgColor: 'white',
+      clickCallback: handleClick,
+      targetPosition: 'right'
     }
   ];
   const initialEdges = [
     { id: 'e1-2', source: 1, target: 2, type: 'step', label: '  YES  ', animate: true},
     { id: 'e2-3', source: 1, target: 3, type: 'step', label: '  NO  ' },
     { id: 'e2-4', source: 2, target: 4, label: 'test', animate: true },
-    { id: 'e2-5', source: 3, target: 4, animate: true }
+    { id: 'e2-5', source: 3, target: 4, animate: true },
+    { id: 'e5-6', source: 5, target: 6, animate: true },
+    { id: 'e5-7', source: 5, target: 7, animate: true }
+
+
   ];
 
   // const otherNodes = [
@@ -115,5 +149,6 @@
   // ];
 </script>
 
+<Svelvet nodes={initialNodes} edges={initialEdges} width={600} background />
 <Svelvet nodes={initialNodes} edges={initialEdges} width={600} background />
 <p>Hello</p>
