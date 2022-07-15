@@ -69,23 +69,61 @@ export function findOrCreateStore(key: string): SvelvetStore {
       // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
       let sourceNode: any; // any -> should follow type Node
       let targetNode: any; // any -> should follow type Node
+			let sourceAnchorPos: any;
+			let targetAnchorPos: any;
+			if (edge.anchors) {
+				sourceAnchorPos = edge.anchors.source && edge.source ? edge.anchors.source : null
+				targetAnchorPos = edge.anchors.target && edge.target ? edge.anchors.target : null
+			}
       $nodesStore.forEach((node: Node) => {
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) targetNode = node;
       });
       if (sourceNode) {
-        let left = sourceNode.position.x;
-        let top = sourceNode.position.y;
-        let middle = sourceNode.width / 2;
-        edge.sourceX = left + middle;
-        edge.sourceY = top + sourceNode.height;
+				let left = sourceNode.position.x;
+				let top = sourceNode.position.y;
+				let middleX = sourceNode.width / 2;
+				let middleY = sourceNode.height / 2;
+				switch (sourceAnchorPos) {
+					case 'left':
+						edge.sourceX = left;
+						edge.sourceY = top + middleY;
+						break;
+					case 'right':
+						edge.sourceX = left + sourceNode.width;
+						edge.sourceY = top + middleY;
+						break;
+					case 'top':
+						edge.sourceX = left + middleX;
+						edge.sourceY = top;
+						break;
+					default:
+						edge.sourceX = left + middleX;
+						edge.sourceY = top + sourceNode.height;
+				}
       }
       if (targetNode) {
         let left = targetNode.position.x;
-        let top = targetNode.position.y;
-        let middle = targetNode.width / 2;
-        edge.targetX = left + middle;
-        edge.targetY = top;
+				let top = targetNode.position.y;
+				let middleX = targetNode.width / 2;
+				let middleY = targetNode.height / 2;
+				switch (targetAnchorPos) {
+					case 'left':
+						edge.targetX = left;
+						edge.targetY = top + middleY;
+						break;
+					case 'right':
+						edge.targetX = left + targetNode.width;
+						edge.targetY = top + middleY;
+						break;
+					case 'top':
+						edge.targetX = left + middleX;
+						edge.targetY = top;
+						break;
+					default:
+						edge.targetX = left + middleX;
+						edge.targetY = top + targetNode.height;
+				}
       }
     });
     return [...$edgesStore];
