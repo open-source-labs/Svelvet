@@ -122,7 +122,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
 						break;
 					default:
 						edge.targetX = left + middleX;
-						edge.targetY = top + targetNode.height;
+						edge.targetY = top;
 				}
       }
     });
