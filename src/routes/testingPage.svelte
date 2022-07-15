@@ -116,4 +116,5 @@
 </script>
 
 <Svelvet nodes={initialNodes} edges={initialEdges} width={600} background />
+<Svelvet nodes={initialNodes} edges={initialEdges} width={600} background />
 <p>Hello</p>
