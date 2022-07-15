@@ -1,4 +1,4 @@
-<footer class="hidden md:flex flex-col pt-10 pb-5 border-t text-sm">
+<footer class="hidden md:flex flex-col pt-10 pb-5 border-t text-sm" style="display:block">
   <div class="hidden md:flex justify-around text-sm px-16">
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/docs/installation" class="text-gray-700 font-semibold">Getting Started</a>
@@ -42,3 +42,4 @@
     </div>
   </div>
 </footer>
+

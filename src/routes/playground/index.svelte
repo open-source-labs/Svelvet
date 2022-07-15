@@ -35,9 +35,7 @@ onMount(() => repl.set({
 <!-- <div class="REPL-container" style="inline-size: 400px; block-size: 400px;"> -->
 <div class="REPL-container">
 	{#if browser}
-    
 		<Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
-    <button>Save TESTING</button>
 	{/if}
 </div>
 

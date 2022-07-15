@@ -2,8 +2,8 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Message from './Message.svelte';
-	import { addCodeToDB, getCodeFromDB } from '../../supabase-db.js';
-	import { user_email } from '$lib/stores/authStore.js';
+	import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../../supabase-db.js';
+	import { user_email, diagrams } from '$lib/stores/authStore.js';
 	// import page from '@playwright/test';
 
 
@@ -79,23 +79,80 @@
 		if (editor) editor.getAllMarks().forEach(m => m.clear());
 	}
 
-	export async function getCodeEditorValue() {
-		// get code from the editor
+
+	export async function copyCodeEditor() {
+		const code_to_copy = editor.getValue();
+
+		const copyToClipboard = () => {
+  		if (navigator && navigator.clipboard && navigator.clipboard.writeText){
+    		return navigator.clipboard.writeText(code_to_copy);
+			}
+  		return Promise.reject('The Clipboard API is not available.');
+		};
+
+		copyToClipboard();
+	}
+	// pass in current project's id as argument
+	export async function getCodeEditorValue(id, diagramName) {
 		const codeToSave = editor.getValue();
-	  addCodeToDB(codeToSave, $user_email);
-	  const canvas = document.getElementById('.s-UBc7zV9kI3Rx');
-		const dataURL = canvas?.getContext('2d')
-		console.log(dataURL);
+		let found = false;
+
+		if(diagramName && $diagrams.length < 6) { // && userCapacity < dbLimit
+			// loop through the array of projects in store and check each object's id	
+			for(const obj of $diagrams) {
+				if(obj.id === id && obj.diagram_name === diagramName) {
+					// update store before making db call
+					console.log(obj);
+					//obj.code.set(codeToSave);
+					updateCodeInDB(id, codeToSave, $diagrams);
+					// do a .then and set $diagrams = the returned project_store
+					console.log("found value: " + found)
+					alert('Diagram updated successfully!');
+					document.getElementById('project-name').value = '';
+					editor.setValue('');
+					found = true;
+				}
+			}
+
+			if(!found) {
+				// diagrams.update();
+				console.log("was found: " + found)
+	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+				alert('Diagram saved to database successfully!');
+			}
+		}
+		else if($diagrams.length >= 6 && !found) {
+			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
+		}
+		else {
+			alert('Please provide a name for your diagram before attempting to save.');
+		}
+		
+	  // const canvas = document.getElementById('.s-UBc7zV9kI3Rx');
+		// const dataURL = canvas?.getContext('2d')
+		// console.log(dataURL);
 	}
 	
-	export async function loadSavedCode() {
+	export async function loadSavedCode(code) {
 		// grab and load saved code into the editor
 		// const codeToSave = editor.getValue();
-		getCodeFromDB($user_email)
-			.then(data => editor.setValue(data[2].code));
-	
+		console.log('grabbing code from store', code)
+		editor.setValue(code);
+		// getCodeFromDB($user_email)
+		// 	.then(data => editor.setValue(code));
+		
 		// editor.setValue(codeToLoad[0].code);
 		// await page.locator('body').screenshot({ path: 'screenshot.png' });
+	}
+
+	export async function deleteCode(id) {
+		deleteCodeFromDB(id, $diagrams);
+		editor.setValue('');
+		document.getElementById('project-name').value = '';
+	}
+
+	export async function updateCode(id, updated_code) {
+		updateCodeInDB(id, updated_code);
 	}
 	
 	// const playwright = require('playwright')
