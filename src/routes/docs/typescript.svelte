@@ -31,7 +31,7 @@
     }
   ];
   const initialEdges = [
-    { id: 'e1-2', source: 1, target: 2, label: ' YES ', animate: true },
+    { id: 'e1-2', source: 1, target: 2, targetPosition: 'left', sourcePosition: 'right', label: ' YES ', animate: true },
     { id: 'e2-3', source: 1, target: 3, label: ' NO ', animate: true }
   ];
 </script>

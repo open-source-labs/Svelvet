@@ -1,5 +1,4 @@
-import type { Position } from 'postcss';
-import type { XYPosition } from './utils';
+import type { XYPosition, Position } from './utils';
 
 export interface Node<T = any> {
   id: number;

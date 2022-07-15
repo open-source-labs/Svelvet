@@ -69,12 +69,6 @@ export function findOrCreateStore(key: string): SvelvetStore {
       // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
       let sourceNode: any; // any -> should follow type Node
       let targetNode: any; // any -> should follow type Node
-			let sourceAnchorPos: any;
-			let targetAnchorPos: any;
-			if (edge.anchors) {
-				sourceAnchorPos = edge.anchors.source && edge.source ? edge.anchors.source : null
-				targetAnchorPos = edge.anchors.target && edge.target ? edge.anchors.target : null
-			}
       $nodesStore.forEach((node: Node) => {
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) targetNode = node;
@@ -84,7 +78,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
 				let top = sourceNode.position.y;
 				let middleX = sourceNode.width / 2;
 				let middleY = sourceNode.height / 2;
-				switch (sourceAnchorPos) {
+				switch (edge.sourcePosition) {
 					case 'left':
 						edge.sourceX = left;
 						edge.sourceY = top + middleY;
@@ -107,7 +101,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
 				let top = targetNode.position.y;
 				let middleX = targetNode.width / 2;
 				let middleY = targetNode.height / 2;
-				switch (targetAnchorPos) {
+				switch (edge.targetPosition) {
 					case 'left':
 						edge.targetX = left;
 						edge.targetY = top + middleY;
