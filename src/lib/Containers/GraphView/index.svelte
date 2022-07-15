@@ -23,7 +23,7 @@
   export let key: string;
 
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, widthStore, heightStore } = svelvetStore;
+  const { nodeSelected, backgroundStore, widthStore, heightStore, scaleStore } = svelvetStore;
 
   const gridSize = 15;
   const dotSize = 10;
@@ -58,6 +58,8 @@
     d3.select(`.Edges-${key} g`).attr('transform', e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
+		// subscribes scale level to store to adjust drag values
+		$scaleStore = transform.k
     // selects and transforms all node divs from class 'Node'
     d3.select(`.Node-${key}`)
       .style(

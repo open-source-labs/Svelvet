@@ -10,6 +10,7 @@ interface CoreSvelvetStore {
   backgroundStore: Writable<boolean>;
   nodeIdSelected: Writable<number>;
   nodeSelected: Writable<boolean>;
+	scaleStore: Writable<number>;
 }
 
 interface SvelvetStore extends CoreSvelvetStore {
@@ -33,7 +34,8 @@ export function findOrCreateStore(key: string): SvelvetStore {
     heightStore: writable(600),
     backgroundStore: writable(false),
     nodeSelected: writable(false),
-    nodeIdSelected: writable(-1)
+    nodeIdSelected: writable(-1),
+		scaleStore: writable(1)
   };
 
   // update position of selected node
@@ -41,8 +43,8 @@ export function findOrCreateStore(key: string): SvelvetStore {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
         if (node.id === nodeID) {
-          node.position.x += e.movementX;
-          node.position.y += e.movementY;
+          node.position.x += e.movementX*(1/get(coreSvelvetStore.scaleStore));
+          node.position.y += e.movementY*(1/get(coreSvelvetStore.scaleStore));
         }
       });
       return [...n];
