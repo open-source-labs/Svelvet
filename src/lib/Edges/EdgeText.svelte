@@ -3,7 +3,8 @@
   import { getCenter } from './utils';
 
   export let edgeTextProps: EdgeTextProps;
-  $: ({ sourceX, sourceY, targetX, targetY, label, labelColor, centerX, centerY } = edgeTextProps);
+  $: ({ sourceX, sourceY, targetX, targetY, label, labelBgColor, centerX, centerY } =
+    edgeTextProps);
 
   const shiftRectY: number = 7;
   $: pxRatio = label.length < 3 ? 9 : 7;
@@ -54,7 +55,7 @@
     <rect
       class="EdgeTextBg"
       data-testid="edge-text-bg"
-      fill={labelColor ? labelColor : 'white'}
+      fill={labelBgColor ? labelBgColor : 'white'}
       x={textCenterX - labelPx / 2}
       y={textCenterY - shiftRectY}
       width={labelPx}
