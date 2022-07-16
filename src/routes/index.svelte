@@ -170,8 +170,7 @@
     <div class=" h-full w-full flex flex-col justify-center">
       <h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
       <div class="flex flex-col contributors:flex-row my-4 items-center">
-        <!-- put back to justify-around (it was set to justify-evenly) -->
-        <div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={anu} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
@@ -199,8 +198,7 @@
             </div>
           </div>
         </div>
-        <!-- changed back justify-around  -->
-        <div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={aaron} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
@@ -229,9 +227,8 @@
           </div>
         </div>
       </div>
-      <!-- trying to have tailwind take care of the rows - my-4 -> my-5 -->
-      <div class="flex flex-col contributors:flex-row my-4 items-center justify-around">
-        <div class="flex justify-between w-1/2 m-2 gap-2 contributors:gap-2">
+      <div class="flex flex-col contributors:flex-row my-4 items-center justify-evenly">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={justin} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Justin <br />Wouters</p>
@@ -259,7 +256,7 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between w-1/2 m-2 gap-2 contributors:gap-2">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={walter} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Walter <br />DeVault</p>
@@ -287,20 +284,23 @@
             </div>
           </div>
         </div>
-        <div class="contributor-card">
-          <img src={ali} alt="" class="hidden contributors:block h-28 rounded-full" />
-          <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
-          <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
-          <div class="flex gap-3 ml-3">
-            <a target="_blank" href="https://www.linkedin.com/in/alimadams/"
-              ><img src={linkedin} alt="LinkedIn Icon" /></a
-            >
-            <a target="_blank" href="https://github.com/AliA12336"
-              ><img src={github} alt="GitHub Icon" /></a
-            >
+        <div class="flex flex-col contributors:flex-row my-4 items-center justify-evenly">
+          <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
+            <div class="contributor-card">
+              <img src={ali} alt="" class="hidden contributors:block h-28 rounded-full" />
+              <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
+              <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+              <div class="flex gap-3 ml-3">
+                <a target="_blank" href="https://www.linkedin.com/in/alimadams/"
+                  ><img src={linkedin} alt="LinkedIn Icon" /></a
+                >
+                <a target="_blank" href="https://github.com/AliA12336"
+                  ><img src={github} alt="GitHub Icon" /></a
+                >
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
       <!-- <div class="flex flex-col contributors:flex-row my-4 items-center justify-evenly">
         <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
