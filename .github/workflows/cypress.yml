@@ -13,3 +13,6 @@ jobs:
         with:
           build: npm run build
           start: npm run dev
+        env:
+          VITE_SVELTE_APP_SUPABASE_URL: ${{ secrets.VITE_SVELTE_APP_SUPABASE_URL }}
+          VITE_SVELTE_APP_SUPABASE_ANON_KEY: ${{ secrets.VITE_SVELTE_APP_SUPABASE_ANON_KEY }}
