@@ -15,8 +15,8 @@ export interface Node<T = any> {
   clickCallback?: Function;
   image?: boolean;
   src?: string;
-  sourcePosition?: string;
-  targetPosition?: string;
+  sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
+  targetPosition?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 export interface Edge {
