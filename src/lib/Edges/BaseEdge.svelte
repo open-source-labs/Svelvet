@@ -13,7 +13,7 @@
     animate,
     arrow,
     label,
-    labelColor,
+    labelBgColor,
     centerX,
     centerY
   } = baseEdgeProps);
@@ -25,7 +25,7 @@
     targetX: targetX,
     targetY: targetY,
     label: label,
-    labelColor: labelColor,
+    labelBgColor: labelBgColor,
     centerX: centerX,
     centerY: centerY
   };
