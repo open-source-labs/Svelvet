@@ -1,8 +1,6 @@
 name: Node.js CI
 
-on:
-  push:
-    branches: [ main ]
+on: [push]
 
 jobs:
   build:
@@ -11,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -19,5 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm test:unit
+          cache: 'npm'
+      - name: Execute Unit tests
+      - run: npm ci
+        - run: npm test:unit
