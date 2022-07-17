@@ -8,14 +8,15 @@ describe('Moves nodes in the Svelvet Component', () => {
   describe('Drag n Drop', () => {
 
     describe('move a node', () => {
-      const moveNode = (number) => {
+      const moveNode = (number, x, y) => {
         //cy.trigger
         cy.get(`#${number}`)
-          .trigger('mousedown', { eventConstructor: 'MouseEvent', button: 1, screenX: 2617, screenY: 365 })
+          //.trigger('mousedown', { eventConstructor: 'MouseEvent', button: 1, screenX: 1911, screenY: 365 })
+          .trigger('mousedown', { eventConstructor: 'MouseEvent', button: 1 })
 
-          .trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, screenX: 2618, screenY: 365 })
-          .trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, screenX: 2619, screenY: 365 })
-          .trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, screenX: 2620, screenY: 365 })
+          .trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, movementX: x, movementY: y })
+          //.trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, screenX: 2619, screenY: 365 })
+          //.trigger('mousemove', { eventConstructor: 'MouseEvent', button: 1, screenX: 2620, screenY: 365 })
 
           // .trigger('mousemove', { eventConstructor: 'MouseEvent', clientX: 200, clientY: 150, pageX: 200, PageY: 150 })
           // .trigger('mousemove', { eventConstructor: 'MouseEvent', clientX: 352, clientY: 344, pageX: 352, PageY: 344, screenX: 2080, screenY: 471 })
@@ -25,8 +26,14 @@ describe('Moves nodes in the Svelvet Component', () => {
           .trigger('mouseup')
       }
       it('moves a node to a new location', () => {
-        moveNode(1)
-        
+        cy.viewport(900, 900)
+        moveNode(1, 160, 80)
+        moveNode(2, 330, 70)
+        moveNode(3, 50, 60)
+        moveNode(4, 0, 0)
+
+        // 85 - 266
+        // 83 - 179
       })
     })
   })
