@@ -299,7 +299,7 @@
 	<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={placeholder_value} required>
 		<option value="" disabled selected>Previously Saved Projects</option>
 			{#each $diagrams as diagram}
-			<option value={diagram}>
+			<option>
 				Name {diagram.diagram_name}, Created at {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))} 
 			</option>
 	{/each}
@@ -315,8 +315,9 @@
 <!-- TODO: give user ability to delete projects in case that they have more than 5 -->
 <!-- TODO: give user ability to update previously saved projects and reflect changes in db -->
 <div class="editor-navbar">
+	<!-- bing the value to the diagram selected (this way we won't have to add unnecessary logic to reset the value.) -->
 	<input id="project-name" placeholder="Enter project name..." required/>
-	<button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button>
+	<button on:click={() => module_editor.getCodeEditorValue(diagramSelected)}>Save Diagram</button>
 	<!-- <button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button> -->
 	<button on:click={() => module_editor.deleteCode(diagramSelected.id)}>Delete Current Diagram</button>
 	<button on:click={() => module_editor.copyCodeEditor()}>Copy to Clipboard</button>

@@ -91,12 +91,13 @@ export const getCodeFromDB = async (user_email) => {
 export const current_session = supabase.auth.session();
 
 export const updateCodeInDB = async (id, updated_code, project_store) => {
+  const updatedDiagramStore = [];
   const {data, error} = await supabase
     .from('user_saved_projects')
     .update({ code: updated_code })
     .match({ id: id })
 
-    const updatedDiagramStore = [];
+    
     project_store.forEach(obj => {
       if(obj.id === data[0].id) {
         updatedDiagramStore.push({...obj, code: data[0].code});

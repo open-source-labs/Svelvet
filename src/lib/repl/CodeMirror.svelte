@@ -93,23 +93,22 @@
 		copyToClipboard();
 	}
 	// pass in current project's id as argument
-	export async function getCodeEditorValue(id, diagramName) {
+	export async function getCodeEditorValue(project) {
+		console.log(project);
+		const diagramName = document.getElementById("project-name").value;
 		const codeToSave = editor.getValue();
 		let found = false;
 
 		if(diagramName && $diagrams.length < 6) { // && userCapacity < dbLimit
 			// loop through the array of projects in store and check each object's id	
 			for(const obj of $diagrams) {
-				if(obj.id === id && obj.diagram_name === diagramName) {
-					// update store before making db call
-					console.log(obj);
+				if(obj.id === project.id && obj.diagram_name === diagramName) {
+					
 					//obj.code.set(codeToSave);
 					updateCodeInDB(id, codeToSave, $diagrams);
 					// do a .then and set $diagrams = the returned project_store
 					console.log("found value: " + found)
 					alert('Diagram updated successfully!');
-					document.getElementById('project-name').value = '';
-					editor.setValue('');
 					found = true;
 				}
 			}
