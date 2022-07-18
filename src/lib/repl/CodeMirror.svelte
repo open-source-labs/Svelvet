@@ -3,7 +3,7 @@
 	import { writable } from 'svelte/store';
 	import Message from './Message.svelte';
 	import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../../supabase-db.js';
-	import { user_email, diagrams, user } from '$lib/stores/authStoreTs.js';
+	import { user_email, diagrams, user } from '$lib/stores/authStore.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -89,28 +89,15 @@
 		};
 		copyToClipboard();
 	}
-<<<<<<< HEAD
-	// pass in current project's id as argument
-	export async function getCodeEditorValue(project) {
-		console.log(project);
-		const diagramName = document.getElementById("project-name").value;
-=======
 
 	export async function getCodeEditorValue(id, diagramName) {
->>>>>>> dev
 		const codeToSave = editor.getValue();
 		let found = false;
 
 		if(diagramName && $diagrams.length < 6) {
 			// loop through the array of projects in store and check each object's id	
 			for(const obj of $diagrams) {
-<<<<<<< HEAD
-				if(obj.id === project.id && obj.diagram_name === diagramName) {
-					
-					//obj.code.set(codeToSave);
-=======
 				if(obj.id === id && obj.diagram_name === diagramName) {
->>>>>>> dev
 					updateCodeInDB(id, codeToSave, $diagrams);
 					alert('Diagram updated successfully!');
 					found = true;

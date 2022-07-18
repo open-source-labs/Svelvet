@@ -8,7 +8,7 @@
 	import Output from './Output/index.svelte';
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
-	import { user, diagrams } from '$lib/stores/authStoreTs.js';
+	import { user, diagrams } from '$lib/stores/authStore.js';
 
 	export let packagesUrl = 'https://unpkg.com';
 	export let svelteUrl = `${packagesUrl}/svelte`;
