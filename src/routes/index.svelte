@@ -11,7 +11,7 @@
   import walter from '../assets/profiles/Walter-small.png';
   import ali from '../assets/profiles/Ali-small.png';
 
-   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+  import Svelvet from '$lib/Containers/Svelvet/index.svelte';
   // import type { Node, Edge } from '$lib/types/types';
   import type { Node, Edge } from 'svelvet';
   //import Svelvet from 'svelvet';
@@ -26,7 +26,7 @@
       bgColor: 'white',
       borderColor: 'transparent',
       image: true,
-      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg'
       //sourcePosition: 'bottom'
     },
     {
@@ -74,7 +74,7 @@
       borderColor: '#FF4121',
       borderRadius: 30,
       bgColor: 'white',
-      textColor: '#FF4121',
+      textColor: '#FF4121'
       //targetPosition: 'right'
     }
   ];
@@ -82,10 +82,18 @@
   const initialEdges: Edge[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
     { id: 'e2-3', source: 2, target: 3, animate: true },
-    { id: 'e1-4', source: 1, target: 4, type: 'step' , animate: true, label: 'new feature'},
+    { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, label: 'new feature' },
     { id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
     { id: 'e2-5', source: 4, target: 6, type: 'straight', label: 'test' },
-    { id: 'e2-5', source: 3, target: 6 , type: 'step', label: 'it works', animate: true,}
+    {
+      id: 'e2-5',
+      source: 3,
+      target: 6,
+      type: 'step',
+      label: 'colored label',
+      labelBgColor: 'rgb(255,69,97)',
+      animate: true
+    }
   ];
 </script>
 

@@ -167,6 +167,7 @@
 		width: 0;
 		height: 100%;
 		cursor: ew-resize;
+		
 	}
 
 	.horizontal::after {
@@ -174,6 +175,8 @@
 		top: 0;
 		width: 1px;
 		height: 100%;
+		border-right: 1px solid;
+		border-color: rgb(240, 240, 240) 
 	}
 
 	.vertical {

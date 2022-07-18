@@ -24,6 +24,8 @@
   on:mousemove={(e) => {
     e.preventDefault();
     if (moving) {
+      console.log('mousemove-->', e)
+      console.log('screenX-->', e.screenX)
       onMouseMove(e, node.id);
       moved = true;
     }
@@ -34,7 +36,7 @@
 <div
   on:touchmove={(e) => {
     if (moving){
-     onTouchMove(e, node.id);
+      onTouchMove(e, node.id);
     }
   }}
   on:touchstart={(e) => {
@@ -48,6 +50,7 @@
   }}
   on:mousedown={(e) => {
     e.preventDefault();
+    console.log('mousedown-->', e, 'screenX-->', e.screenX)
     moving = true;
     $nodeIdSelected = node.id;
     $nodeSelected = true;
@@ -69,6 +72,7 @@
     border-color: {node.borderColor}; 
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
+    id={`${node.id}`}
 >
 
 {#if node.image}

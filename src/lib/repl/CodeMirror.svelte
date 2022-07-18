@@ -3,9 +3,7 @@
 	import { writable } from 'svelte/store';
 	import Message from './Message.svelte';
 	import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../../supabase-db.js';
-	import { user_email, diagrams } from '$lib/stores/authStore.js';
-	// import page from '@playwright/test';
-
+	import { user_email, diagrams, user } from '$lib/stores/authStoreTs.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -79,43 +77,46 @@
 		if (editor) editor.getAllMarks().forEach(m => m.clear());
 	}
 
+	//----- NEW FUNCTIONS AS OF SVELVET 2.0 -----
 
 	export async function copyCodeEditor() {
 		const code_to_copy = editor.getValue();
-
 		const copyToClipboard = () => {
   		if (navigator && navigator.clipboard && navigator.clipboard.writeText){
     		return navigator.clipboard.writeText(code_to_copy);
 			}
   		return Promise.reject('The Clipboard API is not available.');
 		};
-
 		copyToClipboard();
 	}
+<<<<<<< HEAD
 	// pass in current project's id as argument
 	export async function getCodeEditorValue(project) {
 		console.log(project);
 		const diagramName = document.getElementById("project-name").value;
+=======
+
+	export async function getCodeEditorValue(id, diagramName) {
+>>>>>>> dev
 		const codeToSave = editor.getValue();
 		let found = false;
 
-		if(diagramName && $diagrams.length < 6) { // && userCapacity < dbLimit
+		if(diagramName && $diagrams.length < 6) {
 			// loop through the array of projects in store and check each object's id	
 			for(const obj of $diagrams) {
+<<<<<<< HEAD
 				if(obj.id === project.id && obj.diagram_name === diagramName) {
 					
 					//obj.code.set(codeToSave);
+=======
+				if(obj.id === id && obj.diagram_name === diagramName) {
+>>>>>>> dev
 					updateCodeInDB(id, codeToSave, $diagrams);
-					// do a .then and set $diagrams = the returned project_store
-					console.log("found value: " + found)
 					alert('Diagram updated successfully!');
 					found = true;
 				}
 			}
-
 			if(!found) {
-				// diagrams.update();
-				console.log("was found: " + found)
 	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
 				alert('Diagram saved to database successfully!');
 			}
@@ -126,36 +127,24 @@
 		else {
 			alert('Please provide a name for your diagram before attempting to save.');
 		}
-		
-	  // const canvas = document.getElementById('.s-UBc7zV9kI3Rx');
-		// const dataURL = canvas?.getContext('2d')
-		// console.log(dataURL);
 	}
 	
 	export async function loadSavedCode(code) {
 		// grab and load saved code into the editor
-		// const codeToSave = editor.getValue();
-		console.log('grabbing code from store', code)
 		editor.setValue(code);
-		// getCodeFromDB($user_email)
-		// 	.then(data => editor.setValue(code));
-		
-		// editor.setValue(codeToLoad[0].code);
-		// await page.locator('body').screenshot({ path: 'screenshot.png' });
 	}
 
 	export async function deleteCode(id) {
 		deleteCodeFromDB(id, $diagrams);
+		// clear the editor
 		editor.setValue('');
+		// reset the project name field
 		document.getElementById('project-name').value = '';
 	}
 
 	export async function updateCode(id, updated_code) {
 		updateCodeInDB(id, updated_code);
 	}
-	
-	// const playwright = require('playwright')
-	// await page.g
 
 	const modes = {
 		js: {
@@ -223,7 +212,79 @@
 				CodeMirror = mod.default;
 			}
 			await createEditor(mode || 'svelte');
-			if (editor) editor.setValue(code || '');
+			if($user) {
+				if(editor) editor.setValue(code || '');
+			}
+			else {
+				if(editor) editor.setValue(code || `<script>
+  import Svelvet from 'svelvet';
+  const initialNodes = [
+    {
+      id: 1,
+      position: { x: 190, y: 40 },
+      data: { label: 'Input Node' },
+      width: 175,
+      height: 40,
+      bgColor: '#FF4121'
+    },
+    {
+      id: 2,
+      position: { x: 355, y: 160 },
+      data: { label: 'Default Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'yellow'
+    },
+    {
+      id: 3,
+      position: { x: 190, y: 260 },
+      data: { label: 'Output Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'red'
+    },
+    {
+      id: 4,
+      position: { x: 25, y: 160 },
+      data: { label: 'Drag me!' },
+      width: 175,
+      height: 40,
+      bgColor: 'rgb(246,111,83)'
+    },
+    {
+      id: 5,
+      position: { x: 355, y: 360 },
+      data: { label: 'Custom Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'rgb(251,113,133)',
+      borderColor: 'transparent',
+      borderRadius: 0
+    },
+    {
+      id: 6,
+      position: { x: 72.5, y: 360 },
+      data: { label: 'Custom Node' },
+      width: 80,
+      height: 80,
+      borderColor: '#FF4121',
+      borderRadius: 30,
+      bgColor: 'white',
+      textColor: '#FF4121'
+    }
+  ];
+  const initialEdges = [
+    { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
+    { id: 'e2-3', source: 2, target: 3, animate: true },
+    { id: 'e1-4', source: 1, target: 4 },
+    { id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
+    { id: 'e2-5', source: 4, target: 6, type: 'straight' },
+    { id: 'e2-5', source: 3, target: 6 }
+  ];
+	</\script>
+<Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background />
+			`);
+			}
 		})();
 
 		return () => {

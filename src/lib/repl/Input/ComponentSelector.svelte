@@ -131,7 +131,8 @@
 
 <div class="component-selector">
 	{#if $components.length}
-		<div class="file-tabs" on:dblclick={addNew}>
+	<!-- on:dblclick={addNew} -->
+		<div class="file-tabs">
 			{#each $components as component, index}
 				<div
 					id={component.name}
@@ -183,12 +184,14 @@
 				</div>
 			{/each}
 
-			<button class="add-new" on:click={addNew} title="add new component">
+			<!-- SVELVET 2.0 TEAM DISABLED ADD NEW COMPONENT BUTTON -->
+			<!-- <button class="add-new" on:click={addNew} title="add new component">
 				<svg width="12" height="12" viewBox="0 0 24 24">
 					<line stroke="#999" x1="12" y1="5" x2="12" y2="19" />
 					<line stroke="#999" x1="5" y1="12" x2="19" y2="12" />
 				</svg>
-			</button>
+			</button> -->
+
 		</div>
 	{/if}
 </div>
