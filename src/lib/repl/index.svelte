@@ -8,8 +8,7 @@
 	import Output from './Output/index.svelte';
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
-	// import the user and user saved projects from the store;
-	import { user, diagrams } from '$lib/stores/authStore.js';
+	import { user, diagrams } from '$lib/stores/authStoreTs.js';
 
 	export let packagesUrl = 'https://unpkg.com';
 	export let svelteUrl = `${packagesUrl}/svelte`;
@@ -270,61 +269,69 @@
 
 	$: $toggleable = mobile && orientation === 'columns';
 
-	// let codeName = '';
-	// fill with the objects from the db
+	// ----- NEW FUNCTION AS OF SVELVET 2.0 -----
+
 	let diagramSelected;
 
-	// $: diagrams // trigger rerender
-	// let savedClicked = false;
-
-	const placeholder_value = () => {
+	const loadSavedDiagram = () => {
 		module_editor.loadSavedCode(diagramSelected.code);
-		console.log('placeholder is being called')
-		// if(!diagramSelected.diagram_name) {
-		// 	console.log('hi im working')
-		// 	document.getElementById("project-name").value = '';
-		// }
 		document.getElementById("project-name").value = diagramSelected.diagram_name;
-		console.log(diagramSelected.id);
+	}
+
+	const saveDiagram = () => {
+		if($user) {
+			module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name").value)
+		}
+		else {
+			alert("You must sign in before attempting to save a diagram.")
+		}
+	}
+
+	const deleteDiagram = () => {
+		if($user && diagramSelected.id) {
+			module_editor.deleteCode(diagramSelected.id);
+		}
+		else if($user) {
+			alert("You must name and save the diagram before attempting to delete the diagram.")
+		}
+		else {
+			alert("You must sign in and save the diagram before attempting to delete the diagram.")
+		}
+	}
+
+	const copyCodeToClipboard = () => {
+		module_editor.copyCodeEditor();
+		alert("Code copied to clipboard!");
 	}
 
 </script>
 
 <svelte:window on:beforeunload={beforeUnload} />
 
-
-	<!-- dropdown -->
+	<!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
 	{#if $user}
-	<!-- {#each $diagrams as diagram} -->
-	<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={placeholder_value} required>
+	<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
 		<option value="" disabled selected>Previously Saved Projects</option>
 			{#each $diagrams as diagram}
 			<option value={diagram}>
-				Name {diagram.diagram_name}, Created at {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))} 
+					Name: {diagram.diagram_name}, Created at: {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))}
 			</option>
 	{/each}
 	</select>
-<!-- <p>selected question {selected ? selected.id : '[waiting...]'}</p> -->
-	<!-- call load projects from db method which updates the user_projects store -->
-	<!-- need diagram_name and created_at fields -->
-	<!-- pass down user_projects to dropdown that we create -->
-	{:else}
-	   <!-- put text in dropdown that tells them to sign in to see saved projects -->
 	{/if}
-	<!-- TODO: add logic to save button to limit user to 5 projects -->
-<!-- TODO: give user ability to delete projects in case that they have more than 5 -->
-<!-- TODO: give user ability to update previously saved projects and reflect changes in db -->
+
+<!-- NEW BUTTONS AS OF SVELVET 2.0 -->
 <div class="editor-navbar">
 	<input id="project-name" placeholder="Enter project name..." required/>
-	<button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button>
-	<!-- <button on:click={() => module_editor.getCodeEditorValue(diagramSelected.id, document?.getElementById("project-name")?.value)}>Save Diagram</button> -->
-	<button on:click={() => module_editor.deleteCode(diagramSelected.id)}>Delete Current Diagram</button>
-	<button on:click={() => module_editor.copyCodeEditor()}>Copy to Clipboard</button>
+	<!-- added a save button to limit user to 5 projects -->
+	<button on:click={saveDiagram}>Save Diagram</button>
+	<!-- added a button to delete projects in case the users have more than 5 -->
+	<button on:click={deleteDiagram}>Delete Current Diagram</button>
+	<!-- added a button to allow users to update previously saved projects and reflect changes in db -->
+	<button on:click={copyCodeToClipboard}>Copy to Clipboard</button>
 </div>
 
-
-
-
+<!-- REPL ELEMENTS MADE BY SVELTE DEVS -->
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
 	<div class="viewport" class:output={show_output}>
 		<SplitPane
@@ -348,6 +355,17 @@
 </div>
 
 <style>
+	button {
+		background-color: rgb(244 63 94);
+		border: none;
+		color: white;
+		padding: 2px 2px;
+		/* border-radius: 100; */
+		text-align: center;
+		text-decoration: none;
+		/* display: inline-block; */
+		font-size: 12px;
+}
 	.container {
 		position: relative;
 		width: 100%;
@@ -390,7 +408,8 @@
 		transform: translate(-50%);
 	}
 
-	select:invalid{
-        color: gray;
-    }
+	select:invalid {
+  	color: gray;
+  }
+
 </style>
