@@ -48,11 +48,32 @@
       type: 'straight',
       target: 2,
       label: 'labeled edge',
-      labelBgColor: 'blue'
+      labelBgColor: 'black',
+      labelTextColor: '#E1ECF4',
+      edgeColor: 'red'
     },
-    { id: 'e2-3', source: 2, target: 3, label: 'another label' },
-    { id: 'e2-4', source: 2, target: 4, label: 'animated edge', animate: true }
+    {
+      id: 'e2-3',
+      source: 2,
+      target: 3,
+      label: 'another label',
+      type: 'step',
+      animate: true,
+      labelBgColor: 'purple',
+      edgeColor: 'purple',
+      labelTextColor: '#82F719'
+    },
+    {
+      id: 'e2-4',
+      source: 2,
+      target: 4,
+      label: 'animated edge',
+      animate: true,
+      edgeColor: 'blue',
+      labelBgColor: 'blue',
+      labelTextColor: '#E1ECF4'
+    }
   ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<Svelvet nodes={initialNodes} edges={initialEdges} background />

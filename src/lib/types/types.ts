@@ -25,6 +25,8 @@ export interface Edge {
   target: number;
   label?: string;
   labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
   type?: string;
   animate?: boolean;
   noHandle?: boolean;
@@ -53,6 +55,8 @@ export interface EdgeTextProps {
   targetY: number;
   label?: any;
   labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
   centerX?: number;
   centerY?: number;
 }
