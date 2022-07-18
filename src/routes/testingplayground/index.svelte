@@ -128,7 +128,7 @@
 			height: 40,
 			bgColor: 'white',
 			targetPosition: 'bottom',
-			sourcePosition: 'left'
+			sourcePosition: 'top'
 		},
 		{
 			id: 9,
@@ -162,7 +162,6 @@
 		{ id: 'e6-8', source: 6, target: 8, type: 'straight', label: 'e6-8', animate: true },
 		{ id: 'e8-9', source: 8, target: 9, type: 'bezier', label: 'e8-9', animate: true },
 		{ id: 'e7-10', source: 7, target: 10, type: 'smoothstep', label: 'e7-10', animate: false },
-
 	];
 </script>
 
