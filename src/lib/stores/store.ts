@@ -110,9 +110,9 @@ export function findOrCreateStore(key: string): SvelvetStore {
 						edge.targetX = left + targetNode.width;
 						edge.targetY = top + middleY;
 						break;
-					case 'top':
+					case 'bottom':
 						edge.targetX = left + middleX;
-						edge.targetY = top;
+						edge.targetY = top + targetNode.height;
 						break;
 					default:
 						edge.targetX = left + middleX;
