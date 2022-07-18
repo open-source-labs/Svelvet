@@ -22,8 +22,8 @@ interface SvelvetStore extends CoreSvelvetStore {
 
 const svelvetStores: { [key: string]: SvelvetStore } = {};
 
-// refer to svelvet/index, if key does not exist, then create one.
-//Creates one svelvet with a key
+// refer to Svelvet/index, if store does not exist, then create one.
+// Creates one Svelvet component store using the unique key
 export function findOrCreateStore(key: string): SvelvetStore {
   const existing = svelvetStores[key];
   if (existing) {
@@ -38,7 +38,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     backgroundStore: writable(false),
     nodeSelected: writable(false),
     nodeIdSelected: writable(-1),
-    d3Scale: writable(1),
+    d3Scale: writable(1)
   };
 
   // This is the function handler for the mouseMove event to update the position of the selected node.
@@ -51,153 +51,24 @@ export function findOrCreateStore(key: string): SvelvetStore {
           // divide the movement value by scale to keep it proportional to d3Zoom transformations
           node.position.x += e.movementX / scale;
           node.position.y += e.movementY / scale;
-
-          //select the container that contains the current Svelvet component
-          //const d3Container = document.querySelector(`#d3-Container-${key}`);
-          // if(d3Container.style.transform !== ''){
-          //   //let nums = d3Container.style.transform.match(/\(([^)]+)\)/g);
-          //   //let scale = Number(nums[1].slice(1, -1));
-          //   console.log('scale', d3Container.style.transform);
-          //   console.log('e.movementX / scale-->', e.movementX / scale);
-          //   node.position.x += e.movementX / scale;
-          //   node.position.y += e.movementY / scale;
-          // } else {
-            // node.position.x += e.movementX / scale;
-            // node.position.y += e.movementY / scale;
-          //}
         }
       });
       return [...n];
     });
   };
-  //  const onMouseMove = (e: any, nodeID: number, pos1: number, pos2: number, pos3: number, pos4: number) => {
-  //   coreSvelvetStore.nodesStore.update((n) => {
-  //     n.forEach((node: Node) => {
-  //       // e.stopImmediatePropagation(); // attempt to stop mouse from staying "clicked" when it moves outside of playground causing node to go crazy
-  //       if (node.id === nodeID) {
-  //         // console.log(e.clientX, '<--clientX');
-  //         // console.log(e.clientY, '<--clientY');
-  //         // const {x, y, width, height} = e.target.getBoundingClientRect();
-  //         // const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
-  //         // const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
-  //         // console.log('x-->', x, 'y-->', y, 'width-->', width, 'height-->', height)
-  //         // console.log('e.clientX-->', e.clientX, 'e.clientX - x-->', e.clientX-x, 'e.target.offsetWidth-->', e.target.offsetWidth,'width * e.target.offsetWidth-->', width * e.target.offsetWidth)
-  //         // console.log('offsetX-->', offsetX)
-  //         // console.log('e.offsetX-->', e.offsetX)
-  //         // console.log('offsetX from Bound-->', offsetX)
-  //          //console.log('offsetX from event.target-->', e)
-  //          //console.log('----break-----')
-  //          pos1 = pos3 - e.clientX;
-  //          pos2 = pos4 - e.clientY;
-  //          pos3 = e.clientX;
-  //          pos4 = e.clientY;
-  //          console.log('elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";-->', e.target.offsetLeft - pos1)
-  //         node.position.x = e.target.offsetLeft - pos1;
-  //         node.position.y = e.target.offsetTop - pos2;
-  //         //  if(e.offsetX >= 1 || e.offsetX <= -1 || e.offsetY >= 1 || e.offsetY <= -1){
-  //         // //   //this is upset because I removed the require from the Node types
-  //         // //   console.log('offsetX inside of if statement',offsetX)
-            
-  //         //   //console.log('event -->', e);
 
-
-  //         //   node.position.x += e.offsetX - (node.width / 2);
-  //         //   node.position.y += e.offsetY - (node.height / 2);
-  //         //   // node.position.x += offsetX
-  //         //   // node.position.y += offsetY
-  //         //   //console.log('offsetX -->', e.offsetX, 'node.position.x-->', node.position.x);
-  //         //   } else {
-  //         //     console.log('something is wrong')
-  //         //     node.position.x += e.offsetX;
-  //         //      node.position.y += e.offsetY;
-  //         //  }
-  //         // console.log('node.position.x-->', node.position.x) 
-  //       }
-  //     });
-  //     return [...n];
-  //   });
-  // };
-  // const onMouseMove = (e: any, nodeID: number) => {
-  //   coreSvelvetStore.nodesStore.update((n) => {
-  //     n.forEach((node: Node) => {
-  //       if (node.id === nodeID) {
-  //         console.log('e.target.offsetWidth', e.target.offsetWidth)
-  //         const {x, y, width, height} = e.target.getBoundingClientRect();
-  //         const offsetX = (e.clientX-x)/width*e.target.offsetWidth;
-  //         const offsetY = (e.clientY-y)/height*e.target.offsetHeight;
-  //         if(e.offsetX > 1 || e.offsetX < -1 || e.offsetY > 1 || e.offsetY < -1){
-  //           //this is upset because I removed the require from the Node types
-  //           node.position.x += e.offsetX - (node.width / 2);
-  //           node.position.y += e.offsetY - (node.height / 2);
-  //         } else {
-  //         node.position.x += e.offsetX;
-  //         node.position.y += e.offsetY;
-  //         } 
-  //       }
-  //     });
-  //     return [...n];
-  //   });
-  // };
-
+  // This is the function handler for the touch event on mobile to select a node.
   const onTouchMove = (e: any, nodeID: number) => {
     coreSvelvetStore.nodesStore.update((n) => {
       n.forEach((node: Node) => {
-        if(node.id === nodeID) {
+        if (node.id === nodeID) {
           //calculates the location of the selected node
-          const {x, y, width, height} = e.target.getBoundingClientRect();
-          const offsetX = (e.touches[0].clientX - x) / width * e.target.offsetWidth;
-          const offsetY = (e.touches[0].clientY - y) / height * e.target.offsetHeight;
+          const { x, y, width, height } = e.target.getBoundingClientRect();
+          const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+          const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
           // centers the node consistently under the user's touch
-          node.position.x += offsetX - (node.width / 2);
-          node.position.y += offsetY - (node.height / 2);
-
-          //this if statement centers the touched node so that it is immediately placed under the user's finger
-          // if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
-          //   node.position.x += offsetX - (node.width / 2);
-          //   node.position.y += offsetY - (node.height / 2);
-          // } else {
-          // //adjust the node to the current touch of the user
-          // console.log('hello')
-          // node.position.x += offsetX;
-          // node.position.y += offsetY;
-          // } 
-
-          // if(offsetX > 1 || offsetX < -1 || offsetY > 1 || offsetY < -1){
-            // node.position.x += offsetX - (node.width / 2);
-            // node.position.y += offsetY - (node.height / 2);
-          // } else {
-          //adjust the node to the current touch of the user
-          // console.log('')
-          // node.position.x += offsetX;
-          // node.position.y += offsetY;
-          // } 
-
-          // Not working perfectly, concerned about performance of getBoundingClientRect
-          // maybe call tweening to smooth node movement?
-          // const bcr = e.target.getBoundingClientRect();
-          // const x = e.changedTouches[0].pageX - bcr.x;
-          // const y = e.changedTouches[0].pageY - bcr.y;
-          // if(x > 1 || x < -1 || y > 1 || y < -1){
-          //   node.position.x += x - (node.width / 2);
-          //   node.position.y += y - (node.height / 2);
-          // } else {
-          // node.position.x += x;
-          // node.position.y += y;
-          // }
-          /* THIS ONE CREATES AN OFFSET
-          // const bcr = e.target.getBoundingClientRect();
-          // const x = e.changedTouches[0].pageX - bcr.x;
-          // const y = e.changedTouches[0].pageY - bcr.y;
-          // node.position.x += x;
-          // node.position.y += y;
-          */
-
-          // currently working but much more verbose, NEEDS TO BE REMOVED BEFORE PRODUCTION!!!!!
-
-
-          // console.log('offsetX in touch --->', offsetX)
-          // console.log(e, 'touch object');
-          //console.log('offSetX-->', offsetX, 'offSetY-->', offsetY)
+          node.position.x += offsetX - node.width / 2;
+          node.position.y += offsetY - node.height / 2;
         }
       });
       return [...n];
@@ -212,7 +83,6 @@ export function findOrCreateStore(key: string): SvelvetStore {
       }
     });
   };
-
 
   const edgesStore = coreSvelvetStore.edgesStore;
   const nodesStore = coreSvelvetStore.nodesStore;
@@ -248,28 +118,24 @@ export function findOrCreateStore(key: string): SvelvetStore {
           edge.sourceY = top + sourceNode.height;
           //assign sourcePosition to the edge for usage in the various edge components
           edge.sourcePosition = 'bottom';
-        }
-        else if (sourceNode.sourcePosition === 'top'){
+        } else if (sourceNode.sourcePosition === 'top') {
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
           let middle = sourceNode.width / 2;
-          edge.sourceX = left + middle
-          edge.sourceY = top
+          edge.sourceX = left + middle;
+          edge.sourceY = top;
           edge.sourcePosition = sourceNode.sourcePosition;
-        }
-        else if (sourceNode.sourcePosition === 'left'){
+        } else if (sourceNode.sourcePosition === 'left') {
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
-          edge.sourceX = left
-          edge.sourceY = top + sourceNode.height/2;
+          edge.sourceX = left;
+          edge.sourceY = top + sourceNode.height / 2;
           edge.sourcePosition = sourceNode.sourcePosition;
-
-        }
-        else if (sourceNode.sourcePosition === 'right'){
+        } else if (sourceNode.sourcePosition === 'right') {
           let left = sourceNode.position.x;
           let top = sourceNode.position.y;
-          edge.sourceX = left + sourceNode.width
-          edge.sourceY = top + sourceNode.height/2
+          edge.sourceX = left + sourceNode.width;
+          edge.sourceY = top + sourceNode.height / 2;
           edge.sourcePosition = sourceNode.sourcePosition;
         }
       }
@@ -288,28 +154,24 @@ export function findOrCreateStore(key: string): SvelvetStore {
           edge.targetY = top;
           //assign sourcePosition to the edge for usage in the various edge components
           edge.targetPosition = 'top';
-        }
-        else if (targetNode.targetPosition === 'bottom') {
+        } else if (targetNode.targetPosition === 'bottom') {
           let left = targetNode.position.x;
-          let top = targetNode.position.y;        
-          let middle = targetNode.width / 2;      
+          let top = targetNode.position.y;
+          let middle = targetNode.width / 2;
           edge.targetX = left + middle;
           edge.targetY = top + targetNode.height;
           edge.targetPosition = targetNode.targetPosition;
-
-        }
-        else if (targetNode.targetPosition === 'left') {
+        } else if (targetNode.targetPosition === 'left') {
           let left = targetNode.position.x;
           let top = targetNode.position.y;
-          edge.targetX = left
-          edge.targetY = top + targetNode.height / 2
+          edge.targetX = left;
+          edge.targetY = top + targetNode.height / 2;
           edge.targetPosition = targetNode.targetPosition;
-        }
-        else if (targetNode.targetPosition === 'right') {
+        } else if (targetNode.targetPosition === 'right') {
           let left = targetNode.position.x;
           let top = targetNode.position.y;
-          edge.targetX = left + targetNode.width
-          edge.targetY = top + targetNode.height / 2
+          edge.targetX = left + targetNode.width;
+          edge.targetY = top + targetNode.height / 2;
           edge.targetPosition = targetNode.targetPosition;
         }
       }

@@ -4,6 +4,7 @@
 
   export let baseEdgeProps: EdgeProps;
 
+  // destructuring the props passed in from the parent component
   $: ({
     sourceX,
     sourceY,
@@ -20,7 +21,7 @@
     centerY
   } = baseEdgeProps);
 
-  // pass necessary values to EdgeText component
+  // setting edge props
   $: edgeTextProps = {
     sourceX: sourceX,
     sourceY: sourceY,
