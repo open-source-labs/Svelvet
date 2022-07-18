@@ -9,6 +9,9 @@
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
 	import { user, diagrams } from '$lib/stores/authStore.js';
+	import saveIcon from '../../assets/DB save icon.svg';
+	import copyIcon from '../../assets/DB copy icon.svg';
+	import deleteIcon from '../../assets/DB delete icon.svg';
 
 	export let packagesUrl = 'https://unpkg.com';
 	export let svelteUrl = `${packagesUrl}/svelte`;
@@ -309,28 +312,45 @@
 <svelte:window on:beforeunload={beforeUnload} />
 
 	<!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
+	<div class="repl-navbar">
 	{#if $user}
-	<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
-		<option value="" disabled selected>Previously Saved Projects</option>
+		<select id="selectElement" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
+			<option value="" disabled selected>Previously Saved Projects</option>
 			{#each $diagrams as diagram}
 			<option value={diagram}>
-					Name: {diagram.diagram_name}, Created at: {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))}
+				Name: {diagram.diagram_name}, Created at: {diagram.created_at.slice(0, diagram.created_at.indexOf('T'))}
 			</option>
-	{/each}
-	</select>
-	{/if}
+			{/each}
+		</select>
+
+		<div class="icons-navbar">
+			<!-- added a save button to limit user to 5 projects -->
+			<button on:click={saveDiagram}>
+				<img class="db-icons" src={saveIcon} alt="save-icom" />
+			</button>
+			<!-- added a button to delete projects in case the users have more than 5 -->
+			<button on:click={deleteDiagram}>
+				<img class="db-icons" src={deleteIcon} alt="delete-icom" />
+			</button>
+			<!-- added a button to allow users to update previously saved projects and reflect changes in db -->
+			<button on:click={copyCodeToClipboard}>
+				<img class="db-icons" src={copyIcon} alt="copy-icom" />
+			</button>
+			<input id="project-name" class="flex-end bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg p-2.5" placeholder="SAVE AS" required/>
+		</div>
+		{:else}
+		<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
+			<option value="" disabled selected>LOGIN TO SAVE AND LOAD PROJECTS</option>
+		</select>
+		<button on:click={copyCodeToClipboard}>
+			<img class="db-icons" src={copyIcon} alt="copy-icom" />
+		</button>
+		
+		{/if}
+	</div>	
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
-<div class="editor-navbar">
-	<!-- bing the value to the diagram selected (this way we won't have to add unnecessary logic to reset the value.) -->
-	<input id="project-name" placeholder="Enter project name..." required/>
-	<!-- added a save button to limit user to 5 projects -->
-	<button on:click={saveDiagram}>Save Diagram</button>
-	<!-- added a button to delete projects in case the users have more than 5 -->
-	<button on:click={deleteDiagram}>Delete Current Diagram</button>
-	<!-- added a button to allow users to update previously saved projects and reflect changes in db -->
-	<button on:click={copyCodeToClipboard}>Copy to Clipboard</button>
-</div>
+
 
 <!-- REPL ELEMENTS MADE BY SVELTE DEVS -->
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
@@ -356,17 +376,37 @@
 </div>
 
 <style>
+
+	.repl-navbar {
+		display: flex;
+		flex-direction: row;
+		justify-items: space-between;
+		padding: 0.5em;
+	}
+
+	.db-icons {
+		display: inline-block;
+		width: 3rem;
+		height: 3rem;
+	}
+
 	button {
+		background-color: transparent;
+		border: 0rem 3rem 0rem;
+		
+	}
+
+/* 	button {
 		background-color: rgb(244 63 94);
 		border: none;
 		color: white;
 		padding: 2px 2px;
-		/* border-radius: 100; */
+
 		text-align: center;
 		text-decoration: none;
-		/* display: inline-block; */
+
 		font-size: 12px;
-}
+} */
 	.container {
 		position: relative;
 		width: 100%;
