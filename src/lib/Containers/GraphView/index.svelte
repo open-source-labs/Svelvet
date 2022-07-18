@@ -22,12 +22,12 @@
     select,
     selectAll
   };
-  //typescript -> nodestore can be any data type?
+  //typescripting for setting the types for each prop passed in from the store
   export let nodesStore: any;
   export let derivedEdges: any;
   export let key: string;
 
-  // here we lookup the store using the unique key 
+  // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
   const { nodeSelected, backgroundStore, widthStore, heightStore, d3Scale } = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
@@ -39,14 +39,15 @@
     d3.select(`.Nodes-${key}`).call(d3Zoom);
   });
 
-  // @TODO: Update d3Zoom type (refer to d3Zoom docs)
+  // TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom: any = d3
     .zoom()
     .filter(() => !$nodeSelected)
     .scaleExtent([0.4, 2])
     .on('zoom', handleZoom);
 
-  // @TODO: Update mouse event type
+  // TODO: Update mouse event type
+  // function to handle zoom events - arguments: d3ZoomEvent
   function handleZoom(e: any): void {
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
     d3Scale.set(e.transform.k);
@@ -66,7 +67,7 @@
     d3.select(`.Edges-${key} g`).attr('transform', e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
-    // selects and transforms all node divs from class 'Node'
+    // selects and transforms all node divs from class 'Node' and performs transformation
     d3.select(`.Node-${key}`)
       .style(
         'transform',
@@ -80,10 +81,9 @@
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
-    <!-- Iterating through the nodesStore Array -->
     {#each $nodesStore as node}
       {#if node.image && !node.data.label}
-        <ImageNode {node} {key}></ImageNode>
+        <ImageNode {node} {key} />
       {:else}
         <Node {node} {key}>{node.data.label}</Node>
       {/if}
@@ -91,6 +91,7 @@
   </div>
 </div>
 
+<!-- rendering dots on the background depending on the zoom level -->
 <svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}">
   <defs>
     <pattern
@@ -115,8 +116,8 @@
     <rect width="100%" height="100%" style="fill: url(#background-{key});" />
   {/if}
 
+  <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    <!-- Iterating through the derivedEdges array -->
     {#each $derivedEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge {edge} />
@@ -127,13 +128,12 @@
       {:else}
         <SimpleBezierEdge {edge} />
       {/if}
-
+      <!-- sets anchor points type to either arrow or halfcircle-->
       {#if !edge.noHandle}
         <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
         {#if !edge.arrow}
           <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-      {/if}
-      
+        {/if}
       {/if}
     {/each}
   </g>

@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { EdgeTextProps } from '$lib/types/types';
-  import { getCenter } from './utils';
 
+  // destructuring props to pass into BaseEdge component
+  //@TODO look at whether we can remove the ? from this Type definition for centerX and centerY
   export let edgeTextProps: EdgeTextProps;
   $: ({
     sourceX,
@@ -19,8 +20,7 @@
   const shiftRectY: number = 7;
   $: pxRatio = label.length < 3 ? 9 : 7;
 
-  // $: textCenterX = sourceX + (targetX - sourceX) / 2;
-  // $: textCenterY = sourceY + (targetY - sourceY) / 2;
+  // determine the center point of the edge to be used in the EdgeText component
   $: textCenterX = centerX;
   $: textCenterY = centerY;
 
@@ -32,32 +32,6 @@
   $: labelPx = newLength * pxRatio;
 </script>
 
-<!-- {#if typeof label === 'undefined' || !label}
-  {null}
-{:else}
-  <g>
-    <rect
-      class="EdgeTextBg"
-      data-testid="edge-text-bg"
-      fill="white"
-      x={textCenterX - labelPx / 2}
-      y={textCenterY - shiftRectY}
-      width={labelPx}
-      height={16}
-    />
-    <text
-      class="EdgeText"
-      x={textCenterX}
-      y={textCenterY}
-      font-size="12px"
-      dominant-baseline="central"
-      text-anchor="middle"
-      style="fill:black"
-    >
-      {label}
-    </text>
-  </g>
-{/if} -->
 {#if typeof label === 'undefined' || !label}
   {null}
 {:else}
