@@ -30,7 +30,7 @@
 		<slot name="main"></slot>
 	</section>
 
-	<section slot="b">
+	<section class="panel-b" slot="b">
 		<div class="panel-header" on:click={toggle}>
 			<h3>{panel}</h3>
 			<slot name="panel-header"></slot>
@@ -50,11 +50,22 @@
 		align-items: center;
 		padding: 0 0.5em;
 		cursor: pointer;
+		border-top: solid 1px;
+		/* border-top-color: black; */
+	}
+	
+	.slot-a {
+		border-right: 1px;
 	}
 
 	.panel-body {
 		overflow: auto;
 	}
+
+	/* .panel-b {
+		border: 5px;
+		border-top-color: black;
+	} */
 
 	h3 {
 		font: 700 12px/1.5 var(--font);

@@ -39,7 +39,7 @@
 <style>
 	.message {
 		position: relative;
-		color: white;
+		color: black;
 		padding: 12px 16px 12px 44px;
 		font: 400 12px/1.7 var(--font);
 		margin: 0;
@@ -59,7 +59,7 @@
 		line-height: 1;
 		padding: 4px;
 		border-radius: 50%;
-		color: white;
+		color: rgb(255, 10, 10);
 		border: 2px solid white;
 		box-sizing: content-box;
 		width: 10px;
