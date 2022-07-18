@@ -14,6 +14,8 @@
     arrow,
     label,
     labelBgColor,
+    labelTextColor,
+    edgeColor,
     centerX,
     centerY
   } = baseEdgeProps);
@@ -26,6 +28,8 @@
     targetY: targetY,
     label: label,
     labelBgColor: labelBgColor,
+    labelTextColor: labelTextColor,
+    edgeColor: edgeColor,
     centerX: centerX,
     centerY: centerY
   };
@@ -44,7 +48,7 @@
     class={animate ? 'animate' : ''}
     d={path}
     fill="transparent"
-    stroke="gray"
+    stroke={edgeColor ? edgeColor : 'gray'}
     marker-end="url(#arrow)"
     aria-label="svg-path"
   />
@@ -53,7 +57,7 @@
     class={animate ? 'animate' : ''}
     d={path}
     fill="transparent"
-    stroke="gray"
+    stroke={edgeColor ? edgeColor : 'gray'}
     aria-label="svg-path"
   />
 {/if}
