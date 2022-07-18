@@ -15,8 +15,8 @@ export interface Node<T = any> {
   clickCallback?: Function;
   image?: boolean;
   src?: string;
-  sourcePosition?: string;
-  targetPosition?: string;
+  sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
+  targetPosition?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 export interface Edge {
@@ -24,6 +24,9 @@ export interface Edge {
   source: number;
   target: number;
   label?: string;
+  labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
   type?: string;
   animate?: boolean;
   noHandle?: boolean;
@@ -51,6 +54,9 @@ export interface EdgeTextProps {
   targetX: number;
   targetY: number;
   label?: any;
+  labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
   centerX?: number;
   centerY?: number;
 }
