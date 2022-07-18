@@ -205,14 +205,14 @@
 			/>
 		</div>
 
-		<div slot="panel-header">
+		<div class="panel-header" slot="panel-header">
 			<button on:click|stopPropagation={clear_logs}>
 				{#if logs.length > 0}({logs.length}){/if}
 				Clear
 			</button>
 		</div>
 
-		<section slot="panel-body">
+		<section class="panel-body" slot="panel-body">
 			<Console {logs} on:clear={clear_logs} />
 		</section>
 	</PaneWithPanel>
@@ -263,5 +263,10 @@
 		position: absolute;
 		bottom: 0;
 		width: 100%;
+	}
+
+	
+	.panel-body {
+		background-color: rgb(250, 250, 250);
 	}
 </style>
