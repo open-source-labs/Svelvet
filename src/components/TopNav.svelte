@@ -6,8 +6,9 @@
   import MobileDocsNav from './MobileDocsNav.svelte';
   import { signInWithGithub, logout, userInfo } from '../supabase-db';
 
-  import { user, logged_in, user_avatar } from '$lib/stores/authStore.js'
+  import { userInfoStore } from '$lib/stores/authStoreTs'
 
+  let { user, logged_in, user_avatar } = userInfoStore;
   // use set method on user writable and set it equal to the return value of userIndo
   // user.set(userInfo);
 
