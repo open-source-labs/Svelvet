@@ -318,7 +318,7 @@
 	{#if $user}
   
 	<div class="repl-navbar">
-		<input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:350px" required/>
+		<input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:300px" required/>
 
 		<div class="icons-navbar">
 			<!-- added a save button to limit user to 5 projects -->
@@ -403,7 +403,7 @@
 		flex-direction: row;
 		justify-content: flex-start;
 		padding: 0.5em;
-    min-width: 1300px;
+    min-width: 1350px;
 	}
 
 	.db-icons {
