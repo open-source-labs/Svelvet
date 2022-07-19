@@ -14,7 +14,7 @@
     @apply bg-[#ff4561];
   }
   .contributor-card {
-    @apply min-w-[181px] text-center grid place-items-center bg-white text-gray-600 p-5 rounded-xl shadow-lg;
+    @apply min-w-max text-center grid place-items-center bg-white text-gray-600 p-4 rounded-xl shadow-lg;
   }
   .btn-primary {
     @apply border w-fit shadow-lg hover:shadow-transparent rounded-full hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561];

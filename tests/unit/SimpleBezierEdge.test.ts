@@ -12,7 +12,7 @@ const bottom_top = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 const right_left = {
   id: 'e1-2',
   sourceX: 100,
@@ -24,7 +24,7 @@ const right_left = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 
 const left_right = {
   id: 'e1-2',
@@ -37,7 +37,7 @@ const left_right = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 
 const top_left = {
   id: 'e1-2',
@@ -50,7 +50,7 @@ const top_left = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 
 const top_right = {
   id: 'e1-2',
@@ -63,7 +63,7 @@ const top_right = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 
 const bottom_left = {
   id: 'e1-2',
@@ -76,7 +76,7 @@ const bottom_left = {
   data: {
     label: 'this is the test edge'
   }
-}
+};
 
 test('should calculate the correct bezier path string from bottom to top', () => {
   render(SimpleBezierEdge, { props: { edge: bottom_top } });
@@ -110,7 +110,7 @@ test('should calculate the correct bezier path string from top to right', () => 
   render(SimpleBezierEdge, { props: { edge: top_right } });
   const pathElement = screen.getByLabelText('svg-path');
 
-  expect(pathElement).toHaveAttribute('d', 'M100,400 C100,300 150,200 200,200');
+  expect(pathElement).toHaveAttribute('d', 'M100,400 C100,300 262.5,200 200,200');
 });
 
 test('should calculate the correct bezier path string from bottom to left', () => {

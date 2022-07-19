@@ -4,8 +4,14 @@
     ['id', '(required) string'],
     ['source', '(required) node id'],
     ['target', '(required) node id'],
-    ['type', '"straight" / set to "bezier" if not specified'],
+    [
+      'type',
+      'string ("straight", "bezier", "step", "smoothstep") - defaults to "bezier" if not specified'
+    ],
     ['label', 'string'],
+    ['labelBgColor', 'string of string of color name, hexcode, or rgb'],
+    ['labelTextColor', 'string of color name, hexcode, or rgb'],
+    ['edgeColor', 'string of color name, hexcode, or rgb'],
     ['animate', 'boolean'],
     ['arrow', 'boolean'],
     ['noHandle', 'boolean']
