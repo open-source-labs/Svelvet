@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
@@ -7,8 +7,8 @@
     getCodeFromDB,
     updateCodeInDB,
     deleteCodeFromDB
-  } from '../../supabase-db.js';
-  import { user_email, diagrams, user } from '$lib/stores/authStore.js';
+  } from '../../supabase-db';
+  import { userInfoStore } from '$lib/stores/authStoreTs';
 
   const dispatch = createEventDispatcher();
 
@@ -17,6 +17,8 @@
   export let lineNumbers = true;
   export let tab = true;
   export let theme;
+
+  let { user_email, diagrams, user } = userInfoStore;
 
   let w;
   let h;
@@ -87,18 +89,20 @@
 
   //----- NEW FUNCTIONS AS OF SVELVET 2.0 -----
 
-  export async function copyCodeEditor() {
+  export async function copyCodeEditor(): Promise<void> {
     const code_to_copy = editor.getValue();
+    
     const copyToClipboard = () => {
       if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
         return navigator.clipboard.writeText(code_to_copy);
       }
       return Promise.reject('The Clipboard API is not available.');
     };
+    
     copyToClipboard();
   }
 
-  export async function getCodeEditorValue(id, diagramName) {
+  export async function getCodeEditorValue(id: number, diagramName: string): Promise<void> {
     const codeToSave = editor.getValue();
     let found = false;
 
@@ -126,12 +130,12 @@
     }
   }
 
-  export async function loadSavedCode(code) {
+  export async function loadSavedCode(code: string): Promise<void> {
     // grab and load saved code into the editor
     editor.setValue(code);
   }
 
-  export async function deleteCode(id) {
+  export async function deleteCode(id: number): Promise<void> {
     deleteCodeFromDB(id, $diagrams);
     // clear the editor
     editor.setValue('');
