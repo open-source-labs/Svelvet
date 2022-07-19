@@ -124,10 +124,6 @@
 		editor.setValue(code);
 	}
 
-  export async function loadSavedCode(code) {
-    // grab and load saved code into the editor
-    editor.setValue(code);
-  }
 
   export async function deleteCode(id) {
     deleteCodeFromDB(id, $diagrams);

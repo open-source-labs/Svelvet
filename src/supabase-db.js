@@ -112,12 +112,7 @@ export const updateCodeInDB = async (id, updated_code, project_store) => {
     if(error) {
       return console.error(error);
     }
-  });
-  diagrams.set(updatedDiagramStore);
-  if (error) {
-    return console.error(error);
-  }
-};
+  };
 
 export const deleteCodeFromDB = async (id, project_store) => {
   const { data, error } = await supabase.from('user_saved_projects').delete().match({ id: id });

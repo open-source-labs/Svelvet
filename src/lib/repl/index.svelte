@@ -8,10 +8,11 @@
 	import Output from './Output/index.svelte';
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
-	import { user, diagrams } from '$lib/stores/authStore.js';
+	import { user, diagrams, user_name } from '$lib/stores/authStore.js';
 	import saveIcon from '../../assets/DB save icon.svg';
 	import copyIcon from '../../assets/DB copy icon.svg';
 	import deleteIcon from '../../assets/DB delete icon.svg';
+
 
   export let packagesUrl = 'https://unpkg.com';
   export let svelteUrl = `${packagesUrl}/svelte`;
@@ -142,7 +143,7 @@
       const [, name, type] = match;
       const component = $components.find((c) => c.name === name && c.type === type);
       handle_select(component);
-
+/* I think this is what's breaking our REPL */
       setTimeout(() => {
         module_editor.focus();
         module_editor.setCursor({
@@ -302,8 +303,8 @@
     }
   };
 
-  const copyCodeToClipboard = () => {
-    module_editor.copyCodeEditor();
+  const copyCodeToClipboard = async () => {
+    await module_editor.copyCodeEditor();
     alert('Code copied to clipboard!');
   };
 </script>
@@ -311,9 +312,26 @@
 <svelte:window on:beforeunload={beforeUnload} />
 
 	<!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
-	<div class="repl-navbar">
 	{#if $user}
-		<select id="selectElement" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
+  
+	<div class="repl-navbar">
+		<input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:350px" required/>
+
+		<div class="icons-navbar">
+			<!-- added a save button to limit user to 5 projects -->
+			<button class="db-icons" on:click={saveDiagram}>
+				<img class="db-icons" src={saveIcon} alt="save-icom" />
+			</button>
+			<!-- added a button to delete projects in case the users have more than 5 -->
+			<button class="db-icons" on:click={deleteDiagram}>
+				<img class="db-icons" src={deleteIcon} alt="delete-icom" />
+			</button>
+			<!-- added a button to allow users to update previously saved projects and reflect changes in db -->
+			<button class="db-icons" on:click={copyCodeToClipboard}>
+				<img class="db-icons" src={copyIcon} alt="copy-icon" />
+			</button>
+    </div>
+      <select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
 			<option value="" disabled selected>Previously Saved Projects</option>
 			{#each $diagrams as diagram}
 			<option value={diagram}>
@@ -321,32 +339,17 @@
 			</option>
 			{/each}
 		</select>
-
-		<div class="icons-navbar">
-			<!-- added a save button to limit user to 5 projects -->
-			<button on:click={saveDiagram}>
-				<img class="db-icons" src={saveIcon} alt="save-icom" />
-			</button>
-			<!-- added a button to delete projects in case the users have more than 5 -->
-			<button on:click={deleteDiagram}>
-				<img class="db-icons" src={deleteIcon} alt="delete-icom" />
-			</button>
-			<!-- added a button to allow users to update previously saved projects and reflect changes in db -->
-			<button on:click={copyCodeToClipboard}>
-				<img class="db-icons" src={copyIcon} alt="copy-icom" />
-			</button>
-			<input id="project-name" class="flex-end bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg p-2.5" placeholder="SAVE AS" required/>
-		</div>
+  </div>
 		{:else}
+    <div class="repl-navbar-noUser">
 		<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
 			<option value="" disabled selected>LOGIN TO SAVE AND LOAD PROJECTS</option>
 		</select>
 		<button on:click={copyCodeToClipboard}>
 			<img class="db-icons" src={copyIcon} alt="copy-icom" />
 		</button>
-		
+    </div>
 		{/if}
-	</div>	
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
 
@@ -385,25 +388,41 @@
 
 <style>
 
+  .repl-navbar-noUser {
+    display: flex;
+    justify-content: flex-start;
+    min-width: 1300px;
+    padding: 0.5em;
+  }
+
 	.repl-navbar {
 		display: flex;
 		flex-direction: row;
-		justify-items: space-between;
+		justify-content: flex-start;
 		padding: 0.5em;
+    min-width: 1300px;
 	}
 
 	.db-icons {
 		display: inline-block;
 		width: 3rem;
 		height: 3rem;
+    padding: 0.15em;
 	}
 
-	button {
-		background-color: transparent;
-		border: 0rem 3rem 0rem;
-		
-	}
+  button {
+  background-color: rgb(241, 241, 241);
+  margin: 0em 3.5em 0em;
+  box-shadow: 0 9px rgb(228, 224, 224);
+  border-radius: 5px;
+}
+ button:hover {background-color: rgb(215, 215, 215)}
 
+ button:active {
+  background-color: rgb(33, 250, 0);
+  box-shadow: 0 5px rgb(10, 73, 1);
+  transform: translateY(4px);
+}
 /* 	button {
 		background-color: rgb(244 63 94);
 		border: none;
@@ -418,13 +437,15 @@
 	.container {
 		position: relative;
 		width: 100%;
-		height: 100%;
+    /* this is what I fixed to have the repl fit in the screen */
+		height: 95%;
 		background: white;
 	}
 
 	.container :global(section) {
 		position: relative;
-		padding: 42px 0 0 0;
+    /* changed 42-0-0-0 to 0-0-0-0 */
+		padding: 0 0 0 0;
 		height: 100%;
 		box-sizing: border-box;
 	}
@@ -434,7 +455,8 @@
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 42px;
+    /* changed 42 - 0 */
+		height: 0;
 		box-sizing: border-box;
 	}
 
@@ -463,6 +485,7 @@
 
   .container :global(section) {
     position: relative;
+    /* changed */
     padding: 42px 0 0 0;
     height: 100%;
     box-sizing: border-box;
