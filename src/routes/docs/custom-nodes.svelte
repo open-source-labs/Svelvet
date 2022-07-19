@@ -36,6 +36,7 @@
     {:else}.{/if}
   {/each}
 </p>
+<!-- NOTE: may want to add note regarding differences when using an image with / without a label -->
 
 <h3 class="text-xl font-semibold mt-12">Node Properties</h3>
 <div class="w-full md:w-3/4 lg:w-1/2 text-gray-600">
