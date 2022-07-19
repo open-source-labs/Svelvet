@@ -174,15 +174,15 @@
 <div
   class="h-[1200px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
-  <div class=" h-full m-12 p-1 contributors:m-24">
+  <div class=" h-full m-8 p-1 contributors:m-24">
     <div class=" h-full w-full p-1 flex flex-col justify-center">
       <h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
 
       <!-- START TESTING CARDS -->
       <div class="flex flex-col justify-center contributors:flex-row my-4 p-2 items-center">
-        <div class="flex justify-evenly w-1/3 gap-2 contributors:gap-4">
+        <div class="flex flex-row justify-evenly w-1/3 gap-2 contributors:gap-4">
           <!-- CARD 1 -->
-          <div class="contributor-card">
+          <div class="contributor-card ">
             <img src={anu} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
@@ -231,7 +231,7 @@
           <!-- CARD 1 -->
           <div class="contributor-card">
             <img src={alexander} alt="" class="hidden contributors:block h-28 rounded-full" />
-            <p class="mt-3 mb-1 text-lg leading-6">Alexander<br />Zambrano</p>
+            <p class="mt-3 mb-1 text-md leading-6">Alexander<br />Zambrano</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
