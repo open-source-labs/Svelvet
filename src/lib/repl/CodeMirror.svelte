@@ -106,29 +106,28 @@
     const codeToSave = editor.getValue();
     let found = false;
 
-    if (diagramName && $diagrams.length <= 5) {
-      // loop through the array of projects in store and check each object's id
-      for (const obj of $diagrams) {
-        if (obj.id === id && obj.diagram_name === diagramName) {
-          updateCodeInDB(id, codeToSave, $diagrams);
-          alert('Diagram updated successfully!');
-          document.getElementById('project-name').value = '';
-          editor.setValue('');
-          found = true;
-        }
-      }
-      if (!found) {
-        addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
-        alert('Diagram saved to database successfully!');
-      }
-    } else if ($diagrams.length >= 5 && !found) {
-      alert(
-        'You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.'
-      );
-    } else {
-      alert('Please provide a name for your diagram before attempting to save.');
-    }
-  }
+		if(diagramName && $diagrams.length < 6) {
+			// loop through the array of projects in store and check each object's id	
+			for(const obj of $diagrams) {
+				if(obj.id === id && obj.diagram_name === diagramName) {
+					updateCodeInDB(id, codeToSave, $diagrams);
+					alert('Diagram updated successfully!');
+					found = true;
+				}
+			}
+			if(!found) {
+	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+				alert('Diagram saved to database successfully!');
+			}
+		}
+		else if($diagrams.length >= 6 && !found) {
+			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
+		}
+		else {
+			alert('Please provide a name for your diagram before attempting to save.');
+		}
+	}
+	
 
   export async function loadSavedCode(code: string): Promise<void> {
     // grab and load saved code into the editor
