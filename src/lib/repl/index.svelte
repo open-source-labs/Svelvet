@@ -1,18 +1,17 @@
-<script>
-	import { setContext, createEventDispatcher } from 'svelte';
-	import { writable } from 'svelte/store';
-	import SplitPane from './SplitPane.svelte';
-	import InputOutputToggle from './InputOutputToggle.svelte';
-	import ComponentSelector from './Input/ComponentSelector.svelte';
-	import ModuleEditor from './Input/ModuleEditor.svelte';
-	import Output from './Output/index.svelte';
-	import Bundler from './Bundler.js';
-	import { is_browser } from './env.js';
-	import { user, diagrams, user_name } from '$lib/stores/authStore.js';
-	import saveIcon from '../../assets/DB save icon.svg';
+<script lang="ts">
+  import { setContext, createEventDispatcher } from 'svelte';
+  import { get, writable } from 'svelte/store';
+  import SplitPane from './SplitPane.svelte';
+  import InputOutputToggle from './InputOutputToggle.svelte';
+  import ComponentSelector from './Input/ComponentSelector.svelte';
+  import ModuleEditor from './Input/ModuleEditor.svelte';
+  import Output from './Output/index.svelte';
+  import Bundler from './Bundler.js';
+  import { is_browser } from './env.js';
+  import { userInfoStore } from '$lib/stores/authStoreTs';
+  import saveIcon from '../../assets/DB save icon.svg';
 	import copyIcon from '../../assets/DB copy icon.svg';
 	import deleteIcon from '../../assets/DB delete icon.svg';
-
 
   export let packagesUrl = 'https://unpkg.com';
   export let svelteUrl = `${packagesUrl}/svelte`;
@@ -26,6 +25,8 @@
   export let theme = 'svelte';
   export let showModified = false;
   export let showAst = false;
+
+  let { user, diagrams } = userInfoStore; 
 
   const historyMap = new Map();
 
@@ -104,7 +105,7 @@
     legacy: false
   });
 
-  let module_editor;
+  let module_editor: { set: (arg0: any,arg1: any) => void; clearHistory: () => void; update: (arg0: any) => void; focus: () => void; setCursor: (arg0: { line: number; ch: any; }) => void; cursorIndex: { subscribe: (arg0: (index: any) => void) => void; }; unmarkText: () => void; markText: (arg0: { from: any; to: any; }) => void; getHistory: () => any; setHistory: (arg0: any) => void; loadSavedCode: (arg0: any) => void; getCodeEditorValue: (arg0: any,arg1: any) => void; deleteCode: (arg0: any) => void; copyCodeEditor: () => void; };
   let output;
 
   let width = 0;
@@ -275,15 +276,16 @@
 
   // ----- NEW FUNCTION AS OF SVELVET 2.0 -----
 
-  let diagramSelected;
 
-  const loadSavedDiagram = () => {
+  let diagramSelected: any;
+
+  const loadSavedDiagram = (): void => {
     module_editor.loadSavedCode(diagramSelected.code);
     document.getElementById('project-name').value = diagramSelected.diagram_name;
   };
 
-  const saveDiagram = () => {
-    if ($user) {
+  const saveDiagram = (): void => {
+    if (user) {
       module_editor.getCodeEditorValue(
         diagramSelected.id,
         document?.getElementById('project-name').value
@@ -293,21 +295,22 @@
     }
   };
 
-  const deleteDiagram = () => {
-    if ($user && diagramSelected.id) {
+  const deleteDiagram = (): void => {
+    if (user && diagramSelected.id) {
       module_editor.deleteCode(diagramSelected.id);
-    } else if ($user) {
+    } else if (user) {
       alert('You must name and save the diagram before attempting to delete the diagram.');
     } else {
       alert('You must sign in and save the diagram before attempting to delete the diagram.');
     }
   };
 
-  const copyCodeToClipboard = async () => {
-    await module_editor.copyCodeEditor();
+  const copyCodeToClipboard = (): void => {
+    module_editor.copyCodeEditor();
     alert('Code copied to clipboard!');
   };
 </script>
+
 
 <svelte:window on:beforeunload={beforeUnload} />
 
