@@ -53,7 +53,7 @@
     <a
       class="text-rose-600 underline underline-offset-1"
       target="_blank"
-      href="https://playwright.dev/docs/intro">@playwright</a
+      href="https://www.cypress.io/">@cypress</a
     > along with an integrated CI/CD pipeline. Therefore, package version updates and usage could be
     done with confidence.
   </p>
