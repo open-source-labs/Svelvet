@@ -4,11 +4,15 @@
     ['id', '(required) number'],
     ['data', '(required) { label: string }'],
     ['position', '(required) { x: number, y: number }'],
+    ['sourcePosition', 'string (top, bottom, left, right) - defaults to "bottom" if unspecified'],
+    ['targetPosition', 'string (top, bottom, left, right) - defaults to "top" if unspecified'],
     ['width', '(required) number'],
     ['height', '(required) number'],
-    ['bgColor', 'string of color name or hexcode'],
-    ['borderColor', 'string of color name or hexcode'],
-    ['textColor', 'string of color name or hexcode'],
+    ['bgColor', 'string of color name, hexcode, or rgb'],
+    ['borderColor', 'string of color name, hexcode or rgb'],
+    ['textColor', 'string of color name, hexcode or rgb'],
+    ['image', 'boolean'],
+    ['src', 'string of image url'],
     ['borderRadius', 'number'],
     ['clickCallback', 'Function']
   ];
