@@ -12,9 +12,6 @@
   export let height: number = 600;
   export let background: boolean = false;
 
-  //this method assumes !node.position and assigns default positions
-  //FIXME fix typescripting for this addDefaultPositions function
-  if (!nodes.position) addDefaultPositions(nodes);
 
   // generates a unique string for each svelvet component's unique store instance
   const key = (Math.random() + 1).toString(36).substring(7);

@@ -3,7 +3,6 @@
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
   //import type { Node } from '$lib/types/index.js';
-  //import type { D3ZoomEvent } from '@types/d3-zoom';
 
   import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '$lib/Edges/StraightEdge.svelte';

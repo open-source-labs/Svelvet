@@ -1,12 +1,12 @@
-import type { Position } from 'postcss';
-import type { XYPosition } from './utils';
+//import type { Position } from 'postcss';
+import type { XYPosition, Position } from './utils';
 // TODO Add limitations to sourcePosition and targetPosition
 export interface Node<T = any> {
   id: number;
-  position?: XYPosition;
+  position: XYPosition;
   data: T;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   bgColor?: string;
   fontSize?: number;
   borderColor?: string;
@@ -44,8 +44,8 @@ export interface DerivedEdge extends Edge {
 
 export interface EdgeProps extends DerivedEdge {
   path: string;
-  centerX?: number;
-  centerY?: number;
+  centerX: number;
+  centerY: number;
 }
 
 export interface EdgeTextProps {
@@ -57,8 +57,8 @@ export interface EdgeTextProps {
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
-  centerX?: number;
-  centerY?: number;
+  centerX: number;
+  centerY: number;
 }
 
 export type HandleType = 'source' | 'target';

@@ -134,17 +134,19 @@
 
   //TODO - Check for errors regarding source position and Target Positon, changed from source Position.Top to bottom, and target Position from Bottom to Top.
 
-  $: params = {
+  $:params = {
     sourceX: edge.sourceX,
     sourceY: edge.sourceY,
     sourcePosition: edge.sourcePosition,
     targetX: edge.targetX,
     targetY: edge.targetY,
-    targetPosition: edge.targetPosition
+    targetPosition: edge.targetPosition,
+    curvature: 0.25
   };
-
+  
   // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
   $: path = getSimpleBezierPath(params);
+  
   //TODO This needs to be changed to get BezierCenter
   $: [centerX, centerY] = getSimpleBezierCenter(params);
 
