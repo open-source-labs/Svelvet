@@ -305,8 +305,8 @@
     }
   };
 
-  const copyCodeToClipboard = (): void => {
-    module_editor.copyCodeEditor();
+  const copyCodeToClipboard = async (): void => {
+    await module_editor.copyCodeEditor();
     alert('Code copied to clipboard!');
   };
 </script>
@@ -318,7 +318,7 @@
 	{#if $user}
   
 	<div class="repl-navbar">
-		<input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:350px" required/>
+		<input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:275px" required/>
 
 		<div class="icons-navbar">
 			<!-- added a save button to limit user to 5 projects -->
@@ -343,16 +343,20 @@
 			{/each}
 		</select>
   </div>
-		{:else}
-    <div class="repl-navbar-noUser">
+
+
+  {:else}
+  
+  
+  <div class="repl-navbar-noUser">
 		<select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
 			<option value="" disabled selected>LOGIN TO SAVE AND LOAD PROJECTS</option>
 		</select>
 		<button on:click={copyCodeToClipboard}>
 			<img class="db-icons" src={copyIcon} alt="copy-icom" />
 		</button>
-    </div>
-		{/if}
+  </div>
+  {/if}
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
 
@@ -391,40 +395,98 @@
 
 <style>
 
-  .repl-navbar-noUser {
+  /* STYLING FOR MOBILE */
+  @media (max-width: 540px) {
+    .repl-navbar-noUser {
     display: flex;
-    justify-content: flex-start;
-    min-width: 1300px;
-    padding: 0.5em;
+    align-items: center;
+    padding: 0.25em;
   }
+    .repl-navbar {
+      padding: 0.25em;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      margin-top: 1em;
+    }
 
-	.repl-navbar {
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		padding: 0.5em;
-    min-width: 1300px;
-	}
+    #project-name {
+      display: inline-block;
+      height: 4em;
+      width: 22em;
+      font-size: .8em;
+    }
 
-	.db-icons {
-		display: inline-block;
-		width: 3rem;
-		height: 3rem;
+    #selectElement {
+      height: 4em;
+      font-size: .8em;
+      width: 22em;
+      justify-self: center;
+    }
+
+    .db-icons {
+		display: inline-flex;
+    align-items: center;
+		width: 3em;
+		height: 3em;
     padding: 0.15em;
 	}
 
-  button {
-  background-color: rgb(241, 241, 241);
-  margin: 0em 3.5em 0em;
-  box-shadow: 0 9px rgb(228, 224, 224);
-  border-radius: 5px;
-}
- button:hover {background-color: rgb(215, 215, 215)}
+    button {
+    background-color: rgb(241, 241, 241);
+    margin: 1em 1em 1em;
+    box-shadow: 0 9px rgb(228, 224, 224);
+    border-radius: 10px;
+  }
+ 
+    button:hover {background-color: rgb(215, 215, 215)}
 
- button:active {
-  background-color: rgb(33, 250, 0);
-  box-shadow: 0 5px rgb(10, 73, 1);
-  transform: translateY(4px);
+    button:active {
+    background-color: rgb(33, 250, 0);
+    box-shadow: 0 9px rgb(10, 73, 1);
+    transform: translateY(4px);
+  }
+
+  }
+  /* STYLING FOR MOBILE */
+
+  @media (min-width: 540px) {
+
+    .repl-navbar-noUser {
+      display: flex;
+      justify-content: flex-start;
+      min-width: 500px;
+      padding: 0.5em;
+    }
+
+    .repl-navbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      padding: 0.5em;
+      min-width: 1350px;
+    }
+
+    .db-icons {
+      display: inline-block;
+      width: 3.5rem;
+      height: 3.5rem;
+      padding: 0.15em;
+    }
+
+    button {
+    background-color: rgb(241, 241, 241);
+    margin: 0em 3.5em 0em;
+    box-shadow: 0 9px rgb(228, 224, 224);
+    border-radius: 7px;
+  }
+  button:hover {background-color: rgb(215, 215, 215)}
+
+  button:active {
+    background-color: rgb(33, 250, 0);
+    box-shadow: 0 5px rgb(10, 73, 1);
+    transform: translateY(4px);
+  }
 }
 /* 	button {
 		background-color: rgb(244 63 94);
