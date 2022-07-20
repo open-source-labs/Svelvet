@@ -99,7 +99,7 @@
       return Promise.reject('The Clipboard API is not available.');
     };
     
-    copyToClipboard();
+    await copyToClipboard();
   }
 
   export async function getCodeEditorValue(id: number, diagramName: string): Promise<void> {
