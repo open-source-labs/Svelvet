@@ -16,6 +16,6 @@
       <TopNav />
     </div>
     <slot />
-    <Footer />
   </div>
+  <Footer />
   {/if}

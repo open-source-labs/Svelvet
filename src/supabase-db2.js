@@ -93,24 +93,26 @@ export const getCodeFromDB = async (user_email) => {
 export const current_session = supabase.auth.session();
 
 export const updateCodeInDB = async (id, updated_code, project_store) => {
-  const { data, error } = await supabase
+  const updatedDiagramStore = [];
+  const {data, error} = await supabase
     .from('user_saved_projects')
     .update({ code: updated_code })
     .match({ id: id });
 
-  const updatedDiagramStore = [];
-  project_store.forEach((obj) => {
-    if (obj.id === data[0].id) {
-      updatedDiagramStore.push({ ...obj, code: data[0].code });
-    } else {
-      updatedDiagramStore.push(obj);
+    
+    project_store.forEach(obj => {
+      if(obj.id === data[0].id) {
+        updatedDiagramStore.push({...obj, code: data[0].code});
+      }
+      else {
+        updatedDiagramStore.push(obj);
+      }
+    })
+    diagrams.set(updatedDiagramStore);
+    if(error) {
+      return console.error(error);
     }
-  });
-  diagrams.set(updatedDiagramStore);
-  if (error) {
-    return console.error(error);
-  }
-};
+  };
 
 export const deleteCodeFromDB = async (id, project_store) => {
   const { data, error } = await supabase.from('user_saved_projects').delete().match({ id: id });

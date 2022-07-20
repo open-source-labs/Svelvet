@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
@@ -7,8 +7,8 @@
     getCodeFromDB,
     updateCodeInDB,
     deleteCodeFromDB
-  } from '../../supabase-db.js';
-  import { user_email, diagrams, user } from '$lib/stores/authStore.js';
+  } from '../../supabase-db';
+  import { userInfoStore } from '$lib/stores/authStoreTs';
 
   const dispatch = createEventDispatcher();
 
@@ -17,6 +17,8 @@
   export let lineNumbers = true;
   export let tab = true;
   export let theme;
+
+  let { user_email, diagrams, user } = userInfoStore;
 
   let w;
   let h;
@@ -87,51 +89,52 @@
 
   //----- NEW FUNCTIONS AS OF SVELVET 2.0 -----
 
-  export async function copyCodeEditor() {
+  export async function copyCodeEditor(): Promise<void> {
     const code_to_copy = editor.getValue();
+    
     const copyToClipboard = () => {
       if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
         return navigator.clipboard.writeText(code_to_copy);
       }
       return Promise.reject('The Clipboard API is not available.');
     };
-    copyToClipboard();
+    
+    await copyToClipboard();
   }
 
-  export async function getCodeEditorValue(id, diagramName) {
+  export async function getCodeEditorValue(id: number, diagramName: string): Promise<void> {
     const codeToSave = editor.getValue();
     let found = false;
 
-    if (diagramName && $diagrams.length <= 5) {
-      // loop through the array of projects in store and check each object's id
-      for (const obj of $diagrams) {
-        if (obj.id === id && obj.diagram_name === diagramName) {
-          updateCodeInDB(id, codeToSave, $diagrams);
-          alert('Diagram updated successfully!');
-          document.getElementById('project-name').value = '';
-          editor.setValue('');
-          found = true;
-        }
-      }
-      if (!found) {
-        addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
-        alert('Diagram saved to database successfully!');
-      }
-    } else if ($diagrams.length >= 5 && !found) {
-      alert(
-        'You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.'
-      );
-    } else {
-      alert('Please provide a name for your diagram before attempting to save.');
-    }
-  }
+		if(diagramName && $diagrams.length < 6) {
+			// loop through the array of projects in store and check each object's id	
+			for(const obj of $diagrams) {
+				if(obj.id === id && obj.diagram_name === diagramName) {
+					updateCodeInDB(id, codeToSave, $diagrams);
+					alert('Diagram updated successfully!');
+					found = true;
+				}
+			}
+			if(!found) {
+	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+				alert('Diagram saved to database successfully!');
+			}
+		}
+		else if($diagrams.length >= 6 && !found) {
+			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
+		}
+		else {
+			alert('Please provide a name for your diagram before attempting to save.');
+		}
+	}
+	
 
-  export async function loadSavedCode(code) {
+  export async function loadSavedCode(code: string): Promise<void> {
     // grab and load saved code into the editor
     editor.setValue(code);
   }
 
-  export async function deleteCode(id) {
+  export async function deleteCode(id: number): Promise<void> {
     deleteCodeFromDB(id, $diagrams);
     // clear the editor
     editor.setValue('');

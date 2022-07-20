@@ -17,11 +17,17 @@ export const logout: Function = async function signout(): Promise<void>{
 };
 
 export const signInWithGithub: Function = async function signInWithGithub(): Promise<void> {
+  try{
   const { user: User, session: Session, error: Error } = await supabase.auth.signIn(
     {provider: 'github'}, {redirectTo: window.location.href}
   )
+  }
+  catch(error) {
+    console.log("Error with signing in: ", error);
+  }
 }
 
+export const userInfo: User | null = supabase.auth.user();
 
 // detects when the Auth state changes
 export default supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null): void => {
