@@ -36,6 +36,13 @@
     {:else}.{/if}
   {/each}
 </p>
+<br />
+<p class="text-gray-600">
+  <code class="bg-rose-100 rounded-lg p-1">sourcePosition</code> represents the anchor point
+  location on the source node and is set to "bottom" by default. <br />
+  <code class="bg-rose-100 rounded-lg p-1">targetPosition</code> represents the anchor point location
+  on the target node and is set to "top" by default.
+</p>
 <!-- NOTE: may want to add note regarding differences when using an image with / without a label -->
 
 <h3 class="text-xl font-semibold mt-12">Node Properties</h3>
