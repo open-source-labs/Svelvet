@@ -1,6 +1,6 @@
 {
   "name": "svelvet",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "authors": "Anu, Aaron, Alexander, Andrew",
   "license": "MIT",
@@ -72,5 +72,13 @@
     "marked": "^4.0.17",
     "svelte-json-tree": "^1.0.0",
     "yootils": "^0.3.1"
-  }
+  },
+  "files":[
+    "/src/lib/Containers", 
+    "/src/lib/Edges", 
+    "/src/lib/Nodes", 
+    "/src/lib/stores/store.ts",
+    "/src/lib/types",
+    "/src/lib/index.js"
+  ]
 }

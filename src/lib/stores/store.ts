@@ -94,15 +94,32 @@ export function findOrCreateStore(key: string): SvelvetStore {
 
   //ANSWER: Taking the information and adding other properties such as x,y, target x and y, so that the edge has enough information to create the line. In order to create any edge we need starting point and ending point of each line. All we give to the edges array is a source and a target.
   const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
-    $edgesStore.forEach((edge: Edge) => {
+    $edgesStore.forEach((edge: any) => {
       // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
-      let sourceNode: Node; // any -> should follow type Node
-      let targetNode: Node; // any -> should follow type Node
+
+      // These are dummy node to resolve a typescripting issue. They are overwritten in the following forEach loop
+      let sourceNode: Node = {
+        id: 0,
+        position: { x: 25, y: 475 },
+        data: { label: '9' },
+        width: 175,
+        height: 40,
+        targetPosition: 'right',
+        sourcePosition: 'left'
+      };
+      let targetNode: Node = {
+        id: 10,
+        position: { x: 750, y: 475 },
+        data: { label: '10' },
+        width: 175,
+        height: 40,
+        targetPosition: 'right',
+        sourcePosition: 'left'
+      };
       $nodesStore.forEach((node: Node) => {
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) targetNode = node;
       });
-      //
       if (sourceNode) {
         //Default sourcePosition to bottom if sourcePosition not defined
         if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {

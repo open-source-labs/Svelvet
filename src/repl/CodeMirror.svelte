@@ -7,8 +7,8 @@
     getCodeFromDB,
     updateCodeInDB,
     deleteCodeFromDB
-  } from '../../supabase-db';
-  import { userInfoStore } from '$lib/stores/authStoreTs';
+  } from '../supabase-db';
+  import { userInfoStore } from '../authStoreTs';
 
   const dispatch = createEventDispatcher();
 

@@ -1,5 +1,5 @@
 import { Position } from '$lib/types/utils';
-//import { Node } from '$lib/types/types';
+import type {Node} from '$lib/types/types';
 
 export interface GetCenterParams {
   sourceX: number;

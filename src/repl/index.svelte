@@ -8,10 +8,10 @@
   import Output from './Output/index.svelte';
   import Bundler from './Bundler.js';
   import { is_browser } from './env.js';
-  import { userInfoStore } from '$lib/stores/authStoreTs';
-  import saveIcon from '../../assets/DB save icon.svg';
-	import copyIcon from '../../assets/DB copy icon.svg';
-	import deleteIcon from '../../assets/DB delete icon.svg';
+  import { userInfoStore } from '../authStoreTs';
+  import saveIcon from '../assets/DB save icon.svg';
+	import copyIcon from '../assets/DB copy icon.svg';
+	import deleteIcon from '../assets/DB delete icon.svg';
 
   export let packagesUrl = 'https://unpkg.com';
   export let svelteUrl = `${packagesUrl}/svelte`;
