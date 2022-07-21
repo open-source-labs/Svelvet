@@ -65,6 +65,7 @@
       color: {node.textColor};"
   src={node.src}
   alt=""
+  id="svelvet-{node.id}"
 />
 <slot />
 
