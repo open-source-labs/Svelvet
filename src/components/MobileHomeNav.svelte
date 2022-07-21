@@ -2,6 +2,15 @@
   import logo from '../assets/Logo 1.svg';
   import { slide } from 'svelte/transition';
 
+  /* import store so that we can check if there's a user that is loggin in */
+  import { userInfoStore } from '../authStoreTs';
+  /* import supabase functionality for user login / logout */
+  import { signInWithGithub, logout } from '../supabase-db';
+  /* importing GitHub logo from assets */
+  import github from '../assets/github-icon-white.svg';
+
+  let { user, logged_in, user_avatar } = userInfoStore;
+
   let hidden = true;
 
   const toggleMenu = () => {
@@ -71,7 +80,7 @@
       </li>
       <!-- //TODO create button for create page -->
       <li>
-        <a on:click={toggleMenu} href="/playground" class="block py-6">Playground</a>
+        <a on:click={toggleMenu} href="/playground" class="block py-6">REPL</a>
       </li>
       <li>
         <a
@@ -89,9 +98,25 @@
           class="block py-6">Github</a
         >
       </li>
+      <!-- added login / logout button link! -->
+
+      {#if $user}
+      <button on:click={logout}>
+        <div class="login-container rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider hover:text-rose-500 hover:bg-white">Logout 
+        <img src={$user_avatar} alt="user pic"/>
+      </div> 
+    </button>
+    {:else}
+      <button on:click={signInWithGithub}><div class="login-container px-6 py-3 btn-primary">
+        Log In
+        <img src={github} alt="github-logo" />
+      </div></button>
+    {/if}
     </ul>
   </div>
 {/if}
+
+
 
 <style>
   #navMenu > span {
@@ -131,4 +156,27 @@
   #navMenu.active > span:nth-child(3) {
     transform: translateY(-9px) rotate(90deg);
   }
+
+  .login-container{
+    display: flex;
+    width: 8em;
+    justify-content: space-between;
+    border-style: solid;
+    border-width: 1.25px;
+    border-color: #ff4561;
+    border-radius: 2em;
+    align-items: center;
+    flex: 1;
+    float: left;
+    padding: .25em 1em .25em;
+  }
+
+  .login-container img {
+    display: inline-block;
+    margin-left: 5px;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+  }
+
 </style>
