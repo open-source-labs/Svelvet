@@ -5,50 +5,60 @@
   import andrew from '../assets/profiles/Andrew-small.png';
   import alexander from '../assets/profiles/Alexander-small.png';
   import aaron from '../assets/profiles/Aaron-small.png';
+  import justin from '../assets/profiles/Justin-small.png';
+  import damian from '../assets/profiles/Damian-small.png';
+  import von from '../assets/profiles/Von-small.png';
+  import walter from '../assets/profiles/Walter-small.png';
+  import ali from '../assets/profiles/Ali-small.png';
 
-  // import Svelvet from '$lib/Containers/Svelvet/index.svelte';
+  import Svelvet from '$lib/Containers/Svelvet/index.svelte';
   // import type { Node, Edge } from '$lib/types/types';
   import type { Node, Edge } from 'svelvet';
-  import Svelvet from 'svelvet';
+  //import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
       id: 1,
-      position: { x: 190, y: 40 },
-      data: { label: 'Input Node' },
-      width: 175,
-      height: 40,
-      bgColor: 'white'
+      position: { x: 225, y: 10 },
+      data: { label: 'Add Images!' },
+      width: 100,
+      height: 100,
+      bgColor: 'white',
+      borderColor: 'transparent',
+      image: true,
+      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg'
     },
     {
       id: 2,
-      position: { x: 355, y: 160 },
-      data: { label: 'Default Node' },
-      width: 175,
+      position: { x: 390, y: 180 },
+      data: { label: 'Mixed Anchors' },
+      width: 125,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      targetPosition: 'left'
     },
     {
       id: 3,
-      position: { x: 190, y: 260 },
+      position: { x: 225, y: 260 },
       data: { label: 'Output Node' },
-      width: 175,
+      width: 100,
       height: 40,
-      bgColor: 'white'
+      bgColor: '#FFE4E6'
     },
     {
       id: 4,
-      position: { x: 25, y: 160 },
+      position: { x: 25, y: 180 },
       data: { label: 'Drag me!' },
-      width: 175,
+      width: 125,
       height: 40,
-      bgColor: 'white'
+      bgColor: 'white',
+      targetPosition: 'right'
     },
     {
       id: 5,
-      position: { x: 355, y: 360 },
+      position: { x: 390, y: 380 },
       data: { label: 'Custom Node' },
-      width: 175,
+      width: 125,
       height: 40,
       bgColor: '#C8FFC7',
       borderColor: 'transparent',
@@ -56,7 +66,7 @@
     },
     {
       id: 6,
-      position: { x: 72.5, y: 360 },
+      position: { x: 47.5, y: 360 },
       data: { label: 'Custom Node' },
       width: 80,
       height: 80,
@@ -64,16 +74,36 @@
       borderRadius: 30,
       bgColor: 'white',
       textColor: '#FF4121'
+      //targetPosition: 'right'
     }
   ];
 
   const initialEdges: Edge[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
-    { id: 'e2-3', source: 2, target: 3, animate: true },
-    { id: 'e1-4', source: 1, target: 4 },
-    { id: 'e2-5', source: 2, target: 5, label: 'animated edge', animate: true, arrow: true },
+    { id: 'e2-3', source: 2, target: 3, animate: true, label: 'animated edges' },
+    { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, edgeColor: '#FF4121' },
+    {
+      id: 'e2-5',
+      source: 2,
+      target: 5,
+      label: 'colored edges',
+      animate: true,
+      arrow: true,
+      edgeColor: '#FF4121',
+      labelBgColor: '#1F2937',
+      labelTextColor: '#FFE4E6'
+    },
     { id: 'e2-5', source: 4, target: 6, type: 'straight' },
-    { id: 'e2-5', source: 3, target: 6 }
+    {
+      id: 'e2-5',
+      source: 3,
+      target: 6,
+      type: 'smoothstep',
+      label: 'colored label',
+      labelBgColor: '#FF4561',
+      labelTextColor: 'white',
+      animate: true
+    }
   ];
 </script>
 
@@ -151,14 +181,174 @@
   </div>
 </div>
 <div
-  class="h-[640px] contributors:h-[560px] w-screen bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
+  class="h-[1200px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
   <div class=" h-full m-12 contributors:m-24">
-    <div class=" h-full w-full flex flex-col justify-center">
+    <div class=" h-full w-full p-1 flex flex-col justify-around">
       <h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
 
-      <div class="flex flex-col contributors:flex-row my-4 items-center">
-        <div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0">
+      <!-- START TESTING CARDS -->
+      <!-- <div class="flex flex-col contributors:flex-row my-4 items-center"> -->
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- <div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0"> -->
+          <!-- CARD 1 -->
+          <div class="contributor-card ">
+            <img src={anu} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/anu-sharma-6936a686/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/anulepau"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="contributor-card">
+            <img src={andrew} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Andrew <br />Widjaja</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/andrew-widjaja/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/andrew-widjaja"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="contributor-card">
+            <img src={aaron} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/awillettnyc/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/awillettnyc"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="flex flex-col justify-center contributors:flex-row my-4 items-center"> -->
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <!-- <div class="flex justify-evenly w-1/3 gap-2 contributors:gap-4"> -->
+          <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1 -->
+          <div class="contributor-card">
+            <img src={alexander} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-md leading-6">Alexander<br />Zambrano</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/azambran21"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="contributor-card">
+            <img src={justin} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Justin <br />Wouters</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/justinwouters/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/justinwouters"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3 -->
+          <div class="contributor-card">
+            <img src={damian} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Damian <br />Lim</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/lim-damian/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/limd96"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1 -->
+          <div class="contributor-card">
+            <img src={walter} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Walter <br />DeVault</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/walter-devault/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/TensionCoding"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="contributor-card">
+            <img src={von} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Von <br />Garcia</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/gerard-von-g-3964bb160/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/vongarcia97"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3 -->
+          <div class="contributor-card">
+            <img src={ali} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/alimadams/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/AliA12336"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class=" text-gray-100 text-center mt-5 md:mb-0">
+        Svelvet is open source and has room for many more features. We welcome contributors!
+      </p>
+      <a
+        href="https://github.com/oslabs-beta/Svelvet"
+        target="_blank"
+        class="self-center w-fit border-2 border-transparent hover:border-white mt-4 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
+        >See Svelvet on GitHub</a
+      >
+    </div>
+  </div>
+</div>
+
+<!-- END TESTING CARDS -->
+
+<!-- START ORIGINAL CARDS -->
+<!-- <div class="flex flex-col contributors:flex-row my-4 items-center">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={anu} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
@@ -186,7 +376,7 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-around w-1/2 gap-2 contributors:gap-0">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
           <div class="contributor-card">
             <img src={aaron} alt="" class="hidden contributors:block h-28 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
@@ -215,19 +405,83 @@
           </div>
         </div>
       </div>
-      <p class=" text-gray-100 text-center mt-5 md:mb-0">
-        Svelvet is open source and has room for many more features. We welcome contributors!
-      </p>
-      <a
-        href="https://github.com/open-source-labs/Svelvet"
-        target="_blank"
-        class="self-center w-fit border-2 border-transparent hover:border-white mt-4 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
-        >See Svelvet on GitHub</a
-      >
-    </div>
-  </div>
-</div>
+      <div class="flex flex-col contributors:flex-row my-4 items-center justify-evenly">
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
+          <div class="contributor-card">
+            <img src={justin} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Justin <br />Wouters</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/justinwouters/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/justinwouters"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <div class="contributor-card">
+            <img src={damian} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Damian <br />Lim</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/lim-damian/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/limd96"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
+          <div class="contributor-card">
+            <img src={walter} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Walter <br />DeVault</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/walter-devault/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/TensionCoding"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <div class="contributor-card">
+            <img src={von} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Von <br />Garcia</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/gerard-von-g-3964bb160/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/vongarcia97"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col contributors:flex-row my-4 items-center justify-evenly">
+          <div class="flex justify-evenly w-1/2 m-2 gap-2 contributors:gap-0">
+            <div class="contributor-card">
+              <img src={ali} alt="" class="hidden contributors:block h-28 rounded-full" />
+              <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
+              <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+              <div class="flex gap-3 ml-3">
+                <a target="_blank" href="https://www.linkedin.com/in/alimadams/"
+                  ><img src={linkedin} alt="LinkedIn Icon" /></a
+                >
+                <a target="_blank" href="https://github.com/AliA12336"
+                  ><img src={github} alt="GitHub Icon" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
 
+<!-- END ORIGINAL CARDS -->
 <style>
   .css-blurry-gradient {
     overflow-x: hidden;
@@ -263,7 +517,6 @@
     height: 12px;
     border-radius: 100%;
   }
-
   .typing-demo {
     width: 20ch;
     animation: typing 4s steps(20), blink 0.5s step-end infinite alternate;

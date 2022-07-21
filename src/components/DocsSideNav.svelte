@@ -1,3 +1,4 @@
+<!-- Complete sidebar rendering with routes -->
 <script lang="ts">
   import { page } from '$app/stores';
 
@@ -28,6 +29,7 @@
   $: activeLink = `${$page.url.pathname}`;
 </script>
 
+<!-- Ask Team: about implementation of foreach loop for links/routes -->
 <div class="hidden md:block">
   <div class="flex flex-col my-5 text-sm w-full">
     <p class="font-medium text-gray-700 leading-9">Getting Started</p>
