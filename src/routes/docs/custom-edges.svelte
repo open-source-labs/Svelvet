@@ -22,11 +22,21 @@
 
 <p class="text-gray-600">
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> also allows you to customize your edges.
-  Currently, there are two edge types - straight and bezier. The default will be a bezier edge
-  unless you set <code class="bg-rose-100 rounded-lg p-1">type: 'straight'</code>. You can also turn
-  on edge animations by setting <code class="bg-rose-100 rounded-lg p-1">animation: true</code>.
-  Lastly, optionally annotate your edges by providing a
-  <code class="bg-rose-100 rounded-lg p-1">label</code>.
+  Currently, there are four edge types - straight, bezier, step, and smoothstep. The default will be
+  a bezier edge unless you set
+  <code class="bg-rose-100 rounded-lg p-1">type:</code>
+  <code class="bg-rose-100 rounded-lg p-1">'straight'</code>,
+  <code class="bg-rose-100 rounded-lg p-1">'step'</code>, or
+  <code class="bg-rose-100 rounded-lg p-1">'smoothstep'</code>. You can also turn on edge animations
+  by setting
+  <code class="bg-rose-100 rounded-lg p-1">animation: true</code>.
+  <br /><br />Optionally customize the color of edges by setting
+  <code class="bg-rose-100 rounded-lg p-1">edgeColor</code>
+  to a color name, hexcode, or rgb value. Annotate your edges by providing a
+  <code class="bg-rose-100 rounded-lg p-1">label</code>. Customize labels with
+  <code class="bg-rose-100 rounded-lg p-1">labelBgColor</code>
+  and <code class="bg-rose-100 rounded-lg p-1">labelTextColor</code> to change the background and text
+  color of the label using color names, hexcodes, or rgb values.
 </p>
 
 <h3 class="text-xl font-semibold mt-12">Edge Properties</h3>
