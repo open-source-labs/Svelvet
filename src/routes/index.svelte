@@ -183,16 +183,18 @@
 <div
   class="h-[1200px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
-  <div class=" h-full m-8 p-1 contributors:m-24">
-    <div class=" h-full w-full p-1 flex flex-col justify-center">
+  <div class=" h-full m-12 contributors:m-24">
+    <div class=" h-full w-full p-1 flex flex-col justify-around">
       <h3 class="text-4xl font-bold mb-4 text-center">Contributors</h3>
 
       <!-- START TESTING CARDS -->
-      <div class="flex flex-col justify-center contributors:flex-row my-4 p-2 items-center">
-        <div class="flex flex-row justify-evenly w-1/3 gap-2 contributors:gap-4">
+      <!-- <div class="flex flex-col contributors:flex-row my-4 items-center"> -->
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- <div class="flex justify-around w-1/2 m-2 gap-2 contributors:gap-0"> -->
           <!-- CARD 1 -->
           <div class="contributor-card ">
-            <img src={anu} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={anu} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -206,7 +208,7 @@
           </div>
           <!-- CARD 2 -->
           <div class="contributor-card">
-            <img src={andrew} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={andrew} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Andrew <br />Widjaja</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -221,7 +223,7 @@
 
           <!-- CARD 3 -->
           <div class="contributor-card">
-            <img src={aaron} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={aaron} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -235,11 +237,13 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-center contributors:flex-row my-4 items-center">
-        <div class="flex justify-evenly w-1/3 gap-2 contributors:gap-4">
+      <!-- <div class="flex flex-col justify-center contributors:flex-row my-4 items-center"> -->
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <!-- <div class="flex justify-evenly w-1/3 gap-2 contributors:gap-4"> -->
+          <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
           <!-- CARD 1 -->
           <div class="contributor-card">
-            <img src={alexander} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={alexander} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-md leading-6">Alexander<br />Zambrano</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -253,7 +257,7 @@
           </div>
           <!-- CARD 2 -->
           <div class="contributor-card">
-            <img src={justin} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={justin} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Justin <br />Wouters</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -267,7 +271,7 @@
           </div>
           <!-- CARD 3 -->
           <div class="contributor-card">
-            <img src={damian} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={damian} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Damian <br />Lim</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -281,11 +285,11 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-center contributors:flex-row my-4 items-center">
-        <div class="flex justify-evenly w-1/3 gap-2 contributors:gap-4">
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
           <!-- CARD 1 -->
           <div class="contributor-card">
-            <img src={walter} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={walter} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Walter <br />DeVault</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -299,7 +303,7 @@
           </div>
           <!-- CARD 2 -->
           <div class="contributor-card">
-            <img src={von} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={von} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Von <br />Garcia</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -313,7 +317,7 @@
           </div>
           <!-- CARD 3 -->
           <div class="contributor-card">
-            <img src={ali} alt="" class="hidden contributors:block h-28 rounded-full" />
+            <img src={ali} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
             <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
@@ -513,7 +517,6 @@
     height: 12px;
     border-radius: 100%;
   }
-
   .typing-demo {
     width: 20ch;
     animation: typing 4s steps(20), blink 0.5s step-end infinite alternate;
