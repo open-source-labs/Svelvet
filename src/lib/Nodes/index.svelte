@@ -1,7 +1,6 @@
 <script lang="ts">
   import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
-  import { logDOM } from '@testing-library/svelte';
 
   export let node: Node;
   export let key: string;
