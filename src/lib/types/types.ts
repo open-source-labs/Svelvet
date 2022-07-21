@@ -1,6 +1,6 @@
-//import type { Position } from 'postcss';
 import type { XYPosition, Position } from './utils';
-// TODO Add limitations to sourcePosition and targetPosition
+
+
 export interface Node<T = any> {
   id: number;
   position: XYPosition;

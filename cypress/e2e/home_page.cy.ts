@@ -1,7 +1,7 @@
 describe('The Home Page', () => {
   const navLinks = ['Docs', 'Blog', 'Github', 'REPL'];
   const buttons = ['Get Started', 'Learn More', 'Install Now', 'See Svelvet on GitHub'];
-    it('successfully loads', () => {
+    it('successfully loads home page', () => {
       cy.visit('/')
     })
     it('contains correct links in Nav Bar', () => {

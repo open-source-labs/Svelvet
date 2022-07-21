@@ -4,6 +4,7 @@
   import { findOrCreateStore } from '$lib/stores/store';
   import { afterUpdate, onMount } from 'svelte';
   import type { Node, Edge } from '$lib/types/index.js';
+  
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: Node[];
   export let edges: Edge[];
