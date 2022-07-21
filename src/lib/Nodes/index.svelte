@@ -1,6 +1,6 @@
 <script lang="ts">
-  import AstNode from '$lib/repl/Output/AstNode.svelte';
-  import AstView from '$lib/repl/Output/AstView.svelte';
+  //import AstNode from '$lib/repl/Output/AstNode.svelte';
+  //import AstView from '$lib/repl/Output/AstView.svelte';
   import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
   import { logDOM } from '@testing-library/svelte';

@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient, type AuthChangeEvent, type PostgrestResponse, type Session, type User, type UserIdentity } from '@supabase/supabase-js';
-import { userInfoStore  } from '$lib/stores/authStoreTs';
+import { userInfoStore  } from './authStoreTs';
 import { get } from 'svelte/store';
 let { user, logged_in, user_avatar, user_name, user_email, diagrams } = userInfoStore;
 

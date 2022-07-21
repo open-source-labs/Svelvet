@@ -2,10 +2,10 @@
   // REPL
   import { onMount } from "svelte";
   import { browser } from "$app/env";
-  import { userInfoStore } from '$lib/stores/authStoreTs';
+  import { userInfoStore } from '../../authStoreTs';
   import black_logo from "../../assets/Logo 1 black.svg" 
   
-  import Repl from "$lib/repl";
+  import Repl from "../../repl";
   
   let { user_name } = userInfoStore; 
   
