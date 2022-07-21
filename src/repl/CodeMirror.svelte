@@ -106,24 +106,29 @@
     const codeToSave = editor.getValue();
     let found = false;
 
-		if(diagramName && $diagrams.length < 6) {
+		if(diagramName && $diagrams.length <= 5) {
 			// loop through the array of projects in store and check each object's id	
 			for(const obj of $diagrams) {
 				if(obj.id === id && obj.diagram_name === diagramName) {
 					updateCodeInDB(id, codeToSave, $diagrams);
+          document.getElementById('project-name').value = '';
+          editor.setValue('');
 					alert('Diagram updated successfully!');
 					found = true;
 				}
 			}
-			if(!found) {
+		}
+    if(!found && $diagrams.length < 5) {
 	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+        document.getElementById('project-name').value = '';
+        // document.getElementById('selectElement').selectedIndex = -1;
+        editor.setValue('');
 				alert('Diagram saved to database successfully!');
 			}
-		}
-		else if($diagrams.length >= 6 && !found) {
+		else if(!found) {
 			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
 		}
-		else {
+		else if(!diagramName){
 			alert('Please provide a name for your diagram before attempting to save.');
 		}
 	}
@@ -140,6 +145,7 @@
     editor.setValue('');
     // reset the project name field
     document.getElementById('project-name').value = '';
+    alert('Diagram successfully deleted!');
   }
 
   // ----- THIS FUNCTION MIGHT BE UNUSED, CAN POTENTIALLY DELETE IF FUNCTIONALITY WORKS WITHOUT IT
