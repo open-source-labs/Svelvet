@@ -91,13 +91,11 @@ export function findOrCreateStore(key: string): SvelvetStore {
   // updates edgesStore with new object properties (edge,sourceX, edge.targetY, etc) for edgesArray
   // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
   // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
-
-  //ANSWER: Taking the information and adding other properties such as x,y, target x and y, so that the edge has enough information to create the line. In order to create any edge we need starting point and ending point of each line. All we give to the edges array is a source and a target.
   const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
     $edgesStore.forEach((edge: any) => {
-      // any -> edge should follow type DerivedEdge, but we are assigning to a type Edge element so the typing meshes together
+      // any -> edge should follow type DerivedEdge, but we are assigning to any so the typing meshes together
 
-      // These are dummy node to resolve a typescripting issue. They are overwritten in the following forEach loop
+      // These are dummy nodes to resolve a typescripting issue. They are overwritten in the following forEach loop
       let sourceNode: Node = {
         id: 0,
         position: { x: 25, y: 475 },
@@ -107,6 +105,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
         targetPosition: 'right',
         sourcePosition: 'left'
       };
+
       let targetNode: Node = {
         id: 10,
         position: { x: 750, y: 475 },
@@ -116,19 +115,22 @@ export function findOrCreateStore(key: string): SvelvetStore {
         targetPosition: 'right',
         sourcePosition: 'left'
       };
+
       $nodesStore.forEach((node: Node) => {
         if (edge.source === node.id) sourceNode = node;
         if (edge.target === node.id) targetNode = node;
       });
+
       if (sourceNode) {
+        //left side of the node selected
+        let left = sourceNode.position.x;
+        //top of the node selected
+        let top = sourceNode.position.y;
+        //declaring the middle point of the node
+        let middle = sourceNode.width / 2;
+
         //Default sourcePosition to bottom if sourcePosition not defined
         if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
-          //left side of the node selected
-          let left = sourceNode.position.x;
-          //top of the node selected
-          let top = sourceNode.position.y;
-          //declaring the middle point of the node
-          let middle = sourceNode.width / 2;
           //the x coordinate of the middle of the node
           edge.sourceX = left + middle;
           //the y coordinate of the bottom of the node
@@ -136,35 +138,29 @@ export function findOrCreateStore(key: string): SvelvetStore {
           //assign sourcePosition to the edge for usage in the various edge components
           edge.sourcePosition = 'bottom';
         } else if (sourceNode.sourcePosition === 'top') {
-          let left = sourceNode.position.x;
-          let top = sourceNode.position.y;
-          let middle = sourceNode.width / 2;
           edge.sourceX = left + middle;
           edge.sourceY = top;
           edge.sourcePosition = sourceNode.sourcePosition;
         } else if (sourceNode.sourcePosition === 'left') {
-          let left = sourceNode.position.x;
-          let top = sourceNode.position.y;
           edge.sourceX = left;
           edge.sourceY = top + sourceNode.height / 2;
           edge.sourcePosition = sourceNode.sourcePosition;
         } else if (sourceNode.sourcePosition === 'right') {
-          let left = sourceNode.position.x;
-          let top = sourceNode.position.y;
           edge.sourceX = left + sourceNode.width;
           edge.sourceY = top + sourceNode.height / 2;
           edge.sourcePosition = sourceNode.sourcePosition;
         }
       }
       if (targetNode) {
+        //left side of the node selected
+        let left = targetNode.position.x;
+        //top of the node selected
+        let top = targetNode.position.y;
+        //declaring the middle point of the node
+        let middle = targetNode.width / 2;
+
         //Default to top targetPosition if targetPosition undefined
         if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
-          //left side of the node selected
-          let left = targetNode.position.x;
-          //top of the node selected
-          let top = targetNode.position.y;
-          //declaring the middle point of the node
-          let middle = targetNode.width / 2;
           //the x coordinate of the middle of the node
           edge.targetX = left + middle;
           //the y coordinate of the bottom of the node
@@ -172,21 +168,14 @@ export function findOrCreateStore(key: string): SvelvetStore {
           //assign sourcePosition to the edge for usage in the various edge components
           edge.targetPosition = 'top';
         } else if (targetNode.targetPosition === 'bottom') {
-          let left = targetNode.position.x;
-          let top = targetNode.position.y;
-          let middle = targetNode.width / 2;
           edge.targetX = left + middle;
           edge.targetY = top + targetNode.height;
           edge.targetPosition = targetNode.targetPosition;
         } else if (targetNode.targetPosition === 'left') {
-          let left = targetNode.position.x;
-          let top = targetNode.position.y;
           edge.targetX = left;
           edge.targetY = top + targetNode.height / 2;
           edge.targetPosition = targetNode.targetPosition;
         } else if (targetNode.targetPosition === 'right') {
-          let left = targetNode.position.x;
-          let top = targetNode.position.y;
           edge.targetX = left + targetNode.width;
           edge.targetY = top + targetNode.height / 2;
           edge.targetPosition = targetNode.targetPosition;
@@ -195,6 +184,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     });
     return [...$edgesStore];
   });
+  
   //Puts everything together as the svelvet store and use the key so that it can be used.
   const svelvetStore = {
     ...coreSvelvetStore,

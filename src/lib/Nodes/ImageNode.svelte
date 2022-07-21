@@ -1,15 +1,11 @@
 <script lang="ts">
-  //import AstNode from '$lib/repl/Output/AstNode.svelte';
-  //import AstView from '$lib/repl/Output/AstView.svelte';
   import { findOrCreateStore } from '$lib/stores/store';
   import type { Node } from '$lib/types/types';
-  import { logDOM } from '@testing-library/svelte';
 
   export let node: Node;
   export let key: string;
 
-  const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } =
-    findOrCreateStore(key);
+  const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
@@ -73,7 +69,6 @@
 <slot />
 
 <style>
-  /* default we could just add 2 liner width and height, 175, 140 */
   .Node {
     position: absolute;
     display: grid;

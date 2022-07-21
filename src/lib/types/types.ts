@@ -1,6 +1,6 @@
-//import type { Position } from 'postcss';
 import type { XYPosition, Position } from './utils';
-// TODO Add limitations to sourcePosition and targetPosition
+
+
 export interface Node<T = any> {
   id: number;
   position: XYPosition;
@@ -49,14 +49,9 @@ export interface EdgeProps extends DerivedEdge {
 }
 
 export interface EdgeTextProps {
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
   label?: any;
   labelBgColor?: string;
   labelTextColor?: string;
-  edgeColor?: string;
   centerX: number;
   centerY: number;
 }

@@ -9,6 +9,7 @@ export interface GetCenterParams {
   sourcePosition?: Position;
   targetPosition?: Position;
 }
+//needed for getCenter funciotn
 const LeftOrRight = [Position.Left, Position.Right];
 //used to determine the position for edge text on a Smooth or Step Edge
 export const getCenter = ({
@@ -44,23 +45,4 @@ export const getCenter = ({
   const centerY = targetY < sourceY ? targetY + yOffset : targetY - yOffset;
 
   return [centerX, centerY, xOffset, yOffset];
-};
-//Auto positions nodes when node.position is undefine
-export const addDefaultPositions = (nodeArray: Node[]): void => {
-  //create a counter that increments to add values to the unassigned node positions
-  let newPositionsObject = {
-    x: 50,
-    y: 50
-  };
-  //iterate through the nodes Array and check if any node where !node.position
-  nodeArray.forEach((element: Node) => {
-    if (!element.position) {
-      // assign an {x: , y:}
-      const { x, y } = newPositionsObject;
-      element.position = { x: x, y: y };
-    }
-    //increment the assignments so they don't spawn on top of one another
-    newPositionsObject.x += 80;
-    newPositionsObject.y += 80;
-  });
 };

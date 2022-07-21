@@ -6,10 +6,6 @@
 
   // destructuring the props passed in from the parent component
   $: ({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
     path,
     animate,
     arrow,
@@ -21,16 +17,11 @@
     centerY
   } = baseEdgeProps);
 
-  // setting edge props
+  // setting edge text props
   $: edgeTextProps = {
-    sourceX: sourceX,
-    sourceY: sourceY,
-    targetX: targetX,
-    targetY: targetY,
     label: label,
     labelBgColor: labelBgColor,
     labelTextColor: labelTextColor,
-    edgeColor: edgeColor,
     centerX: centerX,
     centerY: centerY
   };

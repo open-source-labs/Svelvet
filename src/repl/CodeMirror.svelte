@@ -118,18 +118,17 @@
 				}
 			}
 		}
-    if(!found && $diagrams.length < 5) {
+    if(!found && $diagrams.length < 5 && diagramName) {
 	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
         document.getElementById('project-name').value = '';
-        // document.getElementById('selectElement').selectedIndex = -1;
         editor.setValue('');
 				alert('Diagram saved to database successfully!');
 			}
+    else if(!diagramName){
+			alert('Please provide a name for your diagram before attempting to save.');
+		}
 		else if(!found) {
 			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
-		}
-		else if(!diagramName){
-			alert('Please provide a name for your diagram before attempting to save.');
 		}
 	}
 	

@@ -2,17 +2,11 @@
   import type { EdgeTextProps } from '$lib/types/types';
 
   // destructuring props to pass into BaseEdge component
-  //@TODO look at whether we can remove the ? from this Type definition for centerX and centerY
   export let edgeTextProps: EdgeTextProps;
   $: ({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
     label,
     labelBgColor,
     labelTextColor,
-    edgeColor,
     centerX,
     centerY
   } = edgeTextProps);

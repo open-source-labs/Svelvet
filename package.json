@@ -2,7 +2,8 @@
   "name": "svelvet",
   "version": "2.0.0",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
-  "authors": "Anu, Aaron, Alexander, Andrew",
+  "keywords": ["svelte", "svelvet", "typescript" ],
+  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter",
   "license": "MIT",
   "bugs": "https://github.com/open-source-labs/Svelvet/issues",
   "homepage": "https://github.com/open-source-labs/Svelvet",
@@ -16,9 +17,8 @@
     "package": "svelte-kit package",
     "preview": "svelte-kit preview",
     "prepare": "svelte-kit sync",
-    "test": "vitest run tests/unit && playwright test tests/e2e",
+    "test": "vitest run tests/unit",
     "test:unit": "vitest tests/unit",
-    "test:e2e": "playwright test tests/e2e",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
@@ -26,10 +26,8 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
-    "@playwright/test": "^1.21.0",
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/adapter-static": "^1.0.0-next.34",
-    "@sveltejs/adapter-vercel": "^1.0.0-next.65",
     "@sveltejs/kit": "next",
     "@sveltejs/svelte-repl": "^0.4.1",
     "@testing-library/jest-dom": "^5.16.4",
@@ -68,17 +66,8 @@
     "d3-zoom": "^3.0.0",
     "dotenv": "^16.0.1",
     "estree-walker": "^3.0.1",
-    "html2canvas": "^1.4.1",
     "marked": "^4.0.17",
     "svelte-json-tree": "^1.0.0",
     "yootils": "^0.3.1"
-  },
-  "files":[
-    "/src/lib/Containers", 
-    "/src/lib/Edges", 
-    "/src/lib/Nodes", 
-    "/src/lib/stores/store.ts",
-    "/src/lib/types",
-    "/src/lib/index.js"
-  ]
+  }
 }

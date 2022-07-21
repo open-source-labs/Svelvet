@@ -2,7 +2,6 @@
   import BaseEdge from '$lib/Edges/BaseEdge.svelte';
   import { Position } from '$lib/types/utils';
   import type { DerivedEdge } from '$lib/types/types';
-  import { getCenter } from './utils';
 
   // how to create a smooth, controlled beizer edge from source and target positions
   // referenced from ReactFlow.dev
@@ -132,7 +131,6 @@
 
   export let edge: DerivedEdge;
 
-  //TODO - Check for errors regarding source position and Target Positon, changed from source Position.Top to bottom, and target Position from Bottom to Top.
 
   $:params = {
     sourceX: edge.sourceX,
@@ -147,7 +145,6 @@
   // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
   $: path = getSimpleBezierPath(params);
   
-  //TODO This needs to be changed to get BezierCenter
   $: [centerX, centerY] = getSimpleBezierCenter(params);
 
   // pass necessary values to BaseEdge component

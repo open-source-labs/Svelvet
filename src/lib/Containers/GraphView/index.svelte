@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
-  //import type { Node } from '$lib/types/index.js';
 
   import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '$lib/Edges/StraightEdge.svelte';
@@ -21,7 +20,8 @@
     select,
     selectAll
   };
-  //typescripting for setting the types for each prop passed in from the store
+
+  //these are typscripted as any, however they have been transformed inside of store.ts
   export let nodesStore: any;
   export let derivedEdges: any;
   export let key: string;
@@ -45,7 +45,6 @@
     .scaleExtent([0.4, 2])
     .on('zoom', handleZoom);
 
-  // TODO: Update mouse event type
   // function to handle zoom events - arguments: d3ZoomEvent
   function handleZoom(e: any): void {
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
