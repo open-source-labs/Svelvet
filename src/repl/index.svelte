@@ -26,7 +26,7 @@
   export let showModified = false;
   export let showAst = false;
 
-let { user, diagrams } = userInfoStore; 
+  let { user, diagrams } = userInfoStore; 
 
 const historyMap = new Map();
 
@@ -318,20 +318,20 @@ const copyCodeToClipboard = async (): void => {
 {#if $user}
 
 <div class="repl-navbar">
-  <input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="SAVE AS" style="min-width:275px" required/>
+  <input id="project-name" class="display:inline-block bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="Save As..." style="min-width:275px" required/>
 
   <div class="icons-navbar">
     <!-- added a save button to limit user to 5 projects -->
     <button class="db-icons" on:click={saveDiagram}>
-      <img class="db-icons" src={saveIcon} alt="save-icom" />
+      Save<img class="db-icons" src={saveIcon} alt="save-icon" />
     </button>
     <!-- added a button to delete projects in case the users have more than 5 -->
     <button class="db-icons" on:click={deleteDiagram}>
-      <img class="db-icons" src={deleteIcon} alt="delete-icom" />
+      Delete<img class="db-icons" src={deleteIcon} alt="delete-icon" />
     </button>
     <!-- added a button to allow users to update previously saved projects and reflect changes in db -->
     <button class="db-icons" on:click={copyCodeToClipboard}>
-      <img class="db-icons" src={copyIcon} alt="copy-icon" />
+      Copy<img class="db-icons" src={copyIcon} alt="copy-icon" />
     </button>
   </div>
     <select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
@@ -344,18 +344,9 @@ const copyCodeToClipboard = async (): void => {
   </select>
 </div>
 
-
-{:else}
-
-
-<div class="repl-navbar-noUser">
-  <select id="selectElement" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" bind:value={diagramSelected} on:change={loadSavedDiagram} required>
-    <option value="" disabled selected>LOGIN TO SAVE AND LOAD PROJECTS</option>
-  </select>
-  <button on:click={copyCodeToClipboard}>
-    <img class="db-icons" src={copyIcon} alt="copy-icom" />
-  </button>
-</div>
+{/if}
+{#if !$user}
+<div>Please log in to save your diagrams.</div>
 {/if}
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
@@ -423,7 +414,7 @@ const copyCodeToClipboard = async (): void => {
     width: 22em;
     justify-self: center;
   }
-
+  
   .db-icons {
   display: inline-flex;
   align-items: center;
@@ -432,11 +423,19 @@ const copyCodeToClipboard = async (): void => {
   padding: 0.15em;
 }
 
+.db-icons img {
+    display: inline-block;
+    padding: 0em 0em 1.75em;
+  }
+
   button {
+  display: flex;
+  flex-direction: column;
   background-color: rgb(241, 241, 241);
   margin: 1em 1em 1em;
   box-shadow: 0 9px rgb(228, 224, 224);
   border-radius: 10px;
+  color: rgb(244 63 94);
 }
 
   button:hover {background-color: rgb(215, 215, 215)}
@@ -469,16 +468,23 @@ const copyCodeToClipboard = async (): void => {
 
   .db-icons {
     display: inline-block;
-    width: 3.5rem;
-    height: 3.5rem;
-    padding: 0.15em;
+    width: 4rem;
+    height: 4rem;
   }
-
+  .db-icons img {
+    display: inline-block;
+    padding: 0em 0em 1.75em;
+  }
+/* changed button display prop to flex and direction to column */
   button {
+  display: flex;
+  flex-direction: column;
+
   background-color: rgb(241, 241, 241);
   margin: 0em 3.5em 0em;
   box-shadow: 0 9px rgb(228, 224, 224);
   border-radius: 7px;
+  color: rgb(244 63 94);
 }
 button:hover {background-color: rgb(215, 215, 215)}
 
