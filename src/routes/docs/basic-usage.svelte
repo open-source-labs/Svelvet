@@ -1,3 +1,4 @@
+<!-- Rendering information with codesandbox embedded -->
 <script lang="ts">
 </script>
 
@@ -19,7 +20,7 @@
   <code class="code">Svelvet</code> component are all you need! Simply alter the node and edge properties
   to your liking.
 </p>
-
+<!-- Ask team - understanding iframe & use of sandbox (comign from embed link on codesandbox.io)-->
 <div class="my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
   <iframe
     src="https://codesandbox.io/embed/basic-usage-71vweu?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark&view=split&editorsize=50&hidedevtools=1"

@@ -6,90 +6,154 @@
   // how to create a smooth, controlled beizer edge from source and target positions
   // referenced from ReactFlow.dev
   interface GetSimpleBezierPathParams {
-    srcX: number;
-    srcY: number;
+    sourceX: number;
+    sourceY: number;
     sourcePosition?: Position;
-    trgX: number;
-    trgY: number;
+    targetX: number;
+    targetY: number;
     targetPosition?: Position;
+    curvature?: number;
   }
 
   interface GetControlParams {
-    pos?: Position;
+    pos: Position;
     x1: number;
     y1: number;
     x2: number;
     y2: number;
+    c: number;
   }
 
-  function getControl({ pos, x1, y1, x2, y2 }: GetControlParams): [number?, number?] {
-    let ctX;
-    let ctY;
+  function calculateControlOffset(distance: number, curvature: number): number {
+    if (distance >= 0) {
+      return 0.5 * distance;
+    } else {
+      return curvature * 25 * Math.sqrt(-distance);
+    }
+  }
+  // get the control point for the bezier curve (in the middle of the edge)
+  function getControlWithCurvature({ pos, x1, y1, x2, y2, c }: GetControlParams): [number, number] {
+    let ctX: number, ctY: number;
     switch (pos) {
       case Position.Left:
+        {
+          ctX = x1 - calculateControlOffset(x1 - x2, c);
+          ctY = y1;
+        }
+        break;
       case Position.Right:
         {
-          ctX = 0.5 * (x1 + x2);
+          ctX = x1 + calculateControlOffset(x2 - x1, c);
           ctY = y1;
         }
         break;
       case Position.Top:
+        {
+          ctX = x1;
+          ctY = y1 - calculateControlOffset(y1 - y2, c);
+        }
+        break;
       case Position.Bottom:
         {
           ctX = x1;
-          ctY = 0.5 * (y1 + y2);
+          ctY = y1 + calculateControlOffset(y2 - y1, c);
         }
         break;
     }
     return [ctX, ctY];
   }
-
   // returns string to pass into edge 'path' svg d attribute (where to be drawn)
   // referenced from ReactFlow.dev
   function getSimpleBezierPath({
-    srcX,
-    srcY,
-    sourcePosition,
-    trgX,
-    trgY,
-    targetPosition
+    sourceX,
+    sourceY,
+    sourcePosition = Position.Bottom,
+    targetX,
+    targetY,
+    targetPosition = Position.Top,
+    curvature = 0.25,
   }: GetSimpleBezierPathParams): string {
-    const [sourceControlX, sourceControlY] = getControl({
+    const [sourceControlX, sourceControlY] = getControlWithCurvature({
       pos: sourcePosition,
-      x1: srcX,
-      y1: srcY,
-      x2: trgX,
-      y2: trgY
+      x1: sourceX,
+      y1: sourceY,
+      x2: targetX,
+      y2: targetY,
+      c: curvature
     });
-    const [targetControlX, targetControlY] = getControl({
+    const [targetControlX, targetControlY] = getControlWithCurvature({
       pos: targetPosition,
-      x1: trgX,
-      y1: trgY,
-      x2: srcX,
-      y2: srcY
+      x1: targetX,
+      y1: targetY,
+      x2: sourceX,
+      y2: sourceY,
+      c: curvature
     });
-    return `M${srcX},${srcY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${trgX},${trgY}`;
+    return `M${sourceX},${sourceY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${targetX},${targetY}`;
+  }
+
+  // determining center of the bezier curve to know where to place the bezier edge text label
+  function getSimpleBezierCenter({
+    sourceX,
+    sourceY,
+    sourcePosition = Position.Bottom,
+    targetX,
+    targetY,
+    targetPosition = Position.Top,
+    curvature = 0.25
+  }: GetSimpleBezierPathParams): [number, number, number, number] {
+    const [sourceControlX, sourceControlY] = getControlWithCurvature({
+      pos: sourcePosition,
+      x1: sourceX,
+      y1: sourceY,
+      x2: targetX,
+      y2: targetY,
+      c: curvature
+    });
+    const [targetControlX, targetControlY] = getControlWithCurvature({
+      pos: targetPosition,
+      x1: targetX,
+      y1: targetY,
+      x2: sourceX,
+      y2: sourceY,
+      c: curvature
+    });
+    // cubic bezier t=0.5 mid point, not the actual mid point, but easy to calculate
+    // https://stackoverflow.com/questions/67516101/how-to-find-distance-mid-point-of-bezier-curve
+    const centerX =
+      sourceX * 0.125 + sourceControlX * 0.375 + targetControlX * 0.375 + targetX * 0.125;
+    const centerY =
+      sourceY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + targetY * 0.125;
+    const xOffset = Math.abs(centerX - sourceX);
+    const yOffset = Math.abs(centerY - sourceY);
+    return [centerX, centerY, xOffset, yOffset];
   }
 
   export let edge: DerivedEdge;
 
-  $: params = {
-    srcX: edge.sourceX,
-    srcY: edge.sourceY,
-    sourcePosition: Position.Top,
-    trgX: edge.targetX,
-    trgY: edge.targetY,
-    targetPosition: Position.Bottom
-  };
 
-  // pass in params to function that returns a string value for SVG path d attribute
+  $:params = {
+    sourceX: edge.sourceX,
+    sourceY: edge.sourceY,
+    sourcePosition: edge.sourcePosition,
+    targetX: edge.targetX,
+    targetY: edge.targetY,
+    targetPosition: edge.targetPosition,
+    curvature: 0.25
+  };
+  
+  // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
   $: path = getSimpleBezierPath(params);
+  
+  $: [centerX, centerY] = getSimpleBezierCenter(params);
 
   // pass necessary values to BaseEdge component
   // BaseEdge renders a 'base' path that can be customized by parent Edge components
   $: baseEdgeProps = {
     ...edge,
-    path: path
+    path: path,
+    centerX: centerX,
+    centerY: centerY
   };
 </script>
 

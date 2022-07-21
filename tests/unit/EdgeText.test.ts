@@ -3,10 +3,8 @@ import { render, screen, cleanup } from '@testing-library/svelte';
 
 beforeEach(() => {
   const mockEdgeTextProps = {
-    sourceX: 50,
-    sourceY: 100,
-    targetX: 150,
-    targetY: 200,
+    centerX: 100,
+    centerY: 150,
     label: 'edge text test'
   };
   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });

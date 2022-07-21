@@ -1,13 +1,18 @@
+<!-- Codesandbox and properties of nodes / customization -->
 <script>
   const nodeProps = [
     ['id', '(required) number'],
     ['data', '(required) { label: string }'],
     ['position', '(required) { x: number, y: number }'],
+    ['sourcePosition', 'string (top, bottom, left, right) - defaults to "bottom" if unspecified'],
+    ['targetPosition', 'string (top, bottom, left, right) - defaults to "top" if unspecified'],
     ['width', '(required) number'],
     ['height', '(required) number'],
-    ['bgColor', 'string of color name or hexcode'],
-    ['borderColor', 'string of color name or hexcode'],
-    ['textColor', 'string of color name or hexcode'],
+    ['bgColor', 'string of color name, hexcode, or rgb'],
+    ['borderColor', 'string of color name, hexcode or rgb'],
+    ['textColor', 'string of color name, hexcode or rgb'],
+    ['image', 'boolean'],
+    ['src', 'string of image url'],
     ['borderRadius', 'number'],
     ['clickCallback', 'Function']
   ];
@@ -31,6 +36,14 @@
     {:else}.{/if}
   {/each}
 </p>
+<br />
+<p class="text-gray-600">
+  <code class="bg-rose-100 rounded-lg p-1">sourcePosition</code> represents the anchor point
+  location on the source node and is set to "bottom" by default. <br />
+  <code class="bg-rose-100 rounded-lg p-1">targetPosition</code> represents the anchor point location
+  on the target node and is set to "top" by default.
+</p>
+<!-- NOTE: may want to add note regarding differences when using an image with / without a label -->
 
 <h3 class="text-xl font-semibold mt-12">Node Properties</h3>
 <div class="w-full md:w-3/4 lg:w-1/2 text-gray-600">

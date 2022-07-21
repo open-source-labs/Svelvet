@@ -4,15 +4,26 @@
 
   export let baseEdgeProps: EdgeProps;
 
-  $: ({ sourceX, sourceY, targetX, targetY, path, animate, arrow, label } = baseEdgeProps);
+  // destructuring the props passed in from the parent component
+  $: ({
+    path,
+    animate,
+    arrow,
+    label,
+    labelBgColor,
+    labelTextColor,
+    edgeColor,
+    centerX,
+    centerY
+  } = baseEdgeProps);
 
-  // pass necessary values to EdgeText component
+  // setting edge text props
   $: edgeTextProps = {
-    sourceX: sourceX,
-    sourceY: sourceY,
-    targetX: targetX,
-    targetY: targetY,
-    label: label
+    label: label,
+    labelBgColor: labelBgColor,
+    labelTextColor: labelTextColor,
+    centerX: centerX,
+    centerY: centerY
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -29,7 +40,7 @@
     class={animate ? 'animate' : ''}
     d={path}
     fill="transparent"
-    stroke="gray"
+    stroke={edgeColor ? edgeColor : 'gray'}
     marker-end="url(#arrow)"
     aria-label="svg-path"
   />
@@ -38,7 +49,7 @@
     class={animate ? 'animate' : ''}
     d={path}
     fill="transparent"
-    stroke="gray"
+    stroke={edgeColor ? edgeColor : 'gray'}
     aria-label="svg-path"
   />
 {/if}
