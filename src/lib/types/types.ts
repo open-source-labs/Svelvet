@@ -49,14 +49,9 @@ export interface EdgeProps extends DerivedEdge {
 }
 
 export interface EdgeTextProps {
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
   label?: any;
   labelBgColor?: string;
   labelTextColor?: string;
-  edgeColor?: string;
   centerX: number;
   centerY: number;
 }
