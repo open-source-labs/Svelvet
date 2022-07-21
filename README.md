@@ -43,7 +43,7 @@ Shout out to our contributors! Here's what's new:
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
 - **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
 - **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background.
-- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
+- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Cypress](https://www.cypress.io/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
 ![screenshot](./src/assets/readme-gif.gif)
@@ -80,8 +80,16 @@ Visit our [website](https://svelvet.io) to learn more on how to customize your n
 
 Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
 
+For Unit testing
+
 ```bash
-npm run test
+npm run test:unit
+```
+
+For End-to-End testing
+
+```bash
+npm run cypress:open
 ```
 
 ## The Svelvet Team
@@ -90,23 +98,23 @@ npm run test
 - Alexander Zambrano • [LinkedIn](https://www.linkedin.com/in/alexander-z-8b7716b0/) • [Github](https://github.com/azambran21)
 - Andrew Widjaja • [LinkedIn](https://www.linkedin.com/in/andrew-widjaja/) • [Github](https://github.com/andrew-widjaja)
 - Anu Sharma • [LinkedIn](https://www.linkedin.com/in/anu-sharma-6936a686/) • [Github](https://github.com/anulepau)
+- Justin Wouters • [LinkedIn](https://www.linkedin.com/in/justinwouters/) • [Github](https://github.com/justinwouters)
+- Walter DeVault • [LinkedIn](https://www.linkedin.com/in/walter-devault/) • [Github](https://github.com/TensionCoding)
+- Ali Adams • [LinkedIn](https://www.linkedin.com/in/alimadams/) • [Github](https://github.com/AliA12336)
+- Von Garcia • [LinkedIn](https://www.linkedin.com/in/gerard-von-g-3964bb160/) • [Github](https://github.com/vongarcia97)
+- Damian Lim • [LinkedIn](https://www.linkedin.com/in/lim-damian/) • [Github](https://github.com/limd96)
 
 ## How to Contribute
 
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
-- Default values for nodes and edges
-- Constant node drag speed regardless of zoom in/out
-- Add left and right anchor locations
 - Contextual menus
-- Customize edges (source/target) with icons
 - Customize nodes via html templates/Svelte components
 - Multiple sockets and socket compatibility for links
 - Custom error handling
 - Increase test coverage for scalability
-- Integration with mobile (click and drag nodes on your phone/tablet)
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
-- Add a full stack feature to the documentation website with authentication and database that allows users to login, create and save their Svelvet diagrams
+- Create a community page for users to share saved REPL Svelvet Prototypes
 
 ## Credits
 
