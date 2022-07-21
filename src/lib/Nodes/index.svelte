@@ -61,7 +61,7 @@
     border-color: {node.borderColor}; 
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
-  id='svelvet-{node.id}'
+  id="svelvet-{node.id}"
 >
 <!-- This executes if node.image is present without node.label -->
   {#if node.image}
