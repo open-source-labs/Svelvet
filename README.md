@@ -21,7 +21,27 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 Shout out to our contributors! Here's what's new:
 
 ### Changelog
-
+<details><summary>v2.0.3</summary>
+<ul>
+  <li>Added left and right anchor points</li>
+  <li>Added smoothstep and step edge types</li>
+  <li>Incorporated mixed edge functionality</li>
+  <li>Refactored how edge text and labels render for every edge</li>
+  <li>Fixed D3Zoom bias bug</li>
+  <li>Expanded styling options, including label color, label background, and edge color</li>
+  <li>Nodes are now able to contain images and will render differently based on the presence of label text</li>
+  <li>Nodes are now dragable on touch screens and reposition themselves to center on your touch</li>
+  <li>Implemented data reactivity</li>
+  <li>Expanded TypeScripting</li>
+  <li>Added E2E testing using Cypress</li>
+  <li>Expanded unit tests</li>
+  <li>Added a REPL to our documentation site</li>
+  <li>Added SQL database to our REPL</li>
+  <li>Added GitHub OAuth to enable users to save their custom diagrams created in our new REPL</li>
+  <li>Expanded documentation for new features</li>
+  <li>Added full CI/CD pipeline</li>
+</ul>
+</details>
 <details><summary>v1.0.3</summary>
 <ul>
   <li>Fixed bug with running tests</li>
