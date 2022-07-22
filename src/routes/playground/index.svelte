@@ -27,9 +27,9 @@
   
   <!-- if there's a username, render the name in the playground? else just have playground? follow the svelvet font on the top left? -->
   {#if user_name}
-    <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide" >{$user_name} PLAYGR<img src={black_logo}/>UND</div>
+    <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide" >{$user_name} PLAYGR<img src={black_logo} alt="Svelvet log in black"/>UND</div>
   {:else}
-  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide" >{$user_name}PLAYGR<img src={black_logo}/>UND</div>
+  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide" >{$user_name}PLAYGR<img src={black_logo} alt="Svelvet log in black"/>UND</div>
   {/if}
   
   
