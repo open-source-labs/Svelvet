@@ -21,7 +21,7 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 Shout out to our contributors! Here's what's new:
 
 ### Changelog
-<details><summary>v2.0.3</summary>
+<details><summary>v2.0.2</summary>
 <ul>
   <li>Added left and right anchor points</li>
   <li>Added smoothstep and step edge types</li>
