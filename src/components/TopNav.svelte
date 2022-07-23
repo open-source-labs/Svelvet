@@ -40,7 +40,7 @@
       }}
       class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6">svelvet</a
     >
-    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v2.0.1</p>
+    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v2.0.2</p>
   </div>
   <nav class="space-x-11 text-sm text-gray-500 font-medium flex items-center">
     <a href="/" id="home" class="hover:text-rose-500 {activeLink === '/' ? 'text-rose-500' : ''}"
@@ -53,7 +53,7 @@
     >
     <a
       target="_blank"
-      href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+      href="https://medium.com/@justinwouters/svelvet-2-0-c6b2059734a6"
       id="blog"
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >

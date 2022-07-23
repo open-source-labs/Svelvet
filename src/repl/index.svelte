@@ -346,7 +346,12 @@ const copyCodeToClipboard = async (): void => {
 
 {/if}
 {#if !$user}
-<div>Please log in to save your diagrams.</div>
+<div class='repl-navbar'>
+  Please log in to save your diagrams.
+  <button class="db-icons" on:click={copyCodeToClipboard}>
+    Copy<img class="db-icons" src={copyIcon} alt="copy-icon" />
+  </button>
+</div>
 {/if}
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
@@ -509,7 +514,7 @@ button:active {
   position: relative;
   width: 100%;
   /* this is what I fixed to have the repl fit in the screen */
-  height: 95%;
+  height: 90%;
   background: white;
 }
 

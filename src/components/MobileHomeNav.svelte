@@ -86,7 +86,7 @@
         <a
           on:click={toggleMenu}
           target="_blank"
-          href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+          href="https://medium.com/@justinwouters/svelvet-2-0-c6b2059734a6"
           class="block py-6">Blog</a
         >
       </li>
