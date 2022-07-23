@@ -53,7 +53,7 @@
     >
     <a
       target="_blank"
-      href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+      href="https://medium.com/@justinwouters/svelvet-2-0-c6b2059734a6"
       id="blog"
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >

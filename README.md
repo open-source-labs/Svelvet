@@ -24,13 +24,13 @@ Shout out to our contributors! Here's what's new:
 <details><summary>v2.0.2</summary>
 <ul>
   <li>Added left and right anchor points</li>
-  <li>Added smoothstep and step edge types</li>
+  <li>Added step and smoothstep edge types</li>
   <li>Incorporated mixed edge functionality</li>
   <li>Refactored how edge text and labels render for every edge</li>
   <li>Fixed D3Zoom bias bug</li>
   <li>Expanded styling options, including label color, label background, and edge color</li>
   <li>Nodes are now able to contain images and will render differently based on the presence of label text</li>
-  <li>Nodes are now dragable on touch screens and reposition themselves to center on your touch</li>
+  <li>Nodes are now draggable on touch screens and reposition themselves to center on your touch</li>
   <li>Implemented data reactivity</li>
   <li>Expanded TypeScripting</li>
   <li>Added E2E testing using Cypress</li>
