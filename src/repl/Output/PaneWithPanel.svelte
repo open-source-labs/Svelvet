@@ -13,6 +13,25 @@
 	const driver = spring(pos);
 	$: pos = $driver;
 
+	const handleNewNode = (e) => {
+  // Creating a default new node template
+	let newUserNode = {
+      id: initialNodes.length + 1,
+      position: { x: 300, y: 25 },
+      data: { label: 'New User Created Node' },
+      width: 175,
+      height: 40,
+      bgColor: '#FFB8B8',
+      borderColor: 'transparent'
+    }
+    // Add newly created node on click to initalNodes array to render
+    initialNodes.push(newUserNode)
+		//reassign initialNodes to tell compiler to rewrite the array holding the nodes
+    initialNodes = initialNodes;
+
+    console.log('This button is working')
+	}
+
 	const toggle = () => {
 		driver.set(pos, { hard: true });
 
@@ -34,6 +53,7 @@
 		<div class="panel-header" on:click={toggle}>
 			<h3>{panel}</h3>
 			<slot name="panel-header"></slot>
+			<button on:click{handleNewNode}>ADD NEW NODE</button>
 		</div>
 
 		<div class="panel-body">

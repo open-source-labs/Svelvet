@@ -12,9 +12,9 @@
   import ali from '../assets/profiles/Ali-small.png';
 
   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-  // import type { Node, Edge } from '$lib/types/types';
+  import type { Node, Edge } from '$lib/types/types';
   import type { Node, Edge } from 'svelvet';
-  //import Svelvet from 'svelvet';
+  // import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
@@ -75,7 +75,7 @@
       bgColor: 'white',
       textColor: '#FF4121'
       //targetPosition: 'right'
-    }
+    },
   ];
 
   const initialEdges: Edge[] = [

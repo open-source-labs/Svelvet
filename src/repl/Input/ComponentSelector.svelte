@@ -185,6 +185,7 @@
 			{/each}
 
 			<!-- SVELVET 2.0 TEAM DISABLED ADD NEW COMPONENT BUTTON -->
+			<!-- SVELVET 3.0 TEAM CHECKING FUNCTIONALITY OF ADD NEW COMPONENT BUTTON NOT THE BUTTON WE EXPECTED aug 18 -->
 			<!-- <button class="add-new" on:click={addNew} title="add new component">
 				<svg width="12" height="12" viewBox="0 0 24 24">
 					<line stroke="#999" x1="12" y1="5" x2="12" y2="19" />
