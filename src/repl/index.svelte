@@ -313,7 +313,6 @@ const copyCodeToClipboard = async (): void => {
 
 
 <svelte:window on:beforeunload={beforeUnload} />
-
 <!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
 {#if $user}
 
@@ -598,4 +597,5 @@ select:invalid {
 select:invalid {
   color: gray;
 }
+
 </style>

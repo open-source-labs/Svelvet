@@ -63,7 +63,6 @@
 		/* height: 100%; */
 	}
 </style>
-
 <div class="editor-wrapper">
 	<div class="editor notranslate" translate="no">
 		<CodeMirror
