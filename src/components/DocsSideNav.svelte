@@ -64,7 +64,7 @@
   <!-- Uncomment Once API Docs are Implemented -->
 
   <div class="flex flex-col my-5 text-sm">
-    <a href="/community/thread" class="font-medium text-gray-700 leading-9">Community</a>
+    <a href="/community/forum" class="font-medium text-gray-700 leading-9">Community</a>
     <div class="flex flex-col leading-9 text-gray-500 ">
       {#each communityLinks as link}
         <a
