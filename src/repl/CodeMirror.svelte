@@ -1,18 +1,29 @@
 <script lang="ts">
+  import {
+    editStrP1,
+    editStrP2,
+    inputToggle,
+    buildToggle,
+    idNumber,
+    positionX,
+    positionY,
+    width,
+    height,
+    borderColor,
+    borderRadius,
+    bgColor,
+    textColor,
+    data
+  } from './../lib/stores/store';
+
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
-  import {
-    addCodeToDB,
-    getCodeFromDB,
-    updateCodeInDB,
-    deleteCodeFromDB
-  } from '../supabase-db';
+  import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../supabase-db';
   import { userInfoStore } from '../authStoreTs';
-import AddNode from './Output/NodeModal.svelte';
-import ContextMenu from './contextmenu/ContextMenu.svelte';
-import NodeModal from './Output/NodeModal.svelte';
-const dispatch = createEventDispatcher();
+  import AddNode from './Output/NodeModal.svelte';
+
+  const dispatch = createEventDispatcher();
 
   export let readonly = false;
   export let errorLoc = null;
@@ -93,14 +104,14 @@ const dispatch = createEventDispatcher();
 
   export async function copyCodeEditor(): Promise<void> {
     const code_to_copy = editor.getValue();
-    
+
     const copyToClipboard = () => {
       if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
         return navigator.clipboard.writeText(code_to_copy);
       }
       return Promise.reject('The Clipboard API is not available.');
     };
-    
+
     await copyToClipboard();
   }
 
@@ -108,32 +119,31 @@ const dispatch = createEventDispatcher();
     const codeToSave = editor.getValue();
     let found = false;
 
-		if(diagramName && $diagrams.length <= 5) {
-			// loop through the array of projects in store and check each object's id	
-			for(const obj of $diagrams) {
-				if(obj.id === id && obj.diagram_name === diagramName) {
-					updateCodeInDB(id, codeToSave, $diagrams);
+    if (diagramName && $diagrams.length <= 5) {
+      // loop through the array of projects in store and check each object's id
+      for (const obj of $diagrams) {
+        if (obj.id === id && obj.diagram_name === diagramName) {
+          updateCodeInDB(id, codeToSave, $diagrams);
           document.getElementById('project-name').value = '';
           editor.setValue('');
-					alert('Diagram updated successfully!');
-					found = true;
-				}
-			}
-		}
-    if(!found && $diagrams.length < 5 && diagramName) {
-	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
-        document.getElementById('project-name').value = '';
-        editor.setValue('');
-				alert('Diagram saved to database successfully!');
-			}
-    else if(!diagramName){
-			alert('Please provide a name for your diagram before attempting to save.');
-		}
-		else if(!found) {
-			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
-		}
-	}
-	
+          alert('Diagram updated successfully!');
+          found = true;
+        }
+      }
+    }
+    if (!found && $diagrams.length < 5 && diagramName) {
+      addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+      document.getElementById('project-name').value = '';
+      editor.setValue('');
+      alert('Diagram saved to database successfully!');
+    } else if (!diagramName) {
+      alert('Please provide a name for your diagram before attempting to save.');
+    } else if (!found) {
+      alert(
+        'You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.'
+      );
+    }
+  }
 
   export async function loadSavedCode(code: string): Promise<void> {
     // grab and load saved code into the editor
@@ -386,125 +396,25 @@ const dispatch = createEventDispatcher();
   function sleep(ms) {
     return new Promise((fulfil) => setTimeout(fulfil, ms));
   }
+let newNode = `{
+id: ${$idNumber},
+ position: { x:${$positionX}, y:${$positionY}},
+ data: { label: "${$data}" },
+ width: ${$width},
+ height: ${$height},
+ borderColor: "${$borderColor}",
+ borderRadius: ${$borderRadius},
+ bgColor: "${$bgColor}",
+ textColor: "${$textColor}"
+},`;
 
-
-
- export let inputToggle: boolean = false;
-
- export const handleNewNode = (e) => {
-    inputToggle = true;
-    let idNumber: number = 9;
-    let positionX: number = 9;
-    let positionY: number = 9;
-    let data: string = 'potato';
-    let width: number = 60;
-    let height: number = 65;
-    let borderColor: string = '#932569';
-    let borderRadius: number = 15;
-    let bgColor: string = '#ab2b7a';
-    let textColor: string = '#6b6b6b';
-    //pop up modal or form input screen
-
-    //target each value and assign to variables on submit
-    let newNode = `{
-      id: ${idNumber},
-      position: { x:${positionX}, y:${positionY}},
-      data: { label: "${data}" },
-      width: ${width},
-      height: ${height},
-      borderColor: "${borderColor}",
-      borderRadius: ${borderRadius},
-      bgColor: "${bgColor}",
-      textColor: "${textColor}"
-    },`;
-    editor.setValue(code || editStrP1 + newNode + editStrP2);
-    // inputToggle = false;
-  };
-
-  export const editStrP1 = `<script>
-  import Svelvet from 'svelvet';
-  const initialNodes = [
-    {
-      id: 1,
-      position: { x: 225, y: 10 },
-      data: { label: 'Add Images!' },
-      width: 100,
-      height: 100,
-      bgColor: 'white',
-      borderColor: 'transparent',
-      image: true,
-      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg'
-    },
-    {
-      id: 2,
-      position: { x: 390, y: 180 },
-      data: { label: 'Mixed Anchors' },
-      width: 125,
-      height: 40,
-      bgColor: 'white',
-      targetPosition: 'left'
-    },
-    {
-      id: 3,
-      position: { x: 225, y: 260 },
-      data: { label: 'Output Node' },
-      width: 100,
-      height: 40,
-      bgColor: '#FFE4E6'
-    },
-    {
-      id: 4,
-      position: { x: 25, y: 180 },
-      data: { label: 'Drag me!' },
-      width: 125,
-      height: 40,
-      bgColor: 'white',
-      targetPosition: 'right'
-    },
-    {
-      id: 5,
-      position: { x: 390, y: 380 },
-      data: { label: 'Custom Node' },
-      width: 125,
-      height: 40,
-      bgColor: '#C8FFC7',
-      borderColor: 'transparent',
-      borderRadius: 0
-    },
-    {
-      id: 6,
-      position: { x: 47.5, y: 360 },
-      data: { label: 'Custom Node' },
-      width: 80,
-      height: 80,
-      borderColor: '#FF4121',
-      borderRadius: 30,
-      bgColor: 'white',
-      textColor: '#FF4121'
-    },`;
-
- export const editStrP2 = `];
-
-const initialEdges = [
-  { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
-  { id: 'e2-3', source: 2, target: 3, animate: true, label: 'animated edges' },
-  { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, edgeColor: '#FF4121' },
-  { id: 'e2-5', source: 2, target: 5, label: 'colored edges', animate: true, arrow: true, edgeColor: '#FF4121', labelBgColor: '#1F2937', labelTextColor: '#FFE4E6' },
-  { id: 'e2-5', source: 4, target: 6, type: 'straight' },
-  { id: 'e2-5', source: 3, target: 6, type: 'smoothstep', label: 'colored label', labelBgColor: '#FF4561', labelTextColor: 'white', animate: true }
-];
-</\script>
-
-<Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background />
-    `;
-
-    
+$: if($buildToggle === true) {
+  console.log('we have entered the handleNewNode function', $idNumber, $positionX, $positionY);
+editor.setValue(code || editStrP1 + newNode + editStrP2);
+$buildToggle = false;
+console.log($buildToggle);
+};
 </script>
-
-<ContextMenu on:click ={handleNewNode} />
-{#if inputToggle === true}
-<NodeModal/>
-{/if}
 
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
   <textarea bind:this={refs.editor} readonly value={code} />
@@ -568,6 +478,4 @@ const initialEdges = [
     tab-size: 2;
     -moz-tab-size: 2;
   }
-
-  
 </style>

@@ -1,35 +1,57 @@
-<script>
+<script lang="ts">
+import { nodeProps, idNumber, data, positionX, positionY, width, height, borderColor, borderRadius, bgColor, textColor, buildToggle, inputToggle } from "$lib/stores/store";
+const datalog = () => console.log("this is data", $data);
 </script>
+
 
 <div id="myModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
       <span class="close">&times;</span>
-      <h2>Build New Node</h2>
+      <h2>CustomNode Properties</h2>
     </div>
     <div class="modal-body">
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-    </div>
-    <div class="modal-footer">
-      <h3>Modal Footer</h3>
+      <form>
+        <label for="data">Label:</label>
+        <input on:input={datalog} id="data" bind:value={$data} type="text" /> <br />
+        <label for="positionx">PositionX:</label>
+        <input id="positionx" bind:value={$positionX} type="number" min="50" max="250" /> <br />
+        <label for="positiony">PositionY:</label>
+        <input bind:value={$positionY} id="positiony" type="number" min="50" max="250" /> <br />
+        <label for="width">Width:</label>
+        <input bind:value={$width} id="width" type="number" min="50" max="250" /> <br />
+        <label for="height">Height:</label>
+        <input bind:value={$height} id="height" type="number" min="50" max="250" /> <br />
+        <label for="borderColor">Border Color:</label>
+        <input bind:value={$borderColor} id="borderColor" type="color" /> <br />
+        <label for="borderRadius">Border Radius:</label>
+        <input bind:value={$borderRadius} id="borderRadius" type="number" min="0" max="50" /> <br />
+        <label for="bgColor">Background Color:</label>
+        <input bind:value={$bgColor} id="bgColor" type="color" /> <br />
+        <label for="textColor">Text Color:</label>
+        <input bind:value={$textColor} id="textColor" type="color" /> <br />
+      </form>
+			<button on:click={() => {$buildToggle = true; $inputToggle = false;} }> SUBMIT<button/>
     </div>
   </div>
 </div>
 
 <style>
-	input {
-		border: #888 solid 2px;
-		border-radius: 5rem;
-	}
+  #myModal {
+    display: grid;
+    gap: 50px 100px;
+  }
+  label {
+    color: white;
+  }
+  input {
+    border: rgb(255, 170, 170) solid 2px;
+    border-radius: 7px;
+    color: #888;
+  }
   /* Modal Header */
   .modal-header {
     padding: 2px 16px;
-    background-color: #5cb85c;
     color: white;
     z-index: 1;
   }
@@ -39,20 +61,13 @@
     padding: 2px 16px;
     opacity: 100;
     z-index: 1;
-  }
-
-  /* Modal Footer */
-  .modal-footer {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-    z-index: 1;
+    justify-content: center;
   }
 
   /* Modal Content */
   .modal-content {
-    position: fixed;
-    background-color: #5cb85c;
+    position: relative;
+    background-color: #f87171ba;
     margin: 15% auto;
     padding: 1rem;
     border: 1px solid #888;
@@ -61,12 +76,15 @@
     animation-name: animatetop;
     animation-duration: 0.4s;
     z-index: 1;
+    justify-content: center;
+    grid-column-start: 1;
+    grid-column-end: 3;
   }
 
   /* Add Animation */
   @keyframes animatetop {
     from {
-      top: -300px;
+      top: -200px;
       opacity: 0;
     }
     to {
