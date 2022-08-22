@@ -15,7 +15,7 @@
       <a href="/docs/testing">Testing</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
-      <a href="/community/thread" class="text-gray-700 font-semibold">Community</a>
+      <a href="/community/forum" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
         href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"

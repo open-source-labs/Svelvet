@@ -60,7 +60,7 @@
     >
     <!-- <a tag> for Community Page -->
     <a
-    href="/community/thread"
+    href="/community/forum"
     id="community"
     class="hover:text-rose-500 {activeLink.includes('community') ? 'text-rose-500' : ''}">Community</a
   >
