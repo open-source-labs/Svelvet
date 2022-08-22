@@ -1,7 +1,10 @@
 <script>
 
-const submitClick = (arg1, arg2) => {
-  console.log(arg1, arg2);
+let inputSubjectString = '';
+let inputBodyString = '';
+
+const submitPostClick = (inputSubjectString, inputBodyString) => {
+  console.log(inputSubjectString, inputBodyString);
 }
 
 
@@ -12,14 +15,14 @@ const submitClick = (arg1, arg2) => {
 
 <form>
   <h3 class="subjectHeader"> Subject: </h3>
-  <input type="text" class="inputSubject" autocomplete="off" placeholder="Check out my design template!">
+  <input type="text" class="inputSubject" autocomplete="off" placeholder="Check out my design template!" bind:value={inputSubjectString}>
 
   <h3 class="bodyHeader"> Body: </h3>
-  <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...."></textarea>
+  <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...." bind:value={inputBodyString}></textarea>
   <br>
 
-  <button type="submit" class="submitPostButton" on:click={() => submitClick("arg1", "arg2")}>
-    <a href="/community/forium">Submit Post</a>
+  <button type="submit" class="submitPostButton" on:click={() => submitPostClick(inputSubjectString, inputBodyString)}>
+    <a href="/community/forum">Submit Post</a>
   </button>
 
   <input class="submit-file" type="file" title="Choose File">
