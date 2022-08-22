@@ -1,4 +1,10 @@
 <script>
+
+const submitClick = (arg1, arg2) => {
+  console.log(arg1, arg2);
+}
+
+
 </script>
 
 
@@ -12,17 +18,13 @@
   <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...."></textarea>
   <br>
 
-    <button type="submit" class="submitPostButton">
-      <a href="/community/thread">Submit Post</a>
-      
-    </button>
-  
-    <input class="submit-file" type="file" title="Choose File">
-  
+  <button type="submit" class="submitPostButton" on:click={() => submitClick("arg1", "arg2")}>
+    <a href="/community/forium">Submit Post</a>
+  </button>
 
-  
-
+  <input class="submit-file" type="file" title="Choose File">
 </form>
+
 
 <style>
 
@@ -31,7 +33,8 @@ input[type='file'] {
 }
 
   .submit-file {
-    margin-left: 12px;
+    margin-left: 20px;
+    margin-top: 2px;
   }
 
 
@@ -56,7 +59,7 @@ input[type='file'] {
     flex: 1;
     float: left;
     padding: .25em 1em .25em; */
- 
+
   }
 
 
