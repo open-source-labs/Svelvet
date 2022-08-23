@@ -26,7 +26,7 @@
   export let showModified = false;
   export let showAst = false;
 
-  let { user, diagrams } = userInfoStore; 
+  let { user, diagrams } = userInfoStore;
 
 const historyMap = new Map();
 

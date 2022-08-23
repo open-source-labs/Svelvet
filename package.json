@@ -30,6 +30,8 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
+    "@smui/button": "^6.1.0",
+    "@smui/icon-button": "^6.1.0",
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/adapter-static": "^1.0.0-next.34",
     "@sveltejs/kit": "next",
@@ -72,6 +74,7 @@
     "estree-walker": "^3.0.1",
     "marked": "^4.0.17",
     "svelte-json-tree": "^1.0.0",
+    "svelte-material-icons": "^2.0.4",
     "yootils": "^0.3.1"
   }
 }
