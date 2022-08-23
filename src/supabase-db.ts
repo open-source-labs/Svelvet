@@ -13,10 +13,12 @@ const supabase_ANON_KEY: string = import.meta.env.VITE_SVELTE_APP_SUPABASE_ANON_
 // this is how we initialize the supabase connection
 export const supabase: SupabaseClient = createClient(supabase_URL, supabase_ANON_KEY);
 
+// supabase native method used to sign out of account
 export const logout: Function = async function signout(): Promise<void>{
   const { error: Error } = await supabase.auth.signOut()
 };
 
+// supabase native method used to sign in using GitHub OAuth
 export const signInWithGithub: Function = async function signInWithGithub(): Promise<void> {
   try{
   const { user: User, session: Session, error: Error } = await supabase.auth.signIn(
@@ -28,9 +30,10 @@ export const signInWithGithub: Function = async function signInWithGithub(): Pro
   }
 }
 
+// supabase native method that returns user info
 export const userInfo: User | null = supabase.auth.user();
 
-// detects when the Auth state changes
+// supabase native method that detects when the Auth state changes
 export default supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null): void => {
   const loggedInUser: User | null = supabase.auth.user();
   const identitiesArray: UserIdentity[] | undefined = loggedInUser?.identities;
