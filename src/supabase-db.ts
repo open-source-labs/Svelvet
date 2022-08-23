@@ -101,6 +101,33 @@ export const getCodeFromDB: Function = async (user_email: string): Promise<void 
   return data;
 };
 
+
+
+
+
+
+// Copy and Pasted from getCodeFromDB and edited to become getPostFRromDB to test DB functionality
+export const getPostFromDB: Function = async (user_email: string): Promise<void | any[]> => {
+  const {data, error} = await supabase
+  .from('discussion_post')
+  .select('*')
+  console.log('retrieved data: ', data);
+  if(error) {
+    console.error("Message: ", error.message, "Details: ", error.details);
+    return;
+  }
+  return data;
+};
+
+// End of getPostFromDB test
+
+
+
+
+
+
+
+
 export const current_session: Session | null = supabase.auth.session();
 
 //TODO type project_store
