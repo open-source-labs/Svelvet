@@ -420,10 +420,10 @@ id: ${$idNumber},
  bgColor: "${$bgColor}",
  textColor: "${$textColor}"
 },`;
-    editor.setValue(code || editStrP1 + newNode + editStrP2);
+    editor.setValue(code || $editStrP1 + newNode + editStrP2);
     $buildToggle = false;
     $idNumber ++;
-    // editStrP1 += newNode;
+    $editStrP1 += newNode;
   }
 </script>
 

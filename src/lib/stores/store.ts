@@ -84,7 +84,7 @@ export let buildToggle = toggleBools.buildToggle;
 // )
 
 //code mirror default code part 1
-export const editStrP1 = `<script>
+export const editStrP1 = writable(`<script>
 import Svelvet from 'svelvet';
 const initialNodes = [
   {
@@ -144,7 +144,7 @@ const initialNodes = [
     borderRadius: 30,
     bgColor: 'white',
     textColor: '#FF4121'
-  },`;
+  },`);
 //code mirror default code part 2
 export const editStrP2 = `];
 
