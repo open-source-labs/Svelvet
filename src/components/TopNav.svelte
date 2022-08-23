@@ -6,6 +6,7 @@
   import MobileDocsNav from './MobileDocsNav.svelte';
   import { signInWithGithub, logout, userInfo } from '../supabase-db';
 
+
   import { userInfoStore } from '../authStoreTs'
 
   let { user, logged_in, user_avatar } = userInfoStore;
@@ -40,7 +41,7 @@
       }}
       class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6">svelvet</a
     >
-    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v2.0.2</p>
+    <p class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider">v3.0</p>
   </div>
   <nav class="space-x-11 text-sm text-gray-500 font-medium flex items-center">
     <a href="/" id="home" class="hover:text-rose-500 {activeLink === '/' ? 'text-rose-500' : ''}"
@@ -57,6 +58,13 @@
       id="blog"
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >
+    <!-- <a tag> for Community Page -->
+    <a
+    href="/community/forum"
+    id="community"
+    class="hover:text-rose-500 {activeLink.includes('community') ? 'text-rose-500' : ''}">Community</a
+  >
+  <!-- End <a tag> for Communit Page -->
     <a
       href="https://github.com/open-source-labs/Svelvet"
       id="github"

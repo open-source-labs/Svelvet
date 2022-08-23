@@ -10,6 +10,7 @@ const supabase_URL: string = import.meta.env.VITE_SVELTE_APP_SUPABASE_URL;
 const supabase_ANON_KEY: string = import.meta.env.VITE_SVELTE_APP_SUPABASE_ANON_KEY;
 console.log(import.meta.env.VITE_SVELTE_APP_SUPABASE_ANON_KEY, import.meta.env.VITE_SVELTE_APP_SUPABASE_URL, "this is directly under supabase declaration")
 
+
 // this is how we initialize the supabase connection
 export const supabase: SupabaseClient = createClient(supabase_URL, supabase_ANON_KEY);
 
