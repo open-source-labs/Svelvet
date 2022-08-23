@@ -396,17 +396,17 @@
   function sleep(ms) {
     return new Promise((fulfil) => setTimeout(fulfil, ms));
   }
-  let newNode = `{
-id: ${$idNumber},
- position: { x:${$positionX}, y:${$positionY}},
- data: { label: "${$data}" },
- width: ${$width},
- height: ${$height},
- borderColor: "${$borderColor}",
- borderRadius: ${$borderRadius},
- bgColor: "${$bgColor}",
- textColor: "${$textColor}"
-},`;
+//   let newNode = `{
+// id: ${$idNumber},
+//  position: { x:${$positionX}, y:${$positionY}},
+//  data: { label: "${$data}" },
+//  width: ${$width},
+//  height: ${$height},
+//  borderColor: "${$borderColor}",
+//  borderRadius: ${$borderRadius},
+//  bgColor: "${$bgColor}",
+//  textColor: "${$textColor}"
+// },`;
 
   $: if ($buildToggle === true) {
     console.log(
@@ -423,11 +423,22 @@ id: ${$idNumber},
       $textColor
     );
     console.log(typeof $positionX);
-
+    let newNode = `{
+id: ${$idNumber},
+ position: { x:${$positionX}, y:${$positionY}},
+ data: { label: "${$data}" },
+ width: ${$width},
+ height: ${$height},
+ borderColor: "${$borderColor}",
+ borderRadius: ${$borderRadius},
+ bgColor: "${$bgColor}",
+ textColor: "${$textColor}"
+},`;
     // console.log(JSON.stringify($newNode));
     editor.setValue(code || editStrP1 + newNode + editStrP2);
     $buildToggle = false;
     console.log($buildToggle);
+    $idNumber ++;
   }
 </script>
 

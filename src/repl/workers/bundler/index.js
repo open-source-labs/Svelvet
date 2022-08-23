@@ -161,6 +161,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 				}
 
 				try {
+					console.log("get_bundle 164")
 					const pkg_url = await follow_redirects(`${packagesUrl}/${importee}/package.json`, uid);
 					const pkg_json = (await fetch_if_uncached(pkg_url, uid)).body;
 					const pkg = JSON.parse(pkg_json);
@@ -232,6 +233,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 	};
 
 	try {
+		console.log("get_bundle 235")
 		bundle = await rollup.rollup({
 			input: './App.svelte',
 			plugins: [
@@ -265,6 +267,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 }
 
 async function bundle({ uid, components }) {
+	// console.log("entered bundle")
 	if (import.meta.env.PROD) {
 		console.clear();
 		(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
@@ -275,16 +278,18 @@ async function bundle({ uid, components }) {
 		const path = `./${component.name}.${component.type}`;
 		lookup[path] = component;
 	});
-
+	// console.log("post-forEach 279")
 	let dom;
 	let error;
 
 	try {
+		console.log("284")
+		console.log(uid,cached.dom,lookup)
 		dom = await get_bundle(uid, 'dom', cached.dom, lookup);
 		if (dom.error) {
 			throw dom.error;
 		}
-
+		// console.log("post get_bundle 284")
 		cached.dom = dom.cache;
 
 		const dom_result = (
@@ -295,7 +300,7 @@ async function bundle({ uid, components }) {
 				sourcemap: true
 			})
 		).output[0];
-
+		// console.log("post generate 299")
 		const ssr = false // TODO how can we do SSR?
 			? await get_bundle(uid, 'ssr', cached.ssr, lookup)
 			: null;
@@ -306,7 +311,7 @@ async function bundle({ uid, components }) {
 				throw ssr.error;
 			}
 		}
-
+		// console.log("310")
 		const ssr_result = ssr
 			? (
 					await ssr.bundle.generate({
@@ -317,7 +322,7 @@ async function bundle({ uid, components }) {
 					})
 			  ).output[0]
 			: null;
-
+			// console.log("321")
 		return {
 			uid,
 			dom: dom_result,
