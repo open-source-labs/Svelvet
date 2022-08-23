@@ -361,13 +361,12 @@ const copyCodeToClipboard = async (): void => {
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
 <ContextMenu/>
-{#if $inputToggle === true}
-  <NodeModal/>
-{/if}
+
 
 <!-- REPL ELEMENTS MADE BY SVELTE DEVS -->
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
 <div class="viewport" class:output={show_output}>
+ 
   <SplitPane
     type={orientation === 'rows' ? 'vertical' : 'horizontal'}
     pos={mobile || fixed ? fixedPos : orientation === 'rows' ? 50 : 60}
@@ -376,8 +375,9 @@ const copyCodeToClipboard = async (): void => {
     <section slot="a">
       <ComponentSelector show_modified={showModified} {handle_select} on:add on:remove />
       <ModuleEditor errorLoc={sourceErrorLoc} {theme} />
+    
     </section>
-
+   
     <section slot="b" style="height: 100%;">
       <Output
         {svelteUrl}
@@ -391,6 +391,7 @@ const copyCodeToClipboard = async (): void => {
       />
     </section>
   </SplitPane>
+  
 </div>
 {#if $toggleable}
   <InputOutputToggle bind:checked={show_output} />

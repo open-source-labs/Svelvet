@@ -15,7 +15,7 @@
     textColor,
     data
   } from './../lib/stores/store';
-
+  import NodeModal from './Output/NodeModal.svelte';
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
@@ -409,20 +409,6 @@
 // },`;
 
   $: if ($buildToggle === true) {
-    console.log(
-      'we have entered the handleNewNode function',
-      $idNumber,
-      $positionX,
-      $positionY,
-      $data,
-      $width,
-      $height,
-      $borderColor,
-      $borderRadius,
-      $bgColor,
-      $textColor
-    );
-    console.log(typeof $positionX);
     let newNode = `{
 id: ${$idNumber},
  position: { x:${$positionX}, y:${$positionY}},
@@ -434,20 +420,22 @@ id: ${$idNumber},
  bgColor: "${$bgColor}",
  textColor: "${$textColor}"
 },`;
-    // console.log(JSON.stringify($newNode));
     editor.setValue(code || editStrP1 + newNode + editStrP2);
     $buildToggle = false;
-    console.log($buildToggle);
     $idNumber ++;
+    // editStrP1 += newNode;
   }
 </script>
 
+{#if $inputToggle === true}
+<NodeModal/>
+{/if}
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
   <textarea bind:this={refs.editor} readonly value={code} />
-
+  
   {#if !CodeMirror}
     <pre style="position: absolute; left: 0; top: 0">{code}</pre>
-
+   
     <div style="position: absolute; width: 100%; bottom: 0">
       <Message kind="info">loading editor...</Message>
     </div>

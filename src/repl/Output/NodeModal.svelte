@@ -4,7 +4,7 @@ const datalog = () => console.log("this is data", $data);
 </script>
 
 
-<div id="myModal" class="modal">
+<!-- <div id="myModal" class="modal"> -->
   <div class="modal-content">
     <div class="modal-header">
       <span class="close">&times;</span>
@@ -31,54 +31,89 @@ const datalog = () => console.log("this is data", $data);
         <label for="textColor">Text Color:</label>
         <input bind:value={$textColor} id="textColor" type="color" /> <br />
       </form>
-			<button on:click={() => {$buildToggle = true; $inputToggle = false;} }> SUBMIT<button/>
+			<button class="bouncy" on:click={() => {$buildToggle = true; $inputToggle = false;} }> SUBMIT<button/>
     </div>
   </div>
-</div>
+<!-- </div> -->
 
 <style>
-  #myModal {
-    display: grid;
-    gap: 50px 100px;
+.bouncy{
+animation:bouncy 5s infinite linear;
+position:relative;
+}
+@keyframes bouncy {
+  0%{top:0em}
+40%{top:0em}
+43%{top:-0.9em}
+46%{top:0em}
+48%{top:-0.4em}
+50%{top:0em}
+100%{top:0em;}
+}
+  button {
+/* display:inline-block; */
+padding:0.1rem 1rem;
+margin: 0.3rem 0.3rem;
+border-radius:2em;
+box-sizing: border-box;
+text-decoration-style: dashed;
+font-family:'Roboto',sans-serif;
+font-weight:300;
+color: grey;
+background-color:white;
+text-align:center;
+transition: all 0.2s;
   }
   label {
     color: white;
   }
   input {
+    position: absolute;
+    left: 50%;
     border: rgb(255, 170, 170) solid 2px;
     border-radius: 7px;
     color: #888;
+    height: 28px;
+    width: 125px;
+    margin: 3px;
   }
   /* Modal Header */
   .modal-header {
     padding: 2px 16px;
     color: white;
-    z-index: 1;
+    z-index: 999;
   }
 
   /* Modal Body */
   .modal-body {
-    padding: 2px 16px;
-    opacity: 100;
-    z-index: 1;
-    justify-content: center;
+    /* padding: 2px 16px; */
+    /* opacity: 100; */
+    z-index: 999;
+    /* justify-content: center; */
+
+
   }
 
   /* Modal Content */
   .modal-content {
-    position: relative;
+    position: absolute;
+    left: 20%;
     background-color: #f87171ba;
     margin: 15% auto;
     padding: 1rem;
     border: 1px solid #888;
-    max-width: 40vw;
+    border-radius: 10px;
+    max-width: 45vw;
+    max-height: 30vw;
+    min-width: 30vw;
+    min-height: 30vw;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     animation-name: animatetop;
     animation-duration: 0.4s;
-    z-index: 1;
-    justify-content: center;
-    grid-column-start: 1;
-    grid-column-end: 3;
+    z-index: 999;
+    /* justify-content: center; */
+    /* display: grid; */
+    z-index: 999;
   }
 
   /* Add Animation */
