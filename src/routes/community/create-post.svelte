@@ -1,6 +1,7 @@
 <script>
 
 let inputSubjectString = '';
+console.log(inputSubjectString);
 let inputBodyString = '';
 
 const submitPostClick = (inputSubjectString, inputBodyString) => {
@@ -22,7 +23,8 @@ const submitPostClick = (inputSubjectString, inputBodyString) => {
   <br>
 
   <button type="submit" class="submitPostButton" on:click={() => submitPostClick(inputSubjectString, inputBodyString)}>
-    <a href="/community/forum">Submit Post</a>
+    <!-- <a href="/community/forum">Submit Post</a> -->
+    Submit Post
   </button>
 
   <input class="submit-file" type="file" title="Choose File">
