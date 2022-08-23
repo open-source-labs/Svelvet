@@ -1,33 +1,32 @@
-import { writable, derived, get } from 'svelte/store';
+import { writable, derived, get, readable } from 'svelte/store';
 import type { Readable, Writable } from 'svelte/store';
 import type { Node, Edge, DerivedEdge } from '../types/types';
 
-
 export interface NodeProps {
- idNumber: Writable<number>;
- positionX: Writable<number>;
- positionY: Writable<number>;
-data: Writable<string>;
-width: Writable<number>;
- height: Writable<number>;
- borderColor: Writable<string>;
- borderRadius: Writable<number>;
- bgColor: Writable<string>;
- textColor: Writable<string> ;
+  idNumber: Writable<number>;
+  positionX: Writable<number>;
+  positionY: Writable<number>;
+  data: Writable<string>;
+  width: Writable<number>;
+  height: Writable<number>;
+  borderColor: Writable<string>;
+  borderRadius: Writable<number>;
+  bgColor: Writable<string>;
+  textColor: Writable<string>;
 }
 
-export const nodeProps : NodeProps = {
-  idNumber: writable(7),
+export const nodeProps: NodeProps = {
+  idNumber: writable('7'),
   positionX: writable(),
   positionY: writable(),
- data: writable(''),
- width: writable(),
+  data: writable(''),
+  width: writable(),
   height: writable(),
-  borderColor: writable(''),
-  borderRadius: writable(),
+  borderColor: writable(),
+  borderRadius: writable(''),
   bgColor: writable(''),
-  textColor: writable(''),
-}
+  textColor: writable('')
+};
 
 //variables to update from modal
 export let idNumber = nodeProps.idNumber;
@@ -42,19 +41,19 @@ export let bgColor = nodeProps.bgColor;
 export let textColor = nodeProps.textColor;
 //toggle modal form
 export interface ToggleBools {
-  inputToggle: Writable<boolean>,
-  buildToggle: Writable<boolean>
+  inputToggle: Writable<boolean>;
+  buildToggle: Writable<boolean>;
 }
 export const toggleBools: ToggleBools = {
   inputToggle: writable(false),
   buildToggle: writable(false)
-}
+};
 export let inputToggle = toggleBools.inputToggle;
 //build toggle for activating functionality in code mirror
 export let buildToggle = toggleBools.buildToggle;
 
 // // new node creation to insert in between pt 1 and 2 on code mirror text editor
-// export interface NEWNODE  {newNode: Writable<string>;}
+// export interface NEWNODE  {newNode: Writable <string>;}
 // export let buildNode: NEWNODE = {newNode: writable(`{
 //   id: ${idNumber},
 //   position: { x:${positionX}, y:${positionY}},
@@ -66,7 +65,7 @@ export let buildToggle = toggleBools.buildToggle;
 //   bgColor: "${bgColor}",
 //   textColor: "${textColor}"
 // },`) }
-
+// export let newNode = buildNode.newNode;
 // export const newNode = derived(
 //   nodeProps.idNumber,
 //   $newNode => {
@@ -84,7 +83,6 @@ export let buildToggle = toggleBools.buildToggle;
 //   }
 // )
 
-// export let newNode = buildNode.newNode;
 //code mirror default code part 1
 export const editStrP1 = `<script>
 import Svelvet from 'svelvet';
@@ -162,7 +160,7 @@ const initialEdges = [
 
 <Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background />
   `;
- interface CoreSvelvetStore {
+interface CoreSvelvetStore {
   nodesStore: Writable<Node[]>;
   edgesStore: Writable<Edge[]>;
   widthStore: Writable<number>;
@@ -344,7 +342,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     });
     return [...$edgesStore];
   });
-  
+
   //Puts everything together as the svelvet store and use the key so that it can be used.
   const svelvetStore = {
     ...coreSvelvetStore,

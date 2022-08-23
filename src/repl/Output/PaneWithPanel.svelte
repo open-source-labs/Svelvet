@@ -1,21 +1,21 @@
 <script>
-	import { spring } from 'svelte/motion';
-	import SplitPane from '../SplitPane.svelte';
+  import { spring } from 'svelte/motion';
+  import SplitPane from '../SplitPane.svelte';
 
-	export let panel;
-	export let pos = 50;
-	let previous_pos = Math.min(pos, 70);
+  export let panel;
+  export let pos = 50;
+  let previous_pos = Math.min(pos, 70);
 
-	let max;
+  let max;
 
-	// we can't bind to the spring itself, but we
-	// can still use the spring to drive `pos`
-	const driver = spring(pos);
-	$: pos = $driver;
+  // we can't bind to the spring itself, but we
+  // can still use the spring to drive `pos`
+  const driver = spring(pos);
+  $: pos = $driver;
 
-	const handleNewNode = (e) => {
-  // Creating a default new node template
-	let newUserNode = {
+  const handleNewNode = (e) => {
+    // Creating a default new node template
+    let newUserNode = {
       id: initialNodes.length + 1,
       position: { x: 300, y: 25 },
       data: { label: 'New User Created Node' },
@@ -23,76 +23,76 @@
       height: 40,
       bgColor: '#FFB8B8',
       borderColor: 'transparent'
-    }
+    };
     // Add newly created node on click to initalNodes array to render
-    initialNodes.push(newUserNode)
-		//reassign initialNodes to tell compiler to rewrite the array holding the nodes
+    initialNodes.push(newUserNode);
+    //reassign initialNodes to tell compiler to rewrite the array holding the nodes
     initialNodes = initialNodes;
 
-    console.log('This button is working')
-	}
+    console.log('This button is working');
+  };
 
-	const toggle = () => {
-		driver.set(pos, { hard: true });
+  const toggle = () => {
+    driver.set(pos, { hard: true });
 
-		if (pos > 80) {
-			driver.set(previous_pos);
-		} else {
-			previous_pos = pos;
-			driver.set(max);
-		}
-	};
+    if (pos > 80) {
+      driver.set(previous_pos);
+    } else {
+      previous_pos = pos;
+      driver.set(max);
+    }
+  };
 </script>
 
-<SplitPane bind:max type="vertical" bind:pos={pos}>
-	<section slot="a">
-		<slot name="main"></slot>
-	</section>
+<SplitPane bind:max type="vertical" bind:pos>
+  <section slot="a">
+    <slot name="main" />
+  </section>
 
-	<section class="panel-b" slot="b">
-		<div class="panel-header" on:click={toggle}>
-			<h3>{panel}</h3>
-			<slot name="panel-header"></slot>
-			<button on:click{handleNewNode}>ADD NEW NODE</button>
-		</div>
+  <section class="panel-b" slot="b">
+    <div class="panel-header" on:click={toggle}>
+      <h3>{panel}</h3>
+      <slot name="panel-header" />
+      <button on:click{handleNewNode}>ADD NEW NODE</button>
+    </div>
 
-		<div class="panel-body">
-			<slot name="panel-body"></slot>
-		</div>
-	</section>
+    <div class="panel-body">
+      <slot name="panel-body" />
+    </div>
+  </section>
 </SplitPane>
 
 <style>
-	.panel-header {
-		height: 42px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0 0.5em;
-		cursor: pointer;
-		border-top: solid 1px;
-		/* border-top-color: black; */
-	}
-	
-	.slot-a {
-		border-right: 1px;
-	}
+  .panel-header {
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5em;
+    cursor: pointer;
+    border-top: solid 1px;
+    /* border-top-color: black; */
+  }
 
-	.panel-body {
-		overflow: auto;
-	}
+  .slot-a {
+    border-right: 1px;
+  }
 
-	/* .panel-b {
+  .panel-body {
+    overflow: auto;
+  }
+
+  /* .panel-b {
 		border: 5px;
 		border-top-color: black;
 	} */
 
-	h3 {
-		font: 700 12px/1.5 var(--font);
-		color: #333;
-	}
+  h3 {
+    font: 700 12px/1.5 var(--font);
+    color: #333;
+  }
 
-	section {
-		overflow: hidden;
-	}
+  section {
+    overflow: hidden;
+  }
 </style>

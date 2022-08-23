@@ -396,7 +396,7 @@
   function sleep(ms) {
     return new Promise((fulfil) => setTimeout(fulfil, ms));
   }
-let newNode = `{
+  let newNode = `{
 id: ${$idNumber},
  position: { x:${$positionX}, y:${$positionY}},
  data: { label: "${$data}" },
@@ -408,12 +408,27 @@ id: ${$idNumber},
  textColor: "${$textColor}"
 },`;
 
-$: if($buildToggle === true) {
-  console.log('we have entered the handleNewNode function', $idNumber, $positionX, $positionY);
-editor.setValue(code || editStrP1 + newNode + editStrP2);
-$buildToggle = false;
-console.log($buildToggle);
-};
+  $: if ($buildToggle === true) {
+    console.log(
+      'we have entered the handleNewNode function',
+      $idNumber,
+      $positionX,
+      $positionY,
+      $data,
+      $width,
+      $height,
+      $borderColor,
+      $borderRadius,
+      $bgColor,
+      $textColor
+    );
+    console.log(typeof $positionX);
+
+    // console.log(JSON.stringify($newNode));
+    editor.setValue(code || editStrP1 + newNode + editStrP2);
+    $buildToggle = false;
+    console.log($buildToggle);
+  }
 </script>
 
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
