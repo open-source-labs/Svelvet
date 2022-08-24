@@ -1,4 +1,14 @@
 <script>
+
+let inputSubjectString = '';
+console.log(inputSubjectString);
+let inputBodyString = '';
+
+const submitPostClick = (inputSubjectString, inputBodyString) => {
+  console.log(inputSubjectString, inputBodyString);
+}
+
+
 </script>
 
 
@@ -6,23 +16,20 @@
 
 <form>
   <h3 class="subjectHeader"> Subject: </h3>
-  <input type="text" class="inputSubject" autocomplete="off" placeholder="Check out my design template!">
+  <input type="text" class="inputSubject" autocomplete="off" placeholder="Check out my design template!" bind:value={inputSubjectString}>
 
   <h3 class="bodyHeader"> Body: </h3>
-  <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...."></textarea>
+  <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...." bind:value={inputBodyString}></textarea>
   <br>
 
-    <button type="submit" class="submitPostButton">
-      <a href="/community/thread">Submit Post</a>
-      
-    </button>
-  
-    <input class="submit-file" type="file" title="Choose File">
-  
+  <button type="submit" class="submitPostButton" on:click={() => submitPostClick(inputSubjectString, inputBodyString)}>
+    <!-- <a href="/community/forum">Submit Post</a> -->
+    Submit Post
+  </button>
 
-  
-
+  <input class="submit-file" type="file" title="Choose File">
 </form>
+
 
 <style>
 
@@ -31,7 +38,8 @@ input[type='file'] {
 }
 
   .submit-file {
-    margin-left: 12px;
+    margin-left: 20px;
+    margin-top: 2px;
   }
 
 
@@ -56,7 +64,7 @@ input[type='file'] {
     flex: 1;
     float: left;
     padding: .25em 1em .25em; */
- 
+
   }
 
 
