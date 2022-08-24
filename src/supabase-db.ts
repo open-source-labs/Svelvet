@@ -14,10 +14,12 @@ console.log(import.meta.env.VITE_SVELTE_APP_SUPABASE_ANON_KEY, import.meta.env.V
 // this is how we initialize the supabase connection
 export const supabase: SupabaseClient = createClient(supabase_URL, supabase_ANON_KEY);
 
+// supabase native method used to sign out of account
 export const logout: Function = async function signout(): Promise<void>{
   const { error: Error } = await supabase.auth.signOut()
 };
 
+// supabase native method used to sign in using GitHub OAuth
 export const signInWithGithub: Function = async function signInWithGithub(): Promise<void> {
   try{
   const { user: User, session: Session, error: Error } = await supabase.auth.signIn(
@@ -29,9 +31,10 @@ export const signInWithGithub: Function = async function signInWithGithub(): Pro
   }
 }
 
+// supabase native method that returns user info
 export const userInfo: User | null = supabase.auth.user();
 
-// detects when the Auth state changes
+// supabase native method that detects when the Auth state changes
 export default supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null): void => {
   const loggedInUser: User | null = supabase.auth.user();
   const identitiesArray: UserIdentity[] | undefined = loggedInUser?.identities;
@@ -98,6 +101,33 @@ export const getCodeFromDB: Function = async (user_email: string): Promise<void 
   }
   return data;
 };
+
+
+
+
+
+
+// Copy and Pasted from getCodeFromDB and edited to become getPostFRromDB to test DB functionality
+export const getPostFromDB: Function = async (user_email: string): Promise<void | any[]> => {
+  const {data, error} = await supabase
+  .from('discussion_post')
+  .select('*')
+  console.log('retrieved data: ', data);
+  if(error) {
+    console.error("Message: ", error.message, "Details: ", error.details);
+    return;
+  }
+  return data;
+};
+
+// End of getPostFromDB test
+
+
+
+
+
+
+
 
 export const current_session: Session | null = supabase.auth.session();
 

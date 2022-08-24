@@ -1,5 +1,4 @@
 <script>
-import { each } from "svelte/internal";
 
     const samplePosts = [
         {
@@ -14,12 +13,18 @@ import { each } from "svelte/internal";
             subject: 'Test Post 3',
             body: 'Sample body 3 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
         },
+        {
+            subject: 'Test Post 4',
+            body: 'Sample body 4 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
+        }
     ]
+
+    
 </script>
 
 
 
-<h1 class="header">Discussion Forum</h1>
+<h1 class="header">Welcome to the Discussion Forum</h1>
 
   <button><div class="login-container px-3 py-3 btn-primary">
      <a href="/community/create-post">Create Post</a>
@@ -27,13 +32,11 @@ import { each } from "svelte/internal";
 
     <div class="search-box">
         <div>
-            <select name="" id="">
-                <option value="everything">Everything</option>
-                <option value="titles">Titles</option>
-                <option value="descriptions">Descriptions</option>
-            </select>
-            <input type="text" name="q" placeholder=" search ...">
-            <button>Search button</button>
+           
+            <input type="text" name="q" placeholder=" Search community...">
+            <button><div class="login-container px-3 py-3 btn-primary">
+                <a href="/community/create-post">Find</a>
+               </div></button>
         </div>
     </div>
 
@@ -45,19 +48,20 @@ import { each } from "svelte/internal";
   <div class="container">
     <div class="subforum">
         <div class="subforum-title">
-
-
-            <h1>General Information</h1>
-        </div>
+            <!-- Start of Each Loop for Forums -->
+            {#each samplePosts as post}
+    
+            <!-- <h1>THREAD FILTER: Discussion/Template</h1> -->
+       
         <div class="subforum-row">
             <div class="subforum-icon subforum-column center">
                 <i>Icon</i>
             </div>
             <div class="subforum-description subforum-column">
                 <h1>
-                    <a href="#">Description Title:</a>
+                    <a href="/community/user-post">{post.subject}</a>
                 </h1>
-                <p>Description Content: adfkjadsfjakfadlfkalkfjsk</p>
+                <p>Body of User Post: {post.body}</p>
             </div>
             <div class="subforum-stats subforum-column center">
                 <span>23 posts | 13 Tags
@@ -69,67 +73,10 @@ import { each } from "svelte/internal";
                 on <small>20 Aug 2022</small> 
             </div>
         </div>
+            {/each}
     </div>
-
-    <!-- More Forums -->
-    <div class="subforum">
-        <div class="subforum-title">
-
-
-            <h1>General Information</h1>
-        </div>
-        <div class="subforum-row">
-            <div class="subforum-icon subforum-column center">
-                <i>Icon</i>
-            </div>
-            <div class="subforum-description subforum-column">
-                <h1>
-                    <a href="#">Description Title:</a>
-                </h1>
-                <p>Description Content: adfkjadsfjakfadlfkalkfjsk</p>
-            </div>
-            <div class="subforum-stats subforum-column center">
-                <span>23 posts | 13 Tags
-                </span>
-            </div>
-            <div class="subforum-info subforum-column">
-                <b> <a href="#">Last Post</a></b> by <a href="#">AnonymousUser12345</a> 
-                <br>
-                on <small>20 Aug 2022</small> 
-            </div>
-        </div>
+</div>
     </div>
-    <!-- More Foums 2 -->
-    <div class="subforum">
-        <div class="subforum-title">
-
-
-            <h1>General Information</h1>
-        </div>
-        <div class="subforum-row">
-            <div class="subforum-icon subforum-column center">
-                <i>Icon</i>
-            </div>
-            <div class="subforum-description subforum-column">
-                <h1>
-                    <a href="#">Description Title:</a>
-                </h1>
-                <p>Description Content: adfkjadsfjakfadlfkalkfjsk</p>
-            </div>
-            <div class="subforum-stats subforum-column center">
-                <span>23 posts | 13 Tags
-                </span>
-            </div>
-            <div class="subforum-info subforum-column">
-                <b> <a href="#">Last Post</a></b> by <a href="#">AnonymousUser12345</a> 
-                <br>
-                on <small>20 Aug 2022</small> 
-            </div>
-        </div>
-    </div>
-
-  </div>
-
   <!-- vvv End of main container div vvv -->
   </div>
   

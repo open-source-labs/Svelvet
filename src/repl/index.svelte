@@ -31,7 +31,7 @@ import NodeModal from './Output/NodeModal.svelte';
   export let showAst = false;
   
 
-  let { user, diagrams } = userInfoStore; 
+  let { user, diagrams } = userInfoStore;
 
 const historyMap = new Map();
 
