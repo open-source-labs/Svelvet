@@ -81,7 +81,7 @@
       bgColor: 'white',
       textColor: '#FF4121'
       //targetPosition: 'right'
-    }
+    },
   ];
 
   const initialEdges: Edge[] = [

@@ -8,6 +8,7 @@
 	import CodeMirror from '../CodeMirror.svelte';
 	import AstView from './AstView.svelte';
 	import { is_browser } from '../env.js';
+	import AddNode from './NodeModal.svelte';
 
 	const { register_output, module_editor_ready } = getContext('REPL');
 
@@ -73,7 +74,6 @@
 	let markdown = '';
 	let ast;
 </script>
-
 <div class="view-toggle">
 	{#if selected_type === 'md'}
 		<button class="active">Markdown</button>

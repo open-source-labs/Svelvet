@@ -12,6 +12,10 @@
   import saveIcon from '../assets/DB save icon.svg';
 	import copyIcon from '../assets/DB copy icon.svg';
 	import deleteIcon from '../assets/DB delete icon.svg';
+import ContextMenu from './contextmenu/ContextMenu.svelte';
+import NodeModal from './Output/NodeModal.svelte';
+  //toggle for Modal WINDOW
+ import { nodeProps, inputToggle, buildToggle } from '$lib/stores/store';
 
   export let packagesUrl = 'https://unpkg.com';
   export let svelteUrl = `${packagesUrl}/svelte`;
@@ -25,6 +29,7 @@
   export let theme = 'svelte';
   export let showModified = false;
   export let showAst = false;
+  
 
   let { user, diagrams } = userInfoStore;
 
@@ -313,8 +318,8 @@ const copyCodeToClipboard = async (): void => {
 
 
 <svelte:window on:beforeunload={beforeUnload} />
-
 <!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
+
 {#if $user}
 
 <div class="repl-navbar">
@@ -355,11 +360,13 @@ const copyCodeToClipboard = async (): void => {
 {/if}
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
+<ContextMenu/>
 
 
 <!-- REPL ELEMENTS MADE BY SVELTE DEVS -->
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
 <div class="viewport" class:output={show_output}>
+ 
   <SplitPane
     type={orientation === 'rows' ? 'vertical' : 'horizontal'}
     pos={mobile || fixed ? fixedPos : orientation === 'rows' ? 50 : 60}
@@ -368,8 +375,9 @@ const copyCodeToClipboard = async (): void => {
     <section slot="a">
       <ComponentSelector show_modified={showModified} {handle_select} on:add on:remove />
       <ModuleEditor errorLoc={sourceErrorLoc} {theme} />
+    
     </section>
-
+   
     <section slot="b" style="height: 100%;">
       <Output
         {svelteUrl}
@@ -383,6 +391,7 @@ const copyCodeToClipboard = async (): void => {
       />
     </section>
   </SplitPane>
+  
 </div>
 {#if $toggleable}
   <InputOutputToggle bind:checked={show_output} />
@@ -598,4 +607,5 @@ select:invalid {
 select:invalid {
   color: gray;
 }
+
 </style>

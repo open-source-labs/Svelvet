@@ -7,7 +7,7 @@
     "svelvet",
     "typescript"
   ],
-  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter",
+  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny",
   "license": "MIT",
   "bugs": "https://github.com/open-source-labs/Svelvet/issues",
   "homepage": "https://github.com/open-source-labs/Svelvet",
@@ -73,6 +73,7 @@
     "dotenv": "^16.0.1",
     "estree-walker": "^3.0.1",
     "marked": "^4.0.17",
+    "node.env": "^1.0.3",
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
     "yootils": "^0.3.1"
