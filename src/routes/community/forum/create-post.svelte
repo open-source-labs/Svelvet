@@ -1,12 +1,17 @@
-<script>
-
+<script lang="ts">
+import { prevent_default } from 'svelte/internal';
+import { addThreadToDB } from '../../../supabase-db';
 let inputSubjectString = '';
-console.log(inputSubjectString);
 let inputBodyString = '';
+$: console.log(inputSubjectString);
+$: console.log(inputBodyString);
 
-const submitPostClick = (inputSubjectString, inputBodyString) => {
-  console.log(inputSubjectString, inputBodyString);
-}
+// DO NOT NEED ANYMORE
+// const submitPostClick = (event: Event, inputSubjectString: string, inputBodyString: string) => {
+//   event.preventDefault();
+//   console.log('IN THE SUBMITPOST CLICK FUNC!!!!!');
+//   addThreadToDB(inputSubjectString, inputBodyString);
+// }
 
 
 </script>
@@ -22,7 +27,8 @@ const submitPostClick = (inputSubjectString, inputBodyString) => {
   <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...." bind:value={inputBodyString}></textarea>
   <br>
 
-  <button type="submit" class="submitPostButton" on:click={() => submitPostClick(inputSubjectString, inputBodyString)}>
+  <!-- <button type="submit" class="submitPostButton" on:click={event => {submitPostClick(event, inputSubjectString, inputBodyString)}}> -->
+    <button type="submit" class="submitPostButton" on:click={event => {event.preventDefault(); addThreadToDB(inputSubjectString, inputBodyString)}}>
     <!-- <a href="/community/forum">Submit Post</a> -->
     Submit Post
   </button>

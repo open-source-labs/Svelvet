@@ -1,5 +1,5 @@
 <script>
- 
+
   // REPL
   import { onMount } from 'svelte';
   import { browser } from '$app/env';
@@ -7,8 +7,8 @@
   import black_logo from '../../assets/Logo 1 black.svg';
   import Repl from '../../repl';
 
-  
-  
+
+
   let { user_name } = userInfoStore;
 
   const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
@@ -49,6 +49,7 @@
     <Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
   {/if}
 </div>
+<!-- <meta http-equiv="refresh" content="15"> -->
 
 <style>
   @media screen and (max-width: 539px) {
