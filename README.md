@@ -129,9 +129,17 @@ npm run cypress:open
 - Johnny Tran • [LinkedIn](https://www.linkedin.com/in/tranpjohnny/) • [Github](https://github.com/JTraan)
 - Samee Vohra • [LinkedIn](https://www.linkedin.com/in/sameev/) • [Github](https://github.com/sameev)
 
+## Forking the Repository
+
+If you'd like to fork the repository and run it locally, you'll need to perform a couple of steps to in order to get everything working properly:
+
+- Create an account on [Supabase](https://supabase.com/)
+- Create a new project in Supabase (you can name this whatever you want)
+- Rename the 'supabase_env' file to '.env' and paste in the API keys from your newly created supabase project into the .env file
+
+Once that is done you should be able to render the website locally on localhost:3000, although you will be missing some minor functionality tied to the production database (e.g. OAuth login).
+
 ## How to Contribute
-
-
 
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
