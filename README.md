@@ -21,6 +21,21 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 Shout out to our contributors! Here's what's new:
 
 ### Changelog
+
+<details><summary>v3.0</summary>
+<ul>
+  <li>Added right-click context menu functionality on REPL playground page</li>
+  <li>Added capability to add custom nodes and edges via context menu</li>
+  <li>Added custom node/edge shortcuts for optimized user experience</li>
+  <li>Incorporated dynamic addition of custom node/edge via predictive algorithm</li>
+  <li>Added ability to copy text from code editor</li>
+  <li>Added tutorial popup for REPL playground page</li>
+  <li>Added ability to access quick view documentation via popup modal</li>
+  <li>Updated documentation to allow easier contributor access('.env' file setup)</li>
+  <li>Updated Community link on website to redirect to Svelvet thread on Stackoverflow</li>
+  <li>Implemented skeleton codebase for a Community Forum with full database/route accessibility(for future contributors)</li>
+</ul>
+</details>
 <details><summary>v2.0.2</summary>
 <ul>
   <li>Added left and right anchor points</li>
@@ -45,7 +60,7 @@ Shout out to our contributors! Here's what's new:
 <details><summary>v1.0.3</summary>
 <ul>
   <li>Fixed bug with running tests</li>
-  <li>Added ability to render multiple unique Svelvet components</li> 
+  <li>Added ability to render multiple unique Svelvet components</li>
   <li>Added a 'clickCallback' customization option for nodes</li>
 </ul>
 </details>
@@ -53,7 +68,7 @@ Shout out to our contributors! Here's what's new:
 <ul>
   <li>Fixed bug with importing types for TypeScript applications</li>
   <li>Added a 'borderRadius' customization option for nodes</li>
-  <li>Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only)</li> 
+  <li>Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only)</li>
 </ul>
 </details>
 
@@ -149,7 +164,7 @@ The following is a list of features and improvements by ourselves and the larger
 - Custom error handling
 - Increase test coverage for scalability
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
-- Create a community page for users to share saved REPL Svelvet Prototypes
+- Community forum code has skeleton framework completed, needs Dev team to refactor and publish
 
 ## Credits
 

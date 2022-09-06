@@ -1,26 +1,30 @@
-<script>
+<script context="module">
+    export async function load() {
+        return {
+            status: 302,
+            redirect: "/404"
+        };
+    }
+</script>
+
+<!-- SVELVET 3.0: WE HAVE CREATED BASIC FUNCTIONALITY TO PULL DATA FROM SUPABASE FOR A DISCUSSION THREAD PAGE AS BELOW -->
+<!-- <script>
     import { getPostFromDB } from '../../../supabase-db';
     import { onMount } from 'svelte';
 
     let samplePosts = [];
-
-// Write some code to fetch (post_subject, post_body, created_at, user) from SupabaseDB
-// const threadFromDB = getPostFromDB();
-
-
-
+// fetch (post_subject, post_body, created_at, user) from SupabaseDB
 	onMount(async () => {
 		samplePosts = await getPostFromDB();
-		// samplePosts = await res.json();
         console.log(samplePosts);
 	});
-
     export let forum
-</script>
+</script> -->
 
 
+<!-- Beginning of Forum Lander -->
 
-<h1 class="header">Welcome to the Discussion Forum</h1>
+<!-- <h1 class="header">Welcome to the Discussion Forum</h1>
 
 
 
@@ -43,14 +47,11 @@
 <div class="main-container">
 
 
-
   <div class="container">
     <div class="subforum">
         <div class="subforum-title">
-            <!-- Start of Each Loop for Forums -->
+
             {#each samplePosts as post}
-            <!-- <div>{post}</div> -->
-            <!-- <h1>THREAD FILTER: Discussion/Template</h1> -->
 
         <div class="subforum-row">
             <div class="subforum-icon subforum-column center">
@@ -58,7 +59,6 @@
             </div>
             <div class="subforum-description subforum-column">
                 <h1>
-                    <!-- <a href={`/forum/${post.id}`}>{post.post_subject}</a> -->
                     <a class="subject-line" id={post.id} href="/forum/user-post/${post.id}">{post.post_subject}</a>
                 </h1>
                 <p class="body-line" >{post.post_body}</p>
@@ -78,16 +78,17 @@
     </div>
 </div>
     </div>
-  <!-- vvv End of main container div vvv -->
-  </div>
+
+  </div> -->
+
+<!-- End of Forum Lander -->
 
 
 
 
 
 
-
-<style>
+<!-- <style>
     .subject-line{
         text-decoration: underline;
         padding-top: 5px;
@@ -227,4 +228,4 @@ h1 {
 
 }
 
-</style>
+</style> -->

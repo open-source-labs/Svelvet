@@ -56,11 +56,11 @@
       class="hover:text-rose-500 {activeLink.includes('docs') ? 'text-rose-500' : ''}">Docs</a
     >
 
-    <a
+    <!-- <a
     href="/community/forum"
     id="community"
     class="hover:text-rose-500 {activeLink.includes('community') ? 'text-rose-500' : ''}">Community</a
-    >
+    > -->
 
     <a
       target="_blank"
@@ -83,17 +83,17 @@
     >
 
     <!-- Add logic for OAuth and conditionally render if the user is logged in, change button text to sign out and vice versa -->
-      
+
     {#if $user}
       <button on:click={logout}>
-        <!-- <div class="login-container rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider hover:text-rose-500 hover:bg-white">Logout 
+        <!-- <div class="login-container rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider hover:text-rose-500 hover:bg-white">Logout
           <img src={$user_avatar} alt="user pic"/>
         </div> -->
-        <div class="login-container px-6 py-3 btn-primary">Logout 
+        <div class="login-container px-6 py-3 btn-primary">Logout
           <img src={$user_avatar} alt="user pic"/>
         </div>
       </button>
-      
+
       <!-- <img id="github-avatar" alt="github-avatar-photo"> -->
     {:else}
       <button on:click={signInWithGithub}><div class="login-container px-6 py-3 btn-primary">
@@ -102,7 +102,7 @@
       </div></button>
     {/if}
 
-    
+
   </nav>
 </div>
 

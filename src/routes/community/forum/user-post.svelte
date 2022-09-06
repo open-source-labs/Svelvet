@@ -1,4 +1,14 @@
-<script lang="ts">
+<script context="module">
+    export async function load() {
+        return {
+            status: 302,
+            redirect: "/404"
+        };
+    }
+</script>
+
+<!-- FROM SVELVET 3.0: CREATED PAGE FOR INDIVIDUAL USERS' POST AS BELOW -->
+<!-- <script lang="ts">
     import { getPostFromDB } from '../../../supabase-db';
     import { onMount } from 'svelte';
     import IconButton, { Icon } from '@smui/icon-button';
@@ -24,15 +34,10 @@
 
   </script>
 
-
-
-<!--Topic Section-->
 <div class="topic-container">
-    <!--Original thread-->
+
     <div class="head">
         <div class="authors">Original Author</div>
-        <!-- <div class="content">Discussion Thread (Visited 325 Times)
-        </div> -->
         <div>Posted {createdAt}</div>
     </div>
 
@@ -71,14 +76,14 @@
     </div>
 </div>
 
-<!--Comment Area-->
+
 <div class="reply-box">
     <textarea name="comment" placeholder="comment here ..."></textarea>
     <input class="login-container px-6 py-3 btn-primary"type="submit" value="Comment">
 </div>
 
 
-<!-- Test Portion -->
+
 
 <style>
 
@@ -179,4 +184,4 @@
 }
 
 
-</style>
+</style> -->

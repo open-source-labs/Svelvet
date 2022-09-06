@@ -1,18 +1,22 @@
 <script context="module">
-    export async function load({ fetch, page }) {
+    // this page was originally designed to handle requests to /community/forum/:id with the function on the next line but until it is built out we will redirect to /404
+    // export async function load({ fetch, page }) {}
 
-    }
+    export async function load() {
+      return {
+          status: 302,
+          redirect: "/404"
+      };
+  }
 </script>
 
-    <h1>Hello</h1>
+<!-- <h1>Hello</h1>
 
-<!--Topic Section-->
 <div class="topic-container">
-    <!--Original thread-->
+
     <div class="head">
         <div class="authors">Original Author</div>
-        <!-- <div class="content">Discussion Thread (Visited 325 Times)
-        </div> -->
+
         <div>Posted {createdAt}</div>
     </div>
 
@@ -51,12 +55,11 @@
     </div>
 </div>
 
-<!--Comment Area-->
+
 <div class="reply-box">
     <textarea name="comment" placeholder="comment here ..."></textarea>
     <input class="login-container px-6 py-3 btn-primary"type="submit" value="Comment">
 </div>
 
-
 <style>
-</style>
+</style> -->

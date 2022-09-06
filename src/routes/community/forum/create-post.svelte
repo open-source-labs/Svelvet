@@ -1,21 +1,28 @@
-<script lang="ts">
-import { prevent_default } from 'svelte/internal';
-import { addThreadToDB } from '../../../supabase-db';
-let inputSubjectString = '';
-let inputBodyString = '';
-$: console.log(inputSubjectString);
-$: console.log(inputBodyString);
-
-// DO NOT NEED ANYMORE
-// const submitPostClick = (event: Event, inputSubjectString: string, inputBodyString: string) => {
-//   event.preventDefault();
-//   console.log('IN THE SUBMITPOST CLICK FUNC!!!!!');
-//   addThreadToDB(inputSubjectString, inputBodyString);
-// }
-
-
+<script context="module">
+  export async function load() {
+      return {
+          status: 302,
+          redirect: "/404"
+      };
+  }
 </script>
 
+
+<!-- FROM SVELVET 3.0 TEAM : WE HAVE CREATED FUNCTIONALITY TO POST MESSAGES TO SUPABASE AS BELOW -->
+<!-- <script lang="ts">
+import { prevent_default } from 'svelte/internal';
+import { addThreadToDB } from '../../../supabase-db';
+
+let inputSubjectString = '';
+let inputBodyString = '';
+
+const submitPostClick = (event: Event, inputSubjectString: string, inputBodyString: string) => {
+  event.preventDefault();
+  console.log('IN THE SUBMITPOST CLICK FUNC!!!!!');
+  addThreadToDB(inputSubjectString, inputBodyString);
+}
+
+</script>
 
 <h2 class="text-xl font-semibold"> Share with the Svelvet Community!</h2>
 
@@ -27,9 +34,8 @@ $: console.log(inputBodyString);
   <textarea type="text" class="inputBody" autocomplete="off" placeholder="Hi Svelvet Community! I've created something amazing...." bind:value={inputBodyString}></textarea>
   <br>
 
-  <!-- <button type="submit" class="submitPostButton" on:click={event => {submitPostClick(event, inputSubjectString, inputBodyString)}}> -->
     <button type="submit" class="submitPostButton" on:click={event => {event.preventDefault(); addThreadToDB(inputSubjectString, inputBodyString)}}>
-    <!-- <a href="/community/forum">Submit Post</a> -->
+
     Submit Post
   </button>
 
@@ -118,4 +124,4 @@ input[type='file'] {
   }
 </style>
 
-<img class="rick" src="https://www.hidefninja.com/community/attachments/e28ec92dea750c11082236b1ecfa8c5d-gif.523656/" alt="dancing rick">
+<img class="rick" src="https://www.hidefninja.com/community/attachments/e28ec92dea750c11082236b1ecfa8c5d-gif.523656/" alt="dancing rick"> -->

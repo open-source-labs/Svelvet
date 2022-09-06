@@ -15,7 +15,7 @@
       <a href="/docs/testing">Testing</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
-      <a href="/community/forum" class="text-gray-700 font-semibold">Community</a>
+      <a href="/" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
         href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
@@ -24,7 +24,7 @@
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
       <a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
-      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelte">Stack Overflow</a>
+      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a>
     </div>
   </div>
   <div class="flex flex-col items-center mt-10 text-gray-500">
