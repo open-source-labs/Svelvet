@@ -5,7 +5,16 @@
   export let node: Node;
   export let key: string;
 
-  const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
+  const {
+    onMouseMove,
+    onNodeClick,
+    onTouchMove,
+    nodeSelected,
+    nodeIdSelected,
+    movementStore: movement
+  } = findOrCreateStore(key);
+
+  $: shouldMove = moving && movement
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
@@ -16,7 +25,7 @@
 <svelte:window
   on:mousemove={(e) => {
     e.preventDefault();
-    if (moving) {
+    if (shouldMove) {
       onMouseMove(e, node.id);
       moved = true;
     }
@@ -25,7 +34,7 @@
 
 <div
   on:touchmove={(e) => {
-    if (moving) {
+    if (shouldMove) {
       onTouchMove(e, node.id);
     }
   }}
@@ -53,12 +62,12 @@
     moved = false;
   }}
   class="Node"
-  style="left: {node.position.x}px; 
-    top: {node.position.y}px; 
-    width: {node.width}px; 
-    height: {node.height}px; 
-    background-color: {node.bgColor}; 
-    border-color: {node.borderColor}; 
+  style="left: {node.position.x}px;
+    top: {node.position.y}px;
+    width: {node.width}px;
+    height: {node.height}px;
+    background-color: {node.bgColor};
+    border-color: {node.borderColor};
     border-radius: {node.borderRadius}px;
     color: {node.textColor};"
   id="svelvet-{node.id}"
@@ -68,7 +77,7 @@
     <img
       src={node.src}
       alt=""
-      style="width: {node.width * 0.75}px; 
+      style="width: {node.width * 0.75}px;
 			 height: {node.height * 0.75}px;
        overflow: hidden;"
     />
