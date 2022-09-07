@@ -4,14 +4,14 @@
   import { findOrCreateStore } from '$lib/stores/store';
   import { afterUpdate, onMount } from 'svelte';
   import type { Node, Edge } from '$lib/types/index.js';
-  
+
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: Node[];
   export let edges: Edge[];
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = false;
-
+  export let movement: boolean = true;
 
   // generates a unique string for each svelvet component's unique store instance
   const key = (Math.random() + 1).toString(36).substring(7);
@@ -28,6 +28,7 @@
     svelvetStore.widthStore.set(width);
     svelvetStore.heightStore.set(height);
     svelvetStore.backgroundStore.set(background);
+    svelvetStore.movementStore.set(movement);
   });
   // enables data reactivity
   afterUpdate(() => {
@@ -36,6 +37,7 @@
     svelvetStore.widthStore.set(width);
     svelvetStore.heightStore.set(height);
     svelvetStore.backgroundStore.set(background);
+    svelvetStore.movementStore.set(movement);
   });
 </script>
 
