@@ -14,7 +14,6 @@
     }
 
     pos = { x: e.clientX, y: e.clientY };
-    console.log(pos);
     showMenu = true;
   }
 
