@@ -28,8 +28,6 @@
     initialNodes.push(newUserNode);
     //reassign initialNodes to tell compiler to rewrite the array holding the nodes
     initialNodes = initialNodes;
-
-    console.log('This button is working');
   };
 
   const toggle = () => {
