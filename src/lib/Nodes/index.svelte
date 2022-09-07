@@ -11,10 +11,10 @@
     onTouchMove,
     nodeSelected,
     nodeIdSelected,
-    movementStore: movement
+    movementStore
   } = findOrCreateStore(key);
 
-  $: shouldMove = moving && movement
+  $: shouldMove = moving && $movementStore;
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected

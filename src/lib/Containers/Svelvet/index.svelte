@@ -13,7 +13,6 @@
   export let background: boolean = false;
   export let movement: boolean = true;
 
-
   // generates a unique string for each svelvet component's unique store instance
   const key = (Math.random() + 1).toString(36).substring(7);
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
