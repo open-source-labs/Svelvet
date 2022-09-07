@@ -45,7 +45,7 @@ Shout out to our contributors! Here's what's new:
 <details><summary>v1.0.3</summary>
 <ul>
   <li>Fixed bug with running tests</li>
-  <li>Added ability to render multiple unique Svelvet components</li> 
+  <li>Added ability to render multiple unique Svelvet components</li>
   <li>Added a 'clickCallback' customization option for nodes</li>
 </ul>
 </details>
@@ -53,7 +53,7 @@ Shout out to our contributors! Here's what's new:
 <ul>
   <li>Fixed bug with importing types for TypeScript applications</li>
   <li>Added a 'borderRadius' customization option for nodes</li>
-  <li>Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only)</li> 
+  <li>Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only)</li>
 </ul>
 </details>
 
@@ -62,7 +62,7 @@ Shout out to our contributors! Here's what's new:
 - **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
 - **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
-- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background.
+- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background and movement.
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Cypress](https://www.cypress.io/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 

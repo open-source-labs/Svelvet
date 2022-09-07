@@ -8,6 +8,7 @@ interface CoreSvelvetStore {
   widthStore: Writable<number>;
   heightStore: Writable<number>;
   backgroundStore: Writable<boolean>;
+  movementStore: Writable<boolean>;
   nodeIdSelected: Writable<number>;
   nodeSelected: Writable<boolean>;
   d3Scale: Writable<number>;
@@ -36,6 +37,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     widthStore: writable(600),
     heightStore: writable(600),
     backgroundStore: writable(false),
+    movementStore: writable(true),
     nodeSelected: writable(false),
     nodeIdSelected: writable(-1),
     d3Scale: writable(1)
@@ -184,7 +186,7 @@ export function findOrCreateStore(key: string): SvelvetStore {
     });
     return [...$edgesStore];
   });
-  
+
   //Puts everything together as the svelvet store and use the key so that it can be used.
   const svelvetStore = {
     ...coreSvelvetStore,
