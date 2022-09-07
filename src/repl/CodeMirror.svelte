@@ -2,6 +2,7 @@
   import {
     editStrP1,
     editStrP2,
+    editStrP3,
     inputToggle,
     buildToggle,
     idNumber,
@@ -13,15 +14,31 @@
     borderRadius,
     bgColor,
     textColor,
-    data
-  } from './../lib/stores/store';
+    data,
+    sourcePosition,
+    targetPosition,
+    id,
+    source,
+    target,
+    edgeLabel,
+    labelBgColor,
+    labelTextColor,
+    edgeColor,
+    animate,
+    arrow,
+    noHandle,
+    edgeToggle,
+    nodeToggle,
+    advancedEdgeToggle,
+    advancedNodeToggle
+  } from '../playgroundStore';
   import NodeModal from './Output/NodeModal.svelte';
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
   import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../supabase-db';
   import { userInfoStore } from '../authStoreTs';
-  import AddNode from './Output/NodeModal.svelte';
+  import {clickOutside} from './shortcuts/clickoutside'
 
   const dispatch = createEventDispatcher();
 
@@ -409,6 +426,10 @@
 // },`;
 
   $: if ($buildToggle === true) {
+
+
+
+    
     let newNode = `{
 id: ${$idNumber},
  position: { x:${$positionX}, y:${$positionY}},
@@ -418,18 +439,35 @@ id: ${$idNumber},
  borderColor: "${$borderColor}",
  borderRadius: ${$borderRadius},
  bgColor: "${$bgColor}",
- textColor: "${$textColor}"
+ textColor: "${$textColor}",
+ sourcePosition: "${$sourcePosition}",
+ targetPosition: "${$targetPosition}",
+ clickCallback: node => console.log(node),
 },`;
-    editor.setValue(code || $editStrP1 + newNode + editStrP2);
-    $buildToggle = false;
+
+if($edgeToggle === true && $nodeToggle === false && $advancedNodeToggle === false) { newNode = ''
+}
+  let newEdge = `{ id: 'e${$source}-${$target}', source: ${$source}, target: ${$target}, label: '${$edgeLabel}', animate: ${$animate}, arrow: ${$arrow}, edgeColor: '${$edgeColor}', labelBgColor: '${$labelBgColor}', labelTextColor: '${$labelTextColor}', },`;
+
+    editor.setValue(code || $editStrP1 + newNode + $editStrP2 + newEdge + editStrP3);
+   $buildToggle = $nodeToggle = $edgeToggle = $advancedNodeToggle = $advancedEdgeToggle = false;
+
     $idNumber ++;
     $editStrP1 += newNode;
+    $editStrP2 += newEdge;
+    $positionX += 20;
+    $positionY += 20;
+    $source++;
+    $target++;
+
   }
 </script>
+<!-- <div  use:clickOutside on:outclick={() => ($inputToggle = false)}> -->
+  {#if $inputToggle === true}
+  <NodeModal/>
+  {/if}
+<!-- </div> -->
 
-{#if $inputToggle === true}
-<NodeModal/>
-{/if}
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
   <textarea bind:this={refs.editor} readonly value={code} />
   

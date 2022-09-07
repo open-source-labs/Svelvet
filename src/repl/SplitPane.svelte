@@ -1,9 +1,8 @@
 <script>
 	import * as yootils from 'yootils';
 	import { createEventDispatcher } from 'svelte';
-	import NodeModal from './Output/NodeModal.svelte';
 	const dispatch = createEventDispatcher();
-import { inputToggle } from '$lib/stores/store';
+
 	export let type;
 	export let pos = 50;
 	export let fixed = false;

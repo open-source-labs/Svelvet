@@ -53,7 +53,6 @@
     <div class="panel-header" on:click={toggle}>
       <h3>{panel}</h3>
       <slot name="panel-header" />
-      <button on:click{handleNewNode}>ADD NEW NODE</button>
     </div>
 
     <div class="panel-body">

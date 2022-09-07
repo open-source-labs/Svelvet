@@ -1,9 +1,8 @@
 <script>
-  import { inputToggle, buildToggle } from './../../lib/stores/store';
+  import { inputToggle, edgeToggle, nodeToggle, copyToggle } from '../../playgroundStore'
   import Menu from './Menu.svelte';
   import MenuOption from './MenuOption.svelte';
   import MenuDivider from './MenuDivider.svelte';
-  import { tick } from 'svelte';
 
  let pos = { x: 0, y: 0 };
  let showMenu = false;
@@ -26,13 +25,11 @@
 
 {#if showMenu}
   <Menu {...pos} on:click={closeMenu} on:clickoutside={closeMenu}>
-    <MenuOption on:click={() => ($inputToggle = true)} text="BUILD" />
-    <MenuOption on:click={console.log} text="Do nothing, but twice" />
+    <MenuOption on:click={() => {$inputToggle = true; $nodeToggle = true; $edgeToggle = true;}} text="Add Node" />
+      <MenuDivider />
+    <MenuOption on:click={() =>{$inputToggle = true; $edgeToggle = true}} text="Add Edge" />
     <MenuDivider />
-    <MenuOption isDisabled={true} on:click={console.log} text="Whoops, disabled!" />
-    <MenuOption on:click={console.log}>
-      <span>Look! An icon!</span>
-    </MenuOption>
+    <MenuOption on:click={() =>{$copyToggle = true;}} text="Copy to Clipboard" />
   </Menu>
 {/if}
 

@@ -12,11 +12,9 @@
   import saveIcon from '../assets/DB save icon.svg';
 	import copyIcon from '../assets/DB copy icon.svg';
 	import deleteIcon from '../assets/DB delete icon.svg';
-import ContextMenu from './contextmenu/ContextMenu.svelte';
-import NodeModal from './Output/NodeModal.svelte';
-  //toggle for Modal WINDOW
- import { nodeProps, inputToggle, buildToggle } from '$lib/stores/store';
-
+  import ContextMenu from './contextmenu/ContextMenu.svelte';
+  import {shortcut} from './shortcuts/shortcut'
+  import { buildToggle, docsToggle, tipsToggle, copyToggle } from '../playgroundStore'
   export let packagesUrl = 'https://unpkg.com';
   export let svelteUrl = `${packagesUrl}/svelte`;
   export let embedded = false;
@@ -314,10 +312,15 @@ const copyCodeToClipboard = async (): void => {
   await module_editor.copyCodeEditor();
   alert('Code copied to clipboard!');
 };
+
+$: if ($copyToggle === true) {
+  copyCodeToClipboard();
+  $copyToggle = false;
+}
 </script>
 
 
-<svelte:window on:beforeunload={beforeUnload} />
+<svelte:window on:beforeunload={beforeUnload}/>
 <!-- NEW DROPDOWN MENU TO SELECT SAVED DIAGRAMS AS OF SVELVET 2.0 -->
 
 {#if $user}
@@ -350,19 +353,23 @@ const copyCodeToClipboard = async (): void => {
 </div>
 
 {/if}
-{#if !$user}
+<!-- commented out button for design purposes -->
+<!-- {#if !$user}
 <div class='repl-navbar'>
   Please log in to save your diagrams.
   <button class="db-icons" on:click={copyCodeToClipboard}>
     Copy<img class="db-icons" src={copyIcon} alt="copy-icon" />
   </button>
 </div>
-{/if}
+{/if} -->
 
 <!-- NEW BUTTONS AS OF SVELVET 2.0 -->
 <ContextMenu/>
-
-
+<!-- keyboard command shortcuts (hidden buttons) -->
+<button use:shortcut={{control: true, shift: true, code: 'KeyN'}} on:click={() =>{$buildToggle = true;}}></button>
+<button use:shortcut={{control: true, shift: true, code: 'KeyT'}} on:click={() =>{$tipsToggle = true;}}></button>
+<button use:shortcut={{control: true, shift: true, code: 'KeyD'}} on:click={() =>{$docsToggle = true;}}></button>
+<button use:shortcut={{control: true, shift: true, code: 'KeyC'}} on:click={copyCodeToClipboard}></button>
 <!-- REPL ELEMENTS MADE BY SVELTE DEVS -->
 <div class="container" class:toggleable={$toggleable} bind:clientWidth={width}>
 <div class="viewport" class:output={show_output}>

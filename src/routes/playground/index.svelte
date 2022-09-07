@@ -6,9 +6,10 @@
   import { userInfoStore } from '../../authStoreTs';
   import black_logo from '../../assets/Logo 1 black.svg';
   import Repl from '../../repl';
-
-
-
+  import PlaygoundTips from '../../repl/shortcuts/PlaygoundTips.svelte';
+  import {tipsToggle, docsToggle} from '../../playgroundStore';
+  import DocsModal from '../../repl/shortcuts/DocsModal.svelte';
+  
   let { user_name } = userInfoStore;
 
   const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
@@ -39,8 +40,13 @@
     {$user_name}PLAYGR<img src={black_logo} alt="Svelvet logo in black" />UND
   </div>
 {/if}
-
-
+<!-- playground tips and tricks  -->
+{#if ($tipsToggle === true)}
+  <PlaygoundTips />
+{/if}
+{#if ($docsToggle === true)}
+<DocsModal />
+{/if}
 
 <!-- REPL -->
 <!-- <div class="REPL-container" style="inline-size: 400px; block-size: 400px;"> -->
@@ -52,6 +58,8 @@
 <!-- <meta http-equiv="refresh" content="15"> -->
 
 <style>
+
+
   @media screen and (max-width: 539px) {
     .REPL-container {
       display: block;
