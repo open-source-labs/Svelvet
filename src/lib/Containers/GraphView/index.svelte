@@ -28,7 +28,7 @@
 
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, widthStore, heightStore, d3Scale } = svelvetStore;
+  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale } = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -47,6 +47,8 @@
 
   // function to handle zoom events - arguments: d3ZoomEvent
   function handleZoom(e: any): void {
+    if (!$movementStore) return
+
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
     d3Scale.set(e.transform.k);
     // should not run d3.select below if backgroundStore is false
