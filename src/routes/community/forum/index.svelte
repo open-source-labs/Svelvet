@@ -1,107 +1,121 @@
-<script>
-
-    const samplePosts = [
-        {
-            subject: 'Test Post 1',
-            body: 'Sample body 1 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
-        },
-        {
-            subject: 'Test Post 2',
-            body: 'Sample body 2 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
-        },
-        {
-            subject: 'Test Post 3',
-            body: 'Sample body 3 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
-        },
-        {
-            subject: 'Test Post 4',
-            body: 'Sample body 4 1dfadsfsdfdsfsadfsdafsdfdsjhfsdakfhasdjkfhsdkjfhsdjfhdsjkfhsdjkfhsadkjfhkdsjfhasdkjhfaskdjhfsdkjfhasdkjfhsdkjfhsdajkfhsdfhsjkdfhsdkfhsakfjhsdkjfhsadkjfhaskdfhsdkjf',
-        }
-    ]
-
-    
+<script context="module">
+    export async function load() {
+        return {
+            status: 302,
+            redirect: "/404"
+        };
+    }
 </script>
 
+<!-- SVELVET 3.0: WE HAVE CREATED BASIC FUNCTIONALITY TO PULL DATA FROM SUPABASE FOR A DISCUSSION THREAD PAGE AS BELOW -->
+<!-- <script>
+    import { getPostFromDB } from '../../../supabase-db';
+    import { onMount } from 'svelte';
+
+    let samplePosts = [];
+// fetch (post_subject, post_body, created_at, user) from SupabaseDB
+	onMount(async () => {
+		samplePosts = await getPostFromDB();
+        console.log(samplePosts);
+	});
+    export let forum
+</script> -->
 
 
-<h1 class="header">Welcome to the Discussion Forum</h1>
+<!-- Beginning of Forum Lander -->
 
-  <button><div class="login-container px-3 py-3 btn-primary">
-     <a href="/community/create-post">Create Post</a>
-    </div></button>
+<!-- <h1 class="header">Welcome to the Discussion Forum</h1>
+
+
 
     <div class="search-box">
-        <div>
-           
-            <input type="text" name="q" placeholder=" Search community...">
+        <div class="search-box-inner">
+
+            <input class="community-searchbox" type="text" name="q" placeholder=" Search community...">
             <button><div class="login-container px-3 py-3 btn-primary">
-                <a href="/community/create-post">Find</a>
+                <a href="/community/forum/create-post">Find</a>
                </div></button>
+
+               <button><div class="login-container px-3 py-3 btn-primary">
+                <a href="/community/forum/create-post">Create Post</a>
+               </div></button>
+
         </div>
     </div>
 
 
 <div class="main-container">
 
-    
 
   <div class="container">
     <div class="subforum">
         <div class="subforum-title">
-            <!-- Start of Each Loop for Forums -->
+
             {#each samplePosts as post}
-    
-            <!-- <h1>THREAD FILTER: Discussion/Template</h1> -->
-       
+
         <div class="subforum-row">
             <div class="subforum-icon subforum-column center">
                 <i>Icon</i>
             </div>
             <div class="subforum-description subforum-column">
                 <h1>
-                    <a href="/community/user-post">{post.subject}</a>
+                    <a class="subject-line" id={post.id} href="/forum/user-post/${post.id}">{post.post_subject}</a>
                 </h1>
-                <p>Body of User Post: {post.body}</p>
+                <p class="body-line" >{post.post_body}</p>
             </div>
+
             <div class="subforum-stats subforum-column center">
-                <span>23 posts | 13 Tags
+                <span>{post.comments} comments
                 </span>
             </div>
             <div class="subforum-info subforum-column">
-                <b> <a href="#">Last Post</a></b> by <a href="#">AnonymousUser12345</a> 
+                <b> <a href="#">Post</a></b> by <a href="#">{post.user}</a>
                 <br>
-                on <small>20 Aug 2022</small> 
+                on <small>{post.created_at}</small>
             </div>
         </div>
-            {/each}
+        {/each}
     </div>
 </div>
     </div>
-  <!-- vvv End of main container div vvv -->
-  </div>
-  
-  
+
+  </div> -->
+
+<!-- End of Forum Lander -->
 
 
 
 
 
-<style>
-    .header {
+
+<!-- <style>
+    .subject-line{
+        text-decoration: underline;
+        padding-top: 5px;
+        padding-left: 5px;
+}
+
+.body-line {
+    padding-left: 5px;
+    font-size: 22px;
+}
+
+.header{
         display: flex;
         justify-content: center;
         font-size: large;
         font-weight: bolder;
-    }
-.main-container {
+}
+
+.main-container{
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 15px 20px;
-    color: #ffffff;
+    color: black;
     font-weight: bold;
     font-size: 1.5em;
-    background: rgba(0, 0, 0, 0.1);
+    /* background: rgba(0,0,0, 0.1); */
     width: 1150px;
 }
 
@@ -126,11 +140,6 @@
     width: 650px;
     height: 800px;
     background: #ff4561;
-
-}
-
-* {
-    box-sizing: border-box;
 }
 
 h1 {
@@ -150,7 +159,6 @@ h1 {
 .subforum-title {
     background-color: #292B2E;
     padding: 5px;
-    border-radius: 5px;
     margin: 4px;
 }
 
@@ -164,10 +172,27 @@ h1 {
 }
 
 .subforum-column {
-    padding: 10px;
+    padding: 1px;
     margin: 4px;
-    border-radius: 5px;
-    background-color: #111314;
+    background-color: #f5f5f5;
+}
+
+.subforum-icon {
+    font-size: 30px;
+}
+
+
+
+.subforum-info{
+    font-size: 20px;
+    padding: 25px;
+}
+
+.subforum-stats{
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .center {
@@ -176,17 +201,19 @@ h1 {
     align-items: center;
 }
 
-.subforum-icon {
-    font-size: 30px;
-}
 
 .search-box {
-    border: solid 1px #ff4561;
     margin-top: 20px;
     padding: 40px;
     display: flex;
     justify-content: center;
 }
+
+
+.community-searchbox{
+    border: solid;
+}
+
 
 @media screen and (max-width: 460) {
     .container {
@@ -201,4 +228,4 @@ h1 {
 
 }
 
-</style>
+</style> -->
