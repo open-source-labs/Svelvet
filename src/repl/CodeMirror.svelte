@@ -1,14 +1,44 @@
 <script lang="ts">
+  import {
+    editStrP1,
+    editStrP2,
+    editStrP3,
+    inputToggle,
+    buildToggle,
+    idNumber,
+    positionX,
+    positionY,
+    width,
+    height,
+    borderColor,
+    borderRadius,
+    bgColor,
+    textColor,
+    data,
+    sourcePosition,
+    targetPosition,
+    id,
+    source,
+    target,
+    edgeLabel,
+    labelBgColor,
+    labelTextColor,
+    edgeColor,
+    animate,
+    arrow,
+    noHandle,
+    edgeToggle,
+    nodeToggle,
+    advancedEdgeToggle,
+    advancedNodeToggle
+  } from '../playgroundStore';
+  import NodeModal from './Output/NodeModal.svelte';
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
-  import {
-    addCodeToDB,
-    getCodeFromDB,
-    updateCodeInDB,
-    deleteCodeFromDB
-  } from '../supabase-db';
+  import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../supabase-db';
   import { userInfoStore } from '../authStoreTs';
+  import {clickOutside} from './shortcuts/clickoutside'
 
   const dispatch = createEventDispatcher();
 
@@ -91,14 +121,14 @@
 
   export async function copyCodeEditor(): Promise<void> {
     const code_to_copy = editor.getValue();
-    
+
     const copyToClipboard = () => {
       if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
         return navigator.clipboard.writeText(code_to_copy);
       }
       return Promise.reject('The Clipboard API is not available.');
     };
-    
+
     await copyToClipboard();
   }
 
@@ -106,32 +136,31 @@
     const codeToSave = editor.getValue();
     let found = false;
 
-		if(diagramName && $diagrams.length <= 5) {
-			// loop through the array of projects in store and check each object's id	
-			for(const obj of $diagrams) {
-				if(obj.id === id && obj.diagram_name === diagramName) {
-					updateCodeInDB(id, codeToSave, $diagrams);
+    if (diagramName && $diagrams.length <= 5) {
+      // loop through the array of projects in store and check each object's id
+      for (const obj of $diagrams) {
+        if (obj.id === id && obj.diagram_name === diagramName) {
+          updateCodeInDB(id, codeToSave, $diagrams);
           document.getElementById('project-name').value = '';
           editor.setValue('');
-					alert('Diagram updated successfully!');
-					found = true;
-				}
-			}
-		}
-    if(!found && $diagrams.length < 5 && diagramName) {
-	  		addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
-        document.getElementById('project-name').value = '';
-        editor.setValue('');
-				alert('Diagram saved to database successfully!');
-			}
-    else if(!diagramName){
-			alert('Please provide a name for your diagram before attempting to save.');
-		}
-		else if(!found) {
-			alert('You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.');
-		}
-	}
-	
+          alert('Diagram updated successfully!');
+          found = true;
+        }
+      }
+    }
+    if (!found && $diagrams.length < 5 && diagramName) {
+      addCodeToDB(codeToSave, $user_email, diagramName, $diagrams);
+      document.getElementById('project-name').value = '';
+      editor.setValue('');
+      alert('Diagram saved to database successfully!');
+    } else if (!diagramName) {
+      alert('Please provide a name for your diagram before attempting to save.');
+    } else if (!found) {
+      alert(
+        'You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.'
+      );
+    }
+  }
 
   export async function loadSavedCode(code: string): Promise<void> {
     // grab and load saved code into the editor
@@ -384,14 +413,67 @@
   function sleep(ms) {
     return new Promise((fulfil) => setTimeout(fulfil, ms));
   }
+//   let newNode = `{
+// id: ${$idNumber},
+//  position: { x:${$positionX}, y:${$positionY}},
+//  data: { label: "${$data}" },
+//  width: ${$width},
+//  height: ${$height},
+//  borderColor: "${$borderColor}",
+//  borderRadius: ${$borderRadius},
+//  bgColor: "${$bgColor}",
+//  textColor: "${$textColor}"
+// },`;
+
+  $: if ($buildToggle === true) {
+
+
+
+    
+    let newNode = `{
+id: ${$idNumber},
+ position: { x:${$positionX}, y:${$positionY}},
+ data: { label: "${$data}" },
+ width: ${$width},
+ height: ${$height},
+ borderColor: "${$borderColor}",
+ borderRadius: ${$borderRadius},
+ bgColor: "${$bgColor}",
+ textColor: "${$textColor}",
+ sourcePosition: "${$sourcePosition}",
+ targetPosition: "${$targetPosition}",
+ clickCallback: node => console.log(node),
+},`;
+
+if($edgeToggle === true && $nodeToggle === false && $advancedNodeToggle === false) { newNode = ''
+}
+  let newEdge = `{ id: 'e${$source}-${$target}', source: ${$source}, target: ${$target}, label: '${$edgeLabel}', animate: ${$animate}, arrow: ${$arrow}, edgeColor: '${$edgeColor}', labelBgColor: '${$labelBgColor}', labelTextColor: '${$labelTextColor}', },`;
+
+    editor.setValue(code || $editStrP1 + newNode + $editStrP2 + newEdge + editStrP3);
+   $buildToggle = $nodeToggle = $edgeToggle = $advancedNodeToggle = $advancedEdgeToggle = false;
+
+    $idNumber ++;
+    $editStrP1 += newNode;
+    $editStrP2 += newEdge;
+    $positionX += 20;
+    $positionY += 20;
+    $source++;
+    $target++;
+
+  }
 </script>
+<!-- <div  use:clickOutside on:outclick={() => ($inputToggle = false)}> -->
+  {#if $inputToggle === true}
+  <NodeModal/>
+  {/if}
+<!-- </div> -->
 
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
   <textarea bind:this={refs.editor} readonly value={code} />
-
+  
   {#if !CodeMirror}
     <pre style="position: absolute; left: 0; top: 0">{code}</pre>
-
+   
     <div style="position: absolute; width: 100%; bottom: 0">
       <Message kind="info">loading editor...</Message>
     </div>

@@ -1,7 +1,6 @@
 <script>
 	import * as yootils from 'yootils';
 	import { createEventDispatcher } from 'svelte';
-
 	const dispatch = createEventDispatcher();
 
 	export let type;
@@ -103,6 +102,7 @@
 </script>
 
 <div class="container" bind:this={refs.container} bind:clientWidth={w} bind:clientHeight={h}>
+
 	<div class="pane" style="{dimension}: {pos}%;">
 		<slot name="a" />
 	</div>
@@ -112,6 +112,7 @@
 	</div>
 
 	{#if !fixed}
+
 		<div
 			class="{type} divider"
 			style="{side}: calc({pos}% - 8px)"
