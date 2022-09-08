@@ -529,34 +529,32 @@ text-align:center;
 transition: all 0.2s;
   }
   label {
-    padding-left: 10%;
-    left: 100px;
+    padding-left: 1rem;
     color: #676778;
-    line-height: 200%;
+    line-height: 2.6rem;
   }
   input {
     position: sticky;
-    left: 200px;
-    /* border: rgb(255, 170, 170) solid 2px; */
+    left: 10rem;
     border-radius: 7px;
     color: #888;
     height: 30px;
     width: 150px;
-    margin: 4px;
-    padding: 4px;
+    margin: .3rem;
+    padding: .09rem;
  
   }
 
   select {
     position: sticky;
-    left: 200px;
+    left: 10rem;
     /* border: rgb(255, 170, 170) solid 2px; */
     border-radius: 7px;
     color: #888;
     height: 30px;
     width: 150px;
-    margin: 4px;
-    padding: 4px;
+    margin: .4rem;
+    padding: .01rem;
  
   }
 
@@ -590,6 +588,7 @@ transition: all 0.2s;
     background-color: #FFEDEB;
     margin: 15% auto;
     padding-top: 1rem;
+    padding-right: 1rem;
     border: 1px #888;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -614,7 +613,7 @@ transition: all 0.2s;
     min-width: fit-content;
     height: 300px;
     width: 30vw;
-    padding-left: 2rem;
+    padding-left: 1rem;
   }
 
  
