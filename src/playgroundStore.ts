@@ -206,5 +206,5 @@ const initialEdges = [
 export const editStrP3 = `];
   </\script>
   
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background />
+  <Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background={true} movement={true} />
     `;
