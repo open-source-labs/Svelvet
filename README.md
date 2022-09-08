@@ -22,13 +22,14 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
-<details><summary>v3.0</summary>
+<details><summary>v3.0.0</summary>
 <ul>
   <li>Added right-click context menu functionality on REPL playground page</li>
   <li>Added capability to add custom nodes and edges via context menu</li>
   <li>Added custom node/edge shortcuts for optimized user experience</li>
   <li>Incorporated dynamic addition of custom node/edge via predictive algorithm</li>
   <li>Added ability to copy text from code editor</li>
+  <li>Node diagrams now have the option to be fixed in place</li>
   <li>Added tutorial popup for REPL playground page</li>
   <li>Added ability to access quick view documentation via popup modal</li>
   <li>Updated documentation to allow easier contributor access('.env' file setup)</li>
@@ -77,7 +78,7 @@ Shout out to our contributors! Here's what's new:
 - **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
 - **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
-- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background.
+- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background and *movement* (collaborator credit to [dvisockas](https://github.com/dvisockas)).
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Cypress](https://www.cypress.io/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
