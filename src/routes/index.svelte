@@ -202,7 +202,6 @@
           <div class="contributor-card ">
             <img src={anu} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Anu <br />Sharma</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/anu-sharma-6936a686/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -216,7 +215,6 @@
           <div class="contributor-card">
             <img src={andrew} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Andrew <br />Widjaja</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/andrew-widjaja/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -231,7 +229,6 @@
           <div class="contributor-card">
             <img src={aaron} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Aaron <br />Willett</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/awillettnyc/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -251,7 +248,6 @@
           <div class="contributor-card">
             <img src={alexander} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-md leading-6">Alexander<br />Zambrano</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/alexander-z-8b7716b0/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -265,7 +261,6 @@
           <div class="contributor-card">
             <img src={justin} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Justin <br />Wouters</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/justinwouters/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -279,7 +274,6 @@
           <div class="contributor-card">
             <img src={damian} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Damian <br />Lim</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/lim-damian/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -297,7 +291,6 @@
           <div class="contributor-card">
             <img src={walter} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Walter <br />DeVault</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/walter-devault/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -311,7 +304,6 @@
           <div class="contributor-card">
             <img src={von} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Von <br />Garcia</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/gerard-von-g-3964bb160/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -325,7 +317,6 @@
           <div class="contributor-card">
             <img src={ali} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Ali <br />Adams</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/alimadams/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -343,7 +334,6 @@
           <div class="contributor-card">
             <img src={chris} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Christopher <br />Mander</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/christopher-mander/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -357,7 +347,6 @@
           <div class="contributor-card">
             <img src={david} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">David <br />Jakubiec</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/david-jakubiec-16783384/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -371,7 +360,6 @@
           <div class="contributor-card">
             <img src={jeff} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Jeffrey <br />Wentworth</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/jeffrey-wentworth-501915248/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -389,7 +377,6 @@
           <div class="contributor-card">
             <img src={johnny} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Johnny <br />Tran</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/johnny-tran-4bb479151/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
@@ -403,7 +390,6 @@
           <div class="contributor-card">
             <img src={samee} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Samee <br />Vohra</p>
-            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/sameev/"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
