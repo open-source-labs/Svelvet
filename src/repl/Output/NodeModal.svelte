@@ -362,8 +362,8 @@ transition: all 0.2s;
     color: #888;
     height: 2rem;
     width: 9rem;
-    margin: .3rem;
-    padding: .3rem;
+    margin: .2rem;
+    padding: .2rem;
     left: 10rem;
 
  
@@ -375,10 +375,10 @@ transition: all 0.2s;
     border-radius: 7px;
     color: #888;
     height: 1.8rem;
-    width: auto;
+    width: 8.5rem;
     margin: .3rem;
-    padding: .3rem;
-    left: 20%;
+    /* padding: .3rem; */
+    left: 9.98rem;
  
   }
 
