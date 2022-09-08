@@ -55,7 +55,7 @@ export const edgeProps: EdgeProps = {
   id: writable(''),
   source: writable(6),
   target: writable(7),
-  edgeLabel: writable('new edge label'),
+  edgeLabel: writable('New Edge Label'),
   animate: writable(true),
   arrow: writable(true),
   edgeColor: writable('#F87171'),

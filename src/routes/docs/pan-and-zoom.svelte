@@ -65,13 +65,27 @@
   The pan and zoom feature of <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows you to
   pan by <strong>dragging</strong> and zoom by <strong>scrolling</strong> or
   <strong>pinching</strong>
-  (mobile).
+  (mobile) by default.
+  <br />
   <br />
   Play around with the flow diagram below!
 </p>
 <div class="overflow-hidden my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={1000} height={500} background />
+  <Svelvet
+    nodes={initialNodes}
+    edges={initialEdges}
+    width={1000}
+    height={500}
+    background
+    movement={true}
+  />
 </div>
+<br /> <i>**As of v3.0.0, simply provide the</i> <code class="code">movement</code>
+<i>attribute and set it's value to</i> <code class="code">false</code><i> directly in the </i>
+<code class="code">Svelvet</code><i
+  >component to prevent movement of the nodes and edges as well as prevent panning and zooming and
+  fix the entire component in place.**</i
+>
 
 <style>
 </style>
