@@ -22,7 +22,7 @@
       <h1>Create custom nodes and edges with just a right click!</h1>
 
       <br /> <br /> <br />
-      Watch this gif <i>gift with a silent 't'</i> below for a visual walkthrough:
+      Watch this <i>gift with a silent 't'</i> below for a visual walkthrough:
       <br />
 
       <img id="gif" src={tutorialGif} alt="gif showing how to use the context menu" />
