@@ -159,13 +159,13 @@ Once that is done you should be able to render the website locally on localhost:
 
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
-- Contextual menus
+- Customize d3 background options
 - Customize nodes via html templates/Svelte components
 - Multiple sockets and socket compatibility for links
 - Custom error handling
 - Increase test coverage for scalability
 - More styling and customization of nodes and edges for complex Svelvet flow diagrams
-- Community forum code has skeleton framework completed, needs Dev team to refactor and publish
+- Community Forum
 
 ## Credits
 
