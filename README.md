@@ -30,7 +30,7 @@ Shout out to our contributors! Here's what's new:
   <li>Incorporated dynamic addition of custom node/edge via predictive algorithm</li>
   <li>Added ability to copy text from code editor</li>
   <li>Node diagrams now have the option to be fixed in place</li>
-  <li>Added tutorial popup for REPL playground page</li>
+  <li>Added tutorial overlay for REPL playground page</li>
   <li>Added ability to access quick view documentation via popup modal</li>
   <li>Updated documentation to allow easier contributor access('.env' file setup)</li>
   <li>Updated Community link on website to redirect to Svelvet thread on Stackoverflow</li>
@@ -104,10 +104,10 @@ Start by importing Svelvet into your application:
 import Svelvet from 'svelvet';
 ```
 
-A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. You can add a dot-grid background like the example below. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!
+A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. By default, Svelvet components allow for the ability to move nodes and edges as well as pan and zoom. However, if you would like to render a fixed diagram, simply pass in the movement attribute and set it's value to false! You can add a dot-grid background like the example below. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!
 
 ```bash
-<Svelvet nodes={nodes} edges={edges} background />
+<Svelvet nodes={nodes} edges={edges} movement background />
 ```
 
 Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking!
