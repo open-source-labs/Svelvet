@@ -22,7 +22,7 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
-<details><summary>v3.0.2</summary>
+<details><summary>v3.0.0</summary>
 <ul>
   <li>Added right-click context menu functionality on REPL playground page</li>
   <li>Added capability to add custom nodes and edges via context menu</li>
