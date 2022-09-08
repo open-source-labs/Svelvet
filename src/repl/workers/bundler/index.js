@@ -275,7 +275,6 @@ async function bundle({ uid, components }) {
 		const path = `./${component.name}.${component.type}`;
 		lookup[path] = component;
 	});
-
 	let dom;
 	let error;
 
@@ -284,7 +283,6 @@ async function bundle({ uid, components }) {
 		if (dom.error) {
 			throw dom.error;
 		}
-
 		cached.dom = dom.cache;
 
 		const dom_result = (
@@ -295,7 +293,6 @@ async function bundle({ uid, components }) {
 				sourcemap: true
 			})
 		).output[0];
-
 		const ssr = false // TODO how can we do SSR?
 			? await get_bundle(uid, 'ssr', cached.ssr, lookup)
 			: null;
@@ -306,7 +303,6 @@ async function bundle({ uid, components }) {
 				throw ssr.error;
 			}
 		}
-
 		const ssr_result = ssr
 			? (
 					await ssr.bundle.generate({
@@ -317,7 +313,6 @@ async function bundle({ uid, components }) {
 					})
 			  ).output[0]
 			: null;
-
 		return {
 			uid,
 			dom: dom_result,

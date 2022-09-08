@@ -10,11 +10,17 @@
   import von from '../assets/profiles/Von-small.png';
   import walter from '../assets/profiles/Walter-small.png';
   import ali from '../assets/profiles/Ali-small.png';
+  import chris from '../assets/profiles/Mander-small.png';
+  import david from '../assets/profiles/David-small.png';
+  import jeff from '../assets/profiles/Jeffrey-small.png';
+  import johnny from '../assets/profiles/Johnny-small.png';
+  import samee from '../assets/profiles/Samee-small.png';
+  
 
   import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-  // import type { Node, Edge } from '$lib/types/types';
-  import type { Node, Edge } from 'svelvet';
-  //import Svelvet from 'svelvet';
+  import type { Node, Edge } from '$lib/types/types';
+  // import type { Node, Edge } from 'svelvet';
+  // import Svelvet from 'svelvet';
 
   const initialNodes: Node[] = [
     {
@@ -52,7 +58,7 @@
       width: 125,
       height: 40,
       bgColor: 'white',
-      targetPosition: 'right'
+      targetPosition: 'right',
     },
     {
       id: 5,
@@ -75,7 +81,7 @@
       bgColor: 'white',
       textColor: '#FF4121'
       //targetPosition: 'right'
-    }
+    },
   ];
 
   const initialEdges: Edge[] = [
@@ -181,7 +187,7 @@
   </div>
 </div>
 <div
-  class="h-[1200px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
+  class="h-[2000px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
   <div class=" h-full m-12 contributors:m-24">
     <div class=" h-full w-full p-1 flex flex-col justify-around">
@@ -331,11 +337,90 @@
           </div>
         </div>
       </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1 -->
+          <div class="contributor-card">
+            <img src={chris} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Christopher <br />Mander</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/christopher-mander/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/cpmander"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="contributor-card">
+            <img src={david} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">David <br />Jakubiec</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/david-jakubiec-16783384/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/davidjakubiec"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3 -->
+          <div class="contributor-card">
+            <img src={jeff} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Jeffrey <br />Wentworth</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/jeffrey-wentworth-501915248/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/jeffreywentworth"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1 -->
+          <div class="contributor-card">
+            <img src={johnny} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Johnny <br />Tran</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/johnny-tran-4bb479151/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/JTraan"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2 -->
+          <div class="contributor-card">
+            <img src={samee} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Samee <br />Vohra</p>
+            <p class="mb-3 text-[11px] text-gray-500">CO-CREATOR</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/sameev/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/sameev"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <p class=" text-gray-100 text-center mt-5 md:mb-0">
         Svelvet is open source and has room for many more features. We welcome contributors!
       </p>
       <a
-        href="https://github.com/oslabs-beta/Svelvet"
+        href="https://github.com/open-source-labs/Svelvet"
         target="_blank"
         class="self-center w-fit border-2 border-transparent hover:border-white mt-4 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
         >See Svelvet on GitHub</a
