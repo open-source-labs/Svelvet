@@ -36,7 +36,7 @@
     </div>
     <div class="text-xs">
       Website designed by <a
-        href="https://www.wendyhuynh.info/"
+        href="https://wendyhuynhdesign.com/"
         target="_blank"
         class="text-rose-400">Wendy Huynh</a
       >
