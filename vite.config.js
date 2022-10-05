@@ -14,7 +14,8 @@ export default defineConfig({
   plugins: [
     svelte({
       configFile: './svelte.config.js',
-      hot: !process.env.VITEST
+      hot: !process.env.VITEST,
+      compilerOptions: { dev: true }
     })
   ]
 });
