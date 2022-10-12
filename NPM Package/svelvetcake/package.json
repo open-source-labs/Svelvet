@@ -1,6 +1,6 @@
 {
   "name": "svelvetcake",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "custom svelvet NPM fork to make adding  changes to NPM Package simpler",
   "keywords": [
     "svelte",

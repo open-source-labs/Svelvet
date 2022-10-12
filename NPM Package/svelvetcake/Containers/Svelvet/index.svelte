@@ -9,6 +9,7 @@ export let width = 600;
 export let height = 600;
 export let background = false;
 export let movement = true;
+export let snap = false;
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -24,6 +25,7 @@ onMount(() => {
     svelvetStore.heightStore.set(height);
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
+    svelvetStore.snapgrid.set(snap);
 });
 // enables data reactivity
 afterUpdate(() => {
@@ -33,6 +35,7 @@ afterUpdate(() => {
     svelvetStore.heightStore.set(height);
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
+    svelvetStore.snapgrid.set(snap);
 });
 </script>
 
