@@ -1,13 +1,13 @@
 {
-  "name": "svelvet",
-  "version": "3.0.0",
-  "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
+  "name": "svelvetcake",
+  "version": "1.0.0",
+  "description": "custom svelvet NPM fork to make adding  changes to NPM Package simpler",
   "keywords": [
     "svelte",
     "svelvet",
     "typescript"
   ],
-  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny",
+  "authors": "Viswa, Mauricio, Ian, Ryan",
   "license": "MIT",
   "bugs": "https://github.com/open-source-labs/Svelvet/issues",
   "homepage": "https://github.com/open-source-labs/Svelvet",
