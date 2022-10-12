@@ -1,7 +1,7 @@
 <script>import { findOrCreateStore } from '../stores/store';
 export let node;
 export let key;
-const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected, movementStore } = findOrCreateStore(key);
+const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected, movementStore, snapgrid } = findOrCreateStore(key);
 $: shouldMove = moving && $movementStore;
 // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
 // moving local boolean specific to node selected, to change position of individual node once selected
@@ -41,6 +41,11 @@ let moved = false;
     $nodeSelected = true;
   }}
   on:mouseup={(e) => {
+
+    if ($snapgrid) {
+      node.position.x = Math.floor(node.position.x/30) * 30
+      node.position.y = Math.floor(node.position.y/30) * 30
+    }
     moving = false;
     $nodeSelected = false;
     if (!moved && node.id == $nodeIdSelected) {

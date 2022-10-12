@@ -8,6 +8,7 @@ declare const __propDef: {
         height?: number | undefined;
         background?: boolean | undefined;
         movement?: boolean | undefined;
+        snap?: boolean | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;
