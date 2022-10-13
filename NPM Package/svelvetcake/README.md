@@ -5,3 +5,8 @@ v 1.0.1 - added snap to grid functionality
         - inside Svelvet=>index.svelte, added functionality to so that snap variable sets snapgrid to true or false
     - changes made to Nodes => index.svelte (on mouseup, if snapgrid is true, will snap node to grid)
     - further changes made to both files in stores folder (added snapgrid as writable to coresvelvetstore)
+
+v 1.1.1
+• File: node_modules -> svelvetecake -> Nodes -> index.svelte
+• Added import of: widthStore and heightStore from findOrCreateStore(key)
+• Added boundaries to within on:mouse logic
