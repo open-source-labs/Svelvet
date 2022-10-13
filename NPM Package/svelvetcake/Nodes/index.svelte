@@ -1,12 +1,23 @@
-<script>import { findOrCreateStore } from '../stores/store';
-export let node;
-export let key;
-const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected, movementStore, snapgrid } = findOrCreateStore(key);
-$: shouldMove = moving && $movementStore;
-// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
-// moving local boolean specific to node selected, to change position of individual node once selected
-let moving = false;
-let moved = false;
+<script>
+  import { findOrCreateStore } from '../stores/store';
+  export let node;
+  export let key;
+  const {
+    onMouseMove,
+    onNodeClick,
+    onTouchMove,
+    nodeSelected,
+    widthStore,
+    heightStore,
+    nodeIdSelected,
+    movementStore,
+    snapgrid
+  } = findOrCreateStore(key);
+  $: shouldMove = moving && $movementStore;
+  // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
+  // moving local boolean specific to node selected, to change position of individual node once selected
+  let moving = false;
+  let moved = false;
 </script>
 
 <svelte:window
@@ -15,6 +26,18 @@ let moved = false;
     if (shouldMove) {
       onMouseMove(e, node.id);
       moved = true;
+      // Prevent nodes from being dragged past the canvas and visible boundaries (GitHub Issue #120)
+      if (
+        // If node moves past boundaries
+        e.clientX < $widthStore - $widthStore || // left canvas and visible boundary
+        e.clientX > $widthStore || // right canvas and visible boundary
+        e.clientY < $heightStore - $heightStore || // top canvas and visible boundary
+        e.clientY > $heightStore // bottom canvas and visible boundary
+      ) {
+        // Then drop the node in that current spot - i.e. at the boundary
+        moving = false;
+        $nodeSelected = false;
+      }
     }
   }}
 />
@@ -41,10 +64,9 @@ let moved = false;
     $nodeSelected = true;
   }}
   on:mouseup={(e) => {
-
     if ($snapgrid) {
-      node.position.x = Math.floor(node.position.x/30) * 30
-      node.position.y = Math.floor(node.position.y/30) * 30
+      node.position.x = Math.floor(node.position.x / 30) * 30;
+      node.position.y = Math.floor(node.position.y / 30) * 30;
     }
     moving = false;
     $nodeSelected = false;
@@ -64,7 +86,7 @@ let moved = false;
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
-<!-- This executes if node.image is present without node.label -->
+  <!-- This executes if node.image is present without node.label -->
   {#if node.image}
     <img
       src={node.src}
