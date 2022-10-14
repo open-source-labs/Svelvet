@@ -7,6 +7,12 @@ v 1.0.1 - added snap to grid functionality
     - further changes made to both files in stores folder (added snapgrid as writable to coresvelvetstore)
 
 v 1.1.1
-• File: node_modules -> svelvetecake -> Nodes -> index.svelte
+• File: node_modules -> svelvetcake -> Nodes -> index.svelte
 • Added import of: widthStore and heightStore from findOrCreateStore(key)
 • Added boundaries to within on:mouse logic
+
+v 1.1.2
+- added changes to svelvetcake -> Containers -> Graphview -> index.svelte
+- now, in nodes declaration, user has option to add data: { html : `<p> HTML DATA HERE </p>`}
+- resolved github issue #112, added HTML data enhancement
+- special thanks to ronvoluted for contributing to this feature
