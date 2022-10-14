@@ -15,4 +15,4 @@ v 1.1.2
 - added changes to svelvetcake -> Containers -> Graphview -> index.svelte
 - now, in nodes declaration, user has option to add data: { html : `<p> HTML DATA HERE </p>`}
 - resolved github issue #112, added HTML data enhancement
-- special thanks to ronvoluted for contributing to this feature
+- special thanks to ronvoluted (Ron Au) for contributing this feature
