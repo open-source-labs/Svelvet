@@ -72,6 +72,8 @@ function handleZoom(e) {
     {#each $nodesStore as node}
       {#if node.image && !node.data.label}
         <ImageNode {node} {key} />
+      {:else if node.data.html}
+        <Node {node} {key}>{@html node.data.html}</Node>
       {:else}
         <Node {node} {key}>{node.data.label}</Node>
       {/if}
