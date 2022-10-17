@@ -13,6 +13,12 @@ v 1.1.1
 
 v 1.1.2
 - added changes to svelvetcake -> Containers -> Graphview -> index.svelte
-- now, in nodes declaration, user has option to add data: { html : `<p> HTML DATA HERE </p>`}
+- now, in nodes declaration, user has option to add data: { html : \`  HTML DATA HERE `}; html value should be enclosed in template literals
 - resolved github issue #112, added HTML data enhancement
 - special thanks to ronvoluted (Ron Au) for contributing this feature
+
+v 1.1.3
+ - added comments demarcating & explaining Snap-to-Grid functionality & HTML data option
+ - removed dotenv as a dependency from package.json (unused library that takes up ~40 mb after npm install)
+ - have previously removed node.env dependency upon creation of svelvetcake
+ - removal of both these dependencies from package.json of NPM Package resolves Github Issue # 118
