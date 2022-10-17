@@ -21,7 +21,7 @@ v 1.1.2
 
 v 1.1.3
  - added comments demarcating & explaining Snap-to-Grid functionality & HTML data option
- - removed dotenv as a dependency from package.json (unused library that takes up ~40 mb after npm install)
+ - removed dotenv as a dependency from package.json (unused library with it's own dependencies)
  - have previously removed node.env dependency upon creation of svelvetcake
  - removal of both these dependencies from package.json of NPM Package resolves github issue #118
 
