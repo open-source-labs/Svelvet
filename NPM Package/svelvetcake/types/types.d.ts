@@ -8,6 +8,8 @@ export interface Node<T = any> {
     bgColor?: string;
     fontSize?: number;
     borderColor?: string;
+    parentNode?: number;
+    childNodes?: number[];
     borderRadius?: number;
     textColor?: string;
     clickCallback?: Function;

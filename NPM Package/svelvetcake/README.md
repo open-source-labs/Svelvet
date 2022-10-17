@@ -24,3 +24,9 @@ v 1.1.3
  - removed dotenv as a dependency from package.json (unused library that takes up ~40 mb after npm install)
  - have previously removed node.env dependency upon creation of svelvetcake
  - removal of both these dependencies from package.json of NPM Package resolves github issue #118
+
+v 1.1.4
+- added a parendNode and childNode definition in types.d.ts
+- implemented logic within store.js for onMouseMove and onTouchMove childNodes so that every node id included in the childNodes array will move with the parent
+- Refactored existing code in store.js to improve readability and cleanliness
+- Added a feature to allow grouping of certain nodes; this resolves github issues #97
