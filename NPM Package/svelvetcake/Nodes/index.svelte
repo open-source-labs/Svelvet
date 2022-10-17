@@ -64,6 +64,7 @@
     $nodeSelected = true;
   }}
   on:mouseup={(e) => {
+    // If user sets snap attribute as true inside Svelvet 
     if ($snapgrid) {
       node.position.x = Math.floor(node.position.x / 30) * 30;
       node.position.y = Math.floor(node.position.y / 30) * 30;

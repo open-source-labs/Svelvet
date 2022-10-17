@@ -72,8 +72,9 @@ function handleZoom(e) {
     {#each $nodesStore as node}
       {#if node.image && !node.data.label}
         <ImageNode {node} {key} />
+        <!-- If node has html property:  -->
       {:else if node.data.html}
-        <Node {node} {key}>{@html node.data.html}</Node>
+        <Node {node} {key}>{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
       {:else}
         <Node {node} {key}>{node.data.label}</Node>
       {/if}
