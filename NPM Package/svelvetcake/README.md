@@ -27,6 +27,6 @@ v 1.1.3
 
 v 1.1.4
 - added a parendNode and childNode definition in types.d.ts
-- implemented logic within store.js for onMouseMove and onTouchMove childNodes so that every node id included in the childNodes array will move with the parent.
+- implemented logic within store.js for onMouseMove and onTouchMove childNodes so that every node id included in the childNodes array will move with the parent
+- Refactored existing code in store.js to improve readability and cleanliness
 - Added a feature to allow grouping of certain nodes; this resolves github issues #97
-- Refactored existing code in store.js to improve readability and cleanliness.
