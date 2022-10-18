@@ -241,7 +241,7 @@
 		/* height: calc(100vh - var(--nav-h)); */
 		border: none;
 		display: block;
-		background-color: aqua;
+		background-color: rgb(210, 253, 253);
 	}
 
 	.greyed-out {
