@@ -30,6 +30,14 @@
       moved = true;
     }
   }}
+  on:mouseup={(e) => {
+    moving = false;
+    $nodeSelected = false;
+    if (!moved && node.id == $nodeIdSelected) {
+      onNodeClick(e, node.id);
+    }
+    moved = false;
+  }}
 />
 
 <div
@@ -52,14 +60,6 @@
     moving = true;
     $nodeIdSelected = node.id;
     $nodeSelected = true;
-  }}
-  on:mouseup={(e) => {
-    moving = false;
-    $nodeSelected = false;
-    if (!moved && node.id == $nodeIdSelected) {
-      onNodeClick(e, node.id);
-    }
-    moved = false;
   }}
   class="Node"
   style="left: {node.position.x}px;
