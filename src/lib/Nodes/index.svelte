@@ -1,6 +1,8 @@
 <script lang="ts">
   import { findOrCreateStore } from '$lib/stores/store';
+    import { Position } from '$lib/types';
   import type { Node } from '$lib/types/types';
+    import { logDOM } from '@testing-library/svelte';
 
   export let node: Node;
   export let key: string;
@@ -11,7 +13,9 @@
     onTouchMove,
     nodeSelected,
     nodeIdSelected,
-    movementStore
+    movementStore,
+    widthStore,
+    heightStore
   } = findOrCreateStore(key);
 
   $: shouldMove = moving && $movementStore;
@@ -24,11 +28,18 @@
 
 <svelte:window
   on:mousemove={(e) => {
+    console.log(e.clientX)
     e.preventDefault();
     if (shouldMove) {
       onMouseMove(e, node.id);
       moved = true;
+
+      if (node.position.x > $widthStore || node.position.y > $heightStore) {
+        moving = false;
+        $nodeSelected = false;
+      }
     }
+   
   }}
 />
 

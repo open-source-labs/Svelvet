@@ -131,12 +131,12 @@ export let copyToggle = toggleBools.copyToggle;
 
 //code mirror default code part 1
 export const editStrP1 = writable(`<script>
-import Svelvet from 'svelvet';
+import Svelvet from 'svelvetcake';
 const initialNodes = [
   {
     id: 1,
     position: { x: 225, y: 10 },
-    data: { label: 'Add Images!' },
+    data: { label: 'HELLO' },
     width: 100,
     height: 100,
     bgColor: 'white',
@@ -147,7 +147,7 @@ const initialNodes = [
   {
     id: 2,
     position: { x: 390, y: 180 },
-    data: { label: 'Mixed Anchors' },
+    data: { label: 'HELLO' },
     width: 125,
     height: 40,
     bgColor: 'white',
@@ -156,7 +156,7 @@ const initialNodes = [
   {
     id: 3,
     position: { x: 225, y: 260 },
-    data: { label: 'Output Node' },
+    data: { label: 'HELLO' },
     width: 100,
     height: 40,
     bgColor: '#FFE4E6'
@@ -164,7 +164,7 @@ const initialNodes = [
   {
     id: 4,
     position: { x: 25, y: 180 },
-    data: { label: 'Drag me!' },
+    data: { label: 'HELLO' },
     width: 125,
     height: 40,
     bgColor: 'white',
@@ -173,7 +173,7 @@ const initialNodes = [
   {
     id: 5,
     position: { x: 390, y: 380 },
-    data: { label: 'Custom Node' },
+    data: { label: 'HELLO' },
     width: 125,
     height: 40,
     bgColor: '#C8FFC7',
@@ -183,7 +183,7 @@ const initialNodes = [
   {
     id: 6,
     position: { x: 47.5, y: 360 },
-    data: { label: 'Custom Node' },
+    data: { label: 'HELLO' },
     width: 80,
     height: 80,
     borderColor: '#FF4121',
