@@ -328,7 +328,7 @@
   ];
 </\script>
  
-<Svelvet nodes={initialNodes} edges={initialEdges} width={710} height={700} background />
+<Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={1200} background />
 			`
           );
       }
