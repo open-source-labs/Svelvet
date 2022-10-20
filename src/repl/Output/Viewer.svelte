@@ -241,6 +241,7 @@
 		/* height: calc(100vh - var(--nav-h)); */
 		border: none;
 		display: block;
+		background-color: rgb(210, 253, 253);
 	}
 
 	.greyed-out {
