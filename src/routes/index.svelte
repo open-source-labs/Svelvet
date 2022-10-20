@@ -47,7 +47,6 @@
 		data: { html: `<button> Click Me! </button>` },
 		width: 100,
 		height: 40,
-    childNodes: [4, 6],
 		bgColor: "blue",
 
 	  },
@@ -65,7 +64,6 @@
 		position: { x: 30, y: 510 },
 		data: { label: "no handle" },
 		width: 80,
-		parentNode: 2,
 		height: 40,
 		bgColor: "white",
 
@@ -147,7 +145,7 @@
       <div
         class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
       >
-        <Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={1200} background />
+        <Svelvet nodes={initialNodes} edges={initialEdges} width={900} height={900} background />
       </div>
     </div>
   </div>
