@@ -28,8 +28,8 @@
 		position: { x: 100, y: 20 },
 		data: { html: ` <video width="480" height="360" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video>` },
 		// data: {html: `<h1> WE DEM BOIZ MONSTARZ </h1>` },
-		width:  330,
-		height: 220,
+		width:  490,
+		height: 375,
 		bgColor: "white",
 	  },
 	  {

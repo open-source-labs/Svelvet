@@ -265,8 +265,8 @@
 		position: { x: 100, y: 20 },
 		data: { html: \` <video width="480" height="360" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video>\` },
 		// data: {html: \`<h1> WE DEM BOIZ MONSTARZ </h1\` },
-		width:  330,
-		height: 220,
+		width:  490,
+		height: 370,
 		bgColor: "white",
 	  },
 	  {
@@ -283,7 +283,7 @@
 		position: { x: 240, y: 510 },
 		data: { html: \`<button> Click Me! </button>\` },
 		width: 100,
-		height: 40,
+		height: 50,
 		bgColor: "blue",
 
 	  },
@@ -293,7 +293,7 @@
 		data: { html: \`<label for="lname">Message Box:</label>
 <input type="text" id="lname" name="lname" form="form1">\` },
 		width: 200,
-		height: 40,
+		height: 50,
 		bgColor: "white"
 	  },
 	  {
@@ -311,7 +311,7 @@
 		position: { x: 450, y: 480 },
 		data: { html: \` <ul><li>Coffee</li><li>Tea</li><li>Milk</li></ul> \` },
 		width: 100,
-		height: 50,
+		height: 80,
 		bgColor: "white",
 
 	  }
@@ -328,7 +328,7 @@
   ];
 </\script>
  
-<Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={1200} background />
+<Svelvet nodes={initialNodes} edges={initialEdges} width={1100} height={1100} background />
 			`
           );
       }
