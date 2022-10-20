@@ -34,3 +34,6 @@ v 1.1.4
 v 1.1.5
 - updated functionality to stop magnetic node to use node.postion.x & node.position.y instead of client.X & client.Y
 - commented out previous code, but left in function because unsure of path forward in fixing this issue
+
+v 1.1.6
+Replaces updates driven by GitHub issue 120 and addresses GitHub issue 125. This update allows nodes to be dragged outside the visible boundaries and not become magnetized when the mouse is unclicked. Refactor based on @FractalHQ ‘s github issue recommendation.
