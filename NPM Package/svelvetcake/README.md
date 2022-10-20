@@ -30,3 +30,7 @@ v 1.1.4
 - implemented logic within store.js for onMouseMove and onTouchMove childNodes so that every node id included in the childNodes array will move with the parent
 - Refactored existing code in store.js to improve readability and cleanliness
 - Added a feature to allow grouping of certain nodes; this resolves github issues #97
+
+v 1.1.5
+- updated functionality to stop magnetic node to use node.postion.x & node.position.y instead of client.X & client.Y
+- commented out previous code, but left in function because unsure of path forward in fixing this issue

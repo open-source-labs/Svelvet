@@ -27,17 +27,43 @@
       onMouseMove(e, node.id);
       moved = true;
       // Prevent nodes from being dragged past the canvas and visible boundaries (GitHub Issue #120)
-      if (
-        // If node moves past boundaries
-        e.clientX < $widthStore - $widthStore || // left canvas and visible boundary
-        e.clientX > $widthStore || // right canvas and visible boundary
-        e.clientY < $heightStore - $heightStore || // top canvas and visible boundary
-        e.clientY > $heightStore // bottom canvas and visible boundary
-      ) {
-        // Then drop the node in that current spot - i.e. at the boundary
-        moving = false;
-        $nodeSelected = false;
-      }
+      // if (
+      //   // If node moves past boundaries
+      //   e.clientX < $widthStore - $widthStore || // left canvas and visible boundary
+      //   e.clientX > $widthStore || // right canvas and visible boundary
+      //   e.clientY < $heightStore - $heightStore || // top canvas and visible boundary
+      //   e.clientY > $heightStore // bottom canvas and visible boundary
+      // ) {
+      //   // Then drop the node in that current spot - i.e. at the boundary
+      //   moving = false;
+      //   $nodeSelected = false;
+      // }
+    
+      if (node.position.x < 0) {
+      node.position.x = 1
+      moving = false;
+      $nodeSelected = false;
+    }
+
+    if (node.position.y < 0) {
+      node.position.y = 1
+      moving = false;
+      $nodeSelected = false;
+    }
+
+    if (node.position.y > $heightStore) {
+      node.position.y = $heightStore - 1
+      moving = false;
+      $nodeSelected = false;
+    }
+
+    if (node.position.x > $widthStore) {
+      node.position.x = $widthStore - 1
+      moving = false;
+      $nodeSelected = false;
+    }
+
+
     }
   }}
 />
