@@ -46,7 +46,7 @@
 		position: { x: 240, y: 510 },
 		data: { html: `<button> Click Me! </button>` },
 		width: 100,
-		height: 40,
+		height: 50,
 		bgColor: "blue",
 
 	  },
@@ -56,7 +56,7 @@
 		data: { html: `<label for="lname">Message Box:</label>
 <input type="text" id="lname" name="lname" form="form1">` },
 		width: 200,
-		height: 40,
+		height: 50,
 		bgColor: "white"
 	  },
 	  {
@@ -73,7 +73,7 @@
 		position: { x: 450, y: 480 },
 		data: { html: ` <ul><li>Coffee</li><li>Tea</li><li>Milk</li></ul> ` },
 		width: 100,
-		height: 50,
+		height: 80,
 		bgColor: "white",
 
 	  }
