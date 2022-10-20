@@ -26,45 +26,21 @@
     if (shouldMove) {
       onMouseMove(e, node.id);
       moved = true;
-      // Prevent nodes from being dragged past the canvas and visible boundaries (GitHub Issue #120)
-      // if (
-      //   // If node moves past boundaries
-      //   e.clientX < $widthStore - $widthStore || // left canvas and visible boundary
-      //   e.clientX > $widthStore || // right canvas and visible boundary
-      //   e.clientY < $heightStore - $heightStore || // top canvas and visible boundary
-      //   e.clientY > $heightStore // bottom canvas and visible boundary
-      // ) {
-      //   // Then drop the node in that current spot - i.e. at the boundary
-      //   moving = false;
-      //   $nodeSelected = false;
-      // }
-    
-      if (node.position.x < 0) {
-      node.position.x = 1
-      moving = false;
-      $nodeSelected = false;
     }
-
-    if (node.position.y < 0) {
-      node.position.y = 1
-      moving = false;
-      $nodeSelected = false;
+  }}
+  on:mouseup={(e) => {
+    // Note: mouseup moved outside of div to prevent issue where node becomes magnetized to cursor after leaving visible boundaries, github issues #120 & #125
+    if ($snapgrid) {
+      // If user sets snap attribute as true inside Svelvet
+      node.position.x = Math.floor(node.position.x / 30) * 30;
+      node.position.y = Math.floor(node.position.y / 30) * 30;
     }
-
-    if (node.position.y > $heightStore) {
-      node.position.y = $heightStore - 1
-      moving = false;
-      $nodeSelected = false;
+    moving = false;
+    $nodeSelected = false;
+    if (!moved && node.id == $nodeIdSelected) {
+      onNodeClick(e, node.id);
     }
-
-    if (node.position.x > $widthStore) {
-      node.position.x = $widthStore - 1
-      moving = false;
-      $nodeSelected = false;
-    }
-
-
-    }
+    moved = false;
   }}
 />
 
@@ -88,19 +64,6 @@
     moving = true;
     $nodeIdSelected = node.id;
     $nodeSelected = true;
-  }}
-  on:mouseup={(e) => {
-    // If user sets snap attribute as true inside Svelvet 
-    if ($snapgrid) {
-      node.position.x = Math.floor(node.position.x / 30) * 30;
-      node.position.y = Math.floor(node.position.y / 30) * 30;
-    }
-    moving = false;
-    $nodeSelected = false;
-    if (!moved && node.id == $nodeIdSelected) {
-      onNodeClick(e, node.id);
-    }
-    moved = false;
   }}
   class="Node"
   style="left: {node.position.x}px;
