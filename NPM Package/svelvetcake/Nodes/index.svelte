@@ -11,7 +11,8 @@
     heightStore,
     nodeIdSelected,
     movementStore,
-    snapgrid
+    snapgrid, 
+    snapResize,
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -32,8 +33,8 @@
     // Note: mouseup moved outside of div to prevent issue where node becomes magnetized to cursor after leaving visible boundaries, github issues #120 & #125
     if ($snapgrid) {
       // If user sets snap attribute as true inside Svelvet
-      node.position.x = Math.floor(node.position.x / 30) * 30;
-      node.position.y = Math.floor(node.position.y / 30) * 30;
+      node.position.x = Math.floor(node.position.x / $snapResize) * $snapResize;
+      node.position.y = Math.floor(node.position.y / $snapResize) * $snapResize;
     }
     moving = false;
     $nodeSelected = false;
