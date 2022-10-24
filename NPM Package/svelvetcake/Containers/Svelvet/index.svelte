@@ -10,6 +10,7 @@ export let height = 600;
 export let background = false;
 export let movement = true;
 export let snap = false;
+export let snapTo;
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -26,6 +27,10 @@ onMount(() => {
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
     svelvetStore.snapgrid.set(snap);
+    // Conditional checks if snapTo is not defined by user; default snapResize remains 30
+    if (snapTo !== undefined) {
+      svelvetStore.snapResize.set(snapTo);
+    };
 });
 // enables data reactivity
 afterUpdate(() => {
@@ -36,6 +41,9 @@ afterUpdate(() => {
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
     svelvetStore.snapgrid.set(snap);
+    if (snapTo !== undefined) {
+      svelvetStore.snapResize.set(snapTo);
+    };
 });
 </script>
 
