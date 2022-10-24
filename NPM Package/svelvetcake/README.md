@@ -36,4 +36,10 @@ v 1.1.5
 - commented out previous code, but left in function because unsure of path forward in fixing this issue
 
 v 1.1.6
-Replaces updates driven by GitHub issue 120 and addresses GitHub issue 125. This update allows nodes to be dragged outside the visible boundaries and not become magnetized when the mouse is unclicked. Refactor based on @FractalHQ ‘s github issue recommendation.
+ - Replaces updates driven by GitHub issue 120 and addresses GitHub issue 125
+ - This update allows nodes to be dragged outside the visible boundaries and not become magnetized when the mouse is unclicked. Refactor based on @FractalHQ ‘s github issue recommendation.
+ 
+ v 1.1.7
+ - Declared a variable that sets size of default snap functionality; Updated snap functionality to reflect new variable in store
+ - Fixed snap to grid so that edges move in relation to node immediately upon snap
+ - Variable declaration for snapTo (user defined prop for size of snap-to-grid); Invoked functionality passing in new prop
