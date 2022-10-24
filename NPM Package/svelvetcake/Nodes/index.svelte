@@ -35,6 +35,7 @@
       // If user sets snap attribute as true inside Svelvet
       node.position.x = Math.floor(node.position.x / $snapResize) * $snapResize;
       node.position.y = Math.floor(node.position.y / $snapResize) * $snapResize;
+      onMouseMove(e, node.id);
     }
     moving = false;
     $nodeSelected = false;
