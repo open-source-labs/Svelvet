@@ -12,6 +12,7 @@ interface CoreSvelvetStore {
     d3Scale: Writable<number>;
     snapgrid: Writable<boolean>;
     snapResize: Writable<number>;
+    backgroundColor: Writable<string>;
 }
 interface SvelvetStore extends CoreSvelvetStore {
     onMouseMove: (e: any, nodeID: number) => void;

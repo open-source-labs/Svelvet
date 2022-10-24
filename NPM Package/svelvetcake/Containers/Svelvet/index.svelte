@@ -3,6 +3,7 @@
 import { findOrCreateStore } from '../../stores/store';
 import { afterUpdate, onMount } from 'svelte';
 // Declaring variables for Svelvet components which will be usable in other files
+// declaring default values for props
 export let nodes;
 export let edges;
 export let width = 600;
@@ -10,14 +11,15 @@ export let height = 600;
 export let background = false;
 export let movement = true;
 export let snap = false;
-export let snapTo;
+export let snapTo = 30;
+export let bgColor = '#ffffff'
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
 // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
 const svelvetStore = findOrCreateStore(key);
 // stores (state) within stores, so that we cannot access values from everywhere
-const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
+const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor } = svelvetStore;
 // sets the state of the store to the values passed in from the Svelvet Component on initial render
 onMount(() => {
     svelvetStore.nodesStore.set(nodes);
@@ -27,10 +29,9 @@ onMount(() => {
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
     svelvetStore.snapgrid.set(snap);
-    // Conditional checks if snapTo is not defined by user; default snapResize remains 30
-    if (snapTo !== undefined) {
+    svelvetStore.backgroundColor.set(bgColor);
       svelvetStore.snapResize.set(snapTo);
-    };
+  
 });
 // enables data reactivity
 afterUpdate(() => {
@@ -41,14 +42,14 @@ afterUpdate(() => {
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
     svelvetStore.snapgrid.set(snap);
-    if (snapTo !== undefined) {
-      svelvetStore.snapResize.set(snapTo);
-    };
+    svelvetStore.backgroundColor.set(bgColor);
+    svelvetStore.snapResize.set(snapTo);
+  
 });
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
-<div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
+<div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px; background-color: ${$backgroundColor}`}>
   <GraphView {nodesStore} {derivedEdges} {key} />
 </div>
 
@@ -58,6 +59,6 @@ afterUpdate(() => {
     overflow: hidden;
     display: grid;
     font-family: 'Segoe UI', sans-serif;
-    background-color: 'white';
+
   }
 </style>
