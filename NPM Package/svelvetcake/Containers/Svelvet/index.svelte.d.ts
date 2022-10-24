@@ -10,6 +10,7 @@ declare const __propDef: {
         movement?: boolean | undefined;
         snap?: boolean | undefined;
         snapTo?: number | undefined;
+        bgColor?: string | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;
