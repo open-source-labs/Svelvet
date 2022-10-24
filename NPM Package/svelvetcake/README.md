@@ -43,3 +43,8 @@ v 1.1.6
  - Declared a variable that sets size of default snap functionality; Updated snap functionality to reflect new variable in store
  - Fixed snap to grid so that edges move in relation to node immediately upon snap
  - Variable declaration for snapTo (user defined prop for size of snap-to-grid); Invoked functionality passing in new prop
+
+
+v 1.1.8
+- Updated the store.js file to have a backgroundColor property that is updated in the componenet declaration to provide different background colors within the iframe container.
+- Imported previous logic on Parent Child relationships into a new folder called "Future Iteration Features" called ParentNode.md.
