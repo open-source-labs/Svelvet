@@ -49,6 +49,7 @@ afterUpdate(() => {
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
+<!-- Pass in props to define svelvet css options -->
 <div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px; background-color: ${$backgroundColor}`}>
   <GraphView {nodesStore} {derivedEdges} {key} />
 </div>
