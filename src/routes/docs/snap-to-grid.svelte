@@ -4,7 +4,7 @@
 	const initialNodes = [
 	  {
 		id: 1,
-		position: { x: 450, y: 100 },
+		position: { x: 453, y: 70 },
 		data: { label: "MAIN NODE"},
 		// data: { html: ` <video width="360" height="240" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video> ` },
 		// data: {html: `<h1> WE DEM BOIZ MONSTARZ </h1>` },
@@ -14,7 +14,7 @@
 	  },
 	  {
 		id: 2,
-		position: { x: 200, y: 230 },
+		position: { x: 250, y: 300 },
 		data: { label: "Snap!" },
 		width: 70,
 		height: 40,
@@ -23,7 +23,7 @@
 	  },
 	  {
 		id: 3,
-		position: { x: 460, y: 400 },
+		position: { x: 463, y: 400 },
 		data: { html: `<button> Svelvet 4.0 </button>` },
 		width: 100,
 		height: 40,
@@ -32,7 +32,7 @@
 	  },
 	  {
 		id: 4,
-		position: { x: 700, y: 110 },
+		position: { x: 700, y: 210 },
 		data: { label: 'SvelvetCake'},
 		width: 300,
 		height: 225,
@@ -42,7 +42,7 @@
 	  },
 	  {
 		id: 5,
-		position: { x: 130, y: 110 },
+		position: { x: 150, y: 210 },
 		data: { label: "Drag Me" },
 		width: 80,
 		height: 40,
@@ -51,7 +51,7 @@
 	  },
 	  {
 		id: 6,
-		position: { x: 550, y: 180 },
+		position: { x: 550, y: 230 },
 		data: { html: ` <ul><li>SNAP</li><li>THAT</li><li>NODE</li></ul> ` },
 		width: 85,
 		height: 100,
@@ -86,6 +86,8 @@
 		arrow: true
 	  }
 	];
+
+let code_sample = `< Svelvet snap={true} snapTo={30} />`
 </script>
 
 <div>
@@ -100,28 +102,21 @@
       edges={initialEdges}
       width={1500}
       height={500}
-      background
       movement={true}
+	  background
       snap={true}
-      snapTo={20}
+      snapTo={30}
     />
   </div>
   <p class="my-4 text-gray-600">
-     Hello
-  </p>
+     The diagram above features the snap-to-grid functioanlity whenver a node's position is changed. Upon Svelvet 4.0's release, snap-to-grid can easily be modifed within the Svelvet component declaration by changing the values passed into the <code class="code">snap</code> and <code class="code">snapTo</code> props. <br><br> 
+     <!-- <code> <Svelvet nodes={initialNodes} edges={initialEdges} background snap={true} snapTo={30}/> </code>  -->
 
-  <p class="my-4 text-gray-600">
-    <strong>For SvelteKit apps:</strong> While
-    <a class="text-rose-600 underline underline-offset-1" target="_blank" href="https://jestjs.io/"
-      >@jest</a
-    >
-    is a reliable option for running your tests, SvelteKit applications are built with Vite and thus
-    require separate configurations. We found that
-    <a class="text-rose-600 underline underline-offset-1" target="_blank" href="https://vitest.dev/"
-      >@vitest</a
-    >
-    is a great option for Vite apps as they share the same config files and require little additional
-    work to get started, letting you focus on writing quality tests rather than config issues.
+     <code class="block rounded-md p-3 bg-rose-100 text-rose-600 w-full sm:w-3/4 md:w-1/2"
+      > {code_sample}
+    </code>
+
+     <br>If no specified numerical value is passed into snapTo, the default value is set to 30. 
   </p>
 </div>
 
