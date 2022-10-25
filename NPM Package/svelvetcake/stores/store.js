@@ -3,6 +3,7 @@ const svelvetStores = {};
 // refer to Svelvet/index, if store does not exist, then create one.
 // Creates one Svelvet component store using the unique key
 export function findOrCreateStore(key) {
+    //This just returns whatever we are requesting from store.js
     const existing = svelvetStores[key];
     if (existing) {
         return existing;
@@ -115,25 +116,35 @@ export function findOrCreateStore(key) {
                 targetPosition: 'right',
                 sourcePosition: 'left'
             };
+            
+            //We find out what the sourceNode is or the targetNode is.
             $nodesStore.forEach((node) => {
                 if (edge.source === node.id)
                     sourceNode = node;
                 if (edge.target === node.id)
                     targetNode = node;
             });
+
             if (sourceNode) {
+                
                 //left side of the node selected
                 let left = sourceNode.position.x;
+                
                 //top of the node selected
                 let top = sourceNode.position.y;
+                
                 //declaring the middle point of the node
                 let middle = sourceNode.width / 2;
+                
                 //Default sourcePosition to bottom if sourcePosition not defined
                 if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
+                
                     //the x coordinate of the middle of the node
                     edge.sourceX = left + middle;
+                    
                     //the y coordinate of the bottom of the node
                     edge.sourceY = top + sourceNode.height;
+                    
                     //assign sourcePosition to the edge for usage in the various edge components
                     edge.sourcePosition = 'bottom';
                 }
@@ -154,12 +165,16 @@ export function findOrCreateStore(key) {
                 }
             }
             if (targetNode) {
+                
                 //left side of the node selected
                 let left = targetNode.position.x;
+                
                 //top of the node selected
                 let top = targetNode.position.y;
+                
                 //declaring the middle point of the node
                 let middle = targetNode.width / 2;
+
                 //Default to top targetPosition if targetPosition undefined
                 if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
                     //the x coordinate of the middle of the node
