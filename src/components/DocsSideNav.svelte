@@ -13,7 +13,9 @@
     ['Custom Edges', 'custom-edges'],
     ['Panning and Zooming', 'pan-and-zoom'],
     ['Usage with Typescript', 'typescript'],
-    ['Testing', 'testing']
+    ['Testing', 'testing'],
+    ['CSS-Background', 'CSS-Background'],
+    ['Node-Grouping', 'node-grouping'],
   ];
 
   // const communityLinks = [
