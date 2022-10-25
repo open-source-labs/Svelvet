@@ -53,3 +53,7 @@ v 1.1.9
 - Created a folder called Future Iteraiton to provide information on further updates developers can implement to improve Svelvet in the future.
 - Uploaded excalidraw png's to provide visualization on how data moves and is loaded within the svelvetcake npm package.
 - Provided a ParentNode.md file documenting the code that attempted to create a parent child node relationship within svelvet. It is currently causing performance issues so it has been left unimplemented but is available for reference for future developers.
+
+v 1.1.10
+- moved several dependencies unneeded for Svelvet diagram functionality into devDependencies
+- this resolves gitHub issue #124 & github issue #118
