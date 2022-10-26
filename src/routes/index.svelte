@@ -22,9 +22,6 @@
   
 
   import Svelvet from 'svelvet';
-  // import type { Node, Edge } from '$lib/types/types';
-  // import type { Node, Edge } from 'svelvet';
-  // import Svelvet from 'svelvet';
 
   const initialNodes = [
     {

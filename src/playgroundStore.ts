@@ -131,13 +131,12 @@ export let copyToggle = toggleBools.copyToggle;
 
 //code mirror default code part 1
 export const editStrP1 = writable(`<script>
-import Svelvet from 'svelvetcake';
+import Svelvet from 'svelvet';
 const initialNodes = [
   {
   id: 1,
   position: { x: 100, y: 20 },
-  data: { html: \` <video width="480" height="360" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video>\` },
-  // data: {html: \`<h1> WE DEM BOIZ MONSTARZ </h1>\` },
+  data: { html: \` <video width="480" height="360" src="https://i.imgur.com/zdT6tSz.mp4" controls autoplay loop></video>\` },
   width:  490,
   height: 370,
   bgColor: "white",
