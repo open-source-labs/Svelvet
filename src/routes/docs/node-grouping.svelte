@@ -6,7 +6,7 @@
   <h2 class="text-4xl font-semibold mb-12">Node-Grouping</h2>
 
   <p class="my-4 text-gray-600">
-   Svelvet supports node grouping so you can multiple nodes at once. you merely need to specify childNodes propery within your initial nodes declaration. Keep in mind that currently a child node with its own children will need to have them specified with the grandparent in order to move themselves. See the example sandbox below to test and tinker with the nodes.
+   Svelvet supports node grouping so you can multiple nodes at once. You merely need to specify 'childNodes' propery within your initial nodes declaration. Keep in mind that children of child nodes need to be specified in the grandparent in order to move with it. See the example sandbox below to test and tinker with the nodes.
 </p>
 
 <ul>
