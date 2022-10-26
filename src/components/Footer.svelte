@@ -22,7 +22,7 @@
       <a href="/" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
-        href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+        href="https://medium.com/p/3d96823096e3"
         >Blog</a
       >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
