@@ -16,7 +16,8 @@
     ['Testing', 'testing'],
     ['CSS-Background', 'CSS-Background'],
     ['Node-Grouping', 'node-grouping'],
-    ['Snap-To-Grid', 'snap-to-grid']
+    ['Snap-To-Grid', 'snap-to-grid'],
+    ['HTML-Docs', 'HTML-Docs']
   ];
 
   // const communityLinks = [
