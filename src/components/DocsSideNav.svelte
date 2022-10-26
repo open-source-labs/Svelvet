@@ -14,12 +14,9 @@
     ['Panning and Zooming', 'pan-and-zoom'],
     ['Usage with Typescript', 'typescript'],
     ['Testing', 'testing'],
-<<<<<<< HEAD
     ['CSS-Background', 'CSS-Background'],
     ['Node-Grouping', 'node-grouping'],
-=======
     ['Snap-To-Grid', 'snap-to-grid']
->>>>>>> dev
   ];
 
   // const communityLinks = [
