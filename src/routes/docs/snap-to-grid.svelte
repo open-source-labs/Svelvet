@@ -6,8 +6,6 @@
 		id: 1,
 		position: { x: 453, y: 70 },
 		data: { label: "MAIN NODE"},
-		// data: { html: ` <video width="360" height="240" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video> ` },
-		// data: {html: `<h1> WE DEM BOIZ MONSTARZ </h1>` },
 		width:  120,
 		height: 60,
 		bgColor: '#FFE4E6'
