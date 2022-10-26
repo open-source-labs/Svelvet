@@ -128,6 +128,9 @@
           <li class:bg-rose-100={activeLink.includes('snap-to-grid')}>
             <a on:click={toggleMenu} href="/docs/snap-to-grid" class="block py-4 px-12">Snap-To-Grid</a>
           </li>
+          <li class:bg-rose-100={activeLink.includes('HTML-Docs')}>
+            <a on:click={toggleMenu} href="/docs/HTML-Docs" class="block py-4 px-12">HTML-Docs</a>
+          </li>
         </ul>
       {/if}
 

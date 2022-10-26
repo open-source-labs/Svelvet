@@ -6,8 +6,6 @@
 		id: 1,
 		position: { x: 453, y: 70 },
 		data: { label: "MAIN NODE"},
-		// data: { html: ` <video width="360" height="240" src="https://i.imgur.com/VoBl9wh.mp4" controls autoplay loop></video> ` },
-		// data: {html: `<h1> WE DEM BOIZ MONSTARZ </h1>` },
 		width:  120,
 		height: 60,
 		bgColor: '#FFE4E6'
@@ -109,7 +107,7 @@ let code_sample = `< Svelvet snap={true} snapTo={30} />`
     />
   </div>
   <p class="my-4 text-gray-600">
-     The diagram above features the snap-to-grid functioanlity whenver a node's position is changed. Upon Svelvet 4.0's release, snap-to-grid can easily be modifed within the Svelvet component declaration by changing the values passed into the <code class="code">snap</code> and <code class="code">snapTo</code> props. <br><br> 
+     The diagram above features the snap-to-grid functionality whenver a node's position is changed. Upon Svelvet 4.0's release, snap-to-grid can easily be modifed within the Svelvet component declaration by changing the values passed into the <code class="code">snap</code> and <code class="code">snapTo</code> props. <br><br> 
      <!-- <code> <Svelvet nodes={initialNodes} edges={initialEdges} background snap={true} snapTo={30}/> </code>  -->
 
      <code class="block rounded-md p-3 bg-rose-100 text-rose-600 w-full sm:w-3/4 md:w-1/2"
