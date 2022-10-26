@@ -12,7 +12,7 @@
 <ul>
 <li class="flex items-center justify-between py-1 border-b">
     <code class="code">childNodes</code>
-    <div class="w-2/3">Array of numbers, put other nodes id's in here</div>
+    <div class="w-2/3">Array, put node ids here</div>
 </li>
 </ul> 
 
