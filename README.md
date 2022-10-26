@@ -78,7 +78,7 @@ Shout out to our contributors! Here's what's new:
 - **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
 - **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
-- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background and *movement* (collaborator credit to [dvisockas](https://github.com/dvisockas)).
+- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background and _movement_ (collaborator credit to [dvisockas](https://github.com/dvisockas)).
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Cypress](https://www.cypress.io/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
@@ -144,6 +144,10 @@ npm run cypress:open
 - Jeffrey Wentworth • [LinkedIn](https://www.linkedin.com/in/jeffreywentworth/) • [Github](https://github.com/jeffreywentworth)
 - Johnny Tran • [LinkedIn](https://www.linkedin.com/in/tranpjohnny/) • [Github](https://github.com/JTraan)
 - Samee Vohra • [LinkedIn](https://www.linkedin.com/in/sameev/) • [Github](https://github.com/sameev)
+- Abhi Gullapalli • [LinkedIn](https://www.linkedin.com/in/viswa-gullapalli-442802253/) • [Github](https://github.com/aubertlone)
+- Ian Hnizdo • [LinkedIn]() • [Github]()
+- Mauricio Castro • [LinkedIn](https://www.linkedin.com/in/mauricioacastro/) • [Github](https://github.com/sher85)
+- Ryan Potter • [LinkedIn](www.linkedin.com/in/ryan-potter-0105b6100) • [Github](https://github.com/rpotter0811)
 
 ## Forking the Repository
 
