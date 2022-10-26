@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Svelvet from "svelvetcake";
+	import Svelvet from "svelvet";
     import Logo from '../../assets/High Resolution Logo.png'
 	const initialNodes = [
 	  {
