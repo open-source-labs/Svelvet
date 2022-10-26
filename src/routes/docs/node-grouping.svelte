@@ -11,8 +11,8 @@
 
 <ul>
 <li class="flex items-center justify-between py-1 border-b">
-    <code class="code">childNodes</code>
-    <div class="w-2/3">Array, put node id's here</div>
+    <code class="code">childNodes:[2,4]</code>
+
 </li>
 </ul> 
 
