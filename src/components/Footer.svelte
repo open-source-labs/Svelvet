@@ -13,8 +13,12 @@
       <a href="/docs/pan-and-zoom">Panning and Zooming</a>
       <a href="/docs/typescript">Usage with TypeScript</a>
       <a href="/docs/testing">Testing</a>
+<<<<<<< HEAD
       <a href="/docs/CSS-background">CSS-Background</a>
       <a href="/docs/node-grouping">Node-Grouping</a>"
+=======
+      <a href="/docs/snap-to-grid">Snap-To-Grid</a>
+>>>>>>> dev
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/" class="text-gray-700 font-semibold">Community</a>
