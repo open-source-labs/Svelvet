@@ -110,7 +110,7 @@
 		{code_sample4} <br> {code_sample5} <br> {code_sample6} <br> {code_sample7}
     </code>
 
-     <br>
+     <br> Let your imagination run wild with this feature!
   </p>
 </div>
 
