@@ -6,8 +6,7 @@
   import MobileDocsNav from './MobileDocsNav.svelte';
   import { signInWithGithub, logout, userInfo } from '../supabase-db';
 
-
-  import { userInfoStore } from '../authStoreTs'
+  import { userInfoStore } from '../authStoreTs';
 
   let { user, logged_in, user_avatar } = userInfoStore;
   // use set method on user writable and set it equal to the return value of userIndo
@@ -15,7 +14,6 @@
 
   $: activeLink = `${$page.url.pathname}`;
   let y: number;
-
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -64,7 +62,7 @@
 
     <a
       target="_blank"
-      href="https://medium.com/@justinwouters/svelvet-2-0-c6b2059734a6"
+      href="https://medium.com/p/3d96823096e3"
       id="blog"
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >
@@ -89,47 +87,44 @@
         <!-- <div class="login-container rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider hover:text-rose-500 hover:bg-white">Logout
           <img src={$user_avatar} alt="user pic"/>
         </div> -->
-        <div class="login-container px-6 py-3 btn-primary">Logout
-          <img src={$user_avatar} alt="user pic"/>
+        <div class="login-container px-6 py-3 btn-primary">
+          Logout
+          <img src={$user_avatar} alt="user pic" />
         </div>
       </button>
 
       <!-- <img id="github-avatar" alt="github-avatar-photo"> -->
     {:else}
-      <button on:click={signInWithGithub}><div class="login-container px-6 py-3 btn-primary">
-        Log In
-        <img src={github} alt="github-logo" />
-      </div></button>
+      <button on:click={signInWithGithub}
+        ><div class="login-container px-6 py-3 btn-primary">
+          Log In
+          <img src={github} alt="github-logo" />
+        </div></button
+      >
     {/if}
-
-
   </nav>
 </div>
 
 <style>
+  .login-container {
+    display: flex;
+    width: 8em;
+    justify-content: space-between;
+    border-style: solid;
+    border-width: 1.25px;
+    border-color: #ff4561;
+    border-radius: 2em;
+    align-items: center;
+    flex: 1;
+    float: left;
+    padding: 0.25em 1em 0.25em;
+  }
 
-.login-container{
-  display: flex;
-  width: 8em;
-  justify-content: space-between;
-  border-style: solid;
-  border-width: 1.25px;
-  border-color: #ff4561;
-  border-radius: 2em;
-  align-items: center;
-  flex: 1;
-  float: left;
-  padding: .25em 1em .25em;
-}
-
-.login-container img {
-  display: inline-block;
-  margin-left: 5px;
-  height: 32px;
-  width: 32px;
-  border-radius: 50%;
-}
-
-
-
+  .login-container img {
+    display: inline-block;
+    margin-left: 5px;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+  }
 </style>

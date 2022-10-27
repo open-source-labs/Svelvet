@@ -22,6 +22,22 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details><summary>v4.0.0</summary>
+<ul>
+  <li>Added ability to include HTML in inside of nodes (i.e. videos, sounds, etc)</li>
+  <li>Added NPM Package folder in repo for ease of transfer to NPM</li>
+  <li>Added snap-to-grid functionality for use during runtime in the canvas (GitHub Issue 107)</li>
+  <li>Corrected issue where nodes become magnetized when moved outside of the visible canvas boundaries (GitHub Issues 120 & 125)</li>
+  <li>Removed unused dotenv dependancy (GitHub Issue 118)</li>
+  <li>Moved all dependancies in devDependancies to regular dependancies object, except for d3-zoom which is used by the client during runtime</li>
+  <li>Added group nodes functionality</li>
+  <li>Updated main website page to include newest set of collaborators</li>
+  <li>Added CSS option for canvas background</li>
+  <li>Added documentation for HTML in nodes, snap-to-grid, canvas background coloring, and node grouping to website documents</li>
+  <li>General refactoring throughout application to improve responsiveness and decrease size</li>
+  <li>Created documentation to assist future developers in understanding the flow of data in Svelvet and provide list of potential updates/upgrades</li>
+</ul>
+</details>
 <details><summary>v3.0.0</summary>
 <ul>
   <li>Added right-click context menu functionality on REPL playground page</li>
