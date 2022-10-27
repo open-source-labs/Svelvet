@@ -1,4 +1,4 @@
-import Svelvet from './Containers/Svelvet/index.svelte';
+import Svelvet from 'svelvet';
 export default Svelvet;
 
-export * from './types';
+// export * from './types';

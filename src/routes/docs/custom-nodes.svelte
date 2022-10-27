@@ -14,7 +14,8 @@
     ['image', 'boolean'],
     ['src', 'string of image url'],
     ['borderRadius', 'number'],
-    ['clickCallback', 'Function']
+    ['clickCallback', 'Function'],
+    ['childNodes', 'Array of numbers, put other nodes id\'s in here']
   ];
 </script>
 

@@ -42,7 +42,7 @@
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
-<div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px`}>
+<div class="Svelvet" style={`width: ${900}px; height: ${1200}px`}>
   <GraphView {nodesStore} {derivedEdges} {key} />
 </div>
 
@@ -52,6 +52,6 @@
     overflow: hidden;
     display: grid;
     font-family: 'Segoe UI', sans-serif;
-    background-color: 'white';
+    background-color: black;
   }
 </style>

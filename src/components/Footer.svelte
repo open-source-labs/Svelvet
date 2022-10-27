@@ -13,18 +13,23 @@
       <a href="/docs/pan-and-zoom">Panning and Zooming</a>
       <a href="/docs/typescript">Usage with TypeScript</a>
       <a href="/docs/testing">Testing</a>
+      <a href="/docs/CSS-background">CSS-Background</a>
+      <a href="/docs/node-grouping">Node-Grouping</a>
+      <a href="/docs/snap-to-grid">Snap-To-Grid</a>
+      <a href="/docs/HTML-Docs">HTML-Docs</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
-        href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+        href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3"
         >Blog</a
       >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
       <a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
-      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a>
+      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a
+      >
     </div>
   </div>
   <div class="flex flex-col items-center mt-10 text-gray-500">

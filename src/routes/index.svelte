@@ -15,14 +15,15 @@
   import jeff from '../assets/profiles/Jeffrey-small.png';
   import johnny from '../assets/profiles/Johnny-small.png';
   import samee from '../assets/profiles/Samee-small.png';
+  import abhi from '../assets/profiles/Abhi-small.png';
+  import ian from '../assets/profiles/Ian-small.png';
+  import mauricio from '../assets/profiles/Mauricio-small.png';
+  import ryan from '../assets/profiles/Ryan-small.png';
   
 
-  import Svelvet from '$lib/Containers/Svelvet/index.svelte';
-  import type { Node, Edge } from '$lib/types/types';
-  // import type { Node, Edge } from 'svelvet';
-  // import Svelvet from 'svelvet';
+  import Svelvet from 'svelvet';
 
-  const initialNodes: Node[] = [
+  const initialNodes = [
     {
       id: 1,
       position: { x: 225, y: 10 },
@@ -58,7 +59,7 @@
       width: 125,
       height: 40,
       bgColor: 'white',
-      targetPosition: 'right',
+      targetPosition: 'right'
     },
     {
       id: 5,
@@ -80,36 +81,16 @@
       borderRadius: 30,
       bgColor: 'white',
       textColor: '#FF4121'
-      //targetPosition: 'right'
-    },
+    }
   ];
 
-  const initialEdges: Edge[] = [
+  const initialEdges = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
     { id: 'e2-3', source: 2, target: 3, animate: true, label: 'animated edges' },
     { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, edgeColor: '#FF4121' },
-    {
-      id: 'e2-5',
-      source: 2,
-      target: 5,
-      label: 'colored edges',
-      animate: true,
-      arrow: true,
-      edgeColor: '#FF4121',
-      labelBgColor: '#1F2937',
-      labelTextColor: '#FFE4E6'
-    },
+    { id: 'e2-5', source: 2, target: 5, label: 'colored edges', animate: true, arrow: true, edgeColor: '#FF4121', labelBgColor: '#1F2937', labelTextColor: '#FFE4E6' },
     { id: 'e2-5', source: 4, target: 6, type: 'straight' },
-    {
-      id: 'e2-5',
-      source: 3,
-      target: 6,
-      type: 'smoothstep',
-      label: 'colored label',
-      labelBgColor: '#FF4561',
-      labelTextColor: 'white',
-      animate: true
-    }
+    { id: 'e2-5', source: 3, target: 6, type: 'smoothstep', label: 'colored label', labelBgColor: '#FF4561', labelTextColor: 'white', animate: true }
   ];
 </script>
 
@@ -151,7 +132,7 @@
       <div
         class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
       >
-        <Svelvet nodes={initialNodes} edges={initialEdges} width={550} height={550} background />
+        <Svelvet nodes={initialNodes} edges={initialEdges} width={900} height={900} background />
       </div>
     </div>
   </div>
@@ -399,6 +380,67 @@
               >
             </div>
           </div>
+          <!-- CARD 3: Abhi -->
+          <div class="contributor-card">
+            <img src={abhi} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Abhi <br />Gullapalli</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/viswa-gullapalli-442802253/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/aubertlone"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1: Ian -->
+          <div class="contributor-card">
+            <img src={ian} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Ian <br />Hnizdo</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/ian-hnizdo-a1a198128/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/ianhnizdo"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2: Mauricio -->
+          <div class="contributor-card">
+            <img src={mauricio} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Mauricio <br />Castro</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/mauricioacastro/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/sher85"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3: Ryan -->
+          <div class="contributor-card">
+            <img src={ryan} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Ryan <br />Potter</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/ryan-potter-0105b6100"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/rpotter0811"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+
         </div>
       </div>
       

@@ -1,13 +1,13 @@
 {
   "name": "svelvet",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
     "svelvet",
     "typescript"
   ],
-  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny",
+  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny, Abhi, Ian, Mauricio, Ryan",
   "license": "MIT",
   "bugs": "https://github.com/open-source-labs/Svelvet/issues",
   "homepage": "https://github.com/open-source-labs/Svelvet",
@@ -57,7 +57,6 @@
     "svelte-check": "^2.2.6",
     "svelte-preprocess": "^4.10.1",
     "svelte2tsx": "^0.5.9",
-    "svelvet": "^2.0.2",
     "tailwindcss": "^3.0.24",
     "tslib": "^2.3.1",
     "typescript": "~4.6.2",
@@ -77,6 +76,7 @@
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
     "svelte-parallax": "^0.6.0",
+    "svelvet": "^4.0.2",
     "yootils": "^0.3.1"
   }
 }
