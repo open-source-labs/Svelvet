@@ -62,7 +62,7 @@
 
     <a
       target="_blank"
-      href="https://medium.com/p/3d96823096e3"
+      href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3"
       id="blog"
       class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
     >

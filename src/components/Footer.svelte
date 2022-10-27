@@ -22,13 +22,14 @@
       <a href="/" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
-        href="https://medium.com/p/3d96823096e3"
+        href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3"
         >Blog</a
       >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
       <a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
-      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a>
+      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a
+      >
     </div>
   </div>
   <div class="flex flex-col items-center mt-10 text-gray-500">
