@@ -76,7 +76,7 @@
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
     "svelte-parallax": "^0.6.0",
-    "svelvet": "^4.0.0",
+    "svelvet": "^4.0.1",
     "yootils": "^0.3.1"
   }
 }
