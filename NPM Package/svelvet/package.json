@@ -1,6 +1,6 @@
 {
   "name": "svelvet",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
@@ -51,7 +51,6 @@
     "svelte-parallax": "^0.6.0",
     "svelte-preprocess": "^4.10.1",
     "svelte2tsx": "^0.5.9",
-    "svelvet": "^2.0.2",
     "tailwindcss": "^3.0.24",
     "tslib": "^2.3.1",
     "typescript": "~4.6.2",
