@@ -1,6 +1,6 @@
 <script>
   import Gist from '../../components/Gist.svelte';
-  import Svelvet from 'svelvetcake';
+  import Svelvet from 'svelvet';
 
   const initialNodes = [
     {

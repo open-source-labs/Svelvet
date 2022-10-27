@@ -1,5 +1,5 @@
 <script>
-  import Svelvet from 'svelvetcake';
+  import Svelvet from 'svelvet';
 
   const initialNodes = [
     {

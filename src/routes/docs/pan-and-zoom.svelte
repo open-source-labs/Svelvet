@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Svelvet from 'svelvetcake';
-  // import Svelvet from 'svelvet';
+  
+  import Svelvet from 'svelvet';
 
   // Example data for how library is to be used
   const initialNodes = [
