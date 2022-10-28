@@ -28,7 +28,7 @@ Shout out to our contributors! Here's what's new:
   <li>Added NPM Package folder in repo for ease of transfer to NPM</li>
   <li>Added snap-to-grid functionality for use during runtime in the canvas (GitHub Issue 107)</li>
   <li>Corrected issue where nodes become magnetized when moved outside of the visible canvas boundaries (GitHub Issues 120 & 125)</li>
-  <li>Removed unused dotenv dependancy (GitHub Issue 118)</li>
+  <li>Removed unused dotenv & node.env dependency from NPM Package package.json (GitHub Issue 118)</li>
   <li>Moved all dependancies in devDependancies to regular dependancies object, except for d3-zoom which is used by the client during runtime</li>
   <li>Added group nodes functionality</li>
   <li>Updated main website page to include newest set of collaborators</li>
