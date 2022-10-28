@@ -1,2 +1,4 @@
-VITE_SVELTE_APP_SUPABASE_URL = ‘https://wmdgqqrvlgjnykteuxtu.supabase.co’;
-VITE_SVELTE_APP_SUPABASE_ANON_KEY = ‘eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtZGdxcXJ2bGdqbnlrdGV1eHR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjQ3NDg1MDcsImV4cCI6MTk4MDMyNDUwN30.94CMcGTlMeYRvqFKVY2gxjJSw8yo9ZW8MI1hVC4GM0w’;
+// When forking the original repository for personal use, rename this file to '.env' and update the information below.
+
+VITE_SVELTE_APP_SUPABASE_URL = '[INSERT YOUR URL HERE]';
+VITE_SVELTE_APP_SUPABASE_ANON_KEY = '[INSERT YOUR ANON_KEY HERE]';
