@@ -52,31 +52,48 @@ export function findOrCreateStore(key) {
     // This is the function handler for the touch event on mobile to select a node.
     const onTouchMove = (e, nodeID) => {
             coreSvelvetStore.nodesStore.update((n) => {
-                const correctNode = n.find((node) => node.id === nodeID);
+                // restores mobile functionality
+                n.forEach(node => {
+                    if (node.id === nodeID) {
+                      //calculates the location of the selected node
+                      const { x, y, width, height } = e.target.getBoundingClientRect();
+                      const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+                      const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+                      // centers the node consistently under the user's touch
+                      node.position.x += offsetX - node.width / 2;
+                      node.position.y += offsetY - node.height / 2;
+                    }
+                  });
+                  return [...n];
+                });
+
+                // Svelvet 4.0 dev code see:
+                // https://github.com/open-source-labs/Svelvet/blob/main/NPM%20Package/svelvet/Future%20Iteration/ParentNode.md
+            //     const correctNode = n.find((node) => node.id === nodeID);
     
-                const { x, y, width, height } = e.target.getBoundingClientRect();
-                const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
-                const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+            //     const { x, y, width, height } = e.target.getBoundingClientRect();
+            //     const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+            //     const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
     
-                if(correctNode.childNodes){
-                    n.forEach((child)=>{
-                        //conditional fails, make it recognize the nodes in childNodes
-                        if(correctNode.childNodes.includes(child.id)){
-                            //All nodes within child nodes will move with the parent container node.
-                            child.position.x += offsetX - correctNode.width/2;
-                            child.position.y += offsetY - correctNode.height/2;
-                        }
-                    })
-                    correctNode.position.x += offsetX - correctNode.width/2;
-                    correctNode.position.y += offsetY - correctNode.height/2;
-                }  else {
-                    // centers the node consistently under the user's touch
-                    correctNode.position.x += offsetX - correctNode.width/2;
-                    correctNode.position.y += offsetY - correctNode.height/2;
+            //     if(correctNode.childNodes){
+            //         n.forEach((child)=>{
+            //             //conditional fails, make it recognize the nodes in childNodes
+            //             if(correctNode.childNodes.includes(child.id)){
+            //                 //All nodes within child nodes will move with the parent container node.
+            //                 child.position.x += offsetX - correctNode.width/2;
+            //                 child.position.y += offsetY - correctNode.height/2;
+            //             }
+            //         })
+            //         correctNode.position.x += offsetX - correctNode.width/2;
+            //         correctNode.position.y += offsetY - correctNode.height/2;
+            //     }  else {
+            //         // centers the node consistently under the user's touch
+            //         correctNode.position.x += offsetX - correctNode.width/2;
+            //         correctNode.position.y += offsetY - correctNode.height/2;
     
-                }
-            });
-            return [...n];
+            //     }
+            // });
+            // return [...n];
     };
 
     const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
