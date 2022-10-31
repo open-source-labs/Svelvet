@@ -25,7 +25,8 @@ Shout out to our contributors! Here's what's new:
 <details><summary>v4.0.0</summary>
 <ul>
   <li>Added ability to include HTML in inside of nodes (i.e. videos, sounds, etc)</li>
-  <li>Added NPM Package folder in repo for ease of transfer to NPM</li>
+  <li>Added NPM Package folder in root directory of GitHub repo</li>
+  <li>this folder is used for adding changes to library & pushing updates to NPM; included here to have version control through GitHub</li>
   <li>Added snap-to-grid functionality for use during runtime in the canvas (GitHub Issue 107)</li>
   <li>Corrected issue where nodes become magnetized when moved outside of the visible canvas boundaries (GitHub Issues 120 & 125)</li>
   <li>Removed unused dotenv & node.env dependency from NPM Package package.json (GitHub Issue 118)</li>
