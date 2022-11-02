@@ -72,7 +72,6 @@
     "dotenv": "^16.0.1",
     "estree-walker": "^3.0.1",
     "marked": "^4.0.17",
-    "node.env": "^1.0.3",
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
     "svelte-parallax": "^0.6.0",
