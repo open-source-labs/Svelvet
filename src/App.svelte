@@ -98,10 +98,6 @@
 		  { id: "e2-5", source: 6, target: 7, animate: true }
 		];
 
-
-
-
-
 	export let name;
 </script>
 
