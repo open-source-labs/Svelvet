@@ -5456,7 +5456,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "Anchor svelte-1x5u8nm");
+    			attr_dev(div, "class", "Anchor svelte-1rl1gvp");
 
     			attr_dev(div, "style", div_style_value = `
     top: ${/*position*/ ctx[1] === 'top'
@@ -6354,7 +6354,7 @@ var app = (function () {
     			if (default_slot) default_slot.c();
     			t3 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", "Node svelte-i273yi");
+    			attr_dev(div, "class", "Node svelte-16rgjp9");
     			set_style(div, "left", /*node*/ ctx[0].position.x + "px");
     			set_style(div, "top", /*node*/ ctx[0].position.y + "px");
     			set_style(div, "width", /*node*/ ctx[0].width + "px");
