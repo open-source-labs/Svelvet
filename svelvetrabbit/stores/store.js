@@ -20,7 +20,9 @@ export const coreSvelvetStore = {
     backgroundColor: writable(),
     mouseX: writable(1),
     mouseY: writable(1),
-    hoveredElement: writable(null)
+    hoveredElement: writable(null),
+    initZoom: writable(4),
+    initLocation: writable([{x:0, y:0}])
 };
 
 
@@ -46,7 +48,6 @@ export function findOrCreateStore(key) {
     //     snapResize: writable(30),
     //     backgroundColor: writable()
     // };
-
     // This is the function handler for the mouseMove event to update the position of the selected node.
     // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
     const onNodeMove = (e, nodeID) => {
