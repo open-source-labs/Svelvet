@@ -94,6 +94,7 @@
           .style('transform-origin', '0 0');
   }
   console.log('initialzoomx', initialZoom.x, 'initialzoomy', initialZoom.y);
+  console.log('hello world');
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
