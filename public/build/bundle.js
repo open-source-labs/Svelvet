@@ -5049,42 +5049,459 @@ var app = (function () {
         return [centerX, centerY, xOffset, yOffset];
     };
 
+    const subscriber_queue = [];
+    /**
+     * Creates a `Readable` store that allows reading by subscription.
+     * @param value initial value
+     * @param {StartStopNotifier}start start and stop notifications for subscriptions
+     */
+    function readable(value, start) {
+        return {
+            subscribe: writable(value, start).subscribe
+        };
+    }
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop$1) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop$1) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop$1;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+    function derived(stores, fn, initial_value) {
+        const single = !Array.isArray(stores);
+        const stores_array = single
+            ? [stores]
+            : stores;
+        const auto = fn.length < 2;
+        return readable(initial_value, (set) => {
+            let inited = false;
+            const values = [];
+            let pending = 0;
+            let cleanup = noop$1;
+            const sync = () => {
+                if (pending) {
+                    return;
+                }
+                cleanup();
+                const result = fn(single ? values[0] : values, set);
+                if (auto) {
+                    set(result);
+                }
+                else {
+                    cleanup = is_function(result) ? result : noop$1;
+                }
+            };
+            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+                values[i] = value;
+                pending &= ~(1 << i);
+                if (inited) {
+                    sync();
+                }
+            }, () => {
+                pending |= (1 << i);
+            }));
+            inited = true;
+            sync();
+            return function stop() {
+                run_all(unsubscribers);
+                cleanup();
+            };
+        });
+    }
+
+    const svelvetStores = {};
+    // refer to Svelvet/index, if store does not exist, then create one.
+
+    // Moved this out of the findOrCreateStore function to have it as more of a traditional? state that can be updated more easily
+    const coreSvelvetStore = {
+        nodesStore: writable([]),
+        edgesStore: writable([]),
+        widthStore: writable(600),
+        heightStore: writable(600),
+        backgroundStore: writable(false),
+        movementStore: writable(true),
+        nodeSelected: writable(false),
+        nodeIdSelected: writable(-1),
+        edgeSelected: writable(false),
+        edgeIdSelected: writable(-1),
+        d3Scale: writable(1),
+        snapgrid: writable(false),
+        snapResize: writable(30),
+        backgroundColor: writable(),
+        mouseX: writable(1),
+        mouseY: writable(1),
+        hoveredElement: writable(null),
+        initZoom: writable(4),
+        initLocation: writable({x:0, y:0})
+    };
+
+
+    // Creates one Svelvet component store using the unique key
+    function findOrCreateStore(key) {
+        //This just returns whatever we are requesting from store.js
+        const existing = svelvetStores[key];
+        if (existing) {
+            return existing;
+        }
+        //Setting defaults of core svelvet store and making them a store using writable
+        // const coreSvelvetStore = {
+        //     nodesStore: writable([]),
+        //     edgesStore: writable([]),
+        //     widthStore: writable(600),
+        //     heightStore: writable(600),
+        //     backgroundStore: writable(false),
+        //     movementStore: writable(true),
+        //     nodeSelected: writable(false),
+        //     nodeIdSelected: writable(-1),
+        //     d3Scale: writable(1),
+        //     snapgrid: writable(false),
+        //     snapResize: writable(30),
+        //     backgroundColor: writable()
+        // };
+        // This is the function handler for the mouseMove event to update the position of the selected node.
+        // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
+        const onNodeMove = (e, nodeID) => {
+            coreSvelvetStore.nodesStore.update((n) => {
+                const correctNode = n.find((node) => node.id === nodeID);
+                // console.log('node x', correctNode.position.x);
+                // console.log('node y', correctNode.position.y);
+
+                const scale = get_store_value(coreSvelvetStore.d3Scale);
+
+                if(correctNode.childNodes){
+                    n.forEach((child) => {
+                        if(correctNode.childNodes.includes(child.id)){
+                            child.position.x += e.movementX / scale;
+                            child.position.y += e.movementY / scale;
+                        }
+                    });
+                    correctNode.position.x += e.movementX / scale;
+                    correctNode.position.y += e.movementY / scale;
+                }
+                else {
+                    // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                    correctNode.position.x += e.movementX / scale;
+                    correctNode.position.y += e.movementY / scale;
+
+                }
+                return [...n];
+            });
+        };
+
+        // Mostly copied from onNodeMove, this allows for the movement of new Edges that don't yet have targets/sources
+        const onEdgeMove = (event, edgeID) => {
+            coreSvelvetStore.edgesStore.update((e) => {
+                const correctEdge = e.find((edge) => edge.id === edgeID);
+                // correctEdge.targetX = event.clientX;
+                // correctEdge.targetY = event.clientY;
+                console.log('correctEdge from store', correctEdge);
+
+                const scale = get_store_value(coreSvelvetStore.d3Scale);
+                // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                if (!correctEdge.target) {
+                  correctEdge.targetX += event.movementX / scale;
+                  correctEdge.targetY += event.movementY / scale;
+                } 
+                if (!correctEdge.source) {
+                  correctEdge.sourceX += event.movementX / scale;
+                  correctEdge.sourceY += event.movementY / scale;
+                  console.log('sourceX', correctEdge.sourceX, 'sourceY', correctEdge.sourceY);
+                }
+        
+                return [...e];
+            });
+        };
+
+        // This is the function handler for the touch event on mobile to select a node.
+        const onTouchMove = (e, nodeID) => {
+                coreSvelvetStore.nodesStore.update((n) => {
+                    // restores mobile functionality
+                    n.forEach(node => {
+                        if (node.id === nodeID) {
+                          //calculates the location of the selected node
+                          const { x, y, width, height } = e.target.getBoundingClientRect();
+                          const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+                          const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+                          // centers the node consistently under the user's touch
+                          node.position.x += offsetX - node.width / 2;
+                          node.position.y += offsetY - node.height / 2;
+                        }
+                      });
+                      return [...n];
+                    });
+                /*  Svelvet 4.0 dev code see:
+                    https://github.com/open-source-labs/Svelvet/blob/main/NPM%20Package/svelvet/Future%20Iteration/ParentNode.md
+                    const correctNode = n.find((node) => node.id === nodeID);
+                    const { x, y, width, height } = e.target.getBoundingClientRect();
+                    const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
+                    const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
+        
+                    if(correctNode.childNodes){
+                        n.forEach((child)=>{
+                            //conditional fails, make it recognize the nodes in childNodes
+                            if(correctNode.childNodes.includes(child.id)){
+                                //All nodes within child nodes will move with the parent container node.
+                                child.position.x += offsetX - correctNode.width/2;
+                                child.position.y += offsetY - correctNode.height/2;
+                            }
+                        })
+                        correctNode.position.x += offsetX - correctNode.width/2;
+                        correctNode.position.y += offsetY - correctNode.height/2;
+                    }  else {
+                        // centers the node consistently under the user's touch
+                        correctNode.position.x += offsetX - correctNode.width/2;
+                        correctNode.position.y += offsetY - correctNode.height/2;
+        
+                    }
+                });
+                return [...n];
+                */
+        };
+
+        const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
+        // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
+        const onNodeClick = (e, nodeID) => {
+            get_store_value(nodesStore).forEach((node) => {
+                if (node.id === get_store_value(nodeIdSelected)) {
+                    node.clickCallback?.(node);
+                }
+            });
+        };
+
+        const edgesStore = coreSvelvetStore.edgesStore;
+        const nodesStore = coreSvelvetStore.nodesStore;
+        // derive from nodesStore and edgesStore, pass in array value from each store
+        // updates edgesStore with new object properties (edge.sourceX, edge.targetY, etc) for edgesArray
+        // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
+        // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
+        const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
+            $edgesStore.forEach((edge) => {
+                // any -> edge should follow type DerivedEdge, but we are assigning to any so the typing meshes together
+                // These are dummy nodes to resolve a typescripting issue. They are overwritten in the following forEach loop
+                let sourceNode = {
+                    id: 0,
+                    position: { x: 25, y: 475 },
+                    data: { label: '9' },
+                    width: 175,
+                    height: 40,
+                    targetPosition: 'right',
+                    sourcePosition: 'left'
+                };
+                let targetNode = {
+                    id: 10,
+                    position: { x: 750, y: 475 },
+                    data: { label: '10' },
+                    width: 175,
+                    height: 40,
+                    targetPosition: 'right',
+                    sourcePosition: 'left'
+                };
+                
+                //We find out what the sourceNode is or the targetNode is.
+                $nodesStore.forEach((node) => {
+                    if (edge.source === node.id) {
+                        sourceNode = node;
+                    }
+                    if (edge.target === node.id) {
+                        targetNode = node;
+                    } 
+                });
+
+                // If the edge doesn't have a target yet, set the target to null rather than to the dummy node above
+                if(!$nodesStore.some(node => node.id === edge.target)) targetNode = null;
+                // Do the same for the source 
+                if(!$nodesStore.some(node => node.id === edge.source)) sourceNode = null;
+
+                if (sourceNode) {
+                    
+                    //left side of the node selected
+                    let left = sourceNode.position.x;
+                    
+                    //top of the node selected
+                    let top = sourceNode.position.y;
+                    
+                    //declaring the middle point of the node
+                    let middle = sourceNode.width / 2;
+                    
+                    //Default sourcePosition to bottom if sourcePosition not defined
+                    if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
+                    
+                        //the x coordinate of the middle of the node
+                        edge.sourceX = left + middle;
+                        
+                        //the y coordinate of the bottom of the node
+                        edge.sourceY = top + sourceNode.height;
+                        
+                        //assign sourcePosition to the edge for usage in the various edge components
+                        edge.sourcePosition = 'bottom';
+                    }
+                    else if (sourceNode.sourcePosition === 'top') {
+                        edge.sourceX = left + middle;
+                        edge.sourceY = top;
+                        edge.sourcePosition = sourceNode.sourcePosition;
+                    }
+                    else if (sourceNode.sourcePosition === 'left') {
+                        edge.sourceX = left;
+                        edge.sourceY = top + sourceNode.height / 2;
+                        edge.sourcePosition = sourceNode.sourcePosition;
+                    }
+                    else if (sourceNode.sourcePosition === 'right') {
+                        edge.sourceX = left + sourceNode.width;
+                        edge.sourceY = top + sourceNode.height / 2;
+                        edge.sourcePosition = sourceNode.sourcePosition;
+                    }
+                }
+                if (targetNode) {
+                    
+                    //left side of the node selected
+                    let left = targetNode.position.x;
+                    
+                    //top of the node selected
+                    let top = targetNode.position.y;
+                    
+                    //declaring the middle point of the node
+                    let middle = targetNode.width / 2;
+
+                    //Default to top targetPosition if targetPosition undefined
+                    if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
+                        //the x coordinate of the middle of the node
+                        edge.targetX = left + middle;
+                        //the y coordinate of the top of the node
+                        edge.targetY = top;
+                        //assign sourcePosition to the edge for usage in the various edge components
+                        edge.targetPosition = 'top';
+                    }
+                    else if (targetNode.targetPosition === 'bottom') {
+                        edge.targetX = left + middle;
+                        edge.targetY = top + targetNode.height;
+                        edge.targetPosition = targetNode.targetPosition;
+                    }
+                    else if (targetNode.targetPosition === 'left') {
+                        edge.targetX = left;
+                        edge.targetY = top + targetNode.height / 2;
+                        edge.targetPosition = targetNode.targetPosition;
+                    }
+                    else if (targetNode.targetPosition === 'right') {
+                        edge.targetX = left + targetNode.width;
+                        edge.targetY = top + targetNode.height / 2;
+                        edge.targetPosition = targetNode.targetPosition;
+                    }
+                } 
+            });
+            return [...$edgesStore];
+        });
+        //Puts everything together as the svelvet store and use the key so that it can be used.
+        const svelvetStore = {
+            ...coreSvelvetStore,
+            onTouchMove,
+            onEdgeMove,
+            onNodeMove,
+            onNodeClick,
+            derivedEdges
+        };
+        svelvetStores[key] = svelvetStore;
+        return svelvetStore;
+    }
+
     /* svelvetrabbit/Edges/EdgeAnchor.svelte generated by Svelte v3.54.0 */
+
+    const { console: console_1$2 } = globals;
     const file$5 = "svelvetrabbit/Edges/EdgeAnchor.svelte";
 
     function create_fragment$7(ctx) {
     	let circle;
+    	let circle_r_value;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
     			circle = svg_element("circle");
+    			attr_dev(circle, "class", "Anchor svelte-1d74fpe");
     			attr_dev(circle, "cx", /*x*/ ctx[0]);
     			attr_dev(circle, "cy", /*y*/ ctx[1]);
-    			attr_dev(circle, "r", 5);
+    			attr_dev(circle, "r", circle_r_value = /*hovered*/ ctx[8] === true ? 10 : 6);
     			attr_dev(circle, "stroke", "white");
     			attr_dev(circle, "fill", "black");
-    			attr_dev(circle, "class", "svelte-1ulqurc");
-    			add_location(circle, file$5, 6, 0, 159);
+    			add_location(circle, file$5, 149, 0, 4997);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, circle, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[23], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[24], false, false, false),
+    					listen_dev(circle, "mousedown", /*mousedown_handler*/ ctx[25], false, false, false),
+    					listen_dev(circle, "mouseup", /*mouseup_handler_1*/ ctx[26], false, false, false),
+    					listen_dev(circle, "mouseenter", /*mouseenter_handler*/ ctx[27], false, false, false),
+    					listen_dev(circle, "mouseleave", /*mouseleave_handler*/ ctx[28], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*x*/ 1) {
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*x*/ 1) {
     				attr_dev(circle, "cx", /*x*/ ctx[0]);
     			}
 
-    			if (dirty & /*y*/ 2) {
+    			if (dirty[0] & /*y*/ 2) {
     				attr_dev(circle, "cy", /*y*/ ctx[1]);
+    			}
+
+    			if (dirty[0] & /*hovered*/ 256 && circle_r_value !== (circle_r_value = /*hovered*/ ctx[8] === true ? 10 : 6)) {
+    				attr_dev(circle, "r", circle_r_value);
     			}
     		},
     		i: noop$1,
     		o: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(circle);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -5100,50 +5517,362 @@ var app = (function () {
     }
 
     function instance$7($$self, $$props, $$invalidate) {
+    	let shouldMove;
+    	let store;
+
+    	let $nodesStore,
+    		$$unsubscribe_nodesStore = noop$1,
+    		$$subscribe_nodesStore = () => ($$unsubscribe_nodesStore(), $$unsubscribe_nodesStore = subscribe(nodesStore, $$value => $$invalidate(31, $nodesStore = $$value)), nodesStore);
+
+    	let $derivedEdges,
+    		$$unsubscribe_derivedEdges = noop$1,
+    		$$subscribe_derivedEdges = () => ($$unsubscribe_derivedEdges(), $$unsubscribe_derivedEdges = subscribe(derivedEdges, $$value => $$invalidate(12, $derivedEdges = $$value)), derivedEdges);
+
+    	let $movementStore;
+    	let $nodeSelected;
+    	let $hoveredElement;
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_nodesStore());
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_derivedEdges());
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('EdgeAnchor', slots, []);
     	let { x } = $$props;
     	let { y } = $$props;
+    	let { key } = $$props;
+    	let { derivedEdges } = $$props;
+    	validate_store(derivedEdges, 'derivedEdges');
+    	$$subscribe_derivedEdges();
+    	let { node } = $$props;
+    	let { nodesStore } = $$props;
+    	validate_store(nodesStore, 'nodesStore');
+    	$$subscribe_nodesStore();
+    	let { position } = $$props;
+    	let newNode;
+    	let newEdge;
+    	let hovered = false;
+    	const { onNodeMove, onEdgeMove, onNodeClick, onTouchMove, nodeSelected, edgeSelected, widthStore, heightStore, nodeIdSelected, edgeIdSelected, movementStore, snapgrid, snapResize, mouseX, mouseY, hoveredElement } = findOrCreateStore(key);
+    	validate_store(nodeSelected, 'nodeSelected');
+    	component_subscribe($$self, nodeSelected, value => $$invalidate(13, $nodeSelected = value));
+    	validate_store(movementStore, 'movementStore');
+    	component_subscribe($$self, movementStore, value => $$invalidate(22, $movementStore = value));
+    	validate_store(hoveredElement, 'hoveredElement');
+    	component_subscribe($$self, hoveredElement, value => $$invalidate(14, $hoveredElement = value));
+
+    	// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
+    	// moving local boolean specific to node selected, to change position of individual node once selected
+    	let moving = false;
+
+    	let moved = false;
+    	let edgeShouldMove = false;
+
+    	/* This keeps track of the cursors current position, taking into account d3 transformations,
+    updating the mouseX and mouseY values in the store
+    */
+    	// d3.select('svg') 
+    	//   .on('mousemove', (event) => {
+    	//     store.mouseX.set(d3.pointer(event)[0]);
+    	//     store.mouseY.set(d3.pointer(event)[1]);
+    	//   })
+    	/*
+    This is the function that renders a new edge when an anchor is clicked
+    */
+    	const renderEdge = e => {
+    		e.preventDefault(); // preventing default behavior, not sure if necessary
+
+    		// set the target or the source depending on the anchor position
+    		position === 'bottom' ? node.id : null;
+
+    		position === 'top' ? node.id : null;
+
+    		// Setting the newEdge variable to an edge prototype
+    		$$invalidate(7, newEdge = position === 'bottom'
+    		? {
+    				id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
+    				source: node.id, // the source is the node that the anchor is on
+    				target: null, // until the mouse is released the target will be set to null
+    				targetX: node.position.x + node.width / 2,
+    				targetY: node.position.y + node.height,
+    				label: "newEdge"
+    			}
+    		: {
+    				id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
+    				source: null, // until the mouse is released the source will be set to null
+    				target: node.id, // the target is the node that the anchor is on
+    				sourceX: node.position.x + node.width / 2,
+    				sourceY: node.position.y,
+    				label: "newEdge"
+    			});
+
+    		store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
+    	};
+
+    	/*
+    This is the function that renders a new node when the mouse is released
+    after clicking on an anchor, takes in the newEdge that was just created
+    */
+    	const renderNewNode = (event, edge) => {
+    		event.preventDefault();
+
+    		let pos = position === 'bottom'
+    		? { x: edge.targetX, y: edge.targetY }
+    		: { x: edge.sourceX, y: edge.sourceY };
+
+    		// setting newNode variable to a 'prototype' node
+    		newNode = {
+    			id: (Math.random() + 10).toFixed(2), // again, better id generation needed, uuid?
+    			position: pos, // the position (top left corner) is at the target coords of the edge for now
+    			data: { label: "newNode" }, // need ways to change the rest of the properties
+    			width: 100,
+    			height: 40,
+    			bgColor: "white"
+    		};
+
+    		// newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+    		if (position === 'bottom') {
+    			edge.target = newNode.id; // set the new edge to target the new node
+    			newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+    		} else {
+    			edge.source = newNode.id;
+    			newNode.position.x = edge.sourceX - newNode.width / 2;
+    			newNode.position.y = edge.sourceY - newNode.height;
+    		}
+
+    		store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
+    	};
 
     	$$self.$$.on_mount.push(function () {
     		if (x === undefined && !('x' in $$props || $$self.$$.bound[$$self.$$.props['x']])) {
-    			console.warn("<EdgeAnchor> was created without expected prop 'x'");
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'x'");
     		}
 
     		if (y === undefined && !('y' in $$props || $$self.$$.bound[$$self.$$.props['y']])) {
-    			console.warn("<EdgeAnchor> was created without expected prop 'y'");
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'y'");
+    		}
+
+    		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'key'");
+    		}
+
+    		if (derivedEdges === undefined && !('derivedEdges' in $$props || $$self.$$.bound[$$self.$$.props['derivedEdges']])) {
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'derivedEdges'");
+    		}
+
+    		if (node === undefined && !('node' in $$props || $$self.$$.bound[$$self.$$.props['node']])) {
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'node'");
+    		}
+
+    		if (nodesStore === undefined && !('nodesStore' in $$props || $$self.$$.bound[$$self.$$.props['nodesStore']])) {
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'nodesStore'");
+    		}
+
+    		if (position === undefined && !('position' in $$props || $$self.$$.bound[$$self.$$.props['position']])) {
+    			console_1$2.warn("<EdgeAnchor> was created without expected prop 'position'");
     		}
     	});
 
-    	const writable_props = ['x', 'y'];
+    	const writable_props = ['x', 'y', 'key', 'derivedEdges', 'node', 'nodesStore', 'position'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<EdgeAnchor> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<EdgeAnchor> was created with unknown prop '${key}'`);
     	});
+
+    	const mousemove_handler = e => {
+    		e.preventDefault();
+
+    		if (edgeShouldMove) {
+    			// onNodeMove(e, newNode.id);
+    			onEdgeMove(e, newEdge.id); // re-renders (moves) the edge while the mouse is down and moving
+
+    			$$invalidate(9, moved = true);
+    		}
+    	};
+
+    	const mouseup_handler = e => {
+    		$$invalidate(10, edgeShouldMove = false); // prevent the new edge from moving
+    		$$invalidate(6, moving = false);
+    		set_store_value(nodeSelected, $nodeSelected = false, $nodeSelected);
+    		$$invalidate(9, moved = false);
+
+    		if (newEdge) {
+    			if ($hoveredElement) {
+    				if (position === 'top') $$invalidate(7, newEdge.source = $hoveredElement.id, newEdge); else $$invalidate(7, newEdge.target = $hoveredElement.id, newEdge);
+    				store.edgesStore.set([...$derivedEdges, newEdge]);
+    			} else {
+    				renderNewNode(e, newEdge);
+    			} // newEdge.target = newNode.id;
+    		}
+
+    		$$invalidate(7, newEdge = null);
+    	};
+
+    	const mousedown_handler = e => {
+    		e.preventDefault();
+    		e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Edges svg) 
+    		renderEdge(e); // renders the new edge on the screen
+    		$$invalidate(10, edgeShouldMove = true);
+    	};
+
+    	const mouseup_handler_1 = e => {
+    		e.preventDefault();
+    		$$invalidate(10, edgeShouldMove = false);
+    		$$invalidate(6, moving = false);
+    		$$invalidate(9, moved = false);
+    	};
+
+    	const mouseenter_handler = e => {
+    		$$invalidate(8, hovered = true);
+    		store.hoveredElement.set(node); // If the mouse enters an anchor, we store the node it's attached to for reference
+    		console.log($hoveredElement);
+    	};
+
+    	const mouseleave_handler = e => {
+    		$$invalidate(8, hovered = false);
+    		store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
+    		console.log($hoveredElement);
+    	};
 
     	$$self.$$set = $$props => {
     		if ('x' in $$props) $$invalidate(0, x = $$props.x);
     		if ('y' in $$props) $$invalidate(1, y = $$props.y);
+    		if ('key' in $$props) $$invalidate(21, key = $$props.key);
+    		if ('derivedEdges' in $$props) $$subscribe_derivedEdges($$invalidate(2, derivedEdges = $$props.derivedEdges));
+    		if ('node' in $$props) $$invalidate(3, node = $$props.node);
+    		if ('nodesStore' in $$props) $$subscribe_nodesStore($$invalidate(4, nodesStore = $$props.nodesStore));
+    		if ('position' in $$props) $$invalidate(5, position = $$props.position);
     	};
 
-    	$$self.$capture_state = () => ({ Position, x, y });
+    	$$self.$capture_state = () => ({
+    		select,
+    		selectAll,
+    		Position,
+    		findOrCreateStore,
+    		derived,
+    		x,
+    		y,
+    		key,
+    		derivedEdges,
+    		node,
+    		nodesStore,
+    		position,
+    		newNode,
+    		newEdge,
+    		hovered,
+    		onNodeMove,
+    		onEdgeMove,
+    		onNodeClick,
+    		onTouchMove,
+    		nodeSelected,
+    		edgeSelected,
+    		widthStore,
+    		heightStore,
+    		nodeIdSelected,
+    		edgeIdSelected,
+    		movementStore,
+    		snapgrid,
+    		snapResize,
+    		mouseX,
+    		mouseY,
+    		hoveredElement,
+    		moving,
+    		moved,
+    		edgeShouldMove,
+    		renderEdge,
+    		renderNewNode,
+    		store,
+    		shouldMove,
+    		$nodesStore,
+    		$derivedEdges,
+    		$movementStore,
+    		$nodeSelected,
+    		$hoveredElement
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ('x' in $$props) $$invalidate(0, x = $$props.x);
     		if ('y' in $$props) $$invalidate(1, y = $$props.y);
+    		if ('key' in $$props) $$invalidate(21, key = $$props.key);
+    		if ('derivedEdges' in $$props) $$subscribe_derivedEdges($$invalidate(2, derivedEdges = $$props.derivedEdges));
+    		if ('node' in $$props) $$invalidate(3, node = $$props.node);
+    		if ('nodesStore' in $$props) $$subscribe_nodesStore($$invalidate(4, nodesStore = $$props.nodesStore));
+    		if ('position' in $$props) $$invalidate(5, position = $$props.position);
+    		if ('newNode' in $$props) newNode = $$props.newNode;
+    		if ('newEdge' in $$props) $$invalidate(7, newEdge = $$props.newEdge);
+    		if ('hovered' in $$props) $$invalidate(8, hovered = $$props.hovered);
+    		if ('moving' in $$props) $$invalidate(6, moving = $$props.moving);
+    		if ('moved' in $$props) $$invalidate(9, moved = $$props.moved);
+    		if ('edgeShouldMove' in $$props) $$invalidate(10, edgeShouldMove = $$props.edgeShouldMove);
+    		if ('store' in $$props) $$invalidate(11, store = $$props.store);
+    		if ('shouldMove' in $$props) shouldMove = $$props.shouldMove;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [x, y];
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*moving, $movementStore*/ 4194368) {
+    			shouldMove = moving && $movementStore;
+    		}
+
+    		if ($$self.$$.dirty[0] & /*key*/ 2097152) {
+    			$$invalidate(11, store = findOrCreateStore(key));
+    		}
+    	};
+
+    	return [
+    		x,
+    		y,
+    		derivedEdges,
+    		node,
+    		nodesStore,
+    		position,
+    		moving,
+    		newEdge,
+    		hovered,
+    		moved,
+    		edgeShouldMove,
+    		store,
+    		$derivedEdges,
+    		$nodeSelected,
+    		$hoveredElement,
+    		onEdgeMove,
+    		nodeSelected,
+    		movementStore,
+    		hoveredElement,
+    		renderEdge,
+    		renderNewNode,
+    		key,
+    		$movementStore,
+    		mousemove_handler,
+    		mouseup_handler,
+    		mousedown_handler,
+    		mouseup_handler_1,
+    		mouseenter_handler,
+    		mouseleave_handler
+    	];
     }
 
     class EdgeAnchor extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$7, create_fragment$7, safe_not_equal, { x: 0, y: 1 });
+
+    		init$1(
+    			this,
+    			options,
+    			instance$7,
+    			create_fragment$7,
+    			safe_not_equal,
+    			{
+    				x: 0,
+    				y: 1,
+    				key: 21,
+    				derivedEdges: 2,
+    				node: 3,
+    				nodesStore: 4,
+    				position: 5
+    			},
+    			null,
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -5166,6 +5895,46 @@ var app = (function () {
     	}
 
     	set y(value) {
+    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get key() {
+    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set key(value) {
+    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get derivedEdges() {
+    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set derivedEdges(value) {
+    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get node() {
+    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set node(value) {
+    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get nodesStore() {
+    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set nodesStore(value) {
+    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get position() {
+    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set position(value) {
     		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -5566,340 +6335,6 @@ var app = (function () {
     	}
     }
 
-    const subscriber_queue = [];
-    /**
-     * Creates a `Readable` store that allows reading by subscription.
-     * @param value initial value
-     * @param {StartStopNotifier}start start and stop notifications for subscriptions
-     */
-    function readable(value, start) {
-        return {
-            subscribe: writable(value, start).subscribe
-        };
-    }
-    /**
-     * Create a `Writable` store that allows both updating and reading by subscription.
-     * @param {*=}value initial value
-     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
-     */
-    function writable(value, start = noop$1) {
-        let stop;
-        const subscribers = new Set();
-        function set(new_value) {
-            if (safe_not_equal(value, new_value)) {
-                value = new_value;
-                if (stop) { // store is ready
-                    const run_queue = !subscriber_queue.length;
-                    for (const subscriber of subscribers) {
-                        subscriber[1]();
-                        subscriber_queue.push(subscriber, value);
-                    }
-                    if (run_queue) {
-                        for (let i = 0; i < subscriber_queue.length; i += 2) {
-                            subscriber_queue[i][0](subscriber_queue[i + 1]);
-                        }
-                        subscriber_queue.length = 0;
-                    }
-                }
-            }
-        }
-        function update(fn) {
-            set(fn(value));
-        }
-        function subscribe(run, invalidate = noop$1) {
-            const subscriber = [run, invalidate];
-            subscribers.add(subscriber);
-            if (subscribers.size === 1) {
-                stop = start(set) || noop$1;
-            }
-            run(value);
-            return () => {
-                subscribers.delete(subscriber);
-                if (subscribers.size === 0) {
-                    stop();
-                    stop = null;
-                }
-            };
-        }
-        return { set, update, subscribe };
-    }
-    function derived(stores, fn, initial_value) {
-        const single = !Array.isArray(stores);
-        const stores_array = single
-            ? [stores]
-            : stores;
-        const auto = fn.length < 2;
-        return readable(initial_value, (set) => {
-            let inited = false;
-            const values = [];
-            let pending = 0;
-            let cleanup = noop$1;
-            const sync = () => {
-                if (pending) {
-                    return;
-                }
-                cleanup();
-                const result = fn(single ? values[0] : values, set);
-                if (auto) {
-                    set(result);
-                }
-                else {
-                    cleanup = is_function(result) ? result : noop$1;
-                }
-            };
-            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
-                values[i] = value;
-                pending &= ~(1 << i);
-                if (inited) {
-                    sync();
-                }
-            }, () => {
-                pending |= (1 << i);
-            }));
-            inited = true;
-            sync();
-            return function stop() {
-                run_all(unsubscribers);
-                cleanup();
-            };
-        });
-    }
-
-    const svelvetStores = {};
-    // refer to Svelvet/index, if store does not exist, then create one.
-    // Creates one Svelvet component store using the unique key
-    function findOrCreateStore(key) {
-        //This just returns whatever we are requesting from store.js
-        const existing = svelvetStores[key];
-        if (existing) {
-            return existing;
-        }
-        //Setting defaults of core svelvet store and making them a store using writable
-        const coreSvelvetStore = {
-            nodesStore: writable([]),
-            edgesStore: writable([]),
-            widthStore: writable(600),
-            heightStore: writable(600),
-            backgroundStore: writable(false),
-            movementStore: writable(true),
-            nodeSelected: writable(false),
-            nodeIdSelected: writable(-1),
-            d3Scale: writable(1),
-            snapgrid: writable(false),
-            snapResize: writable(30),
-            backgroundColor: writable(),
-            initZoom: writable(4),
-            initNode: writable(false),
-            initLocation: writable([{x:0, y:0}])
-        };
-        // This is the function handler for the mouseMove event to update the position of the selected node.
-        const onMouseMove = (e, nodeID) => {
-            coreSvelvetStore.nodesStore.update((n) => {
-                const correctNode = n.find((node) => node.id === nodeID);
-
-                const scale = get_store_value(coreSvelvetStore.d3Scale);
-
-                if(correctNode.childNodes){
-                    n.forEach((child) =>{
-                        if(correctNode.childNodes.includes(child.id)){
-                            child.position.x += e.movementX / scale;
-                            child.position.y += e.movementY / scale;
-                        }
-                    });
-                    correctNode.position.x += e.movementX / scale;
-                    correctNode.position.y += e.movementY / scale;
-                }
-                else {
-                    // divide the movement value by scale to keep it proportional to d3Zoom transformations
-                    correctNode.position.x += e.movementX / scale;
-                    correctNode.position.y += e.movementY / scale;
-
-                }
-                return [...n];
-            });
-        };
-        // This is the function handler for the touch event on mobile to select a node.
-        const onTouchMove = (e, nodeID) => {
-                coreSvelvetStore.nodesStore.update((n) => {
-                    // restores mobile functionality
-                    n.forEach(node => {
-                        if (node.id === nodeID) {
-                          //calculates the location of the selected node
-                          const { x, y, width, height } = e.target.getBoundingClientRect();
-                          const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
-                          const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
-                          // centers the node consistently under the user's touch
-                          node.position.x += offsetX - node.width / 2;
-                          node.position.y += offsetY - node.height / 2;
-                        }
-                      });
-                      return [...n];
-                    });
-                /*  Svelvet 4.0 dev code see:
-                    https://github.com/open-source-labs/Svelvet/blob/main/NPM%20Package/svelvet/Future%20Iteration/ParentNode.md
-                    const correctNode = n.find((node) => node.id === nodeID);
-                    const { x, y, width, height } = e.target.getBoundingClientRect();
-                    const offsetX = ((e.touches[0].clientX - x) / width) * e.target.offsetWidth;
-                    const offsetY = ((e.touches[0].clientY - y) / height) * e.target.offsetHeight;
-        
-                    if(correctNode.childNodes){
-                        n.forEach((child)=>{
-                            //conditional fails, make it recognize the nodes in childNodes
-                            if(correctNode.childNodes.includes(child.id)){
-                                //All nodes within child nodes will move with the parent container node.
-                                child.position.x += offsetX - correctNode.width/2;
-                                child.position.y += offsetY - correctNode.height/2;
-                            }
-                        })
-                        correctNode.position.x += offsetX - correctNode.width/2;
-                        correctNode.position.y += offsetY - correctNode.height/2;
-                    }  else {
-                        // centers the node consistently under the user's touch
-                        correctNode.position.x += offsetX - correctNode.width/2;
-                        correctNode.position.y += offsetY - correctNode.height/2;
-        
-                    }
-                });
-                return [...n];
-                */
-        };
-
-        const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
-        // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
-        const onNodeClick = (e, nodeID) => {
-            get_store_value(nodesStore).forEach((node) => {
-                if (node.id === get_store_value(nodeIdSelected)) {
-                    node.clickCallback?.(node);
-                }
-            });
-        };
-        const edgesStore = coreSvelvetStore.edgesStore;
-        const nodesStore = coreSvelvetStore.nodesStore;
-        // derive from nodesStore and edgesStore, pass in array value from each store
-        // updates edgesStore with new object properties (edge,sourceX, edge.targetY, etc) for edgesArray
-        // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
-        // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
-        const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
-            $edgesStore.forEach((edge) => {
-                // any -> edge should follow type DerivedEdge, but we are assigning to any so the typing meshes together
-                // These are dummy nodes to resolve a typescripting issue. They are overwritten in the following forEach loop
-                let sourceNode = {
-                    id: 0,
-                    position: { x: 25, y: 475 },
-                    data: { label: '9' },
-                    width: 175,
-                    height: 40,
-                    targetPosition: 'right',
-                    sourcePosition: 'left'
-                };
-                let targetNode = {
-                    id: 10,
-                    position: { x: 750, y: 475 },
-                    data: { label: '10' },
-                    width: 175,
-                    height: 40,
-                    targetPosition: 'right',
-                    sourcePosition: 'left'
-                };
-                
-                //We find out what the sourceNode is or the targetNode is.
-                $nodesStore.forEach((node) => {
-                    if (edge.source === node.id)
-                        sourceNode = node;
-                    if (edge.target === node.id)
-                        targetNode = node;
-                });
-
-                if (sourceNode) {
-                    
-                    //left side of the node selected
-                    let left = sourceNode.position.x;
-                    
-                    //top of the node selected
-                    let top = sourceNode.position.y;
-                    
-                    //declaring the middle point of the node
-                    let middle = sourceNode.width / 2;
-                    
-                    //Default sourcePosition to bottom if sourcePosition not defined
-                    if (sourceNode.sourcePosition === 'bottom' || sourceNode.sourcePosition === undefined) {
-                    
-                        //the x coordinate of the middle of the node
-                        edge.sourceX = left + middle;
-                        
-                        //the y coordinate of the bottom of the node
-                        edge.sourceY = top + sourceNode.height;
-                        
-                        //assign sourcePosition to the edge for usage in the various edge components
-                        edge.sourcePosition = 'bottom';
-                    }
-                    else if (sourceNode.sourcePosition === 'top') {
-                        edge.sourceX = left + middle;
-                        edge.sourceY = top;
-                        edge.sourcePosition = sourceNode.sourcePosition;
-                    }
-                    else if (sourceNode.sourcePosition === 'left') {
-                        edge.sourceX = left;
-                        edge.sourceY = top + sourceNode.height / 2;
-                        edge.sourcePosition = sourceNode.sourcePosition;
-                    }
-                    else if (sourceNode.sourcePosition === 'right') {
-                        edge.sourceX = left + sourceNode.width;
-                        edge.sourceY = top + sourceNode.height / 2;
-                        edge.sourcePosition = sourceNode.sourcePosition;
-                    }
-                }
-                if (targetNode) {
-                    
-                    //left side of the node selected
-                    let left = targetNode.position.x;
-                    
-                    //top of the node selected
-                    let top = targetNode.position.y;
-                    
-                    //declaring the middle point of the node
-                    let middle = targetNode.width / 2;
-
-                    //Default to top targetPosition if targetPosition undefined
-                    if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
-                        //the x coordinate of the middle of the node
-                        edge.targetX = left + middle;
-                        //the y coordinate of the bottom of the node
-                        edge.targetY = top;
-                        //assign sourcePosition to the edge for usage in the various edge components
-                        edge.targetPosition = 'top';
-                    }
-                    else if (targetNode.targetPosition === 'bottom') {
-                        edge.targetX = left + middle;
-                        edge.targetY = top + targetNode.height;
-                        edge.targetPosition = targetNode.targetPosition;
-                    }
-                    else if (targetNode.targetPosition === 'left') {
-                        edge.targetX = left;
-                        edge.targetY = top + targetNode.height / 2;
-                        edge.targetPosition = targetNode.targetPosition;
-                    }
-                    else if (targetNode.targetPosition === 'right') {
-                        edge.targetX = left + targetNode.width;
-                        edge.targetY = top + targetNode.height / 2;
-                        edge.targetPosition = targetNode.targetPosition;
-                    }
-                }
-            });
-            return [...$edgesStore];
-        });
-        //Puts everything together as the svelvet store and use the key so that it can be used.
-        const svelvetStore = {
-            ...coreSvelvetStore,
-            onTouchMove,
-            onMouseMove,
-            onNodeClick,
-            derivedEdges
-        };
-        svelvetStores[key] = svelvetStore;
-        return svelvetStore;
-    }
-
     /* svelvetrabbit/Nodes/index.svelte generated by Svelte v3.54.0 */
     const file$4 = "svelvetrabbit/Nodes/index.svelte";
 
@@ -5916,7 +6351,7 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$4, 83, 4, 2279);
+    			add_location(img, file$4, 83, 4, 2276);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5977,7 +6412,7 @@ var app = (function () {
     			set_style(div, "border-radius", /*node*/ ctx[0].borderRadius + "px");
     			set_style(div, "color", /*node*/ ctx[0].textColor);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
-    			add_location(div, file$4, 49, 0, 1475);
+    			add_location(div, file$4, 49, 0, 1472);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6111,7 +6546,7 @@ var app = (function () {
     	validate_slots('Nodes', slots, ['default']);
     	let { node } = $$props;
     	let { key } = $$props;
-    	const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, widthStore, heightStore, nodeIdSelected, movementStore, snapgrid, snapResize } = findOrCreateStore(key);
+    	const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, widthStore, heightStore, nodeIdSelected, movementStore, snapgrid, snapResize } = findOrCreateStore(key);
     	validate_store(nodeSelected, 'nodeSelected');
     	component_subscribe($$self, nodeSelected, value => $$invalidate(6, $nodeSelected = value));
     	validate_store(nodeIdSelected, 'nodeIdSelected');
@@ -6149,7 +6584,7 @@ var app = (function () {
     		e.preventDefault();
 
     		if (shouldMove) {
-    			onMouseMove(e, node.id);
+    			onNodeMove(e, node.id);
     			$$invalidate(2, moved = true);
     		}
     	};
@@ -6163,7 +6598,7 @@ var app = (function () {
     			$$invalidate(0, node.position.y = Math.floor(node.position.y / $snapResize) * $snapResize, node);
 
     			// Invoking on mouseMove so that edges update relation to node immediately upon snap 
-    			onMouseMove(e, node.id);
+    			onNodeMove(e, node.id);
     		}
 
     		$$invalidate(1, moving = false);
@@ -6210,7 +6645,7 @@ var app = (function () {
     		findOrCreateStore,
     		node,
     		key,
-    		onMouseMove,
+    		onNodeMove,
     		onNodeClick,
     		onTouchMove,
     		nodeSelected,
@@ -6257,7 +6692,7 @@ var app = (function () {
     		$snapResize,
     		$nodeSelected,
     		$nodeIdSelected,
-    		onMouseMove,
+    		onNodeMove,
     		onNodeClick,
     		onTouchMove,
     		nodeSelected,
@@ -6617,6 +7052,8 @@ var app = (function () {
     }
 
     /* svelvetrabbit/Containers/GraphView/index.svelte generated by Svelte v3.54.0 */
+
+    const { console: console_1$1 } = globals;
     const file$2 = "svelvetrabbit/Containers/GraphView/index.svelte";
 
     function get_each_context(ctx, list, i) {
@@ -6631,14 +7068,20 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (110:8) {:else}
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[24] = list[i];
+    	return child_ctx;
+    }
+
+    // (114:6) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[27],
+    				node: /*node*/ ctx[24],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -6656,10 +7099,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[27];
-    			if (dirty & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
+    			if (dirty[0] & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[24];
+    			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty & /*$$scope, $nodesStore*/ 1073741840) {
+    			if (dirty[0] & /*$nodesStore*/ 16 | dirty[1] & /*$$scope*/ 2) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6683,22 +7126,22 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(110:8) {:else}",
+    		source: "(114:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:33) 
-    function create_if_block_7(ctx) {
+    // (110:31) 
+    function create_if_block_5(ctx) {
     	let node;
     	let t;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[27],
+    				node: /*node*/ ctx[24],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -6718,10 +7161,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[27];
-    			if (dirty & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
+    			if (dirty[0] & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[24];
+    			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty & /*$$scope, $nodesStore*/ 1073741840) {
+    			if (dirty[0] & /*$nodesStore*/ 16 | dirty[1] & /*$$scope*/ 2) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6744,24 +7187,24 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_7.name,
+    		id: create_if_block_5.name,
     		type: "if",
-    		source: "(108:33) ",
+    		source: "(110:31) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (105:8) {#if node.image && !node.data.label}
-    function create_if_block_6(ctx) {
+    // (107:6) {#if node.image && !node.data.label}
+    function create_if_block_4(ctx) {
     	let imagenode;
     	let t;
     	let current;
 
     	imagenode = new ImageNode({
     			props: {
-    				node: /*node*/ ctx[27],
+    				node: /*node*/ ctx[24],
     				key: /*key*/ ctx[2]
     			},
     			$$inline: true
@@ -6779,8 +7222,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const imagenode_changes = {};
-    			if (dirty & /*$nodesStore*/ 16) imagenode_changes.node = /*node*/ ctx[27];
-    			if (dirty & /*key*/ 4) imagenode_changes.key = /*key*/ ctx[2];
+    			if (dirty[0] & /*$nodesStore*/ 16) imagenode_changes.node = /*node*/ ctx[24];
+    			if (dirty[0] & /*key*/ 4) imagenode_changes.key = /*key*/ ctx[2];
     			imagenode.$set(imagenode_changes);
     		},
     		i: function intro(local) {
@@ -6800,18 +7243,18 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_6.name,
+    		id: create_if_block_4.name,
     		type: "if",
-    		source: "(105:8) {#if node.image && !node.data.label}",
+    		source: "(107:6) {#if node.image && !node.data.label}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:10) <Node {node} {key}>
+    // (115:8) <Node {node} {key}>
     function create_default_slot_1(ctx) {
-    	let t_value = /*node*/ ctx[27].data.label + "";
+    	let t_value = /*node*/ ctx[24].data.label + "";
     	let t;
 
     	const block = {
@@ -6822,7 +7265,7 @@ var app = (function () {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*$nodesStore*/ 16 && t_value !== (t_value = /*node*/ ctx[27].data.label + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*$nodesStore*/ 16 && t_value !== (t_value = /*node*/ ctx[24].data.label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -6833,17 +7276,17 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(111:10) <Node {node} {key}>",
+    		source: "(115:8) <Node {node} {key}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:10) <Node {node} {key}>
+    // (111:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[27].data.html + "";
+    	let raw_value = /*node*/ ctx[24].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -6857,7 +7300,7 @@ var app = (function () {
     			insert_dev(target, html_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*$nodesStore*/ 16 && raw_value !== (raw_value = /*node*/ ctx[27].data.html + "")) html_tag.p(raw_value);
+    			if (dirty[0] & /*$nodesStore*/ 16 && raw_value !== (raw_value = /*node*/ ctx[24].data.html + "")) html_tag.p(raw_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(html_anchor);
@@ -6869,25 +7312,25 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(109:10) <Node {node} {key}>",
+    		source: "(111:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (104:6) {#each $nodesStore as node}
-    function create_each_block_1(ctx) {
+    // (106:4) {#each $nodesStore as node}
+    function create_each_block_2(ctx) {
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block_6, create_if_block_7, create_else_block_1];
+    	const if_block_creators = [create_if_block_4, create_if_block_5, create_else_block_1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*node*/ ctx[27].image && !/*node*/ ctx[27].data.label) return 0;
-    		if (/*node*/ ctx[27].data.html) return 1;
+    		if (/*node*/ ctx[24].image && !/*node*/ ctx[24].data.label) return 0;
+    		if (/*node*/ ctx[24].data.html) return 1;
     		return 2;
     	}
 
@@ -6948,17 +7391,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block_1.name,
+    		id: create_each_block_2.name,
     		type: "each",
-    		source: "(104:6) {#each $nodesStore as node}",
+    		source: "(106:4) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (138:4) {#if $backgroundStore}
-    function create_if_block_5(ctx) {
+    // (143:2) {#if $backgroundStore}
+    function create_if_block_3(ctx) {
     	let rect;
 
     	const block = {
@@ -6967,13 +7410,14 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$2, 138, 6, 5262);
+    			attr_dev(rect, "class", "svelte-1dw7ldy");
+    			add_location(rect, file$2, 143, 4, 5472);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*key*/ 4) {
+    			if (dirty[0] & /*key*/ 4) {
     				set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
     			}
     		},
@@ -6984,22 +7428,22 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_5.name,
+    		id: create_if_block_3.name,
     		type: "if",
-    		source: "(138:4) {#if $backgroundStore}",
+    		source: "(143:2) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (151:8) {:else}
+    // (156:6) {:else}
     function create_else_block(ctx) {
     	let simplebezieredge;
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[24] },
+    			props: { edge: /*edge*/ ctx[27] },
     			$$inline: true
     		});
 
@@ -7013,7 +7457,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplebezieredge_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) simplebezieredge_changes.edge = /*edge*/ ctx[24];
+    			if (dirty[0] & /*$derivedEdges*/ 128) simplebezieredge_changes.edge = /*edge*/ ctx[27];
     			simplebezieredge.$set(simplebezieredge_changes);
     		},
     		i: function intro(local) {
@@ -7034,20 +7478,20 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(151:8) {:else}",
+    		source: "(156:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (149:39) 
-    function create_if_block_4(ctx) {
+    // (154:37) 
+    function create_if_block_2(ctx) {
     	let stepedge;
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[24] },
+    			props: { edge: /*edge*/ ctx[27] },
     			$$inline: true
     		});
 
@@ -7061,7 +7505,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stepedge_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) stepedge_changes.edge = /*edge*/ ctx[24];
+    			if (dirty[0] & /*$derivedEdges*/ 128) stepedge_changes.edge = /*edge*/ ctx[27];
     			stepedge.$set(stepedge_changes);
     		},
     		i: function intro(local) {
@@ -7080,22 +7524,22 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4.name,
+    		id: create_if_block_2.name,
     		type: "if",
-    		source: "(149:39) ",
+    		source: "(154:37) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (147:45) 
-    function create_if_block_3(ctx) {
+    // (152:43) 
+    function create_if_block_1(ctx) {
     	let smoothstepedge;
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[24] },
+    			props: { edge: /*edge*/ ctx[27] },
     			$$inline: true
     		});
 
@@ -7109,7 +7553,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const smoothstepedge_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) smoothstepedge_changes.edge = /*edge*/ ctx[24];
+    			if (dirty[0] & /*$derivedEdges*/ 128) smoothstepedge_changes.edge = /*edge*/ ctx[27];
     			smoothstepedge.$set(smoothstepedge_changes);
     		},
     		i: function intro(local) {
@@ -7128,22 +7572,22 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3.name,
+    		id: create_if_block_1.name,
     		type: "if",
-    		source: "(147:45) ",
+    		source: "(152:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (145:8) {#if edge.type === 'straight'}
-    function create_if_block_2(ctx) {
+    // (150:6) {#if edge.type === 'straight'}
+    function create_if_block(ctx) {
     	let straightedge;
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[24] },
+    			props: { edge: /*edge*/ ctx[27] },
     			$$inline: true
     		});
 
@@ -7157,7 +7601,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const straightedge_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) straightedge_changes.edge = /*edge*/ ctx[24];
+    			if (dirty[0] & /*$derivedEdges*/ 128) straightedge_changes.edge = /*edge*/ ctx[27];
     			straightedge.$set(straightedge_changes);
     		},
     		i: function intro(local) {
@@ -7176,186 +7620,42 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2.name,
-    		type: "if",
-    		source: "(145:8) {#if edge.type === 'straight'}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (155:8) {#if !edge.noHandle}
-    function create_if_block(ctx) {
-    	let edgeanchor;
-    	let if_block_anchor;
-    	let current;
-
-    	edgeanchor = new EdgeAnchor({
-    			props: {
-    				x: /*edge*/ ctx[24].sourceX,
-    				y: /*edge*/ ctx[24].sourceY
-    			},
-    			$$inline: true
-    		});
-
-    	let if_block = !/*edge*/ ctx[24].arrow && create_if_block_1(ctx);
-
-    	const block = {
-    		c: function create() {
-    			create_component(edgeanchor.$$.fragment);
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty$1();
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(edgeanchor, target, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const edgeanchor_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) edgeanchor_changes.x = /*edge*/ ctx[24].sourceX;
-    			if (dirty & /*$derivedEdges*/ 128) edgeanchor_changes.y = /*edge*/ ctx[24].sourceY;
-    			edgeanchor.$set(edgeanchor_changes);
-
-    			if (!/*edge*/ ctx[24].arrow) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-
-    					if (dirty & /*$derivedEdges*/ 128) {
-    						transition_in(if_block, 1);
-    					}
-    				} else {
-    					if_block = create_if_block_1(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(edgeanchor.$$.fragment, local);
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(edgeanchor.$$.fragment, local);
-    			transition_out(if_block);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(edgeanchor, detaching);
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(155:8) {#if !edge.noHandle}",
+    		source: "(150:6) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (157:10) {#if !edge.arrow}
-    function create_if_block_1(ctx) {
-    	let edgeanchor;
-    	let current;
-
-    	edgeanchor = new EdgeAnchor({
-    			props: {
-    				x: /*edge*/ ctx[24].targetX,
-    				y: /*edge*/ ctx[24].targetY
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(edgeanchor.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(edgeanchor, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const edgeanchor_changes = {};
-    			if (dirty & /*$derivedEdges*/ 128) edgeanchor_changes.x = /*edge*/ ctx[24].targetX;
-    			if (dirty & /*$derivedEdges*/ 128) edgeanchor_changes.y = /*edge*/ ctx[24].targetY;
-    			edgeanchor.$set(edgeanchor_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(edgeanchor.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(edgeanchor.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(edgeanchor, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1.name,
-    		type: "if",
-    		source: "(157:10) {#if !edge.arrow}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (144:6) {#each $derivedEdges as edge}
-    function create_each_block(ctx) {
+    // (149:4) {#each $derivedEdges as edge}
+    function create_each_block_1(ctx) {
     	let current_block_type_index;
-    	let if_block0;
-    	let if_block0_anchor;
-    	let if_block1_anchor;
+    	let if_block;
+    	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block_2, create_if_block_3, create_if_block_4, create_else_block];
+    	const if_block_creators = [create_if_block, create_if_block_1, create_if_block_2, create_else_block];
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*edge*/ ctx[24].type === 'straight') return 0;
-    		if (/*edge*/ ctx[24].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[24].type === 'step') return 2;
+    		if (/*edge*/ ctx[27].type === 'straight') return 0;
+    		if (/*edge*/ ctx[27].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[27].type === 'step') return 2;
     		return 3;
     	}
 
     	current_block_type_index = select_block_type_1(ctx);
-    	if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    	let if_block1 = !/*edge*/ ctx[24].noHandle && create_if_block(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	const block = {
     		c: function create() {
-    			if_block0.c();
-    			if_block0_anchor = empty$1();
-    			if (if_block1) if_block1.c();
-    			if_block1_anchor = empty$1();
+    			if_block.c();
+    			if_block_anchor = empty$1();
     		},
     		m: function mount(target, anchor) {
     			if_blocks[current_block_type_index].m(target, anchor);
-    			insert_dev(target, if_block0_anchor, anchor);
-    			if (if_block1) if_block1.m(target, anchor);
-    			insert_dev(target, if_block1_anchor, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -7372,58 +7672,119 @@ var app = (function () {
     				});
 
     				check_outros();
-    				if_block0 = if_blocks[current_block_type_index];
+    				if_block = if_blocks[current_block_type_index];
 
-    				if (!if_block0) {
-    					if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block0.c();
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
     				} else {
-    					if_block0.p(ctx, dirty);
+    					if_block.p(ctx, dirty);
     				}
 
-    				transition_in(if_block0, 1);
-    				if_block0.m(if_block0_anchor.parentNode, if_block0_anchor);
-    			}
-
-    			if (!/*edge*/ ctx[24].noHandle) {
-    				if (if_block1) {
-    					if_block1.p(ctx, dirty);
-
-    					if (dirty & /*$derivedEdges*/ 128) {
-    						transition_in(if_block1, 1);
-    					}
-    				} else {
-    					if_block1 = create_if_block(ctx);
-    					if_block1.c();
-    					transition_in(if_block1, 1);
-    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
-    				}
-    			} else if (if_block1) {
-    				group_outros();
-
-    				transition_out(if_block1, 1, 1, () => {
-    					if_block1 = null;
-    				});
-
-    				check_outros();
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block0);
-    			transition_in(if_block1);
+    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(if_block0);
-    			transition_out(if_block1);
+    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if_blocks[current_block_type_index].d(detaching);
-    			if (detaching) detach_dev(if_block0_anchor);
-    			if (if_block1) if_block1.d(detaching);
-    			if (detaching) detach_dev(if_block1_anchor);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(149:4) {#each $derivedEdges as edge}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (167:4) {#each $nodesStore as node}
+    function create_each_block(ctx) {
+    	let edgeanchor0;
+    	let edgeanchor1;
+    	let current;
+
+    	edgeanchor0 = new EdgeAnchor({
+    			props: {
+    				x: /*node*/ ctx[24].position.x + /*node*/ ctx[24].width / 2,
+    				y: /*node*/ ctx[24].position.y,
+    				position: 'top',
+    				key: /*key*/ ctx[2],
+    				derivedEdges: /*derivedEdges*/ ctx[1],
+    				node: /*node*/ ctx[24],
+    				nodesStore: /*nodesStore*/ ctx[0]
+    			},
+    			$$inline: true
+    		});
+
+    	edgeanchor1 = new EdgeAnchor({
+    			props: {
+    				x: /*node*/ ctx[24].position.x + /*node*/ ctx[24].width / 2,
+    				y: /*node*/ ctx[24].position.y + /*node*/ ctx[24].height,
+    				position: 'bottom',
+    				key: /*key*/ ctx[2],
+    				derivedEdges: /*derivedEdges*/ ctx[1],
+    				node: /*node*/ ctx[24],
+    				nodesStore: /*nodesStore*/ ctx[0]
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(edgeanchor0.$$.fragment);
+    			create_component(edgeanchor1.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(edgeanchor0, target, anchor);
+    			mount_component(edgeanchor1, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const edgeanchor0_changes = {};
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor0_changes.x = /*node*/ ctx[24].position.x + /*node*/ ctx[24].width / 2;
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor0_changes.y = /*node*/ ctx[24].position.y;
+    			if (dirty[0] & /*key*/ 4) edgeanchor0_changes.key = /*key*/ ctx[2];
+    			if (dirty[0] & /*derivedEdges*/ 2) edgeanchor0_changes.derivedEdges = /*derivedEdges*/ ctx[1];
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor0_changes.node = /*node*/ ctx[24];
+    			if (dirty[0] & /*nodesStore*/ 1) edgeanchor0_changes.nodesStore = /*nodesStore*/ ctx[0];
+    			edgeanchor0.$set(edgeanchor0_changes);
+    			const edgeanchor1_changes = {};
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor1_changes.x = /*node*/ ctx[24].position.x + /*node*/ ctx[24].width / 2;
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor1_changes.y = /*node*/ ctx[24].position.y + /*node*/ ctx[24].height;
+    			if (dirty[0] & /*key*/ 4) edgeanchor1_changes.key = /*key*/ ctx[2];
+    			if (dirty[0] & /*derivedEdges*/ 2) edgeanchor1_changes.derivedEdges = /*derivedEdges*/ ctx[1];
+    			if (dirty[0] & /*$nodesStore*/ 16) edgeanchor1_changes.node = /*node*/ ctx[24];
+    			if (dirty[0] & /*nodesStore*/ 1) edgeanchor1_changes.nodesStore = /*nodesStore*/ ctx[0];
+    			edgeanchor1.$set(edgeanchor1_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(edgeanchor0.$$.fragment, local);
+    			transition_in(edgeanchor1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(edgeanchor0.$$.fragment, local);
+    			transition_out(edgeanchor1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(edgeanchor0, detaching);
+    			destroy_component(edgeanchor1, detaching);
     		}
     	};
 
@@ -7431,7 +7792,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(144:6) {#each $derivedEdges as edge}",
+    		source: "(167:4) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7439,23 +7800,41 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	let div1;
     	let div0;
-    	let div0_class_value;
+    	let t0;
+    	let div2;
+    	let div1;
     	let div1_class_value;
-    	let t;
+    	let div2_class_value;
+    	let t1;
+    	let div3;
+    	let t2;
     	let svg;
     	let defs;
     	let pattern;
     	let circle;
     	let pattern_id_value;
     	let g;
+    	let each1_anchor;
     	let svg_class_value;
     	let svg_viewBox_value;
     	let current;
     	let mounted;
     	let dispose;
-    	let each_value_1 = /*$nodesStore*/ ctx[4];
+    	let each_value_2 = /*$nodesStore*/ ctx[4];
+    	validate_each_argument(each_value_2);
+    	let each_blocks_2 = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	const out = i => transition_out(each_blocks_2[i], 1, 1, () => {
+    		each_blocks_2[i] = null;
+    	});
+
+    	let if_block = /*$backgroundStore*/ ctx[3] && create_if_block_3(ctx);
+    	let each_value_1 = /*$derivedEdges*/ ctx[7];
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -7463,12 +7842,11 @@ var app = (function () {
     		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
     	}
 
-    	const out = i => transition_out(each_blocks_1[i], 1, 1, () => {
+    	const out_1 = i => transition_out(each_blocks_1[i], 1, 1, () => {
     		each_blocks_1[i] = null;
     	});
 
-    	let if_block = /*$backgroundStore*/ ctx[3] && create_if_block_5(ctx);
-    	let each_value = /*$derivedEdges*/ ctx[7];
+    	let each_value = /*$nodesStore*/ ctx[4];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -7476,20 +7854,24 @@ var app = (function () {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
-    	const out_1 = i => transition_out(each_blocks[i], 1, 1, () => {
+    	const out_2 = i => transition_out(each_blocks[i], 1, 1, () => {
     		each_blocks[i] = null;
     	});
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
     			div0 = element("div");
+    			t0 = space();
+    			div2 = element("div");
+    			div1 = element("div");
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].c();
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].c();
     			}
 
-    			t = space();
+    			t1 = space();
+    			div3 = element("div");
+    			t2 = space();
     			svg = svg_element("svg");
     			defs = svg_element("defs");
     			pattern = svg_element("pattern");
@@ -7497,51 +7879,71 @@ var app = (function () {
     			if (if_block) if_block.c();
     			g = svg_element("g");
 
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			each1_anchor = empty$1();
+
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"));
-    			add_location(div0, file$2, 102, 4, 4218);
-    			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"));
-    			add_location(div1, file$2, 100, 2, 4096);
+    			attr_dev(div0, "class", "svelvet-container");
+    			add_location(div0, file$2, 99, 0, 4229);
+    			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"));
+    			add_location(div1, file$2, 104, 2, 4388);
+    			attr_dev(div2, "class", div2_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"));
+    			add_location(div2, file$2, 102, 0, 4269);
+    			attr_dev(div3, "class", "background-container");
+    			add_location(div3, file$2, 119, 0, 4964);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$2, 127, 8, 5028);
+    			add_location(circle, file$2, 132, 6, 5260);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", gridSize);
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
-    			add_location(pattern, file$2, 119, 6, 4853);
-    			add_location(defs, file$2, 118, 4, 4840);
-    			add_location(g, file$2, 142, 4, 5447);
-    			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"));
+    			add_location(pattern, file$2, 124, 4, 5101);
+    			add_location(defs, file$2, 123, 2, 5090);
+    			add_location(g, file$2, 147, 2, 5649);
+    			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6]);
-    			add_location(svg, file$2, 117, 2, 4758);
+    			add_location(svg, file$2, 122, 0, 5009);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
+    			insert_dev(target, div0, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].m(div0, null);
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].m(div1, null);
     			}
 
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div3, anchor);
+    			insert_dev(target, t2, anchor);
     			insert_dev(target, svg, anchor);
     			append_dev(svg, defs);
     			append_dev(defs, pattern);
     			append_dev(pattern, circle);
     			if (if_block) if_block.m(svg, null);
     			append_dev(svg, g);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(g, null);
+    			}
+
+    			append_dev(g, each1_anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(g, null);
@@ -7550,13 +7952,66 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[15]), false, true, false);
+    				dispose = listen_dev(div2, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[15]), false, true, false);
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*$nodesStore, key*/ 20) {
-    				each_value_1 = /*$nodesStore*/ ctx[4];
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*$nodesStore, key*/ 20) {
+    				each_value_2 = /*$nodesStore*/ ctx[4];
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks_2[i]) {
+    						each_blocks_2[i].p(child_ctx, dirty);
+    						transition_in(each_blocks_2[i], 1);
+    					} else {
+    						each_blocks_2[i] = create_each_block_2(child_ctx);
+    						each_blocks_2[i].c();
+    						transition_in(each_blocks_2[i], 1);
+    						each_blocks_2[i].m(div1, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_2.length; i < each_blocks_2.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+
+    			if (!current || dirty[0] & /*key*/ 4 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"))) {
+    				attr_dev(div1, "class", div1_class_value);
+    			}
+
+    			if (!current || dirty[0] & /*key*/ 4 && div2_class_value !== (div2_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"))) {
+    				attr_dev(div2, "class", div2_class_value);
+    			}
+
+    			if (!current || dirty[0] & /*key*/ 4 && pattern_id_value !== (pattern_id_value = `background-${/*key*/ ctx[2]}`)) {
+    				attr_dev(pattern, "id", pattern_id_value);
+    			}
+
+    			if (/*$backgroundStore*/ ctx[3]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_3(ctx);
+    					if_block.c();
+    					if_block.m(svg, g);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if (dirty[0] & /*$derivedEdges*/ 128) {
+    				each_value_1 = /*$derivedEdges*/ ctx[7];
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -7570,46 +8025,21 @@ var app = (function () {
     						each_blocks_1[i] = create_each_block_1(child_ctx);
     						each_blocks_1[i].c();
     						transition_in(each_blocks_1[i], 1);
-    						each_blocks_1[i].m(div0, null);
+    						each_blocks_1[i].m(g, each1_anchor);
     					}
     				}
 
     				group_outros();
 
     				for (i = each_value_1.length; i < each_blocks_1.length; i += 1) {
-    					out(i);
+    					out_1(i);
     				}
 
     				check_outros();
     			}
 
-    			if (!current || dirty & /*key*/ 4 && div0_class_value !== (div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"))) {
-    				attr_dev(div0, "class", div0_class_value);
-    			}
-
-    			if (!current || dirty & /*key*/ 4 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"))) {
-    				attr_dev(div1, "class", div1_class_value);
-    			}
-
-    			if (!current || dirty & /*key*/ 4 && pattern_id_value !== (pattern_id_value = `background-${/*key*/ ctx[2]}`)) {
-    				attr_dev(pattern, "id", pattern_id_value);
-    			}
-
-    			if (/*$backgroundStore*/ ctx[3]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_5(ctx);
-    					if_block.c();
-    					if_block.m(svg, g);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-
-    			if (dirty & /*$derivedEdges*/ 128) {
-    				each_value = /*$derivedEdges*/ ctx[7];
+    			if (dirty[0] & /*$nodesStore, key, derivedEdges, nodesStore*/ 23) {
+    				each_value = /*$nodesStore*/ ctx[4];
     				validate_each_argument(each_value);
     				let i;
 
@@ -7630,22 +8060,26 @@ var app = (function () {
     				group_outros();
 
     				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out_1(i);
+    					out_2(i);
     				}
 
     				check_outros();
     			}
 
-    			if (!current || dirty & /*key*/ 4 && svg_class_value !== (svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1h6lxkt"))) {
+    			if (!current || dirty[0] & /*key*/ 4 && svg_class_value !== (svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1dw7ldy"))) {
     				attr_dev(svg, "class", svg_class_value);
     			}
 
-    			if (!current || dirty & /*$widthStore, $heightStore*/ 96 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6])) {
+    			if (!current || dirty[0] & /*$widthStore, $heightStore*/ 96 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6])) {
     				attr_dev(svg, "viewBox", svg_viewBox_value);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
+
+    			for (let i = 0; i < each_value_2.length; i += 1) {
+    				transition_in(each_blocks_2[i]);
+    			}
 
     			for (let i = 0; i < each_value_1.length; i += 1) {
     				transition_in(each_blocks_1[i]);
@@ -7658,6 +8092,12 @@ var app = (function () {
     			current = true;
     		},
     		o: function outro(local) {
+    			each_blocks_2 = each_blocks_2.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				transition_out(each_blocks_2[i]);
+    			}
+
     			each_blocks_1 = each_blocks_1.filter(Boolean);
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
@@ -7673,11 +8113,16 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
-    			destroy_each(each_blocks_1, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div2);
+    			destroy_each(each_blocks_2, detaching);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(svg);
     			if (if_block) if_block.d();
+    			destroy_each(each_blocks_1, detaching);
     			destroy_each(each_blocks, detaching);
     			mounted = false;
     			dispose();
@@ -7743,6 +8188,7 @@ var app = (function () {
     	component_subscribe($$self, widthStore, value => $$invalidate(5, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
     	component_subscribe($$self, heightStore, value => $$invalidate(6, $heightStore = value));
+    	console.log('initialzoomx', initialZoom.x, 'initialzoomy', initialZoom.y);
 
     	function zoomInit() {
     		//d3Scale.set(e.transform.k);
@@ -7759,9 +8205,8 @@ var app = (function () {
     	}
 
     	onMount(() => {
-    		//d3.select(`.Edges-${key}`).call(d3Zoom);
+    		d3.select(`.Edges-${key}`).call(d3Zoom);
     		d3.select(`.Nodes-${key}`).call(d3Zoom);
-
     		zoomInit();
     	});
 
@@ -7790,32 +8235,34 @@ var app = (function () {
     		d3.select(`.Node-${key}`).style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')').style('transform-origin', '0 0');
     	}
 
+    	console.log('initialzoomx', initialZoom.x, 'initialzoomy', initialZoom.y);
+
     	$$self.$$.on_mount.push(function () {
     		if (nodesStore === undefined && !('nodesStore' in $$props || $$self.$$.bound[$$self.$$.props['nodesStore']])) {
-    			console.warn("<GraphView> was created without expected prop 'nodesStore'");
+    			console_1$1.warn("<GraphView> was created without expected prop 'nodesStore'");
     		}
 
     		if (derivedEdges === undefined && !('derivedEdges' in $$props || $$self.$$.bound[$$self.$$.props['derivedEdges']])) {
-    			console.warn("<GraphView> was created without expected prop 'derivedEdges'");
+    			console_1$1.warn("<GraphView> was created without expected prop 'derivedEdges'");
     		}
 
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
-    			console.warn("<GraphView> was created without expected prop 'key'");
+    			console_1$1.warn("<GraphView> was created without expected prop 'key'");
     		}
 
     		if (initialZoom === undefined && !('initialZoom' in $$props || $$self.$$.bound[$$self.$$.props['initialZoom']])) {
-    			console.warn("<GraphView> was created without expected prop 'initialZoom'");
+    			console_1$1.warn("<GraphView> was created without expected prop 'initialZoom'");
     		}
 
     		if (initialLocation === undefined && !('initialLocation' in $$props || $$self.$$.bound[$$self.$$.props['initialLocation']])) {
-    			console.warn("<GraphView> was created without expected prop 'initialLocation'");
+    			console_1$1.warn("<GraphView> was created without expected prop 'initialLocation'");
     		}
     	});
 
     	const writable_props = ['nodesStore', 'derivedEdges', 'key', 'initialZoom', 'initialLocation'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<GraphView> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<GraphView> was created with unknown prop '${key}'`);
     	});
 
     	function contextmenu_handler(event) {
@@ -7909,13 +8356,22 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init$1(this, options, instance$2, create_fragment$2, safe_not_equal, {
-    			nodesStore: 0,
-    			derivedEdges: 1,
-    			key: 2,
-    			initialZoom: 13,
-    			initialLocation: 14
-    		});
+    		init$1(
+    			this,
+    			options,
+    			instance$2,
+    			create_fragment$2,
+    			safe_not_equal,
+    			{
+    				nodesStore: 0,
+    				derivedEdges: 1,
+    				key: 2,
+    				initialZoom: 13,
+    				initialLocation: 14
+    			},
+    			null,
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -7979,9 +8435,9 @@ var app = (function () {
     			props: {
     				nodesStore: /*nodesStore*/ ctx[8],
     				derivedEdges: /*derivedEdges*/ ctx[9],
-    				initialZoom: /*initialZoom*/ ctx[0],
-    				initialLocation: /*initialLocation*/ ctx[1],
-    				key: /*key*/ ctx[5]
+    				key: /*key*/ ctx[5],
+    				initialLocation: /*initialLocation*/ ctx[0],
+    				initialZoom: /*initialZoom*/ ctx[1]
     			},
     			$$inline: true
     		});
@@ -7990,9 +8446,9 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			create_component(graphview.$$.fragment);
-    			attr_dev(div, "class", "Svelvet svelte-pif02z");
+    			attr_dev(div, "class", "Svelvet svelte-tw9ly1");
     			attr_dev(div, "style", div_style_value = `width: ${/*$widthStore*/ ctx[2]}px; height: ${/*$heightStore*/ ctx[3]}px; background-color: ${/*$backgroundColor*/ ctx[4]}`);
-    			add_location(div, file$1, 59, 2, 2812);
+    			add_location(div, file$1, 57, 0, 2573);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8004,8 +8460,8 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			const graphview_changes = {};
-    			if (dirty & /*initialZoom*/ 1) graphview_changes.initialZoom = /*initialZoom*/ ctx[0];
-    			if (dirty & /*initialLocation*/ 2) graphview_changes.initialLocation = /*initialLocation*/ ctx[1];
+    			if (dirty & /*initialLocation*/ 1) graphview_changes.initialLocation = /*initialLocation*/ ctx[0];
+    			if (dirty & /*initialZoom*/ 2) graphview_changes.initialZoom = /*initialZoom*/ ctx[1];
     			graphview.$set(graphview_changes);
 
     			if (!current || dirty & /*$widthStore, $heightStore, $backgroundColor*/ 28 && div_style_value !== (div_style_value = `width: ${/*$widthStore*/ ctx[2]}px; height: ${/*$heightStore*/ ctx[3]}px; background-color: ${/*$backgroundColor*/ ctx[4]}`)) {
@@ -8053,9 +8509,8 @@ var app = (function () {
     	let { snap = false } = $$props;
     	let { snapTo = 30 } = $$props;
     	let { bgColor = '#ffffff' } = $$props;
-    	let { initialZoom = 4 } = $$props;
-    	let { initialNode = false } = $$props;
     	let { initialLocation = { x: 0, y: 0 } } = $$props;
+    	let { initialZoom = 4 } = $$props;
 
     	// generates a unique string for each svelvet component's unique store instance
     	const key = (Math.random() + 1).toString(36).substring(7);
@@ -8065,7 +8520,7 @@ var app = (function () {
     	const svelvetStore = findOrCreateStore(key);
 
     	// stores (state) within stores, so that we cannot access values from everywhere
-    	const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor, initZoom } = svelvetStore;
+    	const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor } = svelvetStore;
 
     	validate_store(widthStore, 'widthStore');
     	component_subscribe($$self, widthStore, value => $$invalidate(2, $widthStore = value));
@@ -8086,7 +8541,6 @@ var app = (function () {
     		svelvetStore.backgroundColor.set(bgColor);
     		svelvetStore.snapResize.set(snapTo);
     		svelvetStore.initZoom.set(initialZoom);
-    		svelvetStore.initNode.set(initialNode);
     		svelvetStore.initLocation.set(initialLocation);
     	});
 
@@ -8102,7 +8556,6 @@ var app = (function () {
     		svelvetStore.backgroundColor.set(bgColor);
     		svelvetStore.snapResize.set(snapTo);
     		svelvetStore.initZoom.set(initialZoom);
-    		svelvetStore.initNode.set(initialNode);
     		svelvetStore.initLocation.set(initialLocation);
     	});
 
@@ -8126,9 +8579,8 @@ var app = (function () {
     		'snap',
     		'snapTo',
     		'bgColor',
-    		'initialZoom',
-    		'initialNode',
-    		'initialLocation'
+    		'initialLocation',
+    		'initialZoom'
     	];
 
     	Object.keys($$props).forEach(key => {
@@ -8145,9 +8597,8 @@ var app = (function () {
     		if ('snap' in $$props) $$invalidate(17, snap = $$props.snap);
     		if ('snapTo' in $$props) $$invalidate(18, snapTo = $$props.snapTo);
     		if ('bgColor' in $$props) $$invalidate(19, bgColor = $$props.bgColor);
-    		if ('initialZoom' in $$props) $$invalidate(0, initialZoom = $$props.initialZoom);
-    		if ('initialNode' in $$props) $$invalidate(20, initialNode = $$props.initialNode);
-    		if ('initialLocation' in $$props) $$invalidate(1, initialLocation = $$props.initialLocation);
+    		if ('initialLocation' in $$props) $$invalidate(0, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(1, initialZoom = $$props.initialZoom);
     	};
 
     	$$self.$capture_state = () => ({
@@ -8164,9 +8615,8 @@ var app = (function () {
     		snap,
     		snapTo,
     		bgColor,
-    		initialZoom,
-    		initialNode,
     		initialLocation,
+    		initialZoom,
     		key,
     		svelvetStore,
     		widthStore,
@@ -8174,7 +8624,6 @@ var app = (function () {
     		nodesStore,
     		derivedEdges,
     		backgroundColor,
-    		initZoom,
     		$widthStore,
     		$heightStore,
     		$backgroundColor
@@ -8190,9 +8639,8 @@ var app = (function () {
     		if ('snap' in $$props) $$invalidate(17, snap = $$props.snap);
     		if ('snapTo' in $$props) $$invalidate(18, snapTo = $$props.snapTo);
     		if ('bgColor' in $$props) $$invalidate(19, bgColor = $$props.bgColor);
-    		if ('initialZoom' in $$props) $$invalidate(0, initialZoom = $$props.initialZoom);
-    		if ('initialNode' in $$props) $$invalidate(20, initialNode = $$props.initialNode);
-    		if ('initialLocation' in $$props) $$invalidate(1, initialLocation = $$props.initialLocation);
+    		if ('initialLocation' in $$props) $$invalidate(0, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(1, initialZoom = $$props.initialZoom);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -8200,8 +8648,8 @@ var app = (function () {
     	}
 
     	return [
-    		initialZoom,
     		initialLocation,
+    		initialZoom,
     		$widthStore,
     		$heightStore,
     		$backgroundColor,
@@ -8219,8 +8667,7 @@ var app = (function () {
     		movement,
     		snap,
     		snapTo,
-    		bgColor,
-    		initialNode
+    		bgColor
     	];
     }
 
@@ -8238,9 +8685,8 @@ var app = (function () {
     			snap: 17,
     			snapTo: 18,
     			bgColor: 19,
-    			initialZoom: 0,
-    			initialNode: 20,
-    			initialLocation: 1
+    			initialLocation: 0,
+    			initialZoom: 1
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -8323,27 +8769,19 @@ var app = (function () {
     		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get initialZoom() {
-    		throw new Error("<Svelvet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set initialZoom(value) {
-    		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get initialNode() {
-    		throw new Error("<Svelvet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set initialNode(value) {
-    		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
     	get initialLocation() {
     		throw new Error("<Svelvet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set initialLocation(value) {
+    		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get initialZoom() {
+    		throw new Error("<Svelvet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set initialZoom(value) {
     		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }

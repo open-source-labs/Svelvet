@@ -3,7 +3,7 @@
   export let node;
   export let key;
   const {
-    onMouseMove,
+    onNodeMove,
     onNodeClick,
     onTouchMove,
     nodeSelected,
@@ -25,7 +25,7 @@
   on:mousemove={(e) => {
     e.preventDefault();
     if (shouldMove) {
-      onMouseMove(e, node.id);
+      onNodeMove(e, node.id);
       moved = true;
     }
   }}
@@ -36,7 +36,7 @@
       node.position.x = Math.floor(node.position.x / $snapResize) * $snapResize;
       node.position.y = Math.floor(node.position.y / $snapResize) * $snapResize;
       // Invoking on mouseMove so that edges update relation to node immediately upon snap 
-      onMouseMove(e, node.id);
+      onNodeMove(e, node.id);
     }
     moving = false;
     $nodeSelected = false;

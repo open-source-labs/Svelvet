@@ -28,6 +28,7 @@
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
+  console.log('initialzoomx', initialZoom.x, 'initialzoomy', initialZoom.y);
   function zoomInit() {
     //d3Scale.set(e.transform.k);
     //set default zoom logic
@@ -55,11 +56,9 @@
   }
   
   onMount(() => {
-      //d3.select(`.Edges-${key}`).call(d3Zoom);
+      d3.select(`.Edges-${key}`).call(d3Zoom);
       d3.select(`.Nodes-${key}`).call(d3Zoom);
       zoomInit()
-      
-      
   });
   // TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom = d3
@@ -94,84 +93,131 @@
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
           .style('transform-origin', '0 0');
   }
-  
+  console.log('initialzoomx', initialZoom.x, 'initialzoomy', initialZoom.y);
+  console.log('hello world');
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-  <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
-    <!-- This container is transformed by d3zoom -->
-    <div class={`Node Node-${key}`}>
-      {#each $nodesStore as node}
-        {#if node.image && !node.data.label}
-          <ImageNode {node} {key} />
-          <!-- If node has html property:  -->
-        {:else if node.data.html}
-          <Node {node} {key}>{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
-        {:else}
-          <Node {node} {key}>{node.data.label}</Node>
-        {/if}
-      {/each}
-    </div>
+<div class="svelvet-container">
+
+</div>
+<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault >
+  <!-- This container is transformed by d3zoom -->
+  <div class={`Node Node-${key}`}>
+    {#each $nodesStore as node}
+      {#if node.image && !node.data.label}
+        <ImageNode {node} {key} />
+        <!-- If node has html property:  -->
+      {:else if node.data.html}
+        <Node {node} {key} >{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
+      <!-- {:else if node.data.component}
+        <Node {node} {key} {derivedEdges} {nodesStore}><{node.data.component} /></Node>   -->
+      {:else}
+        <Node {node} {key}>{node.data.label}</Node>
+      {/if}
+    {/each}
   </div>
+</div>
+<div class="background-container">
   
-  <!-- rendering dots on the background depending on the zoom level -->
-  <svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}">
-    <defs>
-      <pattern
-        id={`background-${key}`}
-        x="0"
-        y="0"
-        width={gridSize}
-        height={gridSize}
-        patternUnits="userSpaceOnUse"
-      >
-        <circle
-          id="dot"
-          cx={gridSize / 2 - dotSize / 2}
-          cy={gridSize / 2 - dotSize / 2}
-          r="0.5"
-          style="fill: gray"
-        />
-      </pattern>
-    </defs>
-  
-    {#if $backgroundStore}
-      <rect width="100%" height="100%" style="fill: url(#background-{key});" />
-    {/if}
-  
-    <!-- <g> tag defines which edge type to render depending on properties of edge object -->
-    <g>
-      {#each $derivedEdges as edge}
-        {#if edge.type === 'straight'}
-          <StraightEdge {edge} />
-        {:else if edge.type === 'smoothstep'}
-          <SmoothStepEdge {edge} />
-        {:else if edge.type === 'step'}
-          <StepEdge {edge} />
-        {:else}
-          <SimpleBezierEdge {edge} />
+</div>
+<svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}" >
+  <defs>
+    <pattern
+      id={`background-${key}`}
+      x="0"
+      y="0"
+      width={gridSize}
+      height={gridSize}
+      patternUnits="userSpaceOnUse"
+    >
+      <circle
+        id="dot"
+        cx={gridSize / 2 - dotSize / 2}
+        cy={gridSize / 2 - dotSize / 2}
+        r="0.5"
+        style="fill: gray"
+      />
+    </pattern>
+  </defs>
+
+  {#if $backgroundStore}
+    <rect width="100%" height="100%" style="fill: url(#background-{key});" />
+  {/if}
+
+  <!-- <g> tag defines which edge type to render depending on properties of edge object -->
+  <g>
+    {#each $derivedEdges as edge}
+      {#if edge.type === 'straight'}
+        <StraightEdge {edge} />
+      {:else if edge.type === 'smoothstep'}
+        <SmoothStepEdge {edge} />
+      {:else if edge.type === 'step'}
+        <StepEdge {edge} />
+      {:else}
+        <SimpleBezierEdge {edge} />
+      {/if}
+      <!-- sets anchor points type to either arrow or halfcircle-->
+      <!-- {#if !edge.noHandle}
+        <EdgeAnchor x={edge.sourceX} y={edge.sourceY} {key} />
+        {#if !edge.arrow}
+          <EdgeAnchor x={edge.targetX} y={edge.targetY} {key} />
         {/if}
-        <!-- sets anchor points type to either arrow or halfcircle-->
-        {#if !edge.noHandle}
-          <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
-          {#if !edge.arrow}
-            <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-          {/if}
-        {/if}
-      {/each}
-    </g>
-  </svg>
-  
-  <style>
-   .Nodes {
-    position: absolute;
+      {/if} -->
+    {/each}
+    {#each $nodesStore as node}
+      <EdgeAnchor 
+        x={node.position.x + (node.width / 2)} 
+        y={node.position.y} 
+        position={'top'}
+        {key} 
+        {derivedEdges} 
+        node={node}
+        {nodesStore}
+      />
+      <EdgeAnchor 
+        x={node.position.x + (node.width / 2)} 
+        y={node.position.y + node.height} 
+        position={'bottom'}
+        {key} 
+        {derivedEdges} 
+        node={node}
+        {nodesStore}
+      />
+    {/each}
+  </g>
+</svg>
+
+
+<!-- rendering dots on the background depending on the zoom level -->
+
+
+<style>
+    .Nodes {
+    position: absolute; 
+    /* width: 100%; */
+    /* height: 100%; */
+    /* cursor:grab; */
+    /* pointer-events: none; */
+    /* z-index: 1 !important; */
+  } 
+  .Edges {
+    pointer-events: none;
+    cursor: grab;
+  }
+  .Edges:active {
+    cursor: grabbing;
+  }
+  rect {
+    pointer-events: all;
+  }
+  .Nodes:active {
+    cursor: grabbing;
+  }
+ 
+  /* .Node {
+    color: black; 
     width: 100%;
     height: 100%;
-  }
-  .Node {
-    color: black; /* remove this once color is set to default via types */
-    width: 100%;
-    height: 100%;
-  }
-  </style>
-  
+  } */ 
+</style>
