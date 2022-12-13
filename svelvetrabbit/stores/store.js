@@ -280,6 +280,29 @@ export function findOrCreateStore(key) {
         });
         return [...$edgesStore];
     });
+    // Sets the position of each anchor (top, bottom, left or right)
+    const setAnchorPosition = (position, node, width, height) => {
+        let top;
+        let left;
+        if(position === 'top') {
+          top = -height / 2;
+          left = node.width / 2 - width / 2;
+        }
+        if(position === 'bottom') {
+          top = node.height - height / 2;
+          left = node.width / 2 - width / 2;
+        }
+        if(position === 'left') {
+          top = node.height / 2 - height / 2;
+          left = -width / 2;
+        }
+        if(position === 'right') {
+          top = node.height / 2 - height / 2;
+          left = node.width - width / 2;
+        }
+        return [top, left];
+      }
+    
     //Puts everything together as the svelvet store and use the key so that it can be used.
     const svelvetStore = {
         ...coreSvelvetStore,
@@ -287,6 +310,7 @@ export function findOrCreateStore(key) {
         onEdgeMove,
         onNodeMove,
         onNodeClick,
+        setAnchorPosition,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;

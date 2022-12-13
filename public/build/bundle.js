@@ -5429,6 +5429,29 @@ var app = (function () {
             });
             return [...$edgesStore];
         });
+        // Sets the position of each anchor (top, bottom, left or right)
+        const setAnchorPosition = (position, node, width, height) => {
+            let top;
+            let left;
+            if(position === 'top') {
+              top = -height / 2;
+              left = node.width / 2 - width / 2;
+            }
+            if(position === 'bottom') {
+              top = node.height - height / 2;
+              left = node.width / 2 - width / 2;
+            }
+            if(position === 'left') {
+              top = node.height / 2 - height / 2;
+              left = -width / 2;
+            }
+            if(position === 'right') {
+              top = node.height / 2 - height / 2;
+              left = node.width - width / 2;
+            }
+            return [top, left];
+          };
+        
         //Puts everything together as the svelvet store and use the key so that it can be used.
         const svelvetStore = {
             ...coreSvelvetStore,
@@ -5436,6 +5459,7 @@ var app = (function () {
             onEdgeMove,
             onNodeMove,
             onNodeClick,
+            setAnchorPosition,
             derivedEdges
         };
         svelvetStores[key] = svelvetStore;
@@ -5449,23 +5473,22 @@ var app = (function () {
 
     function create_fragment$7(ctx) {
     	let div;
-    	let div_style_value;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "Anchor svelte-1rl1gvp");
+    			attr_dev(div, "class", "Anchor svelte-jk37g5");
 
-    			attr_dev(div, "style", div_style_value = `
-    top: ${/*position*/ ctx[1] === 'top'
-			? -/*anchorHeight*/ ctx[11] / 2
-			: /*node*/ ctx[0].height - /*anchorHeight*/ ctx[11] / 2}px;
-    left:${/*node*/ ctx[0].width / 2 - /*anchorWidth*/ ctx[10] / 2}px;
+    			attr_dev(div, "style", `
+    height:${/*anchorHeight*/ ctx[11]}px;
+    width:${/*anchorWidth*/ ctx[10]}px;
+    top: ${/*top*/ ctx[16]}px;
+    left:${/*left*/ ctx[17]}px;
   `);
 
-    			add_location(div, file$5, 129, 0, 4668);
+    			add_location(div, file$5, 131, 0, 4621);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5475,27 +5498,18 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[19], false, false, false),
-    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[20], false, false, false),
-    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[21], false, false, false),
-    					listen_dev(div, "mouseup", /*mouseup_handler_1*/ ctx[22], false, false, false),
-    					listen_dev(div, "mouseenter", /*mouseenter_handler*/ ctx[23], false, false, false),
-    					listen_dev(div, "mouseleave", /*mouseleave_handler*/ ctx[24], false, false, false)
+    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[21], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[22], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "mouseup", /*mouseup_handler_1*/ ctx[24], false, false, false),
+    					listen_dev(div, "mouseenter", /*mouseenter_handler*/ ctx[25], false, false, false),
+    					listen_dev(div, "mouseleave", /*mouseleave_handler*/ ctx[26], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*position, node*/ 3 && div_style_value !== (div_style_value = `
-    top: ${/*position*/ ctx[1] === 'top'
-			? -/*anchorHeight*/ ctx[11] / 2
-			: /*node*/ ctx[0].height - /*anchorHeight*/ ctx[11] / 2}px;
-    left:${/*node*/ ctx[0].width / 2 - /*anchorWidth*/ ctx[10] / 2}px;
-  `)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-    		},
+    		p: noop$1,
     		i: noop$1,
     		o: noop$1,
     		d: function destroy(detaching) {
@@ -5531,13 +5545,17 @@ var app = (function () {
     	let hovered = false;
     	let anchorWidth = 10;
     	let anchorHeight = 10;
-    	const { onEdgeMove, onTouchMove, edgeSelected, edgeIdSelected, movementStore, hoveredElement, derivedEdges, nodesStore } = findOrCreateStore(key);
+
+    	// let top;
+    	// let left;
+    	const { onEdgeMove, onTouchMove, setAnchorPosition, edgeSelected, edgeIdSelected, movementStore, hoveredElement, derivedEdges, nodesStore } = findOrCreateStore(key);
+
     	validate_store(hoveredElement, 'hoveredElement');
     	component_subscribe($$self, hoveredElement, value => $$invalidate(9, $hoveredElement = value));
     	validate_store(derivedEdges, 'derivedEdges');
     	component_subscribe($$self, derivedEdges, value => $$invalidate(8, $derivedEdges = value));
     	validate_store(nodesStore, 'nodesStore');
-    	component_subscribe($$self, nodesStore, value => $$invalidate(26, $nodesStore = value));
+    	component_subscribe($$self, nodesStore, value => $$invalidate(28, $nodesStore = value));
 
     	// $: shouldMove = moving && $movementStore;
     	// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -5546,6 +5564,7 @@ var app = (function () {
 
     	let moved = false;
     	let edgeShouldMove = false;
+    	const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
 
     	/* This keeps track of the cursors current position, taking into account d3 transformations,
     updating the mouseX and mouseY values in the store
@@ -5561,9 +5580,6 @@ var app = (function () {
     	const renderEdge = e => {
     		e.preventDefault(); // preventing default behavior, not sure if necessary
 
-    		// set the target or the source depending on the anchor position
-    		// let source = position === 'bottom' ? node.id : null;
-    		// let target = position === 'top' ? node.id : null;
     		// Setting the newEdge variable to an edge prototype
     		$$invalidate(2, newEdge = position === 'bottom'
     		? {
@@ -5691,7 +5707,7 @@ var app = (function () {
     	};
 
     	$$self.$$set = $$props => {
-    		if ('key' in $$props) $$invalidate(18, key = $$props.key);
+    		if ('key' in $$props) $$invalidate(20, key = $$props.key);
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
     		if ('position' in $$props) $$invalidate(1, position = $$props.position);
     	};
@@ -5712,6 +5728,7 @@ var app = (function () {
     		anchorHeight,
     		onEdgeMove,
     		onTouchMove,
+    		setAnchorPosition,
     		edgeSelected,
     		edgeIdSelected,
     		movementStore,
@@ -5721,6 +5738,8 @@ var app = (function () {
     		moving,
     		moved,
     		edgeShouldMove,
+    		top,
+    		left,
     		renderEdge,
     		renderNewNode,
     		store,
@@ -5730,7 +5749,7 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('key' in $$props) $$invalidate(18, key = $$props.key);
+    		if ('key' in $$props) $$invalidate(20, key = $$props.key);
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
     		if ('position' in $$props) $$invalidate(1, position = $$props.position);
     		if ('newNode' in $$props) newNode = $$props.newNode;
@@ -5749,7 +5768,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*key*/ 262144) {
+    		if ($$self.$$.dirty[0] & /*key*/ 1048576) {
     			$$invalidate(7, store = findOrCreateStore(key));
     		}
     	};
@@ -5771,6 +5790,8 @@ var app = (function () {
     		hoveredElement,
     		derivedEdges,
     		nodesStore,
+    		top,
+    		left,
     		renderEdge,
     		renderNewNode,
     		key,
@@ -5786,7 +5807,7 @@ var app = (function () {
     class EdgeAnchor extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$7, create_fragment$7, safe_not_equal, { key: 18, node: 0, position: 1 });
+    		init$1(this, options, instance$7, create_fragment$7, safe_not_equal, { key: 20, node: 0, position: 1 }, null, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -6220,7 +6241,7 @@ var app = (function () {
     /* svelvetrabbit/Nodes/index.svelte generated by Svelte v3.54.0 */
     const file$4 = "svelvetrabbit/Nodes/index.svelte";
 
-    // (86:4) {#if node.image}
+    // (88:4) {#if node.image}
     function create_if_block_1$1(ctx) {
     	let img;
     	let img_src_value;
@@ -6233,21 +6254,21 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$4, 86, 6, 2404);
+    			add_location(img, file$4, 88, 6, 2485);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*node*/ 1 && !src_url_equal(img.src, img_src_value = /*node*/ ctx[0].src)) {
+    			if (dirty[0] & /*node*/ 1 && !src_url_equal(img.src, img_src_value = /*node*/ ctx[0].src)) {
     				attr_dev(img, "src", img_src_value);
     			}
 
-    			if (dirty & /*node*/ 1) {
+    			if (dirty[0] & /*node*/ 1) {
     				set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			}
 
-    			if (dirty & /*node*/ 1) {
+    			if (dirty[0] & /*node*/ 1) {
     				set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			}
     		},
@@ -6260,14 +6281,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(86:4) {#if node.image}",
+    		source: "(88:4) {#if node.image}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (95:4) {#if node.clickCallback}
+    // (97:4) {#if node.clickCallback}
     function create_if_block$1(ctx) {
     	let button;
     	let mounted;
@@ -6277,13 +6298,13 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Click Me";
-    			add_location(button, file$4, 95, 6, 2615);
+    			add_location(button, file$4, 97, 6, 2696);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[22], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[24], false, false, false);
     				mounted = true;
     			}
     		},
@@ -6299,7 +6320,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(95:4) {#if node.clickCallback}",
+    		source: "(97:4) {#if node.clickCallback}",
     		ctx
     	});
 
@@ -6323,21 +6344,21 @@ var app = (function () {
     			props: {
     				key: /*key*/ ctx[1],
     				node: /*node*/ ctx[0],
-    				position: 'top'
+    				position: /*node*/ ctx[0].targetPosition || 'top'
     			},
     			$$inline: true
     		});
 
     	let if_block0 = /*node*/ ctx[0].image && create_if_block_1$1(ctx);
     	let if_block1 = /*node*/ ctx[0].clickCallback && create_if_block$1(ctx);
-    	const default_slot_template = /*#slots*/ ctx[19].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], null);
+    	const default_slot_template = /*#slots*/ ctx[21].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[20], null);
 
     	edgeanchor1 = new EdgeAnchor({
     			props: {
     				key: /*key*/ ctx[1],
     				node: /*node*/ ctx[0],
-    				position: 'bottom'
+    				position: /*node*/ ctx[0].sourcePosition || 'bottom'
     			},
     			$$inline: true
     		});
@@ -6354,7 +6375,7 @@ var app = (function () {
     			if (default_slot) default_slot.c();
     			t3 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", "Node svelte-16rgjp9");
+    			attr_dev(div, "class", "Node svelte-1u7y2cz");
     			set_style(div, "left", /*node*/ ctx[0].position.x + "px");
     			set_style(div, "top", /*node*/ ctx[0].position.y + "px");
     			set_style(div, "width", /*node*/ ctx[0].width + "px");
@@ -6364,7 +6385,7 @@ var app = (function () {
     			set_style(div, "border-radius", /*node*/ ctx[0].borderRadius + "px");
     			set_style(div, "color", /*node*/ ctx[0].textColor);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
-    			add_location(div, file$4, 51, 0, 1547);
+    			add_location(div, file$4, 53, 0, 1605);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6388,21 +6409,22 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[20], false, false, false),
-    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[21], false, false, false),
-    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[23], false, false, false),
-    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[24], false, false, false),
-    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[25], false, false, false),
-    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[26], false, false, false)
+    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[22], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[25], false, false, false),
+    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[26], false, false, false),
+    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[27], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[28], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			const edgeanchor0_changes = {};
-    			if (dirty & /*key*/ 2) edgeanchor0_changes.key = /*key*/ ctx[1];
-    			if (dirty & /*node*/ 1) edgeanchor0_changes.node = /*node*/ ctx[0];
+    			if (dirty[0] & /*key*/ 2) edgeanchor0_changes.key = /*key*/ ctx[1];
+    			if (dirty[0] & /*node*/ 1) edgeanchor0_changes.node = /*node*/ ctx[0];
+    			if (dirty[0] & /*node*/ 1) edgeanchor0_changes.position = /*node*/ ctx[0].targetPosition || 'top';
     			edgeanchor0.$set(edgeanchor0_changes);
 
     			if (/*node*/ ctx[0].image) {
@@ -6432,58 +6454,59 @@ var app = (function () {
     			}
 
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 262144)) {
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope*/ 1048576)) {
     					update_slot_base(
     						default_slot,
     						default_slot_template,
     						ctx,
-    						/*$$scope*/ ctx[18],
+    						/*$$scope*/ ctx[20],
     						!current
-    						? get_all_dirty_from_scope(/*$$scope*/ ctx[18])
-    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[18], dirty, null),
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[20])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[20], dirty, null),
     						null
     					);
     				}
     			}
 
     			const edgeanchor1_changes = {};
-    			if (dirty & /*key*/ 2) edgeanchor1_changes.key = /*key*/ ctx[1];
-    			if (dirty & /*node*/ 1) edgeanchor1_changes.node = /*node*/ ctx[0];
+    			if (dirty[0] & /*key*/ 2) edgeanchor1_changes.key = /*key*/ ctx[1];
+    			if (dirty[0] & /*node*/ 1) edgeanchor1_changes.node = /*node*/ ctx[0];
+    			if (dirty[0] & /*node*/ 1) edgeanchor1_changes.position = /*node*/ ctx[0].sourcePosition || 'bottom';
     			edgeanchor1.$set(edgeanchor1_changes);
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "left", /*node*/ ctx[0].position.x + "px");
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "top", /*node*/ ctx[0].position.y + "px");
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "width", /*node*/ ctx[0].width + "px");
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "height", /*node*/ ctx[0].height + "px");
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "background-color", /*node*/ ctx[0].bgColor);
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "border-color", /*node*/ ctx[0].borderColor);
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "border-radius", /*node*/ ctx[0].borderRadius + "px");
     			}
 
-    			if (!current || dirty & /*node*/ 1) {
+    			if (!current || dirty[0] & /*node*/ 1) {
     				set_style(div, "color", /*node*/ ctx[0].textColor);
     			}
 
-    			if (!current || dirty & /*node*/ 1 && div_id_value !== (div_id_value = "svelvet-" + /*node*/ ctx[0].id)) {
+    			if (!current || dirty[0] & /*node*/ 1 && div_id_value !== (div_id_value = "svelvet-" + /*node*/ ctx[0].id)) {
     				attr_dev(div, "id", div_id_value);
     			}
     		},
@@ -6534,13 +6557,15 @@ var app = (function () {
     	validate_slots('Nodes', slots, ['default']);
     	let { node } = $$props;
     	let { key } = $$props;
+    	let { sourcePosition } = $$props;
+    	let { targetPosition } = $$props;
     	const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, widthStore, heightStore, nodeIdSelected, movementStore, snapgrid, snapResize, derivedEdges } = findOrCreateStore(key);
     	validate_store(nodeSelected, 'nodeSelected');
     	component_subscribe($$self, nodeSelected, value => $$invalidate(7, $nodeSelected = value));
     	validate_store(nodeIdSelected, 'nodeIdSelected');
     	component_subscribe($$self, nodeIdSelected, value => $$invalidate(8, $nodeIdSelected = value));
     	validate_store(movementStore, 'movementStore');
-    	component_subscribe($$self, movementStore, value => $$invalidate(17, $movementStore = value));
+    	component_subscribe($$self, movementStore, value => $$invalidate(19, $movementStore = value));
     	validate_store(snapgrid, 'snapgrid');
     	component_subscribe($$self, snapgrid, value => $$invalidate(5, $snapgrid = value));
     	validate_store(snapResize, 'snapResize');
@@ -6560,9 +6585,17 @@ var app = (function () {
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
     			console.warn("<Nodes> was created without expected prop 'key'");
     		}
+
+    		if (sourcePosition === undefined && !('sourcePosition' in $$props || $$self.$$.bound[$$self.$$.props['sourcePosition']])) {
+    			console.warn("<Nodes> was created without expected prop 'sourcePosition'");
+    		}
+
+    		if (targetPosition === undefined && !('targetPosition' in $$props || $$self.$$.bound[$$self.$$.props['targetPosition']])) {
+    			console.warn("<Nodes> was created without expected prop 'targetPosition'");
+    		}
     	});
 
-    	const writable_props = ['node', 'key'];
+    	const writable_props = ['node', 'key', 'sourcePosition', 'targetPosition'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Nodes> was created with unknown prop '${key}'`);
@@ -6628,7 +6661,9 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
     		if ('key' in $$props) $$invalidate(1, key = $$props.key);
-    		if ('$$scope' in $$props) $$invalidate(18, $$scope = $$props.$$scope);
+    		if ('sourcePosition' in $$props) $$invalidate(17, sourcePosition = $$props.sourcePosition);
+    		if ('targetPosition' in $$props) $$invalidate(18, targetPosition = $$props.targetPosition);
+    		if ('$$scope' in $$props) $$invalidate(20, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -6636,6 +6671,8 @@ var app = (function () {
     		EdgeAnchor,
     		node,
     		key,
+    		sourcePosition,
+    		targetPosition,
     		onNodeMove,
     		onNodeClick,
     		onTouchMove,
@@ -6660,6 +6697,8 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
     		if ('key' in $$props) $$invalidate(1, key = $$props.key);
+    		if ('sourcePosition' in $$props) $$invalidate(17, sourcePosition = $$props.sourcePosition);
+    		if ('targetPosition' in $$props) $$invalidate(18, targetPosition = $$props.targetPosition);
     		if ('moving' in $$props) $$invalidate(2, moving = $$props.moving);
     		if ('moved' in $$props) $$invalidate(3, moved = $$props.moved);
     		if ('shouldMove' in $$props) $$invalidate(4, shouldMove = $$props.shouldMove);
@@ -6670,7 +6709,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*moving, $movementStore*/ 131076) {
+    		if ($$self.$$.dirty[0] & /*moving, $movementStore*/ 524292) {
     			$$invalidate(4, shouldMove = moving && $movementStore);
     		}
     	};
@@ -6693,6 +6732,8 @@ var app = (function () {
     		movementStore,
     		snapgrid,
     		snapResize,
+    		sourcePosition,
+    		targetPosition,
     		$movementStore,
     		$$scope,
     		slots,
@@ -6709,7 +6750,22 @@ var app = (function () {
     class Nodes extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$4, create_fragment$4, safe_not_equal, { node: 0, key: 1 });
+
+    		init$1(
+    			this,
+    			options,
+    			instance$4,
+    			create_fragment$4,
+    			safe_not_equal,
+    			{
+    				node: 0,
+    				key: 1,
+    				sourcePosition: 17,
+    				targetPosition: 18
+    			},
+    			null,
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -6732,6 +6788,22 @@ var app = (function () {
     	}
 
     	set key(value) {
+    		throw new Error("<Nodes>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get sourcePosition() {
+    		throw new Error("<Nodes>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set sourcePosition(value) {
+    		throw new Error("<Nodes>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get targetPosition() {
+    		throw new Error("<Nodes>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set targetPosition(value) {
     		throw new Error("<Nodes>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -8641,12 +8713,12 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 104, 1, 2088);
+    			add_location(h1, file, 106, 1, 2145);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 105, 14, 2125);
-    			add_location(p, file, 105, 1, 2112);
+    			add_location(a, file, 107, 14, 2182);
+    			add_location(p, file, 107, 1, 2169);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 103, 0, 2080);
+    			add_location(main, file, 105, 0, 2137);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8712,6 +8784,8 @@ var app = (function () {
     			id: 2,
     			position: { x: 50, y: 300 },
     			data: { label: "borderColor" },
+    			targetPosition: 'left',
+    			sourcePosition: 'right',
     			width: 150,
     			height: 40,
     			borderColor: "red",

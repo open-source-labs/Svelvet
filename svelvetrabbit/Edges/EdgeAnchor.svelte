@@ -11,10 +11,13 @@
   let hovered = false;
   let anchorWidth = 10;
   let anchorHeight = 10;
+  // let top;
+  // let left;
 
   const {
       onEdgeMove,
       onTouchMove,
+      setAnchorPosition,
       edgeSelected,
       edgeIdSelected,
       movementStore,
@@ -29,6 +32,7 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
+  const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
 
   /* This keeps track of the cursors current position, taking into account d3 transformations,
   updating the mouseX and mouseY values in the store
@@ -39,15 +43,13 @@
   //     store.mouseY.set(d3.pointer(event)[1]);
   //   })
 
+
   /*
   This is the function that renders a new edge when an anchor is clicked
   */  
   const renderEdge = (e) => {
     e.preventDefault(); // preventing default behavior, not sure if necessary
  
-    // set the target or the source depending on the anchor position
-    // let source = position === 'bottom' ? node.id : null;
-    // let target = position === 'top' ? node.id : null;
     // Setting the newEdge variable to an edge prototype
     newEdge = position === 'bottom' ? { 
       id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
@@ -130,8 +132,10 @@
 <div
   class="Anchor" 
   style={`
-    top: ${position === 'top' ? - anchorHeight / 2 : node.height - anchorHeight / 2}px;
-    left:${node.width / 2 - anchorWidth / 2}px;
+    height:${anchorHeight}px;
+    width:${anchorWidth}px;
+    top: ${top}px;
+    left:${left}px;
   `}
 
   on:mousedown={(e) => {
@@ -164,11 +168,7 @@
 <style>
   .Anchor {
     position: absolute;
-    top: -5px;
-    left: 50px;
 
-    width: 12px;
-    height: 10px;
     border-radius: 40%;
     cursor: crosshair;
     background-color: rgb(105, 99, 99);

@@ -15,6 +15,8 @@
 		    id: 2,
 		    position: { x: 50, y: 300 },
 		    data: { label: "borderColor" },
+				targetPosition: 'left',
+				sourcePosition: 'right',
 		    width: 150,
 		    height: 40,
 		    borderColor: "red",

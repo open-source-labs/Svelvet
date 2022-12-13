@@ -3,6 +3,8 @@
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   export let node;
   export let key;
+  export let sourcePosition;
+  export let targetPosition;
   const {
     onNodeMove,
     onNodeClick,
@@ -81,7 +83,7 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
-  <EdgeAnchor {key} {node} position={'top'} />
+  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} />
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
       <img
@@ -96,7 +98,7 @@
       <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
     {/if}
     <slot />
-    <EdgeAnchor {key} {node} position={'bottom'} />
+    <EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} />
 
 
 
@@ -118,11 +120,5 @@
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     z-index: 3;
     transform-style: preserve-3d;
-  }
-
-  .node-container {
-    width: 100%;
-    height: 100%;
-    z-index: 3;
   }
 </style>
