@@ -126,6 +126,7 @@
 />
 
 <!-- renders simple half-circle for the anchor point of the edge -->
+<!-- CHANGED FROM SVG CIRCLE TO DIV -->
 <div
   class="Anchor" 
   style={`
@@ -171,7 +172,8 @@
     border-radius: 40%;
     cursor: crosshair;
     background-color: rgb(105, 99, 99);
-    z-index: 2 !important; 
+    z-index: -1 !important; 
+    transform: translateZ(-5px);
     /* pointer-events: all; */ 
   }
 

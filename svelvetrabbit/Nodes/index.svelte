@@ -81,22 +81,24 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
-<EdgeAnchor {key} {node} position={'top'} />
-  <!-- This executes if node.image is present without node.label -->
-  {#if node.image}
-    <img
-      src={node.src}
-      alt=""
-      style="width: {node.width * 0.75}px;
-			 height: {node.height * 0.75}px;
-       overflow: hidden;"
-    />
-  {/if}
-  {#if node.clickCallback}
-    <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
-  {/if}
-  <slot />
-  <EdgeAnchor {key} {node} position={'bottom'} />
+  <EdgeAnchor {key} {node} position={'top'} />
+    <!-- This executes if node.image is present without node.label -->
+    {#if node.image}
+      <img
+        src={node.src}
+        alt=""
+        style="width: {node.width * 0.75}px;
+         height: {node.height * 0.75}px;
+         overflow: hidden;"
+      />
+    {/if}
+    {#if node.clickCallback}
+      <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
+    {/if}
+    <slot />
+    <EdgeAnchor {key} {node} position={'bottom'} />
+
+
 
 </div>
 
@@ -114,6 +116,12 @@
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+  }
+
+  .node-container {
+    width: 100%;
+    height: 100%;
     z-index: 3;
   }
 </style>
