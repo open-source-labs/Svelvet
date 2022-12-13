@@ -171,12 +171,13 @@
     border-radius: 40%;
     cursor: crosshair;
     background-color: rgb(105, 99, 99);
-    z-index: 2 !important; 
+    z-index: -1 !important; 
+    transform: translateZ(-10px);
     /* pointer-events: all; */ 
   }
 
   .Anchor:hover {
-    transform: scale(1.5);
+    transform: scale(1.5) translateZ(-10px);
   }
   /* circle {
     position: absolute;
