@@ -21,7 +21,10 @@ export function findOrCreateStore(key) {
         d3Scale: writable(1),
         snapgrid: writable(false),
         snapResize: writable(30),
-        backgroundColor: writable()
+        backgroundColor: writable(),
+        initZoom: writable(4),
+        initNode: writable(false),
+        initLocation: writable([{x:0, y:0}])
     };
     // This is the function handler for the mouseMove event to update the position of the selected node.
     const onMouseMove = (e, nodeID) => {
