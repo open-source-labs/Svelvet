@@ -3,36 +3,26 @@
   import { Position } from '../types/utils';
   import { findOrCreateStore } from '../stores/store';
   import { derived } from 'svelte/store';
-  export let x;
-  export let y;
   export let key;
-  export let derivedEdges;
   export let node;
-  export let nodesStore;
   export let position;
   let newNode;
   let newEdge;
   let hovered = false;
+  let anchorWidth = 10;
+  let anchorHeight = 10;
 
   const {
-      onNodeMove,
       onEdgeMove,
-      onNodeClick,
       onTouchMove,
-      nodeSelected,
       edgeSelected,
-      widthStore,
-      heightStore,
-      nodeIdSelected,
       edgeIdSelected,
       movementStore,
-      snapgrid, 
-      snapResize,
-      mouseX, 
-      mouseY,
-      hoveredElement
+      hoveredElement,
+      derivedEdges,
+      nodesStore
     } = findOrCreateStore(key);
-    $: shouldMove = moving && $movementStore;
+    // $: shouldMove = moving && $movementStore;
     // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
     // moving local boolean specific to node selected, to change position of individual node once selected
     let moving = false;
@@ -56,8 +46,8 @@
     e.preventDefault(); // preventing default behavior, not sure if necessary
  
     // set the target or the source depending on the anchor position
-    let source = position === 'bottom' ? node.id : null;
-    let target = position === 'top' ? node.id : null;
+    // let source = position === 'bottom' ? node.id : null;
+    // let target = position === 'top' ? node.id : null;
     // Setting the newEdge variable to an edge prototype
     newEdge = position === 'bottom' ? { 
       id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
@@ -74,7 +64,7 @@
       sourceY: node.position.y,
       label: "newEdge" 
     };
-    
+    console.log($derivedEdges);
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
 
@@ -94,9 +84,6 @@
       height: 40,
       bgColor: "white"
     };
-  
-
-    // newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
 
     if(position === 'bottom') {
       edge.target = newNode.id; // set the new edge to target the new node
@@ -104,31 +91,26 @@
     }
     else {
       edge.source = newNode.id;
-      newNode.position.x = edge.sourceX - newNode.width /2;
+      newNode.position.x = edge.sourceX - newNode.width / 2;
       newNode.position.y = edge.sourceY - newNode.height;
     }
-      
 
     store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
   }
-  // console.log(`anchor position for id ${node.id}`, position);
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
     e.preventDefault();
     if (edgeShouldMove) {
-      // onNodeMove(e, newNode.id);
       onEdgeMove(e, newEdge.id); // re-renders (moves) the edge while the mouse is down and moving
       moved = true;
     }
-
   }}
 
   on:mouseup={(e) => {
     edgeShouldMove = false; // prevent the new edge from moving
     moving = false;
-    $nodeSelected = false;
     moved = false;
     if (newEdge) {
       if($hoveredElement) {
@@ -137,27 +119,23 @@
         store.edgesStore.set([...$derivedEdges, newEdge]);
       } else {
         renderNewNode(e, newEdge);
-        // newEdge.target = newNode.id;
       }
     }
-    newEdge = null;
+    newEdge = null; // reset newEdge so that the next one can be created normally
   }}
 />
 
-
-
 <!-- renders simple half-circle for the anchor point of the edge -->
-<circle 
+<div
   class="Anchor" 
-  cx={x} 
-  cy={y} 
-  r={hovered === true ? 10 : 6} 
-  stroke="white" 
-  fill="black" 
+  style={`
+    top: ${position === 'top' ? - anchorHeight / 2 : node.height - anchorHeight / 2}px;
+    left:${node.width / 2 - anchorWidth / 2}px;
+  `}
 
   on:mousedown={(e) => {
     e.preventDefault();
-    e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Edges svg) 
+    e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
     renderEdge(e); // renders the new edge on the screen
     edgeShouldMove = true;
   }}
@@ -172,29 +150,36 @@
   on:mouseenter={(e) => {
     hovered = true;
     store.hoveredElement.set(node); // If the mouse enters an anchor, we store the node it's attached to for reference
-    console.log($hoveredElement);
   }}
   
   on:mouseleave={(e) => {
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
-    console.log($hoveredElement);
   }}
 
-/>
+></div>
 
 
 <style>
   .Anchor {
-    position: absolute !important;
+    position: absolute;
+    top: -5px;
+    left: 50px;
+
+    width: 12px;
+    height: 10px;
+    border-radius: 40%;
     cursor: crosshair;
-    background-color: white;
-    color: white;
-    z-index: 3 !important;
-    pointer-events: all;
+    background-color: rgb(105, 99, 99);
+    z-index: 2 !important; 
+    /* pointer-events: all; */ 
   }
-  circle {
+
+  .Anchor:hover {
+    transform: scale(1.5);
+  }
+  /* circle {
     position: absolute;
     background-color: white;
-  }
+  } */
 </style>
