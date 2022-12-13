@@ -1,6 +1,29 @@
 import { writable, derived, get, readable } from 'svelte/store';
 const svelvetStores = {};
 // refer to Svelvet/index, if store does not exist, then create one.
+
+// Moved this out of the findOrCreateStore function to have it as more of a traditional? state that can be updated more easily
+export const coreSvelvetStore = {
+    nodesStore: writable([]),
+    edgesStore: writable([]),
+    widthStore: writable(600),
+    heightStore: writable(600),
+    backgroundStore: writable(false),
+    movementStore: writable(true),
+    nodeSelected: writable(false),
+    nodeIdSelected: writable(-1),
+    edgeSelected: writable(false),
+    edgeIdSelected: writable(-1),
+    d3Scale: writable(1),
+    snapgrid: writable(false),
+    snapResize: writable(30),
+    backgroundColor: writable(),
+    mouseX: writable(1),
+    mouseY: writable(1),
+    hoveredElement: writable(null)
+};
+
+
 // Creates one Svelvet component store using the unique key
 export function findOrCreateStore(key) {
     //This just returns whatever we are requesting from store.js
@@ -9,29 +32,33 @@ export function findOrCreateStore(key) {
         return existing;
     }
     //Setting defaults of core svelvet store and making them a store using writable
-    const coreSvelvetStore = {
-        nodesStore: writable([]),
-        edgesStore: writable([]),
-        widthStore: writable(600),
-        heightStore: writable(600),
-        backgroundStore: writable(false),
-        movementStore: writable(true),
-        nodeSelected: writable(false),
-        nodeIdSelected: writable(-1),
-        d3Scale: writable(1),
-        snapgrid: writable(false),
-        snapResize: writable(30),
-        backgroundColor: writable()
-    };
+    // const coreSvelvetStore = {
+    //     nodesStore: writable([]),
+    //     edgesStore: writable([]),
+    //     widthStore: writable(600),
+    //     heightStore: writable(600),
+    //     backgroundStore: writable(false),
+    //     movementStore: writable(true),
+    //     nodeSelected: writable(false),
+    //     nodeIdSelected: writable(-1),
+    //     d3Scale: writable(1),
+    //     snapgrid: writable(false),
+    //     snapResize: writable(30),
+    //     backgroundColor: writable()
+    // };
+
     // This is the function handler for the mouseMove event to update the position of the selected node.
-    const onMouseMove = (e, nodeID) => {
+    // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
+    const onNodeMove = (e, nodeID) => {
         coreSvelvetStore.nodesStore.update((n) => {
             const correctNode = n.find((node) => node.id === nodeID);
+            // console.log('node x', correctNode.position.x);
+            // console.log('node y', correctNode.position.y);
 
             const scale = get(coreSvelvetStore.d3Scale);
 
             if(correctNode.childNodes){
-                n.forEach((child) =>{
+                n.forEach((child) => {
                     if(correctNode.childNodes.includes(child.id)){
                         child.position.x += e.movementX / scale;
                         child.position.y += e.movementY / scale;
@@ -49,6 +76,31 @@ export function findOrCreateStore(key) {
             return [...n];
         });
     };
+
+    // Mostly copied from onNodeMove, this allows for the movement of new Edges that don't yet have targets/sources
+    const onEdgeMove = (event, edgeID) => {
+        coreSvelvetStore.edgesStore.update((e) => {
+            const correctEdge = e.find((edge) => edge.id === edgeID);
+            // correctEdge.targetX = event.clientX;
+            // correctEdge.targetY = event.clientY;
+            console.log('correctEdge from store', correctEdge);
+
+            const scale = get(coreSvelvetStore.d3Scale);
+            // divide the movement value by scale to keep it proportional to d3Zoom transformations
+            if (!correctEdge.target) {
+              correctEdge.targetX += event.movementX / scale;
+              correctEdge.targetY += event.movementY / scale;
+            } 
+            if (!correctEdge.source) {
+              correctEdge.sourceX += event.movementX / scale;
+              correctEdge.sourceY += event.movementY / scale;
+              console.log('sourceX', correctEdge.sourceX, 'sourceY', correctEdge.sourceY);
+            }
+    
+            return [...e];
+        });
+    };
+
     // This is the function handler for the touch event on mobile to select a node.
     const onTouchMove = (e, nodeID) => {
             coreSvelvetStore.nodesStore.update((n) => {
@@ -104,10 +156,11 @@ export function findOrCreateStore(key) {
             }
         });
     };
+
     const edgesStore = coreSvelvetStore.edgesStore;
     const nodesStore = coreSvelvetStore.nodesStore;
     // derive from nodesStore and edgesStore, pass in array value from each store
-    // updates edgesStore with new object properties (edge,sourceX, edge.targetY, etc) for edgesArray
+    // updates edgesStore with new object properties (edge.sourceX, edge.targetY, etc) for edgesArray
     // $nodesStore and its individual object properties are reactive to node.position.x and node.position.y
     // so derivedEdges has access to node.position.x and node.position.y changes inside of this function
     const derivedEdges = derived([nodesStore, edgesStore], ([$nodesStore, $edgesStore]) => {
@@ -135,11 +188,18 @@ export function findOrCreateStore(key) {
             
             //We find out what the sourceNode is or the targetNode is.
             $nodesStore.forEach((node) => {
-                if (edge.source === node.id)
+                if (edge.source === node.id) {
                     sourceNode = node;
-                if (edge.target === node.id)
+                }
+                if (edge.target === node.id) {
                     targetNode = node;
+                } 
             });
+
+            // If the edge doesn't have a target yet, set the target to null rather than to the dummy node above
+            if(!$nodesStore.some(node => node.id === edge.target)) targetNode = null;
+            // Do the same for the source 
+            if(!$nodesStore.some(node => node.id === edge.source)) sourceNode = null;
 
             if (sourceNode) {
                 
@@ -195,7 +255,7 @@ export function findOrCreateStore(key) {
                 if (targetNode.targetPosition === 'top' || targetNode.targetPosition === undefined) {
                     //the x coordinate of the middle of the node
                     edge.targetX = left + middle;
-                    //the y coordinate of the bottom of the node
+                    //the y coordinate of the top of the node
                     edge.targetY = top;
                     //assign sourcePosition to the edge for usage in the various edge components
                     edge.targetPosition = 'top';
@@ -215,7 +275,7 @@ export function findOrCreateStore(key) {
                     edge.targetY = top + targetNode.height / 2;
                     edge.targetPosition = targetNode.targetPosition;
                 }
-            }
+            } 
         });
         return [...$edgesStore];
     });
@@ -223,7 +283,8 @@ export function findOrCreateStore(key) {
     const svelvetStore = {
         ...coreSvelvetStore,
         onTouchMove,
-        onMouseMove,
+        onEdgeMove,
+        onNodeMove,
         onNodeClick,
         derivedEdges
     };

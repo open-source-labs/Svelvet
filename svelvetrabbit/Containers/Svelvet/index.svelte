@@ -34,18 +34,18 @@ onMount(() => {
   
 });
 // enables data reactivity
-afterUpdate(() => {
-    svelvetStore.nodesStore.set(nodes);
-    svelvetStore.edgesStore.set(edges);
-    svelvetStore.widthStore.set(width);
-    svelvetStore.heightStore.set(height);
-    svelvetStore.backgroundStore.set(background);
-    svelvetStore.movementStore.set(movement);
-    svelvetStore.snapgrid.set(snap);
-    svelvetStore.backgroundColor.set(bgColor);
-    svelvetStore.snapResize.set(snapTo);
+// afterUpdate(() => {
+//     svelvetStore.nodesStore.set(nodes);
+//     svelvetStore.edgesStore.set(edges);
+//     svelvetStore.widthStore.set(width);
+//     svelvetStore.heightStore.set(height);
+//     svelvetStore.backgroundStore.set(background);
+//     svelvetStore.movementStore.set(movement);
+//     svelvetStore.snapgrid.set(snap);
+//     svelvetStore.backgroundColor.set(bgColor);
+//     svelvetStore.snapResize.set(snapTo);
   
-});
+// });
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
