@@ -1,5 +1,6 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
+  import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   export let node;
   export let key;
   const {
@@ -13,6 +14,7 @@
     movementStore,
     snapgrid, 
     snapResize,
+    derivedEdges
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -41,7 +43,7 @@
     moving = false;
     $nodeSelected = false;
     if (!moved && node.id == $nodeIdSelected) {
-      onNodeClick(e, node.id);
+      // onNodeClick(e, node.id);
     }
     moved = false;
   }}
@@ -79,6 +81,7 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
+<EdgeAnchor {key} {node} position={'top'} />
   <!-- This executes if node.image is present without node.label -->
   {#if node.image}
     <img
@@ -89,7 +92,12 @@
        overflow: hidden;"
     />
   {/if}
+  {#if node.clickCallback}
+    <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
+  {/if}
   <slot />
+  <EdgeAnchor {key} {node} position={'bottom'} />
+
 </div>
 
 <style>
@@ -106,5 +114,6 @@
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+    z-index: 3;
   }
 </style>
