@@ -13,6 +13,8 @@ export let movement = true;
 export let snap = false;
 export let snapTo = 30;
 export let bgColor = '#ffffff'
+export let initialLocation = {x: 0, y: 0};
+export let initialZoom = 4;
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -30,8 +32,9 @@ onMount(() => {
     svelvetStore.movementStore.set(movement);
     svelvetStore.snapgrid.set(snap);
     svelvetStore.backgroundColor.set(bgColor);
-      svelvetStore.snapResize.set(snapTo);
-  
+    svelvetStore.snapResize.set(snapTo);  
+    svelvetStore.initZoom.set(initialZoom);
+    svelvetStore.initLocation.set(initialLocation);
 });
 // enables data reactivity
 // afterUpdate(() => {
@@ -44,6 +47,8 @@ onMount(() => {
 //     svelvetStore.snapgrid.set(snap);
 //     svelvetStore.backgroundColor.set(bgColor);
 //     svelvetStore.snapResize.set(snapTo);
+//     svelvetStore.initZoom.set(initialZoom);
+//     svelvetStore.initLocation.set(initialLocation);
   
 // });
 </script>
@@ -51,7 +56,7 @@ onMount(() => {
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <!-- Pass in props to define svelvet css options -->
 <div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px; background-color: ${$backgroundColor}`}>
-  <GraphView {nodesStore} {derivedEdges} {key} />
+  <GraphView {nodesStore} {derivedEdges} {key} {initialLocation} {initialZoom}/>
 </div>
 
 <style>
@@ -60,6 +65,5 @@ onMount(() => {
     overflow: hidden;
     display: grid;
     font-family: 'Segoe UI', sans-serif;
-
   }
 </style>
