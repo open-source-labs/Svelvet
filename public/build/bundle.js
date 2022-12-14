@@ -8774,7 +8774,7 @@ var app = (function () {
     				initialZoom: 8,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
     				edges: /*initialEdges*/ ctx[2],
-    				bgColor: 'pink',
+    				bgColor: '#EEEEEE',
     				background: true
     			},
     			$$inline: true
@@ -8796,12 +8796,12 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 106, 1, 2145);
+    			add_location(h1, file, 98, 1, 2014);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 107, 14, 2182);
-    			add_location(p, file, 107, 1, 2169);
+    			add_location(a, file, 99, 14, 2051);
+    			add_location(p, file, 99, 1, 2038);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 105, 0, 2137);
+    			add_location(main, file, 97, 0, 2006);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8927,14 +8927,6 @@ var app = (function () {
     			height: 100,
     			bgColor: "orange",
     			borderRadius: 30
-    		},
-    		{
-    			id: 9,
-    			position: { x: 0, y: 0 },
-    			data: { label: "burp" },
-    			width: 0,
-    			height: 0,
-    			bgColor: "white"
     		}
     	];
 
@@ -8963,7 +8955,8 @@ var app = (function () {
     			id: "e2-5",
     			source: 6,
     			target: 7,
-    			animate: true
+    			animate: true,
+    			type: 'step'
     		}
     	];
 
