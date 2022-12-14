@@ -2,7 +2,6 @@
 	import Svelvet from "../svelvetrabbit";
 
 		const initialNodes = [
-			
 		  {
 		    id: 1,
 		    position: { x: 150, y: 50 },
@@ -16,6 +15,8 @@
 		    id: 2,
 		    position: { x: 50, y: 300 },
 		    data: { label: "borderColor" },
+				targetPosition: 'left',
+				sourcePosition: 'right',
 		    width: 150,
 		    height: 40,
 		    borderColor: "red",

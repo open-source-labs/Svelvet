@@ -43,7 +43,7 @@
     moving = false;
     $nodeSelected = false;
     if (!moved && node.id == $nodeIdSelected) {
-      // onNodeClick(e, node.id);
+      onNodeClick(e, node.id);
     }
     moved = false;
   }}
@@ -81,22 +81,27 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
-<EdgeAnchor {key} {node} position={'top'} />
-  <!-- This executes if node.image is present without node.label -->
-  {#if node.image}
-    <img
-      src={node.src}
-      alt=""
-      style="width: {node.width * 0.75}px;
-			 height: {node.height * 0.75}px;
-       overflow: hidden;"
-    />
-  {/if}
-  {#if node.clickCallback}
-    <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
-  {/if}
-  <slot />
-  <EdgeAnchor {key} {node} position={'bottom'} />
+  <!-- this anchor is the target-->
+  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+
+    <!-- This executes if node.image is present without node.label -->
+    {#if node.image}
+      <img
+        src={node.src}
+        alt=""
+        style="width: {node.width * 0.75}px;
+         height: {node.height * 0.75}px;
+         overflow: hidden;"
+      />
+    {/if}
+    <!-- {#if node.clickCallback}
+      <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
+    {/if} -->
+    <slot />
+    <!-- this anchor is the source-->
+    <EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} role={'source'} />
+
+
 
 </div>
 
@@ -115,5 +120,6 @@
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     z-index: 3;
+    transform-style: preserve-3d;
   }
 </style>

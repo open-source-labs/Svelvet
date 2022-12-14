@@ -53,8 +53,6 @@ export function findOrCreateStore(key) {
     const onNodeMove = (e, nodeID) => {
         coreSvelvetStore.nodesStore.update((n) => {
             const correctNode = n.find((node) => node.id === nodeID);
-            // console.log('node x', correctNode.position.x);
-            // console.log('node y', correctNode.position.y);
 
             const scale = get(coreSvelvetStore.d3Scale);
 
@@ -280,6 +278,85 @@ export function findOrCreateStore(key) {
         });
         return [...$edgesStore];
     });
+    // Sets the position of each anchor (top, bottom, left or right)
+    const setAnchorPosition = (position, node, width, height) => {
+        let top;
+        let left;
+        if(position === 'top') {
+          top = -height / 2;
+          left = node.width / 2 - width / 2;
+        }
+        if(position === 'bottom') {
+          top = node.height - height / 2;
+          left = node.width / 2 - width / 2;
+        }
+        if(position === 'left') {
+          top = node.height / 2 - height / 2;
+          left = -width / 2;
+        }
+        if(position === 'right') {
+          top = node.height / 2 - height / 2;
+          left = node.width - width / 2;
+        }
+        return [top, left];
+      }
+
+      const setNewEdgeProps = (role, position, node) => {
+        // coreSvelvetStore.nodesStore.forEach(n => {
+        //     if(n.id === id) node = n; 
+        // })
+        // console.log(coreSvelvetStore.nodesStore);
+        let left = node.position.x;
+        //top of the node selected
+        let top = node.position.y;
+        //declaring the middle point of the node
+        let middle = node.width / 2;
+        let x;
+        let y;
+        if(role === 'source') {
+            if (position === 'top') {
+                //the x coordinate of the middle of the node
+                x = left + middle;
+                //the y coordinate of the top of the node
+                y = top;
+            }
+            else if (position === 'bottom') {
+                x = left + middle;
+                y = top + node.height;
+            }
+            else if (position === 'left') {
+                x = left;
+                y = top + node.height / 2;
+            }
+            else if (position === 'right') {
+                x = left + node.width;
+                y = top + node.height / 2;
+            }
+            return [x, y];
+        } else {
+            if (position === 'top') {
+                //the x coordinate of the middle of the node
+                x = left + middle;
+                //the y coordinate of the top of the node
+                y = top;
+            }
+            else if (position === 'bottom') {
+                x = left + middle;
+                y = top + node.height;
+            }
+            else if (position === 'left') {
+                x = left;
+                y = top + node.height / 2;
+            }
+            else if (position === 'right') {
+                x = left + node.width;
+                y = top + node.height / 2;
+            }
+            return [x, y];
+        }
+    } 
+
+    
     //Puts everything together as the svelvet store and use the key so that it can be used.
     const svelvetStore = {
         ...coreSvelvetStore,
@@ -287,6 +364,8 @@ export function findOrCreateStore(key) {
         onEdgeMove,
         onNodeMove,
         onNodeClick,
+        setAnchorPosition,
+        setNewEdgeProps,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;
