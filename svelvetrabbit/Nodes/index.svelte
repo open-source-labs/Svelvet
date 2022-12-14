@@ -70,7 +70,7 @@
     $nodeIdSelected = node.id;
     $nodeSelected = true;
   }}
-  class="Node"
+  class="Node {node.className}"
   style="left: {node.position.x}px;
     top: {node.position.y}px;
     width: {node.width}px;

@@ -6233,7 +6233,7 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$4, 86, 4, 2396);
+    			add_location(img, file$4, 86, 4, 2413);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6277,7 +6277,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Click Me";
-    			add_location(button, file$4, 95, 4, 2586);
+    			add_location(button, file$4, 95, 4, 2603);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -6314,6 +6314,7 @@ var app = (function () {
     	let t2;
     	let t3;
     	let edgeanchor1;
+    	let div_class_value;
     	let div_id_value;
     	let current;
     	let mounted;
@@ -6354,7 +6355,7 @@ var app = (function () {
     			if (default_slot) default_slot.c();
     			t3 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", "Node svelte-6dblbg");
+    			attr_dev(div, "class", div_class_value = "Node " + /*node*/ ctx[0].className + " svelte-6dblbg");
     			set_style(div, "left", /*node*/ ctx[0].position.x + "px");
     			set_style(div, "top", /*node*/ ctx[0].position.y + "px");
     			set_style(div, "width", /*node*/ ctx[0].width + "px");
@@ -6450,6 +6451,10 @@ var app = (function () {
     			if (dirty & /*key*/ 2) edgeanchor1_changes.key = /*key*/ ctx[1];
     			if (dirty & /*node*/ 1) edgeanchor1_changes.node = /*node*/ ctx[0];
     			edgeanchor1.$set(edgeanchor1_changes);
+
+    			if (!current || dirty & /*node*/ 1 && div_class_value !== (div_class_value = "Node " + /*node*/ ctx[0].className + " svelte-6dblbg")) {
+    				attr_dev(div, "class", div_class_value);
+    			}
 
     			if (!current || dirty & /*node*/ 1) {
     				set_style(div, "left", /*node*/ ctx[0].position.x + "px");
@@ -8617,9 +8622,9 @@ var app = (function () {
     				width: 800,
     				height: 800,
     				initialZoom: 10,
-    				initialLocation: { x: 1000, y: 400 },
+    				initialLocation: /*initialNodes*/ ctx[1][2].position,
     				edges: /*initialEdges*/ ctx[2],
-    				bgColor: 'pink',
+    				bgColor: '#EEEEEE',
     				background: true
     			},
     			$$inline: true
@@ -8640,13 +8645,13 @@ var app = (function () {
     			t6 = text(" to learn how to build Svelte apps.");
     			t7 = space();
     			create_component(svelvet.$$.fragment);
-    			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 104, 1, 2088);
+    			attr_dev(h1, "class", "svelte-18ll5zl");
+    			add_location(h1, file, 88, 1, 1790);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 105, 14, 2125);
-    			add_location(p, file, 105, 1, 2112);
-    			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 103, 0, 2080);
+    			add_location(a, file, 89, 14, 1827);
+    			add_location(p, file, 89, 1, 1814);
+    			attr_dev(main, "class", "svelte-18ll5zl");
+    			add_location(main, file, 87, 0, 1782);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8703,10 +8708,11 @@ var app = (function () {
     		{
     			id: 1,
     			position: { x: 150, y: 50 },
-    			data: { label: "default styling" },
+    			data: { label: "customClass" },
     			width: 150,
     			height: 40,
-    			bgColor: "white"
+    			bgColor: "white",
+    			className: 'customClass'
     		},
     		{
     			id: 2,
@@ -8761,23 +8767,6 @@ var app = (function () {
     			height: 40,
     			bgColor: "white",
     			clickCallback: node => console.log(node)
-    		},
-    		{
-    			id: 8,
-    			position: { x: 1000, y: 400 },
-    			data: { label: "test" },
-    			width: 100,
-    			height: 100,
-    			bgColor: "orange",
-    			borderRadius: 30
-    		},
-    		{
-    			id: 9,
-    			position: { x: 0, y: 0 },
-    			data: { label: "burp" },
-    			width: 0,
-    			height: 0,
-    			bgColor: "white"
     		}
     	];
 

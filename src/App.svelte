@@ -6,10 +6,11 @@
 		  {
 		    id: 1,
 		    position: { x: 150, y: 50 },
-		    data: { label: "default styling" },
+		    data: { label: "customClass" },
 		    width: 150,
 		    height: 40,
-		    bgColor: "white"
+		    bgColor: "white",
+				className: 'customClass'
 		  },
 		  {
 		    id: 2,
@@ -109,5 +110,9 @@
 		main {
 			max-width: none;
 		}
+	}
+	.customClass {
+		background-color: darkcyan;
+		color: white;
 	}
 </style>
