@@ -5267,8 +5267,6 @@ var app = (function () {
         const onNodeMove = (e, nodeID) => {
             coreSvelvetStore.nodesStore.update((n) => {
                 const correctNode = n.find((node) => node.id === nodeID);
-                // console.log('node x', correctNode.position.x);
-                // console.log('node y', correctNode.position.y);
 
                 const scale = get_store_value(coreSvelvetStore.d3Scale);
 
@@ -5601,7 +5599,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "Anchor svelte-jk37g5");
+    			attr_dev(div, "class", "Anchor svelte-1kxmdm0");
 
     			attr_dev(div, "style", `
     height:${/*anchorHeight*/ ctx[11]}px;
@@ -5610,7 +5608,7 @@ var app = (function () {
     left:${/*left*/ ctx[17]}px;
   `);
 
-    			add_location(div, file$5, 184, 0, 6481);
+    			add_location(div, file$5, 183, 0, 6444);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5762,7 +5760,6 @@ var app = (function () {
 
     		if (position === 'left') {
     			if (role === 'source') {
-    				console.log('sourceeeeeee');
     				newNode.sourcePosition = 'left';
     				newNode.targetPosition = 'right';
     				edge.target = newNode.id; // set the new edge to target the new node
@@ -6444,7 +6441,7 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$4, 88, 6, 2480);
+    			add_location(img, file$4, 88, 6, 2477);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6501,8 +6498,8 @@ var app = (function () {
     		});
 
     	let if_block = /*node*/ ctx[0].image && create_if_block$1(ctx);
-    	const default_slot_template = /*#slots*/ ctx[18].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[17], null);
+    	const default_slot_template = /*#slots*/ ctx[19].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], null);
 
     	edgeanchor1 = new EdgeAnchor({
     			props: {
@@ -6534,7 +6531,7 @@ var app = (function () {
     			set_style(div, "border-radius", /*node*/ ctx[0].borderRadius + "px");
     			set_style(div, "color", /*node*/ ctx[0].textColor);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
-    			add_location(div, file$4, 51, 0, 1547);
+    			add_location(div, file$4, 51, 0, 1544);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6556,12 +6553,12 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[19], false, false, false),
-    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[20], false, false, false),
-    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[21], false, false, false),
-    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[22], false, false, false),
-    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[23], false, false, false),
-    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[24], false, false, false)
+    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[20], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[21], false, false, false),
+    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[22], false, false, false),
+    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[24], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[25], false, false, false)
     				];
 
     				mounted = true;
@@ -6588,15 +6585,15 @@ var app = (function () {
     			}
 
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 131072)) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 262144)) {
     					update_slot_base(
     						default_slot,
     						default_slot_template,
     						ctx,
-    						/*$$scope*/ ctx[17],
+    						/*$$scope*/ ctx[18],
     						!current
-    						? get_all_dirty_from_scope(/*$$scope*/ ctx[17])
-    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[17], dirty, null),
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[18])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[18], dirty, null),
     						null
     					);
     				}
@@ -6696,7 +6693,7 @@ var app = (function () {
     	validate_store(nodeIdSelected, 'nodeIdSelected');
     	component_subscribe($$self, nodeIdSelected, value => $$invalidate(8, $nodeIdSelected = value));
     	validate_store(movementStore, 'movementStore');
-    	component_subscribe($$self, movementStore, value => $$invalidate(16, $movementStore = value));
+    	component_subscribe($$self, movementStore, value => $$invalidate(17, $movementStore = value));
     	validate_store(snapgrid, 'snapgrid');
     	component_subscribe($$self, snapgrid, value => $$invalidate(5, $snapgrid = value));
     	validate_store(snapResize, 'snapResize');
@@ -6748,7 +6745,9 @@ var app = (function () {
     		$$invalidate(2, moving = false);
     		set_store_value(nodeSelected, $nodeSelected = false, $nodeSelected);
 
-    		if (!moved && node.id == $nodeIdSelected) ; // onNodeClick(e, node.id);
+    		if (!moved && node.id == $nodeIdSelected) {
+    			onNodeClick(e, node.id);
+    		}
 
     		$$invalidate(3, moved = false);
     	};
@@ -6780,7 +6779,7 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
     		if ('key' in $$props) $$invalidate(1, key = $$props.key);
-    		if ('$$scope' in $$props) $$invalidate(17, $$scope = $$props.$$scope);
+    		if ('$$scope' in $$props) $$invalidate(18, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -6822,7 +6821,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*moving, $movementStore*/ 65540) {
+    		if ($$self.$$.dirty & /*moving, $movementStore*/ 131076) {
     			$$invalidate(4, shouldMove = moving && $movementStore);
     		}
     	};
@@ -6838,6 +6837,7 @@ var app = (function () {
     		$nodeSelected,
     		$nodeIdSelected,
     		onNodeMove,
+    		onNodeClick,
     		onTouchMove,
     		nodeSelected,
     		nodeIdSelected,
@@ -7199,13 +7199,13 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[26] = list[i];
+    	child_ctx[24] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[29] = list[i];
+    	child_ctx[27] = list[i];
     	return child_ctx;
     }
 
@@ -7216,7 +7216,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[29],
+    				node: /*node*/ ctx[27],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -7234,10 +7234,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[29];
-    			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
+    			if (dirty & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[27];
+    			if (dirty & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 16 | dirty[1] & /*$$scope*/ 2) {
+    			if (dirty & /*$$scope, $nodesStore*/ 1073741840) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7276,7 +7276,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[29],
+    				node: /*node*/ ctx[27],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -7296,10 +7296,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[29];
-    			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
+    			if (dirty & /*$nodesStore*/ 16) node_changes.node = /*node*/ ctx[27];
+    			if (dirty & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 16 | dirty[1] & /*$$scope*/ 2) {
+    			if (dirty & /*$$scope, $nodesStore*/ 1073741840) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7339,7 +7339,7 @@ var app = (function () {
 
     	imagenode = new ImageNode({
     			props: {
-    				node: /*node*/ ctx[29],
+    				node: /*node*/ ctx[27],
     				key: /*key*/ ctx[2]
     			},
     			$$inline: true
@@ -7357,8 +7357,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const imagenode_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 16) imagenode_changes.node = /*node*/ ctx[29];
-    			if (dirty[0] & /*key*/ 4) imagenode_changes.key = /*key*/ ctx[2];
+    			if (dirty & /*$nodesStore*/ 16) imagenode_changes.node = /*node*/ ctx[27];
+    			if (dirty & /*key*/ 4) imagenode_changes.key = /*key*/ ctx[2];
     			imagenode.$set(imagenode_changes);
     		},
     		i: function intro(local) {
@@ -7387,9 +7387,9 @@ var app = (function () {
     	return block;
     }
 
-    // (119:8) <Node {node} {key}>
+    // (119:8) <Node {node} {key} >
     function create_default_slot_1(ctx) {
-    	let t_value = /*node*/ ctx[29].data.label + "";
+    	let t_value = /*node*/ ctx[27].data.label + "";
     	let t;
 
     	const block = {
@@ -7400,7 +7400,7 @@ var app = (function () {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 16 && t_value !== (t_value = /*node*/ ctx[29].data.label + "")) set_data_dev(t, t_value);
+    			if (dirty & /*$nodesStore*/ 16 && t_value !== (t_value = /*node*/ ctx[27].data.label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -7411,7 +7411,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(119:8) <Node {node} {key}>",
+    		source: "(119:8) <Node {node} {key} >",
     		ctx
     	});
 
@@ -7421,7 +7421,7 @@ var app = (function () {
     // (115:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[29].data.html + "";
+    	let raw_value = /*node*/ ctx[27].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -7435,7 +7435,7 @@ var app = (function () {
     			insert_dev(target, html_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 16 && raw_value !== (raw_value = /*node*/ ctx[29].data.html + "")) html_tag.p(raw_value);
+    			if (dirty & /*$nodesStore*/ 16 && raw_value !== (raw_value = /*node*/ ctx[27].data.html + "")) html_tag.p(raw_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(html_anchor);
@@ -7464,8 +7464,8 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*node*/ ctx[29].image && !/*node*/ ctx[29].data.label) return 0;
-    		if (/*node*/ ctx[29].data.html) return 1;
+    		if (/*node*/ ctx[27].image && !/*node*/ ctx[27].data.label) return 0;
+    		if (/*node*/ ctx[27].data.html) return 1;
     		return 2;
     	}
 
@@ -7545,13 +7545,13 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$2, 145, 4, 5432);
+    			add_location(rect, file$2, 145, 4, 5416);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*key*/ 4) {
+    			if (dirty & /*key*/ 4) {
     				set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
     			}
     		},
@@ -7577,7 +7577,7 @@ var app = (function () {
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[26] },
+    			props: { edge: /*edge*/ ctx[24] },
     			$$inline: true
     		});
 
@@ -7591,7 +7591,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplebezieredge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 128) simplebezieredge_changes.edge = /*edge*/ ctx[26];
+    			if (dirty & /*$derivedEdges*/ 128) simplebezieredge_changes.edge = /*edge*/ ctx[24];
     			simplebezieredge.$set(simplebezieredge_changes);
     		},
     		i: function intro(local) {
@@ -7625,7 +7625,7 @@ var app = (function () {
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[26] },
+    			props: { edge: /*edge*/ ctx[24] },
     			$$inline: true
     		});
 
@@ -7639,7 +7639,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 128) stepedge_changes.edge = /*edge*/ ctx[26];
+    			if (dirty & /*$derivedEdges*/ 128) stepedge_changes.edge = /*edge*/ ctx[24];
     			stepedge.$set(stepedge_changes);
     		},
     		i: function intro(local) {
@@ -7673,7 +7673,7 @@ var app = (function () {
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[26] },
+    			props: { edge: /*edge*/ ctx[24] },
     			$$inline: true
     		});
 
@@ -7687,7 +7687,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const smoothstepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 128) smoothstepedge_changes.edge = /*edge*/ ctx[26];
+    			if (dirty & /*$derivedEdges*/ 128) smoothstepedge_changes.edge = /*edge*/ ctx[24];
     			smoothstepedge.$set(smoothstepedge_changes);
     		},
     		i: function intro(local) {
@@ -7721,7 +7721,7 @@ var app = (function () {
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[26] },
+    			props: { edge: /*edge*/ ctx[24] },
     			$$inline: true
     		});
 
@@ -7735,7 +7735,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const straightedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 128) straightedge_changes.edge = /*edge*/ ctx[26];
+    			if (dirty & /*$derivedEdges*/ 128) straightedge_changes.edge = /*edge*/ ctx[24];
     			straightedge.$set(straightedge_changes);
     		},
     		i: function intro(local) {
@@ -7773,9 +7773,9 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*edge*/ ctx[26].type === 'straight') return 0;
-    		if (/*edge*/ ctx[26].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[26].type === 'step') return 2;
+    		if (/*edge*/ ctx[24].type === 'straight') return 0;
+    		if (/*edge*/ ctx[24].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[24].type === 'step') return 2;
     		return 3;
     	}
 
@@ -7909,27 +7909,27 @@ var app = (function () {
     			}
 
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
-    			add_location(div0, file$2, 108, 2, 4392);
+    			add_location(div0, file$2, 108, 2, 4375);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
-    			add_location(div1, file$2, 106, 0, 4274);
+    			add_location(div1, file$2, 106, 0, 4257);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$2, 134, 6, 5220);
+    			add_location(circle, file$2, 134, 6, 5204);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", gridSize);
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
-    			add_location(pattern, file$2, 126, 4, 5061);
-    			add_location(defs, file$2, 125, 2, 5050);
-    			add_location(g, file$2, 149, 2, 5609);
+    			add_location(pattern, file$2, 126, 4, 5045);
+    			add_location(defs, file$2, 125, 2, 5034);
+    			add_location(g, file$2, 149, 2, 5593);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6]);
-    			add_location(svg, file$2, 124, 0, 4969);
+    			add_location(svg, file$2, 124, 0, 4953);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7961,8 +7961,8 @@ var app = (function () {
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore, key*/ 20) {
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*$nodesStore, key*/ 20) {
     				each_value_1 = /*$nodesStore*/ ctx[4];
     				validate_each_argument(each_value_1);
     				let i;
@@ -7990,15 +7990,15 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (!current || dirty[0] & /*key*/ 4 && div0_class_value !== (div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
+    			if (!current || dirty & /*key*/ 4 && div0_class_value !== (div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
     				attr_dev(div0, "class", div0_class_value);
     			}
 
-    			if (!current || dirty[0] & /*key*/ 4 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
+    			if (!current || dirty & /*key*/ 4 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
-    			if (!current || dirty[0] & /*key*/ 4 && pattern_id_value !== (pattern_id_value = `background-${/*key*/ ctx[2]}`)) {
+    			if (!current || dirty & /*key*/ 4 && pattern_id_value !== (pattern_id_value = `background-${/*key*/ ctx[2]}`)) {
     				attr_dev(pattern, "id", pattern_id_value);
     			}
 
@@ -8015,7 +8015,7 @@ var app = (function () {
     				if_block = null;
     			}
 
-    			if (dirty[0] & /*$derivedEdges*/ 128) {
+    			if (dirty & /*$derivedEdges*/ 128) {
     				each_value = /*$derivedEdges*/ ctx[7];
     				validate_each_argument(each_value);
     				let i;
@@ -8043,11 +8043,11 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (!current || dirty[0] & /*key*/ 4 && svg_class_value !== (svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
+    			if (!current || dirty & /*key*/ 4 && svg_class_value !== (svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
     				attr_dev(svg, "class", svg_class_value);
     			}
 
-    			if (!current || dirty[0] & /*$widthStore, $heightStore*/ 96 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6])) {
+    			if (!current || dirty & /*$widthStore, $heightStore*/ 96 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6])) {
     				attr_dev(svg, "viewBox", svg_viewBox_value);
     			}
     		},
@@ -8147,7 +8147,7 @@ var app = (function () {
     	// here we lookup the store using the unique key
     	const svelvetStore = findOrCreateStore(key);
 
-    	const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, mouseX, mouseY } = svelvetStore;
+    	const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale } = svelvetStore;
     	validate_store(nodeSelected, 'nodeSelected');
     	component_subscribe($$self, nodeSelected, value => $$invalidate(17, $nodeSelected = value));
     	validate_store(backgroundStore, 'backgroundStore');
@@ -8277,8 +8277,6 @@ var app = (function () {
     		widthStore,
     		heightStore,
     		d3Scale,
-    		mouseX,
-    		mouseY,
     		gridSize,
     		dotSize,
     		zoomInit,
@@ -8331,22 +8329,13 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init$1(
-    			this,
-    			options,
-    			instance$2,
-    			create_fragment$2,
-    			safe_not_equal,
-    			{
-    				nodesStore: 0,
-    				derivedEdges: 1,
-    				key: 2,
-    				initialZoom: 13,
-    				initialLocation: 14
-    			},
-    			null,
-    			[-1, -1]
-    		);
+    		init$1(this, options, instance$2, create_fragment$2, safe_not_equal, {
+    			nodesStore: 0,
+    			derivedEdges: 1,
+    			key: 2,
+    			initialZoom: 13,
+    			initialLocation: 14
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -8771,10 +8760,9 @@ var app = (function () {
     				nodes: /*initialNodes*/ ctx[1],
     				width: 800,
     				height: 800,
-    				initialZoom: 8,
+    				initialZoom: 6,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
     				edges: /*initialEdges*/ ctx[2],
-    				bgColor: 'pink',
     				background: true
     			},
     			$$inline: true
@@ -8796,12 +8784,12 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 106, 1, 2145);
+    			add_location(h1, file, 105, 1, 2141);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 107, 14, 2182);
-    			add_location(p, file, 107, 1, 2169);
+    			add_location(a, file, 106, 14, 2178);
+    			add_location(p, file, 106, 1, 2165);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 105, 0, 2137);
+    			add_location(main, file, 104, 0, 2133);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

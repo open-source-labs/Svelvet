@@ -106,7 +106,6 @@
     };
     if (position === 'left') {
       if (role === 'source') {
-        console.log('sourceeeeeee');
         newNode.sourcePosition = 'left';
         newNode.targetPosition = 'right';
         edge.target = newNode.id; // set the new edge to target the new node
@@ -233,8 +232,5 @@
   .Anchor:hover {
     transform: scale(1.5) translateZ(-10px);
   }
-  /* circle {
-    position: absolute;
-    background-color: white;
-  } */
+
 </style>
