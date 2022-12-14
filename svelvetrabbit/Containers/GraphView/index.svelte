@@ -1,6 +1,6 @@
 <script>import { onMount } from 'svelte';
   import { zoom, zoomTransform } from 'd3-zoom';
-  import { select, selectAll } from 'd3-selection';
+  import { select, selectAll, pointer } from 'd3-selection';
   import SimpleBezierEdge from '../../Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '../../Edges/StraightEdge.svelte';
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
@@ -14,7 +14,8 @@
       zoom,
       zoomTransform,
       select,
-      selectAll
+      selectAll,
+      pointer
   };
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let nodesStore;
@@ -24,7 +25,7 @@
   export let initialLocation;
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale } = svelvetStore;
+  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, mouseX, mouseY } = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -93,13 +94,17 @@
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
           .style('transform-origin', '0 0');
   }
+
+  d3.select('.Nodes') 
+    .on('mousemove', (event) => {
+      store.mouseX.set(d3.pointer(event)[0]);
+      store.mouseY.set(d3.pointer(event)[1]);
+    })
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<div class="svelvet-container">
 
-</div>
-<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault >
+<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
@@ -116,9 +121,7 @@
     {/each}
   </div>
 </div>
-<div class="background-container">
-  
-</div>
+
 <svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}" >
   <defs>
     <pattern

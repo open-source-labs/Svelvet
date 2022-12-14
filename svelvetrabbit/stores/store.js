@@ -302,6 +302,62 @@ export function findOrCreateStore(key) {
         }
         return [top, left];
       }
+
+      const setNewEdgeProps = (role, position, node) => {
+        // coreSvelvetStore.nodesStore.forEach(n => {
+        //     if(n.id === id) node = n; 
+        // })
+        // console.log(coreSvelvetStore.nodesStore);
+        let left = node.position.x;
+        //top of the node selected
+        let top = node.position.y;
+        //declaring the middle point of the node
+        let middle = node.width / 2;
+        let x;
+        let y;
+        if(role === 'source') {
+            if (position === 'top') {
+                //the x coordinate of the middle of the node
+                x = left + middle;
+                //the y coordinate of the top of the node
+                y = top;
+            }
+            else if (position === 'bottom') {
+                x = left + middle;
+                y = top + node.height;
+            }
+            else if (position === 'left') {
+                x = left;
+                y = top + node.height / 2;
+            }
+            else if (position === 'right') {
+                x = left + node.width;
+                y = top + node.height / 2;
+            }
+            return [x, y];
+        } else {
+            if (position === 'top') {
+                //the x coordinate of the middle of the node
+                x = left + middle;
+                //the y coordinate of the top of the node
+                y = top;
+            }
+            else if (position === 'bottom') {
+                x = left + middle;
+                y = top + node.height;
+            }
+            else if (position === 'left') {
+                x = left;
+                y = top + node.height / 2;
+            }
+            else if (position === 'right') {
+                x = left + node.width;
+                y = top + node.height / 2;
+            }
+            return [x, y];
+        }
+    } 
+
     
     //Puts everything together as the svelvet store and use the key so that it can be used.
     const svelvetStore = {
@@ -311,6 +367,7 @@ export function findOrCreateStore(key) {
         onNodeMove,
         onNodeClick,
         setAnchorPosition,
+        setNewEdgeProps,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;

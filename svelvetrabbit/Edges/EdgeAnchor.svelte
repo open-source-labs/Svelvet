@@ -1,11 +1,13 @@
 <script>
-  import { select, selectAll } from 'd3-selection';
+  import { select, selectAll, pointer } from 'd3-selection';
+  import { v4 as uuidv4 } from 'uuid';
   import { Position } from '../types/utils';
   import { findOrCreateStore } from '../stores/store';
   import { derived } from 'svelte/store';
   export let key;
   export let node;
   export let position;
+  export let role;
   let newNode;
   let newEdge;
   let hovered = false;
@@ -18,9 +20,12 @@
       onEdgeMove,
       onTouchMove,
       setAnchorPosition,
+      setNewEdgeProps,
       edgeSelected,
       edgeIdSelected,
       movementStore,
+      mouseX,
+      mouseY,
       hoveredElement,
       derivedEdges,
       nodesStore
@@ -33,11 +38,17 @@
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
   const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
+  // const [x, y] = setNewEdgeProps(role, position, node)
 
+
+  // let d3 = {
+  //     select,
+  //     pointer
+  // };
   /* This keeps track of the cursors current position, taking into account d3 transformations,
   updating the mouseX and mouseY values in the store
   */
-  // d3.select('svg') 
+  // d3.select('.Nodes') 
   //   .on('mousemove', (event) => {
   //     store.mouseX.set(d3.pointer(event)[0]);
   //     store.mouseY.set(d3.pointer(event)[1]);
@@ -48,25 +59,30 @@
   This is the function that renders a new edge when an anchor is clicked
   */  
   const renderEdge = (e) => {
+    const [x, y] = setNewEdgeProps(role, position, node)
     e.preventDefault(); // preventing default behavior, not sure if necessary
- 
+      // console.log('correct x and y', node.position.x + (node.width / 2), node.position.y + node.height)
+      // console.log('mouse x and y', $mouseX, $mouseY);
+    console.log('role', role);
     // Setting the newEdge variable to an edge prototype
-    newEdge = position === 'bottom' ? { 
-      id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
+    newEdge = role === 'source' ? { 
+      id: uuidv4(), // need better way to generate id, uuid?
       source: node.id, // the source is the node that the anchor is on
       target: null, // until the mouse is released the target will be set to null
-      targetX: node.position.x + (node.width / 2),
-      targetY: node.position.y + node.height,
+      targetX: x,
+      targetY: y,
+      animate: true,
       label: "newEdge" 
     } : { 
-      id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
+      id: uuidv4(), // need better way to generate id, uuid?
       source: null, // until the mouse is released the source will be set to null
       target: node.id, // the target is the node that the anchor is on
-      sourceX: node.position.x + (node.width / 2),
-      sourceY: node.position.y,
+      sourceX: x,
+      sourceY: y,
+      animate: true,
       label: "newEdge" 
     };
-    console.log($derivedEdges);
+    console.log('role', role, 'x, y', x, y);
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
 
@@ -76,25 +92,60 @@
   */  
   const renderNewNode = (event, edge) => {
     event.preventDefault();
+    const [x, y] = setNewEdgeProps(role, position, node)
     let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
+    
     // setting newNode variable to a 'prototype' node
     newNode = {
-      id: (Math.random() + 10).toFixed(2), // again, better id generation needed, uuid?
+      id: uuidv4(), // again, better id generation needed, uuid?
       position: pos, // the position (top left corner) is at the target coords of the edge for now
       data: { label: "newNode" }, // need ways to change the rest of the properties
       width: 100,
       height: 40,
       bgColor: "white"
     };
-
-    if(position === 'bottom') {
-      edge.target = newNode.id; // set the new edge to target the new node
-      newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
-    }
-    else {
-      edge.source = newNode.id;
-      newNode.position.x = edge.sourceX - newNode.width / 2;
-      newNode.position.y = edge.sourceY - newNode.height;
+    if (position === 'left') {
+      if (role === 'source') {
+        console.log('sourceeeeeee');
+        newNode.sourcePosition = 'left';
+        newNode.targetPosition = 'right';
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        newNode.sourcePosition = 'right';
+        newNode.targetPosition = 'left';
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
+    } else if (position === 'right') {
+      if(role === 'source') {
+        newNode.sourcePosition = 'right';
+        newNode.targetPosition = 'left';
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        newNode.sourcePosition = 'left';
+        newNode.targetPosition = 'right';
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
+    } else {
+      if(role === 'source') {
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
     }
 
     store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
@@ -111,12 +162,13 @@
   }}
 
   on:mouseup={(e) => {
+    newEdge.animate = false;
     edgeShouldMove = false; // prevent the new edge from moving
     moving = false;
     moved = false;
     if (newEdge) {
       if($hoveredElement) {
-        if (position === 'top') newEdge.source = $hoveredElement.id;
+        if (role === 'target') newEdge.source = $hoveredElement.id;
         else newEdge.target = $hoveredElement.id;
         store.edgesStore.set([...$derivedEdges, newEdge]);
       } else {
@@ -125,6 +177,7 @@
     }
     newEdge = null; // reset newEdge so that the next one can be created normally
   }}
+
 />
 
 <!-- renders simple half-circle for the anchor point of the edge -->
