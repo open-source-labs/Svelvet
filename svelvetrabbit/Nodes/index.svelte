@@ -4,6 +4,7 @@
     import EditModal from './EditModal.svelte';
   export let node;
   export let key;
+
   const {
     onNodeMove,
     onNodeClick,

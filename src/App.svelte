@@ -1,15 +1,15 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
+	import BlueThing from "./BlueThing.svelte";
 
 		const initialNodes = [
 		  {
 		    id: 1,
-		    position: { x: 150, y: 50 },
-		    data: { label: "customClass" },
-		    width: 150,
-		    height: 40,
-		    bgColor: "white",
-				className: 'customClass'
+		    position: { x: 150, y: -200 },
+		    data: {custom: BlueThing},
+		    width: 300,
+		    height: 300,
+		    bgColor: "white"
 		  },
 		  {
 		    id: 2,
