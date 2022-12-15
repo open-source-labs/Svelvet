@@ -1,6 +1,36 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
-
+		// let initialNodes = [];
+		// for(let i=0; i < 100; i++){
+		// 	initialNodes.push({
+		//     id: i,
+		//     position: { x: 0, y: 0+(i*50) },
+		//     data: { label: "default styling" },
+		//     width: 50,
+		//     height: 50,
+		//     bgColor: "white"
+		//   })
+		// }
+		// for(let i=0; i < 100; i++){
+		// 	initialNodes.push({
+		//     id: i+100,
+		//     position: { x: 0+(i*50), y: 0+(i*50) },
+		//     data: { label: "default styling" },
+		//     width: 50,
+		//     height: 50,
+		//     bgColor: "white"
+		//   })
+		// }
+		// for(let i=0; i < 100; i++){
+		// 	initialNodes.push({
+		//     id: i+200,
+		//     position: { x: 0+(i*50), y: 0 },
+		//     data: { label: "default styling" },
+		//     width: 50,
+		//     height: 50,
+		//     bgColor: "white"
+		//   })
+		// }
 		const initialNodes = [
 			
 		  {
@@ -69,7 +99,7 @@
 		  },
 		  {
 		    id: 8,
-		    position: { x: 1000, y: 400 },
+		    position: { x: 1000, y: 1000 },
 		    data: { label: "test" },
 		    width: 100,
 		    height: 100,
@@ -106,7 +136,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
+	<Svelvet  nodes={initialNodes} width={500} height={500} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
 </main>
 
 <style>

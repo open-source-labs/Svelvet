@@ -6,6 +6,7 @@
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
   import StepEdge from '../../Edges/StepEdge.svelte';
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
+  import Minimap from '../Minimap/Minimap.svelte';
   import Node from '../../Nodes/index.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
@@ -95,15 +96,15 @@
           .style('transform-origin', '0 0');
   }
 
-  d3.select('.Nodes') 
-    .on('mousemove', (event) => {
-      store.mouseX.set(d3.pointer(event)[0]);
-      store.mouseY.set(d3.pointer(event)[1]);
-    })
+  // d3.select('.Nodes') 
+  //   .on('mousemove', (event) => {
+  //     store.mouseX.set(d3.pointer(event)[0]);
+  //     store.mouseY.set(d3.pointer(event)[1]);
+  //   })
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-
+<Minimap {key}/>
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>

@@ -7,8 +7,8 @@
      
       
       <style>
-        .GreyNode {
+        /* .GreyNode {
             pointer-events: none;
-        }
+        } */
       </style>
       
