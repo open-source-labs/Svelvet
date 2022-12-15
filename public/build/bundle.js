@@ -5610,7 +5610,7 @@ var app = (function () {
     left:${/*left*/ ctx[17]}px;
   `);
 
-    			add_location(div, file$5, 184, 0, 6481);
+    			add_location(div, file$5, 183, 0, 6444);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5762,7 +5762,6 @@ var app = (function () {
 
     		if (position === 'left') {
     			if (role === 'source') {
-    				console.log('sourceeeeeee');
     				newNode.sourcePosition = 'left';
     				newNode.targetPosition = 'right';
     				edge.target = newNode.id; // set the new edge to target the new node
@@ -5858,7 +5857,6 @@ var app = (function () {
     	const mousedown_handler = e => {
     		e.preventDefault();
     		e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    		renderEdge(e); // renders the new edge on the screen
     		$$invalidate(6, edgeShouldMove = true);
     	};
 
@@ -5875,6 +5873,7 @@ var app = (function () {
     	};
 
     	const mouseleave_handler = e => {
+    		if (edgeShouldMove) renderEdge(e); // renders the new edge on the screen
     		$$invalidate(3, hovered = false);
     		store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
     	};
@@ -8796,12 +8795,12 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 98, 1, 2014);
+    			add_location(h1, file, 89, 1, 1834);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 99, 14, 2051);
-    			add_location(p, file, 99, 1, 2038);
+    			add_location(a, file, 90, 14, 1871);
+    			add_location(p, file, 90, 1, 1858);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 97, 0, 2006);
+    			add_location(main, file, 88, 0, 1826);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8918,15 +8917,6 @@ var app = (function () {
     			height: 40,
     			bgColor: "white",
     			clickCallback: node => console.log(node)
-    		},
-    		{
-    			id: 8,
-    			position: { x: 1000, y: 400 },
-    			data: { label: "test" },
-    			width: 100,
-    			height: 100,
-    			bgColor: "orange",
-    			borderRadius: 30
     		}
     	];
 
