@@ -1,7 +1,8 @@
 <script>import { findOrCreateStore } from '../stores/store';
+    import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
 export let node;
 export let key;
-const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
+const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
 // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
 // moving local boolean specific to node selected, to change position of individual node once selected
 let moving = false;
@@ -13,13 +14,12 @@ let moved = false;
   on:mousemove={(e) => {
     e.preventDefault();
     if (moving) {
-      onMouseMove(e, node.id);
+      onNodeMove(e, node.id);
       moved = true;
     }
   }}
 />
-
-<img
+<div 
   on:touchmove={(e) => {
     if (moving) {
       onTouchMove(e, node.id);
@@ -48,20 +48,27 @@ let moved = false;
     }
     moved = false;
   }}
-  class="Node"
+  class='Node'
   style="left: {node.position.x}px; 
-      top: {node.position.y}px; 
-      width: {node.width}px; 
-      height: {node.height}px; 
-      background-color: {node.bgColor}; 
-      border-color: {node.borderColor}; 
-      border-radius: {node.borderRadius}px;
-      color: {node.textColor};"
-  src={node.src}
-  alt=""
+  top: {node.position.y}px; 
+  width: {node.width}px; 
+  height: {node.height}px; 
+  background-color: {node.bgColor}; 
+  border-color: {node.borderColor}; 
+  border-radius: {node.borderRadius}px;
+  color: {node.textColor};"
   id="svelvet-{node.id}"
-/>
+>
+  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+  <img
+    style = "width: {node.width}px;"
+    src={node.src}
+    alt=""
+  />
+<EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} role={'source'} />
 <slot />
+</div>
+
 
 <style>
   .Node {
