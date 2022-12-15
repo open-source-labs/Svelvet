@@ -1,4 +1,5 @@
 <script>import { findOrCreateStore } from '../stores/store';
+    import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
 export let node;
 export let key;
 const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
@@ -18,10 +19,14 @@ let moved = false;
     }
   }}
 />
+<<<<<<< HEAD
 <div class="image-node">
   
 </div>
 <img
+=======
+<div 
+>>>>>>> testenv
   on:touchmove={(e) => {
     if (moving) {
       onTouchMove(e, node.id);
@@ -50,8 +55,9 @@ let moved = false;
     }
     moved = false;
   }}
-  class="Node"
+  class='Node'
   style="left: {node.position.x}px; 
+<<<<<<< HEAD
       top: {node.position.y}px; 
       width: {node.width}px; 
       height: {node.height}px; 
@@ -61,9 +67,27 @@ let moved = false;
       color: {node.textColor};"
   src={node.src}
   alt={node.alt}
+=======
+  top: {node.position.y}px; 
+  width: {node.width}px; 
+  height: {node.height}px; 
+  background-color: {node.bgColor}; 
+  border-color: {node.borderColor}; 
+  border-radius: {node.borderRadius}px;
+  color: {node.textColor};"
+>>>>>>> testenv
   id="svelvet-{node.id}"
-/>
+>
+  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+  <img
+    style = "width: {node.width}px;"
+    src={node.src}
+    alt=""
+  />
+<EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} role={'source'} />
 <slot />
+</div>
+
 
 <style>
   .Node {
