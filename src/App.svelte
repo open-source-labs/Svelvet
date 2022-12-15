@@ -3,14 +3,14 @@
 	import BlueThing from "./BlueThing.svelte";
 
 		const initialNodes = [
-		  {
-		    id: 1,
-		    position: { x: 150, y: -200 },
-		    data: {custom: BlueThing},
-		    width: 300,
-		    height: 300,
-		    bgColor: "white"
-		  },
+		  // {
+		  //   id: 1,
+		  //   position: { x: 150, y: -200 },
+		  //   data: {custom: BlueThing},
+		  //   width: 300,
+		  //   height: 300,
+		  //   bgColor: "white"
+		  // },
 		  {
 		    id: 2,
 		    position: { x: 50, y: 300 },
@@ -28,6 +28,7 @@
 		    data: { label: "textColor" },
 		    width: 150,
 		    height: 40,
+				className: 'customClass',
 		    textColor: "#3F6FD6",
 		    bgColor: "white"
 		  },
@@ -44,10 +45,12 @@
 		  {
 		    id: 5,
 		    position: { x: 250, y: 250 },
-		    data: { label: "width and height" },
+		    data: { },
 		    width: 90,
 		    height: 110,
-		    bgColor: "white"
+		    bgColor: "white",
+				image: true,
+				src: 'https://peasandcrayons.com/wp-content/uploads/2020/03/chickpea-lemon-quinoa-kale-salad-recipe-5-800x1200.jpg'
 		  },
 		  {
 		    id: 6,
@@ -70,7 +73,7 @@
 		];
 
 		const initialEdges = [
-		  { id: "e1-2", source: 1, target: 2, label: "connection" },
+		  // { id: "e1-2", source: 1, target: 2, label: "connection" },
 		  { id: "e2-3", source: 2, target: 5, label: "label" },
 		  {
 		    id: "e1-4",

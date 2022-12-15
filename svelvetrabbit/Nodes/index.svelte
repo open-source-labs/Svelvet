@@ -1,7 +1,7 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
-    import EditModal from './EditModal.svelte';
+  import EditModal from './EditModal.svelte';
   export let node;
   export let key;
 
@@ -10,8 +10,6 @@
     onNodeClick,
     onTouchMove,
     nodeSelected,
-    widthStore,
-    heightStore,
     nodeIdSelected,
     movementStore,
     snapgrid, 
@@ -26,7 +24,7 @@
 
   const openEditModal = (e) => {
     e.preventDefault();
-    document.querySelector('.edit-node-modal').style.opacity = 1;
+    document.querySelector('.edit-node-modal').style.display = 'flex';
   }
 </script>
 
@@ -58,6 +56,8 @@
 
 <div
   on:dblclick={(e) => {
+    e.preventDefault();
+    console.log(node);
     openEditModal(e)
   }}
 
@@ -66,15 +66,18 @@
       onTouchMove(e, node.id);
     }
   }}
+
   on:touchstart={(e) => {
     e.preventDefault();
     moving = true;
     $nodeSelected = true;
   }}
+
   on:touchend={(e) => {
     moving = false;
     $nodeSelected = false;
   }}
+
   on:mousedown={(e) => {
     e.preventDefault();
     moving = true;
@@ -93,10 +96,9 @@
   id="svelvet-{node.id}"
 >
 
-  
-  <!-- this anchor is the target-->
-  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
-
+<!-- this anchor is the target-->
+<EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+<EditModal {node} {key} /> 
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
       <img
@@ -113,8 +115,6 @@
     <slot />
     <!-- this anchor is the source-->
     <EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} role={'source'} />
-
-
 
 </div>
 

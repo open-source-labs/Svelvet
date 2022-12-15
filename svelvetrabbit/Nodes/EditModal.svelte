@@ -18,7 +18,7 @@
     console.log('width', width);
     console.log('height', height);
     node.className = 'testClass';
-    document.querySelector('.edit-node-modal').style.opacity = 0;
+    document.querySelector('.edit-node-modal').style.display = 'none';
     store.nodesStore.update(); // update the nodes in the store
   }
 </script>
@@ -26,7 +26,7 @@
 
 
 <!-- //////////// -- Markup -- //////////// -->
-<div class='edit-node-modal'>
+<div class='edit-node-modal' >
   <label for="label">Change Label</label>
   <input type="text" id="label" name="label" bind:value={label}>
   <label for="height">Height</label>
@@ -43,14 +43,18 @@
 <!-- //////////// -- Styles -- //////////// -->
 <style>
   .edit-node-modal {
-    width: 300px;
-    height: 350px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    width: 200px;
+    height: 200px;
+    background-color: antiquewhite;
     border-radius: 1rem;
     border: 1px solid black;
-    display: flex;
+    display: none;
     flex-direction: column;
-    opacity: 0;
-    z-index: -1;
+    /* opacity: 0; */
+    z-index: 5;
   }
 </style>
 <!-- /////////////////////////////////////// -->

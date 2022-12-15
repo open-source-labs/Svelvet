@@ -110,11 +110,11 @@
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
-      <EditModal {node} {key} />
-      {#if node.image && !node.data.label}
-        <ImageNode {node} {key} />
+      <!-- <EditModal {node} {key} /> -->
+      <!-- {#if node.image && !node.data.label} -->
+        <!-- <ImageNode {node} {key} /> -->
         <!-- If node has html property:  -->
-      {:else if node.data.html}
+      {#if node.data.html}
         <Node {node} {key} >{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
         <!-- If node has 'custom' property: -->
       {:else if node.data.custom}
@@ -191,7 +191,10 @@
   .Nodes:active {
     cursor: grabbing;
   }
- 
+  :global(.hidden) {
+    display: none;
+    opacity: 0;
+  }
   /* .Node {
     color: black; 
     width: 100%;

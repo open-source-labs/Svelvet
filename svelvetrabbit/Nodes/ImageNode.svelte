@@ -1,7 +1,7 @@
 <script>import { findOrCreateStore } from '../stores/store';
 export let node;
 export let key;
-const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
+const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
 // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
 // moving local boolean specific to node selected, to change position of individual node once selected
 let moving = false;
@@ -13,12 +13,14 @@ let moved = false;
   on:mousemove={(e) => {
     e.preventDefault();
     if (moving) {
-      onMouseMove(e, node.id);
+      onNodeMove(e, node.id);
       moved = true;
     }
   }}
 />
-
+<div class="image-node">
+  
+</div>
 <img
   on:touchmove={(e) => {
     if (moving) {
@@ -58,7 +60,7 @@ let moved = false;
       border-radius: {node.borderRadius}px;
       color: {node.textColor};"
   src={node.src}
-  alt=""
+  alt={node.alt}
   id="svelvet-{node.id}"
 />
 <slot />
