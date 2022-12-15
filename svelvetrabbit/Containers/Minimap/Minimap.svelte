@@ -18,7 +18,8 @@
     let nodeWidth = 100;
     let heightRatio = 1;
     let widthRatio = 1;
-    let midpoint = {x:50, y:50}
+    let nodeMidpoint = {x:50, y:50}
+    let mapMidpoint = {x:50, y:50}
     let nodeXleftPosition = Infinity;
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
@@ -28,7 +29,7 @@
     $: {
     if(firstGo){
     //sets initial position values for furthest nodes
-        $nodesStore.forEach((node) => {
+    $nodesStore.forEach((node) => {
     nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
     nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
     nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
@@ -39,7 +40,7 @@
     nodeWidth = nodeXrightPosition - nodeXleftPosition;
 
     // reassign midpoint
-    midpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
+    nodeMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
 
     //ends the first round
     firstGo=!firstGo}
@@ -59,7 +60,7 @@
     // sets the height, width, and midpoint of nodes after movement
     nodeHeight = Math.abs(nodeYbottomPosition - nodeYtopPosition);
     nodeWidth = Math.abs(nodeXleftPosition -nodeXrightPosition);
-    midpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
+    nodeMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
     }
     // console.log(nodeXleftPosition);
     // console.log(nodeXrightPosition);
@@ -81,6 +82,7 @@
         mapHeight = 100;
         mapWidth = 100;
         }
+        mapMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
         heightRatio = (mapHeight / nodeHeight).toFixed(2);
         widthRatio = (mapWidth / nodeWidth).toFixed(2);
         console.log(heightRatio);
