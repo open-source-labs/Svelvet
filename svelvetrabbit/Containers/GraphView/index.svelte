@@ -101,6 +101,8 @@
       store.mouseX.set(d3.pointer(event)[0]);
       store.mouseY.set(d3.pointer(event)[1]);
     })
+
+    
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->

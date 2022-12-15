@@ -1,6 +1,8 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
+    import { onMount, afterUpdate } from 'svelte';
+    import { get } from 'svelte/store';
   export let node;
   export let key;
 
@@ -22,6 +24,20 @@
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
+  
+  const getStyles = (e, node) => {
+    const nodeEl = document.querySelector(`#svelvet-${node.id}`);
+    console.log('element', nodeEl);
+    console.log('test');
+    // const styles = getComputedStyle(nodeEl);
+    const styles = nodeEl.style;
+    console.log(`styles for ${node.id}`, styles);
+    
+  }
+  afterUpdate((e) => {
+    getStyles(e, node);
+  })
+
 </script>
 
 <svelte:window
