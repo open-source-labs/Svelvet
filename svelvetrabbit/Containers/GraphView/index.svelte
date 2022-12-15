@@ -26,7 +26,7 @@
   export let initialLocation;
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, mouseX, mouseY } = svelvetStore;
+  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale} = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -121,7 +121,7 @@
       <!-- {:else if node.data.component}
         <Node {node} {key} {derivedEdges} {nodesStore}><{node.data.component} /></Node>   -->
       {:else}
-        <Node {node} {key}>{node.data.label}</Node>
+        <Node {node} {key} >{node.data.label}</Node>
       {/if}
     {/each}
   </div>

@@ -74,16 +74,7 @@
 		    height: 40,
 		    bgColor: "white",
 		    clickCallback: node => console.log(node)
-		  },
-		  {
-		    id: 8,
-		    position: { x: 1000, y: 400 },
-		    data: { label: "test" },
-		    width: 100,
-		    height: 100,
-		    bgColor: "orange",
-		    borderRadius: 30
-		  },
+		  }
 		];
 
 		const initialEdges = [
@@ -97,7 +88,7 @@
 		    animate: true,
 		    arrow: true
 		  },
-		  { id: "e2-5", source: 6, target: 7, animate: true }
+		  { id: "e2-5", source: 6, target: 7, animate: true, type: 'step' }
 		];
 
 	export let name;
@@ -106,7 +97,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet nodes={initialNodes} width={800} height={800} initialZoom={2} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
+	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
 </main>
 
 <style>

@@ -44,7 +44,7 @@
     moving = false;
     $nodeSelected = false;
     if (!moved && node.id == $nodeIdSelected) {
-      // onNodeClick(e, node.id);
+      onNodeClick(e, node.id);
     }
     moved = false;
   }}
