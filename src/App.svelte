@@ -1,14 +1,14 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
+	import BlueThing from "./BlueThing.svelte";
 
 		const initialNodes = [
-			
 		  {
 		    id: 1,
-		    position: { x: 150, y: 50 },
-		    data: { label: "default styling" },
-		    width: 150,
-		    height: 40,
+		    position: { x: 150, y: -200 },
+		    data: {custom: BlueThing},
+		    width: 300,
+		    height: 300,
 		    bgColor: "white"
 		  },
 		  {
@@ -106,7 +106,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
+	<Svelvet nodes={initialNodes} width={800} height={800} initialZoom={10} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
 </main>
 
 <style>
