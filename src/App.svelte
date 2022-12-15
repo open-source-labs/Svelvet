@@ -112,8 +112,8 @@
 			max-width: none;
 		}
 	}
-	.customClass {
-		background-color: darkcyan;
+	:global(.customClass) {
+		background-color: darkcyan !important;
 		color: white;
 	}
 </style>

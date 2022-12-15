@@ -7,6 +7,7 @@
   import StepEdge from '../../Edges/StepEdge.svelte';
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
   import Node from '../../Nodes/index.svelte';
+  import EditModal from '../../Nodes/EditModal.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
   // leveraging d3 library to zoom/pan
@@ -108,6 +109,7 @@
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
+      <EditModal {node} {key} />
       {#if node.image && !node.data.label}
         <ImageNode {node} {key} />
         <!-- If node has html property:  -->

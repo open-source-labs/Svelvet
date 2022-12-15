@@ -1,6 +1,7 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
+    import EditModal from './EditModal.svelte';
   export let node;
   export let key;
   const {
@@ -21,6 +22,11 @@
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
+
+  const openEditModal = (e) => {
+    e.preventDefault();
+    document.querySelector('.edit-node-modal').style.opacity = 1;
+  }
 </script>
 
 <svelte:window
@@ -50,6 +56,10 @@
 />
 
 <div
+  on:dblclick={(e) => {
+    openEditModal(e)
+  }}
+
   on:touchmove={(e) => {
     if (shouldMove) {
       onTouchMove(e, node.id);
@@ -70,7 +80,7 @@
     $nodeIdSelected = node.id;
     $nodeSelected = true;
   }}
-  class="Node {node.className}"
+  class="Node {node.className || ''}"
   style="left: {node.position.x}px;
     top: {node.position.y}px;
     width: {node.width}px;
@@ -81,6 +91,8 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
+
+  
   <!-- this anchor is the target-->
   <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
 
