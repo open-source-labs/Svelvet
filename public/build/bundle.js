@@ -9114,7 +9114,7 @@ var app = (function () {
     				initialZoom: 2,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
     				edges: /*initialEdges*/ ctx[2],
-    				bgColor: 'pink',
+    				bgColor: 'rgb(245, 100, 80)',
     				background: true
     			},
     			$$inline: true
