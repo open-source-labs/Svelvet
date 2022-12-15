@@ -161,11 +161,11 @@
   }}
 
   on:mouseup={(e) => {
-    newEdge.animate = false;
     edgeShouldMove = false; // prevent the new edge from moving
     moving = false;
     moved = false;
     if (newEdge) {
+      newEdge.animate = false;
       if($hoveredElement) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
         else newEdge.target = $hoveredElement.id;
@@ -232,8 +232,5 @@
   .Anchor:hover {
     transform: scale(1.5) translateZ(-10px);
   }
-  /* circle {
-    position: absolute;
-    background-color: white;
-  } */
+
 </style>

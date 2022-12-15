@@ -1,14 +1,19 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
+	import BlueThing from "./BlueThing.svelte";
+	import w from "./BlueThing.svelte";
+	import h from "./BlueThing.svelte";
+
+	console.log('width ', w);
+	console.log('height ', h);
 
 		const initialNodes = [
-			
 		  {
 		    id: 1,
-		    position: { x: 150, y: 50 },
-		    data: { label: "default styling" },
-		    width: 150,
-		    height: 40,
+		    position: { x: 150, y: -200 },
+		    data: {custom: BlueThing},
+		    width: 300,
+		    height: 300,
 		    bgColor: "white"
 		  },
 		  {
@@ -34,12 +39,15 @@
 		  {
 		    id: 4,
 		    position: { x: 250, y: 150 },
-		    data: { label: "Danny Pink" },
+		    data: { },
 		    width: 150,
-		    height: 40,
+		    height: 150,
 		    textColor: "white",
 		    borderColor: "transparent",
-		    bgColor: "#FF9ABD"
+		    bgColor: "black",
+				image: true,
+				src: "https://www.alimentarium.org/sites/default/files/media/image/2016-10/AL012-02%20carotte_0.jpg",
+				alt: "a carrot"
 		  },
 		  {
 		    id: 5,

@@ -3,6 +3,7 @@
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   export let node;
   export let key;
+
   const {
     onNodeMove,
     onNodeClick,
@@ -43,7 +44,7 @@
     moving = false;
     $nodeSelected = false;
     if (!moved && node.id == $nodeIdSelected) {
-      // onNodeClick(e, node.id);
+      onNodeClick(e, node.id);
     }
     moved = false;
   }}
