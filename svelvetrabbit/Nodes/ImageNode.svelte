@@ -19,14 +19,7 @@ let moved = false;
     }
   }}
 />
-<<<<<<< HEAD
-<div class="image-node">
-  
-</div>
-<img
-=======
 <div 
->>>>>>> testenv
   on:touchmove={(e) => {
     if (moving) {
       onTouchMove(e, node.id);
@@ -57,17 +50,6 @@ let moved = false;
   }}
   class='Node'
   style="left: {node.position.x}px; 
-<<<<<<< HEAD
-      top: {node.position.y}px; 
-      width: {node.width}px; 
-      height: {node.height}px; 
-      background-color: {node.bgColor}; 
-      border-color: {node.borderColor}; 
-      border-radius: {node.borderRadius}px;
-      color: {node.textColor};"
-  src={node.src}
-  alt={node.alt}
-=======
   top: {node.position.y}px; 
   width: {node.width}px; 
   height: {node.height}px; 
@@ -75,7 +57,6 @@ let moved = false;
   border-color: {node.borderColor}; 
   border-radius: {node.borderRadius}px;
   color: {node.textColor};"
->>>>>>> testenv
   id="svelvet-{node.id}"
 >
   <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />

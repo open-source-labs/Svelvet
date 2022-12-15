@@ -162,9 +162,7 @@
 
   on:mouseup={(e) => {
     edgeShouldMove = false; // prevent the new edge from moving
-    moving = false;
-    moved = false;
-    if (newEdge) {
+    if (newEdge && moved) {
       newEdge.animate = false;
       if($hoveredElement) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
@@ -175,6 +173,8 @@
       }
     }
     newEdge = null; // reset newEdge so that the next one can be created normally
+    moved = false;
+    moving = false;
   }}
 
 />
@@ -193,7 +193,7 @@
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    renderEdge(e); // renders the new edge on the screen
+    // renderEdge(e); // renders the new edge on the screen
     edgeShouldMove = true;
   }}
 
@@ -210,6 +210,7 @@
   }}
   
   on:mouseleave={(e) => {
+    if (edgeShouldMove) renderEdge(e); // renders the new edge on the screen
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
   }}
