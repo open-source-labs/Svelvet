@@ -193,7 +193,6 @@
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    renderEdge(e); // renders the new edge on the screen
     edgeShouldMove = true;
   }}
 
@@ -210,6 +209,7 @@
   }}
   
   on:mouseleave={(e) => {
+    if (edgeShouldMove) renderEdge(e); // renders the new edge on the screen
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
   }}

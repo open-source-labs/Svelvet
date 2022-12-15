@@ -5627,7 +5627,11 @@ var app = (function () {
     left:${/*left*/ ctx[17]}px;
   `);
 
+<<<<<<< HEAD
+    			add_location(div, file$5, 183, 0, 6444);
+=======
     			add_location(div, file$6, 183, 0, 6446);
+>>>>>>> testenv
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5875,7 +5879,6 @@ var app = (function () {
     	const mousedown_handler = e => {
     		e.preventDefault();
     		e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    		renderEdge(e); // renders the new edge on the screen
     		$$invalidate(6, edgeShouldMove = true);
     	};
 
@@ -5892,6 +5895,7 @@ var app = (function () {
     	};
 
     	const mouseleave_handler = e => {
+    		if (edgeShouldMove) renderEdge(e); // renders the new edge on the screen
     		$$invalidate(3, hovered = false);
     		store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
     	};
@@ -9114,7 +9118,11 @@ var app = (function () {
     				initialZoom: 2,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
     				edges: /*initialEdges*/ ctx[2],
+<<<<<<< HEAD
     				bgColor: 'rgb(245, 100, 80)',
+=======
+    				bgColor: '#EEEEEE',
+>>>>>>> f9b610546e211cfa69014510623571daa4c3fce4
     				background: true
     			},
     			$$inline: true
@@ -9136,12 +9144,21 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
+<<<<<<< HEAD
+    			add_location(h1, file, 89, 1, 1834);
+    			attr_dev(a, "href", "https://svelte.dev/tutorial");
+    			add_location(a, file, 90, 14, 1871);
+    			add_location(p, file, 90, 1, 1858);
+    			attr_dev(main, "class", "svelte-1tky8bj");
+    			add_location(main, file, 88, 0, 1826);
+=======
     			add_location(h1, file, 106, 1, 2288);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
     			add_location(a, file, 107, 14, 2325);
     			add_location(p, file, 107, 1, 2312);
     			attr_dev(main, "class", "svelte-1tky8bj");
     			add_location(main, file, 105, 0, 2280);
+>>>>>>> testenv
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9263,6 +9280,8 @@ var app = (function () {
     			height: 40,
     			bgColor: "white",
     			clickCallback: node => console.log(node)
+<<<<<<< HEAD
+=======
     		},
     		{
     			id: 8,
@@ -9272,6 +9291,7 @@ var app = (function () {
     			height: 100,
     			bgColor: "orange",
     			borderRadius: 30
+>>>>>>> testenv
     		}
     	];
 
@@ -9300,7 +9320,8 @@ var app = (function () {
     			id: "e2-5",
     			source: 6,
     			target: 7,
-    			animate: true
+    			animate: true,
+    			type: 'step'
     		}
     	];
 
