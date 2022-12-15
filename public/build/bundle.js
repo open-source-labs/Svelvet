@@ -6739,7 +6739,7 @@ var app = (function () {
     const { console: console_1$1 } = globals;
     const file$5 = "svelvetrabbit/Nodes/index.svelte";
 
-    // (103:4) {#if node.image}
+    // (123:4) {#if node.image}
     function create_if_block$1(ctx) {
     	let img;
     	let img_src_value;
@@ -6752,7 +6752,7 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$5, 103, 6, 2772);
+    			add_location(img, file$5, 123, 6, 3434);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6779,7 +6779,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(103:4) {#if node.image}",
+    		source: "(123:4) {#if node.image}",
     		ctx
     	});
 
@@ -6855,7 +6855,7 @@ var app = (function () {
     			set_style(div, "border-radius", /*node*/ ctx[0].borderRadius + "px");
     			set_style(div, "color", /*node*/ ctx[0].textColor);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
-    			add_location(div, file$5, 56, 0, 1691);
+    			add_location(div, file$5, 76, 0, 2353);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7048,6 +7048,27 @@ var app = (function () {
     		document.querySelector('.edit-node-modal').style.display = 'flex';
     	};
 
+    	const getStyles = (e, node) => {
+    		const nodeEl = document.querySelector(`#svelvet-${node.id}`);
+    		const customEl = document.querySelector('.customClass');
+
+    		for (const style in customEl.style) {
+    			if (customEl.style[style] !== '') console.log(style);
+    		}
+
+    		console.log(`custom styles for ${node.id}`, customEl.style);
+    		console.log('element', nodeEl);
+
+    		// const styles = getComputedStyle(nodeEl);
+    		const styles = nodeEl.style;
+
+    		console.log(`styles for ${node.id}`, styles);
+    	};
+
+    	afterUpdate(e => {
+    		getStyles(e, node);
+    	});
+
     	$$self.$$.on_mount.push(function () {
     		if (node === undefined && !('node' in $$props || $$self.$$.bound[$$self.$$.props['node']])) {
     			console_1$1.warn("<Nodes> was created without expected prop 'node'");
@@ -7133,6 +7154,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		findOrCreateStore,
+    		afterUpdate,
     		EdgeAnchor,
     		EditModal,
     		node,
@@ -7149,6 +7171,7 @@ var app = (function () {
     		moving,
     		moved,
     		openEditModal,
+    		getStyles,
     		shouldMove,
     		$movementStore,
     		$snapgrid,
@@ -9410,12 +9433,12 @@ var app = (function () {
     			t6 = text(" to learn how to build Svelte apps.");
     			t7 = space();
     			create_component(svelvet.$$.fragment);
-    			attr_dev(h1, "class", "svelte-cydqi");
+    			attr_dev(h1, "class", "svelte-v76wnz");
     			add_location(h1, file, 100, 1, 2278);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
     			add_location(a, file, 101, 14, 2315);
     			add_location(p, file, 101, 1, 2302);
-    			attr_dev(main, "class", "svelte-cydqi");
+    			attr_dev(main, "class", "svelte-v76wnz");
     			add_location(main, file, 99, 0, 2270);
     		},
     		l: function claim(nodes) {

@@ -1,5 +1,6 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
+  import {afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   import EditModal from './EditModal.svelte';
   export let node;
@@ -26,6 +27,25 @@
     e.preventDefault();
     document.querySelector('.edit-node-modal').style.display = 'flex';
   }
+  const getStyles = (e, node) => {
+    const nodeStyles = {};
+    const customStyles = {};
+    const nodeEl = document.querySelector(`#svelvet-${node.id}`);
+    const customEl = document.querySelector('.customClass');
+    for (const style in customEl.style) {
+      if (customEl.style[style] !== '') console.log(style);
+    }
+    console.log(`custom styles for ${node.id}`, customEl.style);
+    console.log('element', nodeEl);
+    
+    // const styles = getComputedStyle(nodeEl);
+    const styles = nodeEl.style;
+    console.log(`styles for ${node.id}`, styles);
+    
+  }
+  afterUpdate((e) => {
+    getStyles(e, node);
+  })
 </script>
 
 <svelte:window

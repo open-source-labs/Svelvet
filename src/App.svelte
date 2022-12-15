@@ -124,7 +124,9 @@
 		}
 	}
 	:global(.customClass) {
-		background-color: darkcyan !important;
+		background-color: darkcyan;
 		color: white;
+		
+
 	}
 </style>
