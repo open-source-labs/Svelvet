@@ -3897,7 +3897,7 @@ var app = (function () {
     const file$8 = "svelvetrabbit/Edges/EdgeText.svelte";
 
     // (25:0) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$3(ctx) {
     	let g;
     	let rect;
     	let rect_fill_value;
@@ -3987,7 +3987,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$3.name,
     		type: "else",
     		source: "(25:0) {:else}",
     		ctx
@@ -3997,7 +3997,7 @@ var app = (function () {
     }
 
     // (23:0) {#if typeof label === 'undefined' || !label}
-    function create_if_block$3(ctx) {
+    function create_if_block$4(ctx) {
     	let t_value = null + "";
     	let t;
 
@@ -4016,7 +4016,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(23:0) {#if typeof label === 'undefined' || !label}",
     		ctx
@@ -4029,8 +4029,8 @@ var app = (function () {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (typeof /*label*/ ctx[0] === 'undefined' || !/*label*/ ctx[0]) return create_if_block$3;
-    		return create_else_block$2;
+    		if (typeof /*label*/ ctx[0] === 'undefined' || !/*label*/ ctx[0]) return create_if_block$4;
+    		return create_else_block$3;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -4225,7 +4225,7 @@ var app = (function () {
     const file$7 = "svelvetrabbit/Edges/BaseEdge.svelte";
 
     // (41:0) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$2(ctx) {
     	let path_1;
     	let path_1_class_value;
     	let path_1_stroke_value;
@@ -4263,7 +4263,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$2.name,
     		type: "else",
     		source: "(41:0) {:else}",
     		ctx
@@ -4322,7 +4322,7 @@ var app = (function () {
     }
 
     // (51:0) {#if edgeTextProps.label}
-    function create_if_block$2(ctx) {
+    function create_if_block$3(ctx) {
     	let edgetext;
     	let current;
 
@@ -4360,7 +4360,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(51:0) {#if edgeTextProps.label}",
     		ctx
@@ -4380,12 +4380,12 @@ var app = (function () {
 
     	function select_block_type(ctx, dirty) {
     		if (/*arrow*/ ctx[2]) return create_if_block_1$1;
-    		return create_else_block$1;
+    		return create_else_block$2;
     	}
 
     	let current_block_type = select_block_type(ctx);
     	let if_block0 = current_block_type(ctx);
-    	let if_block1 = /*edgeTextProps*/ ctx[0].label && create_if_block$2(ctx);
+    	let if_block1 = /*edgeTextProps*/ ctx[0].label && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
@@ -4444,7 +4444,7 @@ var app = (function () {
     						transition_in(if_block1, 1);
     					}
     				} else {
-    					if_block1 = create_if_block$2(ctx);
+    					if_block1 = create_if_block$3(ctx);
     					if_block1.c();
     					transition_in(if_block1, 1);
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
@@ -5627,11 +5627,7 @@ var app = (function () {
     left:${/*left*/ ctx[17]}px;
   `);
 
-<<<<<<< HEAD
-    			add_location(div, file$5, 183, 0, 6444);
-=======
     			add_location(div, file$6, 183, 0, 6446);
->>>>>>> testenv
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6453,7 +6449,7 @@ var app = (function () {
     const file$5 = "svelvetrabbit/Nodes/index.svelte";
 
     // (89:4) {#if node.image}
-    function create_if_block$1(ctx) {
+    function create_if_block$2(ctx) {
     	let img;
     	let img_src_value;
 
@@ -6490,7 +6486,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block$2.name,
     		type: "if",
     		source: "(89:4) {#if node.image}",
     		ctx
@@ -6521,7 +6517,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	let if_block = /*node*/ ctx[0].image && create_if_block$1(ctx);
+    	let if_block = /*node*/ ctx[0].image && create_if_block$2(ctx);
     	const default_slot_template = /*#slots*/ ctx[19].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], null);
 
@@ -6599,7 +6595,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$1(ctx);
+    					if_block = create_if_block$2(ctx);
     					if_block.c();
     					if_block.m(div, t1);
     				}
@@ -7794,7 +7790,7 @@ var app = (function () {
     }
 
     // (163:6) {:else}
-    function create_else_block(ctx) {
+    function create_else_block$1(ctx) {
     	let simplebezieredge;
     	let current;
 
@@ -7832,7 +7828,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(163:6) {:else}",
     		ctx
@@ -7938,7 +7934,7 @@ var app = (function () {
     }
 
     // (157:6) {#if edge.type === 'straight'}
-    function create_if_block(ctx) {
+    function create_if_block$1(ctx) {
     	let straightedge;
     	let current;
 
@@ -7976,7 +7972,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(157:6) {#if edge.type === 'straight'}",
     		ctx
@@ -7991,7 +7987,7 @@ var app = (function () {
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block, create_if_block_1, create_if_block_2, create_else_block];
+    	const if_block_creators = [create_if_block$1, create_if_block_1, create_if_block_2, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
@@ -8961,95 +8957,155 @@ var app = (function () {
 
     const file$1 = "src/BlueThing.svelte";
 
-    function create_fragment$1(ctx) {
+    // (16:0) {:else}
+    function create_else_block(ctx) {
     	let div;
-    	let nav;
-    	let ul;
-    	let li0;
-    	let a0;
-    	let t1;
-    	let li1;
-    	let a1;
-    	let t3;
-    	let li2;
-    	let a2;
-    	let t5;
-    	let h1;
-    	let t7;
-    	let p;
+    	let t0;
+    	let button;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			nav = element("nav");
-    			ul = element("ul");
-    			li0 = element("li");
-    			a0 = element("a");
-    			a0.textContent = "Home";
+    			t0 = text("You are logged in \n  ");
+    			button = element("button");
+    			button.textContent = "Logout";
+    			add_location(button, file$1, 18, 2, 393);
+    			add_location(div, file$1, 16, 1, 363);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, button);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*toggle*/ ctx[1], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(16:0) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (10:0) {#if !user.loggedIn}
+    function create_if_block(ctx) {
+    	let div;
+    	let input0;
+    	let t0;
+    	let input1;
+    	let t1;
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			input0 = element("input");
+    			t0 = space();
+    			input1 = element("input");
     			t1 = space();
-    			li1 = element("li");
-    			a1 = element("a");
-    			a1.textContent = "About";
-    			t3 = space();
-    			li2 = element("li");
-    			a2 = element("a");
-    			a2.textContent = "Contact";
-    			t5 = space();
-    			h1 = element("h1");
-    			h1.textContent = "My Basic Webpage";
-    			t7 = space();
-    			p = element("p");
-    			p.textContent = "This is a basic webpage created with svelte.";
-    			attr_dev(a0, "href", "#");
-    			attr_dev(a0, "class", "svelte-ftuvnm");
-    			add_location(a0, file$1, 4, 8, 93);
-    			attr_dev(li0, "class", "svelte-ftuvnm");
-    			add_location(li0, file$1, 4, 4, 89);
-    			attr_dev(a1, "href", "#");
-    			attr_dev(a1, "class", "svelte-ftuvnm");
-    			add_location(a1, file$1, 5, 8, 127);
-    			attr_dev(li1, "class", "svelte-ftuvnm");
-    			add_location(li1, file$1, 5, 4, 123);
-    			attr_dev(a2, "href", "#");
-    			attr_dev(a2, "class", "svelte-ftuvnm");
-    			add_location(a2, file$1, 6, 8, 162);
-    			attr_dev(li2, "class", "svelte-ftuvnm");
-    			add_location(li2, file$1, 6, 4, 158);
-    			attr_dev(ul, "class", "svelte-ftuvnm");
-    			add_location(ul, file$1, 3, 2, 80);
-    			attr_dev(nav, "class", "svelte-ftuvnm");
-    			add_location(nav, file$1, 2, 1, 72);
-    			attr_dev(h1, "class", "svelte-ftuvnm");
-    			add_location(h1, file$1, 9, 0, 206);
-    			add_location(p, file$1, 10, 0, 232);
-    			attr_dev(div, "class", "page svelte-ftuvnm");
-    			add_location(div, file$1, 1, 0, 52);
+    			button = element("button");
+    			button.textContent = "Login Here";
+    			attr_dev(input0, "type", "text");
+    			attr_dev(input0, "placeholder", "Username");
+    			add_location(input0, file$1, 11, 2, 201);
+    			attr_dev(input1, "type", "password");
+    			attr_dev(input1, "placeholder", "Password");
+    			add_location(input1, file$1, 12, 2, 248);
+    			add_location(button, file$1, 13, 2, 299);
+    			attr_dev(div, "class", "login svelte-1k3rqxz");
+    			add_location(div, file$1, 10, 0, 179);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, input0);
+    			append_dev(div, t0);
+    			append_dev(div, input1);
+    			append_dev(div, t1);
+    			append_dev(div, button);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*toggle*/ ctx[1], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(10:0) {#if !user.loggedIn}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (!/*user*/ ctx[0].loggedIn) return create_if_block;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty$1();
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, nav);
-    			append_dev(nav, ul);
-    			append_dev(ul, li0);
-    			append_dev(li0, a0);
-    			append_dev(ul, t1);
-    			append_dev(ul, li1);
-    			append_dev(li1, a1);
-    			append_dev(ul, t3);
-    			append_dev(ul, li2);
-    			append_dev(li2, a2);
-    			append_dev(div, t5);
-    			append_dev(div, h1);
-    			append_dev(div, t7);
-    			append_dev(div, p);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     		},
-    		p: noop$1,
+    		p: function update(ctx, [dirty]) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
     		i: noop$1,
     		o: noop$1,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -9064,16 +9120,32 @@ var app = (function () {
     	return block;
     }
 
-    function instance$1($$self, $$props) {
+    function instance$1($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('BlueThing', slots, []);
+    	let user = { loggedIn: false };
+
+    	function toggle() {
+    		$$invalidate(0, user.loggedIn = !user.loggedIn, user);
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<BlueThing> was created with unknown prop '${key}'`);
     	});
 
-    	return [];
+    	$$self.$capture_state = () => ({ user, toggle });
+
+    	$$self.$inject_state = $$props => {
+    		if ('user' in $$props) $$invalidate(0, user = $$props.user);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [user, toggle];
     }
 
     class BlueThing extends SvelteComponentDev {
@@ -9115,7 +9187,7 @@ var app = (function () {
     				nodes: /*initialNodes*/ ctx[1],
     				width: 800,
     				height: 800,
-    				initialZoom: 2,
+    				initialZoom: 8,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
     				edges: /*initialEdges*/ ctx[2],
     				bgColor: '#EEEEEE',
@@ -9140,21 +9212,12 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
-<<<<<<< HEAD
-    			add_location(h1, file, 89, 1, 1834);
+    			add_location(h1, file, 97, 1, 2122);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 90, 14, 1871);
-    			add_location(p, file, 90, 1, 1858);
+    			add_location(a, file, 98, 14, 2159);
+    			add_location(p, file, 98, 1, 2146);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 88, 0, 1826);
-=======
-    			add_location(h1, file, 106, 1, 2288);
-    			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 107, 14, 2325);
-    			add_location(p, file, 107, 1, 2312);
-    			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 105, 0, 2280);
->>>>>>> testenv
+    			add_location(main, file, 96, 0, 2114);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9276,18 +9339,6 @@ var app = (function () {
     			height: 40,
     			bgColor: "white",
     			clickCallback: node => console.log(node)
-<<<<<<< HEAD
-=======
-    		},
-    		{
-    			id: 8,
-    			position: { x: 1000, y: 400 },
-    			data: { label: "test" },
-    			width: 100,
-    			height: 100,
-    			bgColor: "orange",
-    			borderRadius: 30
->>>>>>> testenv
     		}
     	];
 
