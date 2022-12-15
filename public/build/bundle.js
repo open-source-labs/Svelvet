@@ -4254,7 +4254,7 @@ var app = (function () {
     }
 
     // (32:0) {#if arrow}
-    function create_if_block_1$1(ctx) {
+    function create_if_block_1$2(ctx) {
     	let path_1;
     	let path_1_class_value;
     	let path_1_stroke_value;
@@ -4293,7 +4293,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$1.name,
+    		id: create_if_block_1$2.name,
     		type: "if",
     		source: "(32:0) {#if arrow}",
     		ctx
@@ -4360,7 +4360,7 @@ var app = (function () {
     	let current;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*arrow*/ ctx[2]) return create_if_block_1$1;
+    		if (/*arrow*/ ctx[2]) return create_if_block_1$2;
     		return create_else_block$1;
     	}
 
@@ -5049,71 +5049,6 @@ var app = (function () {
         return [centerX, centerY, xOffset, yOffset];
     };
 
-    // Unique ID creation requires a high quality random # generator. In the browser we therefore
-    // require the crypto API and do not support built-in fallback to lower quality random number
-    // generators (like Math.random()).
-    let getRandomValues;
-    const rnds8 = new Uint8Array(16);
-    function rng() {
-      // lazy load so that environments that need to polyfill have a chance to do so
-      if (!getRandomValues) {
-        // getRandomValues needs to be invoked in a context where "this" is a Crypto implementation.
-        getRandomValues = typeof crypto !== 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-
-        if (!getRandomValues) {
-          throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
-        }
-      }
-
-      return getRandomValues(rnds8);
-    }
-
-    /**
-     * Convert array of 16 byte values to UUID string format of the form:
-     * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-     */
-
-    const byteToHex = [];
-
-    for (let i = 0; i < 256; ++i) {
-      byteToHex.push((i + 0x100).toString(16).slice(1));
-    }
-
-    function unsafeStringify(arr, offset = 0) {
-      // Note: Be careful editing this code!  It's been tuned for performance
-      // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
-      return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
-    }
-
-    const randomUUID = typeof crypto !== 'undefined' && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-    var native = {
-      randomUUID
-    };
-
-    function v4(options, buf, offset) {
-      if (native.randomUUID && !buf && !options) {
-        return native.randomUUID();
-      }
-
-      options = options || {};
-      const rnds = options.random || (options.rng || rng)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-
-      rnds[6] = rnds[6] & 0x0f | 0x40;
-      rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
-
-      if (buf) {
-        offset = offset || 0;
-
-        for (let i = 0; i < 16; ++i) {
-          buf[offset + i] = rnds[i];
-        }
-
-        return buf;
-      }
-
-      return unsafeStringify(rnds);
-    }
-
     const subscriber_queue = [];
     /**
      * Creates a `Readable` store that allows reading by subscription.
@@ -5492,85 +5427,6 @@ var app = (function () {
             });
             return [...$edgesStore];
         });
-        // Sets the position of each anchor (top, bottom, left or right)
-        const setAnchorPosition = (position, node, width, height) => {
-            let top;
-            let left;
-            if(position === 'top') {
-              top = -height / 2;
-              left = node.width / 2 - width / 2;
-            }
-            if(position === 'bottom') {
-              top = node.height - height / 2;
-              left = node.width / 2 - width / 2;
-            }
-            if(position === 'left') {
-              top = node.height / 2 - height / 2;
-              left = -width / 2;
-            }
-            if(position === 'right') {
-              top = node.height / 2 - height / 2;
-              left = node.width - width / 2;
-            }
-            return [top, left];
-          };
-
-          const setNewEdgeProps = (role, position, node) => {
-            // coreSvelvetStore.nodesStore.forEach(n => {
-            //     if(n.id === id) node = n; 
-            // })
-            // console.log(coreSvelvetStore.nodesStore);
-            let left = node.position.x;
-            //top of the node selected
-            let top = node.position.y;
-            //declaring the middle point of the node
-            let middle = node.width / 2;
-            let x;
-            let y;
-            if(role === 'source') {
-                if (position === 'top') {
-                    //the x coordinate of the middle of the node
-                    x = left + middle;
-                    //the y coordinate of the top of the node
-                    y = top;
-                }
-                else if (position === 'bottom') {
-                    x = left + middle;
-                    y = top + node.height;
-                }
-                else if (position === 'left') {
-                    x = left;
-                    y = top + node.height / 2;
-                }
-                else if (position === 'right') {
-                    x = left + node.width;
-                    y = top + node.height / 2;
-                }
-                return [x, y];
-            } else {
-                if (position === 'top') {
-                    //the x coordinate of the middle of the node
-                    x = left + middle;
-                    //the y coordinate of the top of the node
-                    y = top;
-                }
-                else if (position === 'bottom') {
-                    x = left + middle;
-                    y = top + node.height;
-                }
-                else if (position === 'left') {
-                    x = left;
-                    y = top + node.height / 2;
-                }
-                else if (position === 'right') {
-                    x = left + node.width;
-                    y = top + node.height / 2;
-                }
-                return [x, y];
-            }
-        }; 
-
-        
         //Puts everything together as the svelvet store and use the key so that it can be used.
         const svelvetStore = {
             ...coreSvelvetStore,
@@ -5578,8 +5434,6 @@ var app = (function () {
             onEdgeMove,
             onNodeMove,
             onNodeClick,
-            setAnchorPosition,
-            setNewEdgeProps,
             derivedEdges
         };
         svelvetStores[key] = svelvetStore;
@@ -5593,22 +5447,31 @@ var app = (function () {
 
     function create_fragment$7(ctx) {
     	let div;
+    	let div_style_value;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
     			div = element("div");
+<<<<<<< HEAD
     			attr_dev(div, "class", "Anchor svelte-1kxmdm0");
+=======
+    			attr_dev(div, "class", "Anchor svelte-12zf7m0");
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
 
-    			attr_dev(div, "style", `
-    height:${/*anchorHeight*/ ctx[11]}px;
-    width:${/*anchorWidth*/ ctx[10]}px;
-    top: ${/*top*/ ctx[16]}px;
-    left:${/*left*/ ctx[17]}px;
+    			attr_dev(div, "style", div_style_value = `
+    top: ${/*position*/ ctx[1] === 'top'
+			? -/*anchorHeight*/ ctx[11] / 2
+			: /*node*/ ctx[0].height - /*anchorHeight*/ ctx[11] / 2}px;
+    left:${/*node*/ ctx[0].width / 2 - /*anchorWidth*/ ctx[10] / 2}px;
   `);
 
+<<<<<<< HEAD
     			add_location(div, file$5, 183, 0, 6444);
+=======
+    			add_location(div, file$5, 128, 0, 4628);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5618,18 +5481,27 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[22], false, false, false),
-    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[23], false, false, false),
-    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[24], false, false, false),
-    					listen_dev(div, "mouseup", /*mouseup_handler_1*/ ctx[25], false, false, false),
-    					listen_dev(div, "mouseenter", /*mouseenter_handler*/ ctx[26], false, false, false),
-    					listen_dev(div, "mouseleave", /*mouseleave_handler*/ ctx[27], false, false, false)
+    					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[19], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[20], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[21], false, false, false),
+    					listen_dev(div, "mouseup", /*mouseup_handler_1*/ ctx[22], false, false, false),
+    					listen_dev(div, "mouseenter", /*mouseenter_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "mouseleave", /*mouseleave_handler*/ ctx[24], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: noop$1,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*position, node*/ 3 && div_style_value !== (div_style_value = `
+    top: ${/*position*/ ctx[1] === 'top'
+			? -/*anchorHeight*/ ctx[11] / 2
+			: /*node*/ ctx[0].height - /*anchorHeight*/ ctx[11] / 2}px;
+    left:${/*node*/ ctx[0].width / 2 - /*anchorWidth*/ ctx[10] / 2}px;
+  `)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
     		i: noop$1,
     		o: noop$1,
     		d: function destroy(detaching) {
@@ -5660,23 +5532,18 @@ var app = (function () {
     	let { key } = $$props;
     	let { node } = $$props;
     	let { position } = $$props;
-    	let { role } = $$props;
     	let newNode;
     	let newEdge;
     	let hovered = false;
     	let anchorWidth = 10;
     	let anchorHeight = 10;
-
-    	// let top;
-    	// let left;
-    	const { onEdgeMove, onTouchMove, setAnchorPosition, setNewEdgeProps, edgeSelected, edgeIdSelected, movementStore, mouseX, mouseY, hoveredElement, derivedEdges, nodesStore } = findOrCreateStore(key);
-
+    	const { onEdgeMove, onTouchMove, edgeSelected, edgeIdSelected, movementStore, hoveredElement, derivedEdges, nodesStore } = findOrCreateStore(key);
     	validate_store(hoveredElement, 'hoveredElement');
     	component_subscribe($$self, hoveredElement, value => $$invalidate(9, $hoveredElement = value));
     	validate_store(derivedEdges, 'derivedEdges');
     	component_subscribe($$self, derivedEdges, value => $$invalidate(8, $derivedEdges = value));
     	validate_store(nodesStore, 'nodesStore');
-    	component_subscribe($$self, nodesStore, value => $$invalidate(29, $nodesStore = value));
+    	component_subscribe($$self, nodesStore, value => $$invalidate(26, $nodesStore = value));
 
     	// $: shouldMove = moving && $movementStore;
     	// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -5685,17 +5552,11 @@ var app = (function () {
 
     	let moved = false;
     	let edgeShouldMove = false;
-    	const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
 
-    	// const [x, y] = setNewEdgeProps(role, position, node)
-    	// let d3 = {
-    	//     select,
-    	//     pointer
-    	// };
     	/* This keeps track of the cursors current position, taking into account d3 transformations,
     updating the mouseX and mouseY values in the store
     */
-    	// d3.select('.Nodes') 
+    	// d3.select('svg') 
     	//   .on('mousemove', (event) => {
     	//     store.mouseX.set(d3.pointer(event)[0]);
     	//     store.mouseY.set(d3.pointer(event)[1]);
@@ -5704,35 +5565,31 @@ var app = (function () {
     This is the function that renders a new edge when an anchor is clicked
     */
     	const renderEdge = e => {
-    		const [x, y] = setNewEdgeProps(role, position, node);
     		e.preventDefault(); // preventing default behavior, not sure if necessary
 
-    		// console.log('correct x and y', node.position.x + (node.width / 2), node.position.y + node.height)
-    		// console.log('mouse x and y', $mouseX, $mouseY);
-    		console.log('role', role);
-
+    		// set the target or the source depending on the anchor position
+    		// let source = position === 'bottom' ? node.id : null;
+    		// let target = position === 'top' ? node.id : null;
     		// Setting the newEdge variable to an edge prototype
-    		$$invalidate(2, newEdge = role === 'source'
+    		$$invalidate(2, newEdge = position === 'bottom'
     		? {
-    				id: v4(), // need better way to generate id, uuid?
+    				id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
     				source: node.id, // the source is the node that the anchor is on
     				target: null, // until the mouse is released the target will be set to null
-    				targetX: x,
-    				targetY: y,
-    				animate: true,
+    				targetX: node.position.x + node.width / 2,
+    				targetY: node.position.y + node.height,
     				label: "newEdge"
     			}
     		: {
-    				id: v4(), // need better way to generate id, uuid?
+    				id: (Math.random() + 10).toFixed(2), // need better way to generate id, uuid?
     				source: null, // until the mouse is released the source will be set to null
     				target: node.id, // the target is the node that the anchor is on
-    				sourceX: x,
-    				sourceY: y,
-    				animate: true,
+    				sourceX: node.position.x + node.width / 2,
+    				sourceY: node.position.y,
     				label: "newEdge"
     			});
 
-    		console.log('role', role, 'x, y', x, y);
+    		console.log($derivedEdges);
     		store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
     	};
 
@@ -5742,7 +5599,6 @@ var app = (function () {
     */
     	const renderNewNode = (event, edge) => {
     		event.preventDefault();
-    		setNewEdgeProps(role, position, node);
 
     		let pos = position === 'bottom'
     		? { x: edge.targetX, y: edge.targetY }
@@ -5750,7 +5606,7 @@ var app = (function () {
 
     		// setting newNode variable to a 'prototype' node
     		newNode = {
-    			id: v4(), // again, better id generation needed, uuid?
+    			id: (Math.random() + 10).toFixed(2), // again, better id generation needed, uuid?
     			position: pos, // the position (top left corner) is at the target coords of the edge for now
     			data: { label: "newNode" }, // need ways to change the rest of the properties
     			width: 100,
@@ -5758,6 +5614,7 @@ var app = (function () {
     			bgColor: "white"
     		};
 
+<<<<<<< HEAD
     		if (position === 'left') {
     			if (role === 'source') {
     				newNode.sourcePosition = 'left';
@@ -5786,16 +5643,15 @@ var app = (function () {
     				newNode.position.x = edge.sourceX - newNode.width / 2;
     				newNode.position.y = edge.sourceY - newNode.height;
     			}
+=======
+    		if (position === 'bottom') {
+    			edge.target = newNode.id; // set the new edge to target the new node
+    			newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		} else {
-    			if (role === 'source') {
-    				edge.target = newNode.id; // set the new edge to target the new node
-    				newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
-    				newNode.position.y = edge.targetY;
-    			} else {
-    				edge.source = newNode.id;
-    				newNode.position.x = edge.sourceX - newNode.width / 2;
-    				newNode.position.y = edge.sourceY - newNode.height;
-    			}
+    			edge.source = newNode.id;
+    			newNode.position.x = edge.sourceX - newNode.width / 2;
+    			newNode.position.y = edge.sourceY - newNode.height;
     		}
 
     		store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
@@ -5813,13 +5669,9 @@ var app = (function () {
     		if (position === undefined && !('position' in $$props || $$self.$$.bound[$$self.$$.props['position']])) {
     			console_1$1.warn("<EdgeAnchor> was created without expected prop 'position'");
     		}
-
-    		if (role === undefined && !('role' in $$props || $$self.$$.bound[$$self.$$.props['role']])) {
-    			console_1$1.warn("<EdgeAnchor> was created without expected prop 'role'");
-    		}
     	});
 
-    	const writable_props = ['key', 'node', 'position', 'role'];
+    	const writable_props = ['key', 'node', 'position'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<EdgeAnchor> was created with unknown prop '${key}'`);
@@ -5835,14 +5687,13 @@ var app = (function () {
     	};
 
     	const mouseup_handler = e => {
-    		$$invalidate(2, newEdge.animate = false, newEdge);
     		$$invalidate(6, edgeShouldMove = false); // prevent the new edge from moving
     		$$invalidate(4, moving = false);
     		$$invalidate(5, moved = false);
 
     		if (newEdge) {
     			if ($hoveredElement) {
-    				if (role === 'target') $$invalidate(2, newEdge.source = $hoveredElement.id, newEdge); else $$invalidate(2, newEdge.target = $hoveredElement.id, newEdge);
+    				if (position === 'top') $$invalidate(2, newEdge.source = $hoveredElement.id, newEdge); else $$invalidate(2, newEdge.target = $hoveredElement.id, newEdge);
     				store.edgesStore.set([...$derivedEdges, newEdge]);
     			} else {
     				renderNewNode(e, newEdge);
@@ -5877,24 +5728,20 @@ var app = (function () {
     	};
 
     	$$self.$$set = $$props => {
-    		if ('key' in $$props) $$invalidate(20, key = $$props.key);
+    		if ('key' in $$props) $$invalidate(18, key = $$props.key);
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
-    		if ('position' in $$props) $$invalidate(21, position = $$props.position);
-    		if ('role' in $$props) $$invalidate(1, role = $$props.role);
+    		if ('position' in $$props) $$invalidate(1, position = $$props.position);
     	};
 
     	$$self.$capture_state = () => ({
     		select,
     		selectAll,
-    		pointer,
-    		uuidv4: v4,
     		Position,
     		findOrCreateStore,
     		derived,
     		key,
     		node,
     		position,
-    		role,
     		newNode,
     		newEdge,
     		hovered,
@@ -5902,21 +5749,15 @@ var app = (function () {
     		anchorHeight,
     		onEdgeMove,
     		onTouchMove,
-    		setAnchorPosition,
-    		setNewEdgeProps,
     		edgeSelected,
     		edgeIdSelected,
     		movementStore,
-    		mouseX,
-    		mouseY,
     		hoveredElement,
     		derivedEdges,
     		nodesStore,
     		moving,
     		moved,
     		edgeShouldMove,
-    		top,
-    		left,
     		renderEdge,
     		renderNewNode,
     		store,
@@ -5926,10 +5767,9 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('key' in $$props) $$invalidate(20, key = $$props.key);
+    		if ('key' in $$props) $$invalidate(18, key = $$props.key);
     		if ('node' in $$props) $$invalidate(0, node = $$props.node);
-    		if ('position' in $$props) $$invalidate(21, position = $$props.position);
-    		if ('role' in $$props) $$invalidate(1, role = $$props.role);
+    		if ('position' in $$props) $$invalidate(1, position = $$props.position);
     		if ('newNode' in $$props) newNode = $$props.newNode;
     		if ('newEdge' in $$props) $$invalidate(2, newEdge = $$props.newEdge);
     		if ('hovered' in $$props) $$invalidate(3, hovered = $$props.hovered);
@@ -5946,14 +5786,14 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*key*/ 1048576) {
+    		if ($$self.$$.dirty & /*key*/ 262144) {
     			$$invalidate(7, store = findOrCreateStore(key));
     		}
     	};
 
     	return [
     		node,
-    		role,
+    		position,
     		newEdge,
     		hovered,
     		moving,
@@ -5968,12 +5808,9 @@ var app = (function () {
     		hoveredElement,
     		derivedEdges,
     		nodesStore,
-    		top,
-    		left,
     		renderEdge,
     		renderNewNode,
     		key,
-    		position,
     		mousemove_handler,
     		mouseup_handler,
     		mousedown_handler,
@@ -5986,7 +5823,7 @@ var app = (function () {
     class EdgeAnchor extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$7, create_fragment$7, safe_not_equal, { key: 20, node: 0, position: 21, role: 1 }, null, [-1, -1]);
+    		init$1(this, options, instance$7, create_fragment$7, safe_not_equal, { key: 18, node: 0, position: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -6017,14 +5854,6 @@ var app = (function () {
     	}
 
     	set position(value) {
-    		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get role() {
-    		throw new Error("<EdgeAnchor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set role(value) {
     		throw new Error("<EdgeAnchor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -6428,8 +6257,8 @@ var app = (function () {
     /* svelvetrabbit/Nodes/index.svelte generated by Svelte v3.54.0 */
     const file$4 = "svelvetrabbit/Nodes/index.svelte";
 
-    // (88:4) {#if node.image}
-    function create_if_block$1(ctx) {
+    // (86:2) {#if node.image}
+    function create_if_block_1$1(ctx) {
     	let img;
     	let img_src_value;
 
@@ -6441,7 +6270,11 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
+<<<<<<< HEAD
     			add_location(img, file$4, 88, 6, 2477);
+=======
+    			add_location(img, file$4, 86, 4, 2396);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6466,9 +6299,48 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(86:2) {#if node.image}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (95:2) {#if node.clickCallback}
+    function create_if_block$1(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Click Me";
+    			add_location(button, file$4, 95, 4, 2586);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[22], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(88:4) {#if node.image}",
+    		source: "(95:2) {#if node.clickCallback}",
     		ctx
     	});
 
@@ -6481,6 +6353,7 @@ var app = (function () {
     	let t0;
     	let t1;
     	let t2;
+    	let t3;
     	let edgeanchor1;
     	let div_id_value;
     	let current;
@@ -6491,13 +6364,17 @@ var app = (function () {
     			props: {
     				key: /*key*/ ctx[1],
     				node: /*node*/ ctx[0],
-    				position: /*node*/ ctx[0].targetPosition || 'top',
-    				role: 'target'
+    				position: 'top'
     			},
     			$$inline: true
     		});
 
+<<<<<<< HEAD
     	let if_block = /*node*/ ctx[0].image && create_if_block$1(ctx);
+=======
+    	let if_block0 = /*node*/ ctx[0].image && create_if_block_1$1(ctx);
+    	let if_block1 = /*node*/ ctx[0].clickCallback && create_if_block$1(ctx);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     	const default_slot_template = /*#slots*/ ctx[19].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[18], null);
 
@@ -6505,8 +6382,7 @@ var app = (function () {
     			props: {
     				key: /*key*/ ctx[1],
     				node: /*node*/ ctx[0],
-    				position: /*node*/ ctx[0].sourcePosition || 'bottom',
-    				role: 'source'
+    				position: 'bottom'
     			},
     			$$inline: true
     		});
@@ -6516,12 +6392,14 @@ var app = (function () {
     			div = element("div");
     			create_component(edgeanchor0.$$.fragment);
     			t0 = space();
-    			if (if_block) if_block.c();
+    			if (if_block0) if_block0.c();
     			t1 = space();
-    			if (default_slot) default_slot.c();
+    			if (if_block1) if_block1.c();
     			t2 = space();
+    			if (default_slot) default_slot.c();
+    			t3 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", "Node svelte-1u7y2cz");
+    			attr_dev(div, "class", "Node svelte-6dblbg");
     			set_style(div, "left", /*node*/ ctx[0].position.x + "px");
     			set_style(div, "top", /*node*/ ctx[0].position.y + "px");
     			set_style(div, "width", /*node*/ ctx[0].width + "px");
@@ -6540,14 +6418,16 @@ var app = (function () {
     			insert_dev(target, div, anchor);
     			mount_component(edgeanchor0, div, null);
     			append_dev(div, t0);
-    			if (if_block) if_block.m(div, null);
+    			if (if_block0) if_block0.m(div, null);
     			append_dev(div, t1);
+    			if (if_block1) if_block1.m(div, null);
+    			append_dev(div, t2);
 
     			if (default_slot) {
     				default_slot.m(div, null);
     			}
 
-    			append_dev(div, t2);
+    			append_dev(div, t3);
     			mount_component(edgeanchor1, div, null);
     			current = true;
 
@@ -6555,10 +6435,17 @@ var app = (function () {
     				dispose = [
     					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[20], false, false, false),
     					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[21], false, false, false),
+<<<<<<< HEAD
     					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[22], false, false, false),
     					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[23], false, false, false),
     					listen_dev(div, "touchend", /*touchend_handler*/ ctx[24], false, false, false),
     					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[25], false, false, false)
+=======
+    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[24], false, false, false),
+    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[25], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[26], false, false, false)
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     				];
 
     				mounted = true;
@@ -6568,20 +6455,32 @@ var app = (function () {
     			const edgeanchor0_changes = {};
     			if (dirty & /*key*/ 2) edgeanchor0_changes.key = /*key*/ ctx[1];
     			if (dirty & /*node*/ 1) edgeanchor0_changes.node = /*node*/ ctx[0];
-    			if (dirty & /*node*/ 1) edgeanchor0_changes.position = /*node*/ ctx[0].targetPosition || 'top';
     			edgeanchor0.$set(edgeanchor0_changes);
 
     			if (/*node*/ ctx[0].image) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					if_block.m(div, t1);
+    					if_block0 = create_if_block_1$1(ctx);
+    					if_block0.c();
+    					if_block0.m(div, t1);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (/*node*/ ctx[0].clickCallback) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block$1(ctx);
+    					if_block1.c();
+    					if_block1.m(div, t2);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
 
     			if (default_slot) {
@@ -6602,7 +6501,6 @@ var app = (function () {
     			const edgeanchor1_changes = {};
     			if (dirty & /*key*/ 2) edgeanchor1_changes.key = /*key*/ ctx[1];
     			if (dirty & /*node*/ 1) edgeanchor1_changes.node = /*node*/ ctx[0];
-    			if (dirty & /*node*/ 1) edgeanchor1_changes.position = /*node*/ ctx[0].sourcePosition || 'bottom';
     			edgeanchor1.$set(edgeanchor1_changes);
 
     			if (!current || dirty & /*node*/ 1) {
@@ -6657,7 +6555,8 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_component(edgeanchor0);
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
     			if (default_slot) default_slot.d(detaching);
     			destroy_component(edgeanchor1);
     			mounted = false;
@@ -6750,6 +6649,10 @@ var app = (function () {
     		}
 
     		$$invalidate(3, moved = false);
+    	};
+
+    	const click_handler = e => {
+    		onNodeClick(e, node.id);
     	};
 
     	const touchmove_handler = e => {
@@ -6849,6 +6752,7 @@ var app = (function () {
     		slots,
     		mousemove_handler,
     		mouseup_handler,
+    		click_handler,
     		touchmove_handler,
     		touchstart_handler,
     		touchend_handler,
@@ -7209,7 +7113,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (118:6) {:else}
+    // (113:6) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
@@ -7261,14 +7165,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(118:6) {:else}",
+    		source: "(113:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (114:31) 
+    // (109:31) 
     function create_if_block_5(ctx) {
     	let node;
     	let t;
@@ -7324,14 +7228,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(114:31) ",
+    		source: "(109:31) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:6) {#if node.image && !node.data.label}
+    // (106:6) {#if node.image && !node.data.label}
     function create_if_block_4(ctx) {
     	let imagenode;
     	let t;
@@ -7380,14 +7284,18 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(111:6) {#if node.image && !node.data.label}",
+    		source: "(106:6) {#if node.image && !node.data.label}",
     		ctx
     	});
 
     	return block;
     }
 
+<<<<<<< HEAD
     // (119:8) <Node {node} {key} >
+=======
+    // (114:8) <Node {node} {key}>
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     function create_default_slot_1(ctx) {
     	let t_value = /*node*/ ctx[27].data.label + "";
     	let t;
@@ -7411,14 +7319,18 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
+<<<<<<< HEAD
     		source: "(119:8) <Node {node} {key} >",
+=======
+    		source: "(114:8) <Node {node} {key}>",
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		ctx
     	});
 
     	return block;
     }
 
-    // (115:8) <Node {node} {key} >
+    // (110:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
     	let raw_value = /*node*/ ctx[27].data.html + "";
@@ -7447,14 +7359,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(115:8) <Node {node} {key} >",
+    		source: "(110:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (110:4) {#each $nodesStore as node}
+    // (105:4) {#each $nodesStore as node}
     function create_each_block_1(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -7528,14 +7440,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(110:4) {#each $nodesStore as node}",
+    		source: "(105:4) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (145:2) {#if $backgroundStore}
+    // (142:2) {#if $backgroundStore}
     function create_if_block_3(ctx) {
     	let rect;
 
@@ -7545,7 +7457,11 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
+<<<<<<< HEAD
     			add_location(rect, file$2, 145, 4, 5416);
+=======
+    			add_location(rect, file$2, 142, 4, 5319);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -7564,14 +7480,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(145:2) {#if $backgroundStore}",
+    		source: "(142:2) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (158:6) {:else}
+    // (155:6) {:else}
     function create_else_block(ctx) {
     	let simplebezieredge;
     	let current;
@@ -7612,14 +7528,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(158:6) {:else}",
+    		source: "(155:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (156:37) 
+    // (153:37) 
     function create_if_block_2(ctx) {
     	let stepedge;
     	let current;
@@ -7660,14 +7576,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(156:37) ",
+    		source: "(153:37) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (154:43) 
+    // (151:43) 
     function create_if_block_1(ctx) {
     	let smoothstepedge;
     	let current;
@@ -7708,14 +7624,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(154:43) ",
+    		source: "(151:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (152:6) {#if edge.type === 'straight'}
+    // (149:6) {#if edge.type === 'straight'}
     function create_if_block(ctx) {
     	let straightedge;
     	let current;
@@ -7756,14 +7672,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(152:6) {#if edge.type === 'straight'}",
+    		source: "(149:6) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (151:4) {#each $derivedEdges as edge}
+    // (148:4) {#each $derivedEdges as edge}
     function create_each_block(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -7838,7 +7754,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(151:4) {#each $derivedEdges as edge}",
+    		source: "(148:4) {#each $derivedEdges as edge}",
     		ctx
     	});
 
@@ -7846,11 +7762,15 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	let div1;
     	let div0;
-    	let div0_class_value;
+    	let t0;
+    	let div2;
+    	let div1;
     	let div1_class_value;
-    	let t;
+    	let div2_class_value;
+    	let t1;
+    	let div3;
+    	let t2;
     	let svg;
     	let defs;
     	let pattern;
@@ -7889,14 +7809,18 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
     			div0 = element("div");
+    			t0 = space();
+    			div2 = element("div");
+    			div1 = element("div");
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].c();
     			}
 
-    			t = space();
+    			t1 = space();
+    			div3 = element("div");
+    			t2 = space();
     			svg = svg_element("svg");
     			defs = svg_element("defs");
     			pattern = svg_element("pattern");
@@ -7908,41 +7832,69 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
+<<<<<<< HEAD
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
     			add_location(div0, file$2, 108, 2, 4375);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
     			add_location(div1, file$2, 106, 0, 4257);
+=======
+    			attr_dev(div0, "class", "svelvet-container");
+    			add_location(div0, file$2, 98, 0, 4076);
+    			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
+    			add_location(div1, file$2, 103, 2, 4235);
+    			attr_dev(div2, "class", div2_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
+    			add_location(div2, file$2, 101, 0, 4116);
+    			attr_dev(div3, "class", "background-container");
+    			add_location(div3, file$2, 118, 0, 4811);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
+<<<<<<< HEAD
     			add_location(circle, file$2, 134, 6, 5204);
+=======
+    			add_location(circle, file$2, 131, 6, 5107);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", gridSize);
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
+<<<<<<< HEAD
     			add_location(pattern, file$2, 126, 4, 5045);
     			add_location(defs, file$2, 125, 2, 5034);
     			add_location(g, file$2, 149, 2, 5593);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6]);
     			add_location(svg, file$2, 124, 0, 4953);
+=======
+    			add_location(pattern, file$2, 123, 4, 4948);
+    			add_location(defs, file$2, 122, 2, 4937);
+    			add_location(g, file$2, 146, 2, 5496);
+    			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"));
+    			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[6]);
+    			add_location(svg, file$2, 121, 0, 4856);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
+    			insert_dev(target, div0, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
-    				each_blocks_1[i].m(div0, null);
+    				each_blocks_1[i].m(div1, null);
     			}
 
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div3, anchor);
+    			insert_dev(target, t2, anchor);
     			insert_dev(target, svg, anchor);
     			append_dev(svg, defs);
     			append_dev(defs, pattern);
@@ -7957,7 +7909,7 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[15]), false, true, false);
+    				dispose = listen_dev(div2, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[15]), false, true, false);
     				mounted = true;
     			}
     		},
@@ -7977,7 +7929,7 @@ var app = (function () {
     						each_blocks_1[i] = create_each_block_1(child_ctx);
     						each_blocks_1[i].c();
     						transition_in(each_blocks_1[i], 1);
-    						each_blocks_1[i].m(div0, null);
+    						each_blocks_1[i].m(div1, null);
     					}
     				}
 
@@ -7990,6 +7942,7 @@ var app = (function () {
     				check_outros();
     			}
 
+<<<<<<< HEAD
     			if (!current || dirty & /*key*/ 4 && div0_class_value !== (div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
     				attr_dev(div0, "class", div0_class_value);
     			}
@@ -7998,6 +7951,16 @@ var app = (function () {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
+=======
+    			if (!current || dirty & /*key*/ 4 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
+    				attr_dev(div1, "class", div1_class_value);
+    			}
+
+    			if (!current || dirty & /*key*/ 4 && div2_class_value !== (div2_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-n8qkrl"))) {
+    				attr_dev(div2, "class", div2_class_value);
+    			}
+
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     			if (!current || dirty & /*key*/ 4 && pattern_id_value !== (pattern_id_value = `background-${/*key*/ ctx[2]}`)) {
     				attr_dev(pattern, "id", pattern_id_value);
     			}
@@ -8080,9 +8043,13 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks_1, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(svg);
     			if (if_block) if_block.d();
     			destroy_each(each_blocks, detaching);
@@ -8125,15 +8092,7 @@ var app = (function () {
     	$$self.$$.on_destroy.push(() => $$unsubscribe_derivedEdges());
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('GraphView', slots, []);
-
-    	let d3 = {
-    		zoom,
-    		zoomTransform: transform,
-    		select,
-    		selectAll,
-    		pointer
-    	};
-
+    	let d3 = { zoom, zoomTransform: transform, select, selectAll };
     	let { nodesStore } = $$props;
     	validate_store(nodesStore, 'nodesStore');
     	$$subscribe_nodesStore();
@@ -8204,11 +8163,6 @@ var app = (function () {
     		d3.select(`.Node-${key}`).style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')').style('transform-origin', '0 0');
     	}
 
-    	d3.select('.Nodes').on('mousemove', event => {
-    		store.mouseX.set(d3.pointer(event)[0]);
-    		store.mouseY.set(d3.pointer(event)[1]);
-    	});
-
     	$$self.$$.on_mount.push(function () {
     		if (nodesStore === undefined && !('nodesStore' in $$props || $$self.$$.bound[$$self.$$.props['nodesStore']])) {
     			console.warn("<GraphView> was created without expected prop 'nodesStore'");
@@ -8255,7 +8209,6 @@ var app = (function () {
     		zoomTransform: transform,
     		select,
     		selectAll,
-    		pointer,
     		SimpleBezierEdge,
     		StraightEdge,
     		SmoothStepEdge,
@@ -8760,8 +8713,13 @@ var app = (function () {
     				nodes: /*initialNodes*/ ctx[1],
     				width: 800,
     				height: 800,
+<<<<<<< HEAD
     				initialZoom: 6,
     				initialLocation: /*initialNodes*/ ctx[1][1].position,
+=======
+    				initialZoom: 10,
+    				initialLocation: { x: 1000, y: 400 },
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     				edges: /*initialEdges*/ ctx[2],
     				background: true
     			},
@@ -8784,12 +8742,21 @@ var app = (function () {
     			t7 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1tky8bj");
+<<<<<<< HEAD
     			add_location(h1, file, 105, 1, 2141);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
     			add_location(a, file, 106, 14, 2178);
     			add_location(p, file, 106, 1, 2165);
     			attr_dev(main, "class", "svelte-1tky8bj");
     			add_location(main, file, 104, 0, 2133);
+=======
+    			add_location(h1, file, 104, 1, 2088);
+    			attr_dev(a, "href", "https://svelte.dev/tutorial");
+    			add_location(a, file, 105, 14, 2125);
+    			add_location(p, file, 105, 1, 2112);
+    			attr_dev(main, "class", "svelte-1tky8bj");
+    			add_location(main, file, 103, 0, 2080);
+>>>>>>> ad026cece560790b25f3b7ed87af4f705da1b121
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8855,8 +8822,6 @@ var app = (function () {
     			id: 2,
     			position: { x: 50, y: 300 },
     			data: { label: "borderColor" },
-    			targetPosition: 'left',
-    			sourcePosition: 'right',
     			width: 150,
     			height: 40,
     			borderColor: "red",
