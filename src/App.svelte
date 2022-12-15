@@ -1,6 +1,11 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
 	import BlueThing from "./BlueThing.svelte";
+	import w from "./BlueThing.svelte";
+	import h from "./BlueThing.svelte";
+
+	console.log('width ', w);
+	console.log('height ', h);
 
 		const initialNodes = [
 		  {
@@ -34,12 +39,15 @@
 		  {
 		    id: 4,
 		    position: { x: 250, y: 150 },
-		    data: { label: "Danny Pink" },
+		    data: { },
 		    width: 150,
-		    height: 40,
+		    height: 150,
 		    textColor: "white",
 		    borderColor: "transparent",
-		    bgColor: "#FF9ABD"
+		    bgColor: "black",
+				image: true,
+				src: "https://www.alimentarium.org/sites/default/files/media/image/2016-10/AL012-02%20carotte_0.jpg",
+				alt: "a carrot"
 		  },
 		  {
 		    id: 5,
@@ -76,14 +84,6 @@
 		    bgColor: "orange",
 		    borderRadius: 30
 		  },
-		  {
-		    id: 9,
-		    position: { x: 0, y: 0 },
-		    data: { label: "burp" },
-		    width: 0,
-		    height: 0,
-		    bgColor: "white"
-		  },
 		];
 
 		const initialEdges = [
@@ -106,7 +106,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet nodes={initialNodes} width={800} height={800} initialZoom={10} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
+	<Svelvet nodes={initialNodes} width={800} height={800} initialZoom={2} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
 </main>
 
 <style>
