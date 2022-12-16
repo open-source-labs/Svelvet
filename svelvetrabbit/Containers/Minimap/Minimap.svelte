@@ -3,6 +3,9 @@
     import {onMount, afterUpdate} from 'svelte'
     import GreyNode from './GreyNode.svelte';
     export let key
+    export let d3Scale;
+    export let yd3Translate;
+    export let xd3Translate;
     
     const svelvetStore = findOrCreateStore(key);
     const {nodesStore} = svelvetStore;
@@ -19,35 +22,12 @@
     let nodeWidth = mapMax -1;
     let heightRatio = 1;
     let widthRatio = 1;
-    let nodeMidpoint = {x:50, y:50}
-    let mapMidpoint = {x:50, y:50}
     let nodeXleftPosition = Infinity;
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
     
-    
-    // reactive object that updates every time nodesStore is updated
-    $: {
-    if(firstGo){
-    //sets initial position values for furthest nodes
-    $nodesStore.forEach((node) => {
-    nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
-    nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
-    nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
-    nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
-    });
-    // set height and width
-    nodeHeight = nodeYtopPosition - nodeYbottomPosition;
-    nodeWidth = nodeXrightPosition - nodeXleftPosition;
-
-    // reassign midpoint
-    nodeMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
-
-    //ends the first round
-    firstGo=!firstGo}
-    else{
-        //reassign node positions for reassignment within updated store
+    $:{
     nodeXleftPosition = Infinity;
     nodeYtopPosition = -Infinity;
     nodeYbottomPosition = Infinity;
@@ -59,11 +39,48 @@
     nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
     nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
     })
-    // sets the height, width, and midpoint of nodes after movement
+    // sets the height, width of nodes after movement
     nodeHeight = Math.abs(nodeYbottomPosition - nodeYtopPosition);
     nodeWidth = Math.abs(nodeXleftPosition -nodeXrightPosition);
-    nodeMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
-    }
+    
+    
+    
+    nodeHeight = nodeYtopPosition - nodeYbottomPosition;
+    nodeWidth = nodeXrightPosition - nodeXleftPosition;
+    
+    // reactive object that updates every time nodesStore is updated
+    // $: {
+    // if(firstGo){
+    // //sets initial position values for furthest nodes
+    // $nodesStore.forEach((node) => {
+    // nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
+    // nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
+    // nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
+    // nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
+    // });
+    // // set height and width
+    // nodeHeight = nodeYtopPosition - nodeYbottomPosition;
+    // nodeWidth = nodeXrightPosition - nodeXleftPosition;
+    // //ends the first round
+    // firstGo=!firstGo}
+    // else{
+    //     //reassign node positions for reassignment within updated store
+    // nodeXleftPosition = Infinity;
+    // nodeYtopPosition = -Infinity;
+    // nodeYbottomPosition = Infinity;
+    // nodeXrightPosition = -Infinity;
+
+    // $nodesStore.forEach((node) => {
+    // nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
+    // nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
+    // nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
+    // nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
+    // })
+    // // sets the height, width of nodes after movement
+    // nodeHeight = Math.abs(nodeYbottomPosition - nodeYtopPosition);
+    // nodeWidth = Math.abs(nodeXleftPosition -nodeXrightPosition);
+    
+    // }
     // console.log(nodeXleftPosition);
     // console.log(nodeXrightPosition);
     // console.log(nodeYbottomPosition);
@@ -84,9 +101,9 @@
     mapHeight = 100;
     mapWidth = 100;
     }
-    mapMidpoint = {x: mapWidth / 2, y: mapHeight / 2}
-    heightRatio = ((mapHeight-20) / nodeHeight).toFixed(2);
-    widthRatio = ((mapWidth-20) / nodeWidth).toFixed(2);
+    
+    heightRatio = ((mapHeight-25) / nodeHeight).toFixed(2);
+    widthRatio = ((mapWidth-25) / nodeWidth).toFixed(2);
     
     }
     //get a scale factor from nodeheight and width
@@ -96,9 +113,10 @@
     //
     
     </script>
-    <div class={`miniMap`} style="height:{mapHeight}px; width:{mapWidth}px">
+    <div class={`miniMap miniMap-${key}`} style="height:{mapHeight}px; width:{mapWidth}px">
+        <div class='viewBox' style="height: {10}px; width:{10}px"></div>
         {#each $nodesStore as node}
-          <GreyNode {node} {key} {heightRatio} {widthRatio} {mapMidpoint} {nodeMidpoint}></GreyNode>
+          <GreyNode {node} {key} {heightRatio} {widthRatio} {nodeXleftPosition} {nodeYbottomPosition}></GreyNode>
         {/each}
     </div>
     <style>

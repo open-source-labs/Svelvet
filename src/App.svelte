@@ -11,16 +11,7 @@
 		//     bgColor: "white"
 		//   })
 		// }
-		// for(let i=0; i < 100; i++){
-		// 	initialNodes.push({
-		//     id: i+100,
-		//     position: { x: 0+(i*50), y: 0+(i*50) },
-		//     data: { label: "default styling" },
-		//     width: 50,
-		//     height: 50,
-		//     bgColor: "white"
-		//   })
-		// }
+		// // 
 		// for(let i=0; i < 100; i++){
 		// 	initialNodes.push({
 		//     id: i+200,
@@ -39,7 +30,8 @@
 		    data: { label: "default styling" },
 		    width: 150,
 		    height: 40,
-		    bgColor: "white"
+		    bgColor: "white",
+			clickCallback: node => console.log(node)
 		  },
 		  {
 		    id: 2,

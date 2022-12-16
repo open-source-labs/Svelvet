@@ -30,7 +30,8 @@
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
-
+  let xd3Translate = initialLocation.x;
+  let yd3Translate = initialLocation.y;
   function zoomInit() {
     //d3Scale.set(e.transform.k);
     //set default zoom logic
@@ -74,6 +75,8 @@
           return;
   //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
   d3Scale.set(e.transform.k);
+  xd3Translate = e.transform.x;
+  yd3Translate = e.transform.y
       // should not run d3.select below if backgroundStore is false
       if ($backgroundStore) {
           d3.select(`#background-${key}`)
@@ -104,7 +107,7 @@
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<Minimap {key}/>
+<Minimap {key} {d3Scale} {xd3Translate} {yd3Translate}/>
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
