@@ -12,10 +12,11 @@
     // variable to first initialize the size of the map
     let firstGo = true;
     //placeholdervalues for initialization
-    let mapWidth = 100;
-    let mapHeight = 100;
-    let nodeHeight = 100;
-    let nodeWidth = 100;
+    let mapMax = 100
+    let mapWidth = mapMax;
+    let mapHeight = mapMax;
+    let nodeHeight = mapMax-10;
+    let nodeWidth = mapMax -1;
     let heightRatio = 1;
     let widthRatio = 1;
     let nodeMidpoint = {x:50, y:50}
@@ -24,6 +25,7 @@
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
+    
     
     // reactive object that updates every time nodesStore is updated
     $: {
@@ -71,32 +73,32 @@
     // console.log(nodeHeight)
     //  console.log(nodeWidth)
 
-        if(nodeHeight>nodeWidth){
-        mapHeight = 100;
-        mapWidth = Math.max((nodeWidth.toFixed(0)*100)/nodeHeight.toFixed(0), 25);
-        }
-        else if(nodeHeight<nodeWidth){
-        mapWidth = 100;
-        mapHeight = Math.max((nodeHeight.toFixed(0)*100)/nodeWidth.toFixed(0), 25)
-        }else{
-        mapHeight = 100;
-        mapWidth = 100;
-        }
-        mapMidpoint = {x: nodeWidth / 2, y: nodeHeight / 2}
-        heightRatio = (mapHeight / nodeHeight).toFixed(2);
-        widthRatio = (mapWidth / nodeWidth).toFixed(2);
-        console.log(heightRatio);
-        console.log(widthRatio)
+    if(nodeHeight>nodeWidth){
+    mapHeight = 100;
+    mapWidth = Math.max((nodeWidth.toFixed(0)*100)/nodeHeight.toFixed(0), 25);
+    }
+    else if(nodeHeight<nodeWidth){
+    mapWidth = 100;
+    mapHeight = Math.max((nodeHeight.toFixed(0)*100)/nodeWidth.toFixed(0), 25)
+    }else{
+    mapHeight = 100;
+    mapWidth = 100;
+    }
+    mapMidpoint = {x: mapWidth / 2, y: mapHeight / 2}
+    heightRatio = ((mapHeight-20) / nodeHeight).toFixed(2);
+    widthRatio = ((mapWidth-20) / nodeWidth).toFixed(2);
+    
     }
     //get a scale factor from nodeheight and width
     //use that scaling factor to make virtual representation of nodes bigger or smaller 
     //depending on the height and width of the overall structure including all nodes
     //
     //
+    
     </script>
     <div class={`miniMap`} style="height:{mapHeight}px; width:{mapWidth}px">
         {#each $nodesStore as node}
-          <GreyNode {node} {key}></GreyNode>
+          <GreyNode {node} {key} {heightRatio} {widthRatio} {mapMidpoint} {nodeMidpoint}></GreyNode>
         {/each}
     </div>
     <style>
@@ -114,5 +116,4 @@
         z-index:10;
         box-shadow: 2px 2px 7px rgb(77, 77, 77);
     }
-    
     </style>
