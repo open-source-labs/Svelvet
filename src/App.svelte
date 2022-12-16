@@ -123,10 +123,17 @@
 			max-width: none;
 		}
 	}
+
 	:global(.customClass) {
 		background-color: darkcyan;
 		color: white;
-		
+		border-radius: 50%;
+	}
 
+	:global(.newNode) {
+		background-color: darkcyan;
+		color: white;
+		border-radius: 35%;
+		/* box-shadow: 1px 1px 1px 4px black; */
 	}
 </style>

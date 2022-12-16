@@ -27,24 +27,48 @@
     e.preventDefault();
     document.querySelector('.edit-node-modal').style.display = 'flex';
   }
+  let customCssText;
   const getStyles = (e, node) => {
     const nodeStyles = {};
     const customStyles = {};
     const nodeEl = document.querySelector(`#svelvet-${node.id}`);
     const customEl = document.querySelector('.customClass');
-    for (const style in customEl.style) {
-      if (customEl.style[style] !== '') console.log(style);
-    }
-    console.log(`custom styles for ${node.id}`, customEl.style);
-    console.log('element', nodeEl);
+
+    // console.log('node with custom class', customEl);
+
+    // for (const style in customEl.style) {
+    //   if (customEl.style[style] !== '') console.log(style);
+    // }
+
+    // console.log(`custom styles for ${node.id}`, customEl.style.cssText);
+    // console.log('element', nodeEl);
     
-    // const styles = getComputedStyle(nodeEl);
+    // // const styles = getComputedStyle(nodeEl);
     const styles = nodeEl.style;
-    console.log(`styles for ${node.id}`, styles);
-    
+    // console.log(`styles for ${node.id}`, styles.cssText);
+    console.log(document.styleSheets);
+    const styleRules = document.styleSheets[1].cssRules;
+    console.log(styleRules);
+    for (const rule in styleRules) {
+      console.log(styleRules[rule]);
+    }
+
+    console.log(Object.values(styleRules));
+    Object.values(styleRules).forEach(rule => {
+      if(rule.selectorText === '.customClass') {
+        const initialText = rule.cssText;
+        console.log('index of bracket', initialText.indexOf('{'));
+        const innerText = initialText.substring(15, initialText.length - 2);
+        console.log(innerText);
+        console.log('custom rule : ', rule.cssText);
+        customCssText = innerText;
+      }
+      // if(rule.selectorText === `.Node.svelte-${key}`) console.log('Node styles: ', rule.cssText);
+    })
   }
+
   afterUpdate((e) => {
-    getStyles(e, node);
+    if (node.className) getStyles(e, node);
   })
 </script>
 
@@ -112,13 +136,14 @@
     background-color: {node.bgColor};
     border-color: {node.borderColor};
     border-radius: {node.borderRadius}px;
-    color: {node.textColor};"
+    color: {node.textColor};
+    {customCssText}"
   id="svelvet-{node.id}"
 >
 
 <!-- this anchor is the target-->
-<EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
-<EditModal {node} {key} /> 
+  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+  <EditModal {node} {key} /> 
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
       <img

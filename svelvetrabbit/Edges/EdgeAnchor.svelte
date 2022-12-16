@@ -92,7 +92,7 @@
   */  
   const renderNewNode = (event, edge) => {
     event.preventDefault();
-    const [x, y] = setNewEdgeProps(role, position, node)
+    const [x, y] = setNewEdgeProps(role, position, node);
     let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
     
     // setting newNode variable to a 'prototype' node
@@ -102,6 +102,7 @@
       data: { label: "newNode" }, // need ways to change the rest of the properties
       width: 100,
       height: 40,
+      className: 'newNode',
       bgColor: "white"
     };
     if (position === 'left') {
