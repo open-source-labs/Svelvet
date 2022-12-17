@@ -8,13 +8,13 @@
   export let node;
   export let position;
   export let role;
+  // export let nodeWidth = node.width;
+  // export let nodeHeight = node.height
   let newNode;
   let newEdge;
   let hovered = false;
   let anchorWidth = 10;
   let anchorHeight = 10;
-  // let top;
-  // let left;
   
   const {
       onEdgeMove,
@@ -23,9 +23,6 @@
       setNewEdgeProps,
       edgeSelected,
       edgeIdSelected,
-      movementStore,
-      mouseX,
-      mouseY,
       hoveredElement,
       derivedEdges,
       nodesStore
@@ -37,23 +34,9 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
+  console.log('node from Anchor', node);
   const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
   // const [x, y] = setNewEdgeProps(role, position, node)
-
-
-  // let d3 = {
-  //     select,
-  //     pointer
-  // };
-  /* This keeps track of the cursors current position, taking into account d3 transformations,
-  updating the mouseX and mouseY values in the store
-  */
-  // d3.select('.Nodes') 
-  //   .on('mousemove', (event) => {
-  //     store.mouseX.set(d3.pointer(event)[0]);
-  //     store.mouseY.set(d3.pointer(event)[1]);
-  //   })
-
 
   /*
   This is the function that renders a new edge when an anchor is clicked
@@ -61,8 +44,6 @@
   const renderEdge = (e) => {
     const [x, y] = setNewEdgeProps(role, position, node)
     e.preventDefault(); // preventing default behavior, not sure if necessary
-      // console.log('correct x and y', node.position.x + (node.width / 2), node.position.y + node.height)
-      // console.log('mouse x and y', $mouseX, $mouseY);
     console.log('role', role);
     // Setting the newEdge variable to an edge prototype
     newEdge = role === 'source' ? { 
@@ -85,6 +66,7 @@
     console.log('role', role, 'x, y', x, y);
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
+
 
   /*
   This is the function that renders a new node when the mouse is released

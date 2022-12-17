@@ -1,11 +1,14 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import {afterUpdate} from 'svelte';
+  import {onMount, afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   import EditModal from './EditModal.svelte';
   export let node;
   export let key;
-
+  let customCssText = '';
+  let nodeWidth;
+  let nodeHeight;
+  $: thisNode = node;
   const {
     onNodeMove,
     onNodeClick,
@@ -15,64 +18,78 @@
     movementStore,
     snapgrid, 
     snapResize,
+    nodesStore,
     derivedEdges
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
+  $: store = findOrCreateStore(key);
+  $: {
+    console.log($nodesStore.filter(n => n.id === node.id)[0]);
+  }
+  // console.log(thisNode);
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
+  console.log('nodesStore from Nodes', $nodesStore);
 
+  // modal for editing nodes
   const openEditModal = (e) => {
     e.preventDefault();
     document.querySelector('.edit-node-modal').style.display = 'flex';
   }
-  let customCssText;
+  
+  // Getting the styles for a custom class, and adjusting the height and width if necessary
   const getStyles = (e, node) => {
-    const nodeStyles = {};
-    const customStyles = {};
-    const nodeEl = document.querySelector(`#svelvet-${node.id}`);
-    const customEl = document.querySelector('.customClass');
-
-    // console.log('node with custom class', customEl);
-
-    // for (const style in customEl.style) {
-    //   if (customEl.style[style] !== '') console.log(style);
-    // }
-
-    // console.log(`custom styles for ${node.id}`, customEl.style.cssText);
-    // console.log('element', nodeEl);
-    
-    // // const styles = getComputedStyle(nodeEl);
-    const styles = nodeEl.style;
-    // console.log(`styles for ${node.id}`, styles.cssText);
-    console.log(document.styleSheets);
     const styleRules = document.styleSheets[1].cssRules;
-    console.log(styleRules);
-    for (const rule in styleRules) {
-      console.log(styleRules[rule]);
-    }
-
-    console.log(Object.values(styleRules));
+    
     Object.values(styleRules).forEach(rule => {
-      if(rule.selectorText === '.customClass') {
+      if(rule.selectorText === `.${node.className}`) {
         const initialText = rule.cssText;
-        console.log('index of bracket', initialText.indexOf('{'));
-        const innerText = initialText.substring(15, initialText.length - 2);
-        console.log(innerText);
-        console.log('custom rule : ', rule.cssText);
-        customCssText = innerText;
+        const i = initialText.indexOf('{');
+        const innerText = initialText.substring(i + 1, initialText.length - 1);
+        customCssText += innerText;
+        const arr = innerText.split(' ');
+        // Adjusting the width and height if they are set via the custom class
+        arr.forEach((str, i) => {
+          if (str === 'width:') {
+            nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
+            const w = parseInt(arr[i+1]);
+            thisNode.width = w;
+          }
+          if (str === 'height:') {
+            nodeHeight = str.concat(arr[i+1]);
+            const h = parseInt(arr[i+1]);
+            // const h = parseInt(nodeHeight.match(/\d+/g)[0])
+            thisNode.height = h;
+          }
+        })
+        console.log('node from Nodes', node);
       }
-      // if(rule.selectorText === `.Node.svelte-${key}`) console.log('Node styles: ', rule.cssText);
     })
+     const newStore = $nodesStore.map(n => {
+      if (node.id === n.id) {
+        n.width = thisNode.width;
+        n.height = thisNode.height;
+        return n;
+      } else return n;
+     })
+     console.log($nodesStore);
+     console.log(newStore);
+     store.nodesStore.set(newStore);
   }
 
-  afterUpdate((e) => {
+  onMount((e) => {
     if (node.className) getStyles(e, node);
   })
+  // afterUpdate((e) => {
+  //   if (node.className) getStyles(e, node);
+  // })
+  // console.log('thisNode', thisNode);
 </script>
 
 <svelte:window
+
   on:mousemove={(e) => {
     e.preventDefault();
     if (shouldMove) {
@@ -80,6 +97,7 @@
       moved = true;
     }
   }}
+
   on:mouseup={(e) => {
     // Note: mouseup moved outside of div to prevent issue where node becomes magnetized to cursor after leaving visible boundaries, github issues #120 & #125
     if ($snapgrid) {
@@ -96,9 +114,12 @@
     }
     moved = false;
   }}
+
 />
 
 <div
+  on:click={(e) => console.log(node)}
+
   on:dblclick={(e) => {
     e.preventDefault();
     console.log(node);
@@ -128,21 +149,24 @@
     $nodeIdSelected = node.id;
     $nodeSelected = true;
   }}
+
   class="Node {node.className || ''}"
+  
   style="left: {node.position.x}px;
     top: {node.position.y}px;
-    width: {node.width}px;
-    height: {node.height}px;
+    width: {thisNode.width || node.width}px;
+    height: {thisNode.height || node.height}px;
     background-color: {node.bgColor};
     border-color: {node.borderColor};
     border-radius: {node.borderRadius}px;
     color: {node.textColor};
     {customCssText}"
+
   id="svelvet-{node.id}"
 >
 
 <!-- this anchor is the target-->
-  <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
+  <EdgeAnchor {key} node={thisNode} {nodeWidth} {nodeHeight} position={node.targetPosition || 'top'} role={'target'} />
   <EditModal {node} {key} /> 
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
@@ -159,7 +183,7 @@
     {/if} -->
     <slot />
     <!-- this anchor is the source-->
-    <EdgeAnchor {key} {node} position={node.sourcePosition || 'bottom'} role={'source'} />
+    <EdgeAnchor {key} node={thisNode} {nodeWidth} {nodeHeight} position={node.sourcePosition || 'bottom'} role={'source'} />
 
 </div>
 

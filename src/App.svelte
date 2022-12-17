@@ -100,11 +100,15 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={10} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
+	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={5} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
 </main>
 
 <style>
 	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
@@ -128,6 +132,9 @@
 		background-color: darkcyan;
 		color: white;
 		border-radius: 50%;
+		width: 100px;
+		height: 60px;
+		border-color: cyan;
 	}
 
 	:global(.newNode) {
