@@ -41,7 +41,7 @@
   
   // Getting the styles for a custom class, and adjusting the height and width if necessary
   const getStyles = (e, node) => {
-    const styleRules = document.styleSheets[1].cssRules;
+    const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
     
     Object.values(styleRules).forEach(rule => {
       if(rule.selectorText === `.${node.className}`) {
@@ -54,11 +54,11 @@
         arr.forEach((str, i) => {
           if (str === 'width:') {
             nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
-            const w = parseInt(arr[i+1]);
+            const w = parseInt(arr[i+1]); // getting the number for the width
             thisNode.width = w;
           }
           if (str === 'height:') {
-            nodeHeight = str.concat(arr[i+1]);
+            nodeHeight = str.concat(arr[i+1]); // same as with the width
             const h = parseInt(arr[i+1]);
             // const h = parseInt(nodeHeight.match(/\d+/g)[0])
             thisNode.height = h;
