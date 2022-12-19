@@ -146,6 +146,23 @@ export function findOrCreateStore(key) {
             */
     };
 
+    const doubleClickedNode = (e, id) => {
+        const answer = confirm('are u sure u want to delete this node?')
+        //if confirm yes, access the nodes store in the svelvet store and return a filtered node array accounting for all nodes except the selected node
+        if (answer) { 
+          coreSvelvetStore.nodesStore.update((n) => {
+              return n.filter(node => node.id !== id);
+              //currently when you delete a node, certain props are being passed down to other nodes on re-render... for example, when delete node id 1, node id receives a background color of red ( the same as node id of 2)
+              //when a higher order node gets deleted, its props gets passed down to lower order nodes?
+          })
+        //if confirm yes, also remove all edges connected to selected node
+        //access the edges store and return a filtered edges array without all edges connected to selected node
+        coreSvelvetStore.edgesStore.update((e) => {
+          return e.filter(edge => edge.source !== id || edge.target !== id)
+        })
+      }
+    }
+
     const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
     // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
     const onNodeClick = (e, nodeID) => {
@@ -366,6 +383,7 @@ export function findOrCreateStore(key) {
         onNodeClick,
         setAnchorPosition,
         setNewEdgeProps,
+        doubleClickedNode,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;

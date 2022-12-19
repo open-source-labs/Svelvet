@@ -5382,6 +5382,23 @@ var app = (function () {
                 */
         };
 
+        const doubleClickedNode = (e, id) => {
+            const answer = confirm('are u sure u want to delete this node?');
+            //if confirm yes, access the nodes store in the svelvet store and return a filtered node array accounting for all nodes except the selected node
+            if (answer) { 
+              coreSvelvetStore.nodesStore.update((n) => {
+                  return n.filter(node => node.id !== id);
+                  //currently when you delete a node, certain props are being passed down to other nodes on re-render... for example, when delete node id 1, node id receives a background color of red ( the same as node id of 2)
+                  //when a higher order node gets deleted, its props gets passed down to lower order nodes?
+              });
+            //if confirm yes, also remove all edges connected to selected node
+            //access the edges store and return a filtered edges array without all edges connected to selected node
+            coreSvelvetStore.edgesStore.update((e) => {
+              return e.filter(edge => edge.source !== id || edge.target !== id)
+            });
+          }
+        };
+
         const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
         // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
         const onNodeClick = (e, nodeID) => {
@@ -5602,6 +5619,7 @@ var app = (function () {
             onNodeClick,
             setAnchorPosition,
             setNewEdgeProps,
+            doubleClickedNode,
             derivedEdges
         };
         svelvetStores[key] = svelvetStore;
@@ -6723,7 +6741,7 @@ var app = (function () {
     const { Object: Object_1, console: console_1$1 } = globals;
     const file$5 = "svelvetrabbit/Nodes/index.svelte";
 
-    // (172:4) {#if node.image}
+    // (174:4) {#if node.image}
     function create_if_block$1(ctx) {
     	let img;
     	let img_src_value;
@@ -6736,7 +6754,7 @@ var app = (function () {
     			set_style(img, "width", /*node*/ ctx[0].width * 0.75 + "px");
     			set_style(img, "height", /*node*/ ctx[0].height * 0.75 + "px");
     			set_style(img, "overflow", "hidden");
-    			add_location(img, file$5, 172, 6, 4940);
+    			add_location(img, file$5, 174, 6, 5132);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -6763,7 +6781,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(172:4) {#if node.image}",
+    		source: "(174:4) {#if node.image}",
     		ctx
     	});
 
@@ -6837,7 +6855,7 @@ var app = (function () {
     			attr_dev(div, "class", div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-1u7y2cz");
     			attr_dev(div, "style", div_style_value = "left: " + /*node*/ ctx[0].position.x + "px; top: " + /*node*/ ctx[0].position.y + "px; width: " + (/*thisNode*/ ctx[7].width || /*node*/ ctx[0].width) + "px; height: " + (/*thisNode*/ ctx[7].height || /*node*/ ctx[0].height) + "px; background-color: " + /*node*/ ctx[0].bgColor + "; border-color: " + /*node*/ ctx[0].borderColor + "; border-radius: " + /*node*/ ctx[0].borderRadius + "px; color: " + /*node*/ ctx[0].textColor + "; " + /*customCssText*/ ctx[3]);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
-    			add_location(div, file$5, 119, 0, 3720);
+    			add_location(div, file$5, 120, 0, 3876);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6864,11 +6882,11 @@ var app = (function () {
     					listen_dev(window, "mousemove", /*mousemove_handler*/ ctx[27], false, false, false),
     					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[28], false, false, false),
     					listen_dev(div, "click", /*click_handler*/ ctx[29], false, false, false),
-    					listen_dev(div, "dblclick", /*dblclick_handler*/ ctx[30], false, false, false),
-    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[31], false, false, false),
-    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[32], false, false, false),
-    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[33], false, false, false),
-    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[34], false, false, false)
+    					listen_dev(div, "touchmove", /*touchmove_handler*/ ctx[30], false, false, false),
+    					listen_dev(div, "touchstart", /*touchstart_handler*/ ctx[31], false, false, false),
+    					listen_dev(div, "touchend", /*touchend_handler*/ ctx[32], false, false, false),
+    					listen_dev(div, "mousedown", /*mousedown_handler*/ ctx[33], false, false, false),
+    					listen_dev(div, "dblclick", /*dblclick_handler*/ ctx[34], false, false, false)
     				];
 
     				mounted = true;
@@ -6990,7 +7008,7 @@ var app = (function () {
     	let customCssText = '';
     	let nodeWidth;
     	let nodeHeight;
-    	const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected, movementStore, snapgrid, snapResize, nodesStore, derivedEdges } = findOrCreateStore(key);
+    	const { onNodeMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected, movementStore, snapgrid, snapResize, nodesStore, derivedEdges, doubleClickedNode } = findOrCreateStore(key);
     	validate_store(nodeSelected, 'nodeSelected');
     	component_subscribe($$self, nodeSelected, value => $$invalidate(11, $nodeSelected = value));
     	validate_store(nodeIdSelected, 'nodeIdSelected');
@@ -7020,7 +7038,7 @@ var app = (function () {
 
     	// Getting the styles for a custom class, and adjusting the height and width if necessary
     	const getStyles = (e, node) => {
-    		const styleRules = document.styleSheets[1].cssRules;
+    		const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
 
     		Object.values(styleRules).forEach(rule => {
     			if (rule.selectorText === `.${node.className}`) {
@@ -7034,12 +7052,12 @@ var app = (function () {
     				arr.forEach((str, i) => {
     					if (str === 'width:') {
     						$$invalidate(4, nodeWidth = str.concat(arr[i + 1])); // go through the array and join width and the number
-    						const w = parseInt(arr[i + 1]);
+    						const w = parseInt(arr[i + 1]); // getting the number for the width
     						$$invalidate(7, thisNode.width = w, thisNode);
     					}
 
     					if (str === 'height:') {
-    						$$invalidate(5, nodeHeight = str.concat(arr[i + 1]));
+    						$$invalidate(5, nodeHeight = str.concat(arr[i + 1])); // same as with the width
     						const h = parseInt(arr[i + 1]);
 
     						// const h = parseInt(nodeHeight.match(/\d+/g)[0])
@@ -7117,12 +7135,6 @@ var app = (function () {
 
     	const click_handler = e => console.log(node);
 
-    	const dblclick_handler = e => {
-    		e.preventDefault();
-    		console.log(node);
-    		openEditModal(e);
-    	};
-
     	const touchmove_handler = e => {
     		if (shouldMove) {
     			onTouchMove(e, node.id);
@@ -7145,6 +7157,13 @@ var app = (function () {
     		$$invalidate(2, moving = true);
     		set_store_value(nodeIdSelected, $nodeIdSelected = node.id, $nodeIdSelected);
     		set_store_value(nodeSelected, $nodeSelected = true, $nodeSelected);
+    	};
+
+    	const dblclick_handler = e => {
+    		e.preventDefault();
+    		set_store_value(nodeSelected, $nodeSelected = true, $nodeSelected);
+    		set_store_value(nodeIdSelected, $nodeIdSelected = node.id, $nodeIdSelected);
+    		doubleClickedNode(e, node.id);
     	};
 
     	$$self.$$set = $$props => {
@@ -7174,6 +7193,7 @@ var app = (function () {
     		snapResize,
     		nodesStore,
     		derivedEdges,
+    		doubleClickedNode,
     		moving,
     		moved,
     		openEditModal,
@@ -7249,7 +7269,7 @@ var app = (function () {
     		snapgrid,
     		snapResize,
     		nodesStore,
-    		openEditModal,
+    		doubleClickedNode,
     		$nodesStore,
     		$movementStore,
     		$$scope,
@@ -7257,11 +7277,11 @@ var app = (function () {
     		mousemove_handler,
     		mouseup_handler,
     		click_handler,
-    		dblclick_handler,
     		touchmove_handler,
     		touchstart_handler,
     		touchend_handler,
-    		mousedown_handler
+    		mousedown_handler,
+    		dblclick_handler
     	];
     }
 

@@ -19,7 +19,8 @@
     snapgrid, 
     snapResize,
     nodesStore,
-    derivedEdges
+    derivedEdges,
+    doubleClickedNode
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
   $: store = findOrCreateStore(key);
@@ -120,12 +121,6 @@
 <div
   on:click={(e) => console.log(node)}
 
-  on:dblclick={(e) => {
-    e.preventDefault();
-    console.log(node);
-    openEditModal(e)
-  }}
-
   on:touchmove={(e) => {
     if (shouldMove) {
       onTouchMove(e, node.id);
@@ -149,6 +144,13 @@
     $nodeIdSelected = node.id;
     $nodeSelected = true;
   }}
+
+on:dblclick={(e) => {
+  e.preventDefault();
+  $nodeSelected = true;
+  $nodeIdSelected = node.id;
+  doubleClickedNode(e, node.id);
+}}
 
   class="Node {node.className || ''}"
   
