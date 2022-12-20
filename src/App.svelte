@@ -128,7 +128,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={500} height={500} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'pink'} background/>
+	<Svelvet  nodes={initialNodes} width={500} height={500} initialZoom={4} initialLocation={{x:0, y:0}} edges={initialEdges} bgColor={'pink'} background minimap/>
 </main>
 
 <style>

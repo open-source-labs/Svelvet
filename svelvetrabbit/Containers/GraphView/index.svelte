@@ -1,5 +1,5 @@
 <script>import { onMount } from 'svelte';
-  import { zoom, zoomTransform } from 'd3-zoom';
+  import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
   import { select, selectAll, pointer } from 'd3-selection';
   import SimpleBezierEdge from '../../Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '../../Edges/StraightEdge.svelte';
@@ -14,6 +14,7 @@
   let d3 = {
       zoom,
       zoomTransform,
+      zoomIdentity,
       select,
       selectAll,
       pointer
@@ -24,14 +25,14 @@
   export let key;
   export let initialZoom;
   export let initialLocation;
+  export let minimap;
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, mouseX, mouseY } = svelvetStore;
+  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale} = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
-  let xd3Translate = initialLocation.x;
-  let yd3Translate = initialLocation.y;
+  let d3Translate = {x: 0, y: 0, k:1};
   function zoomInit() {
     //d3Scale.set(e.transform.k);
     //set default zoom logic
@@ -45,7 +46,10 @@
       //zooms in on selected point
       .transition().duration(0)
       .call(d3Zoom.scaleBy, Number.parseFloat(.4 + (.16*initialZoom)).toFixed(2))
-      
+
+      d3Translate = d3.zoomIdentity.translate(initialLocation.x, initialLocation.y).scale(Number.parseFloat(.4 + (.16*initialZoom)).toFixed(2));
+      console.log(d3Translate)
+
       d3.select(`.Nodes-${key}`)
       .transition().duration(0)
       .call(d3Zoom.translateTo, 0, 0)
@@ -75,8 +79,6 @@
           return;
   //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
   d3Scale.set(e.transform.k);
-  xd3Translate = e.transform.x;
-  yd3Translate = e.transform.y
       // should not run d3.select below if backgroundStore is false
       if ($backgroundStore) {
           d3.select(`#background-${key}`)
@@ -93,6 +95,8 @@
       d3.select(`.Edges-${key} g`).attr('transform', e.transform);
       // transform div elements (nodes)
       let transform = d3.zoomTransform(this);
+      d3Translate = transform;
+      console.log(d3Translate)
       // selects and transforms all node divs from class 'Node' and performs transformation
       d3.select(`.Node-${key}`)
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
@@ -107,7 +111,9 @@
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<Minimap {key} {d3Scale} {xd3Translate} {yd3Translate}/>
+{#if minimap}
+  <Minimap {key} {minimap} {d3Translate}/>
+{/if}
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>

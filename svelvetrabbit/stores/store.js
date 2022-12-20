@@ -22,7 +22,7 @@ export const coreSvelvetStore = {
     mouseY: writable(1),
     hoveredElement: writable(null),
     initZoom: writable(4),
-    initLocation: writable({x:0, y:0})
+    initLocation: writable({x:0, y:0}),
 };
 
 
