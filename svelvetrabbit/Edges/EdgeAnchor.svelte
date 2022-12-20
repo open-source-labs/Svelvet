@@ -1,20 +1,20 @@
 <script>
-  import { select, selectAll, pointer } from 'd3-selection';
   import { v4 as uuidv4 } from 'uuid';
-  import { Position } from '../types/utils';
   import { findOrCreateStore } from '../stores/store';
-  import { derived } from 'svelte/store';
+  import { beforeUpdate } from 'svelte';
   export let key;
   export let node;
   export let position;
   export let role;
+  export let width;
+  export let height;
   let newNode;
   let newEdge;
   let hovered = false;
   let anchorWidth = 10;
   let anchorHeight = 10;
-  // let top;
-  // let left;
+  let top;
+  let left;
 
   const {
       onEdgeMove,
@@ -23,9 +23,6 @@
       setNewEdgeProps,
       edgeSelected,
       edgeIdSelected,
-      movementStore,
-      mouseX,
-      mouseY,
       hoveredElement,
       derivedEdges,
       nodesStore
@@ -37,23 +34,6 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
-  const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
-  // const [x, y] = setNewEdgeProps(role, position, node)
-
-
-  // let d3 = {
-  //     select,
-  //     pointer
-  // };
-  /* This keeps track of the cursors current position, taking into account d3 transformations,
-  updating the mouseX and mouseY values in the store
-  */
-  // d3.select('.Nodes') 
-  //   .on('mousemove', (event) => {
-  //     store.mouseX.set(d3.pointer(event)[0]);
-  //     store.mouseY.set(d3.pointer(event)[1]);
-  //   })
-
 
   /*
   This is the function that renders a new edge when an anchor is clicked
@@ -61,9 +41,6 @@
   const renderEdge = (e) => {
     const [x, y] = setNewEdgeProps(role, position, node)
     e.preventDefault(); // preventing default behavior, not sure if necessary
-      // console.log('correct x and y', node.position.x + (node.width / 2), node.position.y + node.height)
-      // console.log('mouse x and y', $mouseX, $mouseY);
-    console.log('role', role);
     // Setting the newEdge variable to an edge prototype
     newEdge = role === 'source' ? { 
       id: uuidv4(), // need better way to generate id, uuid?
@@ -72,19 +49,17 @@
       targetX: x,
       targetY: y,
       animate: true,
-      label: "newEdge" 
     } : { 
       id: uuidv4(), // need better way to generate id, uuid?
       source: null, // until the mouse is released the source will be set to null
       target: node.id, // the target is the node that the anchor is on
       sourceX: x,
       sourceY: y,
-      animate: true,
-      label: "newEdge" 
+      animate: true, 
     };
-    console.log('role', role, 'x, y', x, y);
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
+
 
   /*
   This is the function that renders a new node when the mouse is released
@@ -92,16 +67,16 @@
   */  
   const renderNewNode = (event, edge) => {
     event.preventDefault();
-    const [x, y] = setNewEdgeProps(role, position, node)
     let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
     
     // setting newNode variable to a 'prototype' node
     newNode = {
-      id: uuidv4(), // again, better id generation needed, uuid?
+      id: uuidv4(), 
       position: pos, // the position (top left corner) is at the target coords of the edge for now
-      data: { label: "newNode" }, // need ways to change the rest of the properties
+      data: { label: "New Node" }, // need ways to change the rest of the properties
       width: 100,
       height: 40,
+      className: 'newNode',
       bgColor: "white"
     };
     if (position === 'left') {
@@ -146,9 +121,14 @@
         newNode.position.y = edge.sourceY - newNode.height;
       }
     }
-
     store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
   }
+
+  // Before the component is updated, adjust the top and left positions to account for custom class dimensions
+  beforeUpdate(() => {
+    top = setAnchorPosition(position, width, height, anchorWidth, anchorHeight)[0];
+    left = setAnchorPosition(position, width, height, anchorWidth, anchorHeight)[1];
+  })
 </script>
 
 <svelte:window
@@ -163,9 +143,7 @@
   on:mouseup={(e) => {
     //newEdge.animate = false; taylor got rid of this as there was constant errors filling up the console with this
     edgeShouldMove = false; // prevent the new edge from moving
-    moving = false;
-    moved = false;
-    if (newEdge) {
+    if (newEdge && moved) {
       newEdge.animate = false;
       if($hoveredElement) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
@@ -176,6 +154,8 @@
       }
     }
     newEdge = null; // reset newEdge so that the next one can be created normally
+    moved = false;
+    moving = false;
   }}
 
 />
@@ -190,7 +170,7 @@
     top: ${top}px;
     left:${left}px;
   `}
-
+  
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
@@ -214,7 +194,7 @@
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
   }}
-
+  on:keydown={() => {return}}
 ></div>
 
 
@@ -231,7 +211,7 @@
   }
 
   .Anchor:hover {
-    transform: scale(1.5) translateZ(-10px);
+    transform: scale(1.6) translateZ(-10px);
   }
 
 </style>

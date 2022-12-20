@@ -278,34 +278,31 @@ export function findOrCreateStore(key) {
         });
         return [...$edgesStore];
     });
+
     // Sets the position of each anchor (top, bottom, left or right)
-    const setAnchorPosition = (position, node, width, height) => {
+    const setAnchorPosition = (position, nodeWidth, nodeHeight, width, height) => {
         let top;
         let left;
         if(position === 'top') {
           top = -height / 2;
-          left = node.width / 2 - width / 2;
+          left = nodeWidth / 2 - width / 2;
         }
         if(position === 'bottom') {
-          top = node.height - height / 2;
-          left = node.width / 2 - width / 2;
+          top = nodeHeight - height / 2;
+          left = nodeWidth / 2 - width / 2;
         }
         if(position === 'left') {
-          top = node.height / 2 - height / 2;
+          top = nodeHeight / 2 - height / 2;
           left = -width / 2;
         }
         if(position === 'right') {
-          top = node.height / 2 - height / 2;
-          left = node.width - width / 2;
+          top = nodeHeight / 2 - height / 2;
+          left = nodeWidth - width / 2;
         }
         return [top, left];
       }
 
       const setNewEdgeProps = (role, position, node) => {
-        // coreSvelvetStore.nodesStore.forEach(n => {
-        //     if(n.id === id) node = n; 
-        // })
-        // console.log(coreSvelvetStore.nodesStore);
         let left = node.position.x;
         //top of the node selected
         let top = node.position.y;

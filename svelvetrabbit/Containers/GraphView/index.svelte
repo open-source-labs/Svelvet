@@ -8,6 +8,7 @@
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
   import Minimap from '../Minimap/Minimap.svelte';
   import Node from '../../Nodes/index.svelte';
+  import EditModal from '../../Nodes/EditModal.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
   
@@ -119,23 +120,23 @@
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
-      {#if node.image && !node.data.label}
-        <ImageNode {node} {key} />
+      <!-- <EditModal {node} {key} /> -->
+      <!-- {#if node.image && !node.data.label} -->
+        <!-- <ImageNode {node} {key} /> -->
         <!-- If node has html property:  -->
-      {:else if node.data.html}
+      {#if node.data.html}
         <Node {node} {key} >{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
         <!-- If node has 'custom' property: -->
       {:else if node.data.custom}
       <!-- Render custom svelte component -->
-        <Node {node} {key}> <svelte:component this={node.data.custom}/> </Node>
-      <!-- {:else if node.data.component}
-        <Node {node} {key} {derivedEdges} {nodesStore}><{node.data.component} /></Node>   -->
+        <Node {node} {key} > <svelte:component this={node.data.custom}/> </Node>
       {:else}
         <Node {node} {key} >{node.data.label}</Node>
       {/if}
     {/each}
   </div>
 </div>
+
 
 <svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}" >
   <defs>
@@ -199,7 +200,10 @@
   .Nodes:active {
     cursor: grabbing;
   }
- 
+  :global(.hidden) {
+    display: none;
+    opacity: 0;
+  }
   /* .Node {
     color: black; 
     width: 100%;
