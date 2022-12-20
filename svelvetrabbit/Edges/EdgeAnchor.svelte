@@ -49,15 +49,13 @@
       targetX: x,
       targetY: y,
       animate: true,
-      label: "newEdge" 
     } : { 
       id: uuidv4(), // need better way to generate id, uuid?
       source: null, // until the mouse is released the source will be set to null
       target: node.id, // the target is the node that the anchor is on
       sourceX: x,
       sourceY: y,
-      animate: true,
-      label: "newEdge" 
+      animate: true, 
     };
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
@@ -75,7 +73,7 @@
     newNode = {
       id: uuidv4(), 
       position: pos, // the position (top left corner) is at the target coords of the edge for now
-      data: { label: "newNode" }, // need ways to change the rest of the properties
+      data: { label: "New Node" }, // need ways to change the rest of the properties
       width: 100,
       height: 40,
       className: 'newNode',

@@ -58,7 +58,7 @@
 		    height: 110,
 		    bgColor: "white",
 				image: true,
-				src: 'https://peasandcrayons.com/wp-content/uploads/2020/03/chickpea-lemon-quinoa-kale-salad-recipe-5-800x1200.jpg'
+				src: 'https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Philip-J-Fry.Futurama.webp'
 		  },
 		  {
 		    id: 6,
@@ -76,7 +76,6 @@
 		    width: 150,
 		    height: 40,
 		    bgColor: "white",
-				className: 'customClass',
 		    clickCallback: node => console.log(node)
 		  },
 		];
@@ -140,11 +139,11 @@
 	}
 
 	:global(.newNode) {
-		background-color: darkcyan;
-		color: white;
-		border-radius: 35%;
-		width: 75px;
-		height: 50px;
+		background-color: #cde1f3;
+		color: black;
+		border-radius: 5%;
+		width: 100px;
+		height: 40px;
 		/* box-shadow: 1px 1px 1px 4px black; */
 	}
 </style>
