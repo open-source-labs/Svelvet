@@ -10,6 +10,7 @@
   import Node from '../../Nodes/index.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
+  
   // leveraging d3 library to zoom/pan
   let d3 = {
       zoom,
@@ -123,10 +124,14 @@
         <!-- If node has html property:  -->
       {:else if node.data.html}
         <Node {node} {key} >{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
+        <!-- If node has 'custom' property: -->
+      {:else if node.data.custom}
+      <!-- Render custom svelte component -->
+        <Node {node} {key}> <svelte:component this={node.data.custom}/> </Node>
       <!-- {:else if node.data.component}
         <Node {node} {key} {derivedEdges} {nodesStore}><{node.data.component} /></Node>   -->
       {:else}
-        <Node {node} {key}>{node.data.label}</Node>
+        <Node {node} {key} >{node.data.label}</Node>
       {/if}
     {/each}
   </div>

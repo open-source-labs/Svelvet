@@ -1,37 +1,20 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
-		// let initialNodes = [];
-		// for(let i=0; i < 100; i++){
-		// 	initialNodes.push({
-		//     id: i,
-		//     position: { x: 0, y: 0+(i*50) },
-		//     data: { label: "default styling" },
-		//     width: 50,
-		//     height: 50,
-		//     bgColor: "white"
-		//   })
-		// }
-		// // 
-		// for(let i=0; i < 100; i++){
-		// 	initialNodes.push({
-		//     id: i+200,
-		//     position: { x: 0+(i*50), y: 0 },
-		//     data: { label: "default styling" },
-		//     width: 50,
-		//     height: 50,
-		//     bgColor: "white"
-		//   })
-		// }
+	import BlueThing from "./BlueThing.svelte";
+	import w from "./BlueThing.svelte";
+	import h from "./BlueThing.svelte";
+
+	console.log('width ', w);
+	console.log('height ', h);
+
 		const initialNodes = [
-			
 		  {
 		    id: 1,
-		    position: { x: 150, y: 50 },
-		    data: { label: "default styling" },
-		    width: 150,
-		    height: 40,
-		    bgColor: "white",
-			clickCallback: node => console.log(node)
+		    position: { x: 150, y: -200 },
+		    data: {custom: BlueThing},
+		    width: 300,
+		    height: 300,
+		    bgColor: "white"
 		  },
 		  {
 		    id: 2,
@@ -56,12 +39,15 @@
 		  {
 		    id: 4,
 		    position: { x: 250, y: 150 },
-		    data: { label: "Danny Pink" },
+		    data: { },
 		    width: 150,
-		    height: 40,
+		    height: 150,
 		    textColor: "white",
 		    borderColor: "transparent",
-		    bgColor: "#FF9ABD"
+		    bgColor: "black",
+				image: true,
+				src: "https://www.alimentarium.org/sites/default/files/media/image/2016-10/AL012-02%20carotte_0.jpg",
+				alt: "a carrot"
 		  },
 		  {
 		    id: 5,
@@ -88,24 +74,7 @@
 		    height: 40,
 		    bgColor: "white",
 		    clickCallback: node => console.log(node)
-		  },
-		  {
-		    id: 8,
-		    position: { x: 1000, y: 1000 },
-		    data: { label: "test" },
-		    width: 100,
-		    height: 100,
-		    bgColor: "orange",
-		    borderRadius: 30
-		  },
-		  {
-		    id: 9,
-		    position: { x: 0, y: 0 },
-		    data: { label: "burp" },
-		    width: 0,
-		    height: 0,
-		    bgColor: "white"
-		  },
+		  }
 		];
 
 		const initialEdges = [
@@ -119,7 +88,7 @@
 		    animate: true,
 		    arrow: true
 		  },
-		  { id: "e2-5", source: 6, target: 7, animate: true }
+		  { id: "e2-5", source: 6, target: 7, animate: true, type: 'step' }
 		];
 
 	export let name;
@@ -128,7 +97,7 @@
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={500} height={500} initialZoom={4} initialLocation={{x:0, y:0}} edges={initialEdges} bgColor={'pink'} background minimap/>
+	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={8} initialLocation={initialNodes[1].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
 </main>
 
 <style>

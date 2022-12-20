@@ -106,7 +106,6 @@
     };
     if (position === 'left') {
       if (role === 'source') {
-        console.log('sourceeeeeee');
         newNode.sourcePosition = 'left';
         newNode.targetPosition = 'right';
         edge.target = newNode.id; // set the new edge to target the new node
@@ -167,6 +166,7 @@
     moving = false;
     moved = false;
     if (newEdge) {
+      newEdge.animate = false;
       if($hoveredElement) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
         else newEdge.target = $hoveredElement.id;
@@ -194,7 +194,6 @@
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    renderEdge(e); // renders the new edge on the screen
     edgeShouldMove = true;
   }}
 
@@ -211,6 +210,7 @@
   }}
   
   on:mouseleave={(e) => {
+    if (edgeShouldMove) renderEdge(e); // renders the new edge on the screen
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
   }}
@@ -233,8 +233,5 @@
   .Anchor:hover {
     transform: scale(1.5) translateZ(-10px);
   }
-  /* circle {
-    position: absolute;
-    background-color: white;
-  } */
+
 </style>

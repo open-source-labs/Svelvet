@@ -3,6 +3,7 @@
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   export let node;
   export let key;
+
   const {
     onNodeMove,
     onNodeClick,

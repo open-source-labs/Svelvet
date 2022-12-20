@@ -53,8 +53,6 @@ export function findOrCreateStore(key) {
     const onNodeMove = (e, nodeID) => {
         coreSvelvetStore.nodesStore.update((n) => {
             const correctNode = n.find((node) => node.id === nodeID);
-            // console.log('node x', correctNode.position.x);
-            // console.log('node y', correctNode.position.y);
 
             const scale = get(coreSvelvetStore.d3Scale);
 
