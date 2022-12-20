@@ -161,6 +161,7 @@
   }}
 
   on:mouseup={(e) => {
+    //newEdge.animate = false; taylor got rid of this as there was constant errors filling up the console with this
     edgeShouldMove = false; // prevent the new edge from moving
     moving = false;
     moved = false;
