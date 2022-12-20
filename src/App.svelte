@@ -42,12 +42,12 @@
 		    position: { x: 250, y: 150 },
 		    data: { },
 		    width: 150,
-		    height: 150,
+		    height: 100,
 		    textColor: "white",
 		    borderColor: "transparent",
 		    bgColor: "black",
 				image: true,
-				src: "https://www.alimentarium.org/sites/default/files/media/image/2016-10/AL012-02%20carotte_0.jpg",
+				src: "https://www.dropbox.com/s/bunxvjowj5fxosa/de3t.jpg?raw=1",
 				alt: "a carrot"
 		  },
 		  {
@@ -92,7 +92,7 @@
 		    animate: true,
 		    arrow: true
 		  },
-		  { id: "e2-5", source: 6, target: 7, animate: true }
+		  { id: "e2-5", source: 6, target: 7, animate: true, type: 'step' }
 		];
 
 	console.log(initialNodes[1]);

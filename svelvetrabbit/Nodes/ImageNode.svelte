@@ -61,7 +61,7 @@ let moved = false;
 >
   <EdgeAnchor {key} {node} position={node.targetPosition || 'top'} role={'target'} />
   <img
-    style = "width: {node.width}px;"
+    style = "width: {node.width * .9}px; height: {node.height * .9}px;"
     src={node.src}
     alt=""
   />
