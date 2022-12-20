@@ -76,6 +76,7 @@
 		    width: 150,
 		    height: 40,
 		    bgColor: "white",
+				className: 'customClass',
 		    clickCallback: node => console.log(node)
 		  },
 		];
@@ -94,11 +95,12 @@
 		  { id: "e2-5", source: 6, target: 7, animate: true }
 		];
 
-	export let name;
+	console.log(initialNodes[1]);
+	console.log('nodes from the User', initialNodes);
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
+	<h1>Hello Svelvet Team!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={5} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
 </main>
@@ -132,7 +134,7 @@
 		background-color: darkcyan;
 		color: white;
 		border-radius: 50%;
-		width: 100px;
+		width: 120px;
 		height: 60px;
 		border-color: cyan;
 	}
@@ -141,6 +143,8 @@
 		background-color: darkcyan;
 		color: white;
 		border-radius: 35%;
+		width: 75px;
+		height: 50px;
 		/* box-shadow: 1px 1px 1px 4px black; */
 	}
 </style>

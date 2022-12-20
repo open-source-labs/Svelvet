@@ -1,21 +1,21 @@
 <script>
-  import { select, selectAll, pointer } from 'd3-selection';
   import { v4 as uuidv4 } from 'uuid';
-  import { Position } from '../types/utils';
   import { findOrCreateStore } from '../stores/store';
-  import { derived } from 'svelte/store';
+  import { beforeUpdate } from 'svelte';
   export let key;
   export let node;
   export let position;
   export let role;
-  // export let nodeWidth = node.width;
-  // export let nodeHeight = node.height
+  export let width;
+  export let height;
   let newNode;
   let newEdge;
   let hovered = false;
   let anchorWidth = 10;
   let anchorHeight = 10;
-  
+  let top;
+  let left;
+
   const {
       onEdgeMove,
       onTouchMove,
@@ -34,9 +34,6 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
-  console.log('node from Anchor', node);
-  const [top, left] = setAnchorPosition(position, node, anchorWidth, anchorHeight);
-  // const [x, y] = setNewEdgeProps(role, position, node)
 
   /*
   This is the function that renders a new edge when an anchor is clicked
@@ -44,7 +41,6 @@
   const renderEdge = (e) => {
     const [x, y] = setNewEdgeProps(role, position, node)
     e.preventDefault(); // preventing default behavior, not sure if necessary
-    console.log('role', role);
     // Setting the newEdge variable to an edge prototype
     newEdge = role === 'source' ? { 
       id: uuidv4(), // need better way to generate id, uuid?
@@ -63,7 +59,6 @@
       animate: true,
       label: "newEdge" 
     };
-    console.log('role', role, 'x, y', x, y);
     store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
   }
 
@@ -74,12 +69,11 @@
   */  
   const renderNewNode = (event, edge) => {
     event.preventDefault();
-    const [x, y] = setNewEdgeProps(role, position, node);
     let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
     
     // setting newNode variable to a 'prototype' node
     newNode = {
-      id: uuidv4(), // again, better id generation needed, uuid?
+      id: uuidv4(), 
       position: pos, // the position (top left corner) is at the target coords of the edge for now
       data: { label: "newNode" }, // need ways to change the rest of the properties
       width: 100,
@@ -129,9 +123,14 @@
         newNode.position.y = edge.sourceY - newNode.height;
       }
     }
-
     store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
   }
+
+  // Before the component is updated, adjust the top and left positions to account for custom class dimensions
+  beforeUpdate(() => {
+    top = setAnchorPosition(position, width, height, anchorWidth, anchorHeight)[0];
+    left = setAnchorPosition(position, width, height, anchorWidth, anchorHeight)[1];
+  })
 </script>
 
 <svelte:window
@@ -172,11 +171,10 @@
     top: ${top}px;
     left:${left}px;
   `}
-
+  
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div) 
-    // renderEdge(e); // renders the new edge on the screen
     edgeShouldMove = true;
   }}
 
@@ -197,7 +195,7 @@
     hovered = false;
     store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
   }}
-
+  on:keydown={() => {return}}
 ></div>
 
 
@@ -214,7 +212,7 @@
   }
 
   .Anchor:hover {
-    transform: scale(1.5) translateZ(-10px);
+    transform: scale(1.6) translateZ(-10px);
   }
 
 </style>

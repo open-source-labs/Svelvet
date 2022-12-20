@@ -5,7 +5,6 @@
   import StraightEdge from '../../Edges/StraightEdge.svelte';
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
   import StepEdge from '../../Edges/StepEdge.svelte';
-  import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
   import Node from '../../Nodes/index.svelte';
   import EditModal from '../../Nodes/EditModal.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
@@ -25,6 +24,7 @@
   export let key;
   export let initialZoom;
   export let initialLocation;
+  let unique = {};
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
   const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale} = svelvetStore;
@@ -102,12 +102,10 @@
       store.mouseX.set(d3.pointer(event)[0]);
       store.mouseY.set(d3.pointer(event)[1]);
     })
-
-    
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-
+{#key unique}
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
@@ -121,15 +119,14 @@
         <!-- If node has 'custom' property: -->
       {:else if node.data.custom}
       <!-- Render custom svelte component -->
-        <Node {node} {key}> <svelte:component this={node.data.custom}/> </Node>
-      <!-- {:else if node.data.component}
-        <Node {node} {key} {derivedEdges} {nodesStore}><{node.data.component} /></Node>   -->
+        <Node {node} {key} > <svelte:component this={node.data.custom}/> </Node>
       {:else}
         <Node {node} {key} >{node.data.label}</Node>
       {/if}
     {/each}
   </div>
 </div>
+{/key}
 
 <svg class={`Edges Edges-${key}`} viewBox="0 0 {$widthStore} {$heightStore}" >
   <defs>
