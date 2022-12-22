@@ -12,10 +12,10 @@
     let nHeight = 0;
 
     $: {
-    nHeight = node.height * heightRatio;
-    nWidth = node.width * widthRatio;
-    top = Math.abs(nodeYbottomPosition*heightRatio) + (node.position.y * heightRatio)
-    left = Math.abs(nodeXleftPosition*widthRatio)+(node.position.x * widthRatio)
+    nHeight = Math.max(node.height * heightRatio, 5)
+    nWidth = Math.max(node.width * widthRatio, 5)
+    top = node.position.y*heightRatio - nodeYbottomPosition*heightRatio
+    left = node.position.x* widthRatio - nodeXleftPosition*widthRatio
     }
 
 </script>

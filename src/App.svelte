@@ -33,7 +33,7 @@
 		    data: { label: "textColor" },
 		    width: 150,
 		    height: 40,
-				className: 'customClass',
+			className: 'customClass',
 		    textColor: "#3F6FD6",
 		    bgColor: "white"
 		  },
@@ -101,7 +101,7 @@
 <main>
 	<h1>Hello Svelvet Team!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={5} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
+	<Svelvet  nodes={initialNodes} width={800} height={800} minimap={true} initialZoom={5} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
 </main>
 
 <style>

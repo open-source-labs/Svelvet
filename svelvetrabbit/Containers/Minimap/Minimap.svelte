@@ -56,7 +56,6 @@
     mapHeight = 100;
     mapWidth = 100;
     }
-    
     heightRatio = ((mapHeight) / nodeHeight).toFixed(2);
     widthRatio = ((mapWidth) / nodeWidth).toFixed(2);
     // console.log(d3Translate)

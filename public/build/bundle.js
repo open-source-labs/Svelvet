@@ -6514,7 +6514,7 @@ var app = (function () {
     			set_style(div, "left", /*left*/ ctx[2] + "px");
     			set_style(div, "height", /*nHeight*/ ctx[4] + "px");
     			set_style(div, "width", /*nWidth*/ ctx[3] + "px");
-    			add_location(div, file$8, 21, 0, 523);
+    			add_location(div, file$8, 21, 0, 522);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6656,10 +6656,10 @@ var app = (function () {
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*node, heightRatio, widthRatio, nodeYbottomPosition, nodeXleftPosition*/ 992) {
     			{
-    				$$invalidate(4, nHeight = node.height * heightRatio);
-    				$$invalidate(3, nWidth = node.width * widthRatio);
-    				$$invalidate(1, top = Math.abs(nodeYbottomPosition * heightRatio) + node.position.y * heightRatio);
-    				$$invalidate(2, left = Math.abs(nodeXleftPosition * widthRatio) + node.position.x * widthRatio);
+    				$$invalidate(4, nHeight = Math.max(node.height * heightRatio, 5));
+    				$$invalidate(3, nWidth = Math.max(node.width * widthRatio, 5));
+    				$$invalidate(1, top = node.position.y * heightRatio - nodeYbottomPosition * heightRatio);
+    				$$invalidate(2, left = node.position.x * widthRatio - nodeXleftPosition * widthRatio);
     			}
     		}
     	};
@@ -6757,7 +6757,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (84:8) {#each $nodesStore as node}
+    // (83:8) {#each $nodesStore as node}
     function create_each_block$1(ctx) {
     	let greynode;
     	let current;
@@ -6810,7 +6810,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(84:8) {#each $nodesStore as node}",
+    		source: "(83:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -6851,11 +6851,11 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$7, 82, 8, 3197);
+    			add_location(div0, file$7, 81, 8, 3192);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$7, 81, 4, 3094);
+    			add_location(div1, file$7, 80, 4, 3089);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10468,6 +10468,7 @@ var app = (function () {
     				nodes: /*initialNodes*/ ctx[0],
     				width: 800,
     				height: 800,
+    				minimap: true,
     				initialZoom: 5,
     				initialLocation: /*initialNodes*/ ctx[0][2].position,
     				edges: /*initialEdges*/ ctx[1],
@@ -10491,12 +10492,12 @@ var app = (function () {
     			t5 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-1iki5qj");
-    			add_location(h1, file, 101, 1, 2347);
+    			add_location(h1, file, 101, 1, 2346);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 102, 14, 2390);
-    			add_location(p, file, 102, 1, 2377);
+    			add_location(a, file, 102, 14, 2389);
+    			add_location(p, file, 102, 1, 2376);
     			attr_dev(main, "class", "svelte-1iki5qj");
-    			add_location(main, file, 100, 0, 2339);
+    			add_location(main, file, 100, 0, 2338);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
