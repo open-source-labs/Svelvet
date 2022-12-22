@@ -6757,7 +6757,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (83:8) {#each $nodesStore as node}
+    // (84:8) {#each $nodesStore as node}
     function create_each_block$1(ctx) {
     	let greynode;
     	let current;
@@ -6810,7 +6810,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(83:8) {#each $nodesStore as node}",
+    		source: "(84:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -6851,11 +6851,11 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$7, 81, 8, 3192);
+    			add_location(div0, file$7, 82, 8, 3193);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$7, 80, 4, 3089);
+    			add_location(div1, file$7, 81, 4, 3090);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
