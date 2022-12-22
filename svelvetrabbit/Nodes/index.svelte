@@ -2,7 +2,6 @@
   import { findOrCreateStore } from '../stores/store';
   import {onMount, afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
-  import EditModal from './EditModal.svelte';
   export let node;
   export let key;
   let customCssText = '';
@@ -159,8 +158,7 @@ on:dblclick={(e) => {
 >
 
 <!-- this anchor is the target-->
-  <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} />
-  <EditModal {node} {key} /> 
+  <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
       <img

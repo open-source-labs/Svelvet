@@ -8,7 +8,6 @@
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
   import Minimap from '../Minimap/Minimap.svelte';
   import Node from '../../Nodes/index.svelte';
-  import EditModal from '../../Nodes/EditModal.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
   
