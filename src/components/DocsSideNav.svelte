@@ -17,7 +17,12 @@
     ['CSS-Background', 'CSS-Background'],
     ['Node-Grouping', 'node-grouping'],
     ['Snap-To-Grid', 'snap-to-grid'],
-    ['HTML-Docs', 'HTML-Docs']
+    ['HTML-Docs', 'HTML-Docs'],
+    ['Interactive Node Linking & Creation', 'Interactive-Nodes'],
+    ['Custom Svelte Components', 'Custom-Svelte'],
+    ['Minimap', 'Minimap'],
+    ['Initial Zoom & Location', 'Initial-Zoom-Location'],
+    ['Node Classes', 'Node-Classes'],
   ];
 
   // const communityLinks = [

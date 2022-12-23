@@ -19,6 +19,10 @@
   import ian from '../assets/profiles/Ian-small.png';
   import mauricio from '../assets/profiles/Mauricio-small.png';
   import ryan from '../assets/profiles/Ryan-small.png';
+  import emma from '../assets/profiles/Timmy-small.png';
+  import timmy from '../assets/profiles/Timmy-small.png';
+  import tony from '../assets/profiles/Tony-small.png';
+  import dillon from '../assets/profiles/Dillon-small.png';
   
 
   import Svelvet from 'svelvet';
@@ -168,7 +172,7 @@
   </div>
 </div>
 <div
-  class="h-[2000px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
+  class="h-[2400px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
   <div class=" h-full m-12 contributors:m-24">
     <div class=" h-full w-full p-1 flex flex-col justify-around">
@@ -436,11 +440,81 @@
               >
             </div>
           </div>
+
         </div>
       </div>
       <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
         <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
-
+          <!-- CARD 1: Emma -->
+          <div class="contributor-card">
+            <img src={'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/81/face-with-cowboy-hat_1f920.png'} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Emma <br />Ferguson</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/emma-ferguson-33858725a/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/emmanotly"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2: Timmy -->
+          <div class="contributor-card">
+            <img src={timmy} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Timmy <br />Lem</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/timmy-lem"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://www.github.com/timmylem01 "
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3: Tony -->
+          <div class="contributor-card">
+            <img src={tony} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Tony <br />Lim</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/tonylim467/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://www.github.com/tonyy467"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col justify-around contributors:flex-row my-1 items-center">
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1: Dillon -->
+          <div class="contributor-card">
+            <img src={dillon} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Dillon<br />McKenna</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="http://linkedin.com/in/dillon-mckenna"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/dmckenna44"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 2: Taylor -->
+          <div class="contributor-card">
+            <img src={"https://thecozycook.com/wp-content/uploads/2022/10/Angel-Hair-Pasta-with-Chicken-f.jpg"} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <p class="mt-3 mb-1 text-lg leading-6">Taylor <br />Alan</p>
+            <div class="flex gap-3 ml-3">
+              <a target="_blank" href="https://www.linkedin.com/in/taylor-alan-026a49226/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/taylien96"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- CARD 3: [NAME HERE] -->
         </div>
       </div>
       
