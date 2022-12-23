@@ -18,11 +18,8 @@
 
   const {
       onEdgeMove,
-      onTouchMove,
       setAnchorPosition,
       setNewEdgeProps,
-      edgeSelected,
-      edgeIdSelected,
       hoveredElement,
       derivedEdges,
       nodesStore

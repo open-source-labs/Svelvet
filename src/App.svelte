@@ -1,5 +1,6 @@
 	<script>
-	import Svelvet from "../svelvetrabbit";
+	import Svelvet from "svelvetrabbits";
+	// import Svelvet from "../svelvetrabbit";
 	import BlueThing from "./BlueThing.svelte";
 	import w from "./BlueThing.svelte";
 	import h from "./BlueThing.svelte";
@@ -33,7 +34,7 @@
 		    data: { label: "textColor" },
 		    width: 150,
 		    height: 40,
-			className: 'customClass',
+			  className: 'customClass',
 		    textColor: "#3F6FD6",
 		    bgColor: "white"
 		  },
