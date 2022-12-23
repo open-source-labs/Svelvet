@@ -2,6 +2,7 @@
     import { findOrCreateStore } from '../../stores/store';
     import {onMount, afterUpdate} from 'svelte'
     import GreyNode from './GreyNode.svelte';
+
     export let key
     export let d3Translate;
     
@@ -56,7 +57,6 @@
     mapHeight = 100;
     mapWidth = 100;
     }
-    
     heightRatio = ((mapHeight) / nodeHeight).toFixed(2);
     widthRatio = ((mapWidth) / nodeWidth).toFixed(2);
     // console.log(d3Translate)
