@@ -1,6 +1,6 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import {onMount, afterUpdate} from 'svelte';
+  import {onMount} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
   export let node;
   export let key;
@@ -12,16 +12,16 @@
     onNodeMove,
     onNodeClick,
     onTouchMove,
+    getStyles,
     nodeSelected,
     nodeIdSelected,
     movementStore,
     snapgrid, 
     snapResize,
     nodesStore,
-    derivedEdges,
+    isLocked
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
-  $: store = findOrCreateStore(key);
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
@@ -33,47 +33,60 @@
     e.preventDefault();
     document.querySelector('.edit-node-modal').style.display = 'flex';
   }
-  
-  // Getting the styles for a custom class, and adjusting the height and width if necessary
-  const getStyles = (e, node) => {
-    const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
+
+  ////////// ------------- MOVED TO STORE ------------- ////////////
+  // // Getting the styles for a custom class, and adjusting the height and width if necessary
+  // const getStyles = (e, node) => {
+  //   console.log('getStyles node', node);
+  //   const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
     
-    // Look through each CSS rule to find the one the user defined
-    Object.values(styleRules).forEach(rule => {
-      if (rule.selectorText === `.${node.className}`) {
-        const initialText = rule.cssText; // getting the full text of the CSS rule 
-        const i = initialText.indexOf('{'); // finding index of first bracket
-        const innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
-        customCssText += innerText; // add the text to our variable which is included in inline styles
-        // Adjusting the width and height if they are set via the custom class
-        const arr = innerText.split(' ');
-        arr.forEach((str, i) => {
-          if (str === 'width:') {
-            nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
-            const w = parseInt(arr[i+1]); // getting the number for the width
-            nodeWidth = w;
-          }
-          if (str === 'height:') {
-            nodeHeight = str.concat(arr[i+1]); // same as with the width
-            const h = parseInt(arr[i+1]);
-            nodeHeight = h;
-          }
-        })
-      }
-    })
-    // adjusting the properties on the node in the store 
-    const newStore = $nodesStore.map(n => {
-      if (node.id === n.id) {
-        n.width = nodeWidth || node.width;
-        n.height = nodeHeight || node.height;
-        return n;
-      } else return n;
-    })
-    store.nodesStore.set(newStore);
+  //   // Look through each CSS rule to find the one the user defined
+  //   Object.values(styleRules).forEach(rule => {
+  //     if (rule.selectorText === `.${node.className}`) {
+  //       const initialText = rule.cssText; // getting the full text of the CSS rule 
+  //       const i = initialText.indexOf('{'); // finding index of first bracket
+  //       const innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
+  //       customCssText += innerText; // add the text to our variable which is included in inline styles
+  //       // Adjusting the width and height if they are set via the custom class
+  //       const arr = innerText.split(' ');
+  //       arr.forEach((str, i) => {
+  //         if (str === 'width:') {
+  //           nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
+  //           const w = parseInt(arr[i+1]); // getting the number for the width
+  //           nodeWidth = w;
+  //         }
+  //         if (str === 'height:') {
+  //           nodeHeight = str.concat(arr[i+1]); // same as with the width
+  //           const h = parseInt(arr[i+1]);
+  //           nodeHeight = h;
+  //         }
+  //       })
+  //     }
+  //   })
+  //   // adjusting the properties on the node in the store 
+  //   const newStore = $nodesStore.map(n => {
+  //     if (node.id === n.id) {
+  //       n.width = nodeWidth || node.width;
+  //       n.height = nodeHeight || node.height;
+  //       return n;
+  //     } else return n;
+  //   })
+  //   store.nodesStore.set(newStore);
+  // }
+  ////////////////////////////////////////////////////////////////////////////
+
+  const editText = (e, node) => {
+    console.log(e.target);
+    e.target.style.conte
   }
 
   onMount((e) => {
-    if (node.className) getStyles(e, node);
+    if (node.className) {
+      const [width, height, innerText] = getStyles(e, node);
+      nodeWidth = width;
+      nodeHeight = height;
+      customCssText += innerText;
+    }
   })
 </script>
 
@@ -81,7 +94,7 @@
 
   on:mousemove={(e) => {
     e.preventDefault();
-    if (shouldMove) {
+    if (shouldMove && !$isLocked) {
       onNodeMove(e, node.id);
       moved = true;
     }
@@ -134,13 +147,6 @@
   }}
 on:keydown={() => {return}}
 
-on:dblclick={(e) => {
-  e.preventDefault();
-  $nodeSelected = true;
-  $nodeIdSelected = node.id;
-  // doubleClickedNode(e, node.id);
-  openEditModal(e)
-}}
 
   class="Node {node.className || ''}"
   
@@ -171,9 +177,13 @@ on:dblclick={(e) => {
       <!-- {#if node.clickCallback}
         <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
         {/if} -->
-        {:else}
-        <slot />
-        {/if}
+    {:else if node.data.label}
+      <p contenteditable="true" class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>      
+    {:else}
+    <div>
+      <slot />
+    </div>
+    {/if}
     <!-- this anchor is the source-->
     <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.sourcePosition || 'bottom'} role={'source'} />
 
@@ -195,5 +205,13 @@ on:dblclick={(e) => {
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     z-index: 3;
     transform-style: preserve-3d;
+  }
+  
+  .Node:hover {
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.35);
+  }
+
+  .node-label:hover {
+    cursor: text;
   }
 </style>
