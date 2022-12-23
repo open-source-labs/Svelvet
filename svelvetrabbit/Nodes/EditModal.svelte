@@ -34,7 +34,7 @@
   <label for="width">Width</label>
   <input type="text" name="width" bind:value={width}>
   <label for="class">Class Name</label>
-  <input type="text" id="customClass">
+  <input type="text" id="customClassInput">
   <button id="submit-node-edit" on:click={(e) => submitChanges()}>Submit</button>
 </div>
 <!-- /////////////////////////////////////// -->

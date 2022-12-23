@@ -16,13 +16,14 @@ export let bgColor = '#ffffff'
 export let initialLocation = {x: 0, y: 0};
 export let initialZoom = 4;
 export let minimap = false;
+export let locked = false;
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
 // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
 const svelvetStore = findOrCreateStore(key);
 // stores (state) within stores, so that we cannot access values from everywhere
-const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor } = svelvetStore;
+const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor, isLocked } = svelvetStore;
 // sets the state of the store to the values passed in from the Svelvet Component on initial render
 onMount(() => {
     svelvetStore.nodesStore.set(nodes);
@@ -36,7 +37,8 @@ onMount(() => {
     svelvetStore.snapResize.set(snapTo);  
     svelvetStore.initZoom.set(initialZoom);
     svelvetStore.initLocation.set(initialLocation);
-});
+    svelvetStore.isLocked.set(locked)
+  });
 // enables data reactivity
 // afterUpdate(() => {
 //     svelvetStore.nodesStore.set(nodes);

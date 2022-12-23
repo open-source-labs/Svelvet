@@ -1,11 +1,9 @@
 	<script>
 	import Svelvet from "../svelvetrabbit";
+	// import Svelvet from 'svelvetrabbits'
 	import BlueThing from "./BlueThing.svelte";
 	import w from "./BlueThing.svelte";
 	import h from "./BlueThing.svelte";
-
-	console.log('width ', w);
-	console.log('height ', h);
 
 		const initialNodes = [
 		  // {
@@ -52,17 +50,15 @@
 		  },
 		  {
 		    id: 5,
-		    position: { x: 250, y: 250 },
-		    data: { },
-		    width: 90,
-		    height: 110,
+		    position: { x: 450, y: 250 },
+		    data: { custom: BlueThing },
+		    width: 200,
+		    height: 150,
 		    bgColor: "white",
-				image: true,
-				src: 'https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Philip-J-Fry.Futurama.webp'
 		  },
 		  {
 		    id: 6,
-		    position: { x: 250, y: 400 },
+		    position: { x: 250, y: 500 },
 		    data: { label: "borderRadius" },
 		    width: 100,
 		    height: 100,
@@ -71,7 +67,7 @@
 		  },
 		  {
 		    id: 7,
-		    position: { x: 50, y: 500 },
+		    position: { x: 50, y: 600 },
 		    data: { label: "clickCallback" },
 		    width: 150,
 		    height: 40,
@@ -94,14 +90,22 @@
 		  { id: "e2-5", source: 6, target: 7, animate: true, type: 'step' }
 		];
 
-	console.log(initialNodes[1]);
-	console.log('nodes from the User', initialNodes);
 </script>
 
 <main>
 	<h1>Hello Svelvet Team!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<Svelvet  nodes={initialNodes} width={800} height={800} initialZoom={5} initialLocation={initialNodes[2].position} edges={initialEdges} bgColor={'#EEEEEE'} background/>
+	<Svelvet  
+	  nodes={initialNodes} 
+	  width={800} 
+		height={800} 
+		initialZoom={5} 
+		initialLocation={initialNodes[2].position} 
+		edges={initialEdges} 
+		bgColor={'#EEEEEE'} 
+		background 
+		minimap={true}
+	/>
 </main>
 
 <style>

@@ -12,17 +12,14 @@ export const coreSvelvetStore = {
     movementStore: writable(true),
     nodeSelected: writable(false),
     nodeIdSelected: writable(-1),
-    edgeSelected: writable(false),
-    edgeIdSelected: writable(-1),
     d3Scale: writable(1),
     snapgrid: writable(false),
     snapResize: writable(30),
     backgroundColor: writable(),
-    mouseX: writable(1),
-    mouseY: writable(1),
     hoveredElement: writable(null),
     initZoom: writable(4),
     initLocation: writable({x:0, y:0}),
+    isLocked: writable(false)
 };
 
 
@@ -51,38 +48,35 @@ export function findOrCreateStore(key) {
     // This is the function handler for the mouseMove event to update the position of the selected node.
     // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
     const onNodeMove = (e, nodeID) => {
-        coreSvelvetStore.nodesStore.update((n) => {
-            const correctNode = n.find((node) => node.id === nodeID);
-
-            const scale = get(coreSvelvetStore.d3Scale);
-
-            if(correctNode.childNodes){
-                n.forEach((child) => {
-                    if(correctNode.childNodes.includes(child.id)){
-                        child.position.x += e.movementX / scale;
-                        child.position.y += e.movementY / scale;
-                    }
-                })
-                correctNode.position.x += e.movementX / scale;
-                correctNode.position.y += e.movementY / scale;
-            }
-            else {
-                // divide the movement value by scale to keep it proportional to d3Zoom transformations
-                correctNode.position.x += e.movementX / scale;
-                correctNode.position.y += e.movementY / scale;
-
-            }
-            return [...n];
-        });
+            coreSvelvetStore.nodesStore.update((n) => {
+                const correctNode = n.find((node) => node.id === nodeID);
+    
+                const scale = get(coreSvelvetStore.d3Scale);
+    
+                if(correctNode.childNodes){
+                    n.forEach((child) => {
+                        if(correctNode.childNodes.includes(child.id)){
+                            child.position.x += e.movementX / scale;
+                            child.position.y += e.movementY / scale;
+                        }
+                    })
+                    correctNode.position.x += e.movementX / scale;
+                    correctNode.position.y += e.movementY / scale;
+                }
+                else {
+                    // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                    correctNode.position.x += e.movementX / scale;
+                    correctNode.position.y += e.movementY / scale;
+    
+                }
+                return [...n];
+            });
     };
 
     // Mostly copied from onNodeMove, this allows for the movement of new Edges that don't yet have targets/sources
     const onEdgeMove = (event, edgeID) => {
         coreSvelvetStore.edgesStore.update((e) => {
             const correctEdge = e.find((edge) => edge.id === edgeID);
-            // correctEdge.targetX = event.clientX;
-            // correctEdge.targetY = event.clientY;
-            console.log('correctEdge from store', correctEdge);
 
             const scale = get(coreSvelvetStore.d3Scale);
             // divide the movement value by scale to keep it proportional to d3Zoom transformations
@@ -145,6 +139,144 @@ export function findOrCreateStore(key) {
             return [...n];
             */
     };
+
+  /*
+  This is the function that renders a new edge when an anchor is clicked
+  */  
+  const renderEdge = (e, node, role, position) => {
+    // const uniq = (Math.random() * .42093840 / .394483 + 1).toString();
+    const uniq = (Math.random() + 1).toString(36).substring(7) + '-' + (Math.random() + 1).toString(36).substring(7);
+    const [x, y] = setNewEdgeProps(role, position, node);
+    e.preventDefault(); // preventing default behavior, not sure if necessary
+    // Setting the newEdge variable to an edge prototype
+    const newEdge = role === 'source' ? { 
+      id: uniq, // generate unique id
+      source: node.id, // the source is the node that the anchor is on
+      target: null, // until the mouse is released the target will be set to null
+      targetX: x,
+      targetY: y,
+      animate: true,
+    } : { 
+      id: uniq, // generate unique id
+      source: null, // until the mouse is released the source will be set to null
+      target: node.id, // the target is the node that the anchor is on
+      sourceX: x,
+      sourceY: y,
+      animate: true, 
+    };
+    coreSvelvetStore.edgesStore.set([...get(derivedEdges), newEdge]); // updating the edges in the store
+    return newEdge;
+  }
+
+  
+    /*
+  This is the function that renders a new node when the mouse is released
+  after clicking on an anchor, takes in the newEdge that was just created
+  */  
+  const renderNewNode = (event, edge, role, position) => {
+    // Find the highest of the current id numbers
+    const nodeIds = get(coreSvelvetStore.nodesStore).map(n => n.id);
+    const highestId = Math.max(...nodeIds)
+    
+    event.preventDefault();
+    let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
+    
+    // setting newNode variable to a 'prototype' node
+    const newNode = {
+      id: highestId + 1, // set the id to one higher than the highest in the current array
+      position: pos, // the position (top left corner) is at the target coords of the edge for now
+      data: { label: "New Node" }, // need ways to change the rest of the properties
+      width: 100,
+      height: 40,
+      className: 'newNode',
+      bgColor: "white"
+    };
+    if (position === 'left') {
+      if (role === 'source') {
+        newNode.sourcePosition = 'left';
+        newNode.targetPosition = 'right';
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        newNode.sourcePosition = 'right';
+        newNode.targetPosition = 'left';
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
+    } else if (position === 'right') {
+      if(role === 'source') {
+        newNode.sourcePosition = 'right';
+        newNode.targetPosition = 'left';
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        newNode.sourcePosition = 'left';
+        newNode.targetPosition = 'right';
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
+    } else {
+      if(role === 'source') {
+        edge.target = newNode.id; // set the new edge to target the new node
+        newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
+        newNode.position.y = edge.targetY;
+      }
+      else {
+        edge.source = newNode.id;
+        newNode.position.x = edge.sourceX - newNode.width / 2;
+        newNode.position.y = edge.sourceY - newNode.height;
+      }
+    }
+    coreSvelvetStore.nodesStore.set([...get(nodesStore), newNode]); // update the nodes in the store
+  }
+
+    // Getting the styles for a custom class, and adjusting the height and width if necessary
+    const getStyles = (e, node) => {
+        let width, height, innerText;
+        console.log('getStyles node', node);
+        const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
+        
+        // Look through each CSS rule to find the one the user defined
+        Object.values(styleRules).forEach(rule => {
+          if (rule.selectorText === `.${node.className}`) {
+            const initialText = rule.cssText; // getting the full text of the CSS rule 
+            const i = initialText.indexOf('{'); // finding index of first bracket
+            innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
+            // customCssText += innerText; // add the text to our variable which is included in inline styles
+            // Adjusting the width and height if they are set via the custom class
+            const arr = innerText.split(' ');
+            arr.forEach((str, i) => {
+              if (str === 'width:') {
+                width = str.concat(arr[i+1]); // go through the array and join width and the number
+                const w = parseInt(arr[i+1]); // getting the number for the width
+                width = w;
+              }
+              if (str === 'height:') {
+                height = str.concat(arr[i+1]); // same as with the width
+                const h = parseInt(arr[i+1]);
+                height = h;
+              }
+            })
+          }
+        })
+        // adjusting the properties on the node in the store 
+        const newStore = get(coreSvelvetStore.nodesStore).map(n => {
+          if (node.id === n.id) {
+            n.width = width || node.width;
+            n.height = height || node.height;
+            return n;
+          } else return n;
+        })
+        coreSvelvetStore.nodesStore.set(newStore);
+        return [width, height, innerText];
+      }
+
 
     const nodeIdSelected = coreSvelvetStore.nodeIdSelected;
     // if the user clicks a node without moving it, this function fires allowing a user to invoke the callback function
@@ -363,6 +495,9 @@ export function findOrCreateStore(key) {
         onNodeClick,
         setAnchorPosition,
         setNewEdgeProps,
+        renderEdge,
+        renderNewNode,
+        getStyles,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;

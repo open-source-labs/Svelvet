@@ -23,9 +23,10 @@ function toggle () {
 <!-- This is the CSS for your svelte component -->
 <style>
 	.login {
+    margin: 1rem;
 		display: flex;
 		flex-direction: column;
 		height: 300px;
-		width: 300px;
+		width: 150px;
 	}
 </style>

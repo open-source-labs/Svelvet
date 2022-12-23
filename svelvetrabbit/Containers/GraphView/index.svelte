@@ -30,7 +30,8 @@
   export let minimap;
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale} = svelvetStore;
+  // svelvetStore.isLocked.set(true)
+  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, isLocked} = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -105,11 +106,11 @@
           .style('transform-origin', '0 0');
   }
 
-  // d3.select('.Nodes') 
-  //   .on('mousemove', (event) => {
-  //     store.mouseX.set(d3.pointer(event)[0]);
-  //     store.mouseY.set(d3.pointer(event)[1]);
-  //   })
+  // if(locked === 'true') {
+  //   document.querySelector('.Nodes').style.poin
+  // }
+  console.log('isLocked from GV', $isLocked);
+  console.log('width from GV', $widthStore);
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
