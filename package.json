@@ -20,7 +20,11 @@
   "dependencies": {
     "sirv-cli": "^2.0.0",
     "svelvet": "^4.0.3",
+<<<<<<< HEAD
+    "svelvetrabbits": "^4.5.3",
+=======
     "svelvetrabbits": "^4.4.0",
+>>>>>>> b0a590d78afd7bb6e9781674c15e4f0dcdb6de9c
     "uuid": "^9.0.0"
   }
 }

@@ -76,8 +76,7 @@
   ////////////////////////////////////////////////////////////////////////////
 
   const editText = (e, node) => {
-    console.log(e.target);
-    e.target.style.conte
+
   }
 
   onMount((e) => {
@@ -178,7 +177,9 @@ on:keydown={() => {return}}
         <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
         {/if} -->
     {:else if node.data.label}
-      <p contenteditable="true" class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>      
+    <div contenteditable="true">
+      <p class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>      
+    </div>
     {:else}
     <div>
       <slot />
@@ -208,7 +209,7 @@ on:keydown={() => {return}}
   }
   
   .Node:hover {
-    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.35);
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
   }
 
   .node-label:hover {

@@ -1,6 +1,7 @@
-<script>import { onMount } from 'svelte';
+<script>
+  import { afterUpdate, onMount } from 'svelte';
   import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
-  import { select, selectAll, pointer } from 'd3-selection';
+  import { select, selectAll, pointer, local } from 'd3-selection';
   import SimpleBezierEdge from '../../Edges/SimpleBezierEdge.svelte';
   import StraightEdge from '../../Edges/StraightEdge.svelte';
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
@@ -95,7 +96,17 @@
       d3.select(`#background-${key}`).call(d3Zoom);
       d3.selectAll('#dot').call(d3Zoom)
       zoomInit()
+      document.getElementById('store-input-btn').addEventListener('click', uploadStore)
   });
+
+  const uploadStore = (e) => {
+    const text = document.getElementById('store-input').value;
+    const newStore = JSON.parse(text);
+    console.log('nodes', newStore.nodes);
+    console.log('edges', newStore.edges);
+    svelvetStore.nodesStore.set(newStore.nodes);
+    svelvetStore.edgesStore.set(newStore.edges);
+  }
   // TODO: Update d3Zoom type (refer to d3Zoom docs)
   
   // function to handle zoom events - arguments: d3ZoomEvent
@@ -121,18 +132,28 @@
       // transform div elements (nodes)
       let transform = d3.zoomTransform(this);
       d3Translate = transform;
+<<<<<<< HEAD
       
+=======
+>>>>>>> testenv
       // selects and transforms all node divs from class 'Node' and performs transformation
       d3.select(`.Node-${key}`)
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
           .style('transform-origin', '0 0');
   }
 
-  // if(locked === 'true') {
-  //   document.querySelector('.Nodes').style.poin
-  // }
-  console.log('isLocked from GV', $isLocked);
-  console.log('width from GV', $widthStore);
+  afterUpdate(() => {
+      // gets the current nodes and edges arrays from the store and saves them in an object
+      const state = {nodes: $nodesStore, edges: $derivedEdges};
+      // this function creates a data blob and an object URL for it
+      const makeTextFile = (text) => {
+        const data = new Blob([text], {type: 'application/json'});
+        const textFile = window.URL.createObjectURL(data);
+        return textFile;
+      }
+      // Set the download button target to the object URL
+      document.getElementById('downloadState').href = makeTextFile(JSON.stringify(state));
+  })
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
@@ -210,6 +231,12 @@
   </g>
 </svg>
 
+<!-- <img src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""> -->
+<a id='downloadState' download='state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
+<!-- <div id="download-state"> -->
+  <!-- <img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""> -->
+  <!-- <a href=# download="state.txt"><img src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a> -->
+<!-- </div> -->
 
 <!-- rendering dots on the background depending on the zoom level -->
 
@@ -234,4 +261,16 @@
     width: 100%;
     height: 100%;
   } */ 
+
+  #dwnldimg {
+    width: 2rem;
+  }
+
+  #downloadState {
+    /* width: 5rem; */
+    /* height: 2rem; */
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+  }
 </style>

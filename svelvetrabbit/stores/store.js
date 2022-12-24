@@ -20,7 +20,9 @@ export const coreSvelvetStore = {
     initZoom: writable(4),
     initLocation: writable({x:0, y:0}),
     isLocked: writable(false),
-    boundary: writable(false)
+    boundary: writable(false),
+    nodeLinkStore: writable(false),
+    nodeCreateStore: writable(false)
 };
 
 
