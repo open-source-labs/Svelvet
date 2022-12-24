@@ -6,10 +6,11 @@
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
   import StepEdge from '../../Edges/StepEdge.svelte';
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
-  import Minimap from '../Minimap/Minimap.svelte';
+  import MinimapBoundless from '../Minimap/MinimapBoundless.svelte';
   import Node from '../../Nodes/index.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
   import { findOrCreateStore } from '../../stores/store';
+  import MinimapBoundary from '../Minimap/MinimapBoundary.svelte';
   
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -30,6 +31,7 @@
   export let width
   export let height
   export let boundary
+  
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
   // svelvetStore.isLocked.set(true)
@@ -134,8 +136,10 @@
   </script>
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-{#if minimap}
-  <Minimap {key} {d3Translate}/>
+{#if minimap && boundary}
+<MinimapBoundary {key} {boundary} {d3Translate}/>
+{:else if minimap }
+<MinimapBoundless {key} {d3Translate}/>
 {/if}
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
