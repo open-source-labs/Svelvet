@@ -37,7 +37,7 @@
 		    data: { label: "textColor" },
 		    width: 150,
 		    height: 40,
-			className: 'customClass',
+			  className: 'customClass',
 		    textColor: "#3F6FD6",
 		    bgColor: "white"
 		  },

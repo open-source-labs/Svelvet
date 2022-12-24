@@ -17,7 +17,6 @@
 
   const {
       onEdgeMove,
-      onTouchMove,
       setAnchorPosition,
       setNewEdgeProps,
       renderEdge,
