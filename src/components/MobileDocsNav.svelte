@@ -146,6 +146,9 @@
           <li class:bg-rose-100={activeLink.includes('Node Classes')}>
             <a on:click={toggleMenu} href="/docs/Node-Classes" class="block py-4 px-12">HTML-Docs</a>
           </li>
+          <li class:bg-rose-100={activeLink.includes('Importing & Exporting Diagrams')}>
+            <a on:click={toggleMenu} href="/docs/importDiagrams" class="block py-4 px-12">HTML-Docs</a>
+          </li>
         </ul>
       {/if}
 
