@@ -19,7 +19,9 @@ export const coreSvelvetStore = {
     hoveredElement: writable(null),
     initZoom: writable(4),
     initLocation: writable({x:0, y:0}),
-    isLocked: writable(false)
+    isLocked: writable(false),
+    nodeLinkStore: writable(false),
+    nodeCreateStore: writable(false)
 };
 
 

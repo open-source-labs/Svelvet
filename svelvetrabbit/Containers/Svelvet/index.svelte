@@ -9,6 +9,8 @@ export let edges;
 export let width = 600;
 export let height = 600;
 export let background = false;
+export let nodeLink = false;
+export let nodeCreate = false;
 export let movement = true;
 export let snap = false;
 export let snapTo = 30;
@@ -37,7 +39,9 @@ onMount(() => {
     svelvetStore.snapResize.set(snapTo);  
     svelvetStore.initZoom.set(initialZoom);
     svelvetStore.initLocation.set(initialLocation);
-    svelvetStore.isLocked.set(locked)
+    svelvetStore.isLocked.set(locked);
+    svelvetStore.nodeLinkStore.set(nodeLink);
+    svelvetStore.nodeCreateStore.set(nodeCreate);
   });
 // enables data reactivity
 // afterUpdate(() => {
