@@ -22,6 +22,17 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details><summary>v5.0.0</summary>
+<ul>
+  <li>Added interactive node linking & creation</li>
+  <li>Added ability to load custom Svelte components as nodes</li>
+  <li>Added an optional minimap that allows you to visualize larger diagrams</li>
+  <li>Added progammatic initial zoom and location</li>
+  <li>Added custom classes for nodes to allow for uniform styling</li>
+  <li>Updated documentation page on website to include new features</li>
+  <li>Updated home page to include newest collaborators</li>
+</ul>
+</details>
 <details><summary>v4.0.0</summary>
 <ul>
   <li>Added ability to include HTML in inside of nodes (i.e. videos, sounds, etc)</li>
