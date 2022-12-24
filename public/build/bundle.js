@@ -8775,7 +8775,7 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$3, 182, 4, 6493);
+    			add_location(rect, file$3, 182, 4, 6498);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -9143,27 +9143,27 @@ var app = (function () {
     			}
 
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
-    			add_location(div0, file$3, 141, 2, 5323);
+    			add_location(div0, file$3, 141, 2, 5328);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
-    			add_location(div1, file$3, 139, 0, 5205);
+    			add_location(div1, file$3, 139, 0, 5210);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$3, 171, 6, 6281);
+    			add_location(circle, file$3, 171, 6, 6286);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", gridSize);
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
-    			add_location(pattern, file$3, 163, 4, 6122);
-    			add_location(defs, file$3, 162, 2, 6111);
-    			add_location(g, file$3, 186, 2, 6670);
+    			add_location(pattern, file$3, 163, 4, 6127);
+    			add_location(defs, file$3, 162, 2, 6116);
+    			add_location(g, file$3, 186, 2, 6675);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[8]);
-    			add_location(svg, file$3, 161, 0, 6030);
+    			add_location(svg, file$3, 161, 0, 6035);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9435,7 +9435,7 @@ var app = (function () {
 
     	function determineD3Instance() {
     		if (boundary) {
-    			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).translateExtent([[0, 0], [boundary, boundary]]).extent([[0, 0], [400, 600]]).on('zoom', handleZoom); // world extent
+    			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).translateExtent([[0, 0], [boundary, boundary]]).extent([[0, 0], [width, height]]).on('zoom', handleZoom); // world extent
     		} else {
     			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).on('zoom', handleZoom);
     		}

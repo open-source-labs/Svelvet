@@ -47,7 +47,7 @@
       .filter(() => !$nodeSelected)
       .scaleExtent([0.4, 2])
       .translateExtent([[0, 0], [boundary, boundary]]) // world extent
-      .extent([[0, 0], [400, 600]]) 
+      .extent([[0, 0], [width, height]]) 
       .on('zoom', handleZoom);}
   else{
     return d3
