@@ -11,6 +11,9 @@
 
 <div>
   <h3 class="text-xl font-semibold mt-12 mb-6">Implementing Custom Svelte Components</h3>
+  <p class="text-gray-600">
+    See the Code Sandbox below to see implementation!
+  </p>
 </div>
 
 <iframe src="https://codesandbox.io/embed/custom-svelte-components-p4ztve?autoresize=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark"
