@@ -27,6 +27,9 @@
   export let initialZoom;
   export let initialLocation;
   export let minimap;
+  export let width
+  export let height
+  export let boundary
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
   // svelvetStore.isLocked.set(true)
@@ -35,8 +38,27 @@
   const gridSize = 15;
   const dotSize = 10;
   let d3Translate = {x: 0, y: 0, k:1};
+  
+  function determineD3Instance() {
+  if(boundary){
+    
+  return d3
+      .zoom()
+      .filter(() => !$nodeSelected)
+      .scaleExtent([0.4, 2])
+      .translateExtent([[0, 0], [boundary, boundary]]) // world extent
+      .extent([[0, 0], [400, 600]]) 
+      .on('zoom', handleZoom);}
+  else{
+    return d3
+      .zoom()
+      .filter(() => !$nodeSelected)
+      .scaleExtent([0.4, 2])
+      .on('zoom', handleZoom);}
+  }
+  let d3Zoom = determineD3Instance()
   function zoomInit() {
-    //d3Scale.set(e.transform.k);
+    
     //set default zoom logic
       d3.select(`.Edges-${key}`)
       //makes sure translation is default at center coordinates
@@ -65,16 +87,15 @@
   }
   
   onMount(() => {
+      
       d3.select(`.Edges-${key}`).call(d3Zoom);
       d3.select(`.Nodes-${key}`).call(d3Zoom);
+      d3.select(`#background-${key}`).call(d3Zoom);
+      d3.selectAll('#dot').call(d3Zoom)
       zoomInit()
   });
   // TODO: Update d3Zoom type (refer to d3Zoom docs)
-  let d3Zoom = d3
-      .zoom()
-      .filter(() => !$nodeSelected)
-      .scaleExtent([0.4, 2])
-      .on('zoom', handleZoom);
+  
   // function to handle zoom events - arguments: d3ZoomEvent
   function handleZoom(e) {
       if (!$movementStore)
@@ -98,7 +119,7 @@
       // transform div elements (nodes)
       let transform = d3.zoomTransform(this);
       d3Translate = transform;
-      console.log(d3Translate)
+      
       // selects and transforms all node divs from class 'Node' and performs transformation
       d3.select(`.Node-${key}`)
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
@@ -114,7 +135,7 @@
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 {#if minimap}
-  <Minimap {key} {minimap} {d3Translate}/>
+  <Minimap {key} {d3Translate}/>
 {/if}
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->

@@ -5197,7 +5197,8 @@ var app = (function () {
         hoveredElement: writable(null),
         initZoom: writable(4),
         initLocation: writable({x:0, y:0}),
-        isLocked: writable(false)
+        isLocked: writable(false),
+        boundary: writable(false)
     };
 
 
@@ -5226,7 +5227,33 @@ var app = (function () {
         // This is the function handler for the mouseMove event to update the position of the selected node.
         // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
         const onNodeMove = (e, nodeID) => {
+          const bound = get_store_value(coreSvelvetStore.boundary);
+          if(bound){
                 coreSvelvetStore.nodesStore.update((n) => {
+                    const correctNode = n.find((node) => node.id === nodeID);
+                    
+                    const scale = get_store_value(coreSvelvetStore.d3Scale);
+        
+                    if(correctNode.childNodes){
+                        n.forEach((child) => {
+                            if(correctNode.childNodes.includes(child.id)){
+                              child.position.x = Math.min(Math.max(child.position.x + e.movementX / scale, 1), bound-50);
+                              child.position.y = Math.min(Math.max(child.position.y +e.movementY / scale, 1), bound-50);
+                            }
+                        });
+                        correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound-50);
+                        correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound-50);
+                    }
+                    else {
+                        // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                        correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound-50);
+                        correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound-50);
+        
+                    }
+                    return [...n];
+                });}
+                  else {
+                  coreSvelvetStore.nodesStore.update((n) => {
                     const correctNode = n.find((node) => node.id === nodeID);
         
                     const scale = get_store_value(coreSvelvetStore.d3Scale);
@@ -5249,7 +5276,8 @@ var app = (function () {
                     }
                     return [...n];
                 });
-        };
+            }      };
+                
 
         // Mostly copied from onNodeMove, this allows for the movement of new Edges that don't yet have targets/sources
         const onEdgeMove = (event, edgeID) => {
@@ -8272,17 +8300,17 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[28] = list[i];
+    	child_ctx[32] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[31] = list[i];
+    	child_ctx[35] = list[i];
     	return child_ctx;
     }
 
-    // (116:0) {#if minimap}
+    // (137:0) {#if minimap}
     function create_if_block_6(ctx) {
     	let minimap_1;
     	let current;
@@ -8290,7 +8318,6 @@ var app = (function () {
     	minimap_1 = new Minimap({
     			props: {
     				key: /*key*/ ctx[2],
-    				minimap: /*minimap*/ ctx[3],
     				d3Translate: /*d3Translate*/ ctx[4]
     			},
     			$$inline: true
@@ -8307,7 +8334,6 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const minimap_1_changes = {};
     			if (dirty[0] & /*key*/ 4) minimap_1_changes.key = /*key*/ ctx[2];
-    			if (dirty[0] & /*minimap*/ 8) minimap_1_changes.minimap = /*minimap*/ ctx[3];
     			if (dirty[0] & /*d3Translate*/ 16) minimap_1_changes.d3Translate = /*d3Translate*/ ctx[4];
     			minimap_1.$set(minimap_1_changes);
     		},
@@ -8329,21 +8355,21 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(116:0) {#if minimap}",
+    		source: "(137:0) {#if minimap}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (133:6) {:else}
+    // (154:6) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[31],
+    				node: /*node*/ ctx[35],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
@@ -8361,10 +8387,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[31];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 8) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8388,21 +8414,21 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(133:6) {:else}",
+    		source: "(154:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (130:33) 
+    // (151:33) 
     function create_if_block_5(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[31],
+    				node: /*node*/ ctx[35],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -8420,10 +8446,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[31];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 8) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8447,14 +8473,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(130:33) ",
+    		source: "(151:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (127:6) {#if node.data.html}
+    // (148:6) {#if node.data.html}
     function create_if_block_4(ctx) {
     	let node;
     	let t;
@@ -8462,7 +8488,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[31],
+    				node: /*node*/ ctx[35],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -8482,10 +8508,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[31];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 8) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8510,16 +8536,16 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(127:6) {#if node.data.html}",
+    		source: "(148:6) {#if node.data.html}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (134:8) <Node {node} {key} >
+    // (155:8) <Node {node} {key} >
     function create_default_slot_2(ctx) {
-    	let t_value = /*node*/ ctx[31].data.label + "";
+    	let t_value = /*node*/ ctx[35].data.label + "";
     	let t;
 
     	const block = {
@@ -8530,7 +8556,7 @@ var app = (function () {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && t_value !== (t_value = /*node*/ ctx[31].data.label + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*$nodesStore*/ 128 && t_value !== (t_value = /*node*/ ctx[35].data.label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -8541,19 +8567,19 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(134:8) <Node {node} {key} >",
+    		source: "(155:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (132:8) <Node {node} {key} >
+    // (153:8) <Node {node} {key} >
     function create_default_slot_1(ctx) {
     	let switch_instance;
     	let t;
     	let current;
-    	var switch_value = /*node*/ ctx[31].data.custom;
+    	var switch_value = /*node*/ ctx[35].data.custom;
 
     	function switch_props(ctx) {
     		return { $$inline: true };
@@ -8574,7 +8600,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (switch_value !== (switch_value = /*node*/ ctx[31].data.custom)) {
+    			if (switch_value !== (switch_value = /*node*/ ctx[35].data.custom)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -8615,17 +8641,17 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(132:8) <Node {node} {key} >",
+    		source: "(153:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (128:8) <Node {node} {key} >
+    // (149:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[31].data.html + "";
+    	let raw_value = /*node*/ ctx[35].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -8639,7 +8665,7 @@ var app = (function () {
     			insert_dev(target, html_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && raw_value !== (raw_value = /*node*/ ctx[31].data.html + "")) html_tag.p(raw_value);
+    			if (dirty[0] & /*$nodesStore*/ 128 && raw_value !== (raw_value = /*node*/ ctx[35].data.html + "")) html_tag.p(raw_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(html_anchor);
@@ -8651,14 +8677,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(128:8) <Node {node} {key} >",
+    		source: "(149:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (122:4) {#each $nodesStore as node}
+    // (143:4) {#each $nodesStore as node}
     function create_each_block_1(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -8668,8 +8694,8 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
-    		if (/*node*/ ctx[31].data.html) return 0;
-    		if (/*node*/ ctx[31].data.custom) return 1;
+    		if (/*node*/ ctx[35].data.html) return 0;
+    		if (/*node*/ ctx[35].data.custom) return 1;
     		return 2;
     	}
 
@@ -8732,14 +8758,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(122:4) {#each $nodesStore as node}",
+    		source: "(143:4) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (161:2) {#if $backgroundStore}
+    // (182:2) {#if $backgroundStore}
     function create_if_block_3(ctx) {
     	let rect;
 
@@ -8749,7 +8775,7 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$3, 161, 4, 6057);
+    			add_location(rect, file$3, 182, 4, 6493);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -8768,20 +8794,20 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(161:2) {#if $backgroundStore}",
+    		source: "(182:2) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (174:6) {:else}
+    // (195:6) {:else}
     function create_else_block$1(ctx) {
     	let simplebezieredge;
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[28] },
+    			props: { edge: /*edge*/ ctx[32] },
     			$$inline: true
     		});
 
@@ -8795,7 +8821,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplebezieredge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 512) simplebezieredge_changes.edge = /*edge*/ ctx[28];
+    			if (dirty[0] & /*$derivedEdges*/ 512) simplebezieredge_changes.edge = /*edge*/ ctx[32];
     			simplebezieredge.$set(simplebezieredge_changes);
     		},
     		i: function intro(local) {
@@ -8816,20 +8842,20 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(174:6) {:else}",
+    		source: "(195:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (172:37) 
+    // (193:37) 
     function create_if_block_2(ctx) {
     	let stepedge;
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[28] },
+    			props: { edge: /*edge*/ ctx[32] },
     			$$inline: true
     		});
 
@@ -8843,7 +8869,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 512) stepedge_changes.edge = /*edge*/ ctx[28];
+    			if (dirty[0] & /*$derivedEdges*/ 512) stepedge_changes.edge = /*edge*/ ctx[32];
     			stepedge.$set(stepedge_changes);
     		},
     		i: function intro(local) {
@@ -8864,20 +8890,20 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(172:37) ",
+    		source: "(193:37) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (170:43) 
+    // (191:43) 
     function create_if_block_1(ctx) {
     	let smoothstepedge;
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[28] },
+    			props: { edge: /*edge*/ ctx[32] },
     			$$inline: true
     		});
 
@@ -8891,7 +8917,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const smoothstepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 512) smoothstepedge_changes.edge = /*edge*/ ctx[28];
+    			if (dirty[0] & /*$derivedEdges*/ 512) smoothstepedge_changes.edge = /*edge*/ ctx[32];
     			smoothstepedge.$set(smoothstepedge_changes);
     		},
     		i: function intro(local) {
@@ -8912,20 +8938,20 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(170:43) ",
+    		source: "(191:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (168:6) {#if edge.type === 'straight'}
+    // (189:6) {#if edge.type === 'straight'}
     function create_if_block$1(ctx) {
     	let straightedge;
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[28] },
+    			props: { edge: /*edge*/ ctx[32] },
     			$$inline: true
     		});
 
@@ -8939,7 +8965,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const straightedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 512) straightedge_changes.edge = /*edge*/ ctx[28];
+    			if (dirty[0] & /*$derivedEdges*/ 512) straightedge_changes.edge = /*edge*/ ctx[32];
     			straightedge.$set(straightedge_changes);
     		},
     		i: function intro(local) {
@@ -8960,14 +8986,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(168:6) {#if edge.type === 'straight'}",
+    		source: "(189:6) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (167:4) {#each $derivedEdges as edge}
+    // (188:4) {#each $derivedEdges as edge}
     function create_each_block(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -8977,9 +9003,9 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*edge*/ ctx[28].type === 'straight') return 0;
-    		if (/*edge*/ ctx[28].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[28].type === 'step') return 2;
+    		if (/*edge*/ ctx[32].type === 'straight') return 0;
+    		if (/*edge*/ ctx[32].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[32].type === 'step') return 2;
     		return 3;
     	}
 
@@ -9042,7 +9068,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(167:4) {#each $derivedEdges as edge}",
+    		source: "(188:4) {#each $derivedEdges as edge}",
     		ctx
     	});
 
@@ -9117,27 +9143,27 @@ var app = (function () {
     			}
 
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
-    			add_location(div0, file$3, 120, 2, 4887);
+    			add_location(div0, file$3, 141, 2, 5323);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
-    			add_location(div1, file$3, 118, 0, 4769);
+    			add_location(div1, file$3, 139, 0, 5205);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$3, 150, 6, 5845);
+    			add_location(circle, file$3, 171, 6, 6281);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", gridSize);
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
-    			add_location(pattern, file$3, 142, 4, 5686);
-    			add_location(defs, file$3, 141, 2, 5675);
-    			add_location(g, file$3, 165, 2, 6234);
+    			add_location(pattern, file$3, 163, 4, 6122);
+    			add_location(defs, file$3, 162, 2, 6111);
+    			add_location(g, file$3, 186, 2, 6670);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1nam3pu"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[5] + " " + /*$heightStore*/ ctx[8]);
-    			add_location(svg, file$3, 140, 0, 5594);
+    			add_location(svg, file$3, 161, 0, 6030);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9167,7 +9193,7 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[18]), false, true, false);
+    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[21]), false, true, false);
     				mounted = true;
     			}
     		},
@@ -9383,6 +9409,9 @@ var app = (function () {
     	let { initialZoom } = $$props;
     	let { initialLocation } = $$props;
     	let { minimap } = $$props;
+    	let { width } = $$props;
+    	let { height } = $$props;
+    	let { boundary } = $$props;
 
     	// here we lookup the store using the unique key
     	const svelvetStore = findOrCreateStore(key);
@@ -9391,21 +9420,30 @@ var app = (function () {
     	const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, isLocked } = svelvetStore;
 
     	validate_store(nodeSelected, 'nodeSelected');
-    	component_subscribe($$self, nodeSelected, value => $$invalidate(21, $nodeSelected = value));
+    	component_subscribe($$self, nodeSelected, value => $$invalidate(24, $nodeSelected = value));
     	validate_store(backgroundStore, 'backgroundStore');
     	component_subscribe($$self, backgroundStore, value => $$invalidate(6, $backgroundStore = value));
     	validate_store(movementStore, 'movementStore');
-    	component_subscribe($$self, movementStore, value => $$invalidate(20, $movementStore = value));
+    	component_subscribe($$self, movementStore, value => $$invalidate(23, $movementStore = value));
     	validate_store(widthStore, 'widthStore');
     	component_subscribe($$self, widthStore, value => $$invalidate(5, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
     	component_subscribe($$self, heightStore, value => $$invalidate(8, $heightStore = value));
     	validate_store(isLocked, 'isLocked');
-    	component_subscribe($$self, isLocked, value => $$invalidate(19, $isLocked = value));
+    	component_subscribe($$self, isLocked, value => $$invalidate(22, $isLocked = value));
     	let d3Translate = { x: 0, y: 0, k: 1 };
 
+    	function determineD3Instance() {
+    		if (boundary) {
+    			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).translateExtent([[0, 0], [boundary, boundary]]).extent([[0, 0], [400, 600]]).on('zoom', handleZoom); // world extent
+    		} else {
+    			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).on('zoom', handleZoom);
+    		}
+    	}
+
+    	let d3Zoom = determineD3Instance();
+
     	function zoomInit() {
-    		//d3Scale.set(e.transform.k);
     		//set default zoom logic
     		d3.select(`.Edges-${key}`).//makes sure translation is default at center coordinates
     		transition().duration(0).call(d3Zoom.translateTo, 0, 0).//moves camera to coordinates
@@ -9423,12 +9461,12 @@ var app = (function () {
     	onMount(() => {
     		d3.select(`.Edges-${key}`).call(d3Zoom);
     		d3.select(`.Nodes-${key}`).call(d3Zoom);
+    		d3.select(`#background-${key}`).call(d3Zoom);
+    		d3.selectAll('#dot').call(d3Zoom);
     		zoomInit();
     	});
 
     	// TODO: Update d3Zoom type (refer to d3Zoom docs)
-    	let d3Zoom = d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).on('zoom', handleZoom);
-
     	// function to handle zoom events - arguments: d3ZoomEvent
     	function handleZoom(e) {
     		if (!$movementStore) return;
@@ -9448,7 +9486,6 @@ var app = (function () {
     		let transform = d3.zoomTransform(this);
 
     		$$invalidate(4, d3Translate = transform);
-    		console.log(d3Translate);
 
     		// selects and transforms all node divs from class 'Node' and performs transformation
     		d3.select(`.Node-${key}`).style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')').style('transform-origin', '0 0');
@@ -9485,6 +9522,18 @@ var app = (function () {
     		if (minimap === undefined && !('minimap' in $$props || $$self.$$.bound[$$self.$$.props['minimap']])) {
     			console_1$1.warn("<GraphView> was created without expected prop 'minimap'");
     		}
+
+    		if (width === undefined && !('width' in $$props || $$self.$$.bound[$$self.$$.props['width']])) {
+    			console_1$1.warn("<GraphView> was created without expected prop 'width'");
+    		}
+
+    		if (height === undefined && !('height' in $$props || $$self.$$.bound[$$self.$$.props['height']])) {
+    			console_1$1.warn("<GraphView> was created without expected prop 'height'");
+    		}
+
+    		if (boundary === undefined && !('boundary' in $$props || $$self.$$.bound[$$self.$$.props['boundary']])) {
+    			console_1$1.warn("<GraphView> was created without expected prop 'boundary'");
+    		}
     	});
 
     	const writable_props = [
@@ -9493,7 +9542,10 @@ var app = (function () {
     		'key',
     		'initialZoom',
     		'initialLocation',
-    		'minimap'
+    		'minimap',
+    		'width',
+    		'height',
+    		'boundary'
     	];
 
     	Object.keys($$props).forEach(key => {
@@ -9511,6 +9563,9 @@ var app = (function () {
     		if ('initialZoom' in $$props) $$invalidate(16, initialZoom = $$props.initialZoom);
     		if ('initialLocation' in $$props) $$invalidate(17, initialLocation = $$props.initialLocation);
     		if ('minimap' in $$props) $$invalidate(3, minimap = $$props.minimap);
+    		if ('width' in $$props) $$invalidate(18, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(19, height = $$props.height);
+    		if ('boundary' in $$props) $$invalidate(20, boundary = $$props.boundary);
     	};
 
     	$$self.$capture_state = () => ({
@@ -9537,6 +9592,9 @@ var app = (function () {
     		initialZoom,
     		initialLocation,
     		minimap,
+    		width,
+    		height,
+    		boundary,
     		svelvetStore,
     		nodeSelected,
     		backgroundStore,
@@ -9548,8 +9606,9 @@ var app = (function () {
     		gridSize,
     		dotSize,
     		d3Translate,
-    		zoomInit,
+    		determineD3Instance,
     		d3Zoom,
+    		zoomInit,
     		handleZoom,
     		$widthStore,
     		$isLocked,
@@ -9569,6 +9628,9 @@ var app = (function () {
     		if ('initialZoom' in $$props) $$invalidate(16, initialZoom = $$props.initialZoom);
     		if ('initialLocation' in $$props) $$invalidate(17, initialLocation = $$props.initialLocation);
     		if ('minimap' in $$props) $$invalidate(3, minimap = $$props.minimap);
+    		if ('width' in $$props) $$invalidate(18, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(19, height = $$props.height);
+    		if ('boundary' in $$props) $$invalidate(20, boundary = $$props.boundary);
     		if ('d3Translate' in $$props) $$invalidate(4, d3Translate = $$props.d3Translate);
     		if ('d3Zoom' in $$props) d3Zoom = $$props.d3Zoom;
     	};
@@ -9596,6 +9658,9 @@ var app = (function () {
     		isLocked,
     		initialZoom,
     		initialLocation,
+    		width,
+    		height,
+    		boundary,
     		contextmenu_handler
     	];
     }
@@ -9616,7 +9681,10 @@ var app = (function () {
     				key: 2,
     				initialZoom: 16,
     				initialLocation: 17,
-    				minimap: 3
+    				minimap: 3,
+    				width: 18,
+    				height: 19,
+    				boundary: 20
     			},
     			null,
     			[-1, -1]
@@ -9677,6 +9745,30 @@ var app = (function () {
     	set minimap(value) {
     		throw new Error("<GraphView>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get width() {
+    		throw new Error("<GraphView>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set width(value) {
+    		throw new Error("<GraphView>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get height() {
+    		throw new Error("<GraphView>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set height(value) {
+    		throw new Error("<GraphView>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get boundary() {
+    		throw new Error("<GraphView>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set boundary(value) {
+    		throw new Error("<GraphView>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* svelvetrabbit/Containers/Svelvet/index.svelte generated by Svelte v3.55.0 */
@@ -9690,12 +9782,15 @@ var app = (function () {
 
     	graphview = new GraphView({
     			props: {
-    				nodesStore: /*nodesStore*/ ctx[9],
-    				minimap: /*minimap*/ ctx[2],
-    				derivedEdges: /*derivedEdges*/ ctx[10],
-    				key: /*key*/ ctx[6],
-    				initialLocation: /*initialLocation*/ ctx[0],
-    				initialZoom: /*initialZoom*/ ctx[1]
+    				nodesStore: /*nodesStore*/ ctx[12],
+    				boundary: /*boundary*/ ctx[5],
+    				width: /*width*/ ctx[0],
+    				height: /*height*/ ctx[1],
+    				minimap: /*minimap*/ ctx[4],
+    				derivedEdges: /*derivedEdges*/ ctx[13],
+    				key: /*key*/ ctx[9],
+    				initialLocation: /*initialLocation*/ ctx[2],
+    				initialZoom: /*initialZoom*/ ctx[3]
     			},
     			$$inline: true
     		});
@@ -9705,8 +9800,8 @@ var app = (function () {
     			div = element("div");
     			create_component(graphview.$$.fragment);
     			attr_dev(div, "class", "Svelvet svelte-tw9ly1");
-    			attr_dev(div, "style", div_style_value = `width: ${/*$widthStore*/ ctx[3]}px; height: ${/*$heightStore*/ ctx[4]}px; background-color: ${/*$backgroundColor*/ ctx[5]}`);
-    			add_location(div, file$2, 60, 0, 2717);
+    			attr_dev(div, "style", div_style_value = `width: ${/*$widthStore*/ ctx[6]}px; height: ${/*$heightStore*/ ctx[7]}px; background-color: ${/*$backgroundColor*/ ctx[8]}`);
+    			add_location(div, file$2, 62, 0, 2785);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9718,12 +9813,15 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			const graphview_changes = {};
-    			if (dirty & /*minimap*/ 4) graphview_changes.minimap = /*minimap*/ ctx[2];
-    			if (dirty & /*initialLocation*/ 1) graphview_changes.initialLocation = /*initialLocation*/ ctx[0];
-    			if (dirty & /*initialZoom*/ 2) graphview_changes.initialZoom = /*initialZoom*/ ctx[1];
+    			if (dirty & /*boundary*/ 32) graphview_changes.boundary = /*boundary*/ ctx[5];
+    			if (dirty & /*width*/ 1) graphview_changes.width = /*width*/ ctx[0];
+    			if (dirty & /*height*/ 2) graphview_changes.height = /*height*/ ctx[1];
+    			if (dirty & /*minimap*/ 16) graphview_changes.minimap = /*minimap*/ ctx[4];
+    			if (dirty & /*initialLocation*/ 4) graphview_changes.initialLocation = /*initialLocation*/ ctx[2];
+    			if (dirty & /*initialZoom*/ 8) graphview_changes.initialZoom = /*initialZoom*/ ctx[3];
     			graphview.$set(graphview_changes);
 
-    			if (!current || dirty & /*$widthStore, $heightStore, $backgroundColor*/ 56 && div_style_value !== (div_style_value = `width: ${/*$widthStore*/ ctx[3]}px; height: ${/*$heightStore*/ ctx[4]}px; background-color: ${/*$backgroundColor*/ ctx[5]}`)) {
+    			if (!current || dirty & /*$widthStore, $heightStore, $backgroundColor*/ 448 && div_style_value !== (div_style_value = `width: ${/*$widthStore*/ ctx[6]}px; height: ${/*$heightStore*/ ctx[7]}px; background-color: ${/*$backgroundColor*/ ctx[8]}`)) {
     				attr_dev(div, "style", div_style_value);
     			}
     		},
@@ -9772,6 +9870,7 @@ var app = (function () {
     	let { initialZoom = 4 } = $$props;
     	let { minimap = false } = $$props;
     	let { locked = false } = $$props;
+    	let { boundary = false } = $$props;
 
     	// generates a unique string for each svelvet component's unique store instance
     	const key = (Math.random() + 1).toString(36).substring(7);
@@ -9784,11 +9883,11 @@ var app = (function () {
     	const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor, isLocked } = svelvetStore;
 
     	validate_store(widthStore, 'widthStore');
-    	component_subscribe($$self, widthStore, value => $$invalidate(3, $widthStore = value));
+    	component_subscribe($$self, widthStore, value => $$invalidate(6, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
-    	component_subscribe($$self, heightStore, value => $$invalidate(4, $heightStore = value));
+    	component_subscribe($$self, heightStore, value => $$invalidate(7, $heightStore = value));
     	validate_store(backgroundColor, 'backgroundColor');
-    	component_subscribe($$self, backgroundColor, value => $$invalidate(5, $backgroundColor = value));
+    	component_subscribe($$self, backgroundColor, value => $$invalidate(8, $backgroundColor = value));
 
     	// sets the state of the store to the values passed in from the Svelvet Component on initial render
     	onMount(() => {
@@ -9804,6 +9903,7 @@ var app = (function () {
     		svelvetStore.initZoom.set(initialZoom);
     		svelvetStore.initLocation.set(initialLocation);
     		svelvetStore.isLocked.set(locked);
+    		svelvetStore.boundary.set(boundary);
     	});
 
     	$$self.$$.on_mount.push(function () {
@@ -9829,7 +9929,8 @@ var app = (function () {
     		'initialLocation',
     		'initialZoom',
     		'minimap',
-    		'locked'
+    		'locked',
+    		'boundary'
     	];
 
     	Object.keys($$props).forEach(key => {
@@ -9837,19 +9938,20 @@ var app = (function () {
     	});
 
     	$$self.$$set = $$props => {
-    		if ('nodes' in $$props) $$invalidate(12, nodes = $$props.nodes);
-    		if ('edges' in $$props) $$invalidate(13, edges = $$props.edges);
-    		if ('width' in $$props) $$invalidate(14, width = $$props.width);
-    		if ('height' in $$props) $$invalidate(15, height = $$props.height);
-    		if ('background' in $$props) $$invalidate(16, background = $$props.background);
-    		if ('movement' in $$props) $$invalidate(17, movement = $$props.movement);
-    		if ('snap' in $$props) $$invalidate(18, snap = $$props.snap);
-    		if ('snapTo' in $$props) $$invalidate(19, snapTo = $$props.snapTo);
-    		if ('bgColor' in $$props) $$invalidate(20, bgColor = $$props.bgColor);
-    		if ('initialLocation' in $$props) $$invalidate(0, initialLocation = $$props.initialLocation);
-    		if ('initialZoom' in $$props) $$invalidate(1, initialZoom = $$props.initialZoom);
-    		if ('minimap' in $$props) $$invalidate(2, minimap = $$props.minimap);
-    		if ('locked' in $$props) $$invalidate(21, locked = $$props.locked);
+    		if ('nodes' in $$props) $$invalidate(15, nodes = $$props.nodes);
+    		if ('edges' in $$props) $$invalidate(16, edges = $$props.edges);
+    		if ('width' in $$props) $$invalidate(0, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(1, height = $$props.height);
+    		if ('background' in $$props) $$invalidate(17, background = $$props.background);
+    		if ('movement' in $$props) $$invalidate(18, movement = $$props.movement);
+    		if ('snap' in $$props) $$invalidate(19, snap = $$props.snap);
+    		if ('snapTo' in $$props) $$invalidate(20, snapTo = $$props.snapTo);
+    		if ('bgColor' in $$props) $$invalidate(21, bgColor = $$props.bgColor);
+    		if ('initialLocation' in $$props) $$invalidate(2, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(3, initialZoom = $$props.initialZoom);
+    		if ('minimap' in $$props) $$invalidate(4, minimap = $$props.minimap);
+    		if ('locked' in $$props) $$invalidate(22, locked = $$props.locked);
+    		if ('boundary' in $$props) $$invalidate(5, boundary = $$props.boundary);
     	};
 
     	$$self.$capture_state = () => ({
@@ -9870,6 +9972,7 @@ var app = (function () {
     		initialZoom,
     		minimap,
     		locked,
+    		boundary,
     		key,
     		svelvetStore,
     		widthStore,
@@ -9884,19 +9987,20 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('nodes' in $$props) $$invalidate(12, nodes = $$props.nodes);
-    		if ('edges' in $$props) $$invalidate(13, edges = $$props.edges);
-    		if ('width' in $$props) $$invalidate(14, width = $$props.width);
-    		if ('height' in $$props) $$invalidate(15, height = $$props.height);
-    		if ('background' in $$props) $$invalidate(16, background = $$props.background);
-    		if ('movement' in $$props) $$invalidate(17, movement = $$props.movement);
-    		if ('snap' in $$props) $$invalidate(18, snap = $$props.snap);
-    		if ('snapTo' in $$props) $$invalidate(19, snapTo = $$props.snapTo);
-    		if ('bgColor' in $$props) $$invalidate(20, bgColor = $$props.bgColor);
-    		if ('initialLocation' in $$props) $$invalidate(0, initialLocation = $$props.initialLocation);
-    		if ('initialZoom' in $$props) $$invalidate(1, initialZoom = $$props.initialZoom);
-    		if ('minimap' in $$props) $$invalidate(2, minimap = $$props.minimap);
-    		if ('locked' in $$props) $$invalidate(21, locked = $$props.locked);
+    		if ('nodes' in $$props) $$invalidate(15, nodes = $$props.nodes);
+    		if ('edges' in $$props) $$invalidate(16, edges = $$props.edges);
+    		if ('width' in $$props) $$invalidate(0, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(1, height = $$props.height);
+    		if ('background' in $$props) $$invalidate(17, background = $$props.background);
+    		if ('movement' in $$props) $$invalidate(18, movement = $$props.movement);
+    		if ('snap' in $$props) $$invalidate(19, snap = $$props.snap);
+    		if ('snapTo' in $$props) $$invalidate(20, snapTo = $$props.snapTo);
+    		if ('bgColor' in $$props) $$invalidate(21, bgColor = $$props.bgColor);
+    		if ('initialLocation' in $$props) $$invalidate(2, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(3, initialZoom = $$props.initialZoom);
+    		if ('minimap' in $$props) $$invalidate(4, minimap = $$props.minimap);
+    		if ('locked' in $$props) $$invalidate(22, locked = $$props.locked);
+    		if ('boundary' in $$props) $$invalidate(5, boundary = $$props.boundary);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -9904,9 +10008,12 @@ var app = (function () {
     	}
 
     	return [
+    		width,
+    		height,
     		initialLocation,
     		initialZoom,
     		minimap,
+    		boundary,
     		$widthStore,
     		$heightStore,
     		$backgroundColor,
@@ -9918,8 +10025,6 @@ var app = (function () {
     		backgroundColor,
     		nodes,
     		edges,
-    		width,
-    		height,
     		background,
     		movement,
     		snap,
@@ -9934,19 +10039,20 @@ var app = (function () {
     		super(options);
 
     		init$1(this, options, instance$2, create_fragment$2, safe_not_equal, {
-    			nodes: 12,
-    			edges: 13,
-    			width: 14,
-    			height: 15,
-    			background: 16,
-    			movement: 17,
-    			snap: 18,
-    			snapTo: 19,
-    			bgColor: 20,
-    			initialLocation: 0,
-    			initialZoom: 1,
-    			minimap: 2,
-    			locked: 21
+    			nodes: 15,
+    			edges: 16,
+    			width: 0,
+    			height: 1,
+    			background: 17,
+    			movement: 18,
+    			snap: 19,
+    			snapTo: 20,
+    			bgColor: 21,
+    			initialLocation: 2,
+    			initialZoom: 3,
+    			minimap: 4,
+    			locked: 22,
+    			boundary: 5
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -10060,6 +10166,14 @@ var app = (function () {
     	set locked(value) {
     		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get boundary() {
+    		throw new Error("<Svelvet>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set boundary(value) {
+    		throw new Error("<Svelvet>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/BlueThing.svelte generated by Svelte v3.55.0 */
@@ -10080,8 +10194,8 @@ var app = (function () {
     			t0 = text("You are logged in \n  ");
     			button = element("button");
     			button.textContent = "Logout";
-    			add_location(button, file$1, 18, 2, 393);
-    			add_location(div, file$1, 16, 1, 363);
+    			add_location(button, file$1, 18, 2, 342);
+    			add_location(div, file$1, 16, 1, 312);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -10134,13 +10248,13 @@ var app = (function () {
     			button.textContent = "Login Here";
     			attr_dev(input0, "type", "text");
     			attr_dev(input0, "placeholder", "Username");
-    			add_location(input0, file$1, 11, 2, 201);
+    			add_location(input0, file$1, 11, 2, 150);
     			attr_dev(input1, "type", "password");
     			attr_dev(input1, "placeholder", "Password");
-    			add_location(input1, file$1, 12, 2, 248);
-    			add_location(button, file$1, 13, 2, 299);
+    			add_location(input1, file$1, 12, 2, 197);
+    			add_location(button, file$1, 13, 2, 248);
     			attr_dev(div, "class", "login svelte-u86i5u");
-    			add_location(div, file$1, 10, 0, 179);
+    			add_location(div, file$1, 10, 0, 128);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -10291,13 +10405,14 @@ var app = (function () {
     	svelvet = new Svelvet({
     			props: {
     				nodes: /*initialNodes*/ ctx[0],
-    				width: 800,
-    				height: 800,
+    				width: 400,
+    				height: 600,
     				initialZoom: 5,
     				initialLocation: /*initialNodes*/ ctx[0][2].position,
     				edges: /*initialEdges*/ ctx[1],
     				bgColor: '#EEEEEE',
     				background: true,
+    				boundary: 1000,
     				minimap: true
     			},
     			$$inline: true
