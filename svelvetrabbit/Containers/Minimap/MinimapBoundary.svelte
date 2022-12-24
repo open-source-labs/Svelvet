@@ -4,36 +4,47 @@
     import GreyNode from './GreyNodeBoundary.svelte';
 
     export let key
+    export let boundary
     export let d3Translate
     
     const svelvetStore = findOrCreateStore(key);
-    const {nodesStore} = svelvetStore;
+    const {nodesStore, heightStore, widthStore} = svelvetStore;
     let mapHeight =100;
     let mapWidth = 100;
     let widthRatio = 1;
-    let heightRatio = 1
+    let heightRatio = 1;
+    let viewRight =1;
+    let viewBottom = 1;
+    const scaleW = (v) => v* (mapWidth/boundary.x)
+    const scaleH = (v) => v* (mapHeight/boundary.y)
     onMount(() => {
         
     })
     $: {
-        if($heightStore>$widthStore){
+        if(boundary.y>boundary.x){
     mapHeight = 100;
-    mapWidth = Math.max(($widthStore.toFixed(0)*100)/$heightStore.toFixed(0), 25);
+    mapWidth = Math.max((boundary.x.toFixed(0)*100)/boundary.y.toFixed(0), 25);
     }
-    else if($heightStore<$widthStore){
+    else if(boundary.y<boundary.x){
     mapWidth = 100;
-    mapHeight = Math.max(($heightStore.toFixed(0)*100)/$widthStore.toFixed(0), 25)
+    mapHeight = Math.max((boundary.y.toFixed(0)*100)/boundary.x.toFixed(0), 25)
     }else{
     mapHeight = 100;
     mapWidth = 100;
     }
-    widthRatio = mapWidth / $widthStore;
-    heightRatio = mapHeight / $heightStore;
-    console.log('height' +heightRatio)
+    widthRatio = (mapWidth / boundary.x);
+    heightRatio = (mapHeight / boundary.y);
+    viewRight = Math.abs(d3Translate.x*widthRatio/d3Translate.k)
+    console.log('scale' + scaleW(d3Translate.x*widthRatio))
+    console.log('x/k' + d3Translate.x / d3Translate.k)
+    console.log('boundratio' + (boundary.x*widthRatio))
+    console.log('viewRight' +viewRight)
+    viewBottom = Math.abs(d3Translate.y*heightRatio/d3Translate.k)
+    console.log(viewBottom)
     }
     </script>
-    <div class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
-        <!-- <div class='viewBox viewBox-{key}' style="height:{viewHeight}px; width:{viewWidth}px; top:{viewBottom}px; left:{viewRight}px;"></div> -->
+    <div class={`miniMap miniMap-${key}`} style="height:{mapHeight+2}px; width:{mapWidth+2}px;">
+        <div class='viewBox viewBox-{key}' style="height:{($heightStore*heightRatio)/d3Translate.k}px; width:{($widthStore*widthRatio)/d3Translate.k}px; top:{viewBottom}px; left:{viewRight}px;"></div>
         {#each $nodesStore as node}
           <GreyNode {node} {key} {heightRatio} {widthRatio}></GreyNode>
         {/each}

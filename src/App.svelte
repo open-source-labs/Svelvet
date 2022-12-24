@@ -104,7 +104,7 @@
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
-		boundary={1000}
+		boundary={{x: 2000, y: 1500}}
 		minimap={true}
 	/>
 </main>

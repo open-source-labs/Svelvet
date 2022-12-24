@@ -15,7 +15,6 @@
     nWidth = Math.max(node.width * widthRatio, 5)
     top = node.position.y * heightRatio
     left = node.position.x * widthRatio
-    console.log(node.id +'node' + top)
     }
 
 </script>

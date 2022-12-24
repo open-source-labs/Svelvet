@@ -59,17 +59,17 @@ export function findOrCreateStore(key) {
                 if(correctNode.childNodes){
                     n.forEach((child) => {
                         if(correctNode.childNodes.includes(child.id)){
-                          child.position.x = Math.min(Math.max(child.position.x + e.movementX / scale, 1), bound-50);
-                          child.position.y = Math.min(Math.max(child.position.y +e.movementY / scale, 1), bound-50);
+                          child.position.x = Math.min(Math.max(child.position.x + e.movementX / scale, 1), bound.x-50);
+                          child.position.y = Math.min(Math.max(child.position.y +e.movementY / scale, 1), bound.y-50);
                         }
                     })
-                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound-50);
-                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound-50);
+                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound.x-50);
+                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound.y-50);
                 }
                 else {
                     // divide the movement value by scale to keep it proportional to d3Zoom transformations
-                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound-50);
-                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound-50);
+                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound.x-50);
+                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound.y-50);
     
                 }
                 return [...n];

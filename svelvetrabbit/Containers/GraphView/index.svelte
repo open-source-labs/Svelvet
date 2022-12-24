@@ -48,7 +48,7 @@
       .zoom()
       .filter(() => !$nodeSelected)
       .scaleExtent([0.4, 2])
-      .translateExtent([[0, 0], [boundary, boundary]]) // world extent
+      .translateExtent([[0, 0], [boundary.x, boundary.y]]) // world extent
       .extent([[0, 0], [width, height]]) 
       .on('zoom', handleZoom);}
   else{
