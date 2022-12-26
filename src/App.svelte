@@ -110,13 +110,10 @@
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
-<<<<<<< HEAD
 		boundary={{x: 2000, y: 1500}}
-=======
 		nodeLink
 		nodeCreate
 		
->>>>>>> testenv
 		minimap={true}
 	/>
 	<!-- <a download='info.txt' id='downloadState'>Download</a> -->

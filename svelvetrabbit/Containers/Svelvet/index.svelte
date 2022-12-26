@@ -1,4 +1,4 @@
-<!--Note: Import / export in svelvet is used for passing props  -->
+
 <script>import GraphView from '../GraphView/index.svelte';
 import { findOrCreateStore } from '../../stores/store';
 import { afterUpdate, onMount } from 'svelte';
@@ -40,14 +40,11 @@ onMount(() => {
     svelvetStore.snapResize.set(snapTo);  
     svelvetStore.initZoom.set(initialZoom);
     svelvetStore.initLocation.set(initialLocation);
-<<<<<<< HEAD
     svelvetStore.isLocked.set(locked)
     svelvetStore.boundary.set(boundary)
-=======
     svelvetStore.isLocked.set(locked);
     svelvetStore.nodeLinkStore.set(nodeLink);
     svelvetStore.nodeCreateStore.set(nodeCreate);
->>>>>>> testenv
   });
 // enables data reactivity
 // afterUpdate(() => {

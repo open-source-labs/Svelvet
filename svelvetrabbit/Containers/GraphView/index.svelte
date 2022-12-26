@@ -132,10 +132,7 @@
       // transform div elements (nodes)
       let transform = d3.zoomTransform(this);
       d3Translate = transform;
-<<<<<<< HEAD
       
-=======
->>>>>>> testenv
       // selects and transforms all node divs from class 'Node' and performs transformation
       d3.select(`.Node-${key}`)
           .style('transform', 'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')')
