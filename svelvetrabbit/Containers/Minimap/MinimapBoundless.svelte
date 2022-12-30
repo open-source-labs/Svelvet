@@ -1,6 +1,6 @@
 <script>
     import { findOrCreateStore } from '../../stores/store';
-    import {onMount, afterUpdate} from 'svelte'
+    import {onMount, createEventDispatcher} from 'svelte'
     import GreyNode from './GreyNodeBoundless.svelte';
 
     export let key
@@ -13,6 +13,7 @@
         
     })
     //placeholdervalues for initialization
+    const dispatch = createEventDispatcher();
     let mapMax = 100
     let mapWidth = mapMax;
     let mapHeight = mapMax;
@@ -28,6 +29,11 @@
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
+    let clientW;
+    let clientH;
+    let x = 0 //x position within the element.
+    let y = 0
+    let map //y position within the element.
     const scaleW = (v) => v* (mapWidth/nodeWidth)
     const scaleH = (v) => v* (mapHeight/nodeHeight)
     $:{
@@ -45,7 +51,7 @@
     // sets the height, width of nodes after movement
     nodeHeight = nodeYtopPosition - nodeYbottomPosition;
     nodeWidth = nodeXrightPosition - nodeXleftPosition;
-
+    
     if(nodeHeight>nodeWidth){
     mapHeight = 100;
     mapWidth = Math.max((nodeWidth.toFixed(0)*100)/nodeHeight.toFixed(0), 25);
@@ -77,9 +83,18 @@
     //depending on the height and width of the overall structure including all nodes
     //
     //
-    
+    function handleClick(event) {
+        let bounds = map.getBoundingClientRect();
+		// x = event.clientX - bounds.left;
+		// y = event.clientY - bounds.top;
+        // console.log('x: ' + x + 'y: ' + y)
+        dispatch('message', {
+			x: (event.clientX - bounds.left)/widthRatio,
+            y: (event.clientY - bounds.top)/heightRatio
+		});
+	}
     </script>
-    <div class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
+    <div on:click={handleClick} bind:this={map} bind:offsetHeight={clientH} bind:clientWidth={clientW} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
         <div class='viewBox viewBox-{key}' style="height:{viewHeight}px; width:{viewWidth}px; top:{viewBottom}px; left:{viewRight}px;"></div>
         {#each $nodesStore as node}
           <GreyNode {node} {key} {heightRatio} {widthRatio} {nodeXleftPosition} {nodeYbottomPosition}></GreyNode>

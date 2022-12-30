@@ -174,6 +174,59 @@ var app = (function () {
             node.style.setProperty(key, value, important ? 'important' : '');
         }
     }
+    // unfortunately this can't be a constant as that wouldn't be tree-shakeable
+    // so we cache the result instead
+    let crossorigin;
+    function is_crossorigin() {
+        if (crossorigin === undefined) {
+            crossorigin = false;
+            try {
+                if (typeof window !== 'undefined' && window.parent) {
+                    void window.parent.document;
+                }
+            }
+            catch (error) {
+                crossorigin = true;
+            }
+        }
+        return crossorigin;
+    }
+    function add_resize_listener(node, fn) {
+        const computed_style = getComputedStyle(node);
+        if (computed_style.position === 'static') {
+            node.style.position = 'relative';
+        }
+        const iframe = element('iframe');
+        iframe.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; ' +
+            'overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: -1;');
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.tabIndex = -1;
+        const crossorigin = is_crossorigin();
+        let unsubscribe;
+        if (crossorigin) {
+            iframe.src = "data:text/html,<script>onresize=function(){parent.postMessage(0,'*')}</script>";
+            unsubscribe = listen(window, 'message', (event) => {
+                if (event.source === iframe.contentWindow)
+                    fn();
+            });
+        }
+        else {
+            iframe.src = 'about:blank';
+            iframe.onload = () => {
+                unsubscribe = listen(iframe.contentWindow, 'resize', fn);
+            };
+        }
+        append(node, iframe);
+        return () => {
+            if (crossorigin) {
+                unsubscribe();
+            }
+            else if (unsubscribe && iframe.contentWindow) {
+                unsubscribe();
+            }
+            detach(iframe);
+        };
+    }
     function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, bubbles, cancelable, detail);
@@ -256,6 +309,34 @@ var app = (function () {
      */
     function afterUpdate(fn) {
         get_current_component().$$.after_update.push(fn);
+    }
+    /**
+     * Creates an event dispatcher that can be used to dispatch [component events](/docs#template-syntax-component-directives-on-eventname).
+     * Event dispatchers are functions that can take two arguments: `name` and `detail`.
+     *
+     * Component events created with `createEventDispatcher` create a
+     * [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent).
+     * These events do not [bubble](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture).
+     * The `detail` argument corresponds to the [CustomEvent.detail](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/detail)
+     * property and can contain any type of data.
+     *
+     * https://svelte.dev/docs#run-time-svelte-createeventdispatcher
+     */
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail, { cancelable = false } = {}) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail, { cancelable });
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+                return !event.defaultPrevented;
+            }
+            return true;
+        };
     }
     // TODO figure out if we still want to support
     // shorthand events, or if we want to implement
@@ -6990,18 +7071,18 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[26] = list[i];
+    	child_ctx[35] = list[i];
     	return child_ctx;
     }
 
-    // (84:8) {#each $nodesStore as node}
+    // (99:8) {#each $nodesStore as node}
     function create_each_block$2(ctx) {
     	let greynode;
     	let current;
 
     	greynode = new GreyNodeBoundless({
     			props: {
-    				node: /*node*/ ctx[26],
+    				node: /*node*/ ctx[35],
     				key: /*key*/ ctx[0],
     				heightRatio: /*heightRatio*/ ctx[3],
     				widthRatio: /*widthRatio*/ ctx[4],
@@ -7021,12 +7102,12 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const greynode_changes = {};
-    			if (dirty & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[26];
-    			if (dirty & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*heightRatio*/ 8) greynode_changes.heightRatio = /*heightRatio*/ ctx[3];
-    			if (dirty & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
-    			if (dirty & /*nodeXleftPosition*/ 32) greynode_changes.nodeXleftPosition = /*nodeXleftPosition*/ ctx[5];
-    			if (dirty & /*nodeYbottomPosition*/ 64) greynode_changes.nodeYbottomPosition = /*nodeYbottomPosition*/ ctx[6];
+    			if (dirty[0] & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[35];
+    			if (dirty[0] & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
+    			if (dirty[0] & /*heightRatio*/ 8) greynode_changes.heightRatio = /*heightRatio*/ ctx[3];
+    			if (dirty[0] & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
+    			if (dirty[0] & /*nodeXleftPosition*/ 32) greynode_changes.nodeXleftPosition = /*nodeXleftPosition*/ ctx[5];
+    			if (dirty[0] & /*nodeYbottomPosition*/ 64) greynode_changes.nodeYbottomPosition = /*nodeYbottomPosition*/ ctx[6];
     			greynode.$set(greynode_changes);
     		},
     		i: function intro(local) {
@@ -7047,7 +7128,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(84:8) {#each $nodesStore as node}",
+    		source: "(99:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7060,7 +7141,10 @@ var app = (function () {
     	let div0_class_value;
     	let t;
     	let div1_class_value;
+    	let div1_resize_listener;
     	let current;
+    	let mounted;
+    	let dispose;
     	let each_value = /*$nodesStore*/ ctx[7];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -7088,11 +7172,12 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$8, 82, 8, 3202);
+    			add_location(div0, file$8, 97, 8, 3839);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$8, 81, 4, 3099);
+    			add_render_callback(() => /*div1_elementresize_handler*/ ctx[27].call(div1));
+    			add_location(div1, file$8, 96, 4, 3642);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7106,30 +7191,37 @@ var app = (function () {
     				each_blocks[i].m(div1, null);
     			}
 
+    			/*div1_binding*/ ctx[26](div1);
+    			div1_resize_listener = add_resize_listener(div1, /*div1_elementresize_handler*/ ctx[27].bind(div1));
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(div1, "click", /*handleClick*/ ctx[18], false, false, false);
+    				mounted = true;
+    			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*key*/ 1 && div0_class_value !== (div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj")) {
+    		p: function update(ctx, dirty) {
+    			if (!current || dirty[0] & /*key*/ 1 && div0_class_value !== (div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj")) {
     				attr_dev(div0, "class", div0_class_value);
     			}
 
-    			if (!current || dirty & /*viewHeight*/ 256) {
+    			if (!current || dirty[0] & /*viewHeight*/ 256) {
     				set_style(div0, "height", /*viewHeight*/ ctx[8] + "px");
     			}
 
-    			if (!current || dirty & /*viewWidth*/ 512) {
+    			if (!current || dirty[0] & /*viewWidth*/ 512) {
     				set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			}
 
-    			if (!current || dirty & /*viewBottom*/ 2048) {
+    			if (!current || dirty[0] & /*viewBottom*/ 2048) {
     				set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			}
 
-    			if (!current || dirty & /*viewRight*/ 1024) {
+    			if (!current || dirty[0] & /*viewRight*/ 1024) {
     				set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
     			}
 
-    			if (dirty & /*$nodesStore, key, heightRatio, widthRatio, nodeXleftPosition, nodeYbottomPosition*/ 249) {
+    			if (dirty[0] & /*$nodesStore, key, heightRatio, widthRatio, nodeXleftPosition, nodeYbottomPosition*/ 249) {
     				each_value = /*$nodesStore*/ ctx[7];
     				validate_each_argument(each_value);
     				let i;
@@ -7157,15 +7249,15 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (!current || dirty & /*key*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"))) {
+    			if (!current || dirty[0] & /*key*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
-    			if (!current || dirty & /*mapHeight*/ 4) {
+    			if (!current || dirty[0] & /*mapHeight*/ 4) {
     				set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			}
 
-    			if (!current || dirty & /*mapWidth*/ 2) {
+    			if (!current || dirty[0] & /*mapWidth*/ 2) {
     				set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
     			}
     		},
@@ -7190,6 +7282,10 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     			destroy_each(each_blocks, detaching);
+    			/*div1_binding*/ ctx[26](null);
+    			div1_resize_listener();
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -7217,17 +7313,18 @@ var app = (function () {
     	validate_store(nodesStore, 'nodesStore');
     	component_subscribe($$self, nodesStore, value => $$invalidate(7, $nodesStore = value));
     	validate_store(widthStore, 'widthStore');
-    	component_subscribe($$self, widthStore, value => $$invalidate(21, $widthStore = value));
+    	component_subscribe($$self, widthStore, value => $$invalidate(25, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
-    	component_subscribe($$self, heightStore, value => $$invalidate(20, $heightStore = value));
+    	component_subscribe($$self, heightStore, value => $$invalidate(24, $heightStore = value));
 
     	onMount(() => {
     		
     	});
 
     	//placeholdervalues for initialization
-    	let mapMax = 100;
+    	const dispatch = createEventDispatcher();
 
+    	let mapMax = 100;
     	let mapWidth = mapMax;
     	let mapHeight = mapMax;
     	let nodeHeight = mapMax - 10;
@@ -7242,8 +7339,30 @@ var app = (function () {
     	let nodeYtopPosition = -Infinity;
     	let nodeYbottomPosition = Infinity;
     	let nodeXrightPosition = -Infinity;
+    	let clientW;
+    	let clientH;
+    	let x = 0; //x position within the element.
+    	let y = 0;
+    	let map; //y position within the element.
     	const scaleW = v => v * (mapWidth / nodeWidth);
     	const scaleH = v => v * (mapHeight / nodeHeight);
+
+    	//get a scale factor from nodeheight and width
+    	//use that scaling factor to make virtual representation of nodes bigger or smaller 
+    	//depending on the height and width of the overall structure including all nodes
+    	//
+    	//
+    	function handleClick(event) {
+    		let bounds = map.getBoundingClientRect();
+
+    		// x = event.clientX - bounds.left;
+    		// y = event.clientY - bounds.top;
+    		// console.log('x: ' + x + 'y: ' + y)
+    		dispatch('message', {
+    			x: (event.clientX - bounds.left) / widthRatio,
+    			y: (event.clientY - bounds.top) / heightRatio
+    		});
+    	}
 
     	$$self.$$.on_mount.push(function () {
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
@@ -7261,15 +7380,29 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<MinimapBoundless> was created with unknown prop '${key}'`);
     	});
 
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			map = $$value;
+    			$$invalidate(14, map);
+    		});
+    	}
+
+    	function div1_elementresize_handler() {
+    		clientH = this.offsetHeight;
+    		clientW = this.clientWidth;
+    		$$invalidate(13, clientH);
+    		$$invalidate(12, clientW);
+    	}
+
     	$$self.$$set = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('d3Translate' in $$props) $$invalidate(15, d3Translate = $$props.d3Translate);
+    		if ('d3Translate' in $$props) $$invalidate(19, d3Translate = $$props.d3Translate);
     	};
 
     	$$self.$capture_state = () => ({
     		findOrCreateStore,
     		onMount,
-    		afterUpdate,
+    		createEventDispatcher,
     		GreyNode: GreyNodeBoundless,
     		key,
     		d3Translate,
@@ -7277,6 +7410,7 @@ var app = (function () {
     		nodesStore,
     		widthStore,
     		heightStore,
+    		dispatch,
     		mapMax,
     		mapWidth,
     		mapHeight,
@@ -7292,8 +7426,14 @@ var app = (function () {
     		nodeYtopPosition,
     		nodeYbottomPosition,
     		nodeXrightPosition,
+    		clientW,
+    		clientH,
+    		x,
+    		y,
+    		map,
     		scaleW,
     		scaleH,
+    		handleClick,
     		$heightStore,
     		$widthStore,
     		$nodesStore
@@ -7301,12 +7441,12 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('d3Translate' in $$props) $$invalidate(15, d3Translate = $$props.d3Translate);
+    		if ('d3Translate' in $$props) $$invalidate(19, d3Translate = $$props.d3Translate);
     		if ('mapMax' in $$props) mapMax = $$props.mapMax;
     		if ('mapWidth' in $$props) $$invalidate(1, mapWidth = $$props.mapWidth);
     		if ('mapHeight' in $$props) $$invalidate(2, mapHeight = $$props.mapHeight);
-    		if ('nodeHeight' in $$props) $$invalidate(16, nodeHeight = $$props.nodeHeight);
-    		if ('nodeWidth' in $$props) $$invalidate(17, nodeWidth = $$props.nodeWidth);
+    		if ('nodeHeight' in $$props) $$invalidate(20, nodeHeight = $$props.nodeHeight);
+    		if ('nodeWidth' in $$props) $$invalidate(21, nodeWidth = $$props.nodeWidth);
     		if ('viewHeight' in $$props) $$invalidate(8, viewHeight = $$props.viewHeight);
     		if ('viewWidth' in $$props) $$invalidate(9, viewWidth = $$props.viewWidth);
     		if ('viewRight' in $$props) $$invalidate(10, viewRight = $$props.viewRight);
@@ -7314,9 +7454,14 @@ var app = (function () {
     		if ('heightRatio' in $$props) $$invalidate(3, heightRatio = $$props.heightRatio);
     		if ('widthRatio' in $$props) $$invalidate(4, widthRatio = $$props.widthRatio);
     		if ('nodeXleftPosition' in $$props) $$invalidate(5, nodeXleftPosition = $$props.nodeXleftPosition);
-    		if ('nodeYtopPosition' in $$props) $$invalidate(18, nodeYtopPosition = $$props.nodeYtopPosition);
+    		if ('nodeYtopPosition' in $$props) $$invalidate(22, nodeYtopPosition = $$props.nodeYtopPosition);
     		if ('nodeYbottomPosition' in $$props) $$invalidate(6, nodeYbottomPosition = $$props.nodeYbottomPosition);
-    		if ('nodeXrightPosition' in $$props) $$invalidate(19, nodeXrightPosition = $$props.nodeXrightPosition);
+    		if ('nodeXrightPosition' in $$props) $$invalidate(23, nodeXrightPosition = $$props.nodeXrightPosition);
+    		if ('clientW' in $$props) $$invalidate(12, clientW = $$props.clientW);
+    		if ('clientH' in $$props) $$invalidate(13, clientH = $$props.clientH);
+    		if ('x' in $$props) x = $$props.x;
+    		if ('y' in $$props) y = $$props.y;
+    		if ('map' in $$props) $$invalidate(14, map = $$props.map);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -7324,24 +7469,24 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$nodesStore, nodeXleftPosition, nodeXrightPosition, nodeYbottomPosition, nodeYtopPosition, nodeHeight, nodeWidth, mapHeight, mapWidth, d3Translate, widthRatio, heightRatio, $widthStore, $heightStore*/ 4161790) {
+    		if ($$self.$$.dirty[0] & /*$nodesStore, nodeXleftPosition, nodeXrightPosition, nodeYbottomPosition, nodeYtopPosition, nodeHeight, nodeWidth, mapHeight, mapWidth, d3Translate, widthRatio, heightRatio, $widthStore, $heightStore*/ 66584830) {
     			{
     				$$invalidate(5, nodeXleftPosition = Infinity);
-    				$$invalidate(18, nodeYtopPosition = -Infinity);
+    				$$invalidate(22, nodeYtopPosition = -Infinity);
     				$$invalidate(6, nodeYbottomPosition = Infinity);
-    				$$invalidate(19, nodeXrightPosition = -Infinity);
+    				$$invalidate(23, nodeXrightPosition = -Infinity);
 
     				$nodesStore.forEach(node => {
     					$$invalidate(5, nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x));
-    					$$invalidate(19, nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x));
+    					$$invalidate(23, nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x));
     					$$invalidate(6, nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y));
-    					$$invalidate(18, nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y));
+    					$$invalidate(22, nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y));
     				});
 
     				// sets the height, width of nodes after movement
-    				$$invalidate(16, nodeHeight = nodeYtopPosition - nodeYbottomPosition);
+    				$$invalidate(20, nodeHeight = nodeYtopPosition - nodeYbottomPosition);
 
-    				$$invalidate(17, nodeWidth = nodeXrightPosition - nodeXleftPosition);
+    				$$invalidate(21, nodeWidth = nodeXrightPosition - nodeXleftPosition);
 
     				if (nodeHeight > nodeWidth) {
     					$$invalidate(2, mapHeight = 100);
@@ -7386,23 +7531,29 @@ var app = (function () {
     		viewWidth,
     		viewRight,
     		viewBottom,
+    		clientW,
+    		clientH,
+    		map,
     		nodesStore,
     		widthStore,
     		heightStore,
+    		handleClick,
     		d3Translate,
     		nodeHeight,
     		nodeWidth,
     		nodeYtopPosition,
     		nodeXrightPosition,
     		$heightStore,
-    		$widthStore
+    		$widthStore,
+    		div1_binding,
+    		div1_elementresize_handler
     	];
     }
 
     class MinimapBoundless extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$8, create_fragment$8, safe_not_equal, { key: 0, d3Translate: 15 });
+    		init$1(this, options, instance$8, create_fragment$8, safe_not_equal, { key: 0, d3Translate: 19 }, null, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -9056,17 +9207,17 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[32] = list[i];
+    	child_ctx[33] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[35] = list[i];
+    	child_ctx[36] = list[i];
     	return child_ctx;
     }
 
-    // (159:19) 
+    // (180:19) 
     function create_if_block_7(ctx) {
     	let minimapboundless;
     	let current;
@@ -9078,6 +9229,8 @@ var app = (function () {
     			},
     			$$inline: true
     		});
+
+    	minimapboundless.$on("message", /*miniMapClick*/ ctx[16]);
 
     	const block = {
     		c: function create() {
@@ -9111,14 +9264,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(159:19) ",
+    		source: "(180:19) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (157:0) {#if minimap && boundary}
+    // (178:0) {#if minimap && boundary}
     function create_if_block_6(ctx) {
     	let minimapboundary;
     	let current;
@@ -9165,21 +9318,21 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(157:0) {#if minimap && boundary}",
+    		source: "(178:0) {#if minimap && boundary}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (176:6) {:else}
+    // (197:6) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
@@ -9197,10 +9350,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[36];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 256) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9224,21 +9377,21 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(176:6) {:else}",
+    		source: "(197:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (173:33) 
+    // (194:33) 
     function create_if_block_5(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -9256,10 +9409,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[36];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 256) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9283,14 +9436,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(173:33) ",
+    		source: "(194:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (170:6) {#if node.data.html}
+    // (191:6) {#if node.data.html}
     function create_if_block_4(ctx) {
     	let node;
     	let t;
@@ -9298,7 +9451,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -9318,10 +9471,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[35];
+    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[36];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 128) {
+    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 256) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9346,16 +9499,16 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(170:6) {#if node.data.html}",
+    		source: "(191:6) {#if node.data.html}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (177:8) <Node {node} {key} >
+    // (198:8) <Node {node} {key} >
     function create_default_slot_2(ctx) {
-    	let t_value = /*node*/ ctx[35].data.label + "";
+    	let t_value = /*node*/ ctx[36].data.label + "";
     	let t;
 
     	const block = {
@@ -9366,7 +9519,7 @@ var app = (function () {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && t_value !== (t_value = /*node*/ ctx[35].data.label + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*$nodesStore*/ 128 && t_value !== (t_value = /*node*/ ctx[36].data.label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -9377,19 +9530,19 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(177:8) <Node {node} {key} >",
+    		source: "(198:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (175:8) <Node {node} {key} >
+    // (196:8) <Node {node} {key} >
     function create_default_slot_1(ctx) {
     	let switch_instance;
     	let t;
     	let current;
-    	var switch_value = /*node*/ ctx[35].data.custom;
+    	var switch_value = /*node*/ ctx[36].data.custom;
 
     	function switch_props(ctx) {
     		return { $$inline: true };
@@ -9410,7 +9563,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (switch_value !== (switch_value = /*node*/ ctx[35].data.custom)) {
+    			if (switch_value !== (switch_value = /*node*/ ctx[36].data.custom)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -9451,17 +9604,17 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(175:8) <Node {node} {key} >",
+    		source: "(196:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (171:8) <Node {node} {key} >
+    // (192:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[35].data.html + "";
+    	let raw_value = /*node*/ ctx[36].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -9475,7 +9628,7 @@ var app = (function () {
     			insert_dev(target, html_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && raw_value !== (raw_value = /*node*/ ctx[35].data.html + "")) html_tag.p(raw_value);
+    			if (dirty[0] & /*$nodesStore*/ 128 && raw_value !== (raw_value = /*node*/ ctx[36].data.html + "")) html_tag.p(raw_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(html_anchor);
@@ -9487,14 +9640,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(171:8) <Node {node} {key} >",
+    		source: "(192:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (165:4) {#each $nodesStore as node}
+    // (186:4) {#each $nodesStore as node}
     function create_each_block_1(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9504,8 +9657,8 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*node*/ ctx[35].data.html) return 0;
-    		if (/*node*/ ctx[35].data.custom) return 1;
+    		if (/*node*/ ctx[36].data.html) return 0;
+    		if (/*node*/ ctx[36].data.custom) return 1;
     		return 2;
     	}
 
@@ -9568,14 +9721,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(165:4) {#each $nodesStore as node}",
+    		source: "(186:4) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (204:2) {#if $backgroundStore}
+    // (225:2) {#if $backgroundStore}
     function create_if_block_3(ctx) {
     	let rect;
 
@@ -9585,7 +9738,7 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$3, 204, 4, 7530);
+    			add_location(rect, file$3, 225, 4, 8224);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -9604,20 +9757,20 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(204:2) {#if $backgroundStore}",
+    		source: "(225:2) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (217:6) {:else}
+    // (238:6) {:else}
     function create_else_block$1(ctx) {
     	let simplebezieredge;
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9631,7 +9784,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplebezieredge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) simplebezieredge_changes.edge = /*edge*/ ctx[32];
+    			if (dirty[0] & /*$derivedEdges*/ 64) simplebezieredge_changes.edge = /*edge*/ ctx[33];
     			simplebezieredge.$set(simplebezieredge_changes);
     		},
     		i: function intro(local) {
@@ -9652,20 +9805,20 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(217:6) {:else}",
+    		source: "(238:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (215:37) 
+    // (236:37) 
     function create_if_block_2(ctx) {
     	let stepedge;
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9679,7 +9832,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) stepedge_changes.edge = /*edge*/ ctx[32];
+    			if (dirty[0] & /*$derivedEdges*/ 64) stepedge_changes.edge = /*edge*/ ctx[33];
     			stepedge.$set(stepedge_changes);
     		},
     		i: function intro(local) {
@@ -9700,20 +9853,20 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(215:37) ",
+    		source: "(236:37) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (213:43) 
+    // (234:43) 
     function create_if_block_1(ctx) {
     	let smoothstepedge;
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9727,7 +9880,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const smoothstepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) smoothstepedge_changes.edge = /*edge*/ ctx[32];
+    			if (dirty[0] & /*$derivedEdges*/ 64) smoothstepedge_changes.edge = /*edge*/ ctx[33];
     			smoothstepedge.$set(smoothstepedge_changes);
     		},
     		i: function intro(local) {
@@ -9748,20 +9901,20 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(213:43) ",
+    		source: "(234:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (211:6) {#if edge.type === 'straight'}
+    // (232:6) {#if edge.type === 'straight'}
     function create_if_block$1(ctx) {
     	let straightedge;
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9775,7 +9928,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const straightedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) straightedge_changes.edge = /*edge*/ ctx[32];
+    			if (dirty[0] & /*$derivedEdges*/ 64) straightedge_changes.edge = /*edge*/ ctx[33];
     			straightedge.$set(straightedge_changes);
     		},
     		i: function intro(local) {
@@ -9796,14 +9949,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(211:6) {#if edge.type === 'straight'}",
+    		source: "(232:6) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (210:4) {#each $derivedEdges as edge}
+    // (231:4) {#each $derivedEdges as edge}
     function create_each_block(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9813,9 +9966,9 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*edge*/ ctx[32].type === 'straight') return 0;
-    		if (/*edge*/ ctx[32].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[32].type === 'step') return 2;
+    		if (/*edge*/ ctx[33].type === 'straight') return 0;
+    		if (/*edge*/ ctx[33].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[33].type === 'step') return 2;
     		return 3;
     	}
 
@@ -9878,7 +10031,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(210:4) {#each $derivedEdges as edge}",
+    		source: "(231:4) {#each $derivedEdges as edge}",
     		ctx
     	});
 
@@ -9974,15 +10127,15 @@ var app = (function () {
     			a = element("a");
     			img = element("img");
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
-    			add_location(div0, file$3, 163, 2, 6360);
+    			add_location(div0, file$3, 184, 2, 7054);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
-    			add_location(div1, file$3, 161, 0, 6242);
+    			add_location(div1, file$3, 182, 0, 6936);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$3, 193, 6, 7318);
+    			add_location(circle, file$3, 214, 6, 8012);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
@@ -9990,21 +10143,21 @@ var app = (function () {
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
     			attr_dev(pattern, "class", "svelte-1tphpvb");
-    			add_location(pattern, file$3, 185, 4, 7159);
-    			add_location(defs, file$3, 184, 2, 7148);
-    			add_location(g, file$3, 208, 2, 7707);
+    			add_location(pattern, file$3, 206, 4, 7853);
+    			add_location(defs, file$3, 205, 2, 7842);
+    			add_location(g, file$3, 229, 2, 8401);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[9] + " " + /*$heightStore*/ ctx[10]);
-    			add_location(svg, file$3, 183, 0, 7067);
+    			add_location(svg, file$3, 204, 0, 7761);
     			attr_dev(img, "id", "dwnldimg");
     			if (!src_url_equal(img.src, img_src_value = "https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
     			attr_dev(img, "class", "svelte-1tphpvb");
-    			add_location(img, file$3, 231, 44, 8468);
+    			add_location(img, file$3, 252, 44, 9162);
     			attr_dev(a, "id", "downloadState");
     			attr_dev(a, "download", "state.json");
     			attr_dev(a, "class", "svelte-1tphpvb");
-    			add_location(a, file$3, 231, 0, 8424);
+    			add_location(a, file$3, 252, 0, 9118);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10040,7 +10193,7 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[20]), false, true, false);
+    				dispose = listen_dev(div1, "contextmenu", prevent_default(/*contextmenu_handler*/ ctx[21]), false, true, false);
     				mounted = true;
     			}
     		},
@@ -10281,16 +10434,29 @@ var app = (function () {
     	const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale, isLocked } = svelvetStore;
 
     	validate_store(nodeSelected, 'nodeSelected');
-    	component_subscribe($$self, nodeSelected, value => $$invalidate(22, $nodeSelected = value));
+    	component_subscribe($$self, nodeSelected, value => $$invalidate(23, $nodeSelected = value));
     	validate_store(backgroundStore, 'backgroundStore');
     	component_subscribe($$self, backgroundStore, value => $$invalidate(8, $backgroundStore = value));
     	validate_store(movementStore, 'movementStore');
-    	component_subscribe($$self, movementStore, value => $$invalidate(21, $movementStore = value));
+    	component_subscribe($$self, movementStore, value => $$invalidate(22, $movementStore = value));
     	validate_store(widthStore, 'widthStore');
     	component_subscribe($$self, widthStore, value => $$invalidate(9, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
     	component_subscribe($$self, heightStore, value => $$invalidate(10, $heightStore = value));
     	let d3Translate = { x: 0, y: 0, k: 1 };
+
+    	//creating function to pass down
+    	function miniMapClick(event) {
+    		if (!boundary) {
+    			console.log('x ' + event.detail.x + 'y ' + event.detail.y);
+
+    			//set default zoom logic
+    			d3.select(`.Edges-${key}`).//makes sure translation is default at center coordinates
+    			transition().duration(0).call(d3Zoom.translateTo, 0, 0).transition().duration(0).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+
+    			d3.select(`.Nodes-${key}`).transition().duration(0).call(d3Zoom.translateTo, 0, 0).transition().duration(0).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    		}
+    	}
 
     	function determineD3Instance() {
     		if (boundary) {
@@ -10437,11 +10603,11 @@ var app = (function () {
     		if ('nodesStore' in $$props) $$subscribe_nodesStore($$invalidate(0, nodesStore = $$props.nodesStore));
     		if ('derivedEdges' in $$props) $$subscribe_derivedEdges($$invalidate(1, derivedEdges = $$props.derivedEdges));
     		if ('key' in $$props) $$invalidate(2, key = $$props.key);
-    		if ('initialZoom' in $$props) $$invalidate(16, initialZoom = $$props.initialZoom);
-    		if ('initialLocation' in $$props) $$invalidate(17, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(17, initialZoom = $$props.initialZoom);
+    		if ('initialLocation' in $$props) $$invalidate(18, initialLocation = $$props.initialLocation);
     		if ('minimap' in $$props) $$invalidate(3, minimap = $$props.minimap);
-    		if ('width' in $$props) $$invalidate(18, width = $$props.width);
-    		if ('height' in $$props) $$invalidate(19, height = $$props.height);
+    		if ('width' in $$props) $$invalidate(19, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(20, height = $$props.height);
     		if ('boundary' in $$props) $$invalidate(4, boundary = $$props.boundary);
     	};
 
@@ -10486,6 +10652,7 @@ var app = (function () {
     		gridSize,
     		dotSize,
     		d3Translate,
+    		miniMapClick,
     		determineD3Instance,
     		d3Zoom,
     		zoomInit,
@@ -10505,11 +10672,11 @@ var app = (function () {
     		if ('nodesStore' in $$props) $$subscribe_nodesStore($$invalidate(0, nodesStore = $$props.nodesStore));
     		if ('derivedEdges' in $$props) $$subscribe_derivedEdges($$invalidate(1, derivedEdges = $$props.derivedEdges));
     		if ('key' in $$props) $$invalidate(2, key = $$props.key);
-    		if ('initialZoom' in $$props) $$invalidate(16, initialZoom = $$props.initialZoom);
-    		if ('initialLocation' in $$props) $$invalidate(17, initialLocation = $$props.initialLocation);
+    		if ('initialZoom' in $$props) $$invalidate(17, initialZoom = $$props.initialZoom);
+    		if ('initialLocation' in $$props) $$invalidate(18, initialLocation = $$props.initialLocation);
     		if ('minimap' in $$props) $$invalidate(3, minimap = $$props.minimap);
-    		if ('width' in $$props) $$invalidate(18, width = $$props.width);
-    		if ('height' in $$props) $$invalidate(19, height = $$props.height);
+    		if ('width' in $$props) $$invalidate(19, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(20, height = $$props.height);
     		if ('boundary' in $$props) $$invalidate(4, boundary = $$props.boundary);
     		if ('d3Translate' in $$props) $$invalidate(5, d3Translate = $$props.d3Translate);
     		if ('d3Zoom' in $$props) d3Zoom = $$props.d3Zoom;
@@ -10536,6 +10703,7 @@ var app = (function () {
     		movementStore,
     		widthStore,
     		heightStore,
+    		miniMapClick,
     		initialZoom,
     		initialLocation,
     		width,
@@ -10558,11 +10726,11 @@ var app = (function () {
     				nodesStore: 0,
     				derivedEdges: 1,
     				key: 2,
-    				initialZoom: 16,
-    				initialLocation: 17,
+    				initialZoom: 17,
+    				initialLocation: 18,
     				minimap: 3,
-    				width: 18,
-    				height: 19,
+    				width: 19,
+    				height: 20,
     				boundary: 4
     			},
     			null,
@@ -11328,7 +11496,6 @@ var app = (function () {
     				edges: /*initialEdges*/ ctx[1],
     				bgColor: '#EEEEEE',
     				background: true,
-    				boundary: { x: 2000, y: 1500 },
     				nodeLink: true,
     				minimap: true
     			},
@@ -11360,9 +11527,9 @@ var app = (function () {
     			add_location(p, file, 102, 1, 6140);
     			attr_dev(input, "type", "text");
     			attr_dev(input, "id", "store-input");
-    			add_location(input, file, 119, 1, 6581);
+    			add_location(input, file, 119, 1, 6552);
     			attr_dev(button, "id", "store-input-btn");
-    			add_location(button, file, 120, 1, 6619);
+    			add_location(button, file, 120, 1, 6590);
     			attr_dev(main, "class", "svelte-1iki5qj");
     			add_location(main, file, 100, 0, 6102);
     		},

@@ -41,7 +41,28 @@
   const gridSize = 15;
   const dotSize = 10;
   let d3Translate = {x: 0, y: 0, k:1};
-  
+  //creating function to pass down
+  function miniMapClick(event){
+    if(!boundary) {
+
+        console.log('x ' + event.detail.x + 'y ' + event.detail.y)
+
+
+      //set default zoom logic
+      d3.select(`.Edges-${key}`)
+      //makes sure translation is default at center coordinates
+      .transition().duration(0)
+      .call(d3Zoom.translateTo, 0, 0)
+      .transition().duration(0)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+
+      d3.select(`.Nodes-${key}`)
+      .transition().duration(0)
+      .call(d3Zoom.translateTo, 0, 0)
+      .transition().duration(0)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+    }
+  }
   function determineD3Instance() {
   if(boundary){
     
@@ -157,7 +178,7 @@
 {#if minimap && boundary}
 <MinimapBoundary {key} {boundary} {d3Translate}/>
 {:else if minimap }
-<MinimapBoundless {key} {d3Translate}/>
+<MinimapBoundless on:message={miniMapClick} {key} {d3Translate}/>
 {/if}
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
