@@ -29,6 +29,8 @@ Shout out to our contributors! Here's what's new:
   <li>Added an optional minimap that allows you to visualize larger diagrams</li>
   <li>Added progammatic initial zoom and location</li>
   <li>Added custom classes for nodes to allow for uniform styling</li>
+  <li>Added a feature that allows you to export and import diagrams</li>
+  <li>Added an optional boundary to the diagram </li>
   <li>Updated documentation page on website to include new features</li>
   <li>Updated home page to include newest collaborators</li>
 </ul>
@@ -173,9 +175,14 @@ npm run cypress:open
 - Johnny Tran • [LinkedIn](https://www.linkedin.com/in/tranpjohnny/) • [Github](https://github.com/JTraan)
 - Samee Vohra • [LinkedIn](https://www.linkedin.com/in/sameev/) • [Github](https://github.com/sameev)
 - Abhi Gullapalli • [LinkedIn](https://www.linkedin.com/in/viswa-gullapalli-442802253/) • [Github](https://github.com/aubertlone)
-- Ian Hnizdo • [LinkedIn]() • [Github]()
+- Ian Hnizdo • [LinkedIn](https://www.linkedin.com/in/ian-hnizdo/) • [Github]()
 - Mauricio Castro • [LinkedIn](https://www.linkedin.com/in/mauricioacastro/) • [Github](https://github.com/sher85)
 - Ryan Potter • [LinkedIn](www.linkedin.com/in/ryan-potter-0105b6100) • [Github](https://github.com/rpotter0811)
+- Emma Ferguson • [LinkedIn](https://www.linkedin.com/in/emma-ferguson-33858725a/) • [Github](https://github.com/emmanotly)
+- Dillon McKenna • [LinkedIn](https://www.linkedin.com/in/dillon-mckenna/) • [Github](https://github.com/dmckenna44)
+- Taylor Alan • [LinkedIn](https://www.linkedin.com/in/taylor-alan-026a49226/) • [Github](https://github.com/taylien96)
+- Timmy Lem • [LinkedIn](https://www.linkedin.com/in/timmy-lem/) • [Github](https://github.com/timmylem01)
+- Tony Lim • [LinkedIn](https://www.linkedin.com/in/tonylim467/) • [Github](https://github.com/tonyy467)
 
 ## Forking the Repository
 
@@ -192,7 +199,6 @@ Once that is done you should be able to render the website locally on localhost:
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
 - Customize d3 background options
-- Customize nodes via html templates/Svelte components
 - Multiple sockets and socket compatibility for links
 - Custom error handling
 - Increase test coverage for scalability
