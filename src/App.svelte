@@ -112,12 +112,8 @@
 		background 
 		boundary={{x: 2000, y: 1500}}
 		nodeLink
-<<<<<<< HEAD
 		
 		
-=======
-		nodeCreate
->>>>>>> testenv
 		minimap={true}
 	/>
 	<!-- <a download='info.txt' id='downloadState'>Download</a> -->

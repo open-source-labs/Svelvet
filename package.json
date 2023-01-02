@@ -21,10 +21,6 @@
     "sirv-cli": "^2.0.0",
     "svelvet": "^4.0.3",
     "svelvetrabbits": "^4.5.3",
-<<<<<<< HEAD
-
-=======
->>>>>>> testenv
     "uuid": "^9.0.0"
   }
 }
