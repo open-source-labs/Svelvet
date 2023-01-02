@@ -22,4 +22,6 @@ export default class Index extends SvelteComponentTyped<IndexProps, IndexEvents,
 }
 export declare function zoomInit(): void;
 export declare function determineD3Instance(): void;
+export declare function uploadStore(e: MouseEvent): void;
+export declare function makeTextFile(text: string): any;
 export {};
