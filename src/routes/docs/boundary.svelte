@@ -15,3 +15,10 @@
     See the Code Sandbox below to see implementation!
   </p>
 </div>
+
+<iframe src="https://codesandbox.io/embed/boundary-wf9f8j?autoresize=1&fontsize=14&module=%2FApp.svelte&theme=dark"
+style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+title="Custom Svelte Components"
+allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
