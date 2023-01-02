@@ -1,6 +1,6 @@
 <script>
     import { findOrCreateStore } from '../../stores/store';
-    import {onMount, afterUpdate} from 'svelte'
+    import {onMount, createEventDispatcher} from 'svelte'
     import GreyNode from './GreyNodeBoundary.svelte';
 
     export let key
@@ -9,14 +9,14 @@
     
     const svelvetStore = findOrCreateStore(key);
     const {nodesStore, heightStore, widthStore} = svelvetStore;
+    const dispatch = createEventDispatcher();
     let mapHeight =100;
     let mapWidth = 100;
     let widthRatio = 1;
     let heightRatio = 1;
     let viewRight =1;
     let viewBottom = 1;
-    const scaleW = (v) => v* (mapWidth/boundary.x)
-    const scaleH = (v) => v* (mapHeight/boundary.y)
+    let map
     onMount(() => {
         
     })
@@ -35,15 +35,22 @@
     widthRatio = (mapWidth / boundary.x);
     heightRatio = (mapHeight / boundary.y);
     viewRight = Math.abs(d3Translate.x*widthRatio/d3Translate.k)
-    console.log('scale' + scaleW(d3Translate.x*widthRatio))
-    console.log('x/k' + d3Translate.x / d3Translate.k)
-    console.log('boundratio' + (boundary.x*widthRatio))
-    console.log('viewRight' +viewRight)
     viewBottom = Math.abs(d3Translate.y*heightRatio/d3Translate.k)
-    console.log(viewBottom)
     }
+
+    function handleClick(event) {
+        let bounds = map.getBoundingClientRect();
+		// x = event.clientX - bounds.left;
+		// y = event.clientY - bounds.top;
+        // console.log('x: ' + x + 'y: ' + y)
+        dispatch('message', {
+			x:((event.clientX - bounds.left)/widthRatio),
+            y:((event.clientY - bounds.top)/heightRatio),
+		});
+	}
+
     </script>
-    <div class={`miniMap miniMap-${key}`} style="height:{mapHeight+2}px; width:{mapWidth+2}px;">
+    <div on:click={handleClick} bind:this={map}  class={`miniMap miniMap-${key}`} style="height:{mapHeight+2}px; width:{mapWidth+2}px;">
         <div class='viewBox viewBox-{key}' style="height:{($heightStore*heightRatio)/d3Translate.k}px; width:{($widthStore*widthRatio)/d3Translate.k}px; top:{viewBottom}px; left:{viewRight}px;"></div>
         {#each $nodesStore as node}
           <GreyNode {node} {key} {heightRatio} {widthRatio}></GreyNode>

@@ -29,10 +29,6 @@
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
-    let clientW;
-    let clientH;
-    let x = 0 //x position within the element.
-    let y = 0
     let map //y position within the element.
     const scaleW = (v) => v* (mapWidth/nodeWidth)
     const scaleH = (v) => v* (mapHeight/nodeHeight)
@@ -89,12 +85,14 @@
 		// y = event.clientY - bounds.top;
         // console.log('x: ' + x + 'y: ' + y)
         dispatch('message', {
-			x: (event.clientX - bounds.left)/widthRatio,
-            y: (event.clientY - bounds.top)/heightRatio
+			x:nodeXleftPosition+((event.clientX - bounds.left)/widthRatio),
+            y: nodeYbottomPosition+((event.clientY - bounds.top)/heightRatio),
+            nLeft: nodeXleftPosition,
+            nBottom: nodeYbottomPosition
 		});
 	}
     </script>
-    <div on:click={handleClick} bind:this={map} bind:offsetHeight={clientH} bind:clientWidth={clientW} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
+    <div on:click={handleClick} bind:this={map} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
         <div class='viewBox viewBox-{key}' style="height:{viewHeight}px; width:{viewWidth}px; top:{viewBottom}px; left:{viewRight}px;"></div>
         {#each $nodesStore as node}
           <GreyNode {node} {key} {heightRatio} {widthRatio} {nodeXleftPosition} {nodeYbottomPosition}></GreyNode>

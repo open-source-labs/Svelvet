@@ -44,22 +44,33 @@
   //creating function to pass down
   function miniMapClick(event){
     if(!boundary) {
-
-        console.log('x ' + event.detail.x + 'y ' + event.detail.y)
-
-
+        //REMEMBER TO SET THE 0 0 TO NODE BOTTOM AND NODE WIDTH SO THAT IT STARTS IN THE LEFT HAND CORNER UPON MOVEMENT
       //set default zoom logic
       d3.select(`.Edges-${key}`)
       //makes sure translation is default at center coordinates
-      .transition().duration(0)
-      .call(d3Zoom.translateTo, 0, 0)
-      .transition().duration(0)
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
       .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
 
       d3.select(`.Nodes-${key}`)
-      .transition().duration(0)
-      .call(d3Zoom.translateTo, 0, 0)
-      .transition().duration(0)
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+    }
+    else{
+      d3.select(`.Edges-${key}`)
+      //makes sure translation is default at center coordinates
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+
+      d3.select(`.Nodes-${key}`)
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
       .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
     }
   }
@@ -176,7 +187,7 @@
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 {#if minimap && boundary}
-<MinimapBoundary {key} {boundary} {d3Translate}/>
+<MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate}/>
 {:else if minimap }
 <MinimapBoundless on:message={miniMapClick} {key} {d3Translate}/>
 {/if}
