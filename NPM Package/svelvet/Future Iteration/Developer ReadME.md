@@ -4,6 +4,15 @@ We have provided excalidraws that provide diagrams that were made within the pro
 
 Future Iteration Possibilities
 
+***Svelvet 5.0***
+*We attempted to implement a deletion of nodes and edges which seemed to work in removing the selected nodes from the nodes/edges array but had a problem concerning inheritance, specifically with the styling properties
+    ---> The node following the deleted node from the nodes array would inherit the deleted nodes properties 
+    ---> The edge following the deleted edge from the edges array would inherit the source and target positions from the deleted edge
+*Ultimately we removed the proposed feature entirely due to this huge bug and because we believe it would take an entire revamp of the entire node/edge relationship with each other as well as the GraphView container
+*Seems like deletion of nodes/edges is not a highly requested community feature neither so could be scrapped
+*Logic we implemented: accessed the nodes array, select the node and remove it from the array while removing its' relational target and source edges from the edges array
+
+***Svelvet 4.0***
 * We attempted to implement a parent child relationship within svelvet that actually worked however it had multiple bugs that slowed down performance. We have left the logic we tried to implement within ParentNode.md for future reference.
 * We are attempting to create more tutorial based resources for users and could always use more templates to help Svelte users or any refactors/additions to components to help explain features.
 * Interactive node linking and creation is a major requested feature that has been requested that react-flow has. This is a difficult feature to replicate and it would be a major accomplishment for future iteration work.
