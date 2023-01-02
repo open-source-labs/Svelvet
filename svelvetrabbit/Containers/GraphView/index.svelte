@@ -42,7 +42,40 @@
   const gridSize = 15;
   const dotSize = 10;
   let d3Translate = {x: 0, y: 0, k:1};
-  
+  //creating function to pass down
+  function miniMapClick(event){
+    console.log(event)
+    if(!boundary) {
+        //REMEMBER TO SET THE 0 0 TO NODE BOTTOM AND NODE WIDTH SO THAT IT STARTS IN THE LEFT HAND CORNER UPON MOVEMENT
+      //set default zoom logic
+      d3.select(`.Edges-${key}`)
+      //makes sure translation is default at center coordinates
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+
+      d3.select(`.Nodes-${key}`)
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+    }
+    else{
+      d3.select(`.Edges-${key}`)
+      //makes sure translation is default at center coordinates
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+
+      d3.select(`.Nodes-${key}`)
+      // .transition().duration(0)
+      // .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+      .transition().duration(500)
+      .call(d3Zoom.translateTo, (event.detail.x), (event.detail.y));
+    }
+  }
   function determineD3Instance() {
   if(boundary){
     
@@ -183,9 +216,9 @@
   
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 {#if minimap && boundary}
-<MinimapBoundary {key} {boundary} {d3Translate}/>
+<MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate}/>
 {:else if minimap }
-<MinimapBoundless {key} {d3Translate}/>
+<MinimapBoundless on:message={miniMapClick} {key} {d3Translate}/>
 {/if}
 <EditModal {key} />
 <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault on:click={closeEditModal}>

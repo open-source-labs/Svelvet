@@ -4,6 +4,7 @@ declare const __propDef: {
     props: {
         key: number;
         d3Translate: d3Translate;
+        
     };
     events: {
         [evt: string]: CustomEvent<any>;
@@ -15,3 +16,4 @@ declare const __propDef: {
 
 export declare function scaleW(v: number): void;
 export declare function scaleH(v: number): void;
+export declare function handleClick(event: any): void;
