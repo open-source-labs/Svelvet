@@ -257,6 +257,34 @@ var app = (function () {
     function afterUpdate(fn) {
         get_current_component().$$.after_update.push(fn);
     }
+    /**
+     * Creates an event dispatcher that can be used to dispatch [component events](/docs#template-syntax-component-directives-on-eventname).
+     * Event dispatchers are functions that can take two arguments: `name` and `detail`.
+     *
+     * Component events created with `createEventDispatcher` create a
+     * [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent).
+     * These events do not [bubble](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture).
+     * The `detail` argument corresponds to the [CustomEvent.detail](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/detail)
+     * property and can contain any type of data.
+     *
+     * https://svelte.dev/docs#run-time-svelte-createeventdispatcher
+     */
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail, { cancelable = false } = {}) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail, { cancelable });
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+                return !event.defaultPrevented;
+            }
+            return true;
+        };
+    }
     // TODO figure out if we still want to support
     // shorthand events, or if we want to implement
     // a real bubbling mechanism
@@ -6990,18 +7018,18 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[26] = list[i];
+    	child_ctx[30] = list[i];
     	return child_ctx;
     }
 
-    // (84:8) {#each $nodesStore as node}
+    // (94:8) {#each $nodesStore as node}
     function create_each_block$2(ctx) {
     	let greynode;
     	let current;
 
     	greynode = new GreyNodeBoundless({
     			props: {
-    				node: /*node*/ ctx[26],
+    				node: /*node*/ ctx[30],
     				key: /*key*/ ctx[0],
     				heightRatio: /*heightRatio*/ ctx[3],
     				widthRatio: /*widthRatio*/ ctx[4],
@@ -7021,12 +7049,12 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const greynode_changes = {};
-    			if (dirty & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[26];
-    			if (dirty & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*heightRatio*/ 8) greynode_changes.heightRatio = /*heightRatio*/ ctx[3];
-    			if (dirty & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
-    			if (dirty & /*nodeXleftPosition*/ 32) greynode_changes.nodeXleftPosition = /*nodeXleftPosition*/ ctx[5];
-    			if (dirty & /*nodeYbottomPosition*/ 64) greynode_changes.nodeYbottomPosition = /*nodeYbottomPosition*/ ctx[6];
+    			if (dirty[0] & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[30];
+    			if (dirty[0] & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
+    			if (dirty[0] & /*heightRatio*/ 8) greynode_changes.heightRatio = /*heightRatio*/ ctx[3];
+    			if (dirty[0] & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
+    			if (dirty[0] & /*nodeXleftPosition*/ 32) greynode_changes.nodeXleftPosition = /*nodeXleftPosition*/ ctx[5];
+    			if (dirty[0] & /*nodeYbottomPosition*/ 64) greynode_changes.nodeYbottomPosition = /*nodeYbottomPosition*/ ctx[6];
     			greynode.$set(greynode_changes);
     		},
     		i: function intro(local) {
@@ -7047,7 +7075,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(84:8) {#each $nodesStore as node}",
+    		source: "(94:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7061,6 +7089,8 @@ var app = (function () {
     	let t;
     	let div1_class_value;
     	let current;
+    	let mounted;
+    	let dispose;
     	let each_value = /*$nodesStore*/ ctx[7];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -7106,30 +7136,36 @@ var app = (function () {
     				each_blocks[i].m(div1, null);
     			}
 
+    			/*div1_binding*/ ctx[24](div1);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(div1, "click", /*handleClick*/ ctx[16], false, false, false);
+    				mounted = true;
+    			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*key*/ 1 && div0_class_value !== (div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj")) {
+    		p: function update(ctx, dirty) {
+    			if (!current || dirty[0] & /*key*/ 1 && div0_class_value !== (div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj")) {
     				attr_dev(div0, "class", div0_class_value);
     			}
 
-    			if (!current || dirty & /*viewHeight*/ 256) {
+    			if (!current || dirty[0] & /*viewHeight*/ 256) {
     				set_style(div0, "height", /*viewHeight*/ ctx[8] + "px");
     			}
 
-    			if (!current || dirty & /*viewWidth*/ 512) {
+    			if (!current || dirty[0] & /*viewWidth*/ 512) {
     				set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			}
 
-    			if (!current || dirty & /*viewBottom*/ 2048) {
+    			if (!current || dirty[0] & /*viewBottom*/ 2048) {
     				set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			}
 
-    			if (!current || dirty & /*viewRight*/ 1024) {
+    			if (!current || dirty[0] & /*viewRight*/ 1024) {
     				set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
     			}
 
-    			if (dirty & /*$nodesStore, key, heightRatio, widthRatio, nodeXleftPosition, nodeYbottomPosition*/ 249) {
+    			if (dirty[0] & /*$nodesStore, key, heightRatio, widthRatio, nodeXleftPosition, nodeYbottomPosition*/ 249) {
     				each_value = /*$nodesStore*/ ctx[7];
     				validate_each_argument(each_value);
     				let i;
@@ -7157,15 +7193,15 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (!current || dirty & /*key*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"))) {
+    			if (!current || dirty[0] & /*key*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"))) {
     				attr_dev(div1, "class", div1_class_value);
     			}
 
-    			if (!current || dirty & /*mapHeight*/ 4) {
+    			if (!current || dirty[0] & /*mapHeight*/ 4) {
     				set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			}
 
-    			if (!current || dirty & /*mapWidth*/ 2) {
+    			if (!current || dirty[0] & /*mapWidth*/ 2) {
     				set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
     			}
     		},
@@ -7190,6 +7226,9 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     			destroy_each(each_blocks, detaching);
+    			/*div1_binding*/ ctx[24](null);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -7217,17 +7256,14 @@ var app = (function () {
     	validate_store(nodesStore, 'nodesStore');
     	component_subscribe($$self, nodesStore, value => $$invalidate(7, $nodesStore = value));
     	validate_store(widthStore, 'widthStore');
-    	component_subscribe($$self, widthStore, value => $$invalidate(21, $widthStore = value));
+    	component_subscribe($$self, widthStore, value => $$invalidate(23, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
-    	component_subscribe($$self, heightStore, value => $$invalidate(20, $heightStore = value));
-
-    	onMount(() => {
-    		
-    	});
+    	component_subscribe($$self, heightStore, value => $$invalidate(22, $heightStore = value));
 
     	//placeholdervalues for initialization
-    	let mapMax = 100;
+    	const dispatch = createEventDispatcher();
 
+    	let mapMax = 100;
     	let mapWidth = mapMax;
     	let mapHeight = mapMax;
     	let nodeHeight = mapMax - 10;
@@ -7242,8 +7278,28 @@ var app = (function () {
     	let nodeYtopPosition = -Infinity;
     	let nodeYbottomPosition = Infinity;
     	let nodeXrightPosition = -Infinity;
+    	let map; //y position within the element.
     	const scaleW = v => v * (mapWidth / nodeWidth);
     	const scaleH = v => v * (mapHeight / nodeHeight);
+
+    	//get a scale factor from nodeheight and width
+    	//use that scaling factor to make virtual representation of nodes bigger or smaller 
+    	//depending on the height and width of the overall structure including all nodes
+    	//
+    	//
+    	function handleClick(event) {
+    		let bounds = map.getBoundingClientRect();
+
+    		// x = event.clientX - bounds.left;
+    		// y = event.clientY - bounds.top;
+    		// console.log('x: ' + x + 'y: ' + y)
+    		dispatch('message', {
+    			x: nodeXleftPosition + (event.clientX - bounds.left) / widthRatio,
+    			y: nodeYbottomPosition + (event.clientY - bounds.top) / heightRatio,
+    			nLeft: nodeXleftPosition,
+    			nBottom: nodeYbottomPosition
+    		});
+    	}
 
     	$$self.$$.on_mount.push(function () {
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
@@ -7261,15 +7317,22 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<MinimapBoundless> was created with unknown prop '${key}'`);
     	});
 
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			map = $$value;
+    			$$invalidate(12, map);
+    		});
+    	}
+
     	$$self.$$set = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('d3Translate' in $$props) $$invalidate(15, d3Translate = $$props.d3Translate);
+    		if ('d3Translate' in $$props) $$invalidate(17, d3Translate = $$props.d3Translate);
     	};
 
     	$$self.$capture_state = () => ({
     		findOrCreateStore,
     		onMount,
-    		afterUpdate,
+    		createEventDispatcher,
     		GreyNode: GreyNodeBoundless,
     		key,
     		d3Translate,
@@ -7277,6 +7340,7 @@ var app = (function () {
     		nodesStore,
     		widthStore,
     		heightStore,
+    		dispatch,
     		mapMax,
     		mapWidth,
     		mapHeight,
@@ -7292,8 +7356,10 @@ var app = (function () {
     		nodeYtopPosition,
     		nodeYbottomPosition,
     		nodeXrightPosition,
+    		map,
     		scaleW,
     		scaleH,
+    		handleClick,
     		$heightStore,
     		$widthStore,
     		$nodesStore
@@ -7301,12 +7367,12 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('d3Translate' in $$props) $$invalidate(15, d3Translate = $$props.d3Translate);
+    		if ('d3Translate' in $$props) $$invalidate(17, d3Translate = $$props.d3Translate);
     		if ('mapMax' in $$props) mapMax = $$props.mapMax;
     		if ('mapWidth' in $$props) $$invalidate(1, mapWidth = $$props.mapWidth);
     		if ('mapHeight' in $$props) $$invalidate(2, mapHeight = $$props.mapHeight);
-    		if ('nodeHeight' in $$props) $$invalidate(16, nodeHeight = $$props.nodeHeight);
-    		if ('nodeWidth' in $$props) $$invalidate(17, nodeWidth = $$props.nodeWidth);
+    		if ('nodeHeight' in $$props) $$invalidate(18, nodeHeight = $$props.nodeHeight);
+    		if ('nodeWidth' in $$props) $$invalidate(19, nodeWidth = $$props.nodeWidth);
     		if ('viewHeight' in $$props) $$invalidate(8, viewHeight = $$props.viewHeight);
     		if ('viewWidth' in $$props) $$invalidate(9, viewWidth = $$props.viewWidth);
     		if ('viewRight' in $$props) $$invalidate(10, viewRight = $$props.viewRight);
@@ -7314,9 +7380,10 @@ var app = (function () {
     		if ('heightRatio' in $$props) $$invalidate(3, heightRatio = $$props.heightRatio);
     		if ('widthRatio' in $$props) $$invalidate(4, widthRatio = $$props.widthRatio);
     		if ('nodeXleftPosition' in $$props) $$invalidate(5, nodeXleftPosition = $$props.nodeXleftPosition);
-    		if ('nodeYtopPosition' in $$props) $$invalidate(18, nodeYtopPosition = $$props.nodeYtopPosition);
+    		if ('nodeYtopPosition' in $$props) $$invalidate(20, nodeYtopPosition = $$props.nodeYtopPosition);
     		if ('nodeYbottomPosition' in $$props) $$invalidate(6, nodeYbottomPosition = $$props.nodeYbottomPosition);
-    		if ('nodeXrightPosition' in $$props) $$invalidate(19, nodeXrightPosition = $$props.nodeXrightPosition);
+    		if ('nodeXrightPosition' in $$props) $$invalidate(21, nodeXrightPosition = $$props.nodeXrightPosition);
+    		if ('map' in $$props) $$invalidate(12, map = $$props.map);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -7324,24 +7391,24 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$nodesStore, nodeXleftPosition, nodeXrightPosition, nodeYbottomPosition, nodeYtopPosition, nodeHeight, nodeWidth, mapHeight, mapWidth, d3Translate, widthRatio, heightRatio, $widthStore, $heightStore*/ 4161790) {
+    		if ($$self.$$.dirty[0] & /*$nodesStore, nodeXleftPosition, nodeXrightPosition, nodeYbottomPosition, nodeYtopPosition, nodeHeight, nodeWidth, mapHeight, mapWidth, d3Translate, widthRatio, heightRatio, $widthStore, $heightStore*/ 16646398) {
     			{
     				$$invalidate(5, nodeXleftPosition = Infinity);
-    				$$invalidate(18, nodeYtopPosition = -Infinity);
+    				$$invalidate(20, nodeYtopPosition = -Infinity);
     				$$invalidate(6, nodeYbottomPosition = Infinity);
-    				$$invalidate(19, nodeXrightPosition = -Infinity);
+    				$$invalidate(21, nodeXrightPosition = -Infinity);
 
     				$nodesStore.forEach(node => {
     					$$invalidate(5, nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x));
-    					$$invalidate(19, nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x));
+    					$$invalidate(21, nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x));
     					$$invalidate(6, nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y));
-    					$$invalidate(18, nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y));
+    					$$invalidate(20, nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y));
     				});
 
     				// sets the height, width of nodes after movement
-    				$$invalidate(16, nodeHeight = nodeYtopPosition - nodeYbottomPosition);
+    				$$invalidate(18, nodeHeight = nodeYtopPosition - nodeYbottomPosition);
 
-    				$$invalidate(17, nodeWidth = nodeXrightPosition - nodeXleftPosition);
+    				$$invalidate(19, nodeWidth = nodeXrightPosition - nodeXleftPosition);
 
     				if (nodeHeight > nodeWidth) {
     					$$invalidate(2, mapHeight = 100);
@@ -7386,16 +7453,19 @@ var app = (function () {
     		viewWidth,
     		viewRight,
     		viewBottom,
+    		map,
     		nodesStore,
     		widthStore,
     		heightStore,
+    		handleClick,
     		d3Translate,
     		nodeHeight,
     		nodeWidth,
     		nodeYtopPosition,
     		nodeXrightPosition,
     		$heightStore,
-    		$widthStore
+    		$widthStore,
+    		div1_binding
     	];
     }
 
@@ -7431,7 +7501,7 @@ var app = (function () {
 
     /* svelvetrabbit/Nodes/index.svelte generated by Svelte v3.55.0 */
 
-    const { console: console_1$3 } = globals;
+    const { console: console_1$2 } = globals;
     const file$7 = "svelvetrabbit/Nodes/index.svelte";
 
     // (183:4) {:else}
@@ -7878,18 +7948,18 @@ var app = (function () {
 
     	$$self.$$.on_mount.push(function () {
     		if (node === undefined && !('node' in $$props || $$self.$$.bound[$$self.$$.props['node']])) {
-    			console_1$3.warn("<Nodes> was created without expected prop 'node'");
+    			console_1$2.warn("<Nodes> was created without expected prop 'node'");
     		}
 
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
-    			console_1$3.warn("<Nodes> was created without expected prop 'key'");
+    			console_1$2.warn("<Nodes> was created without expected prop 'key'");
     		}
     	});
 
     	const writable_props = ['node', 'key'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$3.warn(`<Nodes> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<Nodes> was created with unknown prop '${key}'`);
     	});
 
     	const mousemove_handler = e => {
@@ -8652,24 +8722,22 @@ var app = (function () {
     }
 
     /* svelvetrabbit/Containers/Minimap/MinimapBoundary.svelte generated by Svelte v3.55.0 */
-
-    const { console: console_1$2 } = globals;
     const file$4 = "svelvetrabbit/Containers/Minimap/MinimapBoundary.svelte";
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[18] = list[i];
+    	child_ctx[20] = list[i];
     	return child_ctx;
     }
 
-    // (48:8) {#each $nodesStore as node}
+    // (55:8) {#each $nodesStore as node}
     function create_each_block$1(ctx) {
     	let greynode;
     	let current;
 
     	greynode = new GreyNodeBoundary({
     			props: {
-    				node: /*node*/ ctx[18],
+    				node: /*node*/ ctx[20],
     				key: /*key*/ ctx[0],
     				heightRatio: /*heightRatio*/ ctx[5],
     				widthRatio: /*widthRatio*/ ctx[4]
@@ -8687,7 +8755,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const greynode_changes = {};
-    			if (dirty & /*$nodesStore*/ 1024) greynode_changes.node = /*node*/ ctx[18];
+    			if (dirty & /*$nodesStore*/ 2048) greynode_changes.node = /*node*/ ctx[20];
     			if (dirty & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
     			if (dirty & /*heightRatio*/ 32) greynode_changes.heightRatio = /*heightRatio*/ ctx[5];
     			if (dirty & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
@@ -8711,7 +8779,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(48:8) {#each $nodesStore as node}",
+    		source: "(55:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -8725,7 +8793,9 @@ var app = (function () {
     	let t;
     	let div1_class_value;
     	let current;
-    	let each_value = /*$nodesStore*/ ctx[10];
+    	let mounted;
+    	let dispose;
+    	let each_value = /*$nodesStore*/ ctx[11];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -8748,15 +8818,15 @@ var app = (function () {
     			}
 
     			attr_dev(div0, "class", div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj");
-    			set_style(div0, "height", /*$heightStore*/ ctx[8] * /*heightRatio*/ ctx[5] / /*d3Translate*/ ctx[1].k + "px");
-    			set_style(div0, "width", /*$widthStore*/ ctx[9] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
+    			set_style(div0, "height", /*$heightStore*/ ctx[9] * /*heightRatio*/ ctx[5] / /*d3Translate*/ ctx[1].k + "px");
+    			set_style(div0, "width", /*$widthStore*/ ctx[10] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[7] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[6] + "px");
-    			add_location(div0, file$4, 46, 8, 1569);
+    			add_location(div0, file$4, 53, 8, 1688);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 2 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[3] + 2 + "px");
-    			add_location(div1, file$4, 45, 4, 1468);
+    			add_location(div1, file$4, 52, 4, 1547);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8770,19 +8840,25 @@ var app = (function () {
     				each_blocks[i].m(div1, null);
     			}
 
+    			/*div1_binding*/ ctx[17](div1);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(div1, "click", /*handleClick*/ ctx[15], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			if (!current || dirty & /*key*/ 1 && div0_class_value !== (div0_class_value = "viewBox viewBox-" + /*key*/ ctx[0] + " svelte-enqdqj")) {
     				attr_dev(div0, "class", div0_class_value);
     			}
 
-    			if (!current || dirty & /*$heightStore, heightRatio, d3Translate*/ 290) {
-    				set_style(div0, "height", /*$heightStore*/ ctx[8] * /*heightRatio*/ ctx[5] / /*d3Translate*/ ctx[1].k + "px");
+    			if (!current || dirty & /*$heightStore, heightRatio, d3Translate*/ 546) {
+    				set_style(div0, "height", /*$heightStore*/ ctx[9] * /*heightRatio*/ ctx[5] / /*d3Translate*/ ctx[1].k + "px");
     			}
 
-    			if (!current || dirty & /*$widthStore, widthRatio, d3Translate*/ 530) {
-    				set_style(div0, "width", /*$widthStore*/ ctx[9] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
+    			if (!current || dirty & /*$widthStore, widthRatio, d3Translate*/ 1042) {
+    				set_style(div0, "width", /*$widthStore*/ ctx[10] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
     			}
 
     			if (!current || dirty & /*viewBottom*/ 128) {
@@ -8793,8 +8869,8 @@ var app = (function () {
     				set_style(div0, "left", /*viewRight*/ ctx[6] + "px");
     			}
 
-    			if (dirty & /*$nodesStore, key, heightRatio, widthRatio*/ 1073) {
-    				each_value = /*$nodesStore*/ ctx[10];
+    			if (dirty & /*$nodesStore, key, heightRatio, widthRatio*/ 2097) {
+    				each_value = /*$nodesStore*/ ctx[11];
     				validate_each_argument(each_value);
     				let i;
 
@@ -8854,6 +8930,9 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     			destroy_each(each_blocks, detaching);
+    			/*div1_binding*/ ctx[17](null);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -8880,54 +8959,73 @@ var app = (function () {
     	const svelvetStore = findOrCreateStore(key);
     	const { nodesStore, heightStore, widthStore } = svelvetStore;
     	validate_store(nodesStore, 'nodesStore');
-    	component_subscribe($$self, nodesStore, value => $$invalidate(10, $nodesStore = value));
+    	component_subscribe($$self, nodesStore, value => $$invalidate(11, $nodesStore = value));
     	validate_store(heightStore, 'heightStore');
-    	component_subscribe($$self, heightStore, value => $$invalidate(8, $heightStore = value));
+    	component_subscribe($$self, heightStore, value => $$invalidate(9, $heightStore = value));
     	validate_store(widthStore, 'widthStore');
-    	component_subscribe($$self, widthStore, value => $$invalidate(9, $widthStore = value));
+    	component_subscribe($$self, widthStore, value => $$invalidate(10, $widthStore = value));
+    	const dispatch = createEventDispatcher();
     	let mapHeight = 100;
     	let mapWidth = 100;
     	let widthRatio = 1;
     	let heightRatio = 1;
     	let viewRight = 1;
     	let viewBottom = 1;
-    	const scaleW = v => v * (mapWidth / boundary.x);
-    	const scaleH = v => v * (mapHeight / boundary.y);
+    	let map;
 
     	onMount(() => {
     		
     	});
 
+    	function handleClick(event) {
+    		let bounds = map.getBoundingClientRect();
+
+    		// x = event.clientX - bounds.left;
+    		// y = event.clientY - bounds.top;
+    		// console.log('x: ' + x + 'y: ' + y)
+    		dispatch('message', {
+    			x: (event.clientX - bounds.left) / widthRatio,
+    			y: (event.clientY - bounds.top) / heightRatio
+    		});
+    	}
+
     	$$self.$$.on_mount.push(function () {
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
-    			console_1$2.warn("<MinimapBoundary> was created without expected prop 'key'");
+    			console.warn("<MinimapBoundary> was created without expected prop 'key'");
     		}
 
     		if (boundary === undefined && !('boundary' in $$props || $$self.$$.bound[$$self.$$.props['boundary']])) {
-    			console_1$2.warn("<MinimapBoundary> was created without expected prop 'boundary'");
+    			console.warn("<MinimapBoundary> was created without expected prop 'boundary'");
     		}
 
     		if (d3Translate === undefined && !('d3Translate' in $$props || $$self.$$.bound[$$self.$$.props['d3Translate']])) {
-    			console_1$2.warn("<MinimapBoundary> was created without expected prop 'd3Translate'");
+    			console.warn("<MinimapBoundary> was created without expected prop 'd3Translate'");
     		}
     	});
 
     	const writable_props = ['key', 'boundary', 'd3Translate'];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<MinimapBoundary> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<MinimapBoundary> was created with unknown prop '${key}'`);
     	});
+
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			map = $$value;
+    			$$invalidate(8, map);
+    		});
+    	}
 
     	$$self.$$set = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('boundary' in $$props) $$invalidate(14, boundary = $$props.boundary);
+    		if ('boundary' in $$props) $$invalidate(16, boundary = $$props.boundary);
     		if ('d3Translate' in $$props) $$invalidate(1, d3Translate = $$props.d3Translate);
     	};
 
     	$$self.$capture_state = () => ({
     		findOrCreateStore,
     		onMount,
-    		afterUpdate,
+    		createEventDispatcher,
     		GreyNode: GreyNodeBoundary,
     		key,
     		boundary,
@@ -8936,14 +9034,15 @@ var app = (function () {
     		nodesStore,
     		heightStore,
     		widthStore,
+    		dispatch,
     		mapHeight,
     		mapWidth,
     		widthRatio,
     		heightRatio,
     		viewRight,
     		viewBottom,
-    		scaleW,
-    		scaleH,
+    		map,
+    		handleClick,
     		$heightStore,
     		$widthStore,
     		$nodesStore
@@ -8951,7 +9050,7 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ('key' in $$props) $$invalidate(0, key = $$props.key);
-    		if ('boundary' in $$props) $$invalidate(14, boundary = $$props.boundary);
+    		if ('boundary' in $$props) $$invalidate(16, boundary = $$props.boundary);
     		if ('d3Translate' in $$props) $$invalidate(1, d3Translate = $$props.d3Translate);
     		if ('mapHeight' in $$props) $$invalidate(2, mapHeight = $$props.mapHeight);
     		if ('mapWidth' in $$props) $$invalidate(3, mapWidth = $$props.mapWidth);
@@ -8959,6 +9058,7 @@ var app = (function () {
     		if ('heightRatio' in $$props) $$invalidate(5, heightRatio = $$props.heightRatio);
     		if ('viewRight' in $$props) $$invalidate(6, viewRight = $$props.viewRight);
     		if ('viewBottom' in $$props) $$invalidate(7, viewBottom = $$props.viewBottom);
+    		if ('map' in $$props) $$invalidate(8, map = $$props.map);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -8966,7 +9066,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*boundary, mapWidth, mapHeight, d3Translate, widthRatio, viewRight, heightRatio, viewBottom*/ 16638) {
+    		if ($$self.$$.dirty & /*boundary, mapWidth, mapHeight, d3Translate, widthRatio, heightRatio*/ 65598) {
     			{
     				if (boundary.y > boundary.x) {
     					$$invalidate(2, mapHeight = 100);
@@ -8982,12 +9082,7 @@ var app = (function () {
     				$$invalidate(4, widthRatio = mapWidth / boundary.x);
     				$$invalidate(5, heightRatio = mapHeight / boundary.y);
     				$$invalidate(6, viewRight = Math.abs(d3Translate.x * widthRatio / d3Translate.k));
-    				console.log('scale' + scaleW(d3Translate.x * widthRatio));
-    				console.log('x/k' + d3Translate.x / d3Translate.k);
-    				console.log('boundratio' + boundary.x * widthRatio);
-    				console.log('viewRight' + viewRight);
     				$$invalidate(7, viewBottom = Math.abs(d3Translate.y * heightRatio / d3Translate.k));
-    				console.log(viewBottom);
     			}
     		}
     	};
@@ -9001,20 +9096,23 @@ var app = (function () {
     		heightRatio,
     		viewRight,
     		viewBottom,
+    		map,
     		$heightStore,
     		$widthStore,
     		$nodesStore,
     		nodesStore,
     		heightStore,
     		widthStore,
-    		boundary
+    		handleClick,
+    		boundary,
+    		div1_binding
     	];
     }
 
     class MinimapBoundary extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init$1(this, options, instance$4, create_fragment$4, safe_not_equal, { key: 0, boundary: 14, d3Translate: 1 });
+    		init$1(this, options, instance$4, create_fragment$4, safe_not_equal, { key: 0, boundary: 16, d3Translate: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -9056,13 +9154,13 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[32] = list[i];
+    	child_ctx[33] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[35] = list[i];
+    	child_ctx[36] = list[i];
     	return child_ctx;
     }
 
@@ -9078,6 +9176,8 @@ var app = (function () {
     			},
     			$$inline: true
     		});
+
+    	minimapboundless.$on("message", /*miniMapClick*/ ctx[16]);
 
     	const block = {
     		c: function create() {
@@ -9132,6 +9232,8 @@ var app = (function () {
     			$$inline: true
     		});
 
+    	minimapboundary.$on("message", /*miniMapClick*/ ctx[16]);
+
     	const block = {
     		c: function create() {
     			create_component(minimapboundary.$$.fragment);
@@ -9179,7 +9281,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
@@ -9238,7 +9340,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -9298,7 +9400,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[35],
+    				node: /*node*/ ctx[36],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -9355,7 +9457,7 @@ var app = (function () {
 
     // (196:8) <Node {node} {key} >
     function create_default_slot_2(ctx) {
-    	let t_value = /*node*/ ctx[35].data.label + "";
+    	let t_value = /*node*/ ctx[36].data.label + "";
     	let t;
 
     	const block = {
@@ -9389,7 +9491,7 @@ var app = (function () {
     	let switch_instance;
     	let t;
     	let current;
-    	var switch_value = /*node*/ ctx[35].data.custom;
+    	var switch_value = /*node*/ ctx[36].data.custom;
 
     	function switch_props(ctx) {
     		return { $$inline: true };
@@ -9410,7 +9512,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (switch_value !== (switch_value = /*node*/ ctx[35].data.custom)) {
+    			if (switch_value !== (switch_value = /*node*/ ctx[36].data.custom)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -9461,7 +9563,7 @@ var app = (function () {
     // (190:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[35].data.html + "";
+    	let raw_value = /*node*/ ctx[36].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -9504,8 +9606,8 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*node*/ ctx[35].data.html) return 0;
-    		if (/*node*/ ctx[35].data.custom) return 1;
+    		if (/*node*/ ctx[36].data.html) return 0;
+    		if (/*node*/ ctx[36].data.custom) return 1;
     		return 2;
     	}
 
@@ -9617,7 +9719,7 @@ var app = (function () {
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9665,7 +9767,7 @@ var app = (function () {
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9713,7 +9815,7 @@ var app = (function () {
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9761,7 +9863,7 @@ var app = (function () {
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[32] },
+    			props: { edge: /*edge*/ ctx[33] },
     			$$inline: true
     		});
 
@@ -9813,9 +9915,9 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*edge*/ ctx[32].type === 'straight') return 0;
-    		if (/*edge*/ ctx[32].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[32].type === 'step') return 2;
+    		if (/*edge*/ ctx[33].type === 'straight') return 0;
+    		if (/*edge*/ ctx[33].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[33].type === 'step') return 2;
     		return 3;
     	}
 
@@ -10318,6 +10420,33 @@ var app = (function () {
     	component_subscribe($$self, heightStore, value => $$invalidate(10, $heightStore = value));
     	let d3Translate = { x: 0, y: 0, k: 1 };
 
+    	//creating function to pass down
+    	function miniMapClick(event) {
+    		console.log(event);
+
+    		if (!boundary) {
+    			//REMEMBER TO SET THE 0 0 TO NODE BOTTOM AND NODE WIDTH SO THAT IT STARTS IN THE LEFT HAND CORNER UPON MOVEMENT
+    			//set default zoom logic
+    			d3.select(`.Edges-${key}`).//makes sure translation is default at center coordinates
+    			// .transition().duration(0)
+    			// .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+    			transition().duration(500).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+
+    			d3.select(`.Nodes-${key}`).// .transition().duration(0)
+    			// .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+    			transition().duration(500).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    		} else {
+    			d3.select(`.Edges-${key}`).//makes sure translation is default at center coordinates
+    			// .transition().duration(0)
+    			// .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+    			transition().duration(500).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+
+    			d3.select(`.Nodes-${key}`).// .transition().duration(0)
+    			// .call(d3Zoom.translateTo, event.detail.nLeft, event.detail.nBottom)
+    			transition().duration(500).call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    		}
+    	}
+
     	function determineD3Instance() {
     		if (boundary) {
     			return d3.zoom().filter(() => !$nodeSelected).scaleExtent([0.4, 2]).translateExtent([[0, 0], [boundary.x, boundary.y]]).extent([[0, 0], [width, height]]).on('zoom', handleZoom); // world extent
@@ -10582,6 +10711,7 @@ var app = (function () {
     		movementStore,
     		widthStore,
     		heightStore,
+    		miniMapClick,
     		initialZoom,
     		initialLocation,
     		width,
