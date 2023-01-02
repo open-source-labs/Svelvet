@@ -43,6 +43,7 @@
   let d3Translate = {x: 0, y: 0, k:1};
   //creating function to pass down
   function miniMapClick(event){
+    console.log(event)
     if(!boundary) {
         //REMEMBER TO SET THE 0 0 TO NODE BOTTOM AND NODE WIDTH SO THAT IT STARTS IN THE LEFT HAND CORNER UPON MOVEMENT
       //set default zoom logic

@@ -7022,7 +7022,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (97:8) {#each $nodesStore as node}
+    // (94:8) {#each $nodesStore as node}
     function create_each_block$2(ctx) {
     	let greynode;
     	let current;
@@ -7075,7 +7075,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(97:8) {#each $nodesStore as node}",
+    		source: "(94:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7118,11 +7118,11 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$8, 95, 8, 3810);
+    			add_location(div0, file$8, 92, 8, 3774);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$8, 94, 4, 3668);
+    			add_location(div1, file$8, 91, 4, 3632);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7259,10 +7259,6 @@ var app = (function () {
     	component_subscribe($$self, widthStore, value => $$invalidate(23, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
     	component_subscribe($$self, heightStore, value => $$invalidate(22, $heightStore = value));
-
-    	onMount(() => {
-    		
-    	});
 
     	//placeholdervalues for initialization
     	const dispatch = createEventDispatcher();
@@ -9168,7 +9164,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (191:19) 
+    // (192:19) 
     function create_if_block_7(ctx) {
     	let minimapboundless;
     	let current;
@@ -9215,14 +9211,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(191:19) ",
+    		source: "(192:19) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (189:0) {#if minimap && boundary}
+    // (190:0) {#if minimap && boundary}
     function create_if_block_6(ctx) {
     	let minimapboundary;
     	let current;
@@ -9271,14 +9267,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(189:0) {#if minimap && boundary}",
+    		source: "(190:0) {#if minimap && boundary}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (208:6) {:else}
+    // (209:6) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
@@ -9330,14 +9326,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(208:6) {:else}",
+    		source: "(209:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (205:33) 
+    // (206:33) 
     function create_if_block_5(ctx) {
     	let node;
     	let current;
@@ -9389,14 +9385,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(205:33) ",
+    		source: "(206:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (202:6) {#if node.data.html}
+    // (203:6) {#if node.data.html}
     function create_if_block_4(ctx) {
     	let node;
     	let t;
@@ -9452,14 +9448,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(202:6) {#if node.data.html}",
+    		source: "(203:6) {#if node.data.html}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (209:8) <Node {node} {key} >
+    // (210:8) <Node {node} {key} >
     function create_default_slot_2(ctx) {
     	let t_value = /*node*/ ctx[36].data.label + "";
     	let t;
@@ -9483,14 +9479,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(209:8) <Node {node} {key} >",
+    		source: "(210:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (207:8) <Node {node} {key} >
+    // (208:8) <Node {node} {key} >
     function create_default_slot_1(ctx) {
     	let switch_instance;
     	let t;
@@ -9557,14 +9553,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(207:8) <Node {node} {key} >",
+    		source: "(208:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (203:8) <Node {node} {key} >
+    // (204:8) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
     	let raw_value = /*node*/ ctx[36].data.html + "";
@@ -9593,14 +9589,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(203:8) <Node {node} {key} >",
+    		source: "(204:8) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (197:4) {#each $nodesStore as node}
+    // (198:4) {#each $nodesStore as node}
     function create_each_block_1(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9674,14 +9670,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(197:4) {#each $nodesStore as node}",
+    		source: "(198:4) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (236:2) {#if $backgroundStore}
+    // (237:2) {#if $backgroundStore}
     function create_if_block_3(ctx) {
     	let rect;
 
@@ -9691,7 +9687,7 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$3, 236, 4, 8965);
+    			add_location(rect, file$3, 237, 4, 8988);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -9710,14 +9706,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(236:2) {#if $backgroundStore}",
+    		source: "(237:2) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (249:6) {:else}
+    // (250:6) {:else}
     function create_else_block$1(ctx) {
     	let simplebezieredge;
     	let current;
@@ -9758,14 +9754,14 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(249:6) {:else}",
+    		source: "(250:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (247:37) 
+    // (248:37) 
     function create_if_block_2(ctx) {
     	let stepedge;
     	let current;
@@ -9806,14 +9802,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(247:37) ",
+    		source: "(248:37) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (245:43) 
+    // (246:43) 
     function create_if_block_1(ctx) {
     	let smoothstepedge;
     	let current;
@@ -9854,14 +9850,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(245:43) ",
+    		source: "(246:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (243:6) {#if edge.type === 'straight'}
+    // (244:6) {#if edge.type === 'straight'}
     function create_if_block$1(ctx) {
     	let straightedge;
     	let current;
@@ -9902,14 +9898,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(243:6) {#if edge.type === 'straight'}",
+    		source: "(244:6) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (242:4) {#each $derivedEdges as edge}
+    // (243:4) {#each $derivedEdges as edge}
     function create_each_block(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9984,7 +9980,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(242:4) {#each $derivedEdges as edge}",
+    		source: "(243:4) {#each $derivedEdges as edge}",
     		ctx
     	});
 
@@ -10080,15 +10076,15 @@ var app = (function () {
     			a = element("a");
     			img = element("img");
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
-    			add_location(div0, file$3, 195, 2, 7795);
+    			add_location(div0, file$3, 196, 2, 7818);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
-    			add_location(div1, file$3, 193, 0, 7677);
+    			add_location(div1, file$3, 194, 0, 7700);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$3, 225, 6, 8753);
+    			add_location(circle, file$3, 226, 6, 8776);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
@@ -10096,21 +10092,21 @@ var app = (function () {
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
     			attr_dev(pattern, "class", "svelte-1tphpvb");
-    			add_location(pattern, file$3, 217, 4, 8594);
-    			add_location(defs, file$3, 216, 2, 8583);
-    			add_location(g, file$3, 240, 2, 9142);
+    			add_location(pattern, file$3, 218, 4, 8617);
+    			add_location(defs, file$3, 217, 2, 8606);
+    			add_location(g, file$3, 241, 2, 9165);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1tphpvb"));
     			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[9] + " " + /*$heightStore*/ ctx[10]);
-    			add_location(svg, file$3, 215, 0, 8502);
+    			add_location(svg, file$3, 216, 0, 8525);
     			attr_dev(img, "id", "dwnldimg");
     			if (!src_url_equal(img.src, img_src_value = "https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "");
     			attr_dev(img, "class", "svelte-1tphpvb");
-    			add_location(img, file$3, 263, 44, 9903);
+    			add_location(img, file$3, 264, 44, 9926);
     			attr_dev(a, "id", "downloadState");
     			attr_dev(a, "download", "state.json");
     			attr_dev(a, "class", "svelte-1tphpvb");
-    			add_location(a, file$3, 263, 0, 9859);
+    			add_location(a, file$3, 264, 0, 9882);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10400,6 +10396,8 @@ var app = (function () {
 
     	//creating function to pass down
     	function miniMapClick(event) {
+    		console.log(event);
+
     		if (!boundary) {
     			//REMEMBER TO SET THE 0 0 TO NODE BOTTOM AND NODE WIDTH SO THAT IT STARTS IN THE LEFT HAND CORNER UPON MOVEMENT
     			//set default zoom logic

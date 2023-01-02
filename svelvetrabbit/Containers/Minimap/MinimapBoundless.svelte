@@ -9,9 +9,6 @@
     const svelvetStore = findOrCreateStore(key);
     const {nodesStore, widthStore, heightStore} = svelvetStore;
     
-    onMount(() => {
-        
-    })
     //placeholdervalues for initialization
     const dispatch = createEventDispatcher();
     let mapMax = 100
