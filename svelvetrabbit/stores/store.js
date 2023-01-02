@@ -20,6 +20,7 @@ export const coreSvelvetStore = {
     initZoom: writable(4),
     initLocation: writable({x:0, y:0}),
     isLocked: writable(false),
+    boundary: writable(false),
     nodeLinkStore: writable(false),
     nodeCreateStore: writable(false)
 };
@@ -50,7 +51,33 @@ export function findOrCreateStore(key) {
     // This is the function handler for the mouseMove event to update the position of the selected node.
     // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
     const onNodeMove = (e, nodeID) => {
+      const bound = get(coreSvelvetStore.boundary);
+      if(bound){
             coreSvelvetStore.nodesStore.update((n) => {
+                const correctNode = n.find((node) => node.id === nodeID);
+                
+                const scale = get(coreSvelvetStore.d3Scale);
+    
+                if(correctNode.childNodes){
+                    n.forEach((child) => {
+                        if(correctNode.childNodes.includes(child.id)){
+                          child.position.x = Math.min(Math.max(child.position.x + e.movementX / scale, 1), bound.x-50);
+                          child.position.y = Math.min(Math.max(child.position.y +e.movementY / scale, 1), bound.y-50);
+                        }
+                    })
+                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound.x-50);
+                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound.y-50);
+                }
+                else {
+                    // divide the movement value by scale to keep it proportional to d3Zoom transformations
+                    correctNode.position.x = Math.min(Math.max(correctNode.position.x + e.movementX / scale, 1), bound.x-50);
+                    correctNode.position.y = Math.min(Math.max(correctNode.position.y +e.movementY / scale, 1), bound.y-50);
+    
+                }
+                return [...n];
+            });}
+              else{
+              coreSvelvetStore.nodesStore.update((n) => {
                 const correctNode = n.find((node) => node.id === nodeID);
     
                 const scale = get(coreSvelvetStore.d3Scale);
@@ -73,7 +100,9 @@ export function findOrCreateStore(key) {
                 }
                 return [...n];
             });
-    };
+        };
+      };
+            
 
     // Mostly copied from onNodeMove, this allows for the movement of new Edges that don't yet have targets/sources
     const onEdgeMove = (event, edgeID) => {

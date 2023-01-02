@@ -1,4 +1,4 @@
-<!-- This is the HTML for your svelte component -->
+
 <script>
 let user = {loggedIn: false}
 function toggle () {

@@ -1,7 +1,7 @@
 <script>
     import { findOrCreateStore } from '../../stores/store';
     import {onMount, afterUpdate} from 'svelte'
-    import GreyNode from './GreyNode.svelte';
+    import GreyNode from './GreyNodeBoundless.svelte';
 
     export let key
     export let d3Translate;

@@ -1,4 +1,4 @@
-<!--Note: Import / export in svelvet is used for passing props  -->
+
 <script>import GraphView from '../GraphView/index.svelte';
 import { findOrCreateStore } from '../../stores/store';
 import { afterUpdate, onMount } from 'svelte';
@@ -19,6 +19,7 @@ export let initialLocation = {x: 0, y: 0};
 export let initialZoom = 4;
 export let minimap = false;
 export let locked = false;
+export let boundary = false
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -39,6 +40,8 @@ onMount(() => {
     svelvetStore.snapResize.set(snapTo);  
     svelvetStore.initZoom.set(initialZoom);
     svelvetStore.initLocation.set(initialLocation);
+    svelvetStore.isLocked.set(locked)
+    svelvetStore.boundary.set(boundary)
     svelvetStore.isLocked.set(locked);
     svelvetStore.nodeLinkStore.set(nodeLink);
     svelvetStore.nodeCreateStore.set(nodeCreate);
@@ -63,7 +66,7 @@ onMount(() => {
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <!-- Pass in props to define svelvet css options -->
 <div class="Svelvet" style={`width: ${$widthStore}px; height: ${$heightStore}px; background-color: ${$backgroundColor}`}>
-  <GraphView {nodesStore} {minimap} {derivedEdges} {key} {initialLocation} {initialZoom}/>
+  <GraphView {nodesStore} {boundary} {width} {height} {minimap} {derivedEdges} {key} {initialLocation} {initialZoom}/>
 </div>
 
 <style>

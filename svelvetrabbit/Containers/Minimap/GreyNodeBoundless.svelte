@@ -14,8 +14,8 @@
     $: {
     nHeight = Math.max(node.height * heightRatio, 5)
     nWidth = Math.max(node.width * widthRatio, 5)
-    top = node.position.y*heightRatio - nodeYbottomPosition*heightRatio
-    left = node.position.x* widthRatio - nodeXleftPosition*widthRatio
+    top = (node.position.y*heightRatio - nodeYbottomPosition*heightRatio)+1
+    left = (node.position.x* widthRatio - nodeXleftPosition*widthRatio) +1
     }
 
 </script>
