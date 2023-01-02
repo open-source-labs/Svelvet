@@ -23,7 +23,8 @@
     ['Minimap', 'Minimap'],
     ['Initial Zoom & Location', 'Initial-Zoom-Location'],
     ['Node Classes', 'Node-Classes'],
-    ['Importing & Exporting Diagrams', ['importDiagrams']]
+    ['Importing & Exporting Diagrams', 'importDiagrams'],
+    ['Diagram Boundary', 'boundary']
   ];
 
   // const communityLinks = [
