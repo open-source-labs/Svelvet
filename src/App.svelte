@@ -112,12 +112,11 @@
 		background 
 		nodeLink
 		nodeCreate
-		
 		minimap={true}
 	/>
 	<!-- <a download='info.txt' id='downloadState'>Download</a> -->
-	<input type="text" id="store-input">
-	<button id="store-input-btn">Upload</button>
+	<!-- <input type="text" id="store-input">
+	<button id="store-input-btn">Upload</button> -->
 </main>
 
 <style>

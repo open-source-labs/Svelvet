@@ -73,13 +73,19 @@
   });
 
   const uploadStore = (e) => {
-    const text = document.getElementById('store-input').value;
-    const newStore = JSON.parse(text);
-    console.log('nodes', newStore.nodes);
-    console.log('edges', newStore.edges);
+    const storeInput = document.getElementById('store-input');
+    const reviver = (key, value) => {
+      if (key === 'custom') return eval(value);
+      return value;
+    }
+    const text = storeInput.value;
+    const newStore = JSON.parse(text, reviver);
+  
     svelvetStore.nodesStore.set(newStore.nodes);
     svelvetStore.edgesStore.set(newStore.edges);
+    storeInput.value = '';
   }
+
   // TODO: Update d3Zoom type (refer to d3Zoom docs)
   let d3Zoom = d3
       .zoom()
@@ -116,6 +122,15 @@
   }
 
   afterUpdate(() => {
+    function replacer(key, value) {
+      // Filtering out properties
+      if (key === 'custom') {
+        const str = value + '';
+        const arr = str.split(' ');
+        return arr[1];
+      }
+      return value;
+    }
       // gets the current nodes and edges arrays from the store and saves them in an object
       const state = {nodes: $nodesStore, edges: $derivedEdges};
       // this function creates a data blob and an object URL for it
@@ -125,7 +140,11 @@
         return textFile;
       }
       // Set the download button target to the object URL
-      document.getElementById('downloadState').href = makeTextFile(JSON.stringify(state));
+      document.getElementById('downloadState').href = makeTextFile(JSON.stringify(state, replacer));
+      // document.getElementById('downloadState').addEventListener('click', async (e) => {
+      //   navigator.clipboard.writeText(JSON.stringify(state, replacer))
+      //     .then((res) => alert('JSON copied to clipboard'));
+      // });
   })
   </script>
   
@@ -202,12 +221,11 @@
   </g>
 </svg>
 
-<!-- <img src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""> -->
-<a id='downloadState' download='state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
-<!-- <div id="download-state"> -->
-  <!-- <img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""> -->
-  <!-- <a href=# download="state.txt"><img src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a> -->
-<!-- </div> -->
+<div id="export-import">
+  <a id='downloadState' download='state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
+  <input type="text" id="store-input" placeholder="Paste JSON here">
+	<button id="store-input-btn">Upload</button>
+</div>
 
 <!-- rendering dots on the background depending on the zoom level -->
 
@@ -237,11 +255,26 @@
     width: 2rem;
   }
 
-  #downloadState {
-    /* width: 5rem; */
-    /* height: 2rem; */
+  #store-input, #store-input-btn {
+    height: 1.5rem;
+    border-radius: .3rem;
+    font-size: .7rem;
+    margin: 2px;
+  }
+
+  #store-input-btn:hover {
+    cursor: pointer;
+    background-color: #FF4742;
+    color: white;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  #export-import {
     position: absolute;
     left: 10px;
     bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
   }
 </style>
