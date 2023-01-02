@@ -1,7 +1,9 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import {onMount} from 'svelte';
+  import {onMount, afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
+  import EditModal from './EditModal.svelte';
+
   export let node;
   export let key;
   let customCssText = '';
@@ -75,18 +77,27 @@
   // }
   ////////////////////////////////////////////////////////////////////////////
 
-  const editText = (e, node) => {
-    
-  }
+  const closeEditModal = () => {
+    const input = document.querySelector('.edit-modal');
+    input.style.display = 'none';
+  };
 
-  onMount((e) => {
+  const showEditModal = (e, node) => {
+    e.preventDefault();
+    $nodeIdSelected = node.id;
+    const input = document.querySelector('.edit-modal');
+    input.style.display = 'block';
+  };
+
+  afterUpdate((e) => {
     if (node.className) {
       const [width, height, innerText] = getStyles(e, node);
       nodeWidth = width;
       nodeHeight = height;
       customCssText += innerText;
     }
-  })
+  });
+
 </script>
 
 <svelte:window
@@ -119,7 +130,7 @@
 />
 
 <div
-  on:click={(e) => console.log(node)}
+  on:contextmenu={(e) => {showEditModal(e, node)}}
 
   on:touchmove={(e) => {
     if (shouldMove) {
@@ -161,6 +172,7 @@ on:keydown={() => {return}}
 
   id="svelvet-{node.id}"
 >
+<!-- <EditModal {node} {key} /> -->
 
 <!-- this anchor is the target-->
   <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
@@ -173,12 +185,9 @@ on:keydown={() => {return}}
          height: {node.height * 0.85}px;
          overflow: hidden;"
       />
-      <!-- {#if node.clickCallback}
-        <button on:click={(e) => {onNodeClick(e, node.id)}}>Click Me</button>
-        {/if} -->
     {:else if node.data.label}
-    <div contenteditable="true">
-      <p class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>      
+    <div>
+      <p class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>   
     </div>
     {:else}
     <div>
@@ -204,7 +213,7 @@ on:keydown={() => {return}}
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
-    z-index: 3;
+    /* z-index: 3; */
     transform-style: preserve-3d;
   }
   
@@ -214,5 +223,12 @@ on:keydown={() => {return}}
 
   .node-label:hover {
     cursor: text;
+  }
+
+  .edit-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: .85rem;
   }
 </style>
