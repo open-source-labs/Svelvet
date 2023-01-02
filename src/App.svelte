@@ -103,7 +103,7 @@
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	<Svelvet  
 	  nodes={initialNodes} 
-	  width={400} 
+	  width={600} 
 		height={600} 
 		initialZoom={5} 
 		initialLocation={initialNodes[2].position} 

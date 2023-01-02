@@ -7,6 +7,7 @@
   import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
   import StepEdge from '../../Edges/StepEdge.svelte';
   import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
+  import EditModal from '../../Nodes/EditModal.svelte';
   import MinimapBoundless from '../Minimap/MinimapBoundless.svelte';
   import Node from '../../Nodes/index.svelte';
   import ImageNode from '../../Nodes/ImageNode.svelte';
@@ -145,6 +146,11 @@
           .style('transform-origin', '0 0');
   }
 
+  const closeEditModal = () => {
+    const input = document.querySelector('.edit-modal');
+    input.style.display = 'none';
+  };
+
   afterUpdate(() => {
     function replacer(key, value) {
       // Filtering out properties
@@ -172,17 +178,21 @@
   })
   </script>
   
+  <div id="graphview-container" >
+
+  
   <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 {#if minimap && boundary}
 <MinimapBoundary {key} {boundary} {d3Translate}/>
 {:else if minimap }
 <MinimapBoundless {key} {d3Translate}/>
 {/if}
-<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault>
+<EditModal {key} />
+<div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault on:click={closeEditModal}>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${key}`}>
     {#each $nodesStore as node}
-      <!-- <EditModal {node} {key} /> -->
+    <!-- <EditModal {node} {key} /> -->
       <!-- {#if node.image && !node.data.label} -->
         <!-- <ImageNode {node} {key} /> -->
         <!-- If node has html property:  -->
@@ -248,20 +258,28 @@
 </svg>
 
 <div id="export-import">
-  <a id='downloadState' download='state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
+  <a id='downloadState' download='svelvet-state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
   <input type="text" id="store-input" placeholder="Paste JSON here">
 	<button id="store-input-btn">Upload</button>
 </div>
-
+</div>
 <!-- rendering dots on the background depending on the zoom level -->
 
 
 <style>
+
+  #graphview-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
     .Nodes {
     position: absolute; 
     width: 100%;
     height: 100%;
     cursor: grab;
+    /* pointer-events: none; */
   } 
   
   .Nodes:active {
