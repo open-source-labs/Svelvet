@@ -103,13 +103,14 @@
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	<Svelvet  
 	  nodes={initialNodes} 
-	  width={800} 
-		height={800} 
+	  width={400} 
+		height={600} 
 		initialZoom={5} 
 		initialLocation={initialNodes[2].position} 
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
+		boundary={{x: 2000, y: 1500}}
 		nodeLink
 		nodeCreate
 		

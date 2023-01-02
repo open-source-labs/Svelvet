@@ -21,4 +21,5 @@ export declare type IndexSlots = typeof __propDef.slots;
 export default class Index extends SvelteComponentTyped<IndexProps, IndexEvents, IndexSlots> {
 }
 export declare function zoomInit(): void;
+export declare function determineD3Instance(): void;
 export {};
