@@ -22,7 +22,8 @@ export const coreSvelvetStore = {
     isLocked: writable(false),
     boundary: writable(false),
     nodeLinkStore: writable(false),
-    nodeCreateStore: writable(false)
+    nodeCreateStore: writable(false),
+    nodeEditStore: writable(false)
 };
 
 

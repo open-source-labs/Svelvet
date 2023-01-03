@@ -10,6 +10,7 @@
   let nodeWidth;
   let nodeHeight;
   
+  
   const {
     onNodeMove,
     onNodeClick,
@@ -21,21 +22,18 @@
     snapgrid, 
     snapResize,
     nodesStore,
-    isLocked
+    isLocked,
+    nodeEditStore
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
+  let label;
   // console.log('nodesStore from Nodes', $nodesStore);
-
-  // modal for editing nodes
-  const openEditModal = (e) => {
-    e.preventDefault();
-    document.querySelector('.edit-node-modal').style.display = 'flex';
-  }
-
+  $: label = node.data.label;
+  
   ////////// ------------- MOVED TO STORE ------------- ////////////
   // // Getting the styles for a custom class, and adjusting the height and width if necessary
   // const getStyles = (e, node) => {
@@ -77,16 +75,11 @@
   // }
   ////////////////////////////////////////////////////////////////////////////
 
-  const closeEditModal = () => {
-    const input = document.querySelector('.edit-modal');
-    input.style.display = 'none';
-  };
-
   const showEditModal = (e, node) => {
     e.preventDefault();
     $nodeIdSelected = node.id;
     const input = document.querySelector('.edit-modal');
-    input.style.display = 'block';
+    input.style.display = 'flex';
   };
 
   afterUpdate((e) => {
@@ -130,7 +123,9 @@
 />
 
 <div
-  on:contextmenu={(e) => {showEditModal(e, node)}}
+  on:contextmenu={(e) => {
+    if ($nodeEditStore) showEditModal(e, node);
+    }}
 
   on:touchmove={(e) => {
     if (shouldMove) {
@@ -187,7 +182,7 @@ on:keydown={() => {return}}
       />
     {:else if node.data.label}
     <div>
-      <p class="node-label" on:dblclick={(e) => {editText(e, node)}}>{node.data.label}</p>   
+      <p> {node.data.label}</p>   
     </div>
     {:else}
     <div>
@@ -219,10 +214,6 @@ on:keydown={() => {return}}
   
   .Node:hover {
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
-  }
-
-  .node-label:hover {
-    cursor: text;
   }
 
   .edit-button {

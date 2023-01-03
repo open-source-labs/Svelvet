@@ -3,11 +3,15 @@
   import { findOrCreateStore } from '../stores/store';
   // export let node;
   export let key;
-  let label = '';
+  let label;
   let width = '';
   let height = '';
   let customClass = '';
+  let backgroundColor;
+
   let currentNode;
+
+  let test = 'test';
 
   const {
       nodesStore,
@@ -19,20 +23,34 @@
 
   // const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
 
-  const changeLabel = (e) => {
+  const editNode = (e) => {
     e.preventDefault();
     const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
     if (label) currentNode.data.label = label;
     if (width) currentNode.width = +width;
     if (height) currentNode.height = +height;
     if (customClass) currentNode.className = customClass;
+    if (backgroundColor) currentNode.bgColor = backgroundColor;
     width = '';
     height = '';
     customClass = '';
     
+    
     store.nodesStore.set($nodesStore);
     document.querySelector('.edit-modal').style.display = 'none';
     document.querySelector('#label-input').value = '';
+  }
+
+  const changeLabel = (e) => {
+    const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
+    currentNode.data.label = e.target.value;
+    store.nodesStore.set($nodesStore);
+  }
+
+  const changeColor = (e) => {
+    const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
+    currentNode.bgColor = e.target.value;
+    store.nodesStore.set($nodesStore);
   }
 </script>
 <!-- /////////////////////////////////////// -->
@@ -55,18 +73,21 @@
 <div class="edit-modal">
   <h4>Edit Attributes</h4>
   {#if currentNode}
-  <form on:submit={changeLabel}>
+  <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input" bind:value={label}>
+    <input type="text" id="label-input" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" on:input={changeLabel}>
     <label for="width-input">Width</label>
-    <input type="text" id="width-input" bind:value={width}>
+    <input type="number" id="width-input" placeholder="{currentNode.width}" bind:value={width}>
     <label for="height-input">Height</label>
-    <input type="text" id="height-input" bind:value={height}>
+    <input type="number" id="height-input" placeholder="{currentNode.height}" bind:value={height}>
+    <label for="bg-color-input">Background Color</label>
+    <input type="color" id="bg-color-input"  bind:value={backgroundColor}>
+    <input type="text" placeholder="{currentNode.bgColor}">
     <label for="custom-class-input">Custom Class</label>
-    <input type="text" id="custom-class-input" bind:value={customClass}>
+    <input type="text" id="custom-class-input" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
   </form>
   {/if}
-  <button on:click={changeLabel}>Submit</button>
+  <button on:click={editNode}>Submit</button>
 </div>
 <!-- /////////////////////////////////////// -->
 
@@ -76,6 +97,7 @@
   label {
     font-size: .8rem;
     font-weight: bold;
+    margin-bottom: .15rem;
   }
 
   button {
@@ -84,36 +106,44 @@
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
   }
 
+  input {
+    height: 1.6rem;
+    border-color: #e45b56;
+  }
+
+  #bg-color-input {
+    height: 2rem;
+    width: 5rem;
+    padding: 0;
+    border: none;
+    background-color: none;
+  }
+
   button:hover {
     cursor: pointer;
     background-color: #e45b56;
     color: white;
   }
 
-  .edit-node-modal {
-    position: absolute;
-    left: -20px;
-    top: -20px;
-    width: 200px;
-    height: 200px;
-    background-color: antiquewhite;
-    border-radius: 1rem;
-    border: 1px solid black;
-    display: none;
+  form {
+    display: flex;
     flex-direction: column;
-    /* opacity: 0; */
-    z-index: 5;
+    align-items: center;
+    justify-content: center;
   }
-
   .edit-modal {
     position: absolute;
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
     display: none;
-    border: 1px solid white;
-    border-radius: 3%;
-    background-color: #e45b56;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #333333;
+    border-radius: 2rem;
+    background-color: #FFFFFF;
     z-index: 10;
     user-select: text;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
+    color: #333333;
   }
 
   #label-input {
