@@ -1,22 +1,18 @@
 <!-- //////////// -- Scripts -- //////////// -->
 <script>
   import { findOrCreateStore } from '../stores/store';
-  // export let node;
   export let key;
   let label;
-  let width = '';
-  let height = '';
-  let customClass = '';
+  let width;
+  let height;
+  let customClass;
   let backgroundColor;
 
   let currentNode;
 
-  let test = 'test';
-
   const {
       nodesStore,
       nodeIdSelected,
-      getStyles
     } = findOrCreateStore(key);
   $: store = findOrCreateStore(key);
   $: currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
@@ -35,7 +31,6 @@
     height = '';
     customClass = '';
     
-    
     store.nodesStore.set($nodesStore);
     document.querySelector('.edit-modal').style.display = 'none';
     document.querySelector('#label-input').value = '';
@@ -47,11 +42,11 @@
     store.nodesStore.set($nodesStore);
   }
 
-  const changeColor = (e) => {
-    const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
-    currentNode.bgColor = e.target.value;
-    store.nodesStore.set($nodesStore);
-  }
+  // const changeColor = (e) => {
+  //   const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
+  //   currentNode.bgColor = e.target.value;
+  //   store.nodesStore.set($nodesStore);
+  // }
 </script>
 <!-- /////////////////////////////////////// -->
 
@@ -82,7 +77,7 @@
     <input type="number" id="height-input" placeholder="{currentNode.height}" bind:value={height}>
     <label for="bg-color-input">Background Color</label>
     <input type="color" id="bg-color-input"  bind:value={backgroundColor}>
-    <input type="text" placeholder="{currentNode.bgColor}">
+    <input type="text" placeholder="{currentNode.bgColor}" bind:value={backgroundColor}>
     <label for="custom-class-input">Custom Class</label>
     <input type="text" id="custom-class-input" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
   </form>
@@ -94,6 +89,7 @@
 
 <!-- //////////// -- Styles -- //////////// -->
 <style>
+
   label {
     font-size: .8rem;
     font-weight: bold;
@@ -146,8 +142,5 @@
     color: #333333;
   }
 
-  #label-input {
-    z-index: 1000 !important;
-  }
 </style>
 <!-- /////////////////////////////////////// -->

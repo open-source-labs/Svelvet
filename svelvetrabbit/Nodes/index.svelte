@@ -2,14 +2,12 @@
   import { findOrCreateStore } from '../stores/store';
   import {onMount, afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
-  import EditModal from './EditModal.svelte';
 
   export let node;
   export let key;
   let customCssText = '';
   let nodeWidth;
   let nodeHeight;
-  
   
   const {
     onNodeMove,
