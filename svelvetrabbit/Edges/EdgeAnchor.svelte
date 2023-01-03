@@ -7,7 +7,6 @@
   export let role;
   export let width;
   export let height;
-  let newNode;
   let newEdge;
   let hovered = false;
   let anchorWidth = 13;
@@ -23,7 +22,6 @@
       renderNewNode,
       hoveredElement,
       derivedEdges,
-      nodesStore,
       nodeLinkStore,
       nodeCreateStore
     } = findOrCreateStore(key);
@@ -34,98 +32,6 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
-
-  console.log('link', $nodeLinkStore, 'create', $nodeCreateStore);
-  ////////// ------------ MOVED TO STORE -------------- //////////////////
-  // /*
-  // This is the function that renders a new edge when an anchor is clicked
-  // */  
-  // const renderEdge = (e) => {
-  //   const [x, y] = setNewEdgeProps(role, position, node)
-  //   e.preventDefault(); // preventing default behavior, not sure if necessary
-  //   // Setting the newEdge variable to an edge prototype
-  //   newEdge = role === 'source' ? { 
-  //     id: uuidv4(), // generate unique id
-  //     source: node.id, // the source is the node that the anchor is on
-  //     target: null, // until the mouse is released the target will be set to null
-  //     targetX: x,
-  //     targetY: y,
-  //     animate: true,
-  //   } : { 
-  //     id: uuidv4(), // generate unique id
-  //     source: null, // until the mouse is released the source will be set to null
-  //     target: node.id, // the target is the node that the anchor is on
-  //     sourceX: x,
-  //     sourceY: y,
-  //     animate: true, 
-  //   };
-  //   store.edgesStore.set([...$derivedEdges, newEdge]); // updating the edges in the store
-  // }
-
-
-  // /*
-  // This is the function that renders a new node when the mouse is released
-  // after clicking on an anchor, takes in the newEdge that was just created
-  // */  
-  // const renderNewNode = (event, edge) => {
-  //   event.preventDefault();
-  //   let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
-    
-  //   // setting newNode variable to a 'prototype' node
-  //   newNode = {
-  //     id: uuidv4(), 
-  //     position: pos, // the position (top left corner) is at the target coords of the edge for now
-  //     data: { label: "New Node" }, // need ways to change the rest of the properties
-  //     width: 100,
-  //     height: 40,
-  //     className: 'newNode',
-  //     bgColor: "white"
-  //   };
-  //   if (position === 'left') {
-  //     if (role === 'source') {
-  //       newNode.sourcePosition = 'left';
-  //       newNode.targetPosition = 'right';
-  //       edge.target = newNode.id; // set the new edge to target the new node
-  //       newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
-  //       newNode.position.y = edge.targetY;
-  //     }
-  //     else {
-  //       newNode.sourcePosition = 'right';
-  //       newNode.targetPosition = 'left';
-  //       edge.source = newNode.id;
-  //       newNode.position.x = edge.sourceX - newNode.width / 2;
-  //       newNode.position.y = edge.sourceY - newNode.height;
-  //     }
-  //   } else if (position === 'right') {
-  //     if(role === 'source') {
-  //       newNode.sourcePosition = 'right';
-  //       newNode.targetPosition = 'left';
-  //       edge.target = newNode.id; // set the new edge to target the new node
-  //       newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
-  //       newNode.position.y = edge.targetY;
-  //     }
-  //     else {
-  //       newNode.sourcePosition = 'left';
-  //       newNode.targetPosition = 'right';
-  //       edge.source = newNode.id;
-  //       newNode.position.x = edge.sourceX - newNode.width / 2;
-  //       newNode.position.y = edge.sourceY - newNode.height;
-  //     }
-  //   } else {
-  //     if(role === 'source') {
-  //       edge.target = newNode.id; // set the new edge to target the new node
-  //       newNode.position.x = edge.targetX - newNode.width / 2; // moves the node over to the correct position
-  //       newNode.position.y = edge.targetY;
-  //     }
-  //     else {
-  //       edge.source = newNode.id;
-  //       newNode.position.x = edge.sourceX - newNode.width / 2;
-  //       newNode.position.y = edge.sourceY - newNode.height;
-  //     }
-  //   }
-  //   store.nodesStore.set([...$nodesStore, newNode]); // update the nodes in the store
-  // }
-  ///////////////////////////////////////////////////////////////////////
 
   // Before the component is updated, adjust the top and left positions to account for custom class dimensions
   beforeUpdate(() => {
@@ -152,7 +58,7 @@
         else newEdge.target = $hoveredElement.id;
         store.edgesStore.set([...$derivedEdges, newEdge]);
       } else if ($nodeCreateStore) {
-        renderNewNode(e, newEdge, role, position);
+        renderNewNode(e, node, newEdge, role, position);
       } else {
         store.edgesStore.set($derivedEdges.filter(e => e.id !== newEdge.id))
       }

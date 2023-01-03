@@ -205,7 +205,7 @@ export function findOrCreateStore(key) {
   This is the function that renders a new node when the mouse is released
   after clicking on an anchor, takes in the newEdge that was just created
   */  
-  const renderNewNode = (event, edge, role, position) => {
+  const renderNewNode = (event, node, edge, role, position) => {
     // Find the highest of the current id numbers
     const nodeIds = get(coreSvelvetStore.nodesStore).map(n => n.id);
     const highestId = Math.max(...nodeIds)
@@ -217,7 +217,7 @@ export function findOrCreateStore(key) {
     const newNode = {
       id: highestId + 1, // set the id to one higher than the highest in the current array
       position: pos, // the position (top left corner) is at the target coords of the edge for now
-      data: { label: "New Node" }, // need ways to change the rest of the properties
+      data: node.data ? node.data : {label: ''}, // need ways to change the rest of the properties
       width: 100,
       height: 40,
       className: 'newNode',
