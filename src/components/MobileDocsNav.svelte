@@ -152,6 +152,9 @@
           <li class:bg-rose-100={activeLink.includes('Diagram Boundary')}>
             <a on:click={toggleMenu} href="/docs/boundary" class="block py-4 px-12">HTML-Docs</a>
           </li>
+          <li class:bg-rose-100={activeLink.includes('Interactively Editable Nodes')}>
+            <a on:click={toggleMenu} href="/docs/editNodes" class="block py-4 px-12">HTML-Docs</a>
+          </li>
         </ul>
       {/if}
 

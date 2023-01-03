@@ -30,7 +30,8 @@ Shout out to our contributors! Here's what's new:
   <li>Added progammatic initial zoom and location</li>
   <li>Added custom classes for nodes to allow for uniform styling</li>
   <li>Added a feature that allows you to export and import diagrams</li>
-  <li>Added an optional boundary to the diagram </li>
+  <li>Added an optional boundary to the diagram</li>
+  <li>Added functionality to edit nodes by right-clicking on a node to bring up a modal</li>
   <li>Updated documentation page on website to include new features</li>
   <li>Updated home page to include newest collaborators</li>
 </ul>

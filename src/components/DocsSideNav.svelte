@@ -24,7 +24,8 @@
     ['Initial Zoom & Location', 'Initial-Zoom-Location'],
     ['Node Classes', 'Node-Classes'],
     ['Importing & Exporting Diagrams', 'importDiagrams'],
-    ['Diagram Boundary', 'boundary']
+    ['Diagram Boundary', 'boundary'],
+    ['Interactive Editable Nodes', 'editNodes']
   ];
 
   // const communityLinks = [
