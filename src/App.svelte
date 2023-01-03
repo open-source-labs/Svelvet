@@ -100,23 +100,20 @@
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	<Svelvet  
 	  nodes={initialNodes} 
-	  width={800} 
-		height={800} 
+	  width={600} 
+		height={600} 
 		initialZoom={5} 
 		initialLocation={initialNodes[2].position} 
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
 		boundary={{x: 2000, y: 1500}}
-		nodeLink
 		nodeCreate
+		nodeLink
 		nodeEdit
 		
 		minimap={true}
 	/>
-	<!-- <a download='info.txt' id='downloadState'>Download</a> -->
-	<!-- <input type="text" id="store-input">
-	<button id="store-input-btn">Upload</button> -->
 </main>
 
 <style>
@@ -153,12 +150,12 @@
 		border-color: cyan;
 	}
 
-	:global(.newNode) {
+	/* :global(.newNode) {
 		background-color: #cde1f3;
 		color: black;
 		border-radius: 5%;
 		width: 100px;
 		height: 40px;
-		/* box-shadow: 1px 1px 1px 4px black; */
-	}
+		box-shadow: 1px 1px 1px 4px black; 
+	} */
 </style>

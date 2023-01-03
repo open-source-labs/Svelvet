@@ -291,7 +291,8 @@
 </svg>
 
 <div id="export-import">
-  <a id='downloadState' download='svelvet-state.json'><img id="dwnldimg" src="https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1" alt=""></a>
+  <div id="dwnld-btn"></div>
+  <a id='downloadState' download='svelvet-state.json'><svg id="dwnldimg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_iconCarrier"> <path d="M0 0h48v48H0z" fill="none"></path> <g id="Shopicon"> <polygon points="22,4 22,20 14,20 24,30 34,20 26,20 26,4 "></polygon> <path d="M8,44h32c2.206,0,4-1.794,4-4V30h-4v10H8V30H4v10C4,42.206,5.794,44,8,44z"></path> </g> </g></svg></a>
   <input type="text" id="store-input" placeholder="Paste JSON here">
 	<button id="store-input-btn">Upload</button>
 </div>
@@ -300,6 +301,8 @@
 
 
 <style>
+  /* https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1 */
+  
 
   #graphview-container {
     display: flex;
@@ -329,7 +332,8 @@
   } */ 
 
   #dwnldimg {
-    width: 2rem;
+    width: 1.5rem;
+    margin-right: 0.1rem;
   }
 
   #store-input, #store-input-btn {

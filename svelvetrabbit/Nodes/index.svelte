@@ -1,6 +1,6 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import {onMount, afterUpdate} from 'svelte';
+  import {afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
 
   export let node;
@@ -19,7 +19,6 @@
     movementStore,
     snapgrid, 
     snapResize,
-    nodesStore,
     isLocked,
     nodeEditStore
   } = findOrCreateStore(key);
@@ -28,50 +27,6 @@
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
-  let label;
-  // console.log('nodesStore from Nodes', $nodesStore);
-  $: label = node.data.label;
-  
-  ////////// ------------- MOVED TO STORE ------------- ////////////
-  // // Getting the styles for a custom class, and adjusting the height and width if necessary
-  // const getStyles = (e, node) => {
-  //   console.log('getStyles node', node);
-  //   const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
-    
-  //   // Look through each CSS rule to find the one the user defined
-  //   Object.values(styleRules).forEach(rule => {
-  //     if (rule.selectorText === `.${node.className}`) {
-  //       const initialText = rule.cssText; // getting the full text of the CSS rule 
-  //       const i = initialText.indexOf('{'); // finding index of first bracket
-  //       const innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
-  //       customCssText += innerText; // add the text to our variable which is included in inline styles
-  //       // Adjusting the width and height if they are set via the custom class
-  //       const arr = innerText.split(' ');
-  //       arr.forEach((str, i) => {
-  //         if (str === 'width:') {
-  //           nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
-  //           const w = parseInt(arr[i+1]); // getting the number for the width
-  //           nodeWidth = w;
-  //         }
-  //         if (str === 'height:') {
-  //           nodeHeight = str.concat(arr[i+1]); // same as with the width
-  //           const h = parseInt(arr[i+1]);
-  //           nodeHeight = h;
-  //         }
-  //       })
-  //     }
-  //   })
-  //   // adjusting the properties on the node in the store 
-  //   const newStore = $nodesStore.map(n => {
-  //     if (node.id === n.id) {
-  //       n.width = nodeWidth || node.width;
-  //       n.height = nodeHeight || node.height;
-  //       return n;
-  //     } else return n;
-  //   })
-  //   store.nodesStore.set(newStore);
-  // }
-  ////////////////////////////////////////////////////////////////////////////
 
   const showEditModal = (e, node) => {
     e.preventDefault();
@@ -85,7 +40,7 @@
       const [width, height, innerText] = getStyles(e, node);
       nodeWidth = width;
       nodeHeight = height;
-      customCssText += innerText;
+      customCssText = innerText;
     }
   });
 
