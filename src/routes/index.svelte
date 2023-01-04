@@ -46,7 +46,8 @@
       data: { label: 'Mixed Anchors' },
       width: 125,
       height: 40,
-      bgColor: 'blue',
+      bgColor: 'white',
+      textColor: 'black',
       targetPosition: 'left'
     },
     {
@@ -55,7 +56,8 @@
       data: { label: 'Output Node' },
       width: 100,
       height: 40,
-      bgColor: '#FFE4E6'
+      bgColor: '#FFE4E6',
+      textColor: 'black'
     },
     {
       id: 4,
@@ -63,7 +65,8 @@
       data: { label: 'Drag me!' },
       width: 125,
       height: 40,
-      bgColor: 'red',
+      bgColor: 'white',
+      textColor: 'black',
       targetPosition: 'right'
     },
     {
@@ -73,6 +76,7 @@
       width: 125,
       height: 40,
       bgColor: '#C8FFC7',
+      textColor: 'black',
       borderColor: 'transparent',
       borderRadius: 0
     },
@@ -137,7 +141,7 @@
       <div
         class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
       >
-        <Svelvet nodes={initialNodes} edges={initialEdges} initialLocation={initialNodes[4].position} initialZoom={2} nodeLink nodeCreate width={900} height={900} background />
+        <Svelvet nodes={initialNodes} edges={initialEdges} initialLocation={initialNodes[4].position} initialZoom={2} width={550} height={550} background />
       </div>
     </div>
   </div>
