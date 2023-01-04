@@ -1,6 +1,6 @@
   <script lang="ts">
     // @ts-nocheck
-      import Svelvet from 'svelvet';
+      import Svelvet from 'svelvetrabbits';
       
         const initialNodes = [
         ];
@@ -22,6 +22,7 @@
 
 <p class="text-gray-600">
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows you to download a snapshot of your diagram as a JSON file that can be shared with others!
+  This feature is optional and must be passed down as a prop <code class="bg-rose-100 rounded-lg p-1">shareable</code> to your Svelvet application.
   To access this feature, click the <code class="bg-rose-100 rounded-lg p-1">download</code> button in the bottom left of the diagram.
   This will download a JSON file that can be shared with any developer using <code class="bg-rose-100 rounded-lg p-1">Svelvet</code>! 
   After receiving the JSON file, simply open it and copy paste the JSON string into the <code class="bg-rose-100 rounded-lg p-1">upload</code> box in the bottom left of the diagram.
@@ -37,7 +38,7 @@
 
 <div class="demo">
   <Svelvet nodes={initialNodes} edges={initialEdges} width={500} height={500} bgColor={'pink'} background />
-  <Svelvet nodes={demoNodes} edges={initialEdges} width={500} height={500} bgColor={'aqua'} background />
+  <Svelvet nodes={demoNodes} edges={initialEdges} width={500} height={500} bgColor={'aqua'} nodeLink nodeCreate background />
 </div>
 
 <style>

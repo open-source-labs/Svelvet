@@ -4,7 +4,7 @@
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows users to enable interactive node linking and creation in their diagrams. 
   Initially, node linking and creation is <code class="bg-rose-100 rounded-lg p-1">not enabled</code> by default. To access these features, add the <code class="bg-rose-100 rounded-lg p-1">nodeLink</code> and <code class="bg-rose-100 rounded-lg p-1">nodeCreate</code>
   props to your <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> application. These do not have to be set equal to anything and can just be passed in. 
-  Adding these props will enable interactive node linking and creation. The user can choose to enable one or both features depending on their diagram needs!
+  Adding these props will enable interactive node linking and creation. NOTE: To have full access to the node creation feature, node linking feature must also be passed down as a prop.
   Node <code class="bg-rose-100 rounded-lg p-1">anchors</code> will turn <code class="bg-rose-100 rounded-lg p-1">red</code> and the <code class="bg-rose-100 rounded-lg p-1">cursor</code> 
   will change to a <code class="bg-rose-100 rounded-lg p-1">crosshair</code> to indicate that node linking or creation is <code class="bg-rose-100 rounded-lg p-1">enabled</code>.
 </p>
