@@ -111,7 +111,7 @@
 		nodeLink
 		nodeCreate
 		nodeEdit
-		
+		shareable
 		minimap={true}
 	/>
 	<!-- <a download='info.txt' id='downloadState'>Download</a> -->

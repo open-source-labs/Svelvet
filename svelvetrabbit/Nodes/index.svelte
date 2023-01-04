@@ -1,10 +1,11 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import {onMount, afterUpdate} from 'svelte';
+  import {afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
 
   export let node;
   export let key;
+  // Lines 9-11 are related to node custom classes
   let customCssText = '';
   let nodeWidth;
   let nodeHeight;
@@ -19,7 +20,6 @@
     movementStore,
     snapgrid, 
     snapResize,
-    nodesStore,
     isLocked,
     nodeEditStore
   } = findOrCreateStore(key);
@@ -29,50 +29,9 @@
   let moving = false;
   let moved = false;
   let label;
-  // console.log('nodesStore from Nodes', $nodesStore);
+
   $: label = node.data.label;
   
-  ////////// ------------- MOVED TO STORE ------------- ////////////
-  // // Getting the styles for a custom class, and adjusting the height and width if necessary
-  // const getStyles = (e, node) => {
-  //   console.log('getStyles node', node);
-  //   const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
-    
-  //   // Look through each CSS rule to find the one the user defined
-  //   Object.values(styleRules).forEach(rule => {
-  //     if (rule.selectorText === `.${node.className}`) {
-  //       const initialText = rule.cssText; // getting the full text of the CSS rule 
-  //       const i = initialText.indexOf('{'); // finding index of first bracket
-  //       const innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
-  //       customCssText += innerText; // add the text to our variable which is included in inline styles
-  //       // Adjusting the width and height if they are set via the custom class
-  //       const arr = innerText.split(' ');
-  //       arr.forEach((str, i) => {
-  //         if (str === 'width:') {
-  //           nodeWidth = str.concat(arr[i+1]); // go through the array and join width and the number
-  //           const w = parseInt(arr[i+1]); // getting the number for the width
-  //           nodeWidth = w;
-  //         }
-  //         if (str === 'height:') {
-  //           nodeHeight = str.concat(arr[i+1]); // same as with the width
-  //           const h = parseInt(arr[i+1]);
-  //           nodeHeight = h;
-  //         }
-  //       })
-  //     }
-  //   })
-  //   // adjusting the properties on the node in the store 
-  //   const newStore = $nodesStore.map(n => {
-  //     if (node.id === n.id) {
-  //       n.width = nodeWidth || node.width;
-  //       n.height = nodeHeight || node.height;
-  //       return n;
-  //     } else return n;
-  //   })
-  //   store.nodesStore.set(newStore);
-  // }
-  ////////////////////////////////////////////////////////////////////////////
-
   const showEditModal = (e, node) => {
     e.preventDefault();
     $nodeIdSelected = node.id;
@@ -85,7 +44,7 @@
       const [width, height, innerText] = getStyles(e, node);
       nodeWidth = width;
       nodeHeight = height;
-      customCssText += innerText;
+      customCssText = innerText;
     }
   });
 
@@ -123,7 +82,7 @@
 <div
   on:contextmenu={(e) => {
     if ($nodeEditStore) showEditModal(e, node);
-    }}
+  }}
 
   on:touchmove={(e) => {
     if (shouldMove) {
@@ -148,7 +107,8 @@
     $nodeIdSelected = node.id;
     $nodeSelected = true;
   }}
-on:keydown={() => {return}}
+  
+  on:keydown={() => {return}}
 
 
   class="Node {node.className || ''}"
@@ -165,7 +125,6 @@ on:keydown={() => {return}}
 
   id="svelvet-{node.id}"
 >
-<!-- <EditModal {node} {key} /> -->
 
 <!-- this anchor is the target-->
   <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
@@ -179,17 +138,16 @@ on:keydown={() => {return}}
          overflow: hidden;"
       />
     {:else if node.data.label}
-    <div>
-      <p> {node.data.label}</p>   
-    </div>
+      <div>
+        <p> {node.data.label}</p>   
+      </div>
     {:else}
-    <div>
-      <slot />
-    </div>
+      <div>
+        <slot />
+      </div>
     {/if}
     <!-- this anchor is the source-->
     <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.sourcePosition || 'bottom'} role={'source'} />
-
 </div>
 
 <style>
@@ -206,18 +164,10 @@ on:keydown={() => {return}}
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
-    /* z-index: 3; */
     transform-style: preserve-3d;
   }
   
   .Node:hover {
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
-  }
-
-  .edit-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: .85rem;
   }
 </style>

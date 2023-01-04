@@ -9,23 +9,21 @@
     
     const svelvetStore = findOrCreateStore(key);
     const {nodesStore, heightStore, widthStore} = svelvetStore;
-    const dispatch = createEventDispatcher();
-    let mapHeight =100;
+    const dispatch = createEventDispatcher(); // dispatch creates a message to be sent
+    let mapHeight = 100;
     let mapWidth = 100;
     let widthRatio = 1;
     let heightRatio = 1;
-    let viewRight =1;
+    let viewRight = 1;
     let viewBottom = 1;
-    let map
-    onMount(() => {
-        
-    })
+    let map;
+    
     $: {
-        if(boundary.y>boundary.x){
+        if (boundary.y > boundary.x) {
     mapHeight = 100;
     mapWidth = Math.max((boundary.x.toFixed(0)*100)/boundary.y.toFixed(0), 25);
     }
-    else if(boundary.y<boundary.x){
+    else if (boundary.y < boundary.x) {
     mapWidth = 100;
     mapHeight = Math.max((boundary.y.toFixed(0)*100)/boundary.x.toFixed(0), 25)
     }else{

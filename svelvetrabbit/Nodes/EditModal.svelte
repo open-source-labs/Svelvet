@@ -32,8 +32,8 @@
     customClass = '';
     
     store.nodesStore.set($nodesStore);
-    document.querySelector('.edit-modal').style.display = 'none';
-    document.querySelector('#label-input').value = '';
+    document.querySelector(`.edit-modal-${key}`).style.display = 'none';
+    document.querySelector(`#label-input-${key}`).value = '';
   }
 
   const changeLabel = (e) => {
@@ -65,21 +65,21 @@
   <button id="submit-node-edit" on:click={(e) => submitChanges()}>Submit</button>
 </div> -->
 
-<div class="edit-modal">
+<div class="edit-modal edit-modal-{key}">
   <h4>Edit Attributes</h4>
   {#if currentNode}
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" on:input={changeLabel}>
+    <input type="text" id="label-input-${key}" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" on:input={changeLabel}>
     <label for="width-input">Width</label>
-    <input type="number" id="width-input" placeholder="{currentNode.width}" bind:value={width}>
+    <input type="number" id="width-input-${key}" placeholder="{currentNode.width}" bind:value={width}>
     <label for="height-input">Height</label>
-    <input type="number" id="height-input" placeholder="{currentNode.height}" bind:value={height}>
+    <input type="number" id="height-input-${key}" placeholder="{currentNode.height}" bind:value={height}>
     <label for="bg-color-input">Background Color</label>
-    <input type="color" id="bg-color-input"  bind:value={backgroundColor}>
+    <input type="color" id="bg-color-input-${key}"  bind:value={backgroundColor}>
     <input type="text" placeholder="{currentNode.bgColor}" bind:value={backgroundColor}>
     <label for="custom-class-input">Custom Class</label>
-    <input type="text" id="custom-class-input" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
+    <input type="text" id="custom-class-input-${key}" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
   </form>
   {/if}
   <button on:click={editNode}>Submit</button>

@@ -10,12 +10,14 @@
     const {nodesStore, widthStore, heightStore} = svelvetStore;
     
     //placeholdervalues for initialization
+    //dispatch for message to be sent
     const dispatch = createEventDispatcher();
+
     let mapMax = 100
     let mapWidth = mapMax;
     let mapHeight = mapMax;
-    let nodeHeight = mapMax-10;
-    let nodeWidth = mapMax -10;
+    let nodeHeight = mapMax - 10;
+    let nodeWidth = mapMax - 10;
     let viewHeight = 10;
     let viewWidth = 10;
     let viewRight = 10;
@@ -26,50 +28,47 @@
     let nodeYtopPosition = -Infinity;
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
-    let map //y position within the element.
-    const scaleW = (v) => v* (mapWidth/nodeWidth)
-    const scaleH = (v) => v* (mapHeight/nodeHeight)
+    let map; // y position within the element.
+    const scaleW = (v) => v * (mapWidth / nodeWidth)
+    const scaleH = (v) => v * (mapHeight / nodeHeight)
+    
     $:{
-    nodeXleftPosition = Infinity;
-    nodeYtopPosition = -Infinity;
-    nodeYbottomPosition = Infinity;
-    nodeXrightPosition = -Infinity;
+        nodeXleftPosition = Infinity;
+        nodeYtopPosition = -Infinity;
+        nodeYbottomPosition = Infinity;
+        nodeXrightPosition = -Infinity;
 
-    $nodesStore.forEach((node) => {
-    nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
-    nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
-    nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
-    nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
-    })
-    // sets the height, width of nodes after movement
-    nodeHeight = nodeYtopPosition - nodeYbottomPosition;
-    nodeWidth = nodeXrightPosition - nodeXleftPosition;
-    
-    if(nodeHeight>nodeWidth){
-    mapHeight = 100;
-    mapWidth = Math.max((nodeWidth.toFixed(0)*100)/nodeHeight.toFixed(0), 25);
-    }
-    else if(nodeHeight<nodeWidth){
-    mapWidth = 100;
-    mapHeight = Math.max((nodeHeight.toFixed(0)*100)/nodeWidth.toFixed(0), 25)
-    }else{
-    mapHeight = 100;
-    mapWidth = 100;
-    }
-    heightRatio = ((mapHeight) / nodeHeight).toFixed(2);
-    widthRatio = ((mapWidth) / nodeWidth).toFixed(2);
-    // console.log(d3Translate)
-    // console.log(nodeXleftPosition)
-    // console.log(nodeYbottomPosition)
-    // viewHeight = scale($heightStore/d3Translate.k)
-    // viewWidth = scale($widthStore/d3Translate.k)
-    // viewRight = Math.max(Math.abs(nodeYbottomPosition*heightRatio) - (d3Translate.x * heightRatio))+5
-    // viewBottom = Math.max(Math.abs(nodeXleftPosition*widthRatio)-(d3Translate.y * widthRatio))+5
-    viewRight = (scaleW((d3Translate.x*widthRatio) - d3Translate.x / d3Translate.k))-(nodeXleftPosition*widthRatio); 
-    viewBottom = (scaleH((d3Translate.y*heightRatio) - d3Translate.y / d3Translate.k))-(nodeYbottomPosition*heightRatio);
-    
-    viewWidth = ($widthStore * widthRatio)/d3Translate.k;
-    viewHeight = ($heightStore * heightRatio)/d3Translate.k;
+        // looks for the top-most, bottom-most, left-most, right-most values for the furthest node in those perspective values to find the boundaries of the size of the diagram
+        $nodesStore.forEach((node) => {
+            nodeXleftPosition = Math.min(nodeXleftPosition, node.position.x)
+            nodeXrightPosition = Math.max(nodeXrightPosition, node.position.x)
+            nodeYbottomPosition = Math.min(nodeYbottomPosition, node.position.y)
+            nodeYtopPosition = Math.max(nodeYtopPosition, node.position.y)
+      })
+        // sets the height, width of nodes after movement
+        nodeHeight = nodeYtopPosition - nodeYbottomPosition;
+        nodeWidth = nodeXrightPosition - nodeXleftPosition;
+        
+        if(nodeHeight > nodeWidth){
+          mapHeight = 100;
+          mapWidth = Math.max((nodeWidth.toFixed(0)*100)/nodeHeight.toFixed(0), 25);
+        }
+        else if(nodeHeight < nodeWidth){
+          mapWidth = 100;
+          mapHeight = Math.max((nodeHeight.toFixed(0)*100)/nodeWidth.toFixed(0), 25)
+        } else {
+          mapHeight = 100;
+          mapWidth = 100;
+        }
+        heightRatio = (mapHeight / nodeHeight).toFixed(2);
+        widthRatio = (mapWidth / nodeWidth).toFixed(2);
+
+        // determining the positioning and the size of the viewbox
+        viewRight = (scaleW((d3Translate.x * widthRatio) - d3Translate.x / d3Translate.k)) - (nodeXleftPosition * widthRatio); 
+        viewBottom = (scaleH((d3Translate.y * heightRatio) - d3Translate.y / d3Translate.k)) - (nodeYbottomPosition * heightRatio);
+        
+        viewWidth = ($widthStore * widthRatio) / d3Translate.k;
+        viewHeight = ($heightStore * heightRatio) / d3Translate.k;
     }
     //get a scale factor from nodeheight and width
     //use that scaling factor to make virtual representation of nodes bigger or smaller 
