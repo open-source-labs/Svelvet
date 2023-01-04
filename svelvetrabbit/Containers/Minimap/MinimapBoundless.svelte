@@ -29,6 +29,7 @@
     let nodeYbottomPosition = Infinity;
     let nodeXrightPosition = -Infinity;
     let map; // y position within the element.
+    let hasBeenClicked = false;
     const scaleW = (v) => v * (mapWidth / nodeWidth)
     const scaleH = (v) => v * (mapHeight / nodeHeight)
     
@@ -76,16 +77,25 @@
     //
     //
     function handleClick(event) {
+      if(!hasBeenClicked){
         let bounds = map.getBoundingClientRect();
 		// x = event.clientX - bounds.left;
 		// y = event.clientY - bounds.top;
         // console.log('x: ' + x + 'y: ' + y)
+        hasBeenClicked = true
         dispatch('message', {
 			x:nodeXleftPosition+((event.clientX - bounds.left)/widthRatio),
             y: nodeYbottomPosition+((event.clientY - bounds.top)/heightRatio),
             nLeft: nodeXleftPosition,
             nBottom: nodeYbottomPosition
 		});
+    setTimeout(() => {
+            hasBeenClicked = false;
+        }, 500);
+  
+  }
+
+
 	}
     </script>
     <div on:click={handleClick} bind:this={map} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">

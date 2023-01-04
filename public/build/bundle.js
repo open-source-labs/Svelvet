@@ -7432,18 +7432,18 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[30] = list[i];
+    	child_ctx[31] = list[i];
     	return child_ctx;
     }
 
-    // (93:8) {#each $nodesStore as node}
+    // (103:8) {#each $nodesStore as node}
     function create_each_block$2(ctx) {
     	let greynode;
     	let current;
 
     	greynode = new GreyNodeBoundless({
     			props: {
-    				node: /*node*/ ctx[30],
+    				node: /*node*/ ctx[31],
     				key: /*key*/ ctx[0],
     				heightRatio: /*heightRatio*/ ctx[3],
     				widthRatio: /*widthRatio*/ ctx[4],
@@ -7463,7 +7463,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const greynode_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[30];
+    			if (dirty[0] & /*$nodesStore*/ 128) greynode_changes.node = /*node*/ ctx[31];
     			if (dirty[0] & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
     			if (dirty[0] & /*heightRatio*/ 8) greynode_changes.heightRatio = /*heightRatio*/ ctx[3];
     			if (dirty[0] & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
@@ -7489,7 +7489,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(93:8) {#each $nodesStore as node}",
+    		source: "(103:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7532,11 +7532,11 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$7, 91, 8, 3825);
+    			add_location(div0, file$7, 101, 8, 3999);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$7, 90, 4, 3683);
+    			add_location(div1, file$7, 100, 4, 3857);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7694,6 +7694,7 @@ var app = (function () {
     	let nodeYbottomPosition = Infinity;
     	let nodeXrightPosition = -Infinity;
     	let map; // y position within the element.
+    	let hasBeenClicked = false;
     	const scaleW = v => v * (mapWidth / nodeWidth);
     	const scaleH = v => v * (mapHeight / nodeHeight);
 
@@ -7703,17 +7704,28 @@ var app = (function () {
     	//
     	//
     	function handleClick(event) {
-    		let bounds = map.getBoundingClientRect();
+    		if (!hasBeenClicked) {
+    			let bounds = map.getBoundingClientRect();
 
-    		// x = event.clientX - bounds.left;
-    		// y = event.clientY - bounds.top;
-    		// console.log('x: ' + x + 'y: ' + y)
-    		dispatch('message', {
-    			x: nodeXleftPosition + (event.clientX - bounds.left) / widthRatio,
-    			y: nodeYbottomPosition + (event.clientY - bounds.top) / heightRatio,
-    			nLeft: nodeXleftPosition,
-    			nBottom: nodeYbottomPosition
-    		});
+    			// x = event.clientX - bounds.left;
+    			// y = event.clientY - bounds.top;
+    			// console.log('x: ' + x + 'y: ' + y)
+    			hasBeenClicked = true;
+
+    			dispatch('message', {
+    				x: nodeXleftPosition + (event.clientX - bounds.left) / widthRatio,
+    				y: nodeYbottomPosition + (event.clientY - bounds.top) / heightRatio,
+    				nLeft: nodeXleftPosition,
+    				nBottom: nodeYbottomPosition
+    			});
+
+    			setTimeout(
+    				() => {
+    					hasBeenClicked = false;
+    				},
+    				500
+    			);
+    		}
     	}
 
     	$$self.$$.on_mount.push(function () {
@@ -7772,6 +7784,7 @@ var app = (function () {
     		nodeYbottomPosition,
     		nodeXrightPosition,
     		map,
+    		hasBeenClicked,
     		scaleW,
     		scaleH,
     		handleClick,
@@ -7799,6 +7812,7 @@ var app = (function () {
     		if ('nodeYbottomPosition' in $$props) $$invalidate(6, nodeYbottomPosition = $$props.nodeYbottomPosition);
     		if ('nodeXrightPosition' in $$props) $$invalidate(21, nodeXrightPosition = $$props.nodeXrightPosition);
     		if ('map' in $$props) $$invalidate(12, map = $$props.map);
+    		if ('hasBeenClicked' in $$props) hasBeenClicked = $$props.hasBeenClicked;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -8125,7 +8139,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-zrg65y");
+    			attr_dev(div, "class", div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-14vkmyj");
     			attr_dev(div, "style", div_style_value = "left: " + /*node*/ ctx[0].position.x + "px; top: " + /*node*/ ctx[0].position.y + "px; width: " + (/*nodeWidth*/ ctx[4] || /*node*/ ctx[0].width) + "px; height: " + (/*nodeHeight*/ ctx[5] || /*node*/ ctx[0].height) + "px; background-color: " + /*node*/ ctx[0].bgColor + "; border-color: " + /*node*/ ctx[0].borderColor + "; border-radius: " + /*node*/ ctx[0].borderRadius + "px; color: " + /*node*/ ctx[0].textColor + "; " + /*customCssText*/ ctx[3]);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
     			add_location(div, file$6, 81, 0, 2158);
@@ -8199,7 +8213,7 @@ var app = (function () {
     			if (dirty[0] & /*node*/ 1) edgeanchor1_changes.position = /*node*/ ctx[0].sourcePosition || 'bottom';
     			edgeanchor1.$set(edgeanchor1_changes);
 
-    			if (!current || dirty[0] & /*node*/ 1 && div_class_value !== (div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-zrg65y")) {
+    			if (!current || dirty[0] & /*node*/ 1 && div_class_value !== (div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-14vkmyj")) {
     				attr_dev(div, "class", div_class_value);
     			}
 
@@ -8720,18 +8734,18 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[20] = list[i];
+    	child_ctx[21] = list[i];
     	return child_ctx;
     }
 
-    // (53:8) {#each $nodesStore as node}
+    // (58:8) {#each $nodesStore as node}
     function create_each_block$1(ctx) {
     	let greynode;
     	let current;
 
     	greynode = new GreyNodeBoundary({
     			props: {
-    				node: /*node*/ ctx[20],
+    				node: /*node*/ ctx[21],
     				key: /*key*/ ctx[0],
     				heightRatio: /*heightRatio*/ ctx[5],
     				widthRatio: /*widthRatio*/ ctx[4]
@@ -8749,7 +8763,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const greynode_changes = {};
-    			if (dirty & /*$nodesStore*/ 2048) greynode_changes.node = /*node*/ ctx[20];
+    			if (dirty & /*$nodesStore*/ 2048) greynode_changes.node = /*node*/ ctx[21];
     			if (dirty & /*key*/ 1) greynode_changes.key = /*key*/ ctx[0];
     			if (dirty & /*heightRatio*/ 32) greynode_changes.heightRatio = /*heightRatio*/ ctx[5];
     			if (dirty & /*widthRatio*/ 16) greynode_changes.widthRatio = /*widthRatio*/ ctx[4];
@@ -8773,7 +8787,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(53:8) {#each $nodesStore as node}",
+    		source: "(58:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -8816,11 +8830,11 @@ var app = (function () {
     			set_style(div0, "width", /*$widthStore*/ ctx[10] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[7] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[6] + "px");
-    			add_location(div0, file$4, 51, 8, 1709);
+    			add_location(div0, file$4, 56, 8, 1879);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 2 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[3] + 2 + "px");
-    			add_location(div1, file$4, 50, 4, 1568);
+    			add_location(div1, file$4, 55, 4, 1738);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8966,17 +8980,28 @@ var app = (function () {
     	let viewRight = 1;
     	let viewBottom = 1;
     	let map;
+    	let hasBeenClicked = false;
 
     	function handleClick(event) {
-    		let bounds = map.getBoundingClientRect();
+    		if (!hasBeenClicked) {
+    			hasBeenClicked = true;
+    			let bounds = map.getBoundingClientRect();
 
-    		// x = event.clientX - bounds.left;
-    		// y = event.clientY - bounds.top;
-    		// console.log('x: ' + x + 'y: ' + y)
-    		dispatch('message', {
-    			x: (event.clientX - bounds.left) / widthRatio,
-    			y: (event.clientY - bounds.top) / heightRatio
-    		});
+    			// x = event.clientX - bounds.left;
+    			// y = event.clientY - bounds.top;
+    			// console.log('x: ' + x + 'y: ' + y)
+    			dispatch('message', {
+    				x: (event.clientX - bounds.left) / widthRatio,
+    				y: (event.clientY - bounds.top) / heightRatio
+    			});
+
+    			setTimeout(
+    				() => {
+    					hasBeenClicked = false;
+    				},
+    				500
+    			);
+    		}
     	}
 
     	$$self.$$.on_mount.push(function () {
@@ -9032,6 +9057,7 @@ var app = (function () {
     		viewRight,
     		viewBottom,
     		map,
+    		hasBeenClicked,
     		handleClick,
     		$heightStore,
     		$widthStore,
@@ -9049,6 +9075,7 @@ var app = (function () {
     		if ('viewRight' in $$props) $$invalidate(6, viewRight = $$props.viewRight);
     		if ('viewBottom' in $$props) $$invalidate(7, viewBottom = $$props.viewBottom);
     		if ('map' in $$props) $$invalidate(8, map = $$props.map);
+    		if ('hasBeenClicked' in $$props) hasBeenClicked = $$props.hasBeenClicked;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -11672,7 +11699,6 @@ var app = (function () {
     				edges: /*initialEdges*/ ctx[1],
     				bgColor: '#EEEEEE',
     				background: true,
-    				boundary: { x: 2000, y: 1500 },
     				nodeCreate: true,
     				nodeLink: true,
     				nodeEdit: true,

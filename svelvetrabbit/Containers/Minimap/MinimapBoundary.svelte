@@ -17,7 +17,7 @@
     let viewRight = 1;
     let viewBottom = 1;
     let map;
-    
+    let hasBeenClicked = false;
     $: {
         if (boundary.y > boundary.x) {
     mapHeight = 100;
@@ -37,6 +37,8 @@
     }
 
     function handleClick(event) {
+        if(!hasBeenClicked){
+            hasBeenClicked= true
         let bounds = map.getBoundingClientRect();
 		// x = event.clientX - bounds.left;
 		// y = event.clientY - bounds.top;
@@ -45,6 +47,9 @@
 			x:((event.clientX - bounds.left)/widthRatio),
             y:((event.clientY - bounds.top)/heightRatio),
 		});
+        setTimeout(() => {
+            hasBeenClicked = false;
+        }, 500);}
 	}
 
     </script>
