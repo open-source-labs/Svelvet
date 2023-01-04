@@ -31,7 +31,8 @@
   <p class="text-gray-600">
     See the demo Svelvet diagram below to see implementation!
     Edit the diagram below and then click the <code class="bg-rose-100 rounded-lg p-1">download</code> button in the bottom right. 
-    Copy the downloaded JSON string into the <code class="bg-rose-100 rounded-lg p-1">upload</code> box and click the <code class="bg-rose-100 rounded-lg p-1">button</code> to see the same diagram you downloaded.
+    Once the download has been completed, <code class="bg-rose-100 rounded-lg p-1">refresh</code> the page to reset the diagram.
+    Then copy the downloaded JSON string into the <code class="bg-rose-100 rounded-lg p-1">upload</code> box and click the <code class="bg-rose-100 rounded-lg p-1">button</code> to see the same diagram you downloaded.
   </p>
 </div>
 
