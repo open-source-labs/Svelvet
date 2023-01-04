@@ -10992,7 +10992,7 @@ var app = (function () {
     			create_component(graphview.$$.fragment);
     			attr_dev(div, "class", "Svelvet svelte-tw9ly1");
     			attr_dev(div, "style", div_style_value = `width: ${/*$widthStore*/ ctx[6]}px; height: ${/*$heightStore*/ ctx[7]}px; background-color: ${/*$backgroundColor*/ ctx[8]}`);
-    			add_location(div, file$2, 57, 0, 2479);
+    			add_location(div, file$2, 56, 0, 2440);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -11099,7 +11099,6 @@ var app = (function () {
     		svelvetStore.initLocation.set(initialLocation);
     		svelvetStore.isLocked.set(locked);
     		svelvetStore.boundary.set(boundary);
-    		svelvetStore.isLocked.set(locked);
     		svelvetStore.nodeLinkStore.set(nodeLink);
     		svelvetStore.nodeCreateStore.set(nodeCreate);
     		svelvetStore.nodeEditStore.set(nodeEdit);

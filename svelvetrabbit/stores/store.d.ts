@@ -18,6 +18,11 @@ interface CoreSvelvetStore {
     initZoom: Writable<number>;
     initLocation: Writable<XYPosition>;
     isLocked: Writable<boolean>;
+    nodeLinkStore: Writable<boolean>;
+    nodeCreateStore: Writable<boolean>;
+    nodeEditStore: Writable<boolean>;
+    shareable: Writable<boolean>;
+    boundary: Writable<boolean>;
 }
 
 interface SvelvetStore extends CoreSvelvetStore {
@@ -25,6 +30,9 @@ interface SvelvetStore extends CoreSvelvetStore {
     onEdgeMove: (e: any, edgeID: string | number) => void;
     onNodeClick: (e: any, nodeID: string | number) => void;
     onTouchMove: (e: any, nodeID: string | number) => void;
+    renderEdge: (e: any, node: any, role: string, position: string) => any;
+    renderNewNode: (event: any, node: any, edge: any, role: string, position: string) => void;
+    getStyles: (e: any, node: any) => (number | string)[];
     setAnchorPosition: (position: string, nodeWidth: number, nodeHeight: number, width: number, height: number) => number[];
     setNewEdgeProps: (role: string, position: string, node: Node) => number[];
     derivedEdges: Readable<Edge[]>;

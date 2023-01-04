@@ -44,7 +44,6 @@ onMount(() => {
     svelvetStore.initLocation.set(initialLocation);
     svelvetStore.isLocked.set(locked)
     svelvetStore.boundary.set(boundary)
-    svelvetStore.isLocked.set(locked);
     svelvetStore.nodeLinkStore.set(nodeLink);
     svelvetStore.nodeCreateStore.set(nodeCreate);
     svelvetStore.nodeEditStore.set(nodeEdit);

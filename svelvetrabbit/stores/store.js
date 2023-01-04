@@ -209,7 +209,7 @@ export function findOrCreateStore(key) {
   const renderNewNode = (event, node, edge, role, position) => {
     // Find the highest of the current id numbers
     const nodeIds = get(coreSvelvetStore.nodesStore).map(n => n.id);
-    const highestId = Math.max(...nodeIds)
+    const highestId = Math.max(...nodeIds);
     
     event.preventDefault();
     let pos = position === 'bottom' ? { x: edge.targetX, y: edge.targetY } : { x: edge.sourceX, y: edge.sourceY };
