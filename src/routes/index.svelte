@@ -23,6 +23,7 @@
   import timmy from '../assets/profiles/Timmy-small.png';
   import tony from '../assets/profiles/Tony-small.png';
   import dillon from '../assets/profiles/Dillon-small.png';
+  import taylor from '../assets/profiles/Taylor-small.png';
   
 
   import Svelvet from 'svelvet';
@@ -503,7 +504,7 @@
           </div>
           <!-- CARD 2: Taylor -->
           <div class="contributor-card">
-            <img src={"https://thecozycook.com/wp-content/uploads/2022/10/Angel-Hair-Pasta-with-Chicken-f.jpg"} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <img src={taylor} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Taylor <br />Alan</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/taylor-alan-026a49226/"

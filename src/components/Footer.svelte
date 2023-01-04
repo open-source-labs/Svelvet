@@ -17,6 +17,14 @@
       <a href="/docs/node-grouping">Node-Grouping</a>
       <a href="/docs/snap-to-grid">Snap-To-Grid</a>
       <a href="/docs/HTML-Docs">HTML-Docs</a>
+      <a href="/docs/Interactive-Nodes">Interactive Node Linking & Creation</a>
+      <a href="/docs/Custom-Svelte">Custom Svelte Components</a>
+      <a href="/docs/Minimap">Minimap</a>
+      <a href="/docs/Initial-Zoom-Location">Initial Zoom & Location</a>
+      <a href="/docs/Node-Classes">Node Classes</a>
+      <a href="/docs/importDiagrams">Importing & Exporting Diagrams</a>
+      <a href="/docs/boundary">Diagram Boundary</a>
+      <a href="/docs/editNodes">Interactive Editable Nodes</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/" class="text-gray-700 font-semibold">Community</a>
