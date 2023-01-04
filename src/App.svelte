@@ -107,7 +107,7 @@
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
-		boundary={{x: 2000, y: 1500}}
+		
 		nodeCreate
 		nodeLink
 		nodeEdit
