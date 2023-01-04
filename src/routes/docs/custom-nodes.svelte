@@ -2,7 +2,8 @@
 <script>
   const nodeProps = [
     ['id', '(required) number'],
-    ['data', '(required) { label: string }'],
+    ['data', '(required) { label: string } || { custom: name of imported Svelte component } || { html: string of html}'],
+    ['className', 'string (custom class name)'],
     ['position', '(required) { x: number, y: number }'],
     ['sourcePosition', 'string (top, bottom, left, right) - defaults to "bottom" if unspecified'],
     ['targetPosition', 'string (top, bottom, left, right) - defaults to "top" if unspecified'],
@@ -15,7 +16,7 @@
     ['src', 'string of image url'],
     ['borderRadius', 'number'],
     ['clickCallback', 'Function'],
-    ['childNodes', 'Array of numbers, put other nodes id\'s in here']
+    ['childNodes', 'Array of numbers, put other nodes id\'s in here'],
   ];
 </script>
 
