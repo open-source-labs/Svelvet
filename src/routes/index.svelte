@@ -141,7 +141,7 @@
       <div
         class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
       >
-        <Svelvet nodes={initialNodes} edges={initialEdges} initialLocation={initialNodes[4].position} initialZoom={2} width={550} height={550} background />
+        <Svelvet nodes={initialNodes} edges={initialEdges} initialLocation={{x: 260, y: 250}} initialZoom={2} width={550} height={550} background />
       </div>
     </div>
   </div>
