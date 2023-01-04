@@ -218,7 +218,7 @@ export function findOrCreateStore(key) {
     const newNode = {
       id: highestId + 1, // set the id to one higher than the highest in the current array
       position: pos, // the position (top left corner) is at the target coords of the edge for now
-      data: node.data ? node.data : {label: ''}, // need ways to change the rest of the properties
+      data: node.data ? {...node.data} : {label: ''}, // need ways to change the rest of the properties
       width: node.width,
       height: node.height,
       className: node.className || '',
@@ -277,7 +277,7 @@ export function findOrCreateStore(key) {
     // Getting the styles for a custom class, and adjusting the height and width if necessary
     const getStyles = (e, node) => {
         let width, height, innerText;
-        console.log('getStyles node', node);
+        
         const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
         
         // Look through each CSS rule to find the one the user defined

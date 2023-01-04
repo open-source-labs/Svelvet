@@ -40,6 +40,7 @@
     const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
     currentNode.data.label = e.target.value;
     store.nodesStore.set($nodesStore);
+    console.log('selected node', currentNode);
   }
 
   // const changeColor = (e) => {
@@ -70,7 +71,7 @@
   {#if currentNode}
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input-${key}" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" on:input={changeLabel}>
+    <input type="text" id="label-input-${key}" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" bind:value={label}>
     <label for="width-input">Width</label>
     <input type="number" id="width-input-${key}" placeholder="{currentNode.width}" bind:value={width}>
     <label for="height-input">Height</label>
