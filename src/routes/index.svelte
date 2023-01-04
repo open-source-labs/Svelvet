@@ -19,14 +19,14 @@
   import ian from '../assets/profiles/Ian-small.png';
   import mauricio from '../assets/profiles/Mauricio-small.png';
   import ryan from '../assets/profiles/Ryan-small.png';
-  import emma from '../assets/profiles/Timmy-small.png';
+  import emma from '../assets/profiles/Emma-small.png';
   import timmy from '../assets/profiles/Timmy-small.png';
   import tony from '../assets/profiles/Tony-small.png';
   import dillon from '../assets/profiles/Dillon-small.png';
   import taylor from '../assets/profiles/Taylor-small.png';
   
 
-  import Svelvet from 'svelvet';
+  import Svelvet from 'svelvetrabbits';
 
   const initialNodes = [
     {
@@ -46,7 +46,7 @@
       data: { label: 'Mixed Anchors' },
       width: 125,
       height: 40,
-      bgColor: 'white',
+      bgColor: 'blue',
       targetPosition: 'left'
     },
     {
@@ -63,7 +63,7 @@
       data: { label: 'Drag me!' },
       width: 125,
       height: 40,
-      bgColor: 'white',
+      bgColor: 'red',
       targetPosition: 'right'
     },
     {
@@ -137,7 +137,7 @@
       <div
         class="bg-white max-w-full md:max-w-[550px] h-full relative overflow-hidden border rounded-xl shadow-md self-center md:self-auto"
       >
-        <Svelvet nodes={initialNodes} edges={initialEdges} width={900} height={900} background />
+        <Svelvet nodes={initialNodes} edges={initialEdges} initialLocation={initialNodes[4].position} initialZoom={2} nodeLink nodeCreate width={900} height={900} background />
       </div>
     </div>
   </div>
@@ -448,7 +448,7 @@
         <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
           <!-- CARD 1: Emma -->
           <div class="contributor-card">
-            <img src={'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/81/face-with-cowboy-hat_1f920.png'} alt="" class="hidden contributors:block h-32 rounded-full" />
+            <img src={emma} alt="" class="hidden contributors:block h-32 rounded-full" />
             <p class="mt-3 mb-1 text-lg leading-6">Emma <br />Ferguson</p>
             <div class="flex gap-3 ml-3">
               <a target="_blank" href="https://www.linkedin.com/in/emma-ferguson-33858725a/"
