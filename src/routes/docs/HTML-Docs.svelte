@@ -2,7 +2,7 @@
 	// @ts-nocheck
 	
 	
-		import Svelvet from 'svelvet';
+		import Svelvet from 'svelvetrabbits';
 		
 		  const initialNodes = [
 			{
@@ -95,6 +95,8 @@
 	edges={initialEdges} 
 	width={1100} 
 	height={900} 
+	initialLocation={initialNodes[3].position}
+	initialZoom={2}
 	background />
 
   </div>

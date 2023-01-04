@@ -1,19 +1,16 @@
   <script lang="ts">
     // @ts-nocheck
-      import Svelvet from 'svelvet';
+      import Svelvet from 'svelvetrabbits';
       
-        const initialNodes = [
-        ];
-
         const demoNodes = [
           {
             id: 1,
-            position: { x: 50, y: 50 },
+            position: { x: 10, y: 10 },
             data: { label: "default styling" },
             width: 150,
             height: 40,
             bgColor: "white"
-          },
+		      },
         ];
       
       const initialEdges = [];
@@ -33,18 +30,16 @@
   <h3 class="text-xl font-semibold mt-12 mb-6">Implementing Importing & Exporting Diagrams</h3>
   <p class="text-gray-600">
     See the demo Svelvet diagram below to see implementation!
+    Edit the diagram below and then click the <code class="bg-rose-100 rounded-lg p-1">download</code> button in the bottom right. 
+    Copy the downloaded JSON string into the <code class="bg-rose-100 rounded-lg p-1">upload</code> box and click the <code class="bg-rose-100 rounded-lg p-1">button</code> to see the same diagram you downloaded.
   </p>
 </div>
 
-<div class="demo">
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={500} height={500} bgColor={'pink'} background />
-  <Svelvet nodes={demoNodes} edges={initialEdges} width={500} height={500} bgColor={'aqua'} nodeLink nodeCreate background />
-</div>
+
+<Svelvet nodes={demoNodes} edges={initialEdges} shareable width={500} height={500} bgColor={'gainsboro'} nodeEdit nodeLink nodeCreate background />
+
 
 <style>
-  .demo {
-    display: flex;
-    justify-content: space-around;
-  }
+
 </style>
 
