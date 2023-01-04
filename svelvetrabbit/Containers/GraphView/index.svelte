@@ -300,6 +300,8 @@
 
 
 <style>
+  /* https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1 */
+  
 
   #graphview-container {
     display: flex;
@@ -326,7 +328,8 @@
   } */ 
 
   #dwnldimg {
-    width: 2rem;
+    width: 1.5rem;
+    margin-right: 0.1rem;
   }
 
   #store-input, #store-input-btn {

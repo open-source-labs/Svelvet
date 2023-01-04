@@ -58,7 +58,7 @@
         else newEdge.target = $hoveredElement.id;
         store.edgesStore.set([...$derivedEdges, newEdge]);
       } else if ($nodeCreateStore) {
-        renderNewNode(e, newEdge, role, position);
+        renderNewNode(e, node, newEdge, role, position);
       } else {
         //if no anchor is found (no place to connect new edge), update edges store filtering out newly constructed edge
         store.edgesStore.set($derivedEdges.filter(e => e.id !== newEdge.id));
