@@ -188,7 +188,7 @@
   };
 
   // Can put afterUpdate functionality into it's own function. 
-  afterUpdate(() => {
+  const setImportExport = () => {
     function replacer(key, value) {
       // Filtering out properties
       if (key === 'custom') {
@@ -208,6 +208,10 @@
       }
       // Set the download button target to the object URL
       document.getElementById(`downloadState-${key}`).href = makeTextFile(JSON.stringify(state, replacer));
+  }
+  
+  afterUpdate(() => {
+    if($shareable) setImportExport();
   })
   </script>
   

@@ -112,7 +112,7 @@
 		nodeLink
 		nodeEdit
 		shareable
-		minimap={true}
+		minimap
 	/>
 </main>
 

@@ -9142,17 +9142,17 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[36] = list[i];
+    	child_ctx[37] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[39] = list[i];
+    	child_ctx[40] = list[i];
     	return child_ctx;
     }
 
-    // (220:21) 
+    // (224:21) 
     function create_if_block_8(ctx) {
     	let minimapboundless;
     	let current;
@@ -9199,14 +9199,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(220:21) ",
+    		source: "(224:21) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (218:2) {#if minimap && boundary}
+    // (222:2) {#if minimap && boundary}
     function create_if_block_7(ctx) {
     	let minimapboundary;
     	let current;
@@ -9255,21 +9255,21 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(218:2) {#if minimap && boundary}",
+    		source: "(222:2) {#if minimap && boundary}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (235:8) {:else}
+    // (239:8) {:else}
     function create_else_block_1(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[39],
+    				node: /*node*/ ctx[40],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
@@ -9287,10 +9287,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[39];
+    			if (dirty[0] & /*$nodesStore*/ 256) node_changes.node = /*node*/ ctx[40];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 2048) {
+    			if (dirty[0] & /*$nodesStore*/ 256 | dirty[1] & /*$$scope*/ 4096) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9314,21 +9314,21 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(235:8) {:else}",
+    		source: "(239:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (232:35) 
+    // (236:35) 
     function create_if_block_6(ctx) {
     	let node;
     	let current;
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[39],
+    				node: /*node*/ ctx[40],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -9346,10 +9346,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[39];
+    			if (dirty[0] & /*$nodesStore*/ 256) node_changes.node = /*node*/ ctx[40];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 2048) {
+    			if (dirty[0] & /*$nodesStore*/ 256 | dirty[1] & /*$$scope*/ 4096) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9373,14 +9373,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(232:35) ",
+    		source: "(236:35) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (229:8) {#if node.data.html}
+    // (233:8) {#if node.data.html}
     function create_if_block_5(ctx) {
     	let node;
     	let t;
@@ -9388,7 +9388,7 @@ var app = (function () {
 
     	node = new Nodes({
     			props: {
-    				node: /*node*/ ctx[39],
+    				node: /*node*/ ctx[40],
     				key: /*key*/ ctx[2],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -9408,10 +9408,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const node_changes = {};
-    			if (dirty[0] & /*$nodesStore*/ 128) node_changes.node = /*node*/ ctx[39];
+    			if (dirty[0] & /*$nodesStore*/ 256) node_changes.node = /*node*/ ctx[40];
     			if (dirty[0] & /*key*/ 4) node_changes.key = /*key*/ ctx[2];
 
-    			if (dirty[0] & /*$nodesStore*/ 128 | dirty[1] & /*$$scope*/ 2048) {
+    			if (dirty[0] & /*$nodesStore*/ 256 | dirty[1] & /*$$scope*/ 4096) {
     				node_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9436,16 +9436,16 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(229:8) {#if node.data.html}",
+    		source: "(233:8) {#if node.data.html}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (236:10) <Node {node} {key} >
+    // (240:10) <Node {node} {key} >
     function create_default_slot_2(ctx) {
-    	let t_value = /*node*/ ctx[39].data.label + "";
+    	let t_value = /*node*/ ctx[40].data.label + "";
     	let t;
 
     	const block = {
@@ -9456,7 +9456,7 @@ var app = (function () {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && t_value !== (t_value = /*node*/ ctx[39].data.label + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*$nodesStore*/ 256 && t_value !== (t_value = /*node*/ ctx[40].data.label + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -9467,19 +9467,19 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(236:10) <Node {node} {key} >",
+    		source: "(240:10) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (234:10) <Node {node} {key} >
+    // (238:10) <Node {node} {key} >
     function create_default_slot_1(ctx) {
     	let switch_instance;
     	let t;
     	let current;
-    	var switch_value = /*node*/ ctx[39].data.custom;
+    	var switch_value = /*node*/ ctx[40].data.custom;
 
     	function switch_props(ctx) {
     		return { $$inline: true };
@@ -9500,7 +9500,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (switch_value !== (switch_value = /*node*/ ctx[39].data.custom)) {
+    			if (switch_value !== (switch_value = /*node*/ ctx[40].data.custom)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -9541,17 +9541,17 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(234:10) <Node {node} {key} >",
+    		source: "(238:10) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (230:10) <Node {node} {key} >
+    // (234:10) <Node {node} {key} >
     function create_default_slot(ctx) {
     	let html_tag;
-    	let raw_value = /*node*/ ctx[39].data.html + "";
+    	let raw_value = /*node*/ ctx[40].data.html + "";
     	let html_anchor;
 
     	const block = {
@@ -9565,7 +9565,7 @@ var app = (function () {
     			insert_dev(target, html_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*$nodesStore*/ 128 && raw_value !== (raw_value = /*node*/ ctx[39].data.html + "")) html_tag.p(raw_value);
+    			if (dirty[0] & /*$nodesStore*/ 256 && raw_value !== (raw_value = /*node*/ ctx[40].data.html + "")) html_tag.p(raw_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(html_anchor);
@@ -9577,14 +9577,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(230:10) <Node {node} {key} >",
+    		source: "(234:10) <Node {node} {key} >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (227:6) {#each $nodesStore as node}
+    // (231:6) {#each $nodesStore as node}
     function create_each_block_1(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9594,8 +9594,8 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (/*node*/ ctx[39].data.html) return 0;
-    		if (/*node*/ ctx[39].data.custom) return 1;
+    		if (/*node*/ ctx[40].data.html) return 0;
+    		if (/*node*/ ctx[40].data.custom) return 1;
     		return 2;
     	}
 
@@ -9658,14 +9658,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(227:6) {#each $nodesStore as node}",
+    		source: "(231:6) {#each $nodesStore as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (263:4) {#if $backgroundStore}
+    // (267:4) {#if $backgroundStore}
     function create_if_block_4(ctx) {
     	let rect;
 
@@ -9675,7 +9675,7 @@ var app = (function () {
     			attr_dev(rect, "width", "100%");
     			attr_dev(rect, "height", "100%");
     			set_style(rect, "fill", "url(#background-" + /*key*/ ctx[2] + ")");
-    			add_location(rect, file$3, 263, 6, 9840);
+    			add_location(rect, file$3, 267, 6, 9919);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, rect, anchor);
@@ -9694,20 +9694,20 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(263:4) {#if $backgroundStore}",
+    		source: "(267:4) {#if $backgroundStore}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (276:8) {:else}
+    // (280:8) {:else}
     function create_else_block$1(ctx) {
     	let simplebezieredge;
     	let current;
 
     	simplebezieredge = new SimpleBezierEdge({
-    			props: { edge: /*edge*/ ctx[36] },
+    			props: { edge: /*edge*/ ctx[37] },
     			$$inline: true
     		});
 
@@ -9721,7 +9721,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const simplebezieredge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) simplebezieredge_changes.edge = /*edge*/ ctx[36];
+    			if (dirty[0] & /*$derivedEdges*/ 128) simplebezieredge_changes.edge = /*edge*/ ctx[37];
     			simplebezieredge.$set(simplebezieredge_changes);
     		},
     		i: function intro(local) {
@@ -9742,20 +9742,20 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(276:8) {:else}",
+    		source: "(280:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (274:39) 
+    // (278:39) 
     function create_if_block_3(ctx) {
     	let stepedge;
     	let current;
 
     	stepedge = new StepEdge({
-    			props: { edge: /*edge*/ ctx[36] },
+    			props: { edge: /*edge*/ ctx[37] },
     			$$inline: true
     		});
 
@@ -9769,7 +9769,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const stepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) stepedge_changes.edge = /*edge*/ ctx[36];
+    			if (dirty[0] & /*$derivedEdges*/ 128) stepedge_changes.edge = /*edge*/ ctx[37];
     			stepedge.$set(stepedge_changes);
     		},
     		i: function intro(local) {
@@ -9790,20 +9790,20 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(274:39) ",
+    		source: "(278:39) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (272:45) 
+    // (276:45) 
     function create_if_block_2(ctx) {
     	let smoothstepedge;
     	let current;
 
     	smoothstepedge = new SmoothStepEdge({
-    			props: { edge: /*edge*/ ctx[36] },
+    			props: { edge: /*edge*/ ctx[37] },
     			$$inline: true
     		});
 
@@ -9817,7 +9817,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const smoothstepedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) smoothstepedge_changes.edge = /*edge*/ ctx[36];
+    			if (dirty[0] & /*$derivedEdges*/ 128) smoothstepedge_changes.edge = /*edge*/ ctx[37];
     			smoothstepedge.$set(smoothstepedge_changes);
     		},
     		i: function intro(local) {
@@ -9838,20 +9838,20 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(272:45) ",
+    		source: "(276:45) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (270:8) {#if edge.type === 'straight'}
+    // (274:8) {#if edge.type === 'straight'}
     function create_if_block_1(ctx) {
     	let straightedge;
     	let current;
 
     	straightedge = new StraightEdge({
-    			props: { edge: /*edge*/ ctx[36] },
+    			props: { edge: /*edge*/ ctx[37] },
     			$$inline: true
     		});
 
@@ -9865,7 +9865,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const straightedge_changes = {};
-    			if (dirty[0] & /*$derivedEdges*/ 64) straightedge_changes.edge = /*edge*/ ctx[36];
+    			if (dirty[0] & /*$derivedEdges*/ 128) straightedge_changes.edge = /*edge*/ ctx[37];
     			straightedge.$set(straightedge_changes);
     		},
     		i: function intro(local) {
@@ -9886,14 +9886,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(270:8) {#if edge.type === 'straight'}",
+    		source: "(274:8) {#if edge.type === 'straight'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (269:6) {#each $derivedEdges as edge}
+    // (273:6) {#each $derivedEdges as edge}
     function create_each_block(ctx) {
     	let current_block_type_index;
     	let if_block;
@@ -9903,9 +9903,9 @@ var app = (function () {
     	const if_blocks = [];
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*edge*/ ctx[36].type === 'straight') return 0;
-    		if (/*edge*/ ctx[36].type === 'smoothstep') return 1;
-    		if (/*edge*/ ctx[36].type === 'step') return 2;
+    		if (/*edge*/ ctx[37].type === 'straight') return 0;
+    		if (/*edge*/ ctx[37].type === 'smoothstep') return 1;
+    		if (/*edge*/ ctx[37].type === 'step') return 2;
     		return 3;
     	}
 
@@ -9968,14 +9968,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(269:6) {#each $derivedEdges as edge}",
+    		source: "(273:6) {#each $derivedEdges as edge}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (290:2) {#if $shareable}
+    // (294:2) {#if $shareable}
     function create_if_block$1(ctx) {
     	let div;
     	let a;
@@ -10012,39 +10012,39 @@ var app = (function () {
     			button.textContent = "Upload";
     			attr_dev(g0, "id", "SVGRepo_bgCarrier");
     			attr_dev(g0, "stroke-width", "0");
-    			add_location(g0, file$3, 292, 151, 10950);
+    			add_location(g0, file$3, 296, 151, 11029);
     			attr_dev(path0, "d", "M0 0h48v48H0z");
     			attr_dev(path0, "fill", "none");
-    			add_location(path0, file$3, 292, 227, 11026);
+    			add_location(path0, file$3, 296, 227, 11105);
     			attr_dev(polygon, "points", "22,4 22,20 14,20 24,30 34,20 26,20 26,4 ");
-    			add_location(polygon, file$3, 292, 289, 11088);
+    			add_location(polygon, file$3, 296, 289, 11167);
     			attr_dev(path1, "d", "M8,44h32c2.206,0,4-1.794,4-4V30h-4v10H8V30H4v10C4,42.206,5.794,44,8,44z");
-    			add_location(path1, file$3, 292, 359, 11158);
+    			add_location(path1, file$3, 296, 359, 11237);
     			attr_dev(g1, "id", "Shopicon");
-    			add_location(g1, file$3, 292, 271, 11070);
+    			add_location(g1, file$3, 296, 271, 11149);
     			attr_dev(g2, "id", "SVGRepo_iconCarrier");
-    			add_location(g2, file$3, 292, 198, 10997);
+    			add_location(g2, file$3, 296, 198, 11076);
     			attr_dev(svg, "id", "dwnldimg");
     			attr_dev(svg, "viewBox", "0 0 48 48");
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "fill", "#000000");
     			attr_dev(svg, "class", "svelte-1qch9mz");
-    			add_location(svg, file$3, 292, 62, 10861);
+    			add_location(svg, file$3, 296, 62, 10940);
     			attr_dev(a, "id", a_id_value = "downloadState-" + /*key*/ ctx[2]);
     			attr_dev(a, "download", "svelvet-state.json");
     			attr_dev(a, "class", "svelte-1qch9mz");
-    			add_location(a, file$3, 292, 4, 10803);
+    			add_location(a, file$3, 296, 4, 10882);
     			attr_dev(input, "type", "text");
     			attr_dev(input, "id", "store-input");
     			attr_dev(input, "placeholder", "Paste JSON here");
     			attr_dev(input, "class", "svelte-1qch9mz");
-    			add_location(input, file$3, 293, 4, 11272);
+    			add_location(input, file$3, 297, 4, 11351);
     			attr_dev(button, "id", "store-input-btn");
     			attr_dev(button, "class", "svelte-1qch9mz");
-    			add_location(button, file$3, 294, 4, 11343);
+    			add_location(button, file$3, 298, 4, 11422);
     			attr_dev(div, "id", "export-import");
     			attr_dev(div, "class", "svelte-1qch9mz");
-    			add_location(div, file$3, 291, 2, 10774);
+    			add_location(div, file$3, 295, 2, 10853);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -10082,7 +10082,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(290:2) {#if $shareable}",
+    		source: "(294:2) {#if $shareable}",
     		ctx
     	});
 
@@ -10131,7 +10131,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	let each_value_1 = /*$nodesStore*/ ctx[7];
+    	let each_value_1 = /*$nodesStore*/ ctx[8];
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -10143,8 +10143,8 @@ var app = (function () {
     		each_blocks_1[i] = null;
     	});
 
-    	let if_block1 = /*$backgroundStore*/ ctx[8] && create_if_block_4(ctx);
-    	let each_value = /*$derivedEdges*/ ctx[6];
+    	let if_block1 = /*$backgroundStore*/ ctx[9] && create_if_block_4(ctx);
+    	let each_value = /*$derivedEdges*/ ctx[7];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -10156,7 +10156,7 @@ var app = (function () {
     		each_blocks[i] = null;
     	});
 
-    	let if_block2 = /*$shareable*/ ctx[11] && create_if_block$1(ctx);
+    	let if_block2 = /*$shareable*/ ctx[6] && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -10187,15 +10187,15 @@ var app = (function () {
     			t3 = space();
     			if (if_block2) if_block2.c();
     			attr_dev(div0, "class", div0_class_value = "" + (null_to_empty(`Node Node-${/*key*/ ctx[2]}`) + " svelte-1qch9mz"));
-    			add_location(div0, file$3, 225, 4, 8738);
+    			add_location(div0, file$3, 229, 4, 8817);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`Nodes Nodes-${/*key*/ ctx[2]}`) + " svelte-1qch9mz"));
-    			add_location(div1, file$3, 223, 2, 8562);
+    			add_location(div1, file$3, 227, 2, 8641);
     			attr_dev(circle, "id", "dot");
     			attr_dev(circle, "cx", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "cy", gridSize / 2 - dotSize / 2);
     			attr_dev(circle, "r", "0.5");
     			set_style(circle, "fill", "gray");
-    			add_location(circle, file$3, 252, 8, 9608);
+    			add_location(circle, file$3, 256, 8, 9687);
     			attr_dev(pattern, "id", pattern_id_value = `background-${/*key*/ ctx[2]}`);
     			attr_dev(pattern, "x", "0");
     			attr_dev(pattern, "y", "0");
@@ -10203,15 +10203,15 @@ var app = (function () {
     			attr_dev(pattern, "height", gridSize);
     			attr_dev(pattern, "patternUnits", "userSpaceOnUse");
     			attr_dev(pattern, "class", "svelte-1qch9mz");
-    			add_location(pattern, file$3, 244, 6, 9433);
-    			add_location(defs, file$3, 243, 4, 9420);
-    			add_location(g, file$3, 267, 4, 10023);
+    			add_location(pattern, file$3, 248, 6, 9512);
+    			add_location(defs, file$3, 247, 4, 9499);
+    			add_location(g, file$3, 271, 4, 10102);
     			attr_dev(svg, "class", svg_class_value = "" + (null_to_empty(`Edges Edges-${/*key*/ ctx[2]}`) + " svelte-1qch9mz"));
-    			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[9] + " " + /*$heightStore*/ ctx[10]);
-    			add_location(svg, file$3, 242, 2, 9337);
+    			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[10] + " " + /*$heightStore*/ ctx[11]);
+    			add_location(svg, file$3, 246, 2, 9416);
     			attr_dev(div2, "id", "graphview-container");
     			attr_dev(div2, "class", "svelte-1qch9mz");
-    			add_location(div2, file$3, 215, 0, 8168);
+    			add_location(div2, file$3, 219, 0, 8247);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10299,8 +10299,8 @@ var app = (function () {
     			if (dirty[0] & /*key*/ 4) editmodal_changes.key = /*key*/ ctx[2];
     			editmodal.$set(editmodal_changes);
 
-    			if (dirty[0] & /*$nodesStore, key*/ 132) {
-    				each_value_1 = /*$nodesStore*/ ctx[7];
+    			if (dirty[0] & /*$nodesStore, key*/ 260) {
+    				each_value_1 = /*$nodesStore*/ ctx[8];
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -10339,7 +10339,7 @@ var app = (function () {
     				attr_dev(pattern, "id", pattern_id_value);
     			}
 
-    			if (/*$backgroundStore*/ ctx[8]) {
+    			if (/*$backgroundStore*/ ctx[9]) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
@@ -10352,8 +10352,8 @@ var app = (function () {
     				if_block1 = null;
     			}
 
-    			if (dirty[0] & /*$derivedEdges*/ 64) {
-    				each_value = /*$derivedEdges*/ ctx[6];
+    			if (dirty[0] & /*$derivedEdges*/ 128) {
+    				each_value = /*$derivedEdges*/ ctx[7];
     				validate_each_argument(each_value);
     				let i;
 
@@ -10384,11 +10384,11 @@ var app = (function () {
     				attr_dev(svg, "class", svg_class_value);
     			}
 
-    			if (!current || dirty[0] & /*$widthStore, $heightStore*/ 1536 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[9] + " " + /*$heightStore*/ ctx[10])) {
+    			if (!current || dirty[0] & /*$widthStore, $heightStore*/ 3072 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*$widthStore*/ ctx[10] + " " + /*$heightStore*/ ctx[11])) {
     				attr_dev(svg, "viewBox", svg_viewBox_value);
     			}
 
-    			if (/*$shareable*/ ctx[11]) {
+    			if (/*$shareable*/ ctx[6]) {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
@@ -10469,20 +10469,21 @@ var app = (function () {
     };
 
     function instance$3($$self, $$props, $$invalidate) {
+    	let $shareable;
+
     	let $derivedEdges,
     		$$unsubscribe_derivedEdges = noop$1,
-    		$$subscribe_derivedEdges = () => ($$unsubscribe_derivedEdges(), $$unsubscribe_derivedEdges = subscribe(derivedEdges, $$value => $$invalidate(6, $derivedEdges = $$value)), derivedEdges);
+    		$$subscribe_derivedEdges = () => ($$unsubscribe_derivedEdges(), $$unsubscribe_derivedEdges = subscribe(derivedEdges, $$value => $$invalidate(7, $derivedEdges = $$value)), derivedEdges);
 
     	let $nodesStore,
     		$$unsubscribe_nodesStore = noop$1,
-    		$$subscribe_nodesStore = () => ($$unsubscribe_nodesStore(), $$unsubscribe_nodesStore = subscribe(nodesStore, $$value => $$invalidate(7, $nodesStore = $$value)), nodesStore);
+    		$$subscribe_nodesStore = () => ($$unsubscribe_nodesStore(), $$unsubscribe_nodesStore = subscribe(nodesStore, $$value => $$invalidate(8, $nodesStore = $$value)), nodesStore);
 
     	let $backgroundStore;
     	let $movementStore;
     	let $nodeSelected;
     	let $widthStore;
     	let $heightStore;
-    	let $shareable;
     	$$self.$$.on_destroy.push(() => $$unsubscribe_derivedEdges());
     	$$self.$$.on_destroy.push(() => $$unsubscribe_nodesStore());
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -10520,15 +10521,15 @@ var app = (function () {
     	validate_store(nodeSelected, 'nodeSelected');
     	component_subscribe($$self, nodeSelected, value => $$invalidate(27, $nodeSelected = value));
     	validate_store(backgroundStore, 'backgroundStore');
-    	component_subscribe($$self, backgroundStore, value => $$invalidate(8, $backgroundStore = value));
+    	component_subscribe($$self, backgroundStore, value => $$invalidate(9, $backgroundStore = value));
     	validate_store(movementStore, 'movementStore');
     	component_subscribe($$self, movementStore, value => $$invalidate(26, $movementStore = value));
     	validate_store(widthStore, 'widthStore');
-    	component_subscribe($$self, widthStore, value => $$invalidate(9, $widthStore = value));
+    	component_subscribe($$self, widthStore, value => $$invalidate(10, $widthStore = value));
     	validate_store(heightStore, 'heightStore');
-    	component_subscribe($$self, heightStore, value => $$invalidate(10, $heightStore = value));
+    	component_subscribe($$self, heightStore, value => $$invalidate(11, $heightStore = value));
     	validate_store(shareable, 'shareable');
-    	component_subscribe($$self, shareable, value => $$invalidate(11, $shareable = value));
+    	component_subscribe($$self, shareable, value => $$invalidate(6, $shareable = value));
 
     	// declare prop to be passed down to the minimap
     	let d3Translate = { x: 0, y: 0, k: 1 };
@@ -10653,7 +10654,7 @@ var app = (function () {
     	};
 
     	// Can put afterUpdate functionality into it's own function. 
-    	afterUpdate(() => {
+    	const setImportExport = () => {
     		function replacer(key, value) {
     			// Filtering out properties
     			if (key === 'custom') {
@@ -10677,6 +10678,10 @@ var app = (function () {
 
     		// Set the download button target to the object URL
     		document.getElementById(`downloadState-${key}`).href = makeTextFile(JSON.stringify(state, replacer));
+    	};
+
+    	afterUpdate(() => {
+    		if ($shareable) setImportExport();
     	});
 
     	$$self.$$.on_mount.push(function () {
@@ -10797,14 +10802,15 @@ var app = (function () {
     		uploadStore,
     		handleZoom,
     		closeEditModal,
+    		setImportExport,
+    		$shareable,
     		$derivedEdges,
     		$nodesStore,
     		$backgroundStore,
     		$movementStore,
     		$nodeSelected,
     		$widthStore,
-    		$heightStore,
-    		$shareable
+    		$heightStore
     	});
 
     	$$self.$inject_state = $$props => {
@@ -10833,12 +10839,12 @@ var app = (function () {
     		minimap,
     		boundary,
     		d3Translate,
+    		$shareable,
     		$derivedEdges,
     		$nodesStore,
     		$backgroundStore,
     		$widthStore,
     		$heightStore,
-    		$shareable,
     		nodeSelected,
     		backgroundStore,
     		movementStore,
