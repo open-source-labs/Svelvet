@@ -20,7 +20,7 @@
 		  {
 		    id: 2,
 		    position: { x: 50, y: 300 },
-		    data: { label: "borderColor" },
+		    data: { label: "borderColor"},
 				targetPosition: 'left',
 				sourcePosition: 'right',
 		    width: 150,

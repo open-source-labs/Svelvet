@@ -5458,10 +5458,15 @@ var app = (function () {
           id: highestId + 1, // set the id to one higher than the highest in the current array
           position: pos, // the position (top left corner) is at the target coords of the edge for now
           data: node.data ? node.data : {label: ''}, // need ways to change the rest of the properties
-          width: 100,
-          height: 40,
-          className: 'newNode',
-          bgColor: "white"
+          width: node.width,
+          height: node.height,
+          className: node.className || '',
+          bgColor: node.bgColor,
+          // image: node.image,
+          // src: node.src,
+          textColor: node.textColor,
+          borderRadius: node.borderRadius,
+          borderColor: node.borderColor
         };
         if (position === 'left') {
           if (role === 'source') {
@@ -5520,7 +5525,7 @@ var app = (function () {
                 const initialText = rule.cssText; // getting the full text of the CSS rule 
                 const i = initialText.indexOf('{'); // finding index of first bracket
                 innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
-                // customCssText += innerText; // add the text to our variable which is included in inline styles
+            
                 // Adjusting the width and height if they are set via the custom class
                 const arr = innerText.split(' ');
                 arr.forEach((str, i) => {
@@ -8125,7 +8130,7 @@ var app = (function () {
     			if_block.c();
     			t1 = space();
     			create_component(edgeanchor1.$$.fragment);
-    			attr_dev(div, "class", div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-zrg65y");
+    			attr_dev(div, "class", div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-14vkmyj");
     			attr_dev(div, "style", div_style_value = "left: " + /*node*/ ctx[0].position.x + "px; top: " + /*node*/ ctx[0].position.y + "px; width: " + (/*nodeWidth*/ ctx[4] || /*node*/ ctx[0].width) + "px; height: " + (/*nodeHeight*/ ctx[5] || /*node*/ ctx[0].height) + "px; background-color: " + /*node*/ ctx[0].bgColor + "; border-color: " + /*node*/ ctx[0].borderColor + "; border-radius: " + /*node*/ ctx[0].borderRadius + "px; color: " + /*node*/ ctx[0].textColor + "; " + /*customCssText*/ ctx[3]);
     			attr_dev(div, "id", div_id_value = "svelvet-" + /*node*/ ctx[0].id);
     			add_location(div, file$6, 81, 0, 2158);
@@ -8199,7 +8204,7 @@ var app = (function () {
     			if (dirty[0] & /*node*/ 1) edgeanchor1_changes.position = /*node*/ ctx[0].sourcePosition || 'bottom';
     			edgeanchor1.$set(edgeanchor1_changes);
 
-    			if (!current || dirty[0] & /*node*/ 1 && div_class_value !== (div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-zrg65y")) {
+    			if (!current || dirty[0] & /*node*/ 1 && div_class_value !== (div_class_value = "Node " + (/*node*/ ctx[0].className || '') + " svelte-14vkmyj")) {
     				attr_dev(div, "class", div_class_value);
     			}
 
@@ -11696,12 +11701,12 @@ var app = (function () {
     			t5 = space();
     			create_component(svelvet.$$.fragment);
     			attr_dev(h1, "class", "svelte-bwnhrl");
-    			add_location(h1, file, 98, 1, 2190);
+    			add_location(h1, file, 98, 1, 2189);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 99, 14, 2233);
-    			add_location(p, file, 99, 1, 2220);
+    			add_location(a, file, 99, 14, 2232);
+    			add_location(p, file, 99, 1, 2219);
     			attr_dev(main, "class", "svelte-bwnhrl");
-    			add_location(main, file, 97, 0, 2182);
+    			add_location(main, file, 97, 0, 2181);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

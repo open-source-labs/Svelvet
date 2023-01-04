@@ -219,10 +219,15 @@ export function findOrCreateStore(key) {
       id: highestId + 1, // set the id to one higher than the highest in the current array
       position: pos, // the position (top left corner) is at the target coords of the edge for now
       data: node.data ? node.data : {label: ''}, // need ways to change the rest of the properties
-      width: 100,
-      height: 40,
-      className: 'newNode',
-      bgColor: "white"
+      width: node.width,
+      height: node.height,
+      className: node.className || '',
+      bgColor: node.bgColor,
+      // image: node.image,
+      // src: node.src,
+      textColor: node.textColor,
+      borderRadius: node.borderRadius,
+      borderColor: node.borderColor
     };
     if (position === 'left') {
       if (role === 'source') {
@@ -281,7 +286,7 @@ export function findOrCreateStore(key) {
             const initialText = rule.cssText; // getting the full text of the CSS rule 
             const i = initialText.indexOf('{'); // finding index of first bracket
             innerText = initialText.substring(i + 1, initialText.length - 1); // extracting the CSS to insert into inline style
-            // customCssText += innerText; // add the text to our variable which is included in inline styles
+        
             // Adjusting the width and height if they are set via the custom class
             const arr = innerText.split(' ');
             arr.forEach((str, i) => {
