@@ -22,6 +22,7 @@ export let minimap = false;
 export let locked = false;
 export let boundary = false;
 export let shareable = false;
+export let deleteNodes = false;
 // generates a unique string for each svelvet component's unique store instance
 const key = (Math.random() + 1).toString(36).substring(7);
 // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -48,6 +49,7 @@ onMount(() => {
     svelvetStore.nodeCreateStore.set(nodeCreate);
     svelvetStore.nodeEditStore.set(nodeEdit);
     svelvetStore.shareable.set(shareable);
+    svelvetStore.deleteNodes.set(deleteNodes);
   });
 
 </script>

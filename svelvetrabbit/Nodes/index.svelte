@@ -2,7 +2,7 @@
   import { findOrCreateStore } from '../stores/store';
   import {afterUpdate} from 'svelte';
   import EdgeAnchor from '../Edges/EdgeAnchor.svelte';
-
+  import DeleteAnchor from '../Edges/DeleteAnchor.svelte';
   export let node;
   export let key;
   // Lines 9-11 are related to node custom classes
@@ -21,7 +21,8 @@
     snapgrid, 
     snapResize,
     isLocked,
-    nodeEditStore
+    nodeEditStore,
+    deleteNodes
   } = findOrCreateStore(key);
   $: shouldMove = moving && $movementStore;
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
@@ -125,8 +126,10 @@
 
   id="svelvet-{node.id}"
 >
-
-<!-- this anchor is the target-->
+{#if node.delete || $deleteNodes}
+  <DeleteAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} />
+{/if}
+  <!-- this anchor is the target-->
   <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
