@@ -1,6 +1,6 @@
 <script>
   import { findOrCreateStore } from '../stores/store';
-  import { beforeUpdate } from 'svelte';
+  import { beforeUpdate, afterUpdate } from 'svelte';
   export let key;
   export let node;
   export let position;
@@ -32,6 +32,7 @@
     let moved = false;
     let edgeShouldMove = false;
   $: store = findOrCreateStore(key);
+  
 
   // Before the component is updated, adjust the top and left positions to account for custom class dimensions
   beforeUpdate(() => {
@@ -56,13 +57,15 @@
       if($hoveredElement) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
         else newEdge.target = $hoveredElement.id;
-        store.edgesStore.set([...$derivedEdges, newEdge]);
+        store = store;
+        // store.edgesStore.set([...$derivedEdges, newEdge]);
       } else if ($nodeCreateStore) {
         renderNewNode(e, node, newEdge, role, position);
       } else {
         //if no anchor is found (no place to connect new edge), update edges store filtering out newly constructed edge
         store.edgesStore.set($derivedEdges.filter(e => e.id !== newEdge.id));
       }
+      
     }
     newEdge = null; // reset newEdge so that the next one can be created normally
     moved = false;
@@ -104,6 +107,7 @@
     
     on:mouseleave={(e) => {
       if (edgeShouldMove) newEdge = renderEdge(e, node, role, position); // renders the new edge on the screen
+      store.edgesStore.set($derivedEdges);
       hovered = false;
       store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store
     }}

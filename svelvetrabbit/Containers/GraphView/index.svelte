@@ -228,7 +228,7 @@
   <div class={`Nodes Nodes-${key}`} on:contextmenu|preventDefault on:click={closeEditModal} on:keydown={() => {return}}>
     <!-- This container is transformed by d3zoom -->
     <div class={`Node Node-${key}`}>
-      {#each $nodesStore as node}
+      {#each $nodesStore as node (node.id)}
           <!-- If node has html property:  -->
         {#if node.data.html}
           <Node {node} {key} >{@html node.data.html}</Node> <!-- Directly render HTML inside of Node Component  -->
@@ -270,7 +270,7 @@
 
     <!-- <g> tag defines which edge type to render depending on properties of edge object -->
     <g>
-      {#each $derivedEdges as edge}
+      {#each $derivedEdges as edge (edge.id)}
         {#if edge.type === 'straight'}
           <StraightEdge {edge} />
         {:else if edge.type === 'smoothstep'}

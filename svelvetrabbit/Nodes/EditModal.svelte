@@ -13,11 +13,10 @@
   const {
       nodesStore,
       nodeIdSelected,
+      deleteNode
     } = findOrCreateStore(key);
   $: store = findOrCreateStore(key);
   $: currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
-
-  // const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
 
   const editNode = (e) => {
     e.preventDefault();
@@ -30,67 +29,60 @@
     width = '';
     height = '';
     customClass = '';
+    label = '';
     
     store.nodesStore.set($nodesStore);
     document.querySelector(`.edit-modal-${key}`).style.display = 'none';
-    document.querySelector(`#label-input-${key}`).value = '';
   }
 
   const changeLabel = (e) => {
     const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
     currentNode.data.label = e.target.value;
     store.nodesStore.set($nodesStore);
-    console.log('selected node', currentNode);
   }
 
-  // const changeColor = (e) => {
-  //   const currentNode = $nodesStore.filter(n => n.id === $nodeIdSelected)[0];
-  //   currentNode.bgColor = e.target.value;
-  //   store.nodesStore.set($nodesStore);
-  // }
 </script>
 <!-- /////////////////////////////////////// -->
 
 
 <!-- //////////// -- Markup -- //////////// -->
 
-<!-- <div class='edit-node-modal' >
-  <label for="label">Change Label</label>
-  <input type="text" id="label" name="label" bind:value={label}>
-  <label for="height">Height</label>
-  <input type="text" name="height" bind:value={height}>
-  <label for="width">Width</label>
-  <input type="text" name="width" bind:value={width}>
-  <label for="class">Class Name</label>
-  <input type="text" id="customClassInput">
-  <button id="submit-node-edit" on:click={(e) => submitChanges()}>Submit</button>
-</div> -->
-
 <div class="edit-modal edit-modal-{key}">
   <h4>Edit Attributes</h4>
   {#if currentNode}
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input-${key}" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" bind:value={label}>
+    <input type="text" id="label-input-{key}" placeholder="{currentNode.data.label ? currentNode.data.label : 'None'}" bind:value={label} on:input={changeLabel}>
     <label for="width-input">Width</label>
-    <input type="number" id="width-input-${key}" placeholder="{currentNode.width}" bind:value={width}>
+    <input type="number" id="width-input-{key}" placeholder="{currentNode.width}" bind:value={width}>
     <label for="height-input">Height</label>
-    <input type="number" id="height-input-${key}" placeholder="{currentNode.height}" bind:value={height}>
+    <input type="number" id="height-input-{key}" placeholder="{currentNode.height}" bind:value={height}>
     <label for="bg-color-input">Background Color</label>
-    <input type="color" id="bg-color-input-${key}"  bind:value={backgroundColor}>
+    <input type="color" id="bg-color-input-{key}"  bind:value={backgroundColor}>
     <input type="text" placeholder="{currentNode.bgColor}" bind:value={backgroundColor}>
     <label for="custom-class-input">Custom Class</label>
-    <input type="text" id="custom-class-input-${key}" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
+    <input type="text" id="custom-class-input-{key}" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
   </form>
   {/if}
-  <button on:click={editNode}>Submit</button>
+  <div class="btn-container-{key} btn-container">
+    <button on:click={(e) => {
+      deleteNode(e, $nodeIdSelected);
+      document.querySelector(`.edit-modal-${key}`).style.display = 'none';
+    }
+      }>Delete Node</button>
+    <button on:click={editNode}>Submit</button>
+  </div>
 </div>
 <!-- /////////////////////////////////////// -->
 
 
 <!-- //////////// -- Styles -- //////////// -->
 <style>
-
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: .5rem;
+  }
   label {
     font-size: .8rem;
     font-weight: bold;
@@ -101,6 +93,7 @@
     border-radius: .5rem;
     background-color: white;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
+    margin: .2rem;
   }
 
   input {

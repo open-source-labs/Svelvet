@@ -36,6 +36,7 @@ interface SvelvetStore extends CoreSvelvetStore {
     setAnchorPosition: (position: string, nodeWidth: number, nodeHeight: number, width: number, height: number) => number[];
     setNewEdgeProps: (role: string, position: string, node: Node) => number[];
     derivedEdges: Readable<Edge[]>;
+    deleteNode: (e: any, $nodeIdSelected: string | number) => void;
 }
 export declare function findOrCreateStore(key: string): SvelvetStore;
 export {};
