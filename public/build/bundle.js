@@ -8109,9 +8109,9 @@ var app = (function () {
     			attr_dev(svg, "viewBox", "0 0 24 24");
     			attr_dev(svg, "fill", "none");
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg, "class", "svelte-10hwxo8");
+    			attr_dev(svg, "class", "svelte-1dl9fh3");
     			add_location(svg, file$7, 71, 7, 2011);
-    			attr_dev(div, "class", "Anchor svelte-10hwxo8");
+    			attr_dev(div, "class", "Anchor svelte-1dl9fh3");
 
     			attr_dev(div, "style", `
         height:${/*anchorHeight*/ ctx[5]}px;

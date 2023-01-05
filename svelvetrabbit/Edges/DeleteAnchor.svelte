@@ -84,9 +84,9 @@
     svg {
       border-radius: .2rem;
       border: black solid 1px;
-      background-color: red;
-      
+      background-color: #e45b56;
     }
+
     .Anchor:hover {
       background-color: #000000;
     }
