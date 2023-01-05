@@ -46,7 +46,7 @@
 {#if !hidden}
   <div
     transition:slide
-    class="md:hidden absolute w-screen mobile-menu border bg-gray-100 text-gray-500"
+    class="md:hidden  w-screen mobile-menu border bg-gray-100 text-gray-500"
   >
     <ul class="overflow-y-auto ">
       <li class:bg-rose-100={activeLink === '/'}>
