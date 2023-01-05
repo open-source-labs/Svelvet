@@ -84,6 +84,7 @@
           <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243">Svelvet 1.0</a>
           <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/gitconnected/svelvet-2-0-c6b2059734a6">Svelvet 2.0</a>
           <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3">Svelvet 4.0</a>
+          <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/@efergus1/svelvet-5-0-a-community-driven-update-cfcc93e7b7a7">Svelvet 5.0</a>
         </div>
       </div>
   
