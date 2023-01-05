@@ -2,7 +2,7 @@
 	// @ts-nocheck
 	
 	
-		import Svelvet from 'svelvetrabbits';
+		import Svelvet from 'svelvet';
 		
 		  const initialNodes = [
 			{

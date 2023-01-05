@@ -26,7 +26,7 @@
   import taylor from '../assets/profiles/Taylor-small.png';
   
 
-  import Svelvet from 'svelvetrabbits';
+  import Svelvet from 'svelvet';
 
   const initialNodes = [
     {
