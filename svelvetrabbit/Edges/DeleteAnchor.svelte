@@ -78,14 +78,13 @@
   <style>
     .Anchor {
       position: absolute;
-      cursor: crosshair;
-      
+      cursor: pointer;
     }
+
     svg {
-        border-radius: .2rem;
-      
+      border-radius: .2rem;
       border: black solid 1px;
-        background-color: red;
+      background-color: red;
       
     }
     .Anchor:hover {

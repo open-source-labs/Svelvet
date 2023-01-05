@@ -58,7 +58,7 @@
     <label for="height-input">Height</label>
     <input type="number" id="height-input-{key}" placeholder="{currentNode.height}" bind:value={height}>
     <label for="bg-color-input">Background Color</label>
-    <input type="color" id="bg-color-input-{key}"  bind:value={backgroundColor}>
+    <input type="color" id="bg-color-input-{key}" class="bgci"  bind:value={backgroundColor}>
     <input type="text" placeholder="{currentNode.bgColor}" bind:value={backgroundColor}>
     <label for="custom-class-input">Custom Class</label>
     <input type="text" id="custom-class-input-{key}" placeholder="{currentNode.className ? currentNode.className : 'None'}" bind:value={customClass}>
@@ -101,7 +101,7 @@
     border-color: #e45b56;
   }
 
-  #bg-color-input {
+  .bgci {
     height: 2rem;
     width: 5rem;
     padding: 0;

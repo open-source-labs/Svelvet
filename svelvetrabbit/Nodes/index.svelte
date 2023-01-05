@@ -72,15 +72,20 @@
     }
     moving = false;
     $nodeSelected = false;
-    if (!moved && node.id == $nodeIdSelected) {
-      onNodeClick(e, node.id);
-    }
+    // if (!moved && node.id == $nodeIdSelected) {
+    //   onNodeClick(e, node.id);
+    // }
     moved = false;
   }}
 
 />
 
 <div
+  on:mouseup={(e) => {
+      if (!moved && node.id == $nodeIdSelected) {
+      onNodeClick(e, node.id);
+    }
+  }}
   on:contextmenu={(e) => {
     if ($nodeEditStore) showEditModal(e, node);
   }}

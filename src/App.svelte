@@ -1,6 +1,6 @@
 	<script>
-	// import Svelvet from "../svelvetrabbit";
-	import Svelvet from 'svelvetrabbits'
+	import Svelvet from "../svelvetrabbit";
+	// import Svelvet from 'svelvetrabbits'
 	// import state from "./state.json"
 	import BlueThing from "./BlueThing.svelte";
 	import w from "./BlueThing.svelte";
