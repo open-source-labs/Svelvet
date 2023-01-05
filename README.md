@@ -22,6 +22,7 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+
 <details><summary>v5.0.0</summary>
 <ul>
   <li>Added interactive node linking & creation</li>
