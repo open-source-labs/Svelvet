@@ -1,4 +1,0 @@
-// When forking the original repository for personal use, rename this file to '.env' and update the information below.
-
-VITE_SVELTE_APP_SUPABASE_URL = '[INSERT YOUR URL HERE]';
-VITE_SVELTE_APP_SUPABASE_ANON_KEY = '[INSERT YOUR ANON_KEY HERE]';

@@ -1,13 +1,13 @@
 {
   "name": "svelvet",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
     "svelvet",
     "typescript"
   ],
-  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny, Viswa, Mauricio, Ian, Ryan",
+  "authors": "Anu, Aaron, Alexander, Andrew, Ali, Damian, Justin, Von, Walter, Jeffrey, David, Samee, Christopher, Johnny, Viswa, Mauricio, Ian, Ryan, Taylor, Emma, Dillon, Tony, Timmy",
   "license": "MIT",
   "bugs": "https://github.com/open-source-labs/Svelvet/issues",
   "homepage": "https://github.com/open-source-labs/Svelvet",

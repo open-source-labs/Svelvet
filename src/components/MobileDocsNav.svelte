@@ -131,6 +131,33 @@
           <li class:bg-rose-100={activeLink.includes('HTML-Docs')}>
             <a on:click={toggleMenu} href="/docs/HTML-Docs" class="block py-4 px-12">HTML-Docs</a>
           </li>
+          <li class:bg-rose-100={activeLink.includes('Interactive Node Linking & Creation')}>
+            <a on:click={toggleMenu} href="/docs/Interactive-Nodes" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Custom Svelte Components')}>
+            <a on:click={toggleMenu} href="/docs/Custom-Svelte" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Minimap')}>
+            <a on:click={toggleMenu} href="/docs/Minimap" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Initial Zoom & Location')}>
+            <a on:click={toggleMenu} href="/docs/Initial-Zoom-Location" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Node Classes')}>
+            <a on:click={toggleMenu} href="/docs/Node-Classes" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Importing & Exporting Diagrams')}>
+            <a on:click={toggleMenu} href="/docs/importDiagrams" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Diagram Boundary')}>
+            <a on:click={toggleMenu} href="/docs/boundary" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Interactive Editable Nodes')}>
+            <a on:click={toggleMenu} href="/docs/editNodes" class="block py-4 px-12">HTML-Docs</a>
+          </li>
+          <li class:bg-rose-100={activeLink.includes('Deletable Nodes')}>
+            <a on:click={toggleMenu} href="/docs/delete" class="block py-4 px-12">HTML-Docs</a>
+          </li>
         </ul>
       {/if}
 

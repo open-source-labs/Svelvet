@@ -17,13 +17,37 @@
       <a href="/docs/node-grouping">Node-Grouping</a>
       <a href="/docs/snap-to-grid">Snap-To-Grid</a>
       <a href="/docs/HTML-Docs">HTML-Docs</a>
+      <a href="/docs/Interactive-Nodes">Interactive Node Linking & Creation</a>
+      <a href="/docs/Custom-Svelte">Custom Svelte Components</a>
+      <a href="/docs/Minimap">Minimap</a>
+      <a href="/docs/Initial-Zoom-Location">Initial Zoom & Location</a>
+      <a href="/docs/Node-Classes">Node Classes</a>
+      <a href="/docs/importDiagrams">Importing & Exporting Diagrams</a>
+      <a href="/docs/boundary">Diagram Boundary</a>
+      <a href="/docs/editNodes">Interactive Editable Nodes</a>
+      <a href="/docs/delete">Deletable Nodes</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/" class="text-gray-700 font-semibold">Community</a>
       <a
         target="_blank"
+        href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243"
+        >Svelvet 1.0</a
+      >
+      <a
+        target="_blank"
+        href="https://medium.com/gitconnected/svelvet-2-0-c6b2059734a6"
+        >Svelvet 2.0</a
+      >
+      <a
+        target="_blank"
         href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3"
-        >Blog</a
+        >Svelvet 4.0</a
+      >
+      <a
+        target="_blank"
+        href="https://medium.com/@efergus1/svelvet-5-0-a-community-driven-update-cfcc93e7b7a7"
+        >Svelvet 5.0</a
       >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
