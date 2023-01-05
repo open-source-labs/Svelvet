@@ -13,14 +13,12 @@
 </div>
 
 <h3 class="text-xl font-semibold mt-12">Background Color</h3>
-<iframe
-src = "https://codesandbox.io/embed/css-backgrounds-5mw3bk?file=/App.svelte?autoresize=1&codemirror=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark&view=split&editorsize=50"
-
-style="width:100%; height:800px; border:0; border-radius: 8px; overflow:hidden;"
-title="custom-nodes"
-allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/>
+<iframe src="https://codesandbox.io/embed/css-backgrounds-forked-hky5i1?autoresize=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="CSS-Backgrounds (forked)"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
 
 <div>
     
