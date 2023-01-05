@@ -33,6 +33,8 @@ Shout out to our contributors! Here's what's new:
   <li>Added an optional boundary to the diagram</li>
   <li>Added functionality to edit nodes by right-clicking on a node to bring up a modal</li>
   <li>Added an optional feature that allows users to delete nodes</li>
+  <li>NOTE: Please make sure to give nodes and edges unique IDs to prevent forEach key duplicate error!</li>
+  <li>Solved github issue #s: 65, 78, 80, 81, 85, 86, 104, 105, 146, 147, 148, 151, 153, 158</li>
   <li>Updated documentation page on website to include new features</li>
   <li>Updated home page to include newest collaborators</li>
 </ul>

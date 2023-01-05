@@ -66,8 +66,8 @@
 		  { id: 'e1-3', source: 1, target: 3, animate: true,},
 		  { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, edgeColor: '#FF4121' },
 		  { id: 'e2-5', source: 2, target: 5, label: 'colored edges', animate: true, arrow: true, edgeColor: '#FF4121', labelBgColor: '#1F2937', labelTextColor: '#FFE4E6' },
-		  { id: 'e2-5', source: 4, target: 6, type: 'straight' },
-		  { id: 'e2-5', source: 3, target: 6, type: 'smoothstep', label: 'colored label', labelBgColor: '#FF4561', labelTextColor: 'white', animate: true }
+		  { id: 'e2-6', source: 4, target: 6, type: 'straight' },
+		  { id: 'e2-7', source: 3, target: 6, type: 'smoothstep', label: 'colored label', labelBgColor: '#FF4561', labelTextColor: 'white', animate: true }
 		];
 
 		const code_sample0 = `{`
