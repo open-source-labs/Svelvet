@@ -25,7 +25,8 @@
     ['Node Classes', 'Node-Classes'],
     ['Importing & Exporting Diagrams', 'importDiagrams'],
     ['Diagram Boundary', 'boundary'],
-    ['Interactive Editable Nodes', 'editNodes']
+    ['Interactive Editable Nodes', 'editNodes'],
+    ['Deletable Nodes', 'delete']
   ];
 
   // const communityLinks = [
