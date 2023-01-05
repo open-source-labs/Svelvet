@@ -1,6 +1,6 @@
 {
   "name": "svelvet",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
@@ -75,7 +75,7 @@
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
     "svelte-parallax": "^0.6.0",
-    "svelvet": "^5.0.0",
+    "svelvet": "^5.0.1",
     "yootils": "^0.3.1"
   }
 }

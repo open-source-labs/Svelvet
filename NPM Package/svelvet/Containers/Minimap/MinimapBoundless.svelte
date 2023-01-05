@@ -94,7 +94,7 @@
 
 	}
     </script>
-    <div on:click={handleClick} bind:this={map} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;">
+    <div on:click={handleClick} bind:this={map} class={`miniMap miniMap-${key}`} style="height:{mapHeight+20}px; width:{mapWidth+20}px;" on:keydown={()=> {return}}>
         <div class='viewBox viewBox-{key}' style="height:{viewHeight}px; width:{viewWidth}px; top:{viewBottom}px; left:{viewRight}px;"></div>
         {#each $nodesStore as node}
           <GreyNode {node} {key} {heightRatio} {widthRatio} {nodeXleftPosition} {nodeYbottomPosition}></GreyNode>
