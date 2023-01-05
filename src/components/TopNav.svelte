@@ -59,13 +59,8 @@
     id="community"
     class="hover:text-rose-500 {activeLink.includes('community') ? 'text-rose-500' : ''}">Community</a
     > -->
+ 
 
-    <a
-      target="_blank"
-      href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3"
-      id="blog"
-      class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}">Blog</a
-    >
 
     <a
       href="https://github.com/open-source-labs/Svelvet"
@@ -79,6 +74,19 @@
       id="playground"
       class="hover:text-rose-500 {activeLink.includes('REPL') ? 'text-rose-500' : ''}">REPL</a
     >
+
+    
+      <div class="dropdown">
+        <button class="dropbtn hover:text-rose-500">Blogs
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/@alexander.zambrano/simplify-application-diagramming-with-svelvet-a8f664731243">Svelvet 1.0</a>
+          <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/gitconnected/svelvet-2-0-c6b2059734a6">Svelvet 2.0</a>
+          <a target="_blank" class="hover:text-rose-500 {activeLink.includes('blog') ? 'text-rose-500' : ''}" href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3">Svelvet 4.0</a>
+        </div>
+      </div>
+  
 
     <!-- Add logic for OAuth and conditionally render if the user is logged in, change button text to sign out and vice versa -->
 
@@ -127,4 +135,59 @@
     width: 32px;
     border-radius: 50%;
   }
+
+   /* Navbar container */
+
+
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 0.875rem;
+line-height: 1.25rem;
+text-decoration: inherit;
+  font-weight: 500;/* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.dropdown a:hover, .dropdown:hover .dropbtn {
+  background-color: rgb(255, 255, 255);
+  color: #ff4561;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+} 
 </style>
