@@ -22,7 +22,7 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
-<details><summary>v4.0.0</summary>
+<details><summary>v4.0.0</summary> 
 <ul>
   <li>Added ability to include HTML in inside of nodes (i.e. videos, sounds, etc)</li>
   <li>Added NPM Package folder in root directory of GitHub repo</li>
