@@ -172,15 +172,28 @@ export function findOrCreateStore(key) {
             return [...n];
             */
     };
-
+    const deleteNode = (e, $nodeIdSelected) => {
+      const answer = confirm('Are you sure you want to delete this node?')
+      //if confirm yes, access the nodes store in the svelvet store and return a filtered node array accounting for all nodes except the selected node
+      if (answer) { 
+        coreSvelvetStore.nodesStore.update((n) => {
+            return n.filter(node=> node.id !== $nodeIdSelected);
+        })
+      //if confirm yes, also remove all edges connected to selected node
+      //access the edges store and return a filtered edges array without all edges connected to selected node
+      coreSvelvetStore.edgesStore.update((e) => {
+        return e.filter(edge=> edge.source !== $nodeIdSelected && edge.target !== $nodeIdSelected)
+      })
+    }
+  }
   /*
   This is the function that renders a new edge when an anchor is clicked
   */  
   const renderEdge = (e, node, role, position) => {
-    // const uniq = (Math.random() * .42093840 / .394483 + 1).toString();
+    e.preventDefault(); // preventing default behavior, not sure if necessary
+    
     const uniq = (Math.random() + 1).toString(36).substring(7) + '-' + (Math.random() + 1).toString(36).substring(7);
     const [x, y] = setNewEdgeProps(role, position, node);
-    e.preventDefault(); // preventing default behavior, not sure if necessary
     // Setting the newEdge variable to an edge prototype
     const newEdge = role === 'source' ? { 
       id: uniq, // generate unique id
@@ -536,6 +549,7 @@ export function findOrCreateStore(key) {
         renderEdge,
         renderNewNode,
         getStyles,
+        deleteNode,
         derivedEdges
     };
     svelvetStores[key] = svelvetStore;
