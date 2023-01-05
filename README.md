@@ -202,12 +202,16 @@ Once that is done you should be able to render the website locally on localhost:
 
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
-- Customize d3 background options
-- Multiple sockets and socket compatibility for links
+- Premade node menu with drag & drop abilities
+- Select and Delete a specific edge
+- Rotating and resizing of nodes
+- Expandable and collapsible parent nodes that can hide/show their children nodes
+- Add documentation/video tutorial on how to set up a Svelvet demo
 - Custom error handling
 - Increase test coverage for scalability
-- More styling and customization of nodes and edges for complex Svelvet flow diagrams
+- More styling and customization of edges for complex Svelvet flow diagrams
 - Community Forum
+- GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
 
 ## Credits
 
