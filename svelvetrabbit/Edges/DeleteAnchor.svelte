@@ -1,10 +1,7 @@
 <script>
     import { findOrCreateStore } from '../stores/store';
-    import { beforeUpdate, afterUpdate } from 'svelte';
     export let key;
     export let node;
-
-    
 
     let hovered = false;
     let anchorWidth = 13;
@@ -16,19 +13,9 @@
         deleteNode,
         derivedEdges,
         nodeLinkStore,
-        
       } = findOrCreateStore(key);
-      // $: shouldMove = moving && $movementStore;
-      // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
-      // moving local boolean specific to node selected, to change position of individual node once selected
 
     $: store = findOrCreateStore(key);
-    
-  
-    // Before the component is updated, adjust the top and left positions to account for custom class dimensions
-    beforeUpdate(() => {
-      
-    })
   </script>
   
 
@@ -71,10 +58,6 @@
       on:keydown={() => {return}}
     >  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 5L5 19" stroke="#333333" stroke-width="2" stroke-linecap="round"></path> <path d="M5 5L19 19" stroke="#333333" stroke-width="2" stroke-linecap="round"></path></svg></div>
 
-  
-
-  
-  
   <style>
     .Anchor {
       position: absolute;
@@ -90,5 +73,4 @@
     .Anchor:hover {
       background-color: #000000;
     }
-
   </style>

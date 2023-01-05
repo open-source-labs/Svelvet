@@ -5366,31 +5366,18 @@ var app = (function () {
         if (existing) {
             return existing;
         }
-        //Setting defaults of core svelvet store and making them a store using writable
-        // const coreSvelvetStore = {
-        //     nodesStore: writable([]),
-        //     edgesStore: writable([]),
-        //     widthStore: writable(600),
-        //     heightStore: writable(600),
-        //     backgroundStore: writable(false),
-        //     movementStore: writable(true),
-        //     nodeSelected: writable(false),
-        //     nodeIdSelected: writable(-1),
-        //     d3Scale: writable(1),
-        //     snapgrid: writable(false),
-        //     snapResize: writable(30),
-        //     backgroundColor: writable()
-        // };
+       
         // This is the function handler for the mouseMove event to update the position of the selected node.
         // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
         const onNodeMove = (e, nodeID) => {
           const bound = get_store_value(coreSvelvetStore.boundary);
+          //if there is a boundary set, nodes cannot be moved passed the boundary 
           if(bound){
                 coreSvelvetStore.nodesStore.update((n) => {
                     const correctNode = n.find((node) => node.id === nodeID);
                     
                     const scale = get_store_value(coreSvelvetStore.d3Scale);
-        
+                    //nodes can only move within 50px of the bounds
                     if(correctNode.childNodes){
                         n.forEach((child) => {
                             if(correctNode.childNodes.includes(child.id)){
@@ -5440,7 +5427,6 @@ var app = (function () {
         const onEdgeMove = (event, edgeID) => {
             coreSvelvetStore.edgesStore.update((e) => {
                 const correctEdge = e.find((edge) => edge.id === edgeID);
-
                 const scale = get_store_value(coreSvelvetStore.d3Scale);
                 // divide the movement value by scale to keep it proportional to d3Zoom transformations
                 if (!correctEdge.target) {
@@ -5450,9 +5436,7 @@ var app = (function () {
                 if (!correctEdge.source) {
                   correctEdge.sourceX += event.movementX / scale;
                   correctEdge.sourceY += event.movementY / scale;
-                  console.log('sourceX', correctEdge.sourceX, 'sourceY', correctEdge.sourceY);
                 }
-        
                 return [...e];
             });
         };
@@ -5474,7 +5458,9 @@ var app = (function () {
                       });
                       return [...n];
                     });
-                /*  Svelvet 4.0 dev code see:
+
+                /*  
+                    Svelvet 4.0 dev code see:
                     https://github.com/open-source-labs/Svelvet/blob/main/NPM%20Package/svelvet/Future%20Iteration/ParentNode.md
                     const correctNode = n.find((node) => node.id === nodeID);
                     const { x, y, width, height } = e.target.getBoundingClientRect();
@@ -5507,12 +5493,12 @@ var app = (function () {
           //if confirm yes, access the nodes store in the svelvet store and return a filtered node array accounting for all nodes except the selected node
           if (answer) { 
             coreSvelvetStore.nodesStore.update((n) => {
-                return n.filter(node=> node.id !== $nodeIdSelected);
+                return n.filter(node => node.id !== $nodeIdSelected);
             });
           //if confirm yes, also remove all edges connected to selected node
           //access the edges store and return a filtered edges array without all edges connected to selected node
           coreSvelvetStore.edgesStore.update((e) => {
-            return e.filter(edge=> edge.source !== $nodeIdSelected && edge.target !== $nodeIdSelected)
+            return e.filter(edge => edge.source !== $nodeIdSelected && edge.target !== $nodeIdSelected)
           });
         }
       };
@@ -5522,7 +5508,9 @@ var app = (function () {
       const renderEdge = (e, node, role, position) => {
         e.preventDefault(); // preventing default behavior, not sure if necessary
         
+        
         const uniq = (Math.random() + 1).toString(36).substring(7) + '-' + (Math.random() + 1).toString(36).substring(7);
+        //grabs x y coordinates from setNewEdgeProps
         const [x, y] = setNewEdgeProps(role, position, node);
         // Setting the newEdge variable to an edge prototype
         const newEdge = role === 'source' ? { 
@@ -7349,7 +7337,7 @@ var app = (function () {
     			set_style(div, "left", /*left*/ ctx[2] + "px");
     			set_style(div, "height", /*nHeight*/ ctx[4] + "px");
     			set_style(div, "width", /*nWidth*/ ctx[3] + "px");
-    			add_location(div, file$9, 21, 0, 531);
+    			add_location(div, file$9, 23, 0, 699);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7490,6 +7478,8 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*node, heightRatio, widthRatio, nodeYbottomPosition, nodeXleftPosition*/ 992) {
+    			//nHeight/nWidth repreesnt the height and width of the grey nodes
+    			//top/left represent the actual position of the grey nodes on the minimap
     			{
     				$$invalidate(4, nHeight = Math.max(node.height * heightRatio, 5));
     				$$invalidate(3, nWidth = Math.max(node.width * widthRatio, 5));
@@ -7592,7 +7582,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (103:8) {#each $nodesStore as node}
+    // (101:8) {#each $nodesStore as node}
     function create_each_block$2(ctx) {
     	let greynode;
     	let current;
@@ -7645,7 +7635,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(103:8) {#each $nodesStore as node}",
+    		source: "(101:8) {#each $nodesStore as node}",
     		ctx
     	});
 
@@ -7688,11 +7678,11 @@ var app = (function () {
     			set_style(div0, "width", /*viewWidth*/ ctx[9] + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[11] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[10] + "px");
-    			add_location(div0, file$8, 101, 8, 3999);
+    			add_location(div0, file$8, 99, 8, 3954);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 20 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[1] + 20 + "px");
-    			add_location(div1, file$8, 100, 4, 3857);
+    			add_location(div1, file$8, 98, 4, 3812);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7861,20 +7851,17 @@ var app = (function () {
     	//
     	function handleClick(event) {
     		if (!hasBeenClicked) {
+    			//bounds grabs map variable coordinates on the map relative to the websites position
     			let bounds = map.getBoundingClientRect();
 
-    			// x = event.clientX - bounds.left;
-    			// y = event.clientY - bounds.top;
-    			// console.log('x: ' + x + 'y: ' + y)
     			hasBeenClicked = true;
 
     			dispatch('message', {
     				x: nodeXleftPosition + (event.clientX - bounds.left) / widthRatio,
-    				y: nodeYbottomPosition + (event.clientY - bounds.top) / heightRatio,
-    				nLeft: nodeXleftPosition,
-    				nBottom: nodeYbottomPosition
+    				y: nodeYbottomPosition + (event.clientY - bounds.top) / heightRatio
     			});
 
+    			//throttles clicks to prevent map distortion
     			setTimeout(
     				() => {
     					hasBeenClicked = false;
@@ -8100,18 +8087,18 @@ var app = (function () {
     			attr_dev(path0, "stroke", "#333333");
     			attr_dev(path0, "stroke-width", "2");
     			attr_dev(path0, "stroke-linecap", "round");
-    			add_location(path0, file$7, 71, 79, 2083);
+    			add_location(path0, file$7, 58, 79, 1591);
     			attr_dev(path1, "d", "M5 5L19 19");
     			attr_dev(path1, "stroke", "#333333");
     			attr_dev(path1, "stroke-width", "2");
     			attr_dev(path1, "stroke-linecap", "round");
-    			add_location(path1, file$7, 71, 165, 2169);
+    			add_location(path1, file$7, 58, 165, 1677);
     			attr_dev(svg, "viewBox", "0 0 24 24");
     			attr_dev(svg, "fill", "none");
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr_dev(svg, "class", "svelte-1dl9fh3");
-    			add_location(svg, file$7, 71, 7, 2011);
-    			attr_dev(div, "class", "Anchor svelte-1dl9fh3");
+    			attr_dev(svg, "class", "svelte-99zmj7");
+    			add_location(svg, file$7, 58, 7, 1519);
+    			attr_dev(div, "class", "Anchor svelte-99zmj7");
 
     			attr_dev(div, "style", `
         height:${/*anchorHeight*/ ctx[5]}px;
@@ -8120,7 +8107,7 @@ var app = (function () {
         left:${/*left*/ ctx[7]}px;
       `);
 
-    			add_location(div, file$7, 39, 4, 1092);
+    			add_location(div, file$7, 26, 4, 600);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8189,11 +8176,6 @@ var app = (function () {
     	validate_store(derivedEdges, 'derivedEdges');
     	component_subscribe($$self, derivedEdges, value => $$invalidate(3, $derivedEdges = value));
 
-    	// Before the component is updated, adjust the top and left positions to account for custom class dimensions
-    	beforeUpdate(() => {
-    		
-    	});
-
     	$$self.$$.on_mount.push(function () {
     		if (key === undefined && !('key' in $$props || $$self.$$.bound[$$self.$$.props['key']])) {
     			console.warn("<DeleteAnchor> was created without expected prop 'key'");
@@ -8233,8 +8215,6 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		findOrCreateStore,
-    		beforeUpdate,
-    		afterUpdate,
     		key,
     		node,
     		hovered,
@@ -8266,9 +8246,6 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*key*/ 1024) {
-    			// $: shouldMove = moving && $movementStore;
-    			// $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
-    			// moving local boolean specific to node selected, to change position of individual node once selected
     			$$invalidate(2, store = findOrCreateStore(key));
     		}
     	};
@@ -9051,7 +9028,7 @@ var app = (function () {
     			set_style(div, "left", /*left*/ ctx[2] + "px");
     			set_style(div, "height", /*nHeight*/ ctx[4] + "px");
     			set_style(div, "width", /*nWidth*/ ctx[3] + "px");
-    			add_location(div, file$5, 20, 0, 393);
+    			add_location(div, file$5, 21, 0, 493);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9169,6 +9146,7 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*node, heightRatio, widthRatio*/ 224) {
+    			// sets the size and position of minimap greynodes based on corresponding nodes
     			{
     				$$invalidate(4, nHeight = Math.max(node.height * heightRatio, 5));
     				$$invalidate(3, nWidth = Math.max(node.width * widthRatio, 5));
@@ -9334,11 +9312,11 @@ var app = (function () {
     			set_style(div0, "width", /*$widthStore*/ ctx[10] * /*widthRatio*/ ctx[4] / /*d3Translate*/ ctx[1].k + "px");
     			set_style(div0, "top", /*viewBottom*/ ctx[7] + "px");
     			set_style(div0, "left", /*viewRight*/ ctx[6] + "px");
-    			add_location(div0, file$4, 56, 8, 1879);
+    			add_location(div0, file$4, 56, 8, 1850);
     			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(`miniMap miniMap-${/*key*/ ctx[0]}`) + " svelte-enqdqj"));
     			set_style(div1, "height", /*mapHeight*/ ctx[2] + 2 + "px");
     			set_style(div1, "width", /*mapWidth*/ ctx[3] + 2 + "px");
-    			add_location(div1, file$4, 55, 4, 1738);
+    			add_location(div1, file$4, 55, 4, 1709);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9491,9 +9469,6 @@ var app = (function () {
     			hasBeenClicked = true;
     			let bounds = map.getBoundingClientRect();
 
-    			// x = event.clientX - bounds.left;
-    			// y = event.clientY - bounds.top;
-    			// console.log('x: ' + x + 'y: ' + y)
     			dispatch('message', {
     				x: (event.clientX - bounds.left) / widthRatio,
     				y: (event.clientY - bounds.top) / heightRatio

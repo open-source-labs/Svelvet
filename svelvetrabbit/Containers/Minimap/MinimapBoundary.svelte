@@ -18,31 +18,31 @@
     let viewBottom = 1;
     let map;
     let hasBeenClicked = false;
+    
     $: {
         if (boundary.y > boundary.x) {
-    mapHeight = 100;
-    mapWidth = Math.max((boundary.x.toFixed(0)*100)/boundary.y.toFixed(0), 25);
-    }
-    else if (boundary.y < boundary.x) {
-    mapWidth = 100;
-    mapHeight = Math.max((boundary.y.toFixed(0)*100)/boundary.x.toFixed(0), 25)
-    }else{
-    mapHeight = 100;
-    mapWidth = 100;
-    }
-    widthRatio = (mapWidth / boundary.x);
-    heightRatio = (mapHeight / boundary.y);
-    viewRight = Math.abs(d3Translate.x*widthRatio/d3Translate.k)
-    viewBottom = Math.abs(d3Translate.y*heightRatio/d3Translate.k)
+          mapHeight = 100;
+          mapWidth = Math.max((boundary.x.toFixed(0)*100)/boundary.y.toFixed(0), 25);
+        }
+        else if (boundary.y < boundary.x) {
+          mapWidth = 100;
+          mapHeight = Math.max((boundary.y.toFixed(0)*100)/boundary.x.toFixed(0), 25)
+        }
+        else {
+          mapHeight = 100;
+          mapWidth = 100;
+        }
+        widthRatio = (mapWidth / boundary.x);
+        heightRatio = (mapHeight / boundary.y);
+        viewRight = Math.abs(d3Translate.x*widthRatio/d3Translate.k)
+        viewBottom = Math.abs(d3Translate.y*heightRatio/d3Translate.k)
     }
 
     function handleClick(event) {
         if(!hasBeenClicked){
             hasBeenClicked= true
         let bounds = map.getBoundingClientRect();
-		// x = event.clientX - bounds.left;
-		// y = event.clientY - bounds.top;
-        // console.log('x: ' + x + 'y: ' + y)
+        
         dispatch('message', {
 			x:((event.clientX - bounds.left)/widthRatio),
             y:((event.clientY - bounds.top)/heightRatio),

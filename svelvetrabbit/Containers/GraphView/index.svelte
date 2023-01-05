@@ -280,13 +280,6 @@
         {:else}
           <SimpleBezierEdge {edge} />
         {/if}
-        <!-- sets anchor points type to either arrow or halfcircle-->
-        <!-- {#if !edge.noHandle}
-          <EdgeAnchor x={edge.sourceX} y={edge.sourceY} {key} />
-          {#if !edge.arrow}
-            <EdgeAnchor x={edge.targetX} y={edge.targetY} {key} />
-          {/if}
-        {/if} -->
       {/each}
     </g>
   </svg>
@@ -304,14 +297,10 @@
 
 
 <style>
-  /* https://www.dropbox.com/s/jesjddg8gldgte2/downloadicon.png?raw=1 */
-  
-
   #graphview-container {
     display: flex;
     align-items: center;
     justify-content: center;
-
   }
   
   .Nodes {
@@ -325,11 +314,6 @@
   .Nodes:active {
     cursor: grabbing;
   }
-  /* .Node {
-    color: black; 
-    width: 100%;
-    height: 100%;
-  } */ 
 
   #dwnldimg {
     width: 1.5rem;

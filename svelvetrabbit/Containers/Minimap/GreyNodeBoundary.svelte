@@ -10,11 +10,12 @@
     let nWidth = 0;
     let nHeight = 0;
 
+    // sets the size and position of minimap greynodes based on corresponding nodes
     $: {
-    nHeight = Math.max(node.height * heightRatio, 5)
-    nWidth = Math.max(node.width * widthRatio, 5)
-    top = node.position.y * heightRatio
-    left = node.position.x * widthRatio
+        nHeight = Math.max(node.height * heightRatio, 5)
+        nWidth = Math.max(node.width * widthRatio, 5)
+        top = node.position.y * heightRatio
+        left = node.position.x * widthRatio
     }
 
 </script>

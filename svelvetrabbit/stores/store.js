@@ -36,31 +36,18 @@ export function findOrCreateStore(key) {
     if (existing) {
         return existing;
     }
-    //Setting defaults of core svelvet store and making them a store using writable
-    // const coreSvelvetStore = {
-    //     nodesStore: writable([]),
-    //     edgesStore: writable([]),
-    //     widthStore: writable(600),
-    //     heightStore: writable(600),
-    //     backgroundStore: writable(false),
-    //     movementStore: writable(true),
-    //     nodeSelected: writable(false),
-    //     nodeIdSelected: writable(-1),
-    //     d3Scale: writable(1),
-    //     snapgrid: writable(false),
-    //     snapResize: writable(30),
-    //     backgroundColor: writable()
-    // };
+   
     // This is the function handler for the mouseMove event to update the position of the selected node.
     // Changed from onMouseMove to onNodeMove because of addition of onEdgeMove function
     const onNodeMove = (e, nodeID) => {
       const bound = get(coreSvelvetStore.boundary);
+      //if there is a boundary set, nodes cannot be moved passed the boundary 
       if(bound){
             coreSvelvetStore.nodesStore.update((n) => {
                 const correctNode = n.find((node) => node.id === nodeID);
                 
                 const scale = get(coreSvelvetStore.d3Scale);
-    
+                //nodes can only move within 50px of the bounds
                 if(correctNode.childNodes){
                     n.forEach((child) => {
                         if(correctNode.childNodes.includes(child.id)){
@@ -111,7 +98,6 @@ export function findOrCreateStore(key) {
     const onEdgeMove = (event, edgeID) => {
         coreSvelvetStore.edgesStore.update((e) => {
             const correctEdge = e.find((edge) => edge.id === edgeID);
-
             const scale = get(coreSvelvetStore.d3Scale);
             // divide the movement value by scale to keep it proportional to d3Zoom transformations
             if (!correctEdge.target) {
@@ -121,9 +107,7 @@ export function findOrCreateStore(key) {
             if (!correctEdge.source) {
               correctEdge.sourceX += event.movementX / scale;
               correctEdge.sourceY += event.movementY / scale;
-              console.log('sourceX', correctEdge.sourceX, 'sourceY', correctEdge.sourceY);
             }
-    
             return [...e];
         });
     };
@@ -145,7 +129,9 @@ export function findOrCreateStore(key) {
                   });
                   return [...n];
                 });
-            /*  Svelvet 4.0 dev code see:
+
+            /*  
+                Svelvet 4.0 dev code see:
                 https://github.com/open-source-labs/Svelvet/blob/main/NPM%20Package/svelvet/Future%20Iteration/ParentNode.md
                 const correctNode = n.find((node) => node.id === nodeID);
                 const { x, y, width, height } = e.target.getBoundingClientRect();
@@ -178,12 +164,12 @@ export function findOrCreateStore(key) {
       //if confirm yes, access the nodes store in the svelvet store and return a filtered node array accounting for all nodes except the selected node
       if (answer) { 
         coreSvelvetStore.nodesStore.update((n) => {
-            return n.filter(node=> node.id !== $nodeIdSelected);
+            return n.filter(node => node.id !== $nodeIdSelected);
         })
       //if confirm yes, also remove all edges connected to selected node
       //access the edges store and return a filtered edges array without all edges connected to selected node
       coreSvelvetStore.edgesStore.update((e) => {
-        return e.filter(edge=> edge.source !== $nodeIdSelected && edge.target !== $nodeIdSelected)
+        return e.filter(edge => edge.source !== $nodeIdSelected && edge.target !== $nodeIdSelected)
       })
     }
   }
@@ -193,7 +179,9 @@ export function findOrCreateStore(key) {
   const renderEdge = (e, node, role, position) => {
     e.preventDefault(); // preventing default behavior, not sure if necessary
     
+    
     const uniq = (Math.random() + 1).toString(36).substring(7) + '-' + (Math.random() + 1).toString(36).substring(7);
+    //grabs x y coordinates from setNewEdgeProps
     const [x, y] = setNewEdgeProps(role, position, node);
     // Setting the newEdge variable to an edge prototype
     const newEdge = role === 'source' ? { 

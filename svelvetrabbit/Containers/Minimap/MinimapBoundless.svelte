@@ -74,24 +74,20 @@
     //get a scale factor from nodeheight and width
     //use that scaling factor to make virtual representation of nodes bigger or smaller 
     //depending on the height and width of the overall structure including all nodes
-    //
-    //
     function handleClick(event) {
       if(!hasBeenClicked){
+        //bounds grabs map variable coordinates on the map relative to the websites position
         let bounds = map.getBoundingClientRect();
-		// x = event.clientX - bounds.left;
-		// y = event.clientY - bounds.top;
-        // console.log('x: ' + x + 'y: ' + y)
+		
         hasBeenClicked = true
         dispatch('message', {
-			x:nodeXleftPosition+((event.clientX - bounds.left)/widthRatio),
-            y: nodeYbottomPosition+((event.clientY - bounds.top)/heightRatio),
-            nLeft: nodeXleftPosition,
-            nBottom: nodeYbottomPosition
-		});
-    setTimeout(() => {
+			    x:nodeXleftPosition+((event.clientX - bounds.left)/widthRatio),
+          y: nodeYbottomPosition+((event.clientY - bounds.top)/heightRatio),
+		    });
+        //throttles clicks to prevent map distortion
+      setTimeout(() => {
             hasBeenClicked = false;
-        }, 500);
+      }, 500);
   
   }
 

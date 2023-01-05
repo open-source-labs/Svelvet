@@ -115,6 +115,7 @@
 		shareable
 		minimap
 	/>
+
 </main>
 
 <style>
