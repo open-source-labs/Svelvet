@@ -24,7 +24,8 @@ export const coreSvelvetStore = {
     nodeLinkStore: writable(false),
     nodeCreateStore: writable(false),
     nodeEditStore: writable(false),
-    shareable: writable(false)
+    shareable: writable(false),
+    deleteNodes: writable(false)
 };
 
 
@@ -240,7 +241,8 @@ export function findOrCreateStore(key) {
       // src: node.src,
       textColor: node.textColor,
       borderRadius: node.borderRadius,
-      borderColor: node.borderColor
+      borderColor: node.borderColor,
+      delete: node.delete
     };
     if (position === 'left') {
       if (role === 'source') {

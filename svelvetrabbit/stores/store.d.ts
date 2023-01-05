@@ -23,6 +23,7 @@ interface CoreSvelvetStore {
     nodeEditStore: Writable<boolean>;
     shareable: Writable<boolean>;
     boundary: Writable<boolean>;
+    deleteNodes: Writable<boolean>;
 }
 
 interface SvelvetStore extends CoreSvelvetStore {

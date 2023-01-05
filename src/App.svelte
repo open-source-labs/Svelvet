@@ -66,7 +66,8 @@
 		    width: 100,
 		    height: 100,
 		    bgColor: "orange",
-		    borderRadius: 30
+		    borderRadius: 30,
+			delete : true
 		  },
 		  {
 		    id: 7,
@@ -107,7 +108,7 @@
 		edges={initialEdges} 
 		bgColor={'#EEEEEE'} 
 		background 
-		
+		deleteNodes
 		nodeCreate
 		nodeLink
 		nodeEdit
