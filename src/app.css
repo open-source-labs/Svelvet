@@ -1,0 +1,25 @@
+/* Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+/* Nunito font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-primary {
+    @apply text-[#ff4561];
+  }
+  .bg-primary {
+    @apply bg-[#ff4561];
+  }
+  .contributor-card {
+    @apply min-w-max text-center grid place-items-center bg-white text-gray-600 p-4 rounded-xl shadow-lg;
+  }
+  .btn-primary {
+    @apply border w-fit shadow-lg hover:shadow-transparent rounded-full hover:ease-in duration-100 hover:text-[#ff4561] hover:bg-transparent bg-[#ff4561] text-white border-[#ff4561];
+  }
+  .code {
+    @apply bg-rose-100 rounded-lg p-1 inline;
+  }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="20px" y="px"
+	 viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<g>
+	<ellipse fill="#ff4561" cx="14" cy="8" rx="11" ry="6"/>
+	<path fill="#ff4561" d="M14,24c-4.8,0-8.8-1.4-11-3.6V24c0,3.4,4.8,6,11,6c0.9,0,1.8-0.1,2.7-0.2C15.2,28.3,14.3,26.2,14,24C14,24,14,24,14,24z"/>
+	<path fill="#ff4561" d="M3,12.4V16c0,3.4,4.8,6,11,6c0,0,0,0,0.1,0c0.2-2.4,1.4-4.6,3-6.2c-1,0.1-2,0.2-3.1,0.2C9.2,16,5.2,14.6,3,12.4z"/>
+</g>
+<path fill="#ff4561" d="M25,15.1v8.5l1.3-1.3c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-3,3c-0.1,0.1-0.2,0.2-0.3,0.2C24.3,27,24.1,27,24,27s-0.3,0-0.4-0.1
+	c-0.1-0.1-0.2-0.1-0.3-0.2l-3-3c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l1.3,1.3v-8.5c-3.9,0.5-7,3.9-7,7.9c0,4.4,3.6,8,8,8s8-3.6,8-8
+	C32,18.9,28.9,15.6,25,15.1z"/>
+</svg>
