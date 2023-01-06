@@ -54,12 +54,12 @@
     edgeShouldMove = false; // prevent the new edge from moving
     if (newEdge && moved) {
       newEdge.animate = false;
-      if($hoveredElement) {
+      if($hoveredElement && $hoveredElement.id !== node.id) {
         if (role === 'target') newEdge.source = $hoveredElement.id;
         else newEdge.target = $hoveredElement.id;
         store = store;
         // store.edgesStore.set([...$derivedEdges, newEdge]);
-      } else if ($nodeCreateStore) {
+      } else if ($nodeCreateStore && !$hoveredElement) {
         renderNewNode(e, node, newEdge, role, position);
       } else {
         //if no anchor is found (no place to connect new edge), update edges store filtering out newly constructed edge
@@ -97,7 +97,6 @@
       e.preventDefault();
       edgeShouldMove = false;
       moving = false;
-      moved = false;
     }}
 
     on:mouseenter={(e) => {
@@ -106,7 +105,7 @@
     }}
     
     on:mouseleave={(e) => {
-      if (edgeShouldMove) newEdge = renderEdge(e, node, role, position); // renders the new edge on the screen
+      if (edgeShouldMove && !newEdge) newEdge = renderEdge(e, node, role, position); // renders the new edge on the screen
       store.edgesStore.set($derivedEdges);
       hovered = false;
       store.hoveredElement.set(null); // When the mouse leaves an anchor, we clear the value in the store

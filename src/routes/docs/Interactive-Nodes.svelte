@@ -6,7 +6,8 @@
   props to your <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> application. These do not have to be set equal to anything and can just be passed in. 
   Adding these props will enable interactive node linking and creation. NOTE: To have full access to the node creation feature, node linking feature must also be passed down as a prop.
   Node <code class="bg-rose-100 rounded-lg p-1">anchors</code> will turn <code class="bg-rose-100 rounded-lg p-1">red</code> and the <code class="bg-rose-100 rounded-lg p-1">cursor</code> 
-  will change to a <code class="bg-rose-100 rounded-lg p-1">crosshair</code> to indicate that node linking or creation is <code class="bg-rose-100 rounded-lg p-1">enabled</code>.
+  will change to a <code class="bg-rose-100 rounded-lg p-1">crosshair</code> to indicate that node linking or creation is <code class="bg-rose-100 rounded-lg p-1">enabled</code>. If the user
+  wishes to not create a node after clicking on the <code class="bg-rose-100 rounded-lg p-1">anchor</code> simply go back to that anchor and release the mouse click.
 </p>
 
 <div>
