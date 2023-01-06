@@ -1,5 +1,6 @@
 import { SvelteComponentTyped } from "svelte";
 import type { Node, Edge } from '../../types/index.js';
+import type { XYPosition } from '../../types/utils.js'
 declare const __propDef: {
     props: {
         nodes: Node[];
@@ -7,10 +8,20 @@ declare const __propDef: {
         width?: number | undefined;
         height?: number | undefined;
         background?: boolean | undefined;
+        nodeLink?: boolean | undefined;
+        nodeCreate?: boolean | undefined;
+        nodeEdit?: boolean | undefined;
         movement?: boolean | undefined;
         snap?: boolean | undefined;
         snapTo?: number | undefined;
         bgColor?: string | undefined;
+        initialLocation?: XYPosition | undefined;
+        initialZoom?: number | undefined;
+        minimap?: boolean | undefined;
+        locked?: boolean | undefined;
+        boundary?: boolean | XYPosition | undefined;
+        shareable?: boolean | undefined;
+        deleteNodes?: boolean| undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;
