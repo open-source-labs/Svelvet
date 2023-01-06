@@ -135,7 +135,9 @@
   <DeleteAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} />
 {/if}
   <!-- this anchor is the target-->
-  <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
+  {#if !node?.showEdgeAnchor}
+    <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
+  {/if}
     <!-- This executes if node.image is present without node.label -->
     {#if node.image}
       <img
@@ -155,7 +157,9 @@
       </div>
     {/if}
     <!-- this anchor is the source-->
-    <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.sourcePosition || 'bottom'} role={'source'} />
+    {#if !node?.showEdgeAnchor}
+      <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.sourcePosition || 'bottom'} role={'source'} />
+    {/if}
 </div>
 
 <style>
