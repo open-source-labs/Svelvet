@@ -69,6 +69,8 @@
   <br />
   <br />
   Play around with the flow diagram below!
+  If you wish to stop panning, set the <code class="bg-rose-100 rounded-lg p-1">movement</code> prop to <code class="bg-rose-100 rounded-lg p-1">false</code>.
+  If you wish to stop node dragging, pass in the <code class="bg-rose-100 rounded-lg p-1">locked</code> prop.
 </p>
 <div class="overflow-hidden my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
   <Svelvet
@@ -80,12 +82,6 @@
     movement={true}
   />
 </div>
-<br /> <i>**As of v3.0.0, simply provide the</i> <code class="code">movement</code>
-<i>attribute and set it's value to</i> <code class="code">false</code><i> directly in the </i>
-<code class="code">Svelvet</code><i
-  >component to prevent movement of the nodes and edges as well as prevent panning and zooming and
-  fix the entire component in place.**</i
->
 
 <style>
 </style>
