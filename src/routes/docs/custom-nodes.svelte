@@ -17,6 +17,7 @@
     ['borderRadius', 'number'],
     ['clickCallback', 'Function'],
     ['childNodes', 'Array of numbers, put other nodes id\'s in here'],
+    ['showEdgeAnchor', 'boolean']
   ];
 </script>
 
