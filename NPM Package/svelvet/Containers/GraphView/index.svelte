@@ -310,7 +310,10 @@
     cursor: grab;
     /* pointer-events: none; */
   } 
-  
+  .Edges {
+    height: 100%;
+    width: 100%;
+  }
   .Nodes:active {
     cursor: grabbing;
   }

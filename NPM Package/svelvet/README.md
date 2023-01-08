@@ -24,6 +24,7 @@ Shout out to our contributors! Here's what's new:
 
 <details><summary>v5.0.0</summary>
 <ul>
+  <li>Now compatible with Safari (5.0.7 update)</li>
   <li>Added interactive node linking & creation</li>
   <li>Added ability to load custom Svelte components as nodes</li>
   <li>Added an optional minimap that allows you to visualize larger diagrams</li>
