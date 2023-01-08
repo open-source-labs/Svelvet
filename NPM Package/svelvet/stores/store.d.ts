@@ -22,7 +22,7 @@ interface CoreSvelvetStore {
     nodeCreateStore: Writable<boolean>;
     nodeEditStore: Writable<boolean>;
     shareable: Writable<boolean>;
-    boundary: Writable<boolean>;
+    boundary: Writable<boolean | XYPosition>;
     deleteNodes: Writable<boolean>;
 }
 

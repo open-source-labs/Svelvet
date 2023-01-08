@@ -56,6 +56,6 @@ export interface EdgeTextProps {
 export interface d3Translate {
     x: number;
     y: number;
-    z: number;
+    k: number;
 }
 export declare type HandleType = 'source' | 'target';

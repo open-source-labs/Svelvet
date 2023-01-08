@@ -2,7 +2,7 @@ import { SvelteComponentTyped } from "svelte";
 import type { Node, d3Translate } from "../../types/types";
 declare const __propDef: {
     props: {
-        key: number;
+        key: string;
         d3Translate: d3Translate;
         
     };

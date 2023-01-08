@@ -3,7 +3,7 @@ import type { Node, d3Translate } from "../../types/types";
 import type { XYPosition } from "../../types/utils"
 declare const __propDef: {
     props: {
-        key: number;
+        key: string;
         boundary: XYPosition;
         d3Translate: d3Translate;
     };

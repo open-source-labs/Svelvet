@@ -5,7 +5,7 @@ declare const __propDef: {
         nodesStore: any;
         derivedEdges: any;
         initialZoom: number;
-        initialLocation: any;
+        initialLocation: XYPosition;
         minimap: boolean;
         key: string;
         width: number;
