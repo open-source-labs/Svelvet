@@ -55,5 +55,7 @@
 
 <p class="my-4 text-gray-600">The diagram renders as below:</p>
 <div class="border rounded-lg shadow-md w-full overflow-hidden">
-  <Svelvet nodes={initialNodes} edges={initialEdges} width={1200} height={400} background />
+  <Svelvet 
+  initialLocation={ {x: 400, y: 50 }}
+  nodes={initialNodes} edges={initialEdges} width={1200} height={400} background />
 </div>

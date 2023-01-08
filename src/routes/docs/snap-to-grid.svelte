@@ -104,7 +104,7 @@ let code_sample = `< Svelvet snap={true} snapTo={30} />`
 	  background
       snap={true}
       snapTo={30}
-	  initialLocation={initialNodes[0].position}
+	  initialLocation={{ x: 653, y: 70 }}
     />
   </div>
   <p class="my-4 text-gray-600">
