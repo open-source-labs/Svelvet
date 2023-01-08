@@ -15,6 +15,8 @@ export interface Node<T = any> {
     clickCallback?: Function;
     image?: boolean;
     src?: string;
+    className?: string;
+    delete?: boolean;
     sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
     targetPosition?: 'left' | 'right' | 'top' | 'bottom';
 }

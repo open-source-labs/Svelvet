@@ -12,7 +12,6 @@
     const {
         deleteNode,
         derivedEdges,
-        nodeLinkStore,
       } = findOrCreateStore(key);
 
     $: store = findOrCreateStore(key);
@@ -20,8 +19,7 @@
   
 
 
-  <!-- renders simple half-circle for the anchor point of the edge -->
-  <!-- CHANGED FROM SVG CIRCLE TO DIV -->
+  
  
   <!-- if interactivity is enabled, set event listeners on anchors and hover effects -->
     <div

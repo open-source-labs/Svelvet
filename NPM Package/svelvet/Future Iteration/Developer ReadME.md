@@ -1,3 +1,6 @@
+This readme is from the 4.0 development team:
+
+
 Svelvet has come a long way in providing greater visualization tools to assist svelte users in their work in addtion to providing an easier path for future svelte users. This is an open source product so we are always happy to hear about any ways we can improve this technology or any bugs that exist that need to be fixed up. It is not easy to get on board and understand a codebase so here are some useful tips to assist future developers and some features that could be implemented.
 
 We have provided excalidraws that provide diagrams that were made within the project to showcase the flow of data within. Any future changes should update these existing files to assist users. Please feel free to provide further diagrams to assist in understanding the technology.

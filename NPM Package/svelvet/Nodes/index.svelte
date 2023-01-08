@@ -132,7 +132,7 @@
   id="svelvet-{node.id}"
 >
 {#if node.delete || $deleteNodes}
-  <DeleteAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} />
+  <DeleteAnchor {key} {node}  />
 {/if}
   <!-- this anchor is the target-->
   <EdgeAnchor {key} {node} width={nodeWidth || node.width} height={nodeHeight || node.height} position={node.targetPosition || 'top'} role={'target'} /> 
