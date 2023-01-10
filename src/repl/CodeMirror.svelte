@@ -327,7 +327,10 @@
   ];
 </\script>
  
-<Svelvet nodes={initialNodes} edges={initialEdges} width={1100} height={1100} background />
+
+<Svelvet nodes={initialNodes} edges={initialEdges} 
+        width={970} height={620} initialZoom={2}
+        initialLocation={initialNodes[5].position}  minimap={true} background />
 			`
           );
       }

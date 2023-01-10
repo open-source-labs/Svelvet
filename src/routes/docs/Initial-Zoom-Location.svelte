@@ -6,7 +6,7 @@
 
 <p class="text-gray-600">
   Implementing initial zoom & location to a <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> application is now possible!
-  To access this feature, simply add the prop <code class="bg-rose-100 rounded-lg p-1">initialZoom</code> and set it equal to a number from <code class="bg-rose-100 rounded-lg p-1">0 to 10</code>, <code class="bg-rose-100 rounded-lg p-1">0</code> being the most zoomed in and <code class="bg-rose-100 rounded-lg p-1">10</code> being the most zoomed out. 
+  To access this feature, simply add the prop <code class="bg-rose-100 rounded-lg p-1">initialZoom</code> and set it equal to a number from <code class="bg-rose-100 rounded-lg p-1">0 to 10</code>, <code class="bg-rose-100 rounded-lg p-1">0</code> being the most zoomed out and <code class="bg-rose-100 rounded-lg p-1">10</code> being the most zoomed in. 
   To access the initial location feature, add the prop <code class="bg-rose-100 rounded-lg p-1">initialLocation</code> and set it equal to an object with an <code class="bg-rose-100 rounded-lg p-1">x</code> and <code class="bg-rose-100 rounded-lg p-1">y</code> property like so <code class="bg-rose-100 rounded-lg p-1">x: 100, y:100</code> or <code class="bg-rose-100 rounded-lg p-1">initialNodes[1].position</code> would set it to default at that node's position.
 </p>
 
