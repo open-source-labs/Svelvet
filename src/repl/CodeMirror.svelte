@@ -330,7 +330,7 @@
 
 <Svelvet nodes={initialNodes} edges={initialEdges} 
         width={970} height={620} initialZoom={2}
-        initialLocation={initialNodes[5].position}  minimap={true} background />
+        initialLocation={initialNodes[3].position}  minimap={true} background />
 			`
           );
       }
