@@ -3,7 +3,7 @@
 
   const initialNodes = [
     {
-      id: 77,
+      id: 1,
       position: { x: 225, y: 10 },
       data: { label: 'Add Images!' },
       width: 100,
