@@ -24,7 +24,7 @@ describe('Drag n Drop', () => {
     it('moves all nodes to new locations', () => {
       cy.visit('/testingplayground')
       cy.viewport(1000, 1000)
-      checkNode(10, -49, -150)
+      checkNode(9, -49, -150)
       checkNode(9, 0, -200)
       checkNode(8, -100, -200)
       checkNode(7, 0, 200)
