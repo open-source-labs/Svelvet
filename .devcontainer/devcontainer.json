@@ -3,7 +3,7 @@
 {
 	"name": "Svelvet",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18"
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
 
-	"postCreateCommand": "npm install",
+	"postCreateCommand": "npm install"
 }
