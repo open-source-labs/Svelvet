@@ -1,15 +1,19 @@
+checked
 commit 3dd6bf2fd644a7e7b66ff87a47b0112993352386
 Author: Andrew Widjaja <andrewdwidjaja@gmail.com>
 Date:   Fri May 6 08:53:03 2022 -0700
 
     Initial commit
 
+
+checked
 commit 99a8a4be4c9ad65e607ec3b9ed12669fb666e669
 Author: Andrew Widjaja <andrewdwidjaja@gmail.com>
 Date:   Tue May 10 09:12:16 2022 -0700
 
     initialized project
 
+checked
 commit 0dfe84d3f78cd3967e1ebc44864c3928f894b8b4
 Merge: 3dd6bf2 99a8a4b
 Author: Andrew Widjaja <andrewdwidjaja@gmail.com>
@@ -19,6 +23,8 @@ Date:   Tue May 10 09:12:58 2022 -0700
     
     initialized project
 
+
+checked
 commit 6782fdd4a0c7150da661865866f29c2acdb9b884
 Author: Andrew Widjaja <andrewdwidjaja@gmail.com>
 Date:   Thu May 12 08:21:02 2022 -0700
@@ -34,7 +40,7 @@ Date:   Thu May 12 08:22:08 2022 -0700
     
     added initial nodes and svelvet components
 
-checked
+checked -- This is the first one in the important commits doc
 commit ec67dc621ee75c6236d3f771c5938c3e96b3dda9
 Author: Andrew Widjaja <andrewdwidjaja@gmail.com>
 Date:   Thu May 12 08:27:21 2022 -0700
