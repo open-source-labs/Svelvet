@@ -7,25 +7,77 @@ export let node_id;
 const store = findStore();
 const {nodesStore, edgesStore, anchorsStore} = store;
 
-console.log('asdsadf',$nodesStore)
+let isSelected = false;
 
-
+let asdf
+$: asdf = $nodesStore[node_id];
 </script>
 
-<h2>This is a Node with id {node_id}</h2>
+<svelte:window
+  on:mousemove={(e) => {
+      e.preventDefault();
+      //console.log('we wanna see what is inside the e: ', e)
+      if (isSelected) {
+        //   console.log('this is horizontal mouse movement: ',e.movementX);
+        //   console.log('this is vertical mouse movement', e.movementY)
+        //   $nodesStore[node_id].setPosition(e.movementX, e.movementY)
+        console.log('asdf',nodesStore)
+        nodesStore.update((nodes) => {
+            const node = nodes[node_id];
+            node.setPosition(e.movementX, e.movementY);
+            return {...nodes}
+        })
+        //   nodesStore.update((nodesObj) => {
+        //     nodesObj[node_id].setPosition(e.movementX, e.movementY)
+        //   })
+      }
+  }}
 
+  on:mouseup={(e) => {
+      e.preventDefault();
+      isSelected = false;
+  }}
+/>
 
+<!-- // This is the function handler for the mouseMove event to update the position of the selected node.
+const onMouseMove = (e: any, nodeID: number) => {
+  coreSvelvetStore.nodesStore.update((n) => {
+    n.forEach((node: Node) => {
+      if (node.id === nodeID) {
+        //retrieve d3Scale value from store
+        const scale = get(coreSvelvetStore.d3Scale);
+        // divide the movement value by scale to keep it proportional to d3Zoom transformations
+        node.position.x += e.movementX / scale;
+        node.position.y += e.movementY / scale;
+      }
+    });
+    return [...n];
+  });
+}; -->
 
+{JSON.stringify(asdf)}
 <div
+  on:mousedown={(e) => {
+      e.preventDefault();
+      isSelected = true;
+  }}
+
+
+
   class="Node"
-  style="left: {$nodesStore[node_id].positionX}px;
-    top: {$nodesStore[node_id].positionY + 100}px;
-    width: {$nodesStore[node_id].width}px;
-    height: {$nodesStore[node_id].height}px;
-    background-color: {$nodesStore[node_id].bgColor};
-    border-color: {$nodesStore[node_id].bgColor};
+  style="left: {asdf.positionX}px;
+    top: {asdf.positionY + 100}px;
+    width: {asdf.width}px;
+    height: {asdf.height}px;
+    background-color: {asdf.bgColor};
+    border-color: {asdf.bgColor};
     border-radius: {5}px;
     color: white;"
   id="svelvet-{node_id}"
 >HI IM TEXT</div>
 
+<style>
+  .Node {
+    position: relative;
+  }
+</style>

@@ -41,30 +41,15 @@
       testingNode.handleDelete();
 
 
-      console.log($nodesStore)
   })
 </script>
 
 <div>
-  <h1>Hello World!</h1>
-  <p>
-    {JSON.stringify($nodesStore)}
-  </p>
-  
 
 
   {#each Object.keys($nodesStore) as node_id}
     <NodeComponent {node_id}/>
-    <div
-    class="Node"
-    style="left: {100}px;
-      top: {200}px;
-      width: {150}px;
-      height: {75}px;
-      background-color: blue;"
-    ></div>
 
-    
     <!-- <div
     class="Node"
     style="left: {node.positionX}px;
