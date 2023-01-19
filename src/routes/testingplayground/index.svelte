@@ -12,7 +12,7 @@
 			data: { label: '1' },
 			width: 175,
 			height: 40,
-			bgColor: 'white',
+			bgColor: 'black',
 			sourcePosition: 'bottom'
 		},
 	];

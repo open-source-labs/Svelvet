@@ -52,13 +52,24 @@ interface AnchorType {
     getPosition: Function,
 }
 
+// this is the "global" store that anybody can access
+// think of it like a database
+let store
+export function findStore() {
+    if (store===undefined) throw 'store not set yet'
+    return store
+}
+
+// Creates a store and assigns it to a "global" variable "store"
+// so that other components can use it
 export function createStore() {
     const testingCoreStore: testingCoreStore = {
         nodesStore: writable({}),
         edgesStore: writable({}),
         anchorsStore: writable({}),
     }
-    return testingCoreStore;
+    store = testingCoreStore
+    return store;
 }
 
 export class Edge implements EdgeType {
