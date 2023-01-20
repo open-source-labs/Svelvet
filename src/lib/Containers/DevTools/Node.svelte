@@ -21,7 +21,6 @@ $: asdf = $nodesStore[node_id];
         //   console.log('this is horizontal mouse movement: ',e.movementX);
         //   console.log('this is vertical mouse movement', e.movementY)
         //   $nodesStore[node_id].setPosition(e.movementX, e.movementY)
-        console.log('asdf',nodesStore)
         nodesStore.update((nodes) => {
             const node = nodes[node_id];
             node.setPosition(e.movementX, e.movementY);
@@ -78,6 +77,17 @@ const onMouseMove = (e: any, nodeID: number) => {
 
 <style>
   .Node {
-    position: relative;
+    position: absolute;
+    display: grid;
+    user-select: none;
+    cursor: move;
+    justify-content: center;
+    overscroll-behavior: auto;
+    align-items: center;
+    font-size: 14px;
+    text-align: center;
+    border: solid 1px black;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
   }
 </style>

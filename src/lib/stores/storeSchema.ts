@@ -1,5 +1,6 @@
 import { writable, derived, get, readable } from 'svelte/store';
-import type { Readable, Writable } from 'svelte/store';
+import type {Readable, Writable } from 'svelte/store';
+
 // import type { Node, Edge } from '../types/types';
 /**
  *  When a user install svelvet package into their repo and import Svelvet from Svelvet,
@@ -46,10 +47,12 @@ interface EdgeType {
 
 interface AnchorType {
     id: string,
-    nodeId: number,
-    edgeId: number,
+    nodeId: string,
+    edgeId: string,
     sourceOrSink: string,
-    getPosition: Function,
+    positionX: number,
+    positionY: number,
+    callback: Function,
 }
 
 // this is the "global" store that anybody can access
@@ -96,22 +99,25 @@ export class Edge implements EdgeType {
 
 export class Anchor implements AnchorType {
     id: string;
-    nodeId: number;
-    edgeId: number;
+    nodeId: string;
+    edgeId: string;
     sourceOrSink: string;
-    getPosition: Function;
+    positionX: number;
+    positionY: number;
+    callback: Function;
     
-    constructor(id: string, nodeId: number, edgeId: number, sourceOrSink: string, getPosition=() => {
-        //access the nodeStore[node_id]
-        //will look up the node.positionX and node.positionY
-        //will calculate X. Y position of the anchor
-        console.log('Anchor getPosition fired') 
-    }) {
+    constructor(id: string, nodeId: string, edgeId: string, sourceOrSink: string, positionX: number, positionY: number, callback: Function) {
         this.id = id;
         this.nodeId = nodeId;
         this.edgeId = edgeId;
         this.sourceOrSink = sourceOrSink;
-        this.getPosition = getPosition
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.callback = callback;
+    }
+
+    getNodeInfo() {
+        console.log('this function should get node info')
     }
 }
 
@@ -138,8 +144,22 @@ export class Node implements NodeType {
         //update all necessary data
         this.positionX += movementX;
         this.positionY += movementY;
-        console.log('POSX: ', this.positionX)
-        console.log('POSY: ', this.positionY)
+
+        //update all the anchors on the node in the anchorsStore
+        const store = findStore();
+        const { anchorsStore } = store;
+        //const originalAnchorStore = get(anchorsStore)
+
+        anchorsStore.update((anchors) => {
+            for (const key in anchors) {
+                if (anchors[key].nodeId === this.id) {
+                    // console.log('trying to update the anchorsStore')
+                    anchors[key].positionX += movementX;
+                    anchors[key].positionY += movementY;
+                }
+            }
+            return {...anchors}
+        })
     }
 
     handleDelete() {
