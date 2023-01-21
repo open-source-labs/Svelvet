@@ -1,7 +1,7 @@
 <!--Note: Import / export in svelvet is used for passing props  -->
 <script lang="ts">
-  import GraphView from '$lib/Containers/GraphView/index.svelte';
-  import { findOrCreateStore } from '$lib/stores/store';
+  import GraphView from '$lib/views/Containers/GraphView/index.svelte';
+  import { findOrCreateStore } from '$lib/models/store_old';
   import { afterUpdate, onMount } from 'svelte';
   import type { Node, Edge } from '$lib/types/index.js';
 

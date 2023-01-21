@@ -11,7 +11,7 @@
   import Node from '$lib/Nodes/index.svelte';
   import ImageNode from '$lib/Nodes/ImageNode.svelte';
 
-  import { findOrCreateStore } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/models/store_old';
 
   // leveraging d3 library to zoom/pan
   let d3 = {

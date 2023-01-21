@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { findOrCreateStore } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/models/store_old';
   import type { Node } from '$lib/types/types';
 
   export let node: Node;

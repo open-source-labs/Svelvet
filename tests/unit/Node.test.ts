@@ -1,4 +1,4 @@
-import Nodes from '$lib/Nodes/index.svelte';
+import Nodes from '$lib/views/Nodes/index.svelte';
 import TestNode from './TestNodeSlot.svelte';
 import { render, screen } from '@testing-library/svelte';
 import type { Node } from '$lib/types/types';
@@ -10,7 +10,7 @@ const mockNodes: Node[] = [
     data: { label: 'test-node-1' },
     width: 175,
     height: 40,
-    bgColor: 'white'
+    bgColor: 'white',
   },
   {
     id: 2,
@@ -18,8 +18,8 @@ const mockNodes: Node[] = [
     data: { label: 'test-node-2' },
     width: 175,
     height: 40,
-    bgColor: 'white'
-  }
+    bgColor: 'white',
+  },
 ];
 
 test('should mount the node wrapper div', () => {

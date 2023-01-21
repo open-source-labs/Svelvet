@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { findOrCreateStore } from '$lib/stores/store';
+  import { findOrCreateStore } from '$lib/models/store_old';
   import { Position } from '$lib/types';
   import type { Node } from '$lib/types/types';
   import { logDOM } from '@testing-library/svelte';
