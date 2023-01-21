@@ -66,7 +66,7 @@
               $anchorsStore[anchor_id].positionX = positionX;
               $anchorsStore[anchor_id].positionY = positionY;
             }
-            objAnchors[anchor_id] = new Anchor(anchor_id, mapLabelToId[userLabel], 'random_edge_id', 'source', -1, -1, anchor_cb)      
+            objAnchors[anchor_id] = new Anchor(anchor_id, mapLabelToId[userLabel], null, arr[i], -1, -1, anchor_cb)      
             arr3.push(objAnchors[anchor_id])
           }
           arr2.push(arr3)
@@ -117,26 +117,25 @@
     <AnchorComponent {anchor_id} />
   {/each}
 
+  {#each Object.values($edgesStore) as edge}
+    {JSON.stringify(edge)}
+  {/each}
+</div>
+
+<svg id='svg'>
   {#each Object.keys($edgesStore) as edge_id}
     <EdgeComponent {edge_id} />
   {/each}
-  
-</div>
+</svg>
 
 
 <style>
-  /* .Node {
+  #svg{
     position: absolute;
-    display: grid;
-    user-select: none;
-    cursor: move;
-    justify-content: center;
-    overscroll-behavior: auto;
-    align-items: center;
-    font-size: 14px;
-    text-align: center;
-    border: solid 1px black;
-    border-radius: 5px;
-    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
-  } */
+    z-index: -1000;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
 </style>
