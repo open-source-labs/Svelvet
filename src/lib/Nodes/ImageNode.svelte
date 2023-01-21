@@ -5,7 +5,13 @@
   export let node: Node;
   export let key: string;
 
-  const { onMouseMove, onNodeClick, onTouchMove, nodeSelected, nodeIdSelected } = findOrCreateStore(key);
+  const {
+    onMouseMove,
+    onNodeClick,
+    onTouchMove,
+    nodeSelected,
+    nodeIdSelected,
+  } = findOrCreateStore(key);
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected

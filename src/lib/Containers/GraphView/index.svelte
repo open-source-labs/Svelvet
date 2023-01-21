@@ -18,7 +18,7 @@
     zoom,
     zoomTransform,
     select,
-    selectAll
+    selectAll,
   };
 
   //these are typscripted as any, however they have been transformed inside of store.ts
@@ -28,7 +28,14 @@
 
   // here we lookup the store using the unique key
   const svelvetStore = findOrCreateStore(key);
-  const { nodeSelected, backgroundStore, movementStore, widthStore, heightStore, d3Scale } = svelvetStore;
+  const {
+    nodeSelected,
+    backgroundStore,
+    movementStore,
+    widthStore,
+    heightStore,
+    d3Scale,
+  } = svelvetStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -47,7 +54,7 @@
 
   // function to handle zoom events - arguments: d3ZoomEvent
   function handleZoom(e: any): void {
-    if (!$movementStore) return
+    if (!$movementStore) return;
 
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
     d3Scale.set(e.transform.k);
@@ -71,7 +78,13 @@
     d3.select(`.Node-${key}`)
       .style(
         'transform',
-        'translate(' + transform.x + 'px,' + transform.y + 'px) scale(' + transform.k + ')'
+        'translate(' +
+          transform.x +
+          'px,' +
+          transform.y +
+          'px) scale(' +
+          transform.k +
+          ')'
       )
       .style('transform-origin', '0 0');
   }

@@ -1,20 +1,21 @@
-<script lang='ts'>
-    import { findStore, createStore } from '$lib/stores/storeSchema'
-    
-    export let anchor_id : string;
-    
-    
-    const store = findStore();
-    const {nodesStore, edgesStore, anchorsStore} = store;
+<script lang="ts">
+  import { findStore, createStore } from '$lib/stores/storeSchema';
 
-    let reactAnchor
-    $: reactAnchor = $anchorsStore[anchor_id]
+  export let anchor_id: string;
+
+  const store = findStore();
+  const { nodesStore, edgesStore, anchorsStore } = store;
+
+  let reactAnchor;
+  $: reactAnchor = $anchorsStore[anchor_id];
 </script>
 
 {JSON.stringify(reactAnchor)}
 
-<div class="Anchor" style="
-  left: {reactAnchor.positionX- 5}px;
+<div
+  class="Anchor"
+  style="
+  left: {reactAnchor.positionX - 5}px;
   top: {reactAnchor.positionY}px;
   width: {10}px;
   height: {10}px;
@@ -22,10 +23,10 @@
   border-color: green;
   border-radius: 50%;"
   id="svelvet-{anchor_id}"
-  ></div>
+/>
 
 <style>
-    .Anchor {
+  .Anchor {
     position: absolute;
     display: grid;
     user-select: none;

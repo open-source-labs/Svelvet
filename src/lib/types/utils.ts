@@ -3,7 +3,7 @@ export enum Position {
   Left = 'left',
   Right = 'right',
   Top = 'top',
-  Bottom = 'bottom'
+  Bottom = 'bottom',
 }
 
 // interface for XYPosition to use in nodes and edges

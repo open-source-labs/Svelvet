@@ -48,13 +48,13 @@
     targetPosition = Position.Top,
     borderRadius = 5,
     centerX,
-    centerY
+    centerY,
   }: GetSmoothStepPathParams): string {
     const [_centerX, _centerY, offsetX, offsetY] = getCenter({
       sourceX,
       sourceY,
       targetX,
-      targetY
+      targetY,
     });
     const cornerWidth = Math.min(borderRadius, Math.abs(targetX - sourceX));
     const cornerHeight = Math.min(borderRadius, Math.abs(targetY - sourceY));
@@ -87,7 +87,10 @@
           : leftBottomCorner(targetX, cY, cornerSize);
     }
     // for non-mixed edge left/right
-    if (leftAndRight.includes(sourcePosition) && leftAndRight.includes(targetPosition)) {
+    if (
+      leftAndRight.includes(sourcePosition) &&
+      leftAndRight.includes(targetPosition)
+    ) {
       if (sourceX <= targetX) {
         firstCornerPath =
           sourceY <= targetY
@@ -98,8 +101,10 @@
             ? bottomLeftCorner(cX, targetY, cornerSize)
             : topLeftCorner(cX, targetY, cornerSize);
       } else if (
-        (sourcePosition === Position.Right && targetPosition === Position.Left) ||
-        (sourcePosition === Position.Left && targetPosition === Position.Right) ||
+        (sourcePosition === Position.Right &&
+          targetPosition === Position.Left) ||
+        (sourcePosition === Position.Left &&
+          targetPosition === Position.Right) ||
         (sourcePosition === Position.Left && targetPosition === Position.Left)
       ) {
         // and sourceX > targetX
@@ -113,7 +118,10 @@
             : topRightCorner(cX, targetY, cornerSize);
       }
       // for mixed edges (top/bottom to left/right) OR (left/right to top/bottom)
-    } else if (leftAndRight.includes(sourcePosition) && !leftAndRight.includes(targetPosition)) {
+    } else if (
+      leftAndRight.includes(sourcePosition) &&
+      !leftAndRight.includes(targetPosition)
+    ) {
       if (sourceX <= targetX) {
         firstCornerPath =
           sourceY <= targetY
@@ -126,7 +134,10 @@
             : leftBottomCorner(targetX, sourceY, cornerSize);
       }
       secondCornerPath = '';
-    } else if (!leftAndRight.includes(sourcePosition) && leftAndRight.includes(targetPosition)) {
+    } else if (
+      !leftAndRight.includes(sourcePosition) &&
+      leftAndRight.includes(targetPosition)
+    ) {
       if (sourceX <= targetX) {
         firstCornerPath =
           sourceY <= targetY
@@ -153,7 +164,7 @@
     targetY: edge.targetY,
     sourcePosition: edge.sourcePosition,
     targetPosition: edge.targetPosition,
-    borderRadius: borderRadius
+    borderRadius: borderRadius,
   };
 
   $: [centerX, centerY] = getCenter(params);
@@ -164,7 +175,7 @@
     ...edge,
     path: path,
     centerX: centerX,
-    centerY: centerY
+    centerY: centerY,
   };
 </script>
 

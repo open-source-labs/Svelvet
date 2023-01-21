@@ -14,7 +14,7 @@
     labelTextColor,
     edgeColor,
     centerX,
-    centerY
+    centerY,
   } = baseEdgeProps);
 
   // setting edge text props
@@ -23,14 +23,21 @@
     labelBgColor: labelBgColor,
     labelTextColor: labelTextColor,
     centerX: centerX,
-    centerY: centerY
+    centerY: centerY,
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
 
 <defs>
-  <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto">
+  <marker
+    id="arrow"
+    markerWidth="9"
+    markerHeight="9"
+    refX="8"
+    refY="4"
+    orient="auto"
+  >
     <polygon points={defaultArrow} fill="gray" />
   </marker>
 </defs>

@@ -1,40 +1,38 @@
 <script>
-import { findStore, createStore } from '$lib/stores/storeSchema'
+  import { findStore, createStore } from '$lib/stores/storeSchema';
 
-export let node_id;
+  export let node_id;
 
+  const store = findStore();
+  const { nodesStore, edgesStore, anchorsStore } = store;
 
-const store = findStore();
-const {nodesStore, edgesStore, anchorsStore} = store;
+  let isSelected = false;
 
-let isSelected = false;
-
-let asdf
-$: asdf = $nodesStore[node_id];
+  let asdf;
+  $: asdf = $nodesStore[node_id];
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
-      e.preventDefault();
-      //console.log('we wanna see what is inside the e: ', e)
-      if (isSelected) {
-        //   console.log('this is horizontal mouse movement: ',e.movementX);
-        //   console.log('this is vertical mouse movement', e.movementY)
-        //   $nodesStore[node_id].setPosition(e.movementX, e.movementY)
-        nodesStore.update((nodes) => {
-            const node = nodes[node_id];
-            node.setPosition(e.movementX, e.movementY);
-            return {...nodes}
-        })
-        //   nodesStore.update((nodesObj) => {
-        //     nodesObj[node_id].setPosition(e.movementX, e.movementY)
-        //   })
-      }
+    e.preventDefault();
+    //console.log('we wanna see what is inside the e: ', e)
+    if (isSelected) {
+      //   console.log('this is horizontal mouse movement: ',e.movementX);
+      //   console.log('this is vertical mouse movement', e.movementY)
+      //   $nodesStore[node_id].setPosition(e.movementX, e.movementY)
+      nodesStore.update((nodes) => {
+        const node = nodes[node_id];
+        node.setPosition(e.movementX, e.movementY);
+        return { ...nodes };
+      });
+      //   nodesStore.update((nodesObj) => {
+      //     nodesObj[node_id].setPosition(e.movementX, e.movementY)
+      //   })
+    }
   }}
-
   on:mouseup={(e) => {
-      e.preventDefault();
-      isSelected = false;
+    e.preventDefault();
+    isSelected = false;
   }}
 />
 
@@ -57,12 +55,9 @@ const onMouseMove = (e: any, nodeID: number) => {
 {JSON.stringify(asdf)}
 <div
   on:mousedown={(e) => {
-      e.preventDefault();
-      isSelected = true;
+    e.preventDefault();
+    isSelected = true;
   }}
-
-
-
   class="Node"
   style="left: {asdf.positionX}px;
     top: {asdf.positionY}px;
@@ -73,7 +68,9 @@ const onMouseMove = (e: any, nodeID: number) => {
     border-radius: {5}px;
     color: white;"
   id="svelvet-{node_id}"
->HI IM TEXT</div>
+>
+  HI IM TEXT
+</div>
 
 <style>
   .Node {

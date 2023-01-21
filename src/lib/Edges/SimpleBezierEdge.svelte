@@ -32,7 +32,14 @@
     }
   }
   // get the control point for the bezier curve (in the middle of the edge)
-  function getControlWithCurvature({ pos, x1, y1, x2, y2, c }: GetControlParams): [number, number] {
+  function getControlWithCurvature({
+    pos,
+    x1,
+    y1,
+    x2,
+    y2,
+    c,
+  }: GetControlParams): [number, number] {
     let ctX: number, ctY: number;
     switch (pos) {
       case Position.Left:
@@ -79,7 +86,7 @@
       y1: sourceY,
       x2: targetX,
       y2: targetY,
-      c: curvature
+      c: curvature,
     });
     const [targetControlX, targetControlY] = getControlWithCurvature({
       pos: targetPosition,
@@ -87,7 +94,7 @@
       y1: targetY,
       x2: sourceX,
       y2: sourceY,
-      c: curvature
+      c: curvature,
     });
     return `M${sourceX},${sourceY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${targetX},${targetY}`;
   }
@@ -100,7 +107,7 @@
     targetX,
     targetY,
     targetPosition = Position.Top,
-    curvature = 0.25
+    curvature = 0.25,
   }: GetSimpleBezierPathParams): [number, number, number, number] {
     const [sourceControlX, sourceControlY] = getControlWithCurvature({
       pos: sourcePosition,
@@ -108,7 +115,7 @@
       y1: sourceY,
       x2: targetX,
       y2: targetY,
-      c: curvature
+      c: curvature,
     });
     const [targetControlX, targetControlY] = getControlWithCurvature({
       pos: targetPosition,
@@ -116,14 +123,20 @@
       y1: targetY,
       x2: sourceX,
       y2: sourceY,
-      c: curvature
+      c: curvature,
     });
     // cubic bezier t=0.5 mid point, not the actual mid point, but easy to calculate
     // https://stackoverflow.com/questions/67516101/how-to-find-distance-mid-point-of-bezier-curve
     const centerX =
-      sourceX * 0.125 + sourceControlX * 0.375 + targetControlX * 0.375 + targetX * 0.125;
+      sourceX * 0.125 +
+      sourceControlX * 0.375 +
+      targetControlX * 0.375 +
+      targetX * 0.125;
     const centerY =
-      sourceY * 0.125 + sourceControlY * 0.375 + targetControlY * 0.375 + targetY * 0.125;
+      sourceY * 0.125 +
+      sourceControlY * 0.375 +
+      targetControlY * 0.375 +
+      targetY * 0.125;
     const xOffset = Math.abs(centerX - sourceX);
     const yOffset = Math.abs(centerY - sourceY);
     return [centerX, centerY, xOffset, yOffset];
@@ -131,20 +144,19 @@
 
   export let edge: DerivedEdge;
 
-
-  $:params = {
+  $: params = {
     sourceX: edge.sourceX,
     sourceY: edge.sourceY,
     sourcePosition: edge.sourcePosition,
     targetX: edge.targetX,
     targetY: edge.targetY,
     targetPosition: edge.targetPosition,
-    curvature: 0.25
+    curvature: 0.25,
   };
-  
+
   // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
   $: path = getSimpleBezierPath(params);
-  
+
   $: [centerX, centerY] = getSimpleBezierCenter(params);
 
   // pass necessary values to BaseEdge component
@@ -153,7 +165,7 @@
     ...edge,
     path: path,
     centerX: centerX,
-    centerY: centerY
+    centerY: centerY,
   };
 </script>
 

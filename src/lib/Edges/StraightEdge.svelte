@@ -9,8 +9,14 @@
   $: xOffset = Math.abs(edge.targetX - edge.sourceX) / 2;
   $: yOffset = Math.abs(edge.targetY - edge.sourceY) / 2;
   // determining the center point of the edge to be used in the EdgeText component
-  $: centerX = edge.targetX < edge.sourceX ? edge.targetX + xOffset : edge.targetX - xOffset;
-  $: centerY = edge.targetY < edge.sourceY ? edge.targetY + yOffset : edge.targetY - yOffset;
+  $: centerX =
+    edge.targetX < edge.sourceX
+      ? edge.targetX + xOffset
+      : edge.targetX - xOffset;
+  $: centerY =
+    edge.targetY < edge.sourceY
+      ? edge.targetY + yOffset
+      : edge.targetY - yOffset;
 
   // determine SVG path d (where to be drawn) string value to pass into BaseEdge component
   // path is reactive to current edge source/target X and Y values
@@ -20,7 +26,7 @@
     ...edge,
     path: path,
     centerX: centerX,
-    centerY: centerY
+    centerY: centerY,
   };
 </script>
 

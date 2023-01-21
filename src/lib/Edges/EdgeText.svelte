@@ -3,13 +3,8 @@
 
   // destructuring props to pass into BaseEdge component
   export let edgeTextProps: EdgeTextProps;
-  $: ({
-    label,
-    labelBgColor,
-    labelTextColor,
-    centerX,
-    centerY
-  } = edgeTextProps);
+  $: ({ label, labelBgColor, labelTextColor, centerX, centerY } =
+    edgeTextProps);
 
   const shiftRectY: number = 7;
   $: pxRatio = label.length < 3 ? 9 : 7;

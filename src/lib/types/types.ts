@@ -1,6 +1,5 @@
 import type { XYPosition, Position } from './utils';
 
-
 export interface Node<T = any> {
   id: number;
   position: XYPosition;
