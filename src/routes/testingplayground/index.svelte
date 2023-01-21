@@ -6,7 +6,7 @@
 
 	const initialNodes = [
 		{
-			id: 'node1',
+			id: 1, // this is the userLabel
 			type: 'input',
 			position: { x: 450, y: 100 },
 			data: { label: '1' },
@@ -16,7 +16,7 @@
 			sourcePosition: 'bottom'
 		},
 		{
-			id: 'node2',
+			id: 2, // this is the userLabel
 			type: 'input',
 			position: { x: 650, y: 100 },
 			data: { label: '2' },

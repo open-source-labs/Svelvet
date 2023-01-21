@@ -30,6 +30,7 @@ interface testingCoreStore {
 
 interface NodeType {
     id: string,
+    userLabel: number, // user-defined label
     width: number,
     height: number,
     positionX: number,
@@ -43,7 +44,12 @@ interface EdgeType {
     type: string,
     targetId: number,
     sourceId: number,
-    
+    sourceX: number, 
+    sourceY: number, 
+    targetX: number, 
+    targetY: number,
+    sourceAnchorId: string, 
+    targetAnchorId: string
 }
 
 interface AnchorType {
@@ -78,17 +84,39 @@ export function createStore() {
 
 export class Edge implements EdgeType {
     id: string;
+    sourceAnchorId: string;
+    targetAnchorId: string;
     sourceId: number;
     targetId: number;
     type:string;
+    sourceX: number; 
+    sourceY: number; 
+    targetX: number;
+    targetY: number;
 
-    constructor(id:string, sourceId:number, targetId:number, type:string) {
+
+    constructor(id:string, sourceId:number, targetId:number, type:string, sourceX: number, sourceY: number, targetX: number, targetY: number, sourceAnchorId: string, targetAnchorId: string) {
         this.id = id;
         //surce is the id of the source node
         this.sourceId = sourceId;
         //target is the id of the target node
         this.targetId = targetId;
+        this.sourceX = sourceX;
+        this.sourceY = sourceY;
+        this.targetX = targetX;
+        this.targetY = targetY;
         this.type = type;
+        this.sourceAnchorId = sourceAnchorId;
+        this.targetAnchorId = targetAnchorId;
+    }
+    
+
+    getPosition(userLabel : number) {
+       //look up the node that has the userlabel from the nodesStore
+       
+       //get the id correspond to that node
+
+       //look up the anchor attached to that node
     }
 
     handleDelete() {
@@ -116,14 +144,35 @@ export class Anchor implements AnchorType {
         this.positionY = positionY;
         this.callback = callback;
     }
+    
+    setPosition(movementX: number, movementY: number) {
+        this.positionX += movementX;
+        this.positionY += movementY;
+        //call edge
 
-    getNodeInfo() {
-        console.log('this function should get node info')
+        const store = findStore();
+        const { edgesStore } = store;
+
+        edgesStore.update((edges) => {
+            for (const key in edges) {
+                if (edges[key].sourceAnchorId === this.id) {
+                    edges[key].sourceX += movementX;
+                    edges[key].sourceY += movementY;
+                }
+                if (edges[key].targetAnchorId === this.id) {
+                    edges[key].targetX += movementX;
+                    edges[key].targetY += movementY;
+                }                
+            }
+            return {...edges}
+        })
     }
+    
 }
 
 export class Node implements NodeType {
     id: string
+    userLabel: number
     width: number
     height: number
     positionX: number
@@ -131,8 +180,9 @@ export class Node implements NodeType {
     bgColor: string
     data: string
 
-    constructor(id:string, positionX:number, positionY:number, width:number, height:number, bgColor:string, data:string) {
+    constructor(id:string, userLabel: number, positionX:number, positionY:number, width:number, height:number, bgColor:string, data:string) {
         this.id = id;
+        this.userLabel = userLabel;
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = width;
@@ -155,8 +205,7 @@ export class Node implements NodeType {
             for (const key in anchors) {
                 if (anchors[key].nodeId === this.id) {
                     // console.log('trying to update the anchorsStore')
-                    anchors[key].positionX += movementX;
-                    anchors[key].positionY += movementY;
+                    anchors[key].setPosition(movementX, movementY);
                 }
             }
             return {...anchors}
