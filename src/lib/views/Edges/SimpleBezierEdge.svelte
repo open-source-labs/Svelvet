@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BaseEdge from '$lib/Edges/BaseEdge.svelte';
+  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
   import { Position } from '$lib/types/utils';
   import type { DerivedEdge } from '$lib/types/types';
 

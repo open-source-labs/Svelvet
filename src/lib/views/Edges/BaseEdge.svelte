@@ -1,5 +1,5 @@
 <script lang="ts">
-  import EdgeText from '$lib/Edges/EdgeText.svelte';
+  import EdgeText from '$lib/views/Edges/EdgeText.svelte';
   import type { EdgeProps } from '$lib/types/types';
 
   export let baseEdgeProps: EdgeProps;

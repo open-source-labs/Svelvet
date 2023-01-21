@@ -3,13 +3,13 @@
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
 
-  import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
-  import StraightEdge from '$lib/Edges/StraightEdge.svelte';
-  import SmoothStepEdge from '$lib/Edges/SmoothStepEdge.svelte';
-  import StepEdge from '$lib/Edges/StepEdge.svelte';
-  import EdgeAnchor from '$lib/Edges/EdgeAnchor.svelte';
-  import Node from '$lib/Nodes/index.svelte';
-  import ImageNode from '$lib/Nodes/ImageNode.svelte';
+  import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
+  import StraightEdge from '$lib/views/Edges/StraightEdge.svelte';
+  import SmoothStepEdge from '$lib/views/Edges/SmoothStepEdge.svelte';
+  import StepEdge from '$lib/views/Edges/StepEdge.svelte';
+  import EdgeAnchor from '$lib/views/Edges/EdgeAnchor.svelte';
+  import Node from '$lib/views/Nodes/index.svelte';
+  import ImageNode from '$lib/views/Nodes/ImageNode.svelte';
 
   import { findOrCreateStore } from '$lib/models/store_old';
 

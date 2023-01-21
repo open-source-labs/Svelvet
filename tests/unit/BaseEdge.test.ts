@@ -1,9 +1,11 @@
-import BaseEdge from '$lib/Edges/BaseEdge.svelte';
+import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 afterEach(() => cleanup());
 beforeEach(() => {
-  render(BaseEdge, { baseEdgeProps: { path: 'M 10 10 C 20 20, 40 20, 50 10' } });
+  render(BaseEdge, {
+    baseEdgeProps: { path: 'M 10 10 C 20 20, 40 20, 50 10' },
+  });
 });
 
 test('should mount the path element', async () => {

@@ -1,5 +1,6 @@
 <script>
   import Canvas from '$lib/views/DevTools/Canvas.svelte';
+  import Svelvet from '$lib/views/Containers/Svelvet/index.svelte';
 
   const initialNodes = [
     {
@@ -108,6 +109,12 @@
   ];
 </script>
 
-<!-- <Svelvet nodes={initialNodes} edges={initialEdges} width={900} height={900} background /> -->
+<!-- <Svelvet
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+/> -->
 
 <Canvas nodes={initialNodes} edges={initialEdges} />
