@@ -11,6 +11,7 @@
     $: reactAnchor = $anchorsStore[anchor_id]
 </script>
 
+{JSON.stringify(reactAnchor)}
 
 <div class="Anchor" style="
   left: {reactAnchor.positionX- 5}px;
@@ -25,7 +26,7 @@
 
 <style>
     .Anchor {
-    position: relative;
+    position: absolute;
     display: grid;
     user-select: none;
     cursor: move;

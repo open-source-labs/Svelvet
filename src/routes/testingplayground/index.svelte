@@ -8,11 +8,21 @@
 		{
 			id: 'node1',
 			type: 'input',
-			position: { x: 450, y: 0 },
+			position: { x: 450, y: 100 },
 			data: { label: '1' },
 			width: 175,
 			height: 40,
 			bgColor: 'black',
+			sourcePosition: 'bottom'
+		},
+		{
+			id: 'node2',
+			type: 'input',
+			position: { x: 650, y: 100 },
+			data: { label: '2' },
+			width: 175,
+			height: 40,
+			bgColor: 'blue',
 			sourcePosition: 'bottom'
 		},
 	];

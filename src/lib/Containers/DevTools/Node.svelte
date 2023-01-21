@@ -65,7 +65,7 @@ const onMouseMove = (e: any, nodeID: number) => {
 
   class="Node"
   style="left: {asdf.positionX}px;
-    top: {asdf.positionY + 100}px;
+    top: {asdf.positionY}px;
     width: {asdf.width}px;
     height: {asdf.height}px;
     background-color: {asdf.bgColor};

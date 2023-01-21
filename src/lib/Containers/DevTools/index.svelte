@@ -58,7 +58,9 @@
       const testingNode = tmp[node_ids[0]];
       testingNode.handleDelete();
       
-      Object.values($anchorsStore)[0].callback();
+      Object.values($anchorsStore).forEach((el) => {
+        el.callback();
+      })
       console.log('do we have the right anchorsStore? ', Object.values($anchorsStore)[0]);
       
 

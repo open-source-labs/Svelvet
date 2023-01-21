@@ -43,6 +43,7 @@ interface EdgeType {
     type: string,
     targetId: number,
     sourceId: number,
+    
 }
 
 interface AnchorType {
