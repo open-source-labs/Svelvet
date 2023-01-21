@@ -1,6 +1,6 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
-  import { Edge, Anchor, Node, createStore } from '$lib/stores/svelvetStore';
+  import { Edge, Anchor, Node, createStore } from '$lib/models/store';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/Containers/DevTools/Node.svelte';
   import AnchorComponent from '$lib/Containers/DevTools/Anchor.svelte';

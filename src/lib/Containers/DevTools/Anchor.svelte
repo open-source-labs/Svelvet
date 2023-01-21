@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { findStore, createStore } from '$lib/stores/svelvetStore';
+  import { findStore, createStore } from '$lib/models/store';
 
   export let anchor_id: string;
 
