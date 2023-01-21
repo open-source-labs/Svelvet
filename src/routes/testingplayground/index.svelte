@@ -1,5 +1,5 @@
 <script>
-  import Canvas from '$lib/Containers/DevTools/Canvas.svelte';
+  import Canvas from '$lib/views/DevTools/Canvas.svelte';
 
   const initialNodes = [
     {

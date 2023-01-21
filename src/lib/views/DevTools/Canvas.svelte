@@ -2,9 +2,9 @@
   // Declaring variables for Svelvet components which will be usable in other files
   import { Edge, Anchor, Node, createStore } from '$lib/models/store';
   import { onMount } from 'svelte';
-  import NodeComponent from '$lib/Containers/DevTools/Node.svelte';
-  import AnchorComponent from '$lib/Containers/DevTools/Anchor.svelte';
-  import EdgeComponent from '$lib/Containers/DevTools/Edge.svelte';
+  import NodeComponent from '$lib/views/DevTools/Node.svelte';
+  import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
+  import EdgeComponent from '$lib/views/DevTools/Edge.svelte';
 
   export let nodes;
   export let edges;
