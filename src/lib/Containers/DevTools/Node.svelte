@@ -1,6 +1,5 @@
 <script>
-  import { findStore, createStore } from '$lib/stores/storeSchema';
-
+  import { findStore, createStore } from '$lib/stores/svelvetStore';
   export let node_id;
 
   const store = findStore();

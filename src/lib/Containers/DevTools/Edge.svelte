@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { findStore, createStore } from '$lib/stores/storeSchema';
+  import { findStore, createStore } from '$lib/stores/svelvetStore';
 
   export let edge_id: string;
 
