@@ -17,7 +17,7 @@ export interface TypeUserEdge {
   target: number | string;
   animate: boolean;
   label: string;
-  type: string; // Possible values: 'step'
+  type: string; // TODO: replace with explicit possible values such as 'step'
 }
 
 /*

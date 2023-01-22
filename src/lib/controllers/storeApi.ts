@@ -56,7 +56,7 @@ export function createStoreFromUserInput(
   canvasId: string,
   nodes: TypeUserNode[],
   edges: TypeUserEdge[]
-) {
+): void {
   // find the store
   const store = findStore(canvasId);
   // populate store.nodesStore with user nodes
