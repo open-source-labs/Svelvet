@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
+  import StraightEdge from './StraightEdge.svelte';
 
   // import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
   // import StraightEdge from '$lib/views/Edges/StraightEdge.svelte';
@@ -102,11 +103,11 @@
   {/if}
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
-  <!-- <g>
+  <g>
     {#each edges as edge}
       {#if edge.type === 'straight'}
-        <StraightEdge {edge} />
-      {:else if edge.type === 'smoothstep'}
+        <StraightEdge edgeId={edge.id} {canvasId} />
+        <!-- {:else if edge.type === 'smoothstep'}
         <SmoothStepEdge {edge} />
       {:else if edge.type === 'step'}
         <StepEdge {edge} />
@@ -117,10 +118,10 @@
         <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
         {#if !edge.arrow}
           <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-        {/if}
+        {/if} -->
       {/if}
     {/each}
-  </g> -->
+  </g>
 </svg>
 
 <style>
