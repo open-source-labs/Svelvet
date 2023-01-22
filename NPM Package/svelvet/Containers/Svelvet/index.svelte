@@ -1,5 +1,6 @@
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  // import { v4 as uuidv4 } from 'uuid';
+  //error when importing uuid but only in this folder
   import GraphView from '../GraphView/index.svelte';
   import { findOrCreateStore } from '../../stores/store';
   import { onMount } from 'svelte';
@@ -25,7 +26,7 @@
   export let shareable = false;
   export let deleteNodes = false;
   // generates a unique string for each svelvet component's unique store instance
-  const key = uuidv4();
+  const key = (Math.random() + 1).toString(36).substring(7);
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
   const svelvetStore = findOrCreateStore(key);
