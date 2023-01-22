@@ -1,39 +1,11 @@
 import { writable, derived, get, readable } from 'svelte/store';
 import type { Readable, Writable } from 'svelte/store';
 
-// import type { Node, Edge } from '../types/types';
-/**
- *  When a user install svelvet package into their repo and import Svelvet from Svelvet,
- *  To create a node, the user needs to provide the following information:
- *  [{id, position {x, y}, data, width, height, bgColor}, {}] all required
- *  The position x, y is for the left top corner of the node
- *
- *
- *  To create an edge, the user needs to provide the following information:
- *  {id, source, target} required
- *  {label, labelTextColor, labelBgColor, animate, type, arrow, edgeColor} optional
- *  For now, only focus on the required information for edges
- *
- *
- *  1. We do not want to change the information our user needs to provide to create a node or an edge
- *  2. Is it possible to do OOP for node and edge?
- *  3. Situations for node: Node created / Node moved / Node deleted
- *  4. Situations for edge: Edge created / Edge deleted
- *
- */
-
-export const store = createStore();
-
-function createStore() {
-  const testingCoreStore: testingCoreStore = {
-    nodesStore: writable({}),
-    edgesStore: writable({}),
-    anchorsStore: writable({}),
-  };
-  return testingCoreStore;
-}
-
-interface testingCoreStore {
+/*
+Types:
+Consider moving this to a separate file
+*/
+interface TypeSvelvetStore {
   nodesStore: Writable<{ [key: string]: Node }>;
   edgesStore: Writable<{ [key: string]: Edge }>;
   anchorsStore: Writable<{ [key: string]: Anchor }>;
@@ -73,11 +45,22 @@ interface AnchorType {
   callback: Function;
 }
 
-// this is the "global" store that anybody can access
-// think of it like a database
-
-// Creates a store and assigns it to a "global" variable "store"
-// so that other components can use it
+/*
+  `store` is a dictionary of Svelvet stores.
+    * The reason why we have multiple Svelvet stores is to handle multiple canvases on the same page.
+    * A Svelvet store is the single source of truth for a canvas state.
+    * We discourage developers from interacting with stores directly; instead use the api methods in 
+      `$lib/controllers/storeApi.ts`. However, if need to direct access you can do so by importing:
+      `import { store } from '$lib/models/store';`
+*/
+export const store: TypeSvelvetStore = createStore();
+function createStore() {
+  return {
+    nodesStore: writable({}),
+    edgesStore: writable({}),
+    anchorsStore: writable({}),
+  };
+}
 
 export class Edge implements EdgeType {
   id: string;
@@ -117,18 +100,11 @@ export class Edge implements EdgeType {
     this.targetAnchorId = targetAnchorId;
   }
 
-  getPosition(userLabel: number) {
-    //look up the node that has the userlabel from the nodesStore
-    //get the id correspond to that node
-    //look up the anchor attached to that node
-  }
-
+  // TODO: implement me
   handleDelete() {
-    console.log('Edge handleDelete fired');
+    console.log('deleting edge not implemented yet');
   }
 }
-
-//refactore the nodeStore from array to object
 
 export class Anchor implements AnchorType {
   id: string;
@@ -177,6 +153,11 @@ export class Anchor implements AnchorType {
       }
       return { ...edges };
     });
+  }
+
+  // TODO: implement me
+  handleDelete() {
+    console.log('anchor deletion not yet implemented');
   }
 }
 
@@ -230,7 +211,8 @@ export class Node implements NodeType {
     });
   }
 
+  // TODO: implement me
   handleDelete() {
-    console.log('Node handleDelete fired');
+    console.log('node deletion not yet implemented');
   }
 }

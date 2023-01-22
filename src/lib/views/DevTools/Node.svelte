@@ -14,19 +14,12 @@
 <svelte:window
   on:mousemove={(e) => {
     e.preventDefault();
-    //console.log('we wanna see what is inside the e: ', e)
     if (isSelected) {
-      //   console.log('this is horizontal mouse movement: ',e.movementX);
-      //   console.log('this is vertical mouse movement', e.movementY)
-      //   $nodesStore[node_id].setPosition(e.movementX, e.movementY)
       nodesStore.update((nodes) => {
         const node = nodes[node_id];
         node.setPosition(e.movementX, e.movementY);
         return { ...nodes };
       });
-      //   nodesStore.update((nodesObj) => {
-      //     nodesObj[node_id].setPosition(e.movementX, e.movementY)
-      //   })
     }
   }}
   on:mouseup={(e) => {
