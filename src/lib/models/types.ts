@@ -56,8 +56,8 @@ export interface EdgeType {
 export interface AnchorType {
   id: string;
   nodeId: string;
-  edgeId: string;
-  sourceOrSink: string;
+  edgeUserLabel: string;
+  sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
   callback: Function;

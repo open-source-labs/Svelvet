@@ -63,8 +63,8 @@ export class Edge implements EdgeType {
 export class Anchor implements AnchorType {
   id: string;
   nodeId: string;
-  edgeId: string;
-  sourceOrSink: string;
+  edgeUserLabel: string;
+  sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
   callback: Function;
@@ -73,8 +73,8 @@ export class Anchor implements AnchorType {
   constructor(
     id: string,
     nodeId: string,
-    edgeId: string,
-    sourceOrSink: string,
+    edgeUserLabel: string,
+    sourceOrTarget: 'source' | 'target',
     positionX: number,
     positionY: number,
     callback: Function,
@@ -82,8 +82,8 @@ export class Anchor implements AnchorType {
   ) {
     this.id = id;
     this.nodeId = nodeId;
-    this.edgeId = edgeId;
-    this.sourceOrSink = sourceOrSink;
+    this.edgeUserLabel = edgeUserLabel;
+    this.sourceOrTarget = sourceOrTarget;
     this.positionX = positionX;
     this.positionY = positionY;
     this.callback = callback;

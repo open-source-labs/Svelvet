@@ -27,31 +27,6 @@
 
   onMount(() => {
     const mapLabelToId = createStoreFromUserInput(canvasId, nodes, edges);
-
-    // const objEdges = {};
-    // arrEdges.forEach((parsedEdge: object, idx: number) => {
-    //   // 		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
-    //   const { source, target, type } = parsedEdge;
-    //   const arr4 = arr2[idx];
-    //   const sourceAnchor = arr4[0];
-    //   const targetAnchor = arr4[1];
-    //   // create edge
-    //   const edge_id = (Math.random() + 1).toString(36).substring(7);
-    //   objEdges[edge_id] = new Edge(
-    //     edge_id,
-    //     source,
-    //     target,
-    //     type,
-    //     sourceAnchor.positionX,
-    //     sourceAnchor.positionY,
-    //     targetAnchor.positionX,
-    //     targetAnchor.positionY,
-    //     sourceAnchor.id,
-    //     targetAnchor.id,
-    //     canvasId
-    //   );
-    // });
-    // testingStore.edgesStore.set(objEdges);
   });
 </script>
 

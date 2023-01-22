@@ -8,13 +8,14 @@ import type {
 } from '$lib/models/types';
 import { Edge, Anchor, Node } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes } from './storeApi';
+import { getNodes, getAnchors } from './storeApi';
 
 function createAnchor(
   store: StoreType,
   nodeId: string,
-  sourceOrSink: string,
-  canvasId: string
+  sourceOrTarget: 'source' | 'target',
+  canvasId: string,
+  edgeUserLabel: string
 ) {
   const anchorId = (Math.random() + 1).toString(36).substring(7);
 
@@ -37,8 +38,8 @@ function createAnchor(
   const anchor = new Anchor(
     anchorId,
     nodeId,
-    '', // edgeId
-    sourceOrSink,
+    edgeUserLabel,
+    sourceOrTarget,
     -1,
     -1,
     anchor_cb,
@@ -46,6 +47,52 @@ function createAnchor(
   );
   // return
   return anchor;
+}
+
+export function populateEdgesStore(
+  store: StoreType,
+  edges: TypeUserEdge[],
+  canvasId: string
+) {
+  const edgesStore = {};
+  for (let i = 0; i < edges.length; i++) {
+    const userEdge = edges[i];
+    //  { id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
+    // source is node.userLabel for the source node
+    // target is node.userLabel for the target node
+    // We need to get the anchors
+    const {
+      source: sourceNodeUserLabel,
+      target: targetNodeUserLabel,
+      id: edgeUserLabel,
+      type,
+    } = userEdge;
+
+    const anchors = getAnchors(store, { edgeUserLabel: edgeUserLabel });
+    // check that we have two anchors for every edge
+    if (anchors.length !== 2) throw 'We should have two anchors for every node';
+    // check that we have 1 source anchor and 1 target anchor
+    console.log(anchors);
+    //   const arr4 = arr2[idx];
+    //   const sourceAnchor = arr4[0];
+    //   const targetAnchor = arr4[1];
+    //   // create edge
+    //   const edge_id = (Math.random() + 1).toString(36).substring(7);
+    //   edgesStore[edge_id] = new Edge(
+    //     edge_id,
+    //     source,
+    //     target,
+    //     type,
+    //     sourceAnchor.positionX,
+    //     sourceAnchor.positionY,
+    //     targetAnchor.positionX,
+    //     targetAnchor.positionY,
+    //     sourceAnchor.id,
+    //     targetAnchor.id,
+    //     canvasId
+    //   );
+  }
+  store.edgesStore.set(edgesStore);
 }
 
 export function populateAnchorsStore(
@@ -65,16 +112,28 @@ export function populateAnchorsStore(
   const mapNodeUserLabelToId = Object.fromEntries(arrNodeIdsAndUserLabels);
 
   for (let i = 0; i < edges.length; i++) {
-    const edge = edges[i];
+    const userEdge = edges[i];
     // source, target are userLabels, not ids. We need to use source and target to look up the appropriate node in nodesStore and find the node_id
-    const { source: sourceUserLabel, target: targetUserLabel, type } = edge;
+    const { source: sourceUserLabel, target: targetUserLabel, type } = userEdge;
     // create source anchor
     const sourceNodeId = mapNodeUserLabelToId[sourceUserLabel]; // TODO: refactor this out
-    const sourceAnchor = createAnchor(store, sourceNodeId, 'source', canvasId);
+    const sourceAnchor = createAnchor(
+      store,
+      sourceNodeId,
+      'source',
+      canvasId,
+      userEdge.id
+    );
     anchorsStore[sourceAnchor.id] = sourceAnchor;
     // create target anchor
     const targetNodeId = mapNodeUserLabelToId[targetUserLabel]; // TODO: refactor this out
-    const targetAnchor = createAnchor(store, targetNodeId, 'target', canvasId);
+    const targetAnchor = createAnchor(
+      store,
+      targetNodeId,
+      'target',
+      canvasId,
+      userEdge.id
+    );
     anchorsStore[targetAnchor.id] = targetAnchor;
   }
 
