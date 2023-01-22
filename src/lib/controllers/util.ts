@@ -15,9 +15,9 @@ function createAnchor(
   nodeId: string,
   sourceOrTarget: 'source' | 'target',
   canvasId: string,
-  edgeUserLabel: string
+  edgeId: string
 ) {
-  const anchorId = (Math.random() + 1).toString(36).substring(7);
+  const id = (Math.random() + 1).toString(36).substring(7); // TODO: replace with uuid
 
   // This is a callback. It runs later
   // When it runs, it will set the position of the anchor depending
@@ -29,15 +29,15 @@ function createAnchor(
     const { positionX, positionY, width, height } = node;
     // calculate the position of the anchor and set
     const anchorsStore = get(store.anchorsStore);
-    anchorsStore[anchorId].positionX = positionX + width / 2;
-    anchorsStore[anchorId].positionY = positionY;
+    anchorsStore[id].positionX = positionX + width / 2;
+    anchorsStore[id].positionY = positionY;
   };
 
   // Create a new anchor
   const anchor = new Anchor(
-    anchorId,
+    id,
     nodeId,
-    edgeUserLabel,
+    edgeId,
     sourceOrTarget,
     -1,
     -1,
@@ -57,13 +57,13 @@ export function populateEdgesStore(
   for (let i = 0; i < edges.length; i++) {
     const userEdge = edges[i];
     //  { id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
-    // source is node.userLabel for the source node
-    // target is node.userLabel for the target node
+    // source is node.id for the source node
+    // target is node.id for the target node
     // We need to get the anchors
     const {
-      source: sourceNodeUserLabel,
-      target: targetNodeUserLabel,
-      id: edgeUserLabel,
+      source: sourceNodeId,
+      target: targetNodeId,
+      id: edgeId,
       type,
       label,
       labelBgColor,
@@ -74,7 +74,7 @@ export function populateEdgesStore(
       arrow,
     } = userEdge;
 
-    const anchors = getAnchors(store, { edgeUserLabel: edgeUserLabel });
+    const anchors = getAnchors(store, { edgeId: edgeId });
     // check that we have two anchors for every edge
     if (anchors.length !== 2) throw 'We should have two anchors for every node';
     // check that we have 1 source anchor and 1 target anchor. Since sourceOrTarget is typed to be either 'source'
@@ -92,11 +92,10 @@ export function populateEdgesStore(
     }
 
     // create edge
-    const edgeId = (Math.random() + 1).toString(36).substring(7);
     const params = {
       id: edgeId,
-      sourceId: sourceNodeUserLabel.toString(),
-      targetId: targetNodeUserLabel.toString(),
+      sourceId: sourceNodeId.toString(),
+      targetId: targetNodeId.toString(),
       type,
       sourceX: sourceAnchor.positionX,
       sourceY: sourceAnchor.positionY,
@@ -105,7 +104,6 @@ export function populateEdgesStore(
       sourceAnchorId: sourceAnchor.id,
       targetAnchorId: targetAnchor.id,
       canvasId,
-      userLabel: edgeUserLabel,
       label,
       labelBgColor,
       labelTextColor,
@@ -129,7 +127,6 @@ export function populateAnchorsStore(
   const anchorsStore: { [key: string]: AnchorType } = {};
   for (let i = 0; i < edges.length; i++) {
     const userEdge = edges[i];
-    // source, target are userLabels, not ids. We need to use source and target to look up the appropriate node in nodesStore and find the node_id
     const { source: sourceNodeId, target: targetNodeId, type } = userEdge;
     // create source anchor
     const sourceAnchor = createAnchor(
@@ -168,8 +165,6 @@ export function populateNodesStore(
 ) {
   // this is the nodesStore object
   const nodesStore: { [key: string]: NodeType } = {};
-  // this is a map between userLabel : nodeId
-  const mapLabelToId: { [key: string]: string } = {};
   // iterate through user nodes and create node objects
   for (let i = 0; i < nodes.length; i++) {
     const userNode: UserNodeType = nodes[i];

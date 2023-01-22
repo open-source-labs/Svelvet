@@ -25,7 +25,6 @@ export class Edge implements EdgeType {
   sourceY: number;
   targetX: number;
   targetY: number;
-  userLabel: string;
   label: string;
   labelBgColor?: string;
   labelTextColor?: string;
@@ -46,7 +45,6 @@ export class Edge implements EdgeType {
     sourceAnchorId,
     targetAnchorId,
     canvasId,
-    userLabel,
     label,
     labelBgColor,
     labelTextColor,
@@ -66,7 +64,6 @@ export class Edge implements EdgeType {
     sourceAnchorId: string;
     targetAnchorId: string;
     canvasId: string;
-    userLabel: string;
     label: string;
     labelBgColor?: string;
     labelTextColor?: string;
@@ -88,7 +85,6 @@ export class Edge implements EdgeType {
     this.sourceAnchorId = sourceAnchorId;
     this.targetAnchorId = targetAnchorId;
     this.canvasId = canvasId;
-    this.userLabel = userLabel;
     this.label = label;
     this.labelBgColor = labelBgColor;
     this.labelTextColor = labelTextColor;
@@ -107,7 +103,7 @@ export class Edge implements EdgeType {
 export class Anchor implements AnchorType {
   id: string;
   nodeId: string;
-  edgeUserLabel: string;
+  edgeId: string;
   sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
@@ -117,7 +113,7 @@ export class Anchor implements AnchorType {
   constructor(
     id: string,
     nodeId: string,
-    edgeUserLabel: string,
+    edgeId: string,
     sourceOrTarget: 'source' | 'target',
     positionX: number,
     positionY: number,
@@ -126,7 +122,7 @@ export class Anchor implements AnchorType {
   ) {
     this.id = id;
     this.nodeId = nodeId;
-    this.edgeUserLabel = edgeUserLabel;
+    this.edgeId = edgeId;
     this.sourceOrTarget = sourceOrTarget;
     this.positionX = positionX;
     this.positionY = positionY;
@@ -137,7 +133,6 @@ export class Anchor implements AnchorType {
   setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;
     this.positionY += movementY;
-    //call edge
 
     const { edgesStore } = stores[this.canvasId];
 

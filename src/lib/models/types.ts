@@ -66,8 +66,7 @@ export interface NodeType {
 }
 
 export interface EdgeType {
-  id: string; // this is generated automatically, not the same as userLabel
-  userLabel: string; // this is userEdge.id
+  id: string;
   type?: string;
   targetId: string;
   sourceId: string;
@@ -87,9 +86,9 @@ export interface EdgeType {
 }
 
 export interface AnchorType {
-  id: string;
+  id: string; // note that the user never specifies an anchor and they are generated dynamically. id will be a random string.
   nodeId: string;
-  edgeUserLabel: string;
+  edgeId: string;
   sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
