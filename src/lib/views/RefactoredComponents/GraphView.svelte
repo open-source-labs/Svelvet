@@ -7,7 +7,7 @@
   // import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
   // import StraightEdge from '$lib/views/Edges/StraightEdge.svelte';
   import SmoothStepEdge from './SmoothStepEdge.svelte';
-  // import StepEdge from '$lib/views/Edges/StepEdge.svelte';
+  import StepEdge from './StepEdge.svelte';
   // import EdgeAnchor from '$lib/views/Edges/EdgeAnchor.svelte';
   import Node from './Node.svelte';
   // import ImageNode from '$lib/views/Nodes/ImageNode.svelte';
@@ -109,9 +109,9 @@
         <StraightEdge edgeId={edge.id} {canvasId} />
       {:else if edge.type === 'smoothstep'}
         <SmoothStepEdge {edge} />
-        <!-- {:else if edge.type === 'step'}
+      {:else if edge.type === 'step'}
         <StepEdge {edge} />
-      {:else}
+        <!-- {:else}
         <SimpleBezierEdge {edge} />
       {/if}
       {#if !edge.noHandle}
