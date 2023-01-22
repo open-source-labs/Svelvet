@@ -1,48 +1,17 @@
 import { writable, derived, get, readable } from 'svelte/store';
 import type { Readable, Writable } from 'svelte/store';
+import type { NodeType, EdgeType, AnchorType } from './types';
 
 /*
-Types:
-Consider moving this to a separate file
+Type for a single svelvet store
+The reason why we put svelvetStoreType in store.ts and not in types.ts is because
+developers should not be interacting with the store directly, and thus should not have
+need of svelvetStoreType outside of store.ts
 */
-interface TypeSvelvetStore {
-  nodesStore: Writable<{ [key: string]: Node }>;
-  edgesStore: Writable<{ [key: string]: Edge }>;
-  anchorsStore: Writable<{ [key: string]: Anchor }>;
-}
-
-interface NodeType {
-  id: string;
-  userLabel: number; // user-defined label
-  width: number;
-  height: number;
-  positionX: number;
-  positionY: number;
-  bgColor: string;
-  data: string;
-}
-
-interface EdgeType {
-  id: string;
-  type: string;
-  targetId: number;
-  sourceId: number;
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  sourceAnchorId: string;
-  targetAnchorId: string;
-}
-
-interface AnchorType {
-  id: string;
-  nodeId: string;
-  edgeId: string;
-  sourceOrSink: string;
-  positionX: number;
-  positionY: number;
-  callback: Function;
+interface svelvetStoreType {
+  nodesStore: Writable<{ [key: string]: NodeType }>;
+  edgesStore: Writable<{ [key: string]: EdgeType }>;
+  anchorsStore: Writable<{ [key: string]: AnchorType }>;
 }
 
 /*
@@ -53,7 +22,7 @@ interface AnchorType {
       `$lib/controllers/storeApi.ts`. However, if need to direct access you can do so by importing:
       `import { store } from '$lib/models/store';`
 */
-export const store: TypeSvelvetStore = createStore();
+export const store: svelvetStoreType = createStore();
 function createStore() {
   return {
     nodesStore: writable({}),
