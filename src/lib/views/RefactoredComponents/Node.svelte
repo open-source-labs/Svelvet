@@ -5,8 +5,8 @@
     EdgeType,
     AnchorType,
     StoreType,
-    TypeUserNode,
-    TypeUserEdge,
+    UserNodeType,
+    UserEdgeType,
   } from '$lib/models/types';
   export let nodeId: string;
   export let canvasId: string;
@@ -15,7 +15,6 @@
   const { nodesStore, edgesStore, anchorsStore } = store;
 
   let isSelected = false;
-
   let node: NodeType;
   $: node = $nodesStore[nodeId];
 </script>
@@ -37,22 +36,6 @@
   }}
 />
 
-<!-- // This is the function handler for the mouseMove event to update the position of the selected node.
-const onMouseMove = (e: any, nodeID: number) => {
-  coreSvelvetStore.nodesStore.update((n) => {
-    n.forEach((node: Node) => {
-      if (node.id === nodeID) {
-        //retrieve d3Scale value from store
-        const scale = get(coreSvelvetStore.d3Scale);
-        // divide the movement value by scale to keep it proportional to d3Zoom transformations
-        node.position.x += e.movementX / scale;
-        node.position.y += e.movementY / scale;
-      }
-    });
-    return [...n];
-  });
-}; -->
-
 <div
   on:mousedown={(e) => {
     e.preventDefault();
@@ -64,11 +47,23 @@ const onMouseMove = (e: any, nodeID: number) => {
     width: {node.width}px;
     height: {node.height}px;
     background-color: {node.bgColor};
-    border-color: {node.bgColor};
-    border-radius: {5}px;
-    color: white;"
-  id="svelvet-{nodeId}"
-/>
+    border-color: {node.borderColor};
+    border-radius: {node.borderRadius}px;
+    color: {node.textColor};"
+  id="svelvet-{node.id}"
+>
+  <!-- This executes if node.image is present without node.label -->
+  {#if node.image}
+    <img
+      src={node.src}
+      alt=""
+      style="width: {node.width * 0.75}px;
+			 height: {node.height * 0.75}px;
+       overflow: hidden;"
+    />
+  {/if}
+  <slot />
+</div>
 
 <style>
   .Node {

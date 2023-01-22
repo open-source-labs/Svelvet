@@ -8,6 +8,7 @@
   import {
     createStoreEmpty,
     createStoreFromUserInput,
+    getNodes,
   } from '$lib/controllers/storeApi';
   import type {
     NodeType,
@@ -22,20 +23,27 @@
   export let edges: UserEdgeType[];
 
   const canvasId: string = (Math.random() + 1).toString(36).substring(7);
-  const testingStore = createStoreEmpty(canvasId);
-  const { nodesStore, edgesStore, anchorsStore } = testingStore;
+  const store = createStoreEmpty(canvasId);
+  const { nodesStore, edgesStore, anchorsStore } = store;
 
   onMount(() => {
     createStoreFromUserInput(canvasId, nodes, edges);
   });
+
+  $: reactiveNodes = Object.keys($nodesStore);
+  $: reactiveAnchors = Object.keys($anchorsStore);
 </script>
 
 <div>
-  {#each Object.keys($nodesStore) as node_id}
-    <NodeComponent {node_id} {canvasId} />
+  <!-- {#each reactiveNodes as node}
+    <NodeComponent nodeId={node.id} {canvasId} />
+  {/each} -->
+
+  {#each reactiveNodes as nodeId}
+    <NodeComponent {nodeId} {canvasId} />
   {/each}
 
-  {#each Object.keys($anchorsStore) as anchor_id}
+  {#each reactiveAnchors as anchor_id}
     <AnchorComponent {anchor_id} {canvasId} />
   {/each}
 </div>

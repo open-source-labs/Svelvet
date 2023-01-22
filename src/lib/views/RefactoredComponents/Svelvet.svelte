@@ -13,7 +13,7 @@
     createStoreFromUserInput,
   } from '$lib/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
-  import Canvas from '../DevTools/Canvas.svelte';
+  import GraphView from './GraphView.svelte';
 
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: UserNodeType[];
@@ -52,7 +52,7 @@
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <div class="Svelvet" style={`width: ${900}px; height: ${1200}px`}>
-  <!-- <GraphView {nodesStore} {derivedEdges} {key} /> -->
+  <GraphView {canvasId} />
 </div>
 
 <style>

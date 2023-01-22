@@ -11,8 +11,6 @@
   $: reactAnchor = $anchorsStore[anchor_id];
 </script>
 
-{JSON.stringify(reactAnchor)}
-
 <div
   class="Anchor"
   style="
