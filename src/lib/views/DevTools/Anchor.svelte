@@ -1,5 +1,6 @@
 <script lang="ts">
   import { findStore } from '$lib/controllers/storeApi';
+  import type { AnchorType } from '$lib/models/types';
 
   export let anchor_id: string;
   export let canvasId: string;
@@ -7,7 +8,7 @@
   const store = findStore(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = store;
 
-  let reactAnchor;
+  let reactAnchor: AnchorType;
   $: reactAnchor = $anchorsStore[anchor_id];
 </script>
 
