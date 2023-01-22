@@ -25,20 +25,38 @@ export class Edge implements EdgeType {
   sourceY: number;
   targetX: number;
   targetY: number;
+  userLabel: string;
+  label: string;
 
-  constructor(
-    id: string,
-    sourceId: string,
-    targetId: string,
-    type: string,
-    sourceX: number,
-    sourceY: number,
-    targetX: number,
-    targetY: number,
-    sourceAnchorId: string,
-    targetAnchorId: string,
-    canvasId: string
-  ) {
+  constructor({
+    id,
+    sourceId,
+    targetId,
+    type,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourceAnchorId,
+    targetAnchorId,
+    canvasId,
+    userLabel,
+    label,
+  }: {
+    id: string;
+    sourceId: string;
+    targetId: string;
+    type: string;
+    sourceX: number;
+    sourceY: number;
+    targetX: number;
+    targetY: number;
+    sourceAnchorId: string;
+    targetAnchorId: string;
+    canvasId: string;
+    userLabel: string;
+    label: string;
+  }) {
     this.id = id;
     //surce is the id of the source node
     this.sourceId = sourceId;
@@ -52,6 +70,8 @@ export class Edge implements EdgeType {
     this.sourceAnchorId = sourceAnchorId;
     this.targetAnchorId = targetAnchorId;
     this.canvasId = canvasId;
+    this.userLabel = userLabel;
+    this.label = label;
   }
 
   // TODO: implement me

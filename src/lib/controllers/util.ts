@@ -65,6 +65,7 @@ export function populateEdgesStore(
       target: targetNodeUserLabel,
       id: edgeUserLabel,
       type,
+      label,
     } = userEdge;
 
     const anchors = getAnchors(store, { edgeUserLabel: edgeUserLabel });
@@ -86,19 +87,23 @@ export function populateEdgesStore(
 
     // create edge
     const edgeId = (Math.random() + 1).toString(36).substring(7);
-    edgesStore[edgeId] = new Edge(
-      edgeId,
-      sourceNodeUserLabel.toString(),
-      targetNodeUserLabel.toString(),
+    const params = {
+      id: edgeId,
+      sourceId: sourceNodeUserLabel.toString(),
+      targetId: targetNodeUserLabel.toString(),
       type,
-      sourceAnchor.positionX,
-      sourceAnchor.positionY,
-      targetAnchor.positionX,
-      targetAnchor.positionY,
-      sourceAnchor.id,
-      targetAnchor.id,
-      canvasId
-    );
+      sourceX: sourceAnchor.positionX,
+      sourceY: sourceAnchor.positionY,
+      targetX: targetAnchor.positionX,
+      targetY: targetAnchor.positionY,
+      sourceAnchorId: sourceAnchor.id,
+      targetAnchorId: targetAnchor.id,
+      canvasId,
+      userLabel: edgeUserLabel,
+      label,
+    };
+
+    edgesStore[edgeId] = new Edge(params);
   }
   store.edgesStore.set(edgesStore);
 }

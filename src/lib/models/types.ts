@@ -20,9 +20,14 @@ export interface UserEdgeType {
   id: string;
   source: number | string;
   target: number | string;
-  animate: boolean;
-  label: string;
-  type: string; // TODO: replace with explicit possible values such as 'step'
+  label?: string;
+  labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
+  type?: string;
+  animate?: boolean;
+  noHandle?: boolean;
+  arrow?: boolean;
 }
 
 /*
