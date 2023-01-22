@@ -30,7 +30,7 @@
       data: { label: 'Output Node' },
       width: 100,
       height: 40,
-      bgColor: '#FFE4E6',
+      bgColor: 'white',
       textColor: 'black',
     },
     {
@@ -49,7 +49,7 @@
       data: { label: 'Custom Node' },
       width: 125,
       height: 40,
-      bgColor: '#C8FFC7',
+      bgColor: 'green',
       textColor: 'black',
       borderColor: 'transparent',
       borderRadius: 0,
@@ -62,7 +62,7 @@
       height: 80,
       borderColor: '#FF4121',
       borderRadius: 30,
-      bgColor: 'white',
+      bgColor: 'grey',
       textColor: '#FF4121',
     },
   ];
