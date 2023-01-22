@@ -30,14 +30,14 @@ export class Edge implements EdgeType {
     id: string,
     sourceId: string,
     targetId: string,
+    sourceAnchorId: string,
+    targetAnchorId: string,
+    canvasId: string,
     type: string,
     sourceX: number,
     sourceY: number,
     targetX: number,
-    targetY: number,
-    sourceAnchorId: string,
-    targetAnchorId: string,
-    canvasId: string
+    targetY: number
   ) {
     this.id = id;
     //surce is the id of the source node

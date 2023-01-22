@@ -39,18 +39,18 @@ export interface NodeType {
   bgColor: string;
   data: string; // This is a JSON string
   setPosition: Function;
-  borderColor: string;
-  image: boolean;
-  src: string;
-  textColor: string;
-  targetPosition: 'left ' | 'right' | 'top' | 'bottom';
-  sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
-  borderRadius: number;
+  borderColor?: string;
+  image?: boolean;
+  src?: string;
+  textColor?: string;
+  targetPosition?: 'left ' | 'right' | 'top' | 'bottom';
+  sourcePosition?: 'left ' | 'right' | 'top' | 'bottom';
+  borderRadius?: number;
 }
 
 export interface EdgeType {
   id: string; // this is generated automatically, not the same as userLabel
-  userLabel: string; // this is userEdge.id
+  userLabel?: string; // this is userEdge.id
   type: string;
   targetId: string;
   sourceId: string;
@@ -60,7 +60,7 @@ export interface EdgeType {
   targetY: number;
   sourceAnchorId: string;
   targetAnchorId: string;
-  label: string;
+  label?: string;
 }
 
 export interface AnchorType {
