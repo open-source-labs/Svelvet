@@ -28,10 +28,6 @@
   onMount(() => {
     const mapLabelToId = createStoreFromUserInput(canvasId, nodes, edges);
 
-    const arrEdges = edges.map((edge) => {
-      return edge;
-    });
-
     // const objEdges = {};
     // arrEdges.forEach((parsedEdge: object, idx: number) => {
     //   // 		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
