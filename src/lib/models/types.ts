@@ -38,13 +38,14 @@ export interface NodeType {
   positionY: number;
   bgColor: string;
   data: string;
+  setPosition: Function;
 }
 
 export interface EdgeType {
   id: string;
   type: string;
-  targetId: number;
-  sourceId: number;
+  targetId: string;
+  sourceId: string;
   sourceX: number;
   sourceY: number;
   targetX: number;

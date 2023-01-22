@@ -18,8 +18,8 @@ export class Edge implements EdgeType {
   canvasId: string;
   sourceAnchorId: string;
   targetAnchorId: string;
-  sourceId: number;
-  targetId: number;
+  sourceId: string;
+  targetId: string;
   type: string;
   sourceX: number;
   sourceY: number;
@@ -28,8 +28,8 @@ export class Edge implements EdgeType {
 
   constructor(
     id: string,
-    sourceId: number,
-    targetId: number,
+    sourceId: string,
+    targetId: string,
     type: string,
     sourceX: number,
     sourceY: number,

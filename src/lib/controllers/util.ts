@@ -54,7 +54,7 @@ export function populateEdgesStore(
   edges: TypeUserEdge[],
   canvasId: string
 ) {
-  const edgesStore = {};
+  const edgesStore: { [key: string]: EdgeType } = {};
   for (let i = 0; i < edges.length; i++) {
     const userEdge = edges[i];
     //  { id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
@@ -71,26 +71,35 @@ export function populateEdgesStore(
     const anchors = getAnchors(store, { edgeUserLabel: edgeUserLabel });
     // check that we have two anchors for every edge
     if (anchors.length !== 2) throw 'We should have two anchors for every node';
-    // check that we have 1 source anchor and 1 target anchor
-    console.log(anchors);
-    //   const arr4 = arr2[idx];
-    //   const sourceAnchor = arr4[0];
-    //   const targetAnchor = arr4[1];
-    //   // create edge
-    //   const edge_id = (Math.random() + 1).toString(36).substring(7);
-    //   edgesStore[edge_id] = new Edge(
-    //     edge_id,
-    //     source,
-    //     target,
-    //     type,
-    //     sourceAnchor.positionX,
-    //     sourceAnchor.positionY,
-    //     targetAnchor.positionX,
-    //     targetAnchor.positionY,
-    //     sourceAnchor.id,
-    //     targetAnchor.id,
-    //     canvasId
-    //   );
+    // check that we have 1 source anchor and 1 target anchor. Since sourceOrTarget is typed to be either 'source'
+    //   or 'target', it suffices to check whether there are two unique elements
+    if (new Set(anchors.map((e) => e.sourceOrTarget)).size !== 2)
+      throw 'we should have one source and one target anchor';
+    // get source and target anchor
+    let sourceAnchor, targetAnchor;
+    if (anchors[0].sourceOrTarget === 'source') {
+      sourceAnchor = anchors[0];
+      targetAnchor = anchors[1];
+    } else {
+      sourceAnchor = anchors[1];
+      targetAnchor = anchors[0];
+    }
+
+    // create edge
+    const edgeId = (Math.random() + 1).toString(36).substring(7);
+    edgesStore[edgeId] = new Edge(
+      edgeId,
+      sourceNodeUserLabel.toString(),
+      targetNodeUserLabel.toString(),
+      type,
+      sourceAnchor.positionX,
+      sourceAnchor.positionY,
+      targetAnchor.positionX,
+      targetAnchor.positionY,
+      sourceAnchor.id,
+      targetAnchor.id,
+      canvasId
+    );
   }
   store.edgesStore.set(edgesStore);
 }

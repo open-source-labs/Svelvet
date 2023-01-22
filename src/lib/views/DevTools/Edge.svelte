@@ -1,13 +1,20 @@
 <script lang="ts">
   import { findStore } from '$lib/controllers/storeApi';
-
+  import type {
+    NodeType,
+    EdgeType,
+    AnchorType,
+    StoreType,
+    TypeUserNode,
+    TypeUserEdge,
+  } from '$lib/models/types';
   export let edge_id: string;
   export let canvasId: string;
 
   const store = findStore(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = store;
 
-  let reactEdge: object;
+  let reactEdge: EdgeType;
   $: reactEdge = $edgesStore[edge_id];
   console.log('reactEdge', JSON.stringify(reactEdge));
 </script>

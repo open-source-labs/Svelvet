@@ -1,5 +1,13 @@
 <script lang="ts">
   import { findStore } from '$lib/controllers/storeApi';
+  import type {
+    NodeType,
+    EdgeType,
+    AnchorType,
+    StoreType,
+    TypeUserNode,
+    TypeUserEdge,
+  } from '$lib/models/types';
   export let node_id: string;
   export let canvasId: string;
 
@@ -8,8 +16,8 @@
 
   let isSelected = false;
 
-  let asdf;
-  $: asdf = $nodesStore[node_id];
+  let node: NodeType;
+  $: node = $nodesStore[node_id];
 </script>
 
 <svelte:window
@@ -45,19 +53,19 @@ const onMouseMove = (e: any, nodeID: number) => {
   });
 }; -->
 
-{JSON.stringify(asdf)}
+{JSON.stringify(node)}
 <div
   on:mousedown={(e) => {
     e.preventDefault();
     isSelected = true;
   }}
   class="Node"
-  style="left: {asdf.positionX}px;
-    top: {asdf.positionY}px;
-    width: {asdf.width}px;
-    height: {asdf.height}px;
-    background-color: {asdf.bgColor};
-    border-color: {asdf.bgColor};
+  style="left: {node.positionX}px;
+    top: {node.positionY}px;
+    width: {node.width}px;
+    height: {node.height}px;
+    background-color: {node.bgColor};
+    border-color: {node.bgColor};
     border-radius: {5}px;
     color: white;"
   id="svelvet-{node_id}"
