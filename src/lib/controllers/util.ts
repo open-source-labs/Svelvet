@@ -8,6 +8,7 @@ import type {
 } from '$lib/models/types';
 import { Edge, Anchor, Node } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
+import { getNodes } from './storeApi';
 
 function createAnchor(
   store: StoreType,
@@ -50,23 +51,29 @@ function createAnchor(
 export function populateAnchorsStore(
   store: StoreType,
   edges: TypeUserEdge[],
-  canvasId: string,
-  mapLabelToId: { [key: string]: string }
+  canvasId: string
 ) {
   // anchorsStore will populated and synchronized to store.anchorsStore
   const anchorsStore: { [key: string]: AnchorType } = {};
-  const arr2 = [];
+  // calculate mapNodeUserLabelToId, which is an object that maps node.userLabel to node.id
+  // Example usage: const nodeId = mapNodeUserLabelToId[nodeUserLabel]
+  const nodes = getNodes(store);
+  const arrNodeIdsAndUserLabels = nodes.map((node) => [
+    node.userLabel,
+    node.id,
+  ]);
+  const mapNodeUserLabelToId = Object.fromEntries(arrNodeIdsAndUserLabels);
 
   for (let i = 0; i < edges.length; i++) {
     const edge = edges[i];
     // source, target are userLabels, not ids. We need to use source and target to look up the appropriate node in nodesStore and find the node_id
     const { source: sourceUserLabel, target: targetUserLabel, type } = edge;
     // create source anchor
-    const sourceNodeId = mapLabelToId[sourceUserLabel]; // TODO: refactor this out
+    const sourceNodeId = mapNodeUserLabelToId[sourceUserLabel]; // TODO: refactor this out
     const sourceAnchor = createAnchor(store, sourceNodeId, 'source', canvasId);
     anchorsStore[sourceAnchor.id] = sourceAnchor;
     // create target anchor
-    const targetNodeId = mapLabelToId[targetUserLabel]; // TODO: refactor this out
+    const targetNodeId = mapNodeUserLabelToId[targetUserLabel]; // TODO: refactor this out
     const targetAnchor = createAnchor(store, targetNodeId, 'target', canvasId);
     anchorsStore[targetAnchor.id] = targetAnchor;
   }

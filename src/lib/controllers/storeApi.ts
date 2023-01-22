@@ -11,6 +11,12 @@ import type {
 import { Edge, Anchor, Node } from '$lib/models/store';
 import { populateAnchorsStore, populateNodesStore } from './util';
 
+export function getNodes(store: StoreType, filter?: object): NodeType[] {
+  const nodes = get(store.nodesStore);
+  // TODO: implement filtering
+  return Object.values(nodes);
+}
+
 export function findStore(canvasId: string): StoreType {
   return stores[canvasId];
 }
@@ -32,8 +38,9 @@ export function createStoreFromUserInput(
   // find the store
   const store = findStore(canvasId);
   // populate store.nodesStore with user nodes
-  const mapLabelToId = populateNodesStore(store, nodes, canvasId);
-  // populate store.edgesStore with user edges
-  populateAnchorsStore(store, edges, canvasId, mapLabelToId);
-  return mapLabelToId;
+  populateNodesStore(store, nodes, canvasId);
+  // populate store.anchorsStore with anchors. Note the userdoes not explictly
+  // define anchors; anchors are calculated from the edges
+  populateAnchorsStore(store, edges, canvasId);
+  // populate edges
 }
