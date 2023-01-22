@@ -27,6 +27,7 @@
   // here we lookup the store using the unique key
   const svelvetStore = findStore(canvasId);
   const {
+    edgesStore,
     nodesStore,
     nodeSelected,
     backgroundStore,
@@ -55,9 +56,8 @@
   function handleZoom(e: any): void {}
 
   $: nodes = Object.values($nodesStore);
+  $: edges = Object.values($edgesStore);
 </script>
-
-<div>{JSON.stringify(nodes)}</div>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <!-- This container is transformed by d3zoom -->
@@ -68,3 +68,70 @@
     <Node nodeId={node.id} {canvasId}>{JSON.parse(node.data).label}</Node>
   {/if}
 {/each}
+
+<!-- rendering dots on the background depending on the zoom level -->
+<svg
+  class={`Edges Edges-${canvasId}`}
+  viewBox="0 0 {$widthStore} {$heightStore}"
+>
+  <defs>
+    <pattern
+      id={`background-${canvasId}`}
+      x="0"
+      y="0"
+      width={gridSize}
+      height={gridSize}
+      patternUnits="userSpaceOnUse"
+    >
+      <circle
+        id="dot"
+        cx={gridSize / 2 - dotSize / 2}
+        cy={gridSize / 2 - dotSize / 2}
+        r="0.5"
+        style="fill: gray"
+      />
+    </pattern>
+  </defs>
+
+  {#if $backgroundStore}
+    <rect
+      width="100%"
+      height="100%"
+      style="fill: url(#background-{canvasId});"
+    />
+  {/if}
+
+  <!-- <g> tag defines which edge type to render depending on properties of edge object -->
+  <!-- <g>
+    {#each edges as edge}
+      {#if edge.type === 'straight'}
+        <StraightEdge {edge} />
+      {:else if edge.type === 'smoothstep'}
+        <SmoothStepEdge {edge} />
+      {:else if edge.type === 'step'}
+        <StepEdge {edge} />
+      {:else}
+        <SimpleBezierEdge {edge} />
+      {/if}
+      {#if !edge.noHandle}
+        <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
+        {#if !edge.arrow}
+          <EdgeAnchor x={edge.targetX} y={edge.targetY} />
+        {/if}
+      {/if}
+    {/each}
+  </g> -->
+</svg>
+
+<style>
+  .Nodes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  .Node {
+    color: black; /* remove this once color is set to default via types */
+    width: 100%;
+    height: 100%;
+  }
+</style>
