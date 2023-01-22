@@ -35,10 +35,6 @@
 </script>
 
 <div>
-  <!-- {#each reactiveNodes as node}
-    <NodeComponent nodeId={node.id} {canvasId} />
-  {/each} -->
-
   {#each reactiveNodes as nodeId}
     <NodeComponent {nodeId} {canvasId} />
   {/each}

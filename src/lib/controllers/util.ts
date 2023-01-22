@@ -127,38 +127,28 @@ export function populateAnchorsStore(
 ) {
   // anchorsStore will populated and synchronized to store.anchorsStore
   const anchorsStore: { [key: string]: AnchorType } = {};
-  // calculate mapNodeUserLabelToId, which is an object that maps node.userLabel to node.id
-  // Example usage: const nodeId = mapNodeUserLabelToId[nodeUserLabel]
-  const nodes = getNodes(store);
-  const arrNodeIdsAndUserLabels = nodes.map((node) => [
-    node.userLabel,
-    node.id,
-  ]);
-  const mapNodeUserLabelToId = Object.fromEntries(arrNodeIdsAndUserLabels);
-
   for (let i = 0; i < edges.length; i++) {
     const userEdge = edges[i];
     // source, target are userLabels, not ids. We need to use source and target to look up the appropriate node in nodesStore and find the node_id
-    const { source: sourceUserLabel, target: targetUserLabel, type } = userEdge;
+    const { source: sourceNodeId, target: targetNodeId, type } = userEdge;
     // create source anchor
-    const sourceNodeId = mapNodeUserLabelToId[sourceUserLabel]; // TODO: refactor this out
     const sourceAnchor = createAnchor(
       store,
-      sourceNodeId,
+      sourceNodeId.toString(),
       'source',
       canvasId,
       userEdge.id
     );
-    anchorsStore[sourceAnchor.id] = sourceAnchor;
     // create target anchor
-    const targetNodeId = mapNodeUserLabelToId[targetUserLabel]; // TODO: refactor this out
     const targetAnchor = createAnchor(
       store,
-      targetNodeId,
+      targetNodeId.toString(),
       'target',
       canvasId,
       userEdge.id
     );
+    // store source and target anchors
+    anchorsStore[sourceAnchor.id] = sourceAnchor;
     anchorsStore[targetAnchor.id] = targetAnchor;
   }
 
@@ -183,12 +173,11 @@ export function populateNodesStore(
   // iterate through user nodes and create node objects
   for (let i = 0; i < nodes.length; i++) {
     const userNode: UserNodeType = nodes[i];
-    const nodeId: string = (Math.random() + 1).toString(36).substring(7);
+    const nodeId = userNode.id;
 
     // TODO: refactor to object destructuring
     const params = {
-      id: nodeId,
-      userLabel: userNode.id.toString(), //
+      id: nodeId.toString(), // the user might input a number
       positionX: userNode.position.x,
       positionY: userNode.position.y,
       width: userNode.width,
@@ -207,9 +196,6 @@ export function populateNodesStore(
 
     const node = new Node(params);
     nodesStore[nodeId] = node;
-    mapLabelToId[userNode.id.toString()] = nodeId;
   }
   store.nodesStore.set(nodesStore);
-
-  return mapLabelToId;
 }

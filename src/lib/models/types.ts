@@ -48,7 +48,6 @@ export interface StoreType {
 
 export interface NodeType {
   id: string;
-  userLabel: string; // user-defined label. This is id on the initial Node
   width: number;
   height: number;
   positionX: number;

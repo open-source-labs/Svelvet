@@ -164,7 +164,6 @@ export class Anchor implements AnchorType {
 
 export class Node implements NodeType {
   id: string;
-  userLabel: string;
   width: number;
   height: number;
   positionX: number;
@@ -182,7 +181,6 @@ export class Node implements NodeType {
 
   constructor({
     id,
-    userLabel,
     positionX,
     positionY,
     width,
@@ -199,7 +197,6 @@ export class Node implements NodeType {
     borderRadius,
   }: {
     id: string;
-    userLabel: string;
     positionX: number;
     positionY: number;
     width: number;
@@ -216,7 +213,6 @@ export class Node implements NodeType {
     borderRadius: number;
   }) {
     this.id = id;
-    this.userLabel = userLabel;
     this.positionX = positionX;
     this.positionY = positionY;
     this.width = width;
