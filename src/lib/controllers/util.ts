@@ -92,13 +92,14 @@ export function populateEdgesStore(
       sourceNodeUserLabel.toString(),
       targetNodeUserLabel.toString(),
       type,
-      sourceAnchor.positionX,
-      sourceAnchor.positionY,
-      targetAnchor.positionX,
+      sourceAnchor.positionX.toString(),
+      sourceAnchor.positionY.toString(),
+      targetAnchor.positionX.toString(),
       targetAnchor.positionY,
-      sourceAnchor.id,
-      targetAnchor.id,
-      canvasId
+      +sourceAnchor.id,
+      +targetAnchor.id,
+      +canvasId
+      //Manually Converted values to their respective Types... Consult with team.
     );
   }
   store.edgesStore.set(edgesStore);
