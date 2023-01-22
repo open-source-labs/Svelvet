@@ -66,6 +66,12 @@ export function populateEdgesStore(
       id: edgeUserLabel,
       type,
       label,
+      labelBgColor,
+      labelTextColor,
+      edgeColor,
+      animate,
+      noHandle,
+      arrow,
     } = userEdge;
 
     const anchors = getAnchors(store, { edgeUserLabel: edgeUserLabel });
@@ -101,6 +107,12 @@ export function populateEdgesStore(
       canvasId,
       userLabel: edgeUserLabel,
       label,
+      labelBgColor,
+      labelTextColor,
+      edgeColor,
+      animate,
+      noHandle,
+      arrow,
     };
 
     edgesStore[edgeId] = new Edge(params);

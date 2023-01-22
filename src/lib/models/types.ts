@@ -69,7 +69,7 @@ export interface NodeType {
 export interface EdgeType {
   id: string; // this is generated automatically, not the same as userLabel
   userLabel: string; // this is userEdge.id
-  type: string;
+  type?: string;
   targetId: string;
   sourceId: string;
   sourceX: number;
@@ -79,6 +79,12 @@ export interface EdgeType {
   sourceAnchorId: string;
   targetAnchorId: string;
   label: string;
+  labelBgColor?: string;
+  labelTextColor?: string;
+  edgeColor?: string;
+  animate?: boolean;
+  noHandle?: boolean;
+  arrow?: boolean;
 }
 
 export interface AnchorType {
