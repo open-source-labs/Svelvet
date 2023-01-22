@@ -169,17 +169,26 @@ export function populateNodesStore(
     const nodeId: string = (Math.random() + 1).toString(36).substring(7);
 
     // TODO: refactor to object destructuring
-    const node = new Node(
-      nodeId,
-      userNode.id.toString(),
-      userNode.position.x,
-      userNode.position.y,
-      userNode.width,
-      userNode.height,
-      userNode.bgColor,
-      JSON.stringify(userNode.data),
-      canvasId
-    );
+    const params = {
+      id: nodeId,
+      userLabel: userNode.id.toString(), //
+      positionX: userNode.position.x,
+      positionY: userNode.position.y,
+      width: userNode.width,
+      height: userNode.height,
+      bgColor: userNode.bgColor,
+      data: JSON.stringify(userNode.data),
+      canvasId,
+      borderColor: userNode.borderColor,
+      image: userNode.image,
+      src: userNode.src,
+      textColor: userNode.textColor,
+      targetPosition: userNode.targetPosition,
+      sourcePosition: userNode.sourcePosition,
+      borderRadius: userNode.borderRadius,
+    };
+
+    const node = new Node(params);
     nodesStore[nodeId] = node;
     mapLabelToId[userNode.id.toString()] = nodeId;
   }

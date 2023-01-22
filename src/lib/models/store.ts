@@ -128,18 +128,49 @@ export class Node implements NodeType {
   bgColor: string;
   data: string;
   canvasId: string;
+  borderColor: string;
+  image: boolean;
+  src: string;
+  textColor: string;
+  targetPosition: 'left ' | 'right' | 'top' | 'bottom';
+  sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
+  borderRadius: number;
 
-  constructor(
-    id: string,
-    userLabel: string,
-    positionX: number,
-    positionY: number,
-    width: number,
-    height: number,
-    bgColor: string,
-    data: string,
-    canvasId: string
-  ) {
+  constructor({
+    id,
+    userLabel,
+    positionX,
+    positionY,
+    width,
+    height,
+    bgColor,
+    data,
+    canvasId,
+    borderColor,
+    image,
+    src,
+    textColor,
+    targetPosition,
+    sourcePosition,
+    borderRadius,
+  }: {
+    id: string;
+    userLabel: string;
+    positionX: number;
+    positionY: number;
+    width: number;
+    height: number;
+    bgColor: string;
+    data: string;
+    canvasId: string;
+    borderColor: string;
+    image: boolean;
+    src: string;
+    textColor: string;
+    targetPosition: 'left ' | 'right' | 'top' | 'bottom';
+    sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
+    borderRadius: number;
+  }) {
     this.id = id;
     this.userLabel = userLabel;
     this.positionX = positionX;
@@ -149,6 +180,13 @@ export class Node implements NodeType {
     this.bgColor = bgColor;
     this.data = data;
     this.canvasId = canvasId;
+    this.borderColor = borderColor;
+    this.image = image;
+    this.src = src;
+    this.textColor = textColor;
+    this.targetPosition = targetPosition;
+    this.sourcePosition = sourcePosition;
+    this.borderRadius = borderRadius;
   }
 
   setPosition(movementX: number, movementY: number) {

@@ -1,6 +1,5 @@
 import type { Readable, Writable } from 'svelte/store';
 
-// TODO: change to UserEdgeType
 export interface UserNodeType {
   id: number | string;
   width: number;
@@ -8,9 +7,15 @@ export interface UserNodeType {
   bgColor: string;
   data: object;
   position: { x: number; y: number };
+  borderColor: string;
+  image: boolean;
+  src: string;
+  textColor: string;
+  targetPosition: 'left ' | 'right' | 'top' | 'bottom';
+  sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
+  borderRadius: number;
 }
 
-// TODO: change to UserEdgeType
 export interface UserEdgeType {
   id: string;
   source: number | string;
@@ -53,6 +58,7 @@ export interface NodeType {
   targetPosition: 'left ' | 'right' | 'top' | 'bottom';
   sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
   borderRadius: number;
+  canvasId: string;
 }
 
 export interface EdgeType {

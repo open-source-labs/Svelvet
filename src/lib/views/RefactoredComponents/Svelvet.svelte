@@ -20,7 +20,7 @@
   export let edges: UserEdgeType[];
   export let width: number = 600;
   export let height: number = 600;
-  export let background: boolean = true;
+  export let background: boolean = false;
   export let movement: boolean = true;
 
   // generates a unique string for each svelvet component's unique store instance

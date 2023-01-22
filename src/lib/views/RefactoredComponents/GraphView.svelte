@@ -7,9 +7,9 @@
   import StraightEdge from './StraightEdge.svelte';
   import SmoothStepEdge from './SmoothStepEdge.svelte';
   import StepEdge from './StepEdge.svelte';
-  // import EdgeAnchor from '$lib/views/Edges/EdgeAnchor.svelte';
+  import EdgeAnchor from './EdgeAnchor.svelte';
   import Node from './Node.svelte';
-  // import ImageNode from '$lib/views/Nodes/ImageNode.svelte';
+  import ImageNode from './ImageNode.svelte';
 
   import { findStore } from '$lib/controllers/storeApi';
 
@@ -113,12 +113,7 @@
       {:else}
         <SimpleBezierEdge {edge} />
       {/if}
-      <!-- {#if !edge.noHandle}
-        <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
-        {#if !edge.arrow}
-          <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-        {/if}
-      {/if} -->
+      <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
     {/each}
   </g>
 </svg>
