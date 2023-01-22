@@ -30,4 +30,5 @@ export interface AnchorType {
   positionX: number;
   positionY: number;
   callback: Function;
+  setPosition: Function;
 }

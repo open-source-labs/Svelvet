@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
   import { findStore } from '$lib/controllers/storeApi';
-  export let node_id;
+  export let node_id: string;
+  export let canvasId: string;
 
-  const store = findStore();
+  const store = findStore(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = store;
 
   let isSelected = false;

@@ -1,17 +1,20 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
-  import { Edge, Anchor, Node, store } from '$lib/models/store';
+  import { Edge, Anchor, Node } from '$lib/models/store';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
   import EdgeComponent from '$lib/views/DevTools/Edge.svelte';
+  import { createStore } from '$lib/controllers/storeApi';
 
   export let nodes;
   export let edges;
   // console.log('This should be the array as initialNodes: ', nodes);
   // console.log('This should be the array as initialEdges: ', edges);
 
-  const testingStore = store;
+  const canvasId = 'asdff32fasdfs';
+
+  const testingStore = createStore(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
   onMount(() => {
@@ -46,7 +49,8 @@
         width,
         height,
         bgColor,
-        data
+        data,
+        canvasId
       );
       mapLabelToId[userLabel] = node_id;
       // resultArr.push(new Node(id, positionX, positionY, width, height, bgColor, data));
@@ -82,7 +86,8 @@
           arr[i],
           -1,
           -1,
-          anchor_cb
+          anchor_cb,
+          canvasId
         );
         arr3.push(objAnchors[anchor_id]);
       }
@@ -119,7 +124,8 @@
         targetAnchor.positionX,
         targetAnchor.positionY,
         sourceAnchor.id,
-        targetAnchor.id
+        targetAnchor.id,
+        canvasId
       );
     });
     testingStore.edgesStore.set(objEdges);
@@ -129,27 +135,22 @@
     const node_ids = Object.keys(tmp);
 
     const testingNode = tmp[node_ids[0]];
-    testingNode.handleDelete();
   });
 </script>
 
 <div>
   {#each Object.keys($nodesStore) as node_id}
-    <NodeComponent {node_id} />
+    <NodeComponent {node_id} {canvasId} />
   {/each}
 
   {#each Object.keys($anchorsStore) as anchor_id}
-    <AnchorComponent {anchor_id} />
-  {/each}
-
-  {#each Object.values($edgesStore) as edge}
-    {JSON.stringify(edge)}
+    <AnchorComponent {anchor_id} {canvasId} />
   {/each}
 </div>
 
 <svg id="svg">
   {#each Object.keys($edgesStore) as edge_id}
-    <EdgeComponent {edge_id} />
+    <EdgeComponent {edge_id} {canvasId} />
   {/each}
 </svg>
 

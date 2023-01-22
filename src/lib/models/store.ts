@@ -8,7 +8,7 @@ The reason why we put svelvetStoreType in store.ts and not in types.ts is becaus
 developers should not be interacting with the store directly, and thus should not have
 need of svelvetStoreType outside of store.ts
 */
-interface svelvetStoreType {
+interface storeType {
   nodesStore: Writable<{ [key: string]: NodeType }>;
   edgesStore: Writable<{ [key: string]: EdgeType }>;
   anchorsStore: Writable<{ [key: string]: AnchorType }>;
@@ -21,18 +21,13 @@ interface svelvetStoreType {
     * We discourage developers from interacting with stores directly; instead use the api methods in 
       `$lib/controllers/storeApi.ts`. However, if need to direct access you can do so by importing:
       `import { store } from '$lib/models/store';`
+    *
 */
-export const store: svelvetStoreType = createStore();
-function createStore() {
-  return {
-    nodesStore: writable({}),
-    edgesStore: writable({}),
-    anchorsStore: writable({}),
-  };
-}
+export const stores: { [key: string]: storeType } = {};
 
 export class Edge implements EdgeType {
   id: string;
+  canvasId: string;
   sourceAnchorId: string;
   targetAnchorId: string;
   sourceId: number;
@@ -53,7 +48,8 @@ export class Edge implements EdgeType {
     targetX: number,
     targetY: number,
     sourceAnchorId: string,
-    targetAnchorId: string
+    targetAnchorId: string,
+    canvasId: string
   ) {
     this.id = id;
     //surce is the id of the source node
@@ -67,6 +63,7 @@ export class Edge implements EdgeType {
     this.type = type;
     this.sourceAnchorId = sourceAnchorId;
     this.targetAnchorId = targetAnchorId;
+    this.canvasId = canvasId;
   }
 
   // TODO: implement me
@@ -83,6 +80,7 @@ export class Anchor implements AnchorType {
   positionX: number;
   positionY: number;
   callback: Function;
+  canvasId: string;
 
   constructor(
     id: string,
@@ -91,7 +89,8 @@ export class Anchor implements AnchorType {
     sourceOrSink: string,
     positionX: number,
     positionY: number,
-    callback: Function
+    callback: Function,
+    canvasId: string
   ) {
     this.id = id;
     this.nodeId = nodeId;
@@ -100,6 +99,7 @@ export class Anchor implements AnchorType {
     this.positionX = positionX;
     this.positionY = positionY;
     this.callback = callback;
+    this.canvasId = canvasId;
   }
 
   setPosition(movementX: number, movementY: number) {
@@ -107,7 +107,7 @@ export class Anchor implements AnchorType {
     this.positionY += movementY;
     //call edge
 
-    const { edgesStore } = store;
+    const { edgesStore } = stores[this.canvasId];
 
     edgesStore.update((edges) => {
       for (const key in edges) {
@@ -139,6 +139,7 @@ export class Node implements NodeType {
   positionY: number;
   bgColor: string;
   data: string;
+  canvasId: string;
 
   constructor(
     id: string,
@@ -148,7 +149,8 @@ export class Node implements NodeType {
     width: number,
     height: number,
     bgColor: string,
-    data: string
+    data: string,
+    canvasId: string
   ) {
     this.id = id;
     this.userLabel = userLabel;
@@ -158,6 +160,7 @@ export class Node implements NodeType {
     this.height = height;
     this.bgColor = bgColor;
     this.data = data;
+    this.canvasId = canvasId;
   }
 
   setPosition(movementX: number, movementY: number) {
@@ -166,8 +169,7 @@ export class Node implements NodeType {
     this.positionY += movementY;
 
     //update all the anchors on the node in the anchorsStore
-    const { anchorsStore } = store;
-    //const originalAnchorStore = get(anchorsStore)
+    const { anchorsStore } = stores[this.canvasId];
 
     anchorsStore.update((anchors) => {
       for (const key in anchors) {
