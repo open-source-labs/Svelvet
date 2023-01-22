@@ -2,10 +2,9 @@
   import { onMount } from 'svelte';
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
-  import StraightEdge from './StraightEdge.svelte';
 
-  // import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
-  // import StraightEdge from '$lib/views/Edges/StraightEdge.svelte';
+  import SimpleBezierEdge from './SimpleBezierEdge.svelte';
+  import StraightEdge from './StraightEdge.svelte';
   import SmoothStepEdge from './SmoothStepEdge.svelte';
   import StepEdge from './StepEdge.svelte';
   // import EdgeAnchor from '$lib/views/Edges/EdgeAnchor.svelte';
@@ -111,15 +110,15 @@
         <SmoothStepEdge {edge} />
       {:else if edge.type === 'step'}
         <StepEdge {edge} />
-        <!-- {:else}
+      {:else}
         <SimpleBezierEdge {edge} />
       {/if}
-      {#if !edge.noHandle}
+      <!-- {#if !edge.noHandle}
         <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
         {#if !edge.arrow}
           <EdgeAnchor x={edge.targetX} y={edge.targetY} />
-        {/if} -->
-      {/if}
+        {/if}
+      {/if} -->
     {/each}
   </g>
 </svg>
