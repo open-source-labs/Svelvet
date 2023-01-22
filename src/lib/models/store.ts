@@ -120,7 +120,7 @@ export class Anchor implements AnchorType {
 
 export class Node implements NodeType {
   id: string;
-  userLabel: number;
+  userLabel: string;
   width: number;
   height: number;
   positionX: number;
@@ -131,7 +131,7 @@ export class Node implements NodeType {
 
   constructor(
     id: string,
-    userLabel: number,
+    userLabel: string,
     positionX: number,
     positionY: number,
     width: number,

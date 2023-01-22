@@ -1,12 +1,23 @@
 import type { Readable, Writable } from 'svelte/store';
 
+// TODO: change to UserEdgeType
 export interface TypeUserNode {
-  id: number;
+  id: number | string;
   width: number;
   height: number;
   bgColor: string;
   data: object;
   position: { x: number; y: number };
+}
+
+// TODO: change to UserEdgeType
+export interface TypeUserEdge {
+  id: string;
+  source: number | string;
+  target: number | string;
+  animate: boolean;
+  label: string;
+  type: string; // Possible values: 'step'
 }
 
 /*
@@ -20,7 +31,7 @@ export interface StoreType {
 
 export interface NodeType {
   id: string;
-  userLabel: number; // user-defined label
+  userLabel: string; // user-defined label
   width: number;
   height: number;
   positionX: number;

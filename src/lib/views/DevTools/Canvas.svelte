@@ -15,10 +15,11 @@
     AnchorType,
     StoreType,
     TypeUserNode,
+    TypeUserEdge,
   } from '$lib/models/types';
 
   export let nodes: TypeUserNode[];
-  export let edges: object[];
+  export let edges: TypeUserEdge[];
 
   const canvasId: string = (Math.random() + 1).toString(36).substring(7);
   const testingStore = createStoreEmpty(canvasId);
@@ -31,83 +32,30 @@
       return edge;
     });
 
-    // create AnchorsStore
-    const objAnchors = {};
-    const arr2 = [];
-    arrEdges.forEach((parsedEdge: object) => {
-      // source, target is the userLabel for the node
-      // we need to use source and target to look up the node in nodesStore and find the node_id
-      const { source, target, type } = parsedEdge;
-      // create two anchors for each edge
-      const anchorIds = {};
-      const arr = [source, target]; // source, target are userLabels
-      const arr3 = [];
-      for (let i = 0; i < arr.length; i++) {
-        const anchor_id = (Math.random() + 1).toString(36).substring(7);
-        const userLabel = arr[i];
-        anchorIds[arr[i]] = anchor_id;
-        const anchor_cb = () => {
-          const positionX = $nodesStore[mapLabelToId[userLabel]].positionX;
-          const positionY = $nodesStore[mapLabelToId[userLabel]].positionY;
-          $anchorsStore[anchor_id].positionX = positionX;
-          $anchorsStore[anchor_id].positionY = positionY;
-        };
-        objAnchors[anchor_id] = new Anchor(
-          anchor_id,
-          mapLabelToId[userLabel],
-          null,
-          arr[i],
-          -1,
-          -1,
-          anchor_cb,
-          canvasId
-        );
-        arr3.push(objAnchors[anchor_id]);
-      }
-      arr2.push(arr3);
-    });
-
-    //populates the anchorsStore
-    testingStore.anchorsStore.set(objAnchors);
-    //invoke callback to set each anchor's position based on the nodes
-    Object.values($anchorsStore).forEach((el) => {
-      el.callback();
-    });
-
-    const objEdges = {};
-    console.log('arr2', arr2); // arr2 = [ [sourceAnchor, targetAnchor]  , [sourceAnchor, targetAnchor], ...            ]
-    arrEdges.forEach((parsedEdge: object, idx: number) => {
-      // 		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
-      const { source, target, type } = parsedEdge;
-      const arr4 = arr2[idx];
-      const sourceAnchor = arr4[0];
-      const targetAnchor = arr4[1];
-      console.log('.', arr2);
-      console.log('!', sourceAnchor);
-      console.log('!!', targetAnchor);
-      // create edge
-      const edge_id = (Math.random() + 1).toString(36).substring(7);
-      objEdges[edge_id] = new Edge(
-        edge_id,
-        source,
-        target,
-        type,
-        sourceAnchor.positionX,
-        sourceAnchor.positionY,
-        targetAnchor.positionX,
-        targetAnchor.positionY,
-        sourceAnchor.id,
-        targetAnchor.id,
-        canvasId
-      );
-    });
-    testingStore.edgesStore.set(objEdges);
-
-    // nodes = resultArr;
-    const tmp = $nodesStore;
-    const node_ids = Object.keys(tmp);
-
-    const testingNode = tmp[node_ids[0]];
+    // const objEdges = {};
+    // arrEdges.forEach((parsedEdge: object, idx: number) => {
+    //   // 		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
+    //   const { source, target, type } = parsedEdge;
+    //   const arr4 = arr2[idx];
+    //   const sourceAnchor = arr4[0];
+    //   const targetAnchor = arr4[1];
+    //   // create edge
+    //   const edge_id = (Math.random() + 1).toString(36).substring(7);
+    //   objEdges[edge_id] = new Edge(
+    //     edge_id,
+    //     source,
+    //     target,
+    //     type,
+    //     sourceAnchor.positionX,
+    //     sourceAnchor.positionY,
+    //     targetAnchor.positionX,
+    //     targetAnchor.positionY,
+    //     sourceAnchor.id,
+    //     targetAnchor.id,
+    //     canvasId
+    //   );
+    // });
+    // testingStore.edgesStore.set(objEdges);
   });
 </script>
 
