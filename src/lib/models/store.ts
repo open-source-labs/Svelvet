@@ -13,7 +13,7 @@ import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
 */
 export const stores: { [key: string]: StoreType } = {};
 
-export class Edge implements EdgeType {
+export class Edge {
   id: string;
   canvasId: string;
   sourceAnchorId: string;
@@ -158,71 +158,23 @@ export class Anchor implements AnchorType {
 }
 
 export class Node implements NodeType {
-  id: string;
-  width: number;
-  height: number;
-  positionX: number;
-  positionY: number;
-  bgColor: string;
-  data: string;
-  canvasId: string;
-  borderColor: string;
-  image: boolean;
-  src: string;
-  textColor: string;
-  targetPosition: 'left ' | 'right' | 'top' | 'bottom';
-  sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
-  borderRadius: number;
-
-  constructor({
-    id,
-    positionX,
-    positionY,
-    width,
-    height,
-    bgColor,
-    data,
-    canvasId,
-    borderColor,
-    image,
-    src,
-    textColor,
-    targetPosition,
-    sourcePosition,
-    borderRadius,
-  }: {
-    id: string;
-    positionX: number;
-    positionY: number;
-    width: number;
-    height: number;
-    bgColor: string;
-    data: string;
-    canvasId: string;
-    borderColor: string;
-    image: boolean;
-    src: string;
-    textColor: string;
-    targetPosition: 'left ' | 'right' | 'top' | 'bottom';
-    sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
-    borderRadius: number;
-  }) {
-    this.id = id;
-    this.positionX = positionX;
-    this.positionY = positionY;
-    this.width = width;
-    this.height = height;
-    this.bgColor = bgColor;
-    this.data = data;
-    this.canvasId = canvasId;
-    this.borderColor = borderColor;
-    this.image = image;
-    this.src = src;
-    this.textColor = textColor;
-    this.targetPosition = targetPosition;
-    this.sourcePosition = sourcePosition;
-    this.borderRadius = borderRadius;
-  }
+  constructor(
+    public id: string,
+    public positionX: number,
+    public positionY: number,
+    public width: number,
+    public height: number,
+    public bgColor: string,
+    public data: string,
+    public canvasId: string,
+    public borderColor: string,
+    public image: boolean,
+    public src: string,
+    public textColor: string,
+    public targetPosition: 'left ' | 'right' | 'top' | 'bottom',
+    public sourcePosition: 'left ' | 'right' | 'top' | 'bottom',
+    public borderRadius: number
+  ) {}
 
   setPosition(movementX: number, movementY: number) {
     //update all necessary data

@@ -170,26 +170,41 @@ export function populateNodesStore(
     const userNode: UserNodeType = nodes[i];
     const nodeId = userNode.id;
 
-    // TODO: refactor to object destructuring
-    const params = {
-      id: nodeId.toString(), // the user might input a number
-      positionX: userNode.position.x,
-      positionY: userNode.position.y,
-      width: userNode.width,
-      height: userNode.height,
-      bgColor: userNode.bgColor,
-      data: JSON.stringify(userNode.data),
-      canvasId,
-      borderColor: userNode.borderColor,
-      image: userNode.image,
-      src: userNode.src,
-      textColor: userNode.textColor,
-      targetPosition: userNode.targetPosition,
-      sourcePosition: userNode.sourcePosition,
-      borderRadius: userNode.borderRadius,
-    };
+    // const params = {
+    //   id: nodeId.toString(), // the user might input a number
+    //   positionX: userNode.position.x,
+    //   positionY: userNode.position.y,
+    //   width: userNode.width,
+    //   height: userNode.height,
+    //   bgColor: userNode.bgColor,
+    //   data: JSON.stringify(userNode.data),
+    //   canvasId,
+    //   borderColor: userNode.borderColor,
+    //   image: userNode.image,
+    //   src: userNode.src,
+    //   textColor: userNode.textColor,
+    //   targetPosition: userNode.targetPosition,
+    //   sourcePosition: userNode.sourcePosition,
+    //   borderRadius: userNode.borderRadius,
+    // };
 
-    const node = new Node(params);
+    const node = new Node(
+      nodeId.toString(),
+      userNode.position.x,
+      userNode.position.y,
+      userNode.width,
+      userNode.height,
+      userNode.bgColor,
+      JSON.stringify(userNode.data),
+      canvasId,
+      userNode.borderColor,
+      userNode.image,
+      userNode.src,
+      userNode.textColor,
+      userNode.targetPosition,
+      userNode.sourcePosition,
+      userNode.borderRadius
+    );
     nodesStore[nodeId] = node;
   }
   store.nodesStore.set(nodesStore);
