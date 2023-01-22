@@ -9,7 +9,6 @@
   import StepEdge from './StepEdge.svelte';
   import EdgeAnchor from './EdgeAnchor.svelte';
   import Node from './Node.svelte';
-  import ImageNode from './ImageNode.svelte';
 
   import { findStore } from '$lib/controllers/storeApi';
 
@@ -62,11 +61,7 @@
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <!-- This container is transformed by d3zoom -->
 {#each nodes as node}
-  {#if false}
-    <ImageNode {node} {canvasId} />
-  {:else}
-    <Node nodeId={node.id} {canvasId}>{JSON.parse(node.data).label}</Node>
-  {/if}
+  <Node nodeId={node.id} {canvasId}>{JSON.parse(node.data).label}</Node>
 {/each}
 
 <!-- rendering dots on the background depending on the zoom level -->
