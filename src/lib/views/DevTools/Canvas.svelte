@@ -14,19 +14,19 @@
     EdgeType,
     AnchorType,
     StoreType,
-    TypeUserNode,
-    TypeUserEdge,
+    UserNodeType,
+    UserEdgeType,
   } from '$lib/models/types';
 
-  export let nodes: TypeUserNode[];
-  export let edges: TypeUserEdge[];
+  export let nodes: UserNodeType[];
+  export let edges: UserEdgeType[];
 
   const canvasId: string = (Math.random() + 1).toString(36).substring(7);
   const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
   onMount(() => {
-    const mapLabelToId = createStoreFromUserInput(canvasId, nodes, edges);
+    createStoreFromUserInput(canvasId, nodes, edges);
   });
 </script>
 

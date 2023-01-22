@@ -25,12 +25,11 @@ function createAnchor(
   // TODO: abstract this out so that people can define their own custom anchor positions
   const anchor_cb = () => {
     // get node data
-    const nodesStore = get(store.nodesStore);
-    const positionX = nodesStore[nodeId].positionX;
-    const positionY = nodesStore[nodeId].positionY;
+    const node = getNodes(store, { id: nodeId })[0];
+    const { positionX, positionY, width, height } = node;
     // calculate the position of the anchor and set
     const anchorsStore = get(store.anchorsStore);
-    anchorsStore[anchorId].positionX = positionX;
+    anchorsStore[anchorId].positionX = positionX + width / 2;
     anchorsStore[anchorId].positionY = positionY;
   };
 

@@ -33,9 +33,24 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   return anchors;
 }
 
-export function getNodes(store: StoreType, filter?: object): NodeType[] {
-  const nodes = Object.values(get(store.nodesStore));
-  // TODO: implement filtering
+export function getNodes(
+  store: StoreType,
+  filter?: { [key: string]: any }
+): NodeType[] {
+  let nodes = Object.values(get(store.nodesStore));
+  // filter the array of anchors for elements that match filter
+  // Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will
+  //          return all anchors with sourceOrTarget = source AND poxitionX = 35
+  if (filter !== undefined) {
+    nodes = nodes.filter((node) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (node[filterKey as keyof NodeType] !== filterValue) return false;
+      }
+      return true;
+    });
+  }
+  // return list of nodes
   return nodes;
 }
 
