@@ -1,5 +1,5 @@
 <script>
-  import { findStore, createStore } from '$lib/models/store';
+  import { findStore } from '$lib/controllers/storeApi';
   export let node_id;
 
   const store = findStore();

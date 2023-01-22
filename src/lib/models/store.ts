@@ -22,6 +22,17 @@ import type { Readable, Writable } from 'svelte/store';
  *
  */
 
+export const store = createStore();
+
+function createStore() {
+  const testingCoreStore: testingCoreStore = {
+    nodesStore: writable({}),
+    edgesStore: writable({}),
+    anchorsStore: writable({}),
+  };
+  return testingCoreStore;
+}
+
 interface testingCoreStore {
   nodesStore: Writable<{ [key: string]: Node }>;
   edgesStore: Writable<{ [key: string]: Edge }>;
@@ -64,23 +75,9 @@ interface AnchorType {
 
 // this is the "global" store that anybody can access
 // think of it like a database
-let store;
-export function findStore() {
-  if (store === undefined) throw 'store not set yet';
-  return store;
-}
 
 // Creates a store and assigns it to a "global" variable "store"
 // so that other components can use it
-export function createStore() {
-  const testingCoreStore: testingCoreStore = {
-    nodesStore: writable({}),
-    edgesStore: writable({}),
-    anchorsStore: writable({}),
-  };
-  store = testingCoreStore;
-  return store;
-}
 
 export class Edge implements EdgeType {
   id: string;
@@ -165,7 +162,6 @@ export class Anchor implements AnchorType {
     this.positionY += movementY;
     //call edge
 
-    const store = findStore();
     const { edgesStore } = store;
 
     edgesStore.update((edges) => {
@@ -220,7 +216,6 @@ export class Node implements NodeType {
     this.positionY += movementY;
 
     //update all the anchors on the node in the anchorsStore
-    const store = findStore();
     const { anchorsStore } = store;
     //const originalAnchorStore = get(anchorsStore)
 

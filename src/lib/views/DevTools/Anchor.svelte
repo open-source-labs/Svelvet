@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { findStore, createStore } from '$lib/models/store';
+  import { findStore } from '$lib/controllers/storeApi';
 
   export let anchor_id: string;
 

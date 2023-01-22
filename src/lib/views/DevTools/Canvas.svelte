@@ -1,6 +1,6 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
-  import { Edge, Anchor, Node, createStore } from '$lib/models/store';
+  import { Edge, Anchor, Node, store } from '$lib/models/store';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
@@ -11,7 +11,7 @@
   // console.log('This should be the array as initialNodes: ', nodes);
   // console.log('This should be the array as initialEdges: ', edges);
 
-  const testingStore = createStore();
+  const testingStore = store;
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
   onMount(() => {
