@@ -1,7 +1,7 @@
 import type { Readable, Writable } from 'svelte/store';
 
 // TODO: change to UserEdgeType
-export interface TypeUserNode {
+export interface UserNodeType {
   id: number | string;
   width: number;
   height: number;
@@ -11,7 +11,7 @@ export interface TypeUserNode {
 }
 
 // TODO: change to UserEdgeType
-export interface TypeUserEdge {
+export interface UserEdgeType {
   id: string;
   source: number | string;
   target: number | string;

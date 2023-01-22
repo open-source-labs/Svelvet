@@ -5,8 +5,8 @@ import type {
   EdgeType,
   AnchorType,
   StoreType,
-  TypeUserNode,
-  TypeUserEdge,
+  UserNodeType,
+  UserEdgeType,
 } from '$lib/models/types';
 import { Edge, Anchor, Node } from '$lib/models/store';
 import {
@@ -54,8 +54,8 @@ export function createStoreEmpty(canvasId: string): StoreType {
 
 export function createStoreFromUserInput(
   canvasId: string,
-  nodes: TypeUserNode[],
-  edges: TypeUserEdge[]
+  nodes: UserNodeType[],
+  edges: UserEdgeType[]
 ): void {
   // find the store
   const store = findStore(canvasId);

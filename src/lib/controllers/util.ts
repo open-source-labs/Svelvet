@@ -3,8 +3,8 @@ import type {
   EdgeType,
   AnchorType,
   StoreType,
-  TypeUserNode,
-  TypeUserEdge,
+  UserNodeType,
+  UserEdgeType,
 } from '$lib/models/types';
 import { Edge, Anchor, Node } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
@@ -51,7 +51,7 @@ function createAnchor(
 
 export function populateEdgesStore(
   store: StoreType,
-  edges: TypeUserEdge[],
+  edges: UserEdgeType[],
   canvasId: string
 ) {
   const edgesStore: { [key: string]: EdgeType } = {};
@@ -106,7 +106,7 @@ export function populateEdgesStore(
 
 export function populateAnchorsStore(
   store: StoreType,
-  edges: TypeUserEdge[],
+  edges: UserEdgeType[],
   canvasId: string
 ) {
   // anchorsStore will populated and synchronized to store.anchorsStore
@@ -157,7 +157,7 @@ export function populateAnchorsStore(
 
 export function populateNodesStore(
   store: StoreType,
-  nodes: TypeUserNode[],
+  nodes: UserNodeType[],
   canvasId: string
 ) {
   // this is the nodesStore object
@@ -166,7 +166,7 @@ export function populateNodesStore(
   const mapLabelToId: { [key: string]: string } = {};
   // iterate through user nodes and create node objects
   for (let i = 0; i < nodes.length; i++) {
-    const userNode: TypeUserNode = nodes[i];
+    const userNode: UserNodeType = nodes[i];
     const nodeId: string = (Math.random() + 1).toString(36).substring(7);
 
     // TODO: refactor to object destructuring
