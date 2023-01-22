@@ -31,18 +31,26 @@ export interface StoreType {
 
 export interface NodeType {
   id: string;
-  userLabel: string; // user-defined label
+  userLabel: string; // user-defined label. This is id on the initial Node
   width: number;
   height: number;
   positionX: number;
   positionY: number;
   bgColor: string;
-  data: string;
+  data: string; // This is a JSON string
   setPosition: Function;
+  borderColor: string;
+  image: boolean;
+  src: string;
+  textColor: string;
+  targetPosition: 'left ' | 'right' | 'top' | 'bottom';
+  sourcePosition: 'left ' | 'right' | 'top' | 'bottom';
+  borderRadius: number;
 }
 
 export interface EdgeType {
-  id: string;
+  id: string; // this is generated automatically, not the same as userLabel
+  userLabel: string; // this is userEdge.id
   type: string;
   targetId: string;
   sourceId: string;
@@ -52,6 +60,7 @@ export interface EdgeType {
   targetY: number;
   sourceAnchorId: string;
   targetAnchorId: string;
+  label: string;
 }
 
 export interface AnchorType {
