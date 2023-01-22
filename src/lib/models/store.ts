@@ -1,18 +1,6 @@
 import { writable, derived, get, readable } from 'svelte/store';
 import type { Readable, Writable } from 'svelte/store';
-import type { NodeType, EdgeType, AnchorType } from './types';
-
-/*
-Type for a single svelvet store
-The reason why we put svelvetStoreType in store.ts and not in types.ts is because
-developers should not be interacting with the store directly, and thus should not have
-need of svelvetStoreType outside of store.ts
-*/
-interface storeType {
-  nodesStore: Writable<{ [key: string]: NodeType }>;
-  edgesStore: Writable<{ [key: string]: EdgeType }>;
-  anchorsStore: Writable<{ [key: string]: AnchorType }>;
-}
+import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
 
 /*
   `store` is a dictionary of Svelvet stores.
@@ -23,7 +11,7 @@ interface storeType {
       `import { store } from '$lib/models/store';`
     *
 */
-export const stores: { [key: string]: storeType } = {};
+export const stores: { [key: string]: StoreType } = {};
 
 export class Edge implements EdgeType {
   id: string;

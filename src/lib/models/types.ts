@@ -1,3 +1,14 @@
+import type { Readable, Writable } from 'svelte/store';
+
+/*
+Type for a single svelvet store
+*/
+export interface StoreType {
+  nodesStore: Writable<{ [key: string]: NodeType }>;
+  edgesStore: Writable<{ [key: string]: EdgeType }>;
+  anchorsStore: Writable<{ [key: string]: AnchorType }>;
+}
+
 export interface NodeType {
   id: string;
   userLabel: number; // user-defined label

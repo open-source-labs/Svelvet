@@ -5,16 +5,13 @@
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
   import EdgeComponent from '$lib/views/DevTools/Edge.svelte';
-  import { createStore } from '$lib/controllers/storeApi';
+  import { createStoreEmpty } from '$lib/controllers/storeApi';
 
-  export let nodes;
-  export let edges;
-  // console.log('This should be the array as initialNodes: ', nodes);
-  // console.log('This should be the array as initialEdges: ', edges);
+  export let nodes: object[];
+  export let edges: object[];
 
-  const canvasId = 'asdff32fasdfs';
-
-  const testingStore = createStore(canvasId);
+  const canvasId = (Math.random() + 1).toString(36).substring(7);
+  const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
   onMount(() => {
