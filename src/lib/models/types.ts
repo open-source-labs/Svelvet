@@ -27,6 +27,13 @@ export interface StoreType {
   nodesStore: Writable<{ [key: string]: NodeType }>;
   edgesStore: Writable<{ [key: string]: EdgeType }>;
   anchorsStore: Writable<{ [key: string]: AnchorType }>;
+  widthStore: Writable<number>;
+  heightStore: Writable<number>;
+  backgroundStore: Writable<boolean>;
+  movementStore: Writable<boolean>;
+  nodeIdSelected: Writable<number>;
+  nodeSelected: Writable<boolean>;
+  d3Scale: Writable<number>;
 }
 
 export interface NodeType {

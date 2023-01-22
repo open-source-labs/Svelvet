@@ -63,6 +63,13 @@ export function createStoreEmpty(canvasId: string): StoreType {
     nodesStore: writable({}),
     edgesStore: writable({}),
     anchorsStore: writable({}),
+    widthStore: writable(600),
+    heightStore: writable(600),
+    backgroundStore: writable(false),
+    movementStore: writable(true),
+    nodeSelected: writable(false),
+    nodeIdSelected: writable(-1),
+    d3Scale: writable(1),
   };
   return stores[canvasId];
 }
