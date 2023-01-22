@@ -5,55 +5,31 @@
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
   import EdgeComponent from '$lib/views/DevTools/Edge.svelte';
-  import { createStoreEmpty } from '$lib/controllers/storeApi';
+  import {
+    createStoreEmpty,
+    createStoreFromUserInput,
+  } from '$lib/controllers/storeApi';
+  import type {
+    NodeType,
+    EdgeType,
+    AnchorType,
+    StoreType,
+    TypeUserNode,
+  } from '$lib/models/types';
 
-  export let nodes: object[];
+  export let nodes: TypeUserNode[];
   export let edges: object[];
 
-  const canvasId = (Math.random() + 1).toString(36).substring(7);
+  const canvasId: string = (Math.random() + 1).toString(36).substring(7);
   const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
   onMount(() => {
-    const arrNodes = nodes.map((node) => {
-      return {
-        userLabel: node.id, // we will be generating the node_id separately to ensure uniqueness
-        width: node.width,
-        height: node.height,
-        bgColor: node.bgColor,
-        data: JSON.stringify(node.data),
-        positionX: node.position.x,
-        positionY: node.position.y,
-      };
-    });
+    const mapLabelToId = createStoreFromUserInput(canvasId, nodes, edges);
 
     const arrEdges = edges.map((edge) => {
       return edge;
     });
-
-    const objNodes = {};
-    // this creates the object that will eventually populate nodesStore and anchorsStore
-    const mapLabelToId: object = {};
-    arrNodes.forEach((parsedNode: object) => {
-      const node_id = (Math.random() + 1).toString(36).substring(7);
-      const { userLabel, width, height, bgColor, data, positionX, positionY } =
-        parsedNode;
-      objNodes[node_id] = new Node(
-        node_id,
-        userLabel,
-        positionX,
-        positionY,
-        width,
-        height,
-        bgColor,
-        data,
-        canvasId
-      );
-      mapLabelToId[userLabel] = node_id;
-      // resultArr.push(new Node(id, positionX, positionY, width, height, bgColor, data));
-    });
-    // populates nodeStore
-    testingStore.nodesStore.set(objNodes);
 
     // create AnchorsStore
     const objAnchors = {};

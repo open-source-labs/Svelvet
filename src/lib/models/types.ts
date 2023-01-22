@@ -1,5 +1,14 @@
 import type { Readable, Writable } from 'svelte/store';
 
+export interface TypeUserNode {
+  id: number;
+  width: number;
+  height: number;
+  bgColor: string;
+  data: object;
+  position: { x: number; y: number };
+}
+
 /*
 Type for a single svelvet store
 */
