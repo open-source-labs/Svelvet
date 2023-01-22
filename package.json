@@ -76,6 +76,7 @@
     "svelte-material-icons": "^2.0.4",
     "svelte-parallax": "^0.6.0",
     "svelvet": "^5.0.7",
+    "uuid": "^9.0.0",
     "yootils": "^0.3.1"
   }
 }

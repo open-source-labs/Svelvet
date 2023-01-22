@@ -1,5 +1,6 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
+  import { v4 as uuidv4 } from 'uuid';
   import { Edge, Anchor, Node } from '$lib/models/store';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
@@ -21,7 +22,7 @@
   export let nodes: UserNodeType[];
   export let edges: UserEdgeType[];
 
-  const canvasId: string = (Math.random() + 1).toString(36).substring(7);
+  const canvasId: string = uuidv4();
   const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 

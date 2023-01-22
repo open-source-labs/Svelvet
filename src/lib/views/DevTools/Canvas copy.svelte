@@ -1,5 +1,6 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
+  import { v4 as uuidv4 } from 'uuid';
   import { Edge, Anchor, Node } from '$lib/models/store';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
@@ -10,7 +11,7 @@
   export let nodes: object[];
   export let edges: object[];
 
-  const canvasId = (Math.random() + 1).toString(36).substring(7);
+  const canvasId = uuidv4();
   const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
 
@@ -35,7 +36,7 @@
     // this creates the object that will eventually populate nodesStore and anchorsStore
     const mapLabelToId: object = {};
     arrNodes.forEach((parsedNode: object) => {
-      const node_id = (Math.random() + 1).toString(36).substring(7);
+      const node_id = uuidv4();
       const { userLabel, width, height, bgColor, data, positionX, positionY } =
         parsedNode;
       objNodes[node_id] = new Node(
@@ -67,7 +68,7 @@
       const arr = [source, target]; // source, target are userLabels
       const arr3 = [];
       for (let i = 0; i < arr.length; i++) {
-        const anchor_id = (Math.random() + 1).toString(36).substring(7);
+        const anchor_id = uuidv4();
         const userLabel = arr[i];
         anchorIds[arr[i]] = anchor_id;
         const anchor_cb = () => {
@@ -110,7 +111,7 @@
       console.log('!', sourceAnchor);
       console.log('!!', targetAnchor);
       // create edge
-      const edge_id = (Math.random() + 1).toString(36).substring(7);
+      const edge_id = uuidv4();
       objEdges[edge_id] = new Edge(
         edge_id,
         source,

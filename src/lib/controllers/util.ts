@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import type {
   NodeType,
   EdgeType,
@@ -17,7 +18,7 @@ function createAnchor(
   canvasId: string,
   edgeUserLabel: string
 ) {
-  const anchorId = (Math.random() + 1).toString(36).substring(7);
+  const anchorId = uuidv4();
 
   // This is a callback. It runs later
   // When it runs, it will set the position of the anchor depending
@@ -86,7 +87,7 @@ export function populateEdgesStore(
     }
 
     // create edge
-    const edgeId = (Math.random() + 1).toString(36).substring(7);
+    const edgeId = uuidv4();
     edgesStore[edgeId] = new Edge(
       edgeId,
       sourceNodeUserLabel.toString(),
@@ -168,7 +169,7 @@ export function populateNodesStore(
   // iterate through user nodes and create node objects
   for (let i = 0; i < nodes.length; i++) {
     const userNode: UserNodeType = nodes[i];
-    const nodeId: string = (Math.random() + 1).toString(36).substring(7);
+    const nodeId: string = uuidv4();
 
     // TODO: refactor to object destructuring
     const node = new Node(
