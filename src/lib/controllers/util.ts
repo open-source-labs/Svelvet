@@ -243,8 +243,6 @@ export function populateNodesStore(
       userNode.image,
       userNode.src,
       userNode.textColor,
-      userNode.targetPosition,
-      userNode.sourcePosition,
       userNode.borderRadius
     );
     nodesStore[nodeId] = node;

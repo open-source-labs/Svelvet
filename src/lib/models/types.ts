@@ -59,8 +59,6 @@ export interface NodeType {
   image: boolean;
   src: string;
   textColor: string;
-  targetPosition: 'left' | 'right' | 'top' | 'bottom';
-  sourcePosition: 'left' | 'right' | 'top' | 'bottom';
   borderRadius: number;
   canvasId: string;
 }
