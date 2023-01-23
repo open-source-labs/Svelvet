@@ -142,8 +142,6 @@ export function populateEdgesStore(
       sourceAnchor.positionY,
       targetAnchor.positionX,
       targetAnchor.positionY,
-      sourceAnchor.id,
-      targetAnchor.id,
       canvasId,
       label,
       type,

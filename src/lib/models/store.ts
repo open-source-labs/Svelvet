@@ -18,8 +18,6 @@ export class Edge implements EdgeType {
     public sourceY: number,
     public targetX: number,
     public targetY: number,
-    public sourceAnchorId: string, // id of the anchor that is the "source" of the edge
-    public targetAnchorId: string, // id of the anchor that is the "target" of the edge
     public canvasId: string,
     public label?: string,
     public type?: string,

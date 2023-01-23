@@ -69,8 +69,6 @@ export interface EdgeType {
   sourceY: number;
   targetX: number;
   targetY: number;
-  sourceAnchorId: string; // id of the anchor that is the "source" of the edge
-  targetAnchorId: string; // id of the anchor that is the "target" of the edge
   canvasId: string;
   label?: string;
   type?: string;

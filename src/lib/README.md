@@ -14,6 +14,7 @@
 - change Node.data from JSON string to object
 - new type for userNode, userEdget to fix typescript error from testingplayground/index.svelte
 - refactor anchor callbacks to use setPosition so that we cascade changes to edges (needed for resizing)
+- refactor out sourceAnchorId, targetAnchorId from edge. We should be thinking about anchors as a join. For some reason when we remove things break (probably because of constructor!)
 
 ## Motivation
 
