@@ -147,6 +147,7 @@
         <SimpleBezierEdge {edge} />
       {/if}
       <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
+      <EdgeAnchor x={edge.targetX} y={edge.targetY} />
     {/each}
   </g>
 </svg>
