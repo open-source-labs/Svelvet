@@ -1,5 +1,3 @@
-import { writable, derived, get, readable } from 'svelte/store';
-import type { Readable, Writable } from 'svelte/store';
 import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
 
 /*
@@ -16,8 +14,8 @@ export const stores: { [key: string]: StoreType } = {};
 export class Edge implements EdgeType {
   constructor(
     public id: string,
-    public sourceId: string, // id of node that is the "source" of the edge : TODO: can we remove this? this is redundant to sourceAnchorId
-    public targetId: string, // id of node that is the "target" of the edge : TODO: can we remove this? this is redundant to targetAnchorId
+    public sourceId: string, // id of node that is the "source" of the edge : TODO: refactor this out
+    public targetId: string, // id of node that is the "target" of the edge : TODO: refactor this out
     public sourceX: number,
     public sourceY: number,
     public targetX: number,
@@ -45,7 +43,7 @@ export class Anchor implements AnchorType {
   constructor(
     public id: string,
     public nodeId: string,
-    public edgeId: string,
+    public edgeId: string, // TODO: refactor this out
     public sourceOrTarget: 'source' | 'target',
     public positionX: number,
     public positionY: number,

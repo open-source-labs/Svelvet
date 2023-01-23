@@ -24,3 +24,22 @@ We suggest the following to future developers:
 - Preserve the relational nature of the Svelvet store and avoid the document model. For example, if you want to find out node that is the "source" for a given edge, do not store that node id on the edge table. Instead, do a lookup on the source anchor foreign key, then go to the anchor table and do a lookup on the node foreign key. While this is more work, it also preserves a single state of truth for node/anchor/edge relationships and will make implementing new features easier.
 - Create new tables when adding new features. For example, if you want to add a new feature where a node wears a "hat", do not embed "hat" parameters in the Node table. Instead, create a new "Hat" table with a foreign key that links to the appropriate node. This increaes the modularity of the code.
 - Avoid circular foreign key relationships. For example, currently an "edge" contains a foreign key to a "source anchor", which itself contains a foreign key to a "node". Avoid creating a foreign key from a "node" back to an "edge". The reason for this is to avoid complexity when populating the store; imagine populating a SQL database with foreign keys where the parents do not exist. Allowing nullable foreign keys is possible, but then you have to define the behavior of an edge without a node. Note that this also means that edges/anchors cannot exist in isolation; every edge must have two anchors, and every anchor must have a node. We believe this constraint is useful because it matches the definition of an edge in graph theory. We suggest that if you want to add functionality to create edges without nodes to define a separate table for nodeless edges and not hack changes onto edges.
+
+## Important files
+
+- `$lib/models/store.ts`
+  This implements the Svelvet store. It exports `stores` which is an object of stores; each store within stores corresponds to a different Svelvet canvas (this is so we can have multiple canvases on a single page). It also exports classes `Node`, `Anchor`, and `Edge`. Note that each `Anchor` has a foreign key to `Node`, and that each `Edge` has two foreign keys to source and target `Anchor`.
+
+  The easiest way to understand the store is to think about it like relational database. You have `Node`, `Anchor`, `Edge` tables. Updating a `Node` object (for example dragging it arround) will have cascading changes applied to associated `Anchors`, where the changes will cascade to associated `Edges`. The flow of information is one way, from `Node` to `Anchor` to `Edge`.
+
+- `$lib/controllers/storeApi.ts`
+  This implements api methods to interact with the Svelvet store.
+
+- `$lib/views/DevTools`
+  This contains the Svelvet components we pair-programmed our way through. We will not be developing these further, but I have kept them because I think they might be useful for our own learning. You can visualize them on `http://localhost:3000/testingplayground/`
+
+- `$lib/views/RefactoredComponents`
+  This contains Svelvet components. You can see them rendered on `http://localhost:3000/testingplayground3/`. This is what we are working on; we should be changing RefactoredComponents to look like the the original components (more about this below). You can visualize them on `http://localhost:3000/testingplayground3/`
+
+- `$lib/views/`
+  All folders that are not for `DevTools` and `RefactoredComponents` are Svelvet components from the original team. We will eventually be deleting these but they are useful to have around so we can `diff` files and see what fixes need to be made. You can visualize these components on `http://localhost:3000/testingplayground2/`
