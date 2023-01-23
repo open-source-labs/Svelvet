@@ -42,34 +42,16 @@ export class Edge implements EdgeType {
 }
 
 export class Anchor implements AnchorType {
-  id: string;
-  nodeId: string;
-  edgeId: string;
-  sourceOrTarget: 'source' | 'target';
-  positionX: number;
-  positionY: number;
-  callback: Function;
-  canvasId: string;
-
   constructor(
-    id: string,
-    nodeId: string,
-    edgeId: string,
-    sourceOrTarget: 'source' | 'target',
-    positionX: number,
-    positionY: number,
-    callback: Function,
-    canvasId: string
-  ) {
-    this.id = id;
-    this.nodeId = nodeId;
-    this.edgeId = edgeId;
-    this.sourceOrTarget = sourceOrTarget;
-    this.positionX = positionX;
-    this.positionY = positionY;
-    this.callback = callback;
-    this.canvasId = canvasId;
-  }
+    public id: string,
+    public nodeId: string,
+    public edgeId: string,
+    public sourceOrTarget: 'source' | 'target',
+    public positionX: number,
+    public positionY: number,
+    public callback: Function,
+    public canvasId: string
+  ) {}
 
   setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;
@@ -112,8 +94,8 @@ export class Node implements NodeType {
     public image: boolean,
     public src: string,
     public textColor: string,
-    public targetPosition: 'left ' | 'right' | 'top' | 'bottom',
-    public sourcePosition: 'left ' | 'right' | 'top' | 'bottom',
+    public targetPosition: 'left ' | 'right' | 'top' | 'bottom', // TODO: refactor this out, anchor should take care of this
+    public sourcePosition: 'left ' | 'right' | 'top' | 'bottom', // TODO: refator this out, anchor should take care of this
     public borderRadius: number
   ) {}
 
