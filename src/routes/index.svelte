@@ -231,6 +231,7 @@
     </div>
   </div>
 </div>
+
 <div
   class="h-[2400px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
@@ -732,6 +733,32 @@
               >
             </div>
           </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-col justify-around contributors:flex-row my-1 items-center"
+      >
+        <div class="flex justify-evenly w-3/4 gap-2 m-1 contributors:gap-0">
+          <!-- CARD 1: Ernesto -->
+          <div class="contributor-card">
+            <img
+              src={ernesto}
+              alt=""
+              class="hidden contributors:block h-32 rounded-full"
+            />
+            <p class="mt-3 mb-1 text-lg leading-6">Ernesto <br />Gonzalez</p>
+            <div class="flex gap-3 ml-3">
+              <a
+                target="_blank"
+                href="www.linkedin.com/in/ernesto-gonzalez-a168221a7"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/TheRaftMaker"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- Card 2: [NAME HERE] -->
         </div>
       </div>
 
