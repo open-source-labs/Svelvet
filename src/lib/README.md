@@ -2,7 +2,8 @@
 
 ## TODO
 
-- move Svelvet5 code into its own "libOld" folder
+- move Svelvet5 code into its own "libOld" folder. Should be independent of changes to new codebase
+- render anchors. file: `$lib/views/RefactoredComponents/EdgeAnchor.svelte`
 - Update the setPosition method for Anchors to use the callback. This is necessary for resizing nodes
   file: store.js
 - Write a StoreEditor component to read/update the store (like a spreadsheet). This will be necessary to develop deleting/resizing nodes and anchors. This can be a brand new file. You will want separate the controller to $lib/controllers/storeEditor.ts (already created)
