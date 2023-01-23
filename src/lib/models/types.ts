@@ -42,8 +42,8 @@ export interface StoreType {
   backgroundStore: Writable<boolean>;
   movementStore: Writable<boolean>;
   nodeIdSelected: Writable<number>;
-  nodeSelected: Writable<boolean>;
-  d3Scale: Writable<number>;
+  nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged
+  d3Scale: Writable<number>; // for zoom and pan
 }
 
 export interface NodeType {

@@ -11,6 +11,8 @@
 - sanitize user input so that all id's are strings. Change types/toString() to reflect that all types are strings now
 - render anchors. file: `$lib/views/RefactoredComponents/EdgeAnchor.svelte`. The triangle anchor was working at one point, now it isn't (it seems to work if you hardcode the position to top).
 - logic decide whether anchor position should be top/bottom/left/right
+- change Node.data from JSON string to object
+- new type for userNode, userEdget to fix typescript error from testingplayground/index.svelte
 
 ## Motivation
 
