@@ -138,8 +138,6 @@ export function populateEdgesStore(
 
     edgesStore[edgeId] = new Edge(
       edgeId,
-      sourceNodeId.toString(),
-      targetNodeId.toString(),
       sourceAnchor.positionX,
       sourceAnchor.positionY,
       targetAnchor.positionX,

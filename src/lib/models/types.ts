@@ -65,8 +65,6 @@ export interface NodeType {
 
 export interface EdgeType {
   id: string;
-  sourceId: string; // id of node that is the "source" of the edge : TODO: can we remove this? this is redundant to sourceAnchorId
-  targetId: string; // id of node that is the "target" of the edge : TODO: can we remove this? this is redundant to targetAnchorId
   sourceX: number;
   sourceY: number;
   targetX: number;

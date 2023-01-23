@@ -14,8 +14,6 @@ export const stores: { [key: string]: StoreType } = {};
 export class Edge implements EdgeType {
   constructor(
     public id: string,
-    public sourceId: string, // id of node that is the "source" of the edge : TODO: refactor this out
-    public targetId: string, // id of node that is the "target" of the edge : TODO: refactor this out
     public sourceX: number,
     public sourceY: number,
     public targetX: number,
