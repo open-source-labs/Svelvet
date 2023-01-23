@@ -55,15 +55,13 @@ export class Anchor implements AnchorType {
     const { edgesStore } = stores[this.canvasId];
 
     edgesStore.update((edges) => {
-      for (const key in edges) {
-        if (edges[key].sourceAnchorId === this.id) {
-          edges[key].sourceX += movementX;
-          edges[key].sourceY += movementY;
-        }
-        if (edges[key].targetAnchorId === this.id) {
-          edges[key].targetX += movementX;
-          edges[key].targetY += movementY;
-        }
+      const edge = edges[this.edgeId];
+      if (this.sourceOrTarget === 'source') {
+        edge.sourceX += movementX;
+        edge.sourceY += movementY;
+      } else {
+        edge.targetX += movementX;
+        edge.targetY += movementY;
       }
       return { ...edges };
     });
