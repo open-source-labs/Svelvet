@@ -28,6 +28,7 @@
   const {
     edgesStore,
     nodesStore,
+    anchorsStore,
     nodeSelected,
     backgroundStore,
     movementStore,
@@ -37,6 +38,7 @@
   } = store;
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
+  $: anchors = Object.values($anchorsStore);
 
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
@@ -146,8 +148,10 @@
       {:else}
         <SimpleBezierEdge {edge} />
       {/if}
-      <EdgeAnchor x={edge.sourceX} y={edge.sourceY} />
-      <EdgeAnchor x={edge.targetX} y={edge.targetY} />
+    {/each}
+
+    {#each anchors as anchor}
+      <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}
   </g>
 </svg>

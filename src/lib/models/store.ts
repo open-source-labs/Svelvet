@@ -52,7 +52,6 @@ export class Anchor implements AnchorType {
   setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;
     this.positionY += movementY;
-
     const { edgesStore } = stores[this.canvasId];
 
     edgesStore.update((edges) => {
