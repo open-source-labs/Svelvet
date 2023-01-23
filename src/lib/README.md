@@ -13,6 +13,7 @@
 - logic decide whether anchor position should be top/bottom/left/right
 - change Node.data from JSON string to object
 - new type for userNode, userEdget to fix typescript error from testingplayground/index.svelte
+- refactor anchor callbacks to use setPosition so that we cascade changes to edges (needed for resizing)
 
 ## Motivation
 

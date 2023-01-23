@@ -35,7 +35,7 @@ function createAnchor(
   // These are callbacks. It runs later
   // When it runs, it will set the position of the anchor depending on the position of the node
   // TODO: abstract this out so that people can define their own custom anchor positions
-  const topCb = () => {
+  const topCb = (): void => {
     // get node data
     const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
     const { positionX, positionY, width, height } = node;
@@ -44,7 +44,7 @@ function createAnchor(
     anchorsStore[id].positionX = positionX + width / 2;
     anchorsStore[id].positionY = positionY;
   };
-  const bottomCb = () => {
+  const bottomCb = (): void => {
     // get node data
     const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
     const { positionX, positionY, width, height } = node;
@@ -53,7 +53,7 @@ function createAnchor(
     anchorsStore[id].positionX = positionX + width / 2;
     anchorsStore[id].positionY = positionY + height;
   };
-  const leftCb = () => {
+  const leftCb = (): void => {
     // get node data
     const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
     const { positionX, positionY, width, height } = node;
@@ -62,7 +62,7 @@ function createAnchor(
     anchorsStore[id].positionX = positionX;
     anchorsStore[id].positionY = positionY + height / 2;
   };
-  const rightCb = () => {
+  const rightCb = (): void => {
     // get node data
     const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
     const { positionX, positionY, width, height } = node;
