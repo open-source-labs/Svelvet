@@ -83,10 +83,8 @@ export function createStoreFromUserInput(
   const store = findStore(canvasId);
   // populate store.nodesStore with user nodes
   populateNodesStore(store, nodes, canvasId);
-  // // populate store.anchorsStore with anchors. Note the userdoes not explictly
-  // // define anchors; anchors are calculated from the edges
-
+  // populate store.anchorsStore with anchors. Note the userdoes not explictly define anchors; anchors are calculated from the edges
   populateAnchorsStore(store, edges, canvasId);
-  // // populate edges
+  // populate edges
   populateEdgesStore(store, edges, canvasId);
 }

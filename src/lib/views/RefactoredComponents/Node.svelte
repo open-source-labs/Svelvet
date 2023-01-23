@@ -12,7 +12,7 @@
   export let canvasId: string;
 
   const store = findStore(canvasId);
-  const { nodesStore, edgesStore, anchorsStore } = store;
+  const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
 
   let isSelected = false;
   let node: NodeType;
@@ -32,6 +32,7 @@
   }}
   on:mouseup={(e) => {
     e.preventDefault();
+    $nodeSelected = false; // when $nodeSelected = true, d3 functionality is disabled
     isSelected = false;
   }}
 />
@@ -39,6 +40,7 @@
 <div
   on:mousedown={(e) => {
     e.preventDefault();
+    $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
     isSelected = true;
   }}
   class="Node"

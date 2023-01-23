@@ -20,7 +20,7 @@
   export let edges: UserEdgeType[];
   export let width: number = 600;
   export let height: number = 600;
-  export let background: boolean = false;
+  export let background: boolean = true;
   export let movement: boolean = true;
 
   // generates a unique string for each svelvet component's unique store instance
@@ -39,15 +39,15 @@
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
   });
-  // enables data reactivity
-  //   afterUpdate(() => {
-  //     svelvetStore.nodesStore.set(nodes);
-  //     svelvetStore.edgesStore.set(edges);
-  //     svelvetStore.widthStore.set(width);
-  //     svelvetStore.heightStore.set(height);
-  //     svelvetStore.backgroundStore.set(background);
-  //     svelvetStore.movementStore.set(movement);
-  //   });
+  // // enables data reactivity
+  // afterUpdate(() => {
+  //   svelvetStore.nodesStore.set(nodes);
+  //   svelvetStore.edgesStore.set(edges);
+  //   svelvetStore.widthStore.set(width);
+  //   svelvetStore.heightStore.set(height);
+  //   svelvetStore.backgroundStore.set(background);
+  //   svelvetStore.movementStore.set(movement);
+  // });
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
