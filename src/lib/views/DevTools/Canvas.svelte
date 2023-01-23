@@ -23,15 +23,9 @@
   export let nodes: UserNodeType[];
   export let edges: UserEdgeType[];
 
-<<<<<<< HEAD
-  const canvasId: string = (Math.random() + 1).toString(36).substring(7);
-  const store = createStoreEmpty(canvasId);
-  const { nodesStore, edgesStore, anchorsStore } = store;
-=======
   const canvasId: string = uuidv4();
   const testingStore = createStoreEmpty(canvasId);
   const { nodesStore, edgesStore, anchorsStore } = testingStore;
->>>>>>> fd67ef758e35c5ccedbaf94bada8db08895aa301
 
   onMount(() => {
     createStoreFromUserInput(canvasId, nodes, edges);

@@ -1,3 +1,44 @@
+/*
+
+
+Important functions (in order of how likely I think you are to use them):
+
+findStore(canvasId: string)
+- Input: canvasId. There can be multiple Svelvet canvases on the same page, and each has their own store
+- Returns: store
+- Notes: You will need to call this function on every component you make
+
+getNodes(store, filter)
+- Description: this function returns of list of Node objects
+- Input: store: the store where you get the list of Node objects from
+-        filter: an object where you can filter the array. For example, if you want to find nodes with an id of 'sdf-2d3fs' and positionX=35, then you
+                 would set filter = {id: 'sdf-2d3fs, positionX: 35}. 
+                 Right now, you can only test for equality.
+- Notes: This is a very mongoose way of retrieving information. Given the relational nature of our stores, maybe it would be better to use an SQL-like syntax
+         This array is non-reactive (ie, you cannot use information from this array to force a re-render of a Svelte component)
+
+getAnchors(store, filter)
+- Description: same as getNodes, but for Anchor objects
+
+
+createStoreEmpty(canvasId: string)
+- Input: canvasId. 
+- Returns: store
+- Notes. This should be called once every time you initialize a new Svelvet canvas, (ie, only in the Svelvet.svelte file)
+
+createStoreFromUserInput(canvasId, nodes, edges)
+- canvasId: this the the canvasId of the Svelvet component you are creating a store for
+- nodes: this is an array of objects containing node info that is defined by the user. NOTE THAT THE STRUCTURE DIFFERS FROM THE NODES CLASS
+         The whole point of createStoreFromUserInput is to convert nodes into proper Svelvet Node objects. An example of nodes is in 
+         $routes/testingplayground/index.svelte
+- edges: same as nodes, this is an array of objects containing edge info THAT IS DIFFERENT FROM THE EDGE CLASS.
+- Returns: store
+- Notes: this is mis-named, it doesn't actually create a store it populates an existing store so "createStoreEmpty" must be called first.
+         TODO: rename this
+
+
+*/
+
 import { stores } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
 import type {

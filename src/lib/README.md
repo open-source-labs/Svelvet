@@ -22,8 +22,8 @@ We suggest the following to future developers:
 
 - The most important suggestion can be summed up as: make the store look more like PostgreSQL and less like mongoDB. (TODO: read up Codd's rules for databases)
 - Preserve the relational nature of the Svelvet store and avoid the document model. For example, if you want to find out node that is the "source" for a given edge, do not store that node id on the edge table. Instead, do a lookup on the source anchor foreign key, then go to the anchor table and do a lookup on the node foreign key. While this is more work, it also preserves a single state of truth for node/anchor/edge relationships and will make implementing new features easier.
-- Create new tables when adding new features. For example, if you want to add a new feature where a node wears a "hat", do not embed "hat" parameters in the Node table. Instead, create a new "Hat" table with a foreign key that links to the appropriate node. This increaes the modularity of the code.
-- Avoid circular foreign key relationships. For example, currently an "edge" contains a foreign key to a "source anchor", which itself contains a foreign key to a "node". Avoid creating a foreign key from a "node" back to an "edge". The reason for this is to avoid complexity when populating the store; imagine populating a SQL database with foreign keys where the parents do not exist. Allowing nullable foreign keys is possible, but then you have to define the behavior of an edge without a node. Note that this also means that edges/anchors cannot exist in isolation; every edge must have two anchors, and every anchor must have a node. We believe this constraint is useful because it matches the definition of an edge in graph theory. We suggest that if you want to add functionality to create edges without nodes to define a separate table for nodeless edges and not hack changes onto edges.
+- Create new tables when adding new features. For example, if you want to add a new feature where a node wears a "hat", do not embed "hat" parameters in the Node table. Instead, create a new "Hat" table with a foreign key that links to the appropriate node. This increaes the modularity of the code; you can easily remove the hat feature without disturbing core Svelvet.
+- Avoid circular foreign key relationships. For example, currently an "edge" contains a foreign key to a "source anchor", which itself contains a foreign key to a "node". Avoid creating a foreign key from a "node" back to an "edge". This makes the flow of information easier to reason about; moving a node will cause an update to anchors, which will itself cause an update to edges.
 
 ## Important files
 
@@ -43,3 +43,9 @@ We suggest the following to future developers:
 
 - `$lib/views/`
   All folders that are not for `DevTools` and `RefactoredComponents` are Svelvet components from the original team. We will eventually be deleting these but they are useful to have around so we can `diff` files and see what fixes need to be made. You can visualize these components on `http://localhost:3000/testingplayground2/`
+
+- `$lib/types/`
+  this these are legacy types needed to run the old Svelvet5 components, we will delete these later
+
+- `$lib/store/store_old.ts`
+  this is the Svelvet5 store needed to run old components, we will delete this later
