@@ -92,8 +92,8 @@ export class Node implements NodeType {
     public image: boolean,
     public src: string,
     public textColor: string,
-    public targetPosition: 'left ' | 'right' | 'top' | 'bottom', // TODO: refactor this out, anchor should take care of this
-    public sourcePosition: 'left ' | 'right' | 'top' | 'bottom', // TODO: refator this out, anchor should take care of this
+    public targetPosition: 'left' | 'right' | 'top' | 'bottom', // TODO: refactor this out, anchor should take care of this
+    public sourcePosition: 'left' | 'right' | 'top' | 'bottom', // TODO: refator this out, anchor should take care of this
     public borderRadius: number
   ) {}
 
