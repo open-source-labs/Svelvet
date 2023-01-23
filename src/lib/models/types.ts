@@ -67,16 +67,17 @@ export interface NodeType {
 
 export interface EdgeType {
   id: string;
-  type?: string;
-  targetId: string;
-  sourceId: string;
+  sourceId: string; // id of node that is the "source" of the edge : TODO: can we remove this? this is redundant to sourceAnchorId
+  targetId: string; // id of node that is the "target" of the edge : TODO: can we remove this? this is redundant to targetAnchorId
   sourceX: number;
   sourceY: number;
   targetX: number;
   targetY: number;
-  sourceAnchorId: string;
-  targetAnchorId: string;
-  label: string;
+  sourceAnchorId: string; // id of the anchor that is the "source" of the edge
+  targetAnchorId: string; // id of the anchor that is the "target" of the edge
+  canvasId: string;
+  label?: string;
+  type?: string;
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;

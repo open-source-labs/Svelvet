@@ -13,86 +13,27 @@ import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
 */
 export const stores: { [key: string]: StoreType } = {};
 
-export class Edge {
-  id: string;
-  canvasId: string;
-  sourceAnchorId: string;
-  targetAnchorId: string;
-  sourceId: string;
-  targetId: string;
-  type?: string;
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  label: string;
-  labelBgColor?: string;
-  labelTextColor?: string;
-  edgeColor?: string;
-  animate?: boolean;
-  noHandle?: boolean;
-  arrow?: boolean;
-
-  constructor({
-    id,
-    sourceId,
-    targetId,
-    type,
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourceAnchorId,
-    targetAnchorId,
-    canvasId,
-    label,
-    labelBgColor,
-    labelTextColor,
-    edgeColor,
-    animate,
-    noHandle,
-    arrow,
-  }: {
-    id: string;
-    sourceId: string;
-    targetId: string;
-    type?: string;
-    sourceX: number;
-    sourceY: number;
-    targetX: number;
-    targetY: number;
-    sourceAnchorId: string;
-    targetAnchorId: string;
-    canvasId: string;
-    label: string;
-    labelBgColor?: string;
-    labelTextColor?: string;
-    edgeColor?: string;
-    animate?: boolean;
-    noHandle?: boolean;
-    arrow?: boolean;
-  }) {
-    this.id = id;
-    //surce is the id of the source node
-    this.sourceId = sourceId;
-    //target is the id of the target node
-    this.targetId = targetId;
-    this.sourceX = sourceX;
-    this.sourceY = sourceY;
-    this.targetX = targetX;
-    this.targetY = targetY;
-    this.type = type;
-    this.sourceAnchorId = sourceAnchorId;
-    this.targetAnchorId = targetAnchorId;
-    this.canvasId = canvasId;
-    this.label = label;
-    this.labelBgColor = labelBgColor;
-    this.labelTextColor = labelTextColor;
-    this.edgeColor = edgeColor;
-    this.animate = animate;
-    this.noHandle = noHandle;
-    this.arrow = arrow;
-  }
+export class Edge implements EdgeType {
+  constructor(
+    public id: string,
+    public sourceId: string, // id of node that is the "source" of the edge : TODO: can we remove this? this is redundant to sourceAnchorId
+    public targetId: string, // id of node that is the "target" of the edge : TODO: can we remove this? this is redundant to targetAnchorId
+    public sourceX: number,
+    public sourceY: number,
+    public targetX: number,
+    public targetY: number,
+    public sourceAnchorId: string, // id of the anchor that is the "source" of the edge
+    public targetAnchorId: string, // id of the anchor that is the "target" of the edge
+    public canvasId: string,
+    public label?: string,
+    public type?: string,
+    public labelBgColor?: string,
+    public labelTextColor?: string,
+    public edgeColor?: string,
+    public animate?: boolean,
+    public noHandle?: boolean,
+    public arrow?: boolean
+  ) {}
 
   // TODO: implement me
   handleDelete() {

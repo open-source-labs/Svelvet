@@ -91,29 +91,26 @@ export function populateEdgesStore(
       targetAnchor = anchors[0];
     }
 
-    // create edge
-    const params = {
-      id: edgeId,
-      sourceId: sourceNodeId.toString(),
-      targetId: targetNodeId.toString(),
-      type,
-      sourceX: sourceAnchor.positionX,
-      sourceY: sourceAnchor.positionY,
-      targetX: targetAnchor.positionX,
-      targetY: targetAnchor.positionY,
-      sourceAnchorId: sourceAnchor.id,
-      targetAnchorId: targetAnchor.id,
+    edgesStore[edgeId] = new Edge(
+      edgeId,
+      sourceNodeId.toString(),
+      targetNodeId.toString(),
+      sourceAnchor.positionX,
+      sourceAnchor.positionY,
+      targetAnchor.positionX,
+      targetAnchor.positionY,
+      sourceAnchor.id,
+      targetAnchor.id,
       canvasId,
       label,
+      type,
       labelBgColor,
       labelTextColor,
       edgeColor,
       animate,
       noHandle,
-      arrow,
-    };
-
-    edgesStore[edgeId] = new Edge(params);
+      arrow
+    );
   }
   store.edgesStore.set(edgesStore);
 }
@@ -169,24 +166,6 @@ export function populateNodesStore(
   for (let i = 0; i < nodes.length; i++) {
     const userNode: UserNodeType = nodes[i];
     const nodeId = userNode.id;
-
-    // const params = {
-    //   id: nodeId.toString(), // the user might input a number
-    //   positionX: userNode.position.x,
-    //   positionY: userNode.position.y,
-    //   width: userNode.width,
-    //   height: userNode.height,
-    //   bgColor: userNode.bgColor,
-    //   data: JSON.stringify(userNode.data),
-    //   canvasId,
-    //   borderColor: userNode.borderColor,
-    //   image: userNode.image,
-    //   src: userNode.src,
-    //   textColor: userNode.textColor,
-    //   targetPosition: userNode.targetPosition,
-    //   sourcePosition: userNode.sourcePosition,
-    //   borderRadius: userNode.borderRadius,
-    // };
 
     const node = new Node(
       nodeId.toString(),
