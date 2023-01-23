@@ -118,6 +118,7 @@ export function populateEdgesStore(
 
 export function populateAnchorsStore(
   store: StoreType,
+  nodes: UserNodeType[],
   edges: UserEdgeType[],
   canvasId: string
 ) {

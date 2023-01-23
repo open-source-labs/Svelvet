@@ -1,5 +1,14 @@
 # README
 
+## TODO
+
+- move Svelvet5 code into its own "libOld" folder
+- Update the setPosition method for Anchors to use the callback. This is necessary for resizing nodes
+  file: store.js
+- Write a StoreEditor component to read/update the store (like a spreadsheet). This will be necessary to develop deleting/resizing nodes and anchors. This can be a brand new file. You will want separate the controller to $lib/controllers/storeEditor.ts (already created)
+- Implement the delete functionality on Anchors/Nodes/Edges. We probably want the store-editor component to be finished first for testing. file: store.js
+- Think through how you would update the store to allow for functionality to resize a component. I have an idea on how to do this but I think this is a learning experience to think through.
+
 ## Motivation
 
 Svelvet was originally written as a monolith. This increased development speed but made the code fragile. For example, one Svelvet team attempted to implement deletion of edges but found "it would take an entire revamp of the entire node/edge relationship" to fix bugs and ended up scrapping the feature entirely.
