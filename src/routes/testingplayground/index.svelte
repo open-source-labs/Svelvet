@@ -1,6 +1,5 @@
 <script>
   import Canvas from '$lib/views/DevTools/Canvas.svelte';
-  import Svelvet from '$lib/views/Containers/Svelvet/index.svelte';
 
   const initialNodes = [
     {

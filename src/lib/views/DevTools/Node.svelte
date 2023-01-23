@@ -5,8 +5,6 @@
     EdgeType,
     AnchorType,
     StoreType,
-    TypeUserNode,
-    TypeUserEdge,
   } from '$lib/models/types';
   export let nodeId: string;
   export let canvasId: string;
