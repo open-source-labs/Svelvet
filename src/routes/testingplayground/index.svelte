@@ -1,168 +1,119 @@
 <script>
+  import Canvas from '$lib/views/DevTools/Canvas.svelte';
 
-  import Svelvet from 'svelvet';
+  const initialNodes = [
+    {
+      id: 1,
+      position: { x: 225, y: 10 },
+      data: { label: 'Add Images!' },
+      width: 100,
+      height: 100,
+      bgColor: 'white',
+      borderColor: 'transparent',
+      image: true,
+      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+    },
+    {
+      id: 2,
+      position: { x: 390, y: 180 },
+      data: { label: 'Mixed Anchors' },
+      width: 125,
+      height: 40,
+      bgColor: 'white',
+      textColor: 'black',
+      targetPosition: 'left',
+    },
+    {
+      id: 3,
+      position: { x: 225, y: 260 },
+      data: { label: 'Output Node' },
+      width: 100,
+      height: 40,
+      bgColor: 'white',
+      textColor: 'black',
+    },
+    {
+      id: 4,
+      position: { x: 25, y: 180 },
+      data: { label: 'Drag me!' },
+      width: 125,
+      height: 40,
+      bgColor: 'white',
+      textColor: 'black',
+      targetPosition: 'right',
+    },
+    {
+      id: 5,
+      position: { x: 390, y: 380 },
+      data: { label: 'Custom Node' },
+      width: 125,
+      height: 40,
+      bgColor: 'green',
+      textColor: 'black',
+      borderColor: 'transparent',
+      borderRadius: 0,
+    },
+    {
+      id: 6,
+      position: { x: 47.5, y: 360 },
+      data: { label: 'Custom Node' },
+      width: 80,
+      height: 80,
+      borderColor: '#FF4121',
+      borderRadius: 30,
+      bgColor: 'grey',
+      textColor: '#FF4121',
+    },
+  ];
 
-	// const initialNodes = [
-	// 	{
-	// 		id: 1,
-	// 		type: 'input',
-	// 		position: { x: 0, y: 0 },
-	// 		data: { label: 'Input' },
-	// 		width: 175,
-	// 		height: 40,
-	// 		bgColor: 'white',
-	// 		sourcePosition: 'bottom'
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		type: 'default',
-	// 		position: { x: 0, y: 100 },
-	// 		data: { label: 'Default' },
-	// 		width: 175,
-	// 		height: 40,
-	// 		bgColor: 'white'
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		type: 'output',
-	// 		position: { x: 0, y: 200 },
-	// 		data: { label: 'Output' },
-	// 		width: 175,
-	// 		height: 40,
-	// 		bgColor: 'white'
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		type: 'output',
-	// 		position: { x: 200, y: 200 },
-	// 		data: { label: 'Bye!' },
-	// 		width: 175,
-	// 		height: 40,
-	// 		bgColor: 'white'
-	// 	}
-	// ];
-
-	const initialNodes = [
-		{
-			id: 1,
-			type: 'input',
-			position: { x: 450, y: 0 },
-			data: { label: '1' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			sourcePosition: 'bottom'
-		},
-		{
-			id: 2,
-			type: 'default',
-			position: { x: 550, y: 150 },
-			data: { label: '2' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			sourcePosition: 'right',
-			targetPositon: 'top'
-		},
-		{
-			id: 3,
-			type: 'default',
-			position: { x: 350, y: 150 },
-			data: { label: '3' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPositon: 'right',
-			sourcePosition: 'left'
-		},
-		{
-			id: 4,
-			type: 'default',
-			position: { x: 50, y: 200 },
-			data: { label: '4' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'right',
-			sourcePosition: 'bottom'
-		},
-		{
-			id: 5,
-			type: 'output',
-			position: { x: 750, y: 250 },
-			data: { label: '5' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'top',
-			sourcePosition: 'left'
-		},
-		{
-			id: 6,
-			type: 'output',
-			position: { x: 450, y: 750 },
-			data: { label: '6' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'bottom',
-			sourcePosition: 'top'
-		},
-		{
-			id: 7,
-			type: 'output',
-			position: { x: 550, y: 600 },
-			data: { label: '7' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'bottom',
-			sourcePosition: 'right'
-		},
-		{
-			id: 8,
-			type: 'output',
-			position: { x: 250, y: 600 },
-			data: { label: '8' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'bottom',
-			sourcePosition: 'top'
-		},
-		{
-			id: 9,
-			type: 'output',
-			position: { x: 25, y: 475 },
-			data: { label: '9' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'right',
-			sourcePosition: 'left'
-		},
-		{
-			id: 10,
-			type: 'output',
-			position: { x: 750, y: 475 },
-			data: { label: '10' },
-			width: 175,
-			height: 40,
-			bgColor: 'white',
-			targetPosition: 'left',
-			sourcePosition: 'left'
-		},
-	];
   const initialEdges = [
-		{ id: 'e1-2', source: 1, type: 'straight', target: 2, label: 'e1-2' },
-		{ id: 'e1-3', source: 1, type: 'bezier', target: 3, label: 'e1-3' },
-		{ id: 'e2-3', source: 2, target: 5,type: 'smoothstep',  label: 'e2-3' },
-		{ id: 'e2-4', source: 3, target: 4, type: 'step', label: 'e2-4', animate: true },
-		{ id: 'e6-7', source: 6, target: 7, type: 'straight', label: 'e6-7', animate: true },
-		{ id: 'e6-8', source: 6, target: 8, type: 'straight', label: 'e6-8', animate: true },
-		{ id: 'e8-9', source: 8, target: 9, type: 'bezier', label: 'e8-9', animate: true },
-		{ id: 'e7-10', source: 7, target: 10, type: 'smoothstep', label: 'e7-10', animate: false },
-	];
+    { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
+    {
+      id: 'e2-3',
+      source: 2,
+      target: 3,
+      animate: true,
+      label: 'animated edges',
+    },
+    {
+      id: 'e1-4',
+      source: 1,
+      target: 4,
+      type: 'step',
+      animate: true,
+      edgeColor: '#FF4121',
+    },
+    {
+      id: 'e2-5',
+      source: 2,
+      target: 5,
+      label: 'colored edges',
+      animate: true,
+      arrow: true,
+      edgeColor: '#FF4121',
+      labelBgColor: '#1F2937',
+      labelTextColor: '#FFE4E6',
+    },
+    { id: 'e2-6', source: 4, target: 6, type: 'straight' },
+    {
+      id: 'e2-7',
+      source: 3,
+      target: 6,
+      type: 'smoothstep',
+      label: 'colored label',
+      labelBgColor: '#FF4561',
+      labelTextColor: 'white',
+      animate: true,
+    },
+  ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} width={900} height={900} background />
+<!-- <Svelvet
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+/> -->
+
+<Canvas nodes={initialNodes} edges={initialEdges} />

@@ -1,6 +1,7 @@
 import Svelvet from 'svelvet';
 export default Svelvet;
 
+// From the 5.0 team
 // export * from './types';
 // not sure lib needs to stay in the repo anymore
 // but all tests are currently running off this lib folder, so tests would need to be re-written

@@ -1,11 +1,12 @@
-import EdgeText from '$lib/Edges/EdgeText.svelte';
+import EdgeText from '$lib/views/RefactoredComponents/EdgeText.svelte';
+
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 beforeEach(() => {
   const mockEdgeTextProps = {
     centerX: 100,
     centerY: 150,
-    label: 'edge text test'
+    label: 'edge text test',
   };
   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
 });

@@ -1,4 +1,4 @@
-import SimpleBezierEdge from '$lib/Edges/SimpleBezierEdge.svelte';
+import SimpleBezierEdge from 'src/libOld/Edges/SimpleBezierEdge.svelte';
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 const bottom_top = {
@@ -10,8 +10,8 @@ const bottom_top = {
   sourcePosition: 'bottom',
   targetPosition: 'top',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 const right_left = {
   id: 'e1-2',
@@ -22,8 +22,8 @@ const right_left = {
   sourcePosition: 'right',
   targetPosition: 'left',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 
 const left_right = {
@@ -35,8 +35,8 @@ const left_right = {
   sourcePosition: 'left',
   targetPosition: 'right',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 
 const top_left = {
@@ -48,8 +48,8 @@ const top_left = {
   sourcePosition: 'top',
   targetPosition: 'left',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 
 const top_right = {
@@ -61,8 +61,8 @@ const top_right = {
   sourcePosition: 'top',
   targetPosition: 'right',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 
 const bottom_left = {
@@ -74,8 +74,8 @@ const bottom_left = {
   sourcePosition: 'bottom',
   targetPosition: 'left',
   data: {
-    label: 'this is the test edge'
-  }
+    label: 'this is the test edge',
+  },
 };
 
 test('should calculate the correct bezier path string from bottom to top', () => {
@@ -110,7 +110,10 @@ test('should calculate the correct bezier path string from top to right', () => 
   render(SimpleBezierEdge, { props: { edge: top_right } });
   const pathElement = screen.getByLabelText('svg-path');
 
-  expect(pathElement).toHaveAttribute('d', 'M100,400 C100,300 262.5,200 200,200');
+  expect(pathElement).toHaveAttribute(
+    'd',
+    'M100,400 C100,300 262.5,200 200,200'
+  );
 });
 
 test('should calculate the correct bezier path string from bottom to left', () => {
