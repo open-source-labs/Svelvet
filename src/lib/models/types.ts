@@ -1,7 +1,7 @@
 import type { Readable, Writable } from 'svelte/store';
 
 export interface UserNodeType {
-  id: number | string;
+  id: string;
   width: number;
   height: number;
   bgColor: string;
@@ -18,8 +18,8 @@ export interface UserNodeType {
 
 export interface UserEdgeType {
   id: string;
-  source: number | string;
-  target: number | string;
+  source: string;
+  target: string;
   label?: string;
   labelBgColor?: string;
   labelTextColor?: string;

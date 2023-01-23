@@ -116,17 +116,35 @@ export function populateEdgesStore(
   store.edgesStore.set(edgesStore);
 }
 
+function findUserNodeById(
+  id: string,
+  userNodes: UserNodeType[]
+): UserNodeType | null {
+  for (let i = 0; i < userNodes.length; i++) {
+    const userNode = userNodes[i];
+    if (userNode.id === id) return userNode;
+  }
+  return null;
+}
+
 export function populateAnchorsStore(
   store: StoreType,
   nodes: UserNodeType[],
   edges: UserEdgeType[],
   canvasId: string
 ) {
-  // anchorsStore will populated and synchronized to store.anchorsStore
+  // anchorsStore will populated and eventaully synchronized to store.anchorsStore
   const anchorsStore: { [key: string]: AnchorType } = {};
+  // iterate through user edges. Note the user never explicitly defines anchors; we calculate anchors
+  // from the user edge/node information
   for (let i = 0; i < edges.length; i++) {
     const userEdge = edges[i];
-    const { source: sourceNodeId, target: targetNodeId, type } = userEdge;
+    // find the source and target userNodes. These will be used to create the nodeId foreign key and
+    // determine placement of the anchor based on userNode.targetPosition, useNode.sourcePosition
+    const { source: sourceNodeId, target: targetNodeId } = userEdge;
+    const sourceUserNode = findUserNodeById(sourceNodeId.toString(), nodes);
+    console.log(sourceNodeId.toString(), nodes);
+    console.log('!', sourceUserNode);
     // create source anchor
     const sourceAnchor = createAnchor(
       store,

@@ -8,6 +8,7 @@
 - Write a StoreEditor component to read/update the store (like a spreadsheet). This will be necessary to develop deleting/resizing nodes and anchors. This can be a brand new file. You will want separate the controller to $lib/controllers/storeEditor.ts (already created)
 - Implement the delete functionality on Anchors/Nodes/Edges. We probably want the store-editor component to be finished first for testing. file: store.js
 - Think through how you would update the store to allow for functionality to resize a component. I have an idea on how to do this but I think this is a learning experience to think through.
+- sanitize user input so that all id's are strings. Change types/toString() to reflect that all types are strings now
 
 ## Motivation
 

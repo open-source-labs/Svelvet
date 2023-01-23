@@ -16,12 +16,24 @@
   import GraphView from './GraphView.svelte';
 
   // Declaring variables for Svelvet components which will be usable in other files
-  export let nodes: UserNodeType[];
-  export let edges: UserEdgeType[];
+  export let nodes: UserNodeType[]; // TODO: new type to account for users putting in number in ids
+  export let edges: UserEdgeType[]; // TODO: new type to account for users putting in number in ids
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = true;
   export let movement: boolean = true;
+
+  // sanitize user input
+  // This is so that all id's are strings
+  nodes = nodes.map((e) => {
+    e.id = e.id.toString();
+    return e;
+  });
+  edges = edges.map((e) => {
+    e.source = e.source.toString();
+    e.target = e.target.toString();
+    return e;
+  });
 
   // generates a unique string for each svelvet component's unique store instance
   const canvasId: string = (Math.random() + 1).toString(36).substring(7);
