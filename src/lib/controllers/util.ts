@@ -13,11 +13,15 @@ import { getNodes, getAnchors } from './storeApi';
 
 function createAnchor(
   store: StoreType,
-  nodeId: string,
+  userNode: UserNodeType | null,
   sourceOrTarget: 'source' | 'target',
   canvasId: string,
   edgeId: string
 ) {
+  // edge case
+  if (userNode === null)
+    throw `you cannot create an anchor without a user node (for now)`;
+
   const id = uuidv4();
 
   // This is a callback. It runs later
@@ -26,7 +30,7 @@ function createAnchor(
   // TODO: abstract this out so that people can define their own custom anchor positions
   const anchor_cb = () => {
     // get node data
-    const node = getNodes(store, { id: nodeId })[0];
+    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
     const { positionX, positionY, width, height } = node;
     // calculate the position of the anchor and set
     const anchorsStore = get(store.anchorsStore);
@@ -37,7 +41,7 @@ function createAnchor(
   // Create a new anchor
   const anchor = new Anchor(
     id,
-    nodeId,
+    userNode.id,
     edgeId,
     sourceOrTarget,
     -1,
@@ -142,13 +146,12 @@ export function populateAnchorsStore(
     // find the source and target userNodes. These will be used to create the nodeId foreign key and
     // determine placement of the anchor based on userNode.targetPosition, useNode.sourcePosition
     const { source: sourceNodeId, target: targetNodeId } = userEdge;
-    const sourceUserNode = findUserNodeById(sourceNodeId.toString(), nodes);
-    console.log(sourceNodeId.toString(), nodes);
-    console.log('!', sourceUserNode);
+    const sourceUserNode = findUserNodeById(sourceNodeId, nodes);
+    const targetUserNode = findUserNodeById(targetNodeId, nodes);
     // create source anchor
     const sourceAnchor = createAnchor(
       store,
-      sourceNodeId.toString(),
+      sourceUserNode,
       'source',
       canvasId,
       userEdge.id
@@ -156,7 +159,7 @@ export function populateAnchorsStore(
     // create target anchor
     const targetAnchor = createAnchor(
       store,
-      targetNodeId.toString(),
+      targetUserNode,
       'target',
       canvasId,
       userEdge.id
