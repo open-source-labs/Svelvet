@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import type {
   NodeType,
   EdgeType,
@@ -17,7 +18,7 @@ function createAnchor(
   canvasId: string,
   edgeId: string
 ) {
-  const id = (Math.random() + 1).toString(36).substring(7); // TODO: replace with uuid
+  const id = uuidv4();
 
   // This is a callback. It runs later
   // When it runs, it will set the position of the anchor depending

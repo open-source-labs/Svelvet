@@ -1,5 +1,6 @@
 <!--Note: Import / export in svelvet is used for passing props  -->
 <script lang="ts">
+  import { v4 as uuidv4 } from 'uuid';
   import GraphView from '$lib/views/Containers/GraphView/index.svelte';
   import { findOrCreateStore } from '$lib/models/store_old';
   import { afterUpdate, onMount } from 'svelte';
@@ -14,7 +15,7 @@
   export let movement: boolean = true;
 
   // generates a unique string for each svelvet component's unique store instance
-  const key = (Math.random() + 1).toString(36).substring(7);
+  const key = uuidv4();
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
   const svelvetStore = findOrCreateStore(key);
