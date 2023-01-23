@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Position } from '$lib/types/utils';
   export let x: number;
   export let y: number;
 </script>

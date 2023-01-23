@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { findOrCreateStore } from '$lib/models/store_old';
-  import type { Node } from '$lib/types/types';
+  import { findOrCreateStore } from '../stores/store_old';
+  import { Position } from '../types';
+  import type { Node } from '../types/types';
+  import { logDOM } from '@testing-library/svelte';
 
   export let node: Node;
   export let key: string;
@@ -11,29 +13,38 @@
     onTouchMove,
     nodeSelected,
     nodeIdSelected,
+    movementStore,
+    widthStore,
+    heightStore,
   } = findOrCreateStore(key);
+
+  $: shouldMove = moving && $movementStore;
 
   // $nodeSelected is a store boolean that lets GraphView component know if ANY node is selected
   // moving local boolean specific to node selected, to change position of individual node once selected
   let moving = false;
   let moved = false;
-
-  //This is a modified Node Component that is formated to fill the entire space of the div to fit the image and does not allow for a label
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
+    console.log(e.clientX);
     e.preventDefault();
-    if (moving) {
+    if (shouldMove) {
       onMouseMove(e, node.id);
       moved = true;
+
+      if (node.position.x > $widthStore || node.position.y > $heightStore) {
+        moving = false;
+        $nodeSelected = false;
+      }
     }
   }}
 />
 
-<img
+<div
   on:touchmove={(e) => {
-    if (moving) {
+    if (shouldMove) {
       onTouchMove(e, node.id);
     }
   }}
@@ -61,19 +72,28 @@
     moved = false;
   }}
   class="Node"
-  style="left: {node.position.x}px; 
-      top: {node.position.y}px; 
-      width: {node.width}px; 
-      height: {node.height}px; 
-      background-color: {node.bgColor}; 
-      border-color: {node.borderColor}; 
-      border-radius: {node.borderRadius}px;
-      color: {node.textColor};"
-  src={node.src}
-  alt=""
+  style="left: {node.position.x}px;
+    top: {node.position.y}px;
+    width: {node.width}px;
+    height: {node.height}px;
+    background-color: {node.bgColor};
+    border-color: {node.borderColor};
+    border-radius: {node.borderRadius}px;
+    color: {node.textColor};"
   id="svelvet-{node.id}"
-/>
-<slot />
+>
+  <!-- This executes if node.image is present without node.label -->
+  {#if node.image}
+    <img
+      src={node.src}
+      alt=""
+      style="width: {node.width * 0.75}px;
+			 height: {node.height * 0.75}px;
+       overflow: hidden;"
+    />
+  {/if}
+  <slot />
+</div>
 
 <style>
   .Node {

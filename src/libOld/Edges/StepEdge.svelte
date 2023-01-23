@@ -1,6 +1,6 @@
 <script lang="ts">
   import SmoothStepEdge from './SmoothStepEdge.svelte';
-  import type { DerivedEdge } from '$lib/types';
+  import type { DerivedEdge } from '../types';
   export let edge: DerivedEdge;
 </script>
 

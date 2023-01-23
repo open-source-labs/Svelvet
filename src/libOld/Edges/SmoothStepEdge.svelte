@@ -1,9 +1,9 @@
 <script lang="ts">
-  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
+  import BaseEdge from './BaseEdge.svelte';
   import { getCenter } from './utils';
-  import { Position } from '$lib/types/utils';
+  import { Position } from '../types/utils';
   import EdgeAnchor from './EdgeAnchor.svelte';
-  import type { DerivedEdge } from '$lib/types';
+  import type { DerivedEdge } from '../types';
 
   // These are some helper methods for drawing the round corners
   // The name indicates the direction of the path. "bottomLeftCorner" goes

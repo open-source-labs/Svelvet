@@ -1,4 +1,4 @@
-import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
+import SimpleBezierEdge from 'src/libOld/Edges/SimpleBezierEdge.svelte';
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 const bottom_top = {

@@ -1,10 +1,10 @@
 <!--Note: Import / export in svelvet is used for passing props  -->
 <script lang="ts">
   import { v4 as uuidv4 } from 'uuid';
-  import GraphView from '$lib/views/Containers/GraphView/index.svelte';
-  import { findOrCreateStore } from '$lib/models/store_old';
+  import GraphView from '../GraphView/index.svelte';
+  import { findOrCreateStore } from '../../stores/store_old';
   import { afterUpdate, onMount } from 'svelte';
-  import type { Node, Edge } from '$lib/types/index.js';
+  import type { Node, Edge } from '../../types/index';
 
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: Node[];

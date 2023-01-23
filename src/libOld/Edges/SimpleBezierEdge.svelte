@@ -1,7 +1,7 @@
 <script lang="ts">
-  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
-  import { Position } from '$lib/types/utils';
-  import type { DerivedEdge } from '$lib/types/types';
+  import BaseEdge from '../Edges/BaseEdge.svelte';
+  import { Position } from '../types/utils';
+  import type { DerivedEdge } from '../types/types';
 
   // how to create a smooth, controlled beizer edge from source and target positions
   // referenced from ReactFlow.dev

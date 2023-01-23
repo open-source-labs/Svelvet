@@ -3,15 +3,15 @@
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
 
-  import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
-  import StraightEdge from '$lib/views/Edges/StraightEdge.svelte';
-  import SmoothStepEdge from '$lib/views/Edges/SmoothStepEdge.svelte';
-  import StepEdge from '$lib/views/Edges/StepEdge.svelte';
-  import EdgeAnchor from '$lib/views/Edges/EdgeAnchor.svelte';
-  import Node from '$lib/views/Nodes/index.svelte';
-  import ImageNode from '$lib/views/Nodes/ImageNode.svelte';
+  import SimpleBezierEdge from '../../Edges/SimpleBezierEdge.svelte';
+  import StraightEdge from '../../Edges/StraightEdge.svelte';
+  import SmoothStepEdge from '../../Edges/SmoothStepEdge.svelte';
+  import StepEdge from '../../Edges/StepEdge.svelte';
+  import EdgeAnchor from '../../Edges/EdgeAnchor.svelte';
+  import Node from '../../Nodes/index.svelte';
+  import ImageNode from '../../Nodes/ImageNode.svelte';
 
-  import { findOrCreateStore } from '$lib/models/store_old';
+  import { findOrCreateStore } from '../../stores/store_old';
 
   // leveraging d3 library to zoom/pan
   let d3 = {

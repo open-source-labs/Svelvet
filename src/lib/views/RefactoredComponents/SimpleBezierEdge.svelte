@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
-  import { Position } from '$lib/types/utils';
+  import BaseEdge from '$lib/views/RefactoredComponents/BaseEdge.svelte';
+  import { Position } from './utils';
   import type { EdgeType } from '$lib/models/types';
 
   // how to create a smooth, controlled beizer edge from source and target positions

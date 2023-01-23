@@ -1,7 +1,7 @@
 import Nodes from '$lib/views/Nodes/index.svelte';
 import TestNode from './TestNodeSlot.svelte';
 import { render, screen } from '@testing-library/svelte';
-import type { Node } from '$lib/types/types';
+import type { Node } from 'src/libOld/types/types';
 
 const mockNodes: Node[] = [
   {

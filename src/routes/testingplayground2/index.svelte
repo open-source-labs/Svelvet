@@ -1,7 +1,7 @@
 <script>
   import Canvas from '$lib/views/DevTools/Canvas.svelte';
-  import Svelvet from '$lib/views/Containers/Svelvet/index.svelte';
-
+  // import Svelvet from 'src/libOld/Containers/Svelvet/index.svelte';
+  import Svelvet from '../../libOld/Containers/Svelvet/index.svelte';
   const initialNodes = [
     {
       id: 1,

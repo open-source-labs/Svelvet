@@ -1,4 +1,5 @@
-import SmoothStepEdge from '$lib/views/Edges/SmoothStepEdge.svelte';
+import SmoothStepEdge from '$lib/views/RefactoredComponents/SmoothStepEdge.svelte';
+
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 const bottom_top = {

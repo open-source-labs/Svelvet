@@ -1,4 +1,5 @@
-import EdgeText from '$lib/views/Edges/EdgeText.svelte';
+import EdgeText from '$lib/views/RefactoredComponents/EdgeText.svelte';
+
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 beforeEach(() => {

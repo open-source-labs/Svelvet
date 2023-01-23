@@ -1,7 +1,7 @@
 <!-- Handling the rendering of edges -->
 <script lang="ts">
-  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
-  import type { DerivedEdge } from '$lib/types/types';
+  import BaseEdge from './BaseEdge.svelte';
+  import type { DerivedEdge } from '../types/types';
 
   export let edge: DerivedEdge;
 

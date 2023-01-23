@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EdgeTextProps } from '$lib/types/types';
+  import type { EdgeTextProps } from '../types/types';
 
   // destructuring props to pass into BaseEdge component
   export let edgeTextProps: EdgeTextProps;

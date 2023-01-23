@@ -1,7 +1,7 @@
 <script lang="ts">
-  import BaseEdge from '$lib/views/Edges/BaseEdge.svelte';
+  import BaseEdge from '$lib/views/RefactoredComponents/BaseEdge.svelte';
   import { getCenter } from './utils';
-  import { Position } from '$lib/types/utils';
+  import { Position } from './utils';
   import type { EdgeType } from '$lib/models/types';
 
   // These are some helper methods for drawing the round corners

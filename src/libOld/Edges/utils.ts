@@ -1,5 +1,5 @@
-import { Position } from '$lib/types/utils';
-import type {Node} from '$lib/types/types';
+import { Position } from '../types/utils';
+import type { Node } from '../types/types';
 
 export interface GetCenterParams {
   sourceX: number;
@@ -18,7 +18,7 @@ export const getCenter = ({
   targetX,
   targetY,
   sourcePosition = Position.Bottom,
-  targetPosition = Position.Top
+  targetPosition = Position.Top,
 }: GetCenterParams): [number, number, number, number] => {
   const sourceIsLeftOrRight = LeftOrRight.includes(sourcePosition);
   const targetIsLeftOrRight = LeftOrRight.includes(targetPosition);
@@ -26,7 +26,8 @@ export const getCenter = ({
   // we expect flows to be horizontal or vertical (all handles left or right respectively top or bottom)
   // a mixed edge is when one the source is on the left and the target is on the top for example.
   const mixedEdge =
-    (sourceIsLeftOrRight && !targetIsLeftOrRight) || (targetIsLeftOrRight && !sourceIsLeftOrRight);
+    (sourceIsLeftOrRight && !targetIsLeftOrRight) ||
+    (targetIsLeftOrRight && !sourceIsLeftOrRight);
 
   if (mixedEdge) {
     const xOffset = sourceIsLeftOrRight ? Math.abs(targetX - sourceX) : 0;
