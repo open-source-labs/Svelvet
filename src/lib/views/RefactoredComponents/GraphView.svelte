@@ -57,7 +57,7 @@
     .on('zoom', handleZoom);
 
   // function to handle zoom events - arguments: d3ZoomEvent
-  function handleZoom(e: any): void {
+  function handleZoom(this: any, e: any): void {
     if (!$movementStore) return;
 
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function

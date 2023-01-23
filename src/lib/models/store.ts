@@ -39,7 +39,7 @@ export class Anchor implements AnchorType {
   constructor(
     public id: string,
     public nodeId: string,
-    public edgeId: string, // TODO: refactor this out
+    public edgeId: string,
     public sourceOrTarget: 'source' | 'target',
     public positionX: number,
     public positionY: number,
