@@ -8,13 +8,13 @@
 - Write a StoreEditor component to read/update the store (like a spreadsheet). This will be necessary to develop deleting/resizing nodes and anchors. This can be a brand new file. You will want separate the controller to $lib/controllers/storeEditor.ts (already created)
 - Implement the delete functionality on Anchors/Nodes/Edges. We probably want the store-editor component to be finished first for testing. file: store.js
 - Think through how you would update the store to allow for functionality to resize a component. I have an idea on how to do this but I think this is a learning experience to think through.
-- sanitize user input so that all id's are strings. Change types/toString() to reflect that all types are strings now
+- sanitize user input so that all id's are strings (this is done). Change types/toString() to reflect that all types are strings now
 - render anchors. file: `$lib/views/RefactoredComponents/EdgeAnchor.svelte`. The triangle anchor was working at one point, now it isn't (it seems to work if you hardcode the position to top).
 - logic decide whether anchor position should be top/bottom/left/right
 - change Node.data from JSON string to object
 - new type for userNode, userEdget to fix typescript error from testingplayground/index.svelte
 - refactor anchor callbacks to use setPosition so that we cascade changes to edges (needed for resizing)
-- refactor out sourceAnchorId, targetAnchorId from edge. We should be thinking about anchors as a join. For some reason when we remove things break (probably because of constructor!)
+- get D3 scaling movement working
 
 ## Motivation
 
