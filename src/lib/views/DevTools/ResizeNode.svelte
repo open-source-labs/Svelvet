@@ -15,10 +15,10 @@
 <div
   class="ResizeNode"
   style="
-  left: {reactResizeNode.positionX - 50}px;
-  top: {reactResizeNode.positionY - 100}px;
-  width: {100}px;
-  height: {100}px;
+  left: {reactResizeNode.positionX - 5}px;
+  top: {reactResizeNode.positionY - 5}px;
+  width: {10}px;
+  height: {10}px;
   background-color: purple;
   border-color: purple;
   border-radius: 50%;"

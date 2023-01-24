@@ -79,6 +79,7 @@
     "marked": "^4.0.17",
     "svelte-json-tree": "^1.0.0",
     "svelte-material-icons": "^2.0.4",
+    "svelte-moveable": "^0.34.1",
     "svelte-parallax": "^0.6.0",
     "svelvet": "^5.0.7",
     "uuid": "^9.0.0",

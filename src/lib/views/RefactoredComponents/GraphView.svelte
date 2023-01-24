@@ -105,7 +105,6 @@
     {#each nodes as node}
       <Node nodeId={node.id} {canvasId}>{JSON.parse(node.data).label}</Node>
     {/each}
-
     {#each resize as res}
       <ResizeNode resizeId={res.id} {canvasId} />
     {/each}

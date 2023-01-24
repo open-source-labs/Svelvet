@@ -13,6 +13,7 @@ export class ResizeNode implements ResizeNodeType {
   constructor(
     public id: string,
     public canvasId: string,
+    public nodeId: string,
     public positionX: number,
     public positionY: number
   ) {}
