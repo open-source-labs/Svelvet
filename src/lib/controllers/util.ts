@@ -48,14 +48,6 @@ function createAnchor(
   else positionCb = edge.sourceAnchorCb;
   if (positionCb === undefined) positionCb = bottomCb;
 
-  // calculate the initial position of the anchor based on the position of the node
-  const [xPosition, yPosition, angle] = positionCb(
-    userNode.position.x,
-    userNode.position.y,
-    userNode.width,
-    userNode.height
-  );
-
   // wrap positionCB so that Anchor is able to set its own x,y position
   const fixedCb = () => {
     const node = getNodeById(store, userNode.id);
@@ -171,11 +163,11 @@ function createAnchor(
     userNode.id,
     edgeId,
     sourceOrTarget,
-    xPosition,
-    yPosition,
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
     fixedCb,
     canvasId,
-    angle
+    0 // dummy variables for x,y,angle for now
   );
   // return
   return anchor;
@@ -295,6 +287,11 @@ export function populateAnchorsStore(
 
   //populates the anchorsStore
   store.anchorsStore.set(anchorsStore);
+
+  // set anchor positions. We can only set anchor positions after anchorsStore and nodesStore
+  // has been populated. TODO: maybe add a check to see that anchorsStore and NodesStore populated?
+  const anchors = getAnchors(store);
+  for (const anchor of anchors) anchor.callback();
 }
 
 export function populateNodesStore(
