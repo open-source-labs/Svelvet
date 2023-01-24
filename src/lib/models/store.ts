@@ -61,7 +61,7 @@ export class Anchor implements AnchorType {
     public sourceOrTarget: 'source' | 'target',
     public positionX: number,
     public positionY: number,
-    public callback: Function,
+    public callback: Function, //
     public canvasId: string
   ) {}
 
@@ -70,17 +70,28 @@ export class Anchor implements AnchorType {
   // Then it will set the position of the anchor in the store
   // TODO: abstract this out so that people can define their own custom anchor positions
   setPositionFromNode() {
-    const anchorCb = (userCallback: Function): void => {
-      // get node data
-      const store = findStore(this.canvasId);
-      const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero
-      const { positionX, positionY, width, height } = node;
-      // calculate the position of the anchor
-      const [x, y] = userCallback(positionX, positionY, width, height);
-      const anchorsStore = get(store.anchorsStore);
-      this.positionX = x;
-      this.positionY = y;
-    };
+    // get node data
+    const store = findStore(this.canvasId);
+    const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero elements, this means that there is no node corresponding to this.nodeId
+    const { positionX, positionY, width, height } = node;
+    // calculate the new position of the anchor using user-defined callback
+    const [x, y] = this.callback(positionX, positionY, width, height);
+    const { edgesStore, anchorsStore } = stores[this.canvasId];
+    // set the position of the anchor
+    this.positionX = x;
+    this.positionY = y;
+    // update edges
+    edgesStore.update((edges) => {
+      const edge = edges[this.edgeId];
+      if (this.sourceOrTarget === 'source') {
+        edge.sourceX = x;
+        edge.sourceY = y;
+      } else {
+        edge.targetX = x;
+        edge.targetY = y;
+      }
+      return { ...edges };
+    });
   }
 
   setPosition(movementX: number, movementY: number) {
@@ -133,10 +144,10 @@ export class Node implements NodeType {
     const { anchorsStore } = stores[this.canvasId];
 
     anchorsStore.update((anchors) => {
-      for (const key in anchors) {
-        if (anchors[key].nodeId === this.id) {
-          // console.log('trying to update the anchorsStore')
-          anchors[key].setPosition(movementX, movementY);
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === this.id) {
+          anchors[anchorId].setPositionFromNode();
+          //anchors[anchorId].setPosition(movementX, movementY);
         }
       }
       return { ...anchors };
