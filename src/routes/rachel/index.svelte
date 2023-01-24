@@ -1,5 +1,6 @@
 <script>
   import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
+  import NodesStoreView from '$lib/views/RefactoredComponents/NodesStoreView.svelte';
 
   const initialNodes = [
     {
@@ -108,23 +109,22 @@
   ];
 </script>
 
-
-
 <Svelvet
+  canvasId="4asdlfkjs"
   nodes={initialNodes}
   edges={initialEdges}
   width={900}
   height={900}
   background
 />
-
-
+<NodesStoreView id={'4asdlfkjs'} />
 
 <Svelvet
+  canvasId="4tsdgss32"
   nodes={initialNodes}
   edges={initialEdges}
   width={900}
   height={900}
   background
 />
-
+<NodesStoreView id={'4tsdgss32'} />

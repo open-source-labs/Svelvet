@@ -16,7 +16,7 @@
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
 
-  import NodesStoreView from './NodesStoreView.svelte'; 
+  import NodesStoreView from './NodesStoreView.svelte';
 
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: UserNodeType[]; // TODO: new type to account for users putting in number in ids
@@ -25,6 +25,7 @@
   export let height: number = 600;
   export let background: boolean = true;
   export let movement: boolean = true;
+  export let canvasId: string = uuidv4();
 
   // sanitize user input
   // This is so that all id's are strings
@@ -39,7 +40,6 @@
   });
 
   // generates a unique string for each svelvet component's unique store instance
-  const canvasId: string = uuidv4();
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
   const svelvetStore = createStoreEmpty(canvasId);
@@ -66,7 +66,6 @@
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
-<NodesStoreView id={canvasId} />
 <div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
   <GraphView {canvasId} />
 </div>
