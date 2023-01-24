@@ -1,4 +1,10 @@
-import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
+import type {
+  NodeType,
+  EdgeType,
+  AnchorType,
+  StoreType,
+  ResizeNodeType,
+} from './types';
 
 /*
   `store` is a dictionary of Svelvet stores.
@@ -10,6 +16,15 @@ import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
     *
 */
 export const stores: { [key: string]: StoreType } = {};
+
+export class ResizeNode implements ResizeNodeType {
+  constructor(
+    public id: string,
+    public canvasId: string,
+    public positionX: number,
+    public positionY: number
+  ) {}
+}
 
 export class Edge implements EdgeType {
   constructor(

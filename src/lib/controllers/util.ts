@@ -4,12 +4,19 @@ import type {
   EdgeType,
   AnchorType,
   StoreType,
+  ResizeNodeType,
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Edge, Anchor, Node } from '$lib/models/store';
+import { Edge, Anchor, Node, ResizeNode } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors } from './storeApi';
+
+function createResizeNode(store: StoreType, canvasId: string) {
+  const id = uuidv4();
+  const resizeNode = new ResizeNode(id, canvasId, -5, -5);
+  return resizeNode;
+}
 
 function createAnchor(
   store: StoreType,
@@ -219,7 +226,7 @@ export function populateNodesStore(
   nodes: UserNodeType[],
   canvasId: string
 ) {
-  // this is the nodesStore object
+  // this is the nodesStore object. THIS IS NOT THE SAME AS A NODESTORE
   const nodesStore: { [key: string]: NodeType } = {};
   // iterate through user nodes and create node objects
   for (let i = 0; i < nodes.length; i++) {
@@ -243,5 +250,16 @@ export function populateNodesStore(
     );
     nodesStore[nodeId] = node;
   }
+  // This is actually what sets the store
   store.nodesStore.set(nodesStore);
+}
+
+export function populateResizeNodeStore(store: StoreType, canvasId: string) {
+  const resizeNodeStore: { [key: string]: ResizeNodeType } = {};
+
+  const resizeNode = createResizeNode(store, canvasId);
+  // console.log(resizeNode);
+  resizeNodeStore[resizeNode.id] = resizeNode;
+  // console.log('ResizeNodeStore', resizeNodeStore);
+  store.resizeNodesStore.set(resizeNodeStore);
 }

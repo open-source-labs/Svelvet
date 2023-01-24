@@ -6,6 +6,7 @@
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';
   import EdgeComponent from '$lib/views/DevTools/Edge.svelte';
+  import ResizeNodeComponent from '$lib/views/DevTools/ResizeNode.svelte';
   import {
     createStoreEmpty,
     createStoreFromUserInput,
@@ -25,7 +26,8 @@
 
   const canvasId: string = uuidv4();
   const testingStore = createStoreEmpty(canvasId);
-  const { nodesStore, edgesStore, anchorsStore } = testingStore;
+  const { nodesStore, edgesStore, anchorsStore, resizeNodesStore } =
+    testingStore;
 
   onMount(() => {
     createStoreFromUserInput(canvasId, nodes, edges);
@@ -33,6 +35,7 @@
 
   $: reactiveNodes = Object.keys($nodesStore);
   $: reactiveAnchors = Object.keys($anchorsStore);
+  $: reactiveResize = Object.keys($resizeNodesStore);
 </script>
 
 <div>
@@ -42,6 +45,10 @@
 
   {#each reactiveAnchors as anchor_id}
     <AnchorComponent {anchor_id} {canvasId} />
+  {/each}
+
+  {#each reactiveResize as resizeId}
+    <ResizeNodeComponent {resizeId} {canvasId} />
   {/each}
 </div>
 
