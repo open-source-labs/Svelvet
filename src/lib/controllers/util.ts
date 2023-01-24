@@ -32,60 +32,43 @@ function createAnchor(
   else if (sourceOrTarget === 'target') position = userNode.targetPosition;
   if (position === undefined) position = 'bottom';
 
-  // These are callbacks. It runs later
-  // When it runs, it will set the position of the anchor depending on the position of the node
-  // TODO: abstract this out so that people can define their own custom anchor positions
-  const topCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width / 2;
-    anchorsStore[id].positionY = positionY;
-  };
-  const bottomCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width / 2;
-    anchorsStore[id].positionY = positionY + height;
-  };
-  const leftCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX;
-    anchorsStore[id].positionY = positionY + height / 2;
-  };
-  const rightCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width;
-    anchorsStore[id].positionY = positionY + height / 2;
+  // This is a user-definedcallback
+  // It calculates the position of an anchor (x,y) coordinates so that
+  // the anchor is on the right side of a node parameterized by (x,y,width,height)
+  const rightCb = (
+    xNode: number,
+    yNode: number,
+    widthNode: number,
+    heightNode: number
+  ) => {
+    const xAnchor = xNode + widthNode;
+    const yAnchor = yNode + heightNode / 2;
+    return [xAnchor, yAnchor];
   };
 
   let positionCb;
-  if (position === 'top') positionCb = topCb;
-  else if (position === 'bottom') positionCb = bottomCb;
-  else if (position === 'left') positionCb = leftCb;
+  if (position === 'top') positionCb = rightCb;
+  else if (position === 'bottom') positionCb = rightCb;
+  else if (position === 'left') positionCb = rightCb;
   else if (position === 'right') positionCb = rightCb;
-  else positionCb = bottomCb;
+  else positionCb = rightCb;
+
+  // calculate the initial position of the anchor based on the position of the node
+  const [xPosition, yPosition] = positionCb(
+    userNode.position.x,
+    userNode.position.y,
+    userNode.width,
+    userNode.height
+  );
+
   // Create a new anchor
   const anchor = new Anchor(
     id,
     userNode.id,
     edgeId,
     sourceOrTarget,
-    -1,
-    -1,
+    xPosition,
+    yPosition,
     positionCb,
     canvasId
   );

@@ -1,4 +1,6 @@
 import type { NodeType, EdgeType, AnchorType, StoreType } from './types';
+import { writable, derived, get, readable } from 'svelte/store';
+import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 
 /*
   `store` is a dictionary of Svelvet stores.
@@ -46,6 +48,24 @@ export class Anchor implements AnchorType {
     public callback: Function,
     public canvasId: string
   ) {}
+
+  // Uses
+  // When anchorCB runs, it will calculate the position of the anchor using the user-defined callback.
+  // Then it will set the position of the anchor in the store
+  // TODO: abstract this out so that people can define their own custom anchor positions
+  setPositionFromNode() {
+    const anchorCb = (userCallback: Function): void => {
+      // get node data
+      const store = findStore(this.canvasId);
+      const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero
+      const { positionX, positionY, width, height } = node;
+      // calculate the position of the anchor
+      const [x, y] = userCallback(positionX, positionY, width, height);
+      const anchorsStore = get(store.anchorsStore);
+      this.positionX = x;
+      this.positionY = y;
+    };
+  }
 
   setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;

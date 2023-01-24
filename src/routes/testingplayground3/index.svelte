@@ -46,7 +46,7 @@
     {
       id: 5,
       position: { x: 390, y: 380 },
-      data: { label: 'Custom Node' },
+      data: { label: 'Custom Nodeaaaa' },
       width: 125,
       height: 40,
       bgColor: 'green',
@@ -57,13 +57,15 @@
     {
       id: 6,
       position: { x: 47.5, y: 360 },
-      data: { label: 'Custom Node' },
+      data: { label: 'Custom Nodebbb' },
       width: 80,
       height: 80,
       borderColor: '#FF4121',
       borderRadius: 30,
       bgColor: 'grey',
       textColor: '#FF4121',
+      targetPosition: 'right',
+      sourcePosition: 'right',
     },
   ];
 
