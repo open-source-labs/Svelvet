@@ -16,8 +16,6 @@
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
 
-  import NodesStoreView from './NodesStoreView.svelte';
-
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: UserNodeType[]; // TODO: new type to account for users putting in number in ids
   export let edges: UserEdgeType[]; // TODO: new type to account for users putting in number in ids

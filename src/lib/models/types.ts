@@ -98,5 +98,5 @@ export interface AnchorType {
   positionX: number;
   positionY: number;
   callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position
-  setPosition: Function;
+  setPositionFromNode: Function;
 }

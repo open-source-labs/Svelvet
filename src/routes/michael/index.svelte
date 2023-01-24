@@ -116,12 +116,4 @@
   background
 />
 
-<Svelvet
-  nodes={initialNodes}
-  edges={initialEdges}
-  width={900}
-  height={900}
-  background
-/>
-
 <!-- <Canvas nodes={initialNodes} edges={initialEdges} /> -->
