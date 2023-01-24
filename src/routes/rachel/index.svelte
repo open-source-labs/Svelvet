@@ -109,6 +109,7 @@
   ];
 </script>
 
+
 <Svelvet
   canvasId="4asdlfkjs"
   nodes={initialNodes}
@@ -128,3 +129,4 @@
   background
 />
 <NodesStoreView id={'4tsdgss32'} />
+
