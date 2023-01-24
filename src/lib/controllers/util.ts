@@ -75,7 +75,7 @@ function createAnchor(
     anchor.positionY = y;
   };
 
-  // this callback sets anchor position depending on the other node
+  // this callback sets anchor position and angle depending on the other node
   const setStoreCb2 = () => {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
@@ -97,6 +97,7 @@ function createAnchor(
     const slope = (ySelf - yOther) / (xSelf - xOther);
     // slope<1 means -45 to 45 degrees so left/right anchors
     if (Math.abs(slope) < 1) {
+      // self node is on the left, other node is on the right
       if (nodeSelf.positionX < nodeOther.positionX) {
         const [selfX, selfY] = rightCb(
           nodeSelf.positionX,
@@ -111,8 +112,11 @@ function createAnchor(
           nodeOther.height
         );
         anchorSelf.setPosition(selfX, selfY);
+        anchorSelf.angle = 0; // if the self node is on the left, the anchor should have orientation of 0 degrees on the unit circle
         anchorOther.setPosition(otherX, otherY);
+        anchorOther.angle = 180;
       } else {
+        // in this case, the self node is on the right and the other node is on the left
         const [selfX, selfY] = leftCb(
           nodeSelf.positionX,
           nodeSelf.positionY,
@@ -127,10 +131,12 @@ function createAnchor(
         );
         anchorSelf.setPosition(selfX, selfY);
         anchorOther.setPosition(otherX, otherY);
+        anchorSelf.angle = 180;
+        anchorOther.angle = 0;
       }
     } else {
-      // top/bottom
       if (nodeSelf.positionY < nodeOther.positionY) {
+        // here the self node is above the other node
         const [selfX, selfY] = bottomCb(
           nodeSelf.positionX,
           nodeSelf.positionY,
@@ -145,6 +151,8 @@ function createAnchor(
         );
         anchorSelf.setPosition(selfX, selfY);
         anchorOther.setPosition(otherX, otherY);
+        anchorSelf.angle = 270;
+        anchorOther.angle = 90;
       } else {
         const [selfX, selfY] = topCb(
           nodeSelf.positionX,
@@ -160,6 +168,8 @@ function createAnchor(
         );
         anchorSelf.setPosition(selfX, selfY);
         anchorOther.setPosition(otherX, otherY);
+        anchorSelf.angle = 90;
+        anchorOther.angle = 270;
       }
     }
   };

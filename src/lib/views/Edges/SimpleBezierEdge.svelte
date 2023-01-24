@@ -1,30 +1,8 @@
 <script lang="ts">
-  import BaseEdge from '$lib/views/RefactoredComponents/BaseEdge.svelte';
-  import { Position } from './utils';
-  import type { EdgeType } from '$lib/models/types';
-
-  // how to create a smooth, controlled beizer edge from source and target positions
-  // referenced from ReactFlow.dev
-  interface GetSimpleBezierPathParams {
-    sourceX: number;
-    sourceY: number;
-    sourcePosition?: Position;
-    targetX: number;
-    targetY: number;
-    targetPosition?: Position;
-    curvature?: number;
-  }
-
-  interface GetControlParams {
-    pos: Position;
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    c: number;
-  }
-
-  function calculateControlOffset(distance: number, curvature: number): number {
+  import BaseEdge from './BaseEdge.svelte';
+  import { Position } from '../types/utils';
+  import { findStore, getAnchorFromEdge } from '$lib/controllers/storeApi';
+  function calculateControlOffset(distance, curvature) {
     if (distance >= 0) {
       return 0.5 * distance;
     } else {
@@ -32,15 +10,8 @@
     }
   }
   // get the control point for the bezier curve (in the middle of the edge)
-  function getControlWithCurvature({
-    pos,
-    x1,
-    y1,
-    x2,
-    y2,
-    c,
-  }: GetControlParams): [number, number] {
-    let ctX: number, ctY: number;
+  function getControlWithCurvature({ pos, x1, y1, x2, y2, c }) {
+    let ctX, ctY;
     switch (pos) {
       case Position.Left:
         {
@@ -79,7 +50,7 @@
     targetY,
     targetPosition = Position.Top,
     curvature = 0.25,
-  }: GetSimpleBezierPathParams): string {
+  }) {
     const [sourceControlX, sourceControlY] = getControlWithCurvature({
       pos: sourcePosition,
       x1: sourceX,
@@ -98,7 +69,6 @@
     });
     return `M${sourceX},${sourceY} C${sourceControlX},${sourceControlY} ${targetControlX},${targetControlY} ${targetX},${targetY}`;
   }
-
   // determining center of the bezier curve to know where to place the bezier edge text label
   function getSimpleBezierCenter({
     sourceX,
@@ -108,7 +78,7 @@
     targetY,
     targetPosition = Position.Top,
     curvature = 0.25,
-  }: GetSimpleBezierPathParams): [number, number, number, number] {
+  }) {
     const [sourceControlX, sourceControlY] = getControlWithCurvature({
       pos: sourcePosition,
       x1: sourceX,
@@ -141,22 +111,28 @@
     const yOffset = Math.abs(centerY - sourceY);
     return [centerX, centerY, xOffset, yOffset];
   }
-
-  export let edge: EdgeType;
-
-  $: params = {
-    sourceX: edge.sourceX,
-    sourceY: edge.sourceY,
-    targetX: edge.targetX,
-    targetY: edge.targetY,
-    curvature: 0.25,
-  };
+  export let canvasId: string;
+  export let edge;
+  let params;
+  $: {
+    const store = findStore(canvasId);
+    const sourceAnchor = getAnchorFromEdge(store, edge.id, 'source');
+    const targetAnchor = getAnchorFromEdge(store, edge.id, 'target');
+    const mapAngle = { 0: 'right', 90: 'top', 180: 'left', 270: 'bottom' };
+    params = {
+      sourceX: edge.sourceX,
+      sourceY: edge.sourceY,
+      sourcePosition: mapAngle[sourceAnchor.angle],
+      targetX: edge.targetX,
+      targetY: edge.targetY,
+      targetPosition: mapAngle[targetAnchor.angle],
+      curvature: 0.25,
+    };
+  }
 
   // pass in params to function that returns a string value for SVG path d attribute (where to be drawn)
   $: path = getSimpleBezierPath(params);
-
   $: [centerX, centerY] = getSimpleBezierCenter(params);
-
   // pass necessary values to BaseEdge component
   // BaseEdge renders a 'base' path that can be customized by parent Edge components
   $: baseEdgeProps = {
