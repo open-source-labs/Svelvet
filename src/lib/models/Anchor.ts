@@ -18,7 +18,8 @@ export class Anchor implements AnchorType {
     public positionX: number,
     public positionY: number,
     public callback: Function, //
-    public canvasId: string
+    public canvasId: string,
+    public angle: number
   ) {}
 
   // Uses
