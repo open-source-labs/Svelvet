@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { rightCb, leftCb, topCb, bottomCb } from './anchorCb.ts'; // these are callbacks used to calculate anchor position relative to node
 import type {
   NodeType,
   EdgeType,
@@ -37,28 +38,15 @@ function createAnchor(
   let position: 'left' | 'right' | 'top' | 'bottom' | undefined;
   if (sourceOrTarget === 'source') position = userNode.sourcePosition;
   else if (sourceOrTarget === 'target') position = userNode.targetPosition;
-  if (position === undefined) position = 'bottom';
 
-  // This is a user-definedcallback
-  // It calculates the position of an anchor (x,y) coordinates so that
-  // the anchor is on the right side of a node parameterized by (x,y,width,height)
-  const rightCb = (
-    xNode: number,
-    yNode: number,
-    widthNode: number,
-    heightNode: number
-  ) => {
-    const xAnchor = xNode + widthNode;
-    const yAnchor = yNode + heightNode / 2;
-    return [xAnchor, yAnchor];
-  };
-
+  // topCb, bottomCb, leftCb, rightCb are callbacks used to set the anchor position relative
+  // to its parent node.
   let positionCb;
-  if (position === 'top') positionCb = rightCb;
-  else if (position === 'bottom') positionCb = rightCb;
-  else if (position === 'left') positionCb = rightCb;
+  if (position === 'top') positionCb = topCb;
+  else if (position === 'bottom') positionCb = bottomCb;
+  else if (position === 'left') positionCb = leftCb;
   else if (position === 'right') positionCb = rightCb;
-  else positionCb = rightCb;
+  else positionCb = bottomCb;
 
   // calculate the initial position of the anchor based on the position of the node
   const [xPosition, yPosition] = positionCb(
