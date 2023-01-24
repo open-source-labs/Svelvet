@@ -58,6 +58,11 @@ function createAnchor(
   else if (position === 'right') positionCb = rightCb;
   else positionCb = bottomCb;
 
+  // let positionCb: Function;
+  // if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
+  // else positionCb = edge.sourceAnchorCb;
+  // if (positionCb === undefined) positionCb = bottomCb;
+
   // calculate the initial position of the anchor based on the position of the node
   const [xPosition, yPosition, angle] = positionCb(
     userNode.position.x,
@@ -67,7 +72,7 @@ function createAnchor(
   );
 
   // wrap positionCB so that Anchor is able to set its own x,y position
-  const setStoreCb = () => {
+  const fixedCb = () => {
     const node = getNodeById(store, userNode.id);
     const { positionX, positionY, width, height } = node;
     const [x, y] = positionCb(positionX, positionY, width, height);
@@ -77,7 +82,7 @@ function createAnchor(
   };
 
   // this callback sets anchor position and angle depending on the other node
-  const setStoreCb2 = () => {
+  const dynamicCb = () => {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
     if (anchors.length !== 2) throw 'there should be two anchors per edge';
@@ -183,7 +188,7 @@ function createAnchor(
     sourceOrTarget,
     xPosition,
     yPosition,
-    setStoreCb2,
+    dynamicCb,
     canvasId,
     angle
   );
