@@ -49,9 +49,9 @@ import type {
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Anchor } from '$lib/models/Anchor';
-import { Node } from '$lib/models/Node';
-import { Edge } from '$lib/models/Edge';
+// import { Anchor } from '$lib/models/Anchor';
+// import { Node } from '$lib/models/Node';
+// import { Edge } from '$lib/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
@@ -152,4 +152,5 @@ export function createStoreFromUserInput(
   populateEdgesStore(store, edges, canvasId);
   //populate resize Store
   populateResizeNodeStore(store, canvasId);
+  console.log(getAnchors(store));
 }

@@ -58,7 +58,7 @@ function createAnchor(
   else positionCb = bottomCb;
 
   // calculate the initial position of the anchor based on the position of the node
-  const [xPosition, yPosition] = positionCb(
+  const [xPosition, yPosition, angle] = positionCb(
     userNode.position.x,
     userNode.position.y,
     userNode.width,
@@ -173,7 +173,8 @@ function createAnchor(
     xPosition,
     yPosition,
     setStoreCb2,
-    canvasId
+    canvasId,
+    angle
   );
   // return
   return anchor;

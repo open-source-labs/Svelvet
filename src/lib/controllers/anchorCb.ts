@@ -9,7 +9,7 @@ export const rightCb = (
 ) => {
   const xAnchor = xNode + widthNode;
   const yAnchor = yNode + heightNode / 2;
-  return [xAnchor, yAnchor];
+  return [xAnchor, yAnchor, 0];
 };
 
 export const leftCb = (
@@ -20,7 +20,7 @@ export const leftCb = (
 ) => {
   const xAnchor = xNode;
   const yAnchor = yNode + heightNode / 2;
-  return [xAnchor, yAnchor];
+  return [xAnchor, yAnchor, 180];
 };
 
 export const topCb = (
@@ -31,7 +31,7 @@ export const topCb = (
 ) => {
   const xAnchor = xNode + widthNode / 2;
   const yAnchor = yNode;
-  return [xAnchor, yAnchor];
+  return [xAnchor, yAnchor, 90];
 };
 
 export const bottomCb = (
@@ -42,5 +42,5 @@ export const bottomCb = (
 ) => {
   const xAnchor = xNode + widthNode / 2;
   const yAnchor = yNode + heightNode;
-  return [xAnchor, yAnchor];
+  return [xAnchor, yAnchor, 270];
 };
