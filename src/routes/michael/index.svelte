@@ -1,6 +1,6 @@
 <script>
   import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
-
+  import { rightCb, leftCb, topCb, bottomCb } from '$lib/controllers/anchorCb';
   const initialNodes = [
     {
       id: 4,
@@ -25,7 +25,16 @@
     },
   ];
 
-  const initialEdges = [{ id: 'e2-6', source: 4, target: 6, type: 'straight' }];
+  const initialEdges = [
+    {
+      id: 'e2-6',
+      source: 4,
+      sourceAnchorCb: rightCb,
+      targetAnchorCb: rightCb,
+      target: 6,
+      type: 'straight',
+    },
+  ];
 </script>
 
 <Svelvet

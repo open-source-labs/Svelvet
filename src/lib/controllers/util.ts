@@ -33,12 +33,13 @@ function createAnchor(
   userNode: UserNodeType | null,
   sourceOrTarget: 'source' | 'target',
   canvasId: string,
-  edgeId: string
+  edge: UserEdgeType
 ) {
   // edge case
   if (userNode === null)
     throw `you cannot create an anchor without a user node (for now)`;
 
+  const edgeId = edge.id;
   const anchorId = uuidv4();
 
   // position is the position on the node where the anchor should be placed
@@ -287,7 +288,7 @@ export function populateAnchorsStore(
       sourceUserNode,
       'source',
       canvasId,
-      userEdge.id
+      userEdge
     );
     // create target anchor
     const targetAnchor = createAnchor(
@@ -295,7 +296,7 @@ export function populateAnchorsStore(
       targetUserNode,
       'target',
       canvasId,
-      userEdge.id
+      userEdge
     );
     // store source and target anchors
     anchorsStore[sourceAnchor.id] = sourceAnchor;
