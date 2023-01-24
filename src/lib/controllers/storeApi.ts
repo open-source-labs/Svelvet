@@ -75,6 +75,18 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   return anchors;
 }
 
+export function getAnchorById(store: StoreType, id: string) {
+  const anchorsStore = get(store.anchorsStore);
+  const anchor = anchorsStore[id];
+  return anchor;
+}
+
+export function getNodeById(store: StoreType, id: string) {
+  const nodesStore = get(store.nodesStore);
+  const node = nodesStore[id];
+  return node;
+}
+
 export function getNodes(
   store: StoreType,
   filter?: { [key: string]: any }

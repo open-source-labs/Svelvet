@@ -11,7 +11,7 @@ import type {
 } from '$lib/models/types';
 import { Edge, Anchor, Node, ResizeNode } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors } from './storeApi';
+import { getNodes, getAnchors, getNodeById, getAnchorById } from './storeApi';
 
 function createResizeNode(store: StoreType, canvasId: string) {
   const id = uuidv4();
@@ -30,7 +30,7 @@ function createAnchor(
   if (userNode === null)
     throw `you cannot create an anchor without a user node (for now)`;
 
-  const id = uuidv4();
+  const anchorId = uuidv4();
 
   // position is the position on the node where the anchor should be placed
   // specified by the user to be left, right, top, or bottom. If undefine,
@@ -56,24 +56,25 @@ function createAnchor(
     userNode.height
   );
 
-  // wrap the callback
+  // wrap positionCB so that Anchor is able to set its own x,y position
   const setStoreCb = () => {
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO: error check there is one node
+    const node = getNodeById(store, userNode.id);
     const { positionX, positionY, width, height } = node;
     const [x, y] = positionCb(positionX, positionY, width, height);
-    node.positionX = x;
-    node.positionY = y;
+    const anchor = getAnchorById(store, anchorId);
+    anchor.positionX = x;
+    anchor.positionY = y;
   };
 
   // Create a new anchor
   const anchor = new Anchor(
-    id,
+    anchorId,
     userNode.id,
     edgeId,
     sourceOrTarget,
     xPosition,
     yPosition,
-    positionCb,
+    setStoreCb,
     canvasId
   );
   // return

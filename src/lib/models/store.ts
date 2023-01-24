@@ -74,20 +74,17 @@ export class Anchor implements AnchorType {
     const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero elements, this means that there is no node corresponding to this.nodeId
     const { positionX, positionY, width, height } = node;
     // calculate the new position of the anchor using user-defined callback
-    const [x, y] = this.callback(positionX, positionY, width, height);
-    const { edgesStore, anchorsStore } = stores[this.canvasId];
-    // set the position of the anchor
-    this.positionX = x;
-    this.positionY = y;
+    this.callback();
+    const { edgesStore } = stores[this.canvasId];
     // update edges
     edgesStore.update((edges) => {
       const edge = edges[this.edgeId];
       if (this.sourceOrTarget === 'source') {
-        edge.sourceX = x;
-        edge.sourceY = y;
+        edge.sourceX = this.positionX;
+        edge.sourceY = this.positionY;
       } else {
-        edge.targetX = x;
-        edge.targetY = y;
+        edge.targetX = this.positionX;
+        edge.targetY = this.positionY;
       }
       return { ...edges };
     });
