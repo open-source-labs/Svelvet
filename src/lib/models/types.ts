@@ -1,5 +1,14 @@
 import type { Readable, Writable } from 'svelte/store';
 
+export interface ResizeNodeType {
+  id: string;
+  nodeId?: string;
+  edgeId?: string;
+  canvasId: string;
+  anchorId?: string;
+  positionX: number;
+  positionY: number;
+}
 export interface UserNodeType {
   id: string;
   width: number;
@@ -37,6 +46,7 @@ export interface StoreType {
   nodesStore: Writable<{ [key: string]: NodeType }>;
   edgesStore: Writable<{ [key: string]: EdgeType }>;
   anchorsStore: Writable<{ [key: string]: AnchorType }>;
+  resizeNodesStore: Writable<{ [key: string]: ResizeNodeType }>;
   widthStore: Writable<number>;
   heightStore: Writable<number>;
   backgroundStore: Writable<boolean>;

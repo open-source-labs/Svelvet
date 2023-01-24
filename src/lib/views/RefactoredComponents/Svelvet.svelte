@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { v4 as uuidv4 } from 'uuid';
   import type {
     NodeType,
     EdgeType,
@@ -38,7 +39,7 @@
   });
 
   // generates a unique string for each svelvet component's unique store instance
-  const canvasId: string = (Math.random() + 1).toString(36).substring(7);
+  const canvasId: string = uuidv4();
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
   const svelvetStore = createStoreEmpty(canvasId);
