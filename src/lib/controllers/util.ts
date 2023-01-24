@@ -9,7 +9,10 @@ import type {
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Edge, Anchor, Node, ResizeNode } from '$lib/models/store';
+import { ResizeNode } from '$lib/models/store';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,

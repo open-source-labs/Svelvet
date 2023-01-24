@@ -49,7 +49,9 @@ import type {
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Edge, Anchor, Node } from '$lib/models/store';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
