@@ -3,7 +3,7 @@
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
 
-  import SimpleBezierEdge from './SimpleBezierEdge.svelte';
+  import SimpleBezierEdge from '$lib/views/Edges/SimpleBezierEdge.svelte';
   import StraightEdge from './StraightEdge.svelte';
   import SmoothStepEdge from './SmoothStepEdge.svelte';
   import StepEdge from './StepEdge.svelte';
@@ -154,7 +154,7 @@
       {:else if edge.type === 'step'}
         <StepEdge {edge} />
       {:else}
-        <SimpleBezierEdge {edge} />
+        <SimpleBezierEdge {edge} {canvasId} />
       {/if}
     {/each}
 

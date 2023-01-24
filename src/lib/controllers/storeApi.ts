@@ -59,6 +59,16 @@ import {
   populateResizeNodeStore,
 } from './util';
 
+// Gets the source anchor for a given edge
+export function getSourceAnchor(store: StoreType, edgeId: string): AnchorType {
+  const edge = getEdgeById(store, edgeId);
+  const anchors = getAnchors(store, { edgeId: edgeId });
+  if (anchors.length !== 2)
+    throw `there should be two anchors for a given edge, there are ${anchors.length}`;
+  // there should be one source anchor and one target anchor. Return the source anchor
+  return anchors.filter((anchor) => anchor.sourceOrTarget === 'source')[0];
+}
+
 export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   let anchors = Object.values(get(store.anchorsStore));
   // filter the array of anchors for elements that match filter
@@ -92,6 +102,7 @@ export function getNodeById(store: StoreType, id: string) {
 export function getEdgeById(store: StoreType, id: string) {
   const edgesStore = get(store.edgesStore);
   const edge = edgesStore[id];
+  if (edge === undefined) throw 'edge not found';
   return edge;
 }
 
