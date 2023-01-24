@@ -42,26 +42,11 @@ function createAnchor(
   const edgeId = edge.id;
   const anchorId = uuidv4();
 
-  // position is the position on the node where the anchor should be placed
-  // specified by the user to be left, right, top, or bottom. If undefine,
-  // defaults to bottom
-  let position: 'left' | 'right' | 'top' | 'bottom' | undefined;
-  if (sourceOrTarget === 'source') position = userNode.sourcePosition;
-  else if (sourceOrTarget === 'target') position = userNode.targetPosition;
-
-  // topCb, bottomCb, leftCb, rightCb are callbacks used to set the anchor position relative
-  // to its parent node.
+  // get callback from userEdge object. If not specified, default to bottomCb
   let positionCb: Function;
-  if (position === 'top') positionCb = topCb;
-  else if (position === 'bottom') positionCb = bottomCb;
-  else if (position === 'left') positionCb = leftCb;
-  else if (position === 'right') positionCb = rightCb;
-  else positionCb = bottomCb;
-
-  // let positionCb: Function;
-  // if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
-  // else positionCb = edge.sourceAnchorCb;
-  // if (positionCb === undefined) positionCb = bottomCb;
+  if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
+  else positionCb = edge.sourceAnchorCb;
+  if (positionCb === undefined) positionCb = bottomCb;
 
   // calculate the initial position of the anchor based on the position of the node
   const [xPosition, yPosition, angle] = positionCb(
@@ -188,7 +173,7 @@ function createAnchor(
     sourceOrTarget,
     xPosition,
     yPosition,
-    dynamicCb,
+    fixedCb,
     canvasId,
     angle
   );
