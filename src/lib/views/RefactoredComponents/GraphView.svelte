@@ -8,6 +8,8 @@
   import SmoothStepEdge from './SmoothStepEdge.svelte';
   import StepEdge from './StepEdge.svelte';
   import EdgeAnchor from './EdgeAnchor.svelte';
+  import ResizeNode from '../DevTools/ResizeNode.svelte';
+
   import Node from './Node.svelte';
 
   import { findStore } from '$lib/controllers/storeApi';
@@ -29,6 +31,7 @@
     edgesStore,
     nodesStore,
     anchorsStore,
+    resizeNodesStore,
     nodeSelected,
     backgroundStore,
     movementStore,
@@ -39,6 +42,7 @@
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
+  $: resize = Object.values($resizeNodesStore);
 
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
@@ -100,6 +104,10 @@
   <div class={`Node Node-${canvasId}`}>
     {#each nodes as node}
       <Node nodeId={node.id} {canvasId}>{JSON.parse(node.data).label}</Node>
+    {/each}
+
+    {#each resize as res}
+      <ResizeNode resizeId={res.id} {canvasId} />
     {/each}
   </div>
 </div>

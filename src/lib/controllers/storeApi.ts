@@ -54,6 +54,7 @@ import {
   populateAnchorsStore,
   populateNodesStore,
   populateEdgesStore,
+  populateResizeNodeStore,
 } from './util';
 
 export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
@@ -104,6 +105,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     nodesStore: writable({}),
     edgesStore: writable({}),
     anchorsStore: writable({}),
+    resizeNodesStore: writable({}),
     widthStore: writable(600),
     heightStore: writable(600),
     backgroundStore: writable(false),
@@ -128,4 +130,6 @@ export function createStoreFromUserInput(
   populateAnchorsStore(store, nodes, edges, canvasId);
   // populate edges
   populateEdgesStore(store, edges, canvasId);
+  //populate resize Store
+  populateResizeNodeStore(store, canvasId);
 }
