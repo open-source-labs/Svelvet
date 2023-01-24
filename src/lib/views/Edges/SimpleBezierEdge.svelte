@@ -119,7 +119,6 @@
     const sourceAnchor = getAnchorFromEdge(store, edge.id, 'source');
     const targetAnchor = getAnchorFromEdge(store, edge.id, 'target');
     const mapAngle = { 0: 'right', 90: 'top', 180: 'left', 270: 'bottom' };
-    console.log(sourceAnchor.angle);
     params = {
       sourceX: edge.sourceX,
       sourceY: edge.sourceY,
