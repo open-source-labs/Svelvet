@@ -42,11 +42,10 @@ function createAnchor(
   const edgeId = edge.id;
   const anchorId = uuidv4();
 
-  // get callback from userEdge object. If not specified, default to bottomCb
+  // positionCb is the callback from userEdge object. It is possible to be undefined
   let positionCb: Function;
   if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
   else positionCb = edge.sourceAnchorCb;
-  if (positionCb === undefined) positionCb = bottomCb;
 
   // wrap positionCB so that Anchor is able to set its own x,y position
   const fixedCb = () => {
@@ -165,11 +164,12 @@ function createAnchor(
     sourceOrTarget,
     -1, // dummy variables for x,y,angle for now
     -1, // dummy variables for x,y,angle for now
-    fixedCb,
+    positionCb === undefined ? dynamicCb : fixedCb,
     canvasId,
     0 // dummy variables for x,y,angle for now
   );
   // return
+  console.log(anchor);
   return anchor;
 }
 

@@ -4,7 +4,7 @@
   const initialNodes = [
     {
       id: 4,
-      position: { x: 25, y: 180 },
+      position: { x: 50, y: 180 },
       data: { label: 'Drag me!' },
       width: 125,
       height: 40,
@@ -14,7 +14,7 @@
     },
     {
       id: 6,
-      position: { x: 47.5, y: 360 },
+      position: { x: 200, y: 180 },
       data: { label: 'Custom Ndddode' },
       width: 80,
       height: 80,
@@ -29,8 +29,7 @@
     {
       id: 'e2-6',
       source: 4,
-      sourceAnchorCb: rightCb,
-      targetAnchorCb: rightCb,
+      targetAnchorCb: leftCb,
       target: 6,
       type: 'straight',
     },
