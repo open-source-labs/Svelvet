@@ -290,11 +290,6 @@ export function populateAnchorsStore(
 
   //populates the anchorsStore
   store.anchorsStore.set(anchorsStore);
-  //invoke callback to set each anchor's position based on the nodes
-  // TODO: can we refactor this out and set x,y directly in function createAnchor?
-  Object.values(get(store.anchorsStore)).forEach((el) => {
-    el.callback();
-  });
 }
 
 export function populateNodesStore(
