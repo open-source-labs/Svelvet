@@ -41,7 +41,7 @@ function createAnchor(
 
   // topCb, bottomCb, leftCb, rightCb are callbacks used to set the anchor position relative
   // to its parent node.
-  let positionCb;
+  let positionCb: Function;
   if (position === 'top') positionCb = topCb;
   else if (position === 'bottom') positionCb = bottomCb;
   else if (position === 'left') positionCb = leftCb;
@@ -55,6 +55,15 @@ function createAnchor(
     userNode.width,
     userNode.height
   );
+
+  // wrap the callback
+  const setStoreCb = () => {
+    const node = getNodes(store, { id: userNode.id })[0]; // TODO: error check there is one node
+    const { positionX, positionY, width, height } = node;
+    const [x, y] = positionCb(positionX, positionY, width, height);
+    node.positionX = x;
+    node.positionY = y;
+  };
 
   // Create a new anchor
   const anchor = new Anchor(
