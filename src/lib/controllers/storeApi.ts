@@ -60,13 +60,22 @@ import {
 } from './util';
 
 // Gets the source anchor for a given edge
-export function getSourceAnchor(store: StoreType, edgeId: string): AnchorType {
+export function getAnchorFromEdge(
+  store: StoreType,
+  edgeId: string,
+  sourceOrTarget: 'source' | 'target'
+): AnchorType {
   const edge = getEdgeById(store, edgeId);
   const anchors = getAnchors(store, { edgeId: edgeId });
   if (anchors.length !== 2)
     throw `there should be two anchors for a given edge, there are ${anchors.length}`;
   // there should be one source anchor and one target anchor. Return the source anchor
-  return anchors.filter((anchor) => anchor.sourceOrTarget === 'source')[0];
+  const anchor = anchors.filter(
+    (anchor) => anchor.sourceOrTarget === sourceOrTarget
+  );
+  if (anchor.length !== 1)
+    throw `there should only be one source/target anchor`;
+  return anchor[0];
 }
 
 export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
