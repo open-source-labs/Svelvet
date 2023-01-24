@@ -18,12 +18,3 @@ import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
     *
 */
 export const stores: { [key: string]: StoreType } = {};
-
-export class ResizeNode implements ResizeNodeType {
-  constructor(
-    public id: string,
-    public canvasId: string,
-    public positionX: number,
-    public positionY: number
-  ) {}
-}

@@ -7,7 +7,6 @@ import type {
 } from './types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
-
 import { stores } from './store';
 
 export class Anchor implements AnchorType {
