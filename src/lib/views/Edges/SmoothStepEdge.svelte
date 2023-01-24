@@ -1,42 +1,27 @@
-<script lang="ts">
-  import BaseEdge from '$lib/views/RefactoredComponents/BaseEdge.svelte';
+<script>
+  import BaseEdge from './BaseEdge.svelte';
   import { getCenter } from './utils';
-  import { Position } from './utils';
-  import type { EdgeType } from '$lib/models/types';
-
+  import { Position } from '../types/utils';
   // These are some helper methods for drawing the round corners
   // The name indicates the direction of the path. "bottomLeftCorner" goes
   // from bottom to the left and "leftBottomCorner" goes from left to the bottom.
   // We have to consider the direction of the paths because of the animated lines.
-  const bottomLeftCorner = (x: number, y: number, size: number): string =>
+  const bottomLeftCorner = (x, y, size) =>
     `L ${x},${y - size}Q ${x},${y} ${x + size},${y}`;
-  const leftBottomCorner = (x: number, y: number, size: number): string =>
+  const leftBottomCorner = (x, y, size) =>
     `L ${x + size},${y}Q ${x},${y} ${x},${y - size}`;
-  const bottomRightCorner = (x: number, y: number, size: number): string =>
+  const bottomRightCorner = (x, y, size) =>
     `L ${x},${y - size}Q ${x},${y} ${x - size},${y}`;
-  const rightBottomCorner = (x: number, y: number, size: number): string =>
+  const rightBottomCorner = (x, y, size) =>
     `L ${x - size},${y}Q ${x},${y} ${x},${y - size}`;
-  const leftTopCorner = (x: number, y: number, size: number): string =>
+  const leftTopCorner = (x, y, size) =>
     `L ${x + size},${y}Q ${x},${y} ${x},${y + size}`;
-  const topLeftCorner = (x: number, y: number, size: number): string =>
+  const topLeftCorner = (x, y, size) =>
     `L ${x},${y + size}Q ${x},${y} ${x + size},${y}`;
-  const topRightCorner = (x: number, y: number, size: number): string =>
+  const topRightCorner = (x, y, size) =>
     `L ${x},${y + size}Q ${x},${y} ${x - size},${y}`;
-  const rightTopCorner = (x: number, y: number, size: number): string =>
+  const rightTopCorner = (x, y, size) =>
     `L ${x - size},${y}Q ${x},${y} ${x},${y + size}`;
-
-  interface GetSmoothStepPathParams {
-    sourceX: number;
-    sourceY: number;
-    sourcePosition?: Position;
-    targetX: number;
-    targetY: number;
-    targetPosition?: Position;
-    borderRadius?: number;
-    centerX?: number;
-    centerY?: number;
-  }
-
   // returns string to pass into edge 'path' svg d attribute (where to be drawn)
   export function getSmoothStepPath({
     sourceX,
@@ -48,7 +33,7 @@
     borderRadius = 5,
     centerX,
     centerY,
-  }: GetSmoothStepPathParams): string {
+  }) {
     const [_centerX, _centerY, offsetX, offsetY] = getCenter({
       sourceX,
       sourceY,
@@ -61,10 +46,8 @@
     const leftAndRight = [Position.Left, Position.Right];
     const cX = typeof centerX !== 'undefined' ? centerX : _centerX;
     const cY = typeof centerY !== 'undefined' ? centerY : _centerY;
-
     let firstCornerPath = null;
     let secondCornerPath = null;
-
     // for non-mixed edge top/bottom
     if (sourceX <= targetX) {
       firstCornerPath =
@@ -150,24 +133,32 @@
       }
       secondCornerPath = '';
     }
-
     return `M ${sourceX},${sourceY}${firstCornerPath}${secondCornerPath}L ${targetX},${targetY}`;
   }
-  export let edge: EdgeType;
+  export let edge;
   export let borderRadius = 5;
+  export let canvasId;
 
-  $: params = {
-    sourceX: edge.sourceX,
-    sourceY: edge.sourceY,
-    targetX: edge.targetX,
-    targetY: edge.targetY,
-    borderRadius: borderRadius,
-  };
+  import { findStore, getAnchorFromEdge } from '$lib/controllers/storeApi';
 
+  let params;
+  $: {
+    const store = findStore(canvasId);
+    const sourceAnchor = getAnchorFromEdge(store, edge.id, 'source');
+    const targetAnchor = getAnchorFromEdge(store, edge.id, 'target');
+    const mapAngle = { 0: 'right', 90: 'top', 180: 'left', 270: 'bottom' };
+    params = {
+      sourceX: edge.sourceX,
+      sourceY: edge.sourceY,
+      targetX: edge.targetX,
+      targetY: edge.targetY,
+      sourcePosition: mapAngle[sourceAnchor.angle],
+      targetPosition: mapAngle[targetAnchor.angle],
+      borderRadius: borderRadius,
+    };
+  }
   $: [centerX, centerY] = getCenter(params);
-
   $: path = getSmoothStepPath(params);
-
   $: baseEdgeProps = {
     ...edge,
     path: path,

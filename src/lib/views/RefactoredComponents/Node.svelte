@@ -8,6 +8,7 @@
     UserNodeType,
     UserEdgeType,
   } from '$lib/models/types';
+    // import { id } from 'src/playgroundStore';
   export let nodeId: string;
   export let canvasId: string;
 
@@ -42,6 +43,11 @@
     e.preventDefault();
     $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
     isSelected = true;
+  }}
+  on:contextmenu={(e) => {
+    e.preventDefault();
+    console.log('I clicked on the Node, event listener on contextmenue should be fired!')
+    console.log('what info we can get from e.target?', e.target.id)
   }}
   class="Node"
   style="left: {node.positionX}px;

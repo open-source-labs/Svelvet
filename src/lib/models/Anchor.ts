@@ -19,7 +19,10 @@ export class Anchor implements AnchorType {
     public positionY: number,
     public callback: Function, //
     public canvasId: string,
-    public angle: number
+    // this is the orientation of the anchor and is used to make sure bezier/step curves are rendered perpendicular to the node
+    // angles are defined along the unit circle; an angle of 0 means anchor is on the right side of the node, while an angle of 180
+    // means the anchor is on the left side of the node
+    public angle: 0 | 90 | 180 | 270
   ) {}
 
   // Uses
