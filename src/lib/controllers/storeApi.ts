@@ -163,5 +163,5 @@ export function createStoreFromUserInput(
   populateEdgesStore(store, edges, canvasId);
   //populate resize Store
   populateResizeNodeStore(store, canvasId);
-  console.log(getAnchors(store));
+  // console.log(getAnchors(store));
 }
