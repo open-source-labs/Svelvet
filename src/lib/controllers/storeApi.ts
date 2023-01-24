@@ -87,6 +87,12 @@ export function getNodeById(store: StoreType, id: string) {
   return node;
 }
 
+export function getEdgeById(store: StoreType, id: string) {
+  const edgesStore = get(store.edgesStore);
+  const edge = edgesStore[id];
+  return edge;
+}
+
 export function getNodes(
   store: StoreType,
   filter?: { [key: string]: any }

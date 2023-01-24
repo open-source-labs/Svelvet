@@ -90,11 +90,39 @@ export class Anchor implements AnchorType {
     });
   }
 
+  updateEdges() {
+    const { edgesStore } = stores[this.canvasId];
+    // update edges
+
+    edgesStore.update((edges) => {
+      const edge = edges[this.edgeId];
+      // this means that no edge was found, just return without doing anything
+
+      if (edge === undefined) {
+        console.log(`edge ${this.edgeId} not found`);
+        return { ...edges };
+      }
+      if (this.sourceOrTarget === 'source') {
+        edge.sourceX = this.positionX;
+        edge.sourceY = this.positionY;
+      } else {
+        edge.targetX = this.positionX;
+        edge.targetY = this.positionY;
+      }
+      return { ...edges };
+    });
+  }
+
+  setPosition(x: number, y: number) {
+    this.positionX = x;
+    this.positionY = y;
+    this.updateEdges();
+  }
+
   setPositionFromMovement(movementX: number, movementY: number) {
     this.positionX += movementX;
     this.positionY += movementY;
     const { edgesStore } = stores[this.canvasId];
-
     edgesStore.update((edges) => {
       const edge = edges[this.edgeId];
       if (this.sourceOrTarget === 'source') {

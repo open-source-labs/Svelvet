@@ -11,7 +11,13 @@ import type {
 } from '$lib/models/types';
 import { Edge, Anchor, Node, ResizeNode } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, getNodeById, getAnchorById } from './storeApi';
+import {
+  getNodes,
+  getAnchors,
+  getNodeById,
+  getAnchorById,
+  getEdgeById,
+} from './storeApi';
 
 function createResizeNode(store: StoreType, canvasId: string) {
   const id = uuidv4();
@@ -66,6 +72,95 @@ function createAnchor(
     anchor.positionY = y;
   };
 
+  // this callback sets anchor position depending on the other node
+  const setStoreCb2 = () => {
+    // get the two anchors
+    const anchors = getAnchors(store, { edgeId: edgeId });
+    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    let [anchorSelf, anchorOther] = anchors;
+    if (anchorSelf.id !== anchorId)
+      [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
+    // get the two nodes
+    const nodeSelf = getNodeById(store, anchorSelf.nodeId);
+    const nodeOther = getNodeById(store, anchorOther.nodeId);
+    // get the midpoints
+    const [xSelf, ySelf, xOther, yOther] = [
+      nodeSelf.positionX + nodeSelf.width / 2,
+      nodeSelf.positionY + nodeSelf.height / 2,
+      nodeOther.positionX + nodeOther.width / 2,
+      nodeOther.positionY + nodeOther.height / 2,
+    ];
+    // calculate the slope
+    const slope = (ySelf - yOther) / (xSelf - xOther);
+    // slope<1 means -45 to 45 degrees so left/right anchors
+    if (Math.abs(slope) < 1) {
+      if (nodeSelf.positionX < nodeOther.positionX) {
+        const [selfX, selfY] = rightCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = leftCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      } else {
+        const [selfX, selfY] = leftCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = rightCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      }
+    } else {
+      // top/bottom
+      if (nodeSelf.positionY < nodeOther.positionY) {
+        const [selfX, selfY] = bottomCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = topCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      } else {
+        const [selfX, selfY] = topCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = bottomCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      }
+    }
+  };
+
   // Create a new anchor
   const anchor = new Anchor(
     anchorId,
@@ -74,7 +169,7 @@ function createAnchor(
     sourceOrTarget,
     xPosition,
     yPosition,
-    setStoreCb,
+    setStoreCb2,
     canvasId
   );
   // return
