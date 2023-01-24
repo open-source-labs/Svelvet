@@ -1,7 +1,9 @@
 <script lang="ts">
   // Declaring variables for Svelvet components which will be usable in other files
   import { v4 as uuidv4 } from 'uuid';
-  import { Edge, Anchor, Node } from '$lib/models/store';
+  import { Anchor } from '$lib/models/Anchor';
+  import { Node } from '$lib/models/Node';
+  import { Edge } from '$lib/models/Edge';
   import { onMount } from 'svelte';
   import NodeComponent from '$lib/views/DevTools/Node.svelte';
   import AnchorComponent from '$lib/views/DevTools/Anchor.svelte';

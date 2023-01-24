@@ -49,7 +49,9 @@ import type {
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Edge, Anchor, Node } from '$lib/models/store';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
@@ -73,6 +75,24 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   }
   // return list of anchors
   return anchors;
+}
+
+export function getAnchorById(store: StoreType, id: string) {
+  const anchorsStore = get(store.anchorsStore);
+  const anchor = anchorsStore[id];
+  return anchor;
+}
+
+export function getNodeById(store: StoreType, id: string) {
+  const nodesStore = get(store.nodesStore);
+  const node = nodesStore[id];
+  return node;
+}
+
+export function getEdgeById(store: StoreType, id: string) {
+  const edgesStore = get(store.edgesStore);
+  const edge = edgesStore[id];
+  return edge;
 }
 
 export function getNodes(

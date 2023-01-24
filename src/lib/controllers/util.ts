@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { rightCb, leftCb, topCb, bottomCb } from './anchorCb'; // these are callbacks used to calculate anchor position relative to node
 import type {
   NodeType,
   EdgeType,
@@ -8,9 +9,18 @@ import type {
   UserNodeType,
   UserEdgeType,
 } from '$lib/models/types';
-import { Edge, Anchor, Node, ResizeNode } from '$lib/models/store';
+import { ResizeNode } from '$lib/models/ResizeNode';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors } from './storeApi';
+import {
+  getNodes,
+  getAnchors,
+  getNodeById,
+  getAnchorById,
+  getEdgeById,
+} from './storeApi';
 
 function createResizeNode(store: StoreType, canvasId: string) {
   const id = uuidv4();
@@ -29,7 +39,7 @@ function createAnchor(
   if (userNode === null)
     throw `you cannot create an anchor without a user node (for now)`;
 
-  const id = uuidv4();
+  const anchorId = uuidv4();
 
   // position is the position on the node where the anchor should be placed
   // specified by the user to be left, right, top, or bottom. If undefine,
@@ -37,63 +47,132 @@ function createAnchor(
   let position: 'left' | 'right' | 'top' | 'bottom' | undefined;
   if (sourceOrTarget === 'source') position = userNode.sourcePosition;
   else if (sourceOrTarget === 'target') position = userNode.targetPosition;
-  if (position === undefined) position = 'bottom';
 
-  // These are callbacks. It runs later
-  // When it runs, it will set the position of the anchor depending on the position of the node
-  // TODO: abstract this out so that people can define their own custom anchor positions
-  const topCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width / 2;
-    anchorsStore[id].positionY = positionY;
-  };
-  const bottomCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width / 2;
-    anchorsStore[id].positionY = positionY + height;
-  };
-  const leftCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX;
-    anchorsStore[id].positionY = positionY + height / 2;
-  };
-  const rightCb = (): void => {
-    // get node data
-    const node = getNodes(store, { id: userNode.id })[0]; // TODO add error checking for zero
-    const { positionX, positionY, width, height } = node;
-    // calculate the position of the anchor and set
-    const anchorsStore = get(store.anchorsStore);
-    anchorsStore[id].positionX = positionX + width;
-    anchorsStore[id].positionY = positionY + height / 2;
-  };
-
-  let positionCb;
+  // topCb, bottomCb, leftCb, rightCb are callbacks used to set the anchor position relative
+  // to its parent node.
+  let positionCb: Function;
   if (position === 'top') positionCb = topCb;
   else if (position === 'bottom') positionCb = bottomCb;
   else if (position === 'left') positionCb = leftCb;
   else if (position === 'right') positionCb = rightCb;
   else positionCb = bottomCb;
+
+  // calculate the initial position of the anchor based on the position of the node
+  const [xPosition, yPosition] = positionCb(
+    userNode.position.x,
+    userNode.position.y,
+    userNode.width,
+    userNode.height
+  );
+
+  // wrap positionCB so that Anchor is able to set its own x,y position
+  const setStoreCb = () => {
+    const node = getNodeById(store, userNode.id);
+    const { positionX, positionY, width, height } = node;
+    const [x, y] = positionCb(positionX, positionY, width, height);
+    const anchor = getAnchorById(store, anchorId);
+    anchor.positionX = x;
+    anchor.positionY = y;
+  };
+
+  // this callback sets anchor position depending on the other node
+  const setStoreCb2 = () => {
+    // get the two anchors
+    const anchors = getAnchors(store, { edgeId: edgeId });
+    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    let [anchorSelf, anchorOther] = anchors;
+    if (anchorSelf.id !== anchorId)
+      [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
+    // get the two nodes
+    const nodeSelf = getNodeById(store, anchorSelf.nodeId);
+    const nodeOther = getNodeById(store, anchorOther.nodeId);
+    // get the midpoints
+    const [xSelf, ySelf, xOther, yOther] = [
+      nodeSelf.positionX + nodeSelf.width / 2,
+      nodeSelf.positionY + nodeSelf.height / 2,
+      nodeOther.positionX + nodeOther.width / 2,
+      nodeOther.positionY + nodeOther.height / 2,
+    ];
+    // calculate the slope
+    const slope = (ySelf - yOther) / (xSelf - xOther);
+    // slope<1 means -45 to 45 degrees so left/right anchors
+    if (Math.abs(slope) < 1) {
+      if (nodeSelf.positionX < nodeOther.positionX) {
+        const [selfX, selfY] = rightCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = leftCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      } else {
+        const [selfX, selfY] = leftCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = rightCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      }
+    } else {
+      // top/bottom
+      if (nodeSelf.positionY < nodeOther.positionY) {
+        const [selfX, selfY] = bottomCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = topCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      } else {
+        const [selfX, selfY] = topCb(
+          nodeSelf.positionX,
+          nodeSelf.positionY,
+          nodeSelf.width,
+          nodeSelf.height
+        );
+        const [otherX, otherY] = bottomCb(
+          nodeOther.positionX,
+          nodeOther.positionY,
+          nodeOther.width,
+          nodeOther.height
+        );
+        anchorSelf.setPosition(selfX, selfY);
+        anchorOther.setPosition(otherX, otherY);
+      }
+    }
+  };
+
   // Create a new anchor
   const anchor = new Anchor(
-    id,
+    anchorId,
     userNode.id,
     edgeId,
     sourceOrTarget,
-    -1,
-    -1,
-    positionCb,
+    xPosition,
+    yPosition,
+    setStoreCb2,
     canvasId
   );
   // return
@@ -214,11 +293,6 @@ export function populateAnchorsStore(
 
   //populates the anchorsStore
   store.anchorsStore.set(anchorsStore);
-  //invoke callback to set each anchor's position based on the nodes
-  // TODO: can we refactor this out and set x,y directly in function createAnchor?
-  Object.values(get(store.anchorsStore)).forEach((el) => {
-    el.callback();
-  });
 }
 
 export function populateNodesStore(
