@@ -2,7 +2,8 @@
 import Svelvet from '$lib/views/Containers/Svelvet/index.svelte';
 import { render, prettyDOM } from '@testing-library/svelte';
 
-const handleClick = (e) => {
+
+const handleClick = (e: object) => {
   console.log(e);
 };
 

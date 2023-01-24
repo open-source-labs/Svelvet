@@ -15,6 +15,8 @@
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
 
+  import NodesStoreView from './NodesStoreView.svelte'; 
+
   // Declaring variables for Svelvet components which will be usable in other files
   export let nodes: UserNodeType[]; // TODO: new type to account for users putting in number in ids
   export let edges: UserEdgeType[]; // TODO: new type to account for users putting in number in ids
@@ -63,6 +65,7 @@
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
+<NodesStoreView id={canvasId} />
 <div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
   <GraphView {canvasId} />
 </div>
