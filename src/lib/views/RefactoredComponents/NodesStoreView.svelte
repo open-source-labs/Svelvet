@@ -1,4 +1,7 @@
 <script lang='ts'>
+  /**
+   * import findStore
+  */
   import { findStore } from "$lib/controllers/storeApi";
 
   export let id: string;
