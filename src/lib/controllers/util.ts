@@ -43,50 +43,42 @@ function createAnchor(
   userNode: UserNodeType | null,
   sourceOrTarget: 'source' | 'target',
   canvasId: string,
-  edgeId: string
+  edge: UserEdgeType
 ) {
   // edge case
   if (userNode === null)
     throw `you cannot create an anchor without a user node (for now)`;
 
+  const edgeId = edge.id;
   const anchorId = uuidv4();
 
-  // position is the position on the node where the anchor should be placed
-  // specified by the user to be left, right, top, or bottom. If undefine,
-  // defaults to bottom
-  let position: 'left' | 'right' | 'top' | 'bottom' | undefined;
-  if (sourceOrTarget === 'source') position = userNode.sourcePosition;
-  else if (sourceOrTarget === 'target') position = userNode.targetPosition;
-
-  // topCb, bottomCb, leftCb, rightCb are callbacks used to set the anchor position relative
-  // to its parent node.
+  // positionCb is the callback from userEdge object. It is possible to be undefined
   let positionCb: Function;
-  if (position === 'top') positionCb = topCb;
-  else if (position === 'bottom') positionCb = bottomCb;
-  else if (position === 'left') positionCb = leftCb;
-  else if (position === 'right') positionCb = rightCb;
-  else positionCb = bottomCb;
-
-  // calculate the initial position of the anchor based on the position of the node
-  const [xPosition, yPosition, angle] = positionCb(
-    userNode.position.x,
-    userNode.position.y,
-    userNode.width,
-    userNode.height
-  );
+  if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
+  else positionCb = edge.sourceAnchorCb;
 
   // wrap positionCB so that Anchor is able to set its own x,y position
-  const setStoreCb = () => {
+  const fixedCb = () => {
+    // get the two anchors
+    const anchors = getAnchors(store, { edgeId: edgeId });
+    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    let [anchorSelf, anchorOther] = anchors;
+    if (anchorSelf.id !== anchorId)
+      [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
+
     const node = getNodeById(store, userNode.id);
     const { positionX, positionY, width, height } = node;
-    const [x, y] = positionCb(positionX, positionY, width, height);
-    const anchor = getAnchorById(store, anchorId);
-    anchor.positionX = x;
-    anchor.positionY = y;
+    const [x, y, angle] = positionCb(positionX, positionY, width, height);
+    anchorSelf.positionX = x;
+    anchorSelf.positionY = y;
+    anchorSelf.angle = angle;
+    // update the other anchor. This is in case the other anchor is a dynamic anchor
+    // The dyanamic anchor has a check that prevents an infinite loop
+    anchorOther.callback();
   };
 
   // this callback sets anchor position and angle depending on the other node
-  const setStoreCb2 = () => {
+  const dynamicCb = () => {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
     if (anchors.length !== 2) throw 'there should be two anchors per edge';
@@ -103,6 +95,10 @@ function createAnchor(
       nodeOther.positionX + nodeOther.width / 2,
       nodeOther.positionY + nodeOther.height / 2,
     ];
+
+    // record angle for later. We use this so we don't have an infinite loop
+    let prevAngle = anchorSelf.angle;
+
     // calculate the slope
     const slope = (ySelf - yOther) / (xSelf - xOther);
     // slope<1 means -45 to 45 degrees so left/right anchors
@@ -123,8 +119,6 @@ function createAnchor(
         );
         anchorSelf.setPosition(selfX, selfY);
         anchorSelf.angle = 0; // if the self node is on the left, the anchor should have orientation of 0 degrees on the unit circle
-        anchorOther.setPosition(otherX, otherY);
-        anchorOther.angle = 180;
       } else {
         // in this case, the self node is on the right and the other node is on the left
         const [selfX, selfY] = leftCb(
@@ -140,9 +134,7 @@ function createAnchor(
           nodeOther.height
         );
         anchorSelf.setPosition(selfX, selfY);
-        anchorOther.setPosition(otherX, otherY);
         anchorSelf.angle = 180;
-        anchorOther.angle = 0;
       }
     } else {
       if (nodeSelf.positionY < nodeOther.positionY) {
@@ -160,9 +152,7 @@ function createAnchor(
           nodeOther.height
         );
         anchorSelf.setPosition(selfX, selfY);
-        anchorOther.setPosition(otherX, otherY);
         anchorSelf.angle = 270;
-        anchorOther.angle = 90;
       } else {
         const [selfX, selfY] = topCb(
           nodeSelf.positionX,
@@ -177,11 +167,13 @@ function createAnchor(
           nodeOther.height
         );
         anchorSelf.setPosition(selfX, selfY);
-        anchorOther.setPosition(otherX, otherY);
         anchorSelf.angle = 90;
-        anchorOther.angle = 270;
       }
     }
+
+    // if the anchor changed position, then do operation for other anchor
+    // otherwise, don't do anything. This check is so we don't have an infinite loop
+    if (prevAngle !== anchorSelf.angle) anchorOther.callback();
   };
 
   // Create a new anchor
@@ -190,13 +182,14 @@ function createAnchor(
     userNode.id,
     edgeId,
     sourceOrTarget,
-    xPosition,
-    yPosition,
-    setStoreCb2,
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    positionCb === undefined ? dynamicCb : fixedCb,
     canvasId,
-    angle
+    0 // dummy variables for x,y,angle for now
   );
   // return
+  console.log;
   return anchor;
 }
 
@@ -297,7 +290,7 @@ export function populateAnchorsStore(
       sourceUserNode,
       'source',
       canvasId,
-      userEdge.id
+      userEdge
     );
     // create target anchor
     const targetAnchor = createAnchor(
@@ -305,7 +298,7 @@ export function populateAnchorsStore(
       targetUserNode,
       'target',
       canvasId,
-      userEdge.id
+      userEdge
     );
     // store source and target anchors
     anchorsStore[sourceAnchor.id] = sourceAnchor;
@@ -314,6 +307,11 @@ export function populateAnchorsStore(
 
   //populates the anchorsStore
   store.anchorsStore.set(anchorsStore);
+
+  // set anchor positions. We can only set anchor positions after anchorsStore and nodesStore
+  // has been populated. TODO: maybe add a check to see that anchorsStore and NodesStore populated?
+  const anchors = getAnchors(store);
+  for (const anchor of anchors) anchor.callback();
 }
 
 export function populateNodesStore(

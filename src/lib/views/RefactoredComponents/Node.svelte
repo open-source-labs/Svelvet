@@ -8,16 +8,16 @@
     UserNodeType,
     UserEdgeType,
   } from '$lib/models/types';
-    // import { id } from 'src/playgroundStore';
-  
+  // import { id } from 'src/playgroundStore';
+
   import EditNode from './EditNode.svelte';
 
   export let nodeId: string;
   export let canvasId: string;
 
   const store = findStore(canvasId);
-  const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
-  
+  // const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
+
   //isEditing will be set to true when user right click on the node
   $: isEditing = false;
   //offsetX and offsetY are props to pass down to EditNode component to display the form
@@ -62,7 +62,7 @@
   }}
   on:contextmenu={(e) => {
     e.preventDefault();
-    //set the value of offsetX and offsetY to the mouse right click position 
+    //set the value of offsetX and offsetY to the mouse right click position
     //so that the menu pops up on the right side of the mouse click
     offsetX = e.offsetX;
     offsetY = e.offsetY;
@@ -70,7 +70,6 @@
     $nodeSelected = false; // when $nodeSelected = true, d3 functionality is disabled
     isSelected = false;
     isEditing = isEditing === true ? false : true;
-
   }}
   class="Node"
   style="left: {node.positionX}px;
@@ -85,7 +84,7 @@
 >
   <!--EditNode component will be displayed if isEditing is true-->
   {#if isEditing}
-    <EditNode {canvasId} {nodeId} {offsetX} {offsetY}/>
+    <EditNode {canvasId} {nodeId} {offsetX} {offsetY} />
   {/if}
   <!-- This executes if node.image is present without node.label -->
   {#if node.image}
