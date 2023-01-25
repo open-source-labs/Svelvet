@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { rightCb, leftCb, topCb, bottomCb } from './anchorCb'; // these are callbacks used to calculate anchor position relative to node
+import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
 import type {
   NodeType,
   EdgeType,
@@ -22,10 +22,10 @@ import {
   getEdgeById,
 } from './storeApi';
 /**
- * 
- * @param store 
- * @param canvasId 
- * @returns 
+ *
+ * @param store
+ * @param canvasId
+ * @returns
  */
 function createResizeNode(
   canvasId: string,
