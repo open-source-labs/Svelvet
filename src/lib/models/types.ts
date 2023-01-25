@@ -9,6 +9,7 @@ export interface ResizeNodeType {
   positionX: number;
   positionY: number;
   setPosition: Function;
+  setPositionNoCascade: Function;
 }
 export interface UserNodeType {
   id: string;
@@ -68,6 +69,7 @@ export interface NodeType {
   bgColor: string;
   data: string; // This is a JSON string
   setPosition: Function;
+  setSizeFromMovement: Function;
   borderColor: string;
   image: boolean;
   src: string;

@@ -13,20 +13,20 @@ import { stores } from './store';
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
   /**
- * @param {string} id - id of the node we created genertated by a random string //i think
- * @param {number} positionX - 'X' position of the node
- * @param {number} positionY - 'Y' position of the node
- * @param {number} width - width of the node
- * @param {number} height - height of the node
- * @param {string} bgColor - background color of node
- * @param {string} data - //note sure
- * @param {string} canvasId - //note sure
- * @param {string} borderColor - border color of node
- * @param {boolean} image - //not sure
- * @param {string} src - //not sure
- * @param {string} textColor - the color of the text in the node
- * @param {string} borderRadius - //not sure
- */
+   * @param {string} id - id of the node we created genertated by a random string //i think
+   * @param {number} positionX - 'X' position of the node
+   * @param {number} positionY - 'Y' position of the node
+   * @param {number} width - width of the node
+   * @param {number} height - height of the node
+   * @param {string} bgColor - background color of node
+   * @param {string} data - //note sure
+   * @param {string} canvasId - //note sure
+   * @param {string} borderColor - border color of node
+   * @param {boolean} image - //not sure
+   * @param {string} src - //not sure
+   * @param {string} textColor - the color of the text in the node
+   * @param {string} borderRadius - //not sure
+   */
   constructor(
     public id: string,
     public positionX: number,
@@ -44,8 +44,8 @@ export class Node implements NodeType {
   ) {}
   /**
    * @function setPosition -
-   * @param {number} movementX - 
-   * @param {number} movementy - 
+   * @param {number} movementX -
+   * @param {number} movementy -
    */
   setPosition(movementX: number, movementY: number) {
     //update all necessary data
@@ -53,6 +53,34 @@ export class Node implements NodeType {
     this.positionY += movementY;
 
     //update all the anchors on the node in the anchorsStore
+    const { anchorsStore, resizeNodesStore } = stores[this.canvasId];
+
+    anchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === this.id) {
+          anchors[anchorId].setPositionFromNode();
+          //anchors[anchorId].setPosition(movementX, movementY);
+        }
+      }
+      return { ...anchors };
+    });
+
+    resizeNodesStore.update((resAnchors) => {
+      for (const anchorId in resAnchors) {
+        if (resAnchors[anchorId].nodeId === this.id) {
+          resAnchors[anchorId].setPositionNoCascade(movementX, movementY);
+          //resAnchors[anchorId].setPosition(movementX, movementY);
+        }
+      }
+      return { ...resAnchors };
+    });
+  }
+
+  //TODO: Functionality to set width and height to movement difference
+  setSizeFromMovement(movementX: number, movementY: number) {
+    this.width += movementX;
+    this.height += movementY;
+
     const { anchorsStore } = stores[this.canvasId];
 
     anchorsStore.update((anchors) => {
@@ -65,6 +93,7 @@ export class Node implements NodeType {
       return { ...anchors };
     });
   }
+
   /**
    * @function handleDelete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
    * @TODO implement this
