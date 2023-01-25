@@ -4,7 +4,7 @@
   const initialNodes = [
     {
       id: 4,
-      position: { x: 50, y: 180 },
+      position: { x: 50, y: 50 },
       data: { label: 'Drag me!' },
       width: 125,
       height: 40,
@@ -14,10 +14,10 @@
     },
     {
       id: 6,
-      position: { x: 200, y: 180 },
+      position: { x: 300, y: 180 },
       data: { label: 'Custom Ndddode' },
       width: 80,
-      height: 80,
+      height: 300,
       borderColor: '#FF4121',
       borderRadius: 30,
       bgColor: 'grey',
@@ -31,7 +31,6 @@
       source: 4,
       targetAnchorCb: leftCb,
       target: 6,
-      type: 'straight',
     },
   ];
 </script>

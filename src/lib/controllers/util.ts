@@ -58,10 +58,10 @@ function createAnchor(
 
     const node = getNodeById(store, userNode.id);
     const { positionX, positionY, width, height } = node;
-    const [x, y] = positionCb(positionX, positionY, width, height);
+    const [x, y, angle] = positionCb(positionX, positionY, width, height);
     anchorSelf.positionX = x;
     anchorSelf.positionY = y;
-
+    anchorSelf.angle = angle;
     // update the other anchor. This is in case the other anchor is a dynamic anchor
     // The dyanamic anchor has a check that prevents an infinite loop
     anchorOther.callback();
