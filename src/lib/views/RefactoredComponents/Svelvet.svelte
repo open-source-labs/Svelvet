@@ -24,6 +24,8 @@
   export let background: boolean = true;
   export let movement: boolean = true;
   export let canvasId: string = uuidv4();
+  export let snap: boolean = false;
+  export let snapTo: number = 30;
 
   // sanitize user input
   // This is so that all id's are strings
@@ -51,6 +53,8 @@
     svelvetStore.heightStore.set(height);
     svelvetStore.backgroundStore.set(background);
     svelvetStore.movementStore.set(movement);
+    const optionsObj = { snap, snapTo };
+    svelvetStore.options.set(optionsObj);
   });
   // // enables data reactivity
   // afterUpdate(() => {

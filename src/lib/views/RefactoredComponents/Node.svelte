@@ -11,6 +11,7 @@
   // import { id } from 'src/playgroundStore';
 
   import EditNode from './EditNode.svelte';
+  import { writable, derived, get, readable } from 'svelte/store';
 
   export let nodeId: string;
   export let canvasId: string;
@@ -47,8 +48,17 @@
   }}
   on:mouseup={(e) => {
     e.preventDefault();
-    $nodeSelected = false; // when $nodeSelected = true, d3 functionality is disabled
+    $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
+
+    // TODO: fix the TS error
+    if (get(store.options).snap) {
+      // If user sets snap attribute as true inside Svelvet
+      const snapResize = get(store.options).snapTo;
+      const x = Math.floor(node.positionX / snapResize) * snapResize;
+      const y = Math.floor(node.positionY / snapResize) * snapResize;
+      console.log('!', x, y);
+    }
   }}
 />
 
