@@ -2,7 +2,7 @@ import type { Readable, Writable } from 'svelte/store';
 
 export interface ResizeNodeType {
   id: string;
-  nodeId?: string;
+  nodeId: string;
   edgeId?: string;
   canvasId: string;
   anchorId?: string;
