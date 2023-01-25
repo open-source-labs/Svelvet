@@ -14,20 +14,20 @@ import { populateNodesStore } from '$lib/controllers/util';
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
   /**
- * @param {string} id - id of the node we created genertated by a random string //i think
- * @param {number} positionX - 'X' position of the node
- * @param {number} positionY - 'Y' position of the node
- * @param {number} width - width of the node
- * @param {number} height - height of the node
- * @param {string} bgColor - background color of node
- * @param {string} data - //note sure
- * @param {string} canvasId - //note sure
- * @param {string} borderColor - border color of node
- * @param {boolean} image - //not sure
- * @param {string} src - //not sure
- * @param {string} textColor - the color of the text in the node
- * @param {string} borderRadius - //not sure
- */
+   * @param {string} id - id of the node we created genertated by a random string //i think
+   * @param {number} positionX - 'X' position of the node
+   * @param {number} positionY - 'Y' position of the node
+   * @param {number} width - width of the node
+   * @param {number} height - height of the node
+   * @param {string} bgColor - background color of node
+   * @param {string} data - //note sure
+   * @param {string} canvasId - //note sure
+   * @param {string} borderColor - border color of node
+   * @param {boolean} image - //not sure
+   * @param {string} src - //not sure
+   * @param {string} textColor - the color of the text in the node
+   * @param {string} borderRadius - //not sure
+   */
   constructor(
     public id: string,
     public positionX: number,
@@ -45,8 +45,8 @@ export class Node implements NodeType {
   ) {}
   /**
    * @function setPosition -
-   * @param {number} movementX - 
-   * @param {number} movementy - 
+   * @param {number} movementX -
+   * @param {number} movementy -
    */
   setPosition(movementX: number, movementY: number) {
     //update all necessary data
@@ -54,6 +54,34 @@ export class Node implements NodeType {
     this.positionY += movementY;
 
     //update all the anchors on the node in the anchorsStore
+    const { anchorsStore, resizeNodesStore } = stores[this.canvasId];
+
+    anchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === this.id) {
+          anchors[anchorId].setPositionFromNode();
+          //anchors[anchorId].setPosition(movementX, movementY);
+        }
+      }
+      return { ...anchors };
+    });
+
+    resizeNodesStore.update((resAnchors) => {
+      for (const anchorId in resAnchors) {
+        if (resAnchors[anchorId].nodeId === this.id) {
+          resAnchors[anchorId].setPositionNoCascade(movementX, movementY);
+          //resAnchors[anchorId].setPosition(movementX, movementY);
+        }
+      }
+      return { ...resAnchors };
+    });
+  }
+
+  //TODO: Functionality to set width and height to movement difference
+  setSizeFromMovement(movementX: number, movementY: number) {
+    this.width += movementX;
+    this.height += movementY;
+
     const { anchorsStore } = stores[this.canvasId];
 
     anchorsStore.update((anchors) => {
@@ -66,6 +94,7 @@ export class Node implements NodeType {
       return { ...anchors };
     });
   }
+
   /**
    * @function delete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
    * @TODO implement this
@@ -73,7 +102,7 @@ export class Node implements NodeType {
   delete() {
     console.log('working on waterfall down to delete anchors and edges');
     
-    const { nodesStore } = stores[this.canvasId];
+    const { nodesStore, anchorsStore, edgesStore } = stores[this.canvasId];
 
     const deletedNode = this
 
@@ -89,7 +118,28 @@ export class Node implements NodeType {
 
     console.log('the deleted node is => ', deletedNode);
 
-    //should use the deletedNode info to delete anchors and edges
-    
+    let deletedAnchor;
+
+    //use the deletedNode info to delete anchors
+    anchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === deletedNode.id) {
+          deletedAnchor = anchors[anchorId];
+            //use the deletedAnchor info to delete edges
+            let deletedEdge;
+            edgesStore.update((edges) => {
+              for (const edgeId in edges) {
+                if (edges[edgeId].id === deletedAnchor.edgeId) {
+                  deletedEdge = edges[edgeId]
+                  delete edges[edgeId];
+                }
+              }
+              return {...edges}
+            })
+          delete anchors[anchorId];
+        }
+      }
+      return {...anchors}
+    })
   }
 }
