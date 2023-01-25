@@ -114,7 +114,7 @@ export class Anchor implements AnchorType {
   }
 
   // TODO: implement me
-  handleDelete() {
+  delete() {
     console.log('anchor deletion not yet implemented');
   }
 }

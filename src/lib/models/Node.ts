@@ -9,6 +9,7 @@ import type {
 import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 import { stores } from './store';
+import { populateNodesStore } from '$lib/controllers/util';
 
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
@@ -66,10 +67,29 @@ export class Node implements NodeType {
     });
   }
   /**
-   * @function handleDelete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
+   * @function delete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
    * @TODO implement this
    */
-  handleDelete() {
-    console.log('node deletion not yet implemented');
+  delete() {
+    console.log('working on waterfall down to delete anchors and edges');
+    
+    const { nodesStore } = stores[this.canvasId];
+
+    const deletedNode = this
+
+    nodesStore.update((nodes) => {
+      for (const nodeId in nodes) {
+        if (nodes[nodeId].id === this.id) {
+          delete nodes[nodeId];
+        }
+      }
+      return {...nodes}
+    })
+    
+
+    console.log('the deleted node is => ', deletedNode);
+
+    //should use the deletedNode info to delete anchors and edges
+    
   }
 }

@@ -68,6 +68,7 @@ export interface NodeType {
   bgColor: string;
   data: string; // This is a JSON string
   setPosition: Function;
+  delete: Function;
   borderColor: string;
   image: boolean;
   src: string;
@@ -105,4 +106,5 @@ export interface AnchorType {
   setPositionFromNode: Function;
   setPosition: Function;
   updateEdges: Function;
+  delete: Function
 }
