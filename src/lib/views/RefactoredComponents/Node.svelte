@@ -23,6 +23,13 @@
   //offsetX and offsetY are props to pass down to EditNode component to display the form
   let offsetX;
   let offsetY;
+  const {
+    nodesStore,
+    edgesStore,
+    anchorsStore,
+    nodeSelected,
+    resizeNodesStore,
+  } = store;
 
   let isSelected = false;
   let node: NodeType;
