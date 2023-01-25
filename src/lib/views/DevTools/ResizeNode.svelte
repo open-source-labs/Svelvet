@@ -19,7 +19,7 @@
     if (isSelected) {
       resizeNodesStore.update((resNode) => {
         const newResNode = resNode[resizeId];
-        newResNode.setPosition(e.movementX, e.movementY, resizeId);
+        newResNode.setPositionAndCascade(e.movementX, e.movementY, resizeId);
         return { ...resNode };
       });
     }

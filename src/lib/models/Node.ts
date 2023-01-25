@@ -68,7 +68,7 @@ export class Node implements NodeType {
     resizeNodesStore.update((resAnchors) => {
       for (const anchorId in resAnchors) {
         if (resAnchors[anchorId].nodeId === this.id) {
-          resAnchors[anchorId].setPositionNoCascade(movementX, movementY);
+          resAnchors[anchorId].setPosition(movementX, movementY);
           //resAnchors[anchorId].setPosition(movementX, movementY);
         }
       }
