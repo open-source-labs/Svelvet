@@ -1,3 +1,4 @@
+/** this is where we create our node store */
 import type {
   NodeType,
   EdgeType,
@@ -9,7 +10,23 @@ import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 import { stores } from './store';
 
+/** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
+  /**
+ * @param {string} id - id of the node we created genertated by a random string //i think
+ * @param {number} positionX - 'X' position of the node
+ * @param {number} positionY - 'Y' position of the node
+ * @param {number} width - width of the node
+ * @param {number} height - height of the node
+ * @param {string} bgColor - background color of node
+ * @param {string} data - //note sure
+ * @param {string} canvasId - //note sure
+ * @param {string} borderColor - border color of node
+ * @param {boolean} image - //not sure
+ * @param {string} src - //not sure
+ * @param {string} textColor - the color of the text in the node
+ * @param {string} borderRadius - //not sure
+ */
   constructor(
     public id: string,
     public positionX: number,
@@ -25,7 +42,11 @@ export class Node implements NodeType {
     public textColor: string,
     public borderRadius: number
   ) {}
-
+  /**
+   * @function setPosition -
+   * @param {number} movementX - 
+   * @param {number} movementy - 
+   */
   setPosition(movementX: number, movementY: number) {
     //update all necessary data
     this.positionX += movementX;
@@ -44,8 +65,10 @@ export class Node implements NodeType {
       return { ...anchors };
     });
   }
-
-  // TODO: implement me
+  /**
+   * @function handleDelete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
+   * @TODO implement this
+   */
   handleDelete() {
     console.log('node deletion not yet implemented');
   }

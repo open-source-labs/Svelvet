@@ -21,7 +21,12 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
-
+/**
+ * 
+ * @param store 
+ * @param canvasId 
+ * @returns 
+ */
 function createResizeNode(store: StoreType, canvasId: string) {
   const id = uuidv4();
   const resizeNode = new ResizeNode(id, canvasId, -5, -5);
