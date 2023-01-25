@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Moveable from 'svelte-moveable';
   import { findStore } from '$lib/controllers/storeApi';
   import type {
     NodeType,
@@ -13,6 +14,7 @@
   const { nodesStore, edgesStore, anchorsStore } = store;
 
   let isSelected = false;
+  let target;
 
   let node: NodeType;
   $: node = $nodesStore[nodeId];
@@ -56,7 +58,7 @@ const onMouseMove = (e: any, nodeID: number) => {
     e.preventDefault();
     isSelected = true;
   }}
-  class="Node"
+  class="Node target"
   style="left: {node.positionX}px;
     top: {node.positionY}px;
     width: {node.width}px;
@@ -66,8 +68,29 @@ const onMouseMove = (e: any, nodeID: number) => {
     border-radius: {5}px;
     color: white;"
   id="svelvet-{nodeId}"
+  bind:this={target}
 />
 
+<Moveable
+  {target}
+  origin={true}
+  edge={true}
+  keepRatio={false}
+  renderDirections={['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e']}
+  resizable={true}
+  throttleResize={0}
+  on:resizeStart={() => console.log('asdfasdfa')}
+  on:resize={() => console.log('asdfasdfa')}
+  on:resizeEnd={() => console.log('asdfasdfa')}
+/>
+
+<!--   function onDragStart({ target, set }) {
+    const frame = getFrame(target);
+
+    set([
+    set([frame.get("transform", "scaleX"), frame.get("transform", "scaleY")]);
+    dragStart && onDragStart(dragStart);
+  } -->
 <style>
   .Node {
     position: absolute;

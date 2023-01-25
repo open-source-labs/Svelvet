@@ -21,10 +21,20 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
-
-function createResizeNode(store: StoreType, canvasId: string) {
+/**
+ * 
+ * @param store 
+ * @param canvasId 
+ * @returns 
+ */
+function createResizeNode(
+  canvasId: string,
+  nodeId: string,
+  posX: number,
+  posY: number
+) {
   const id = uuidv4();
-  const resizeNode = new ResizeNode(id, canvasId, -5, -5);
+  const resizeNode = new ResizeNode(id, canvasId, nodeId, posX, posY);
   return resizeNode;
 }
 
@@ -337,12 +347,25 @@ export function populateNodesStore(
   store.nodesStore.set(nodesStore);
 }
 
-export function populateResizeNodeStore(store: StoreType, canvasId: string) {
+export function populateResizeNodeStore(
+  store: StoreType,
+  nodes: UserNodeType[],
+  canvasId: string
+) {
   const resizeNodeStore: { [key: string]: ResizeNodeType } = {};
 
-  const resizeNode = createResizeNode(store, canvasId);
+  for (let i = 0; i < nodes.length; i++) {
+    const userNode = nodes[i];
+    const { id, width, height, position } = userNode;
+    const resizeNode = createResizeNode(
+      canvasId,
+      id,
+      position.x + width,
+      position.y + height
+    );
+    resizeNodeStore[resizeNode.id] = resizeNode;
+  }
   // console.log(resizeNode);
-  resizeNodeStore[resizeNode.id] = resizeNode;
   // console.log('ResizeNodeStore', resizeNodeStore);
   store.resizeNodesStore.set(resizeNodeStore);
 }

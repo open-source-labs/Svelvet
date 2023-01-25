@@ -48,10 +48,6 @@
   {#each reactiveAnchors as anchor_id}
     <AnchorComponent {anchor_id} {canvasId} />
   {/each}
-
-  {#each reactiveResize as resizeId}
-    <ResizeNodeComponent {resizeId} {canvasId} />
-  {/each}
 </div>
 
 <svg id="svg">

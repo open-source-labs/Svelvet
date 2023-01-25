@@ -3,13 +3,13 @@
    * import findStore
   */
   import { findStore } from "$lib/controllers/storeApi";
-  
+
   export let id: string;
 
   const store = findStore(id);
 
   const { nodesStore } = store;
-  
+
 
 </script>
 

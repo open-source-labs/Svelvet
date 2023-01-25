@@ -1,3 +1,6 @@
+/**
+ * This is where we create, update  the Anchor store. 
+ */
 import type {
   NodeType,
   EdgeType,
@@ -9,7 +12,21 @@ import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 import { stores } from './store';
 
+/** Class representing an anchor with a Anchortype alias */
 export class Anchor implements AnchorType {
+  /**
+ * creates an anchor.
+ * @param {string} id - id that is created dynamically which will be set to a random string
+ * @param {string} nodeId - id of the node in which this anchor will be set on
+ * @param {string} edgeId - id of the edge that will connect the target and source anchors
+ * @param {'source' | 'target'} sourceOrTarget - declaring if this anchor will be a source or target
+ * @param {number} positionX - the 'X' coordinate of the anchor 
+ * @param {number} positionY - the 'Y' coordinate of the anchor
+ * @param {function} callback - the callback function that will determine the position of this anchor from our anchprCb.ts file in our controllers
+ * @param {string} canvasId - // not sure
+ * @param { number } angle - this is the orientation of the anchor and is used to make sure bezier/step curves are rendered perpendicular to the node. 
+ *                           Angles are defined along the unit circle. EX: 0 = right side of node, 180 = left side of node.
+ */
   constructor(
     public id: string,
     public nodeId: string,
@@ -17,20 +34,19 @@ export class Anchor implements AnchorType {
     public sourceOrTarget: 'source' | 'target',
     public positionX: number,
     public positionY: number,
-    public callback: Function, //
+    public callback: Function,
     public canvasId: string,
-    // this is the orientation of the anchor and is used to make sure bezier/step curves are rendered perpendicular to the node
-    // angles are defined along the unit circle; an angle of 0 means anchor is on the right side of the node, while an angle of 180
-    // means the anchor is on the left side of the node
     public angle: 0 | 90 | 180 | 270
   ) {}
-
+/**
+ * @function setPositionFromNode - 
+ * @TODO - abstract this out so that people can define their own custom anchor positions
+ */
   // Uses
   // When anchorCB runs, it will calculate the position of the anchor using the user-defined callback.
   // Then it will set the position of the anchor in the store
-  // TODO: abstract this out so that people can define their own custom anchor positions
   setPositionFromNode() {
-    // get node data
+    /**get node data */
     const store = findStore(this.canvasId);
     const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero elements, this means that there is no node corresponding to this.nodeId
     const { positionX, positionY, width, height } = node;
@@ -53,7 +69,7 @@ export class Anchor implements AnchorType {
 
   updateEdges() {
     const { edgesStore } = stores[this.canvasId];
-    // update edges
+    /** update edges by deconstructing edges store and setting its new vlue to stores[this.canvasID] */
 
     edgesStore.update((edges) => {
       const edge = edges[this.edgeId];
