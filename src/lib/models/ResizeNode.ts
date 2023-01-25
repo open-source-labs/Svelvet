@@ -23,12 +23,12 @@ export class ResizeNode implements ResizeNodeType {
     public positionY: number
   ) {}
 
-  setPositionNoCascade(movementX: number, movementY: number) {
+  setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;
     this.positionY += movementY;
   }
 
-  setPosition(movementX: number, movementY: number, id: string) {
+  setPositionAndCascade(movementX: number, movementY: number, id: string) {
     // calculate new anchor position
     // claculate new node width/height
     // if width<0 or height<0 return
