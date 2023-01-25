@@ -121,6 +121,7 @@
     align-items: center;
     justify-content: center;
   }
+  
   .edit-modal {
     position: absolute;
     padding: 0 1rem 1rem 1rem;
