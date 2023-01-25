@@ -12,7 +12,13 @@
   export let canvasId: string;
 
   const store = findStore(canvasId);
-  const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
+  const {
+    nodesStore,
+    edgesStore,
+    anchorsStore,
+    nodeSelected,
+    resizeNodesStore,
+  } = store;
 
   let isSelected = false;
   let node: NodeType;
