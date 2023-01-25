@@ -20,7 +20,7 @@ export class Node implements NodeType {
    * @param {number} width - width of the node
    * @param {number} height - height of the node
    * @param {string} bgColor - background color of node
-   * @param {string} data - //note sure
+   * @param {object} data - //note sure
    * @param {string} canvasId - //note sure
    * @param {string} borderColor - border color of node
    * @param {boolean} image - //not sure
@@ -35,7 +35,7 @@ export class Node implements NodeType {
     public width: number,
     public height: number,
     public bgColor: string,
-    public data: string,
+    public data: object,
     public canvasId: string,
     public borderColor: string,
     public image: boolean,

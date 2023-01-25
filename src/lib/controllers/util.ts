@@ -219,7 +219,7 @@ export function populateNodesStore(
       userNode.width,
       userNode.height,
       userNode.bgColor,
-      JSON.stringify(userNode.data),
+      userNode.data,
       canvasId,
       userNode.borderColor,
       userNode.image,

@@ -68,7 +68,7 @@ export interface NodeType {
   positionX: number;
   positionY: number;
   bgColor: string;
-  data: string; // This is a JSON string
+  data: object;
   setPosition: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
