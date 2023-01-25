@@ -41,7 +41,7 @@
     if (isSelected) {
       nodesStore.update((nodes) => {
         const node = nodes[nodeId];
-        node.setPosition(e.movementX, e.movementY);
+        node.setPositionFromMovement(e.movementX, e.movementY);
         return { ...nodes };
       });
     }
@@ -64,7 +64,7 @@
 
 <!--EditNode component will be displayed if isEditing is true-->
 {#if isEditing}
-  <EditNode {canvasId} {nodeId}/>
+  <EditNode {canvasId} {nodeId} />
 {/if}
 
 <div
@@ -91,7 +91,6 @@
     color: {node.textColor};"
   id="svelvet-{node.id}"
 >
-
   <!-- This executes if node.image is present without node.label -->
   {#if node.image}
     <img

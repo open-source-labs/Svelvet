@@ -43,12 +43,13 @@ export class Node implements NodeType {
     public textColor: string,
     public borderRadius: number
   ) {}
+
   /**
    * @function setPosition -
    * @param {number} movementX -
    * @param {number} movementy -
    */
-  setPosition(movementX: number, movementY: number) {
+  setPositionFromMovement(movementX: number, movementY: number) {
     //update all necessary data
     this.positionX += movementX;
     this.positionY += movementY;
@@ -101,10 +102,10 @@ export class Node implements NodeType {
    */
   delete() {
     console.log('working on waterfall down to delete anchors and edges');
-    
+
     const { nodesStore, anchorsStore, edgesStore } = stores[this.canvasId];
 
-    const deletedNode = this
+    const deletedNode = this;
 
     nodesStore.update((nodes) => {
       for (const nodeId in nodes) {
@@ -112,9 +113,8 @@ export class Node implements NodeType {
           delete nodes[nodeId];
         }
       }
-      return {...nodes}
-    })
-    
+      return { ...nodes };
+    });
 
     console.log('the deleted node is => ', deletedNode);
 
@@ -125,21 +125,21 @@ export class Node implements NodeType {
       for (const anchorId in anchors) {
         if (anchors[anchorId].nodeId === deletedNode.id) {
           deletedAnchor = anchors[anchorId];
-            //use the deletedAnchor info to delete edges
-            let deletedEdge;
-            edgesStore.update((edges) => {
-              for (const edgeId in edges) {
-                if (edges[edgeId].id === deletedAnchor.edgeId) {
-                  deletedEdge = edges[edgeId]
-                  delete edges[edgeId];
-                }
+          //use the deletedAnchor info to delete edges
+          let deletedEdge;
+          edgesStore.update((edges) => {
+            for (const edgeId in edges) {
+              if (edges[edgeId].id === deletedAnchor.edgeId) {
+                deletedEdge = edges[edgeId];
+                delete edges[edgeId];
               }
-              return {...edges}
-            })
+            }
+            return { ...edges };
+          });
           delete anchors[anchorId];
         }
       }
-      return {...anchors}
-    })
+      return { ...anchors };
+    });
   }
 }
