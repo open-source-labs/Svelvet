@@ -8,6 +8,7 @@ export interface ResizeNodeType {
   anchorId?: string;
   positionX: number;
   positionY: number;
+  setPosition: Function;
 }
 export interface UserNodeType {
   id: string;
