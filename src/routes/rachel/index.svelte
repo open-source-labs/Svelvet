@@ -1,6 +1,7 @@
 <script>
   import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
   import NodesStoreView from '$lib/views/RefactoredComponents/NodesStoreView.svelte';
+  
 
   const initialNodes = [
     {

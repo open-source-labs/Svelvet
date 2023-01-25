@@ -9,6 +9,7 @@ import type {
 import { writable, derived, get, readable } from 'svelte/store';
 import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 import { stores } from './store';
+import { populateNodesStore } from '$lib/controllers/util';
 
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
@@ -95,10 +96,50 @@ export class Node implements NodeType {
   }
 
   /**
-   * @function handleDelete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
+   * @function delete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
    * @TODO implement this
    */
-  handleDelete() {
-    console.log('node deletion not yet implemented');
+  delete() {
+    console.log('working on waterfall down to delete anchors and edges');
+    
+    const { nodesStore, anchorsStore, edgesStore } = stores[this.canvasId];
+
+    const deletedNode = this
+
+    nodesStore.update((nodes) => {
+      for (const nodeId in nodes) {
+        if (nodes[nodeId].id === this.id) {
+          delete nodes[nodeId];
+        }
+      }
+      return {...nodes}
+    })
+    
+
+    console.log('the deleted node is => ', deletedNode);
+
+    let deletedAnchor;
+
+    //use the deletedNode info to delete anchors
+    anchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === deletedNode.id) {
+          deletedAnchor = anchors[anchorId];
+            //use the deletedAnchor info to delete edges
+            let deletedEdge;
+            edgesStore.update((edges) => {
+              for (const edgeId in edges) {
+                if (edges[edgeId].id === deletedAnchor.edgeId) {
+                  deletedEdge = edges[edgeId]
+                  delete edges[edgeId];
+                }
+              }
+              return {...edges}
+            })
+          delete anchors[anchorId];
+        }
+      }
+      return {...anchors}
+    })
   }
 }

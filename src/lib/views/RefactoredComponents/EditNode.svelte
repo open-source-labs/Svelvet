@@ -1,10 +1,10 @@
 <script>
   import { findStore } from "$lib/controllers/storeApi";
+  import { deleteNode } from "$lib/controllers/storeEditor";
 
   export let nodeId;
   export let canvasId;
-  export let offsetX;
-  export let offsetY;
+
 
   let label;
   let width;
@@ -16,13 +16,13 @@
 
   const { nodesStore } = store;
 
-  $: currentNode = $nodesStore[nodeId];
+  let currentNode = $nodesStore[nodeId];
 
   const editNode = (e) => {
     e.preventDefault();
     if (label) currentNode.data = JSON.stringify(label);
-    if (width) currentNode.width = +width;
-    if (height) currentNode.height = +height;
+    if (width) currentNode.width = width;
+    if (height) currentNode.height = height;
     if (backgroundColor) currentNode.bgColor = backgroundColor;
     width = '';
     height = '';
@@ -35,20 +35,19 @@
 </script>
 
 <div class='EditNode'
-style='left:{offsetX}px; top:{offsetY}px' >
+style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.positionY}px' >
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
     <input type="text" id="label-input-{nodeId}" placeholder="{currentNode.data}" bind:value={label}>
-    <label for="width-input">Width</label>
-    <input type="number" id="width-input-{nodeId}" placeholder="{currentNode.width.toString()}" bind:value={width}>
-    <label for="height-input">Height</label>
-    <input type="number" id="height-input-{nodeId}" placeholder="{currentNode.height.toString()}" bind:value={height}>
+
     <label for="bg-color-input">Background Color</label>
     <input type="color" id="bg-color-input-{nodeId}" class="bgci"  bind:value={backgroundColor}>
     <input type="text" placeholder="{currentNode.bgColor}" bind:value={backgroundColor}>
   </form>
   <div class="btn-container">
     <button on:click={(e) => {
+      console.log('on delete button clicked')
+      deleteNode(nodeId, canvasId);
     }}>Delete Node</button>
     <button on:click={editNode}>Submit</button>
   </div>

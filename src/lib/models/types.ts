@@ -69,6 +69,7 @@ export interface NodeType {
   bgColor: string;
   data: string; // This is a JSON string
   setPosition: Function;
+  delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
   borderColor: string;
   image: boolean;
@@ -107,4 +108,5 @@ export interface AnchorType {
   setPositionFromNode: Function;
   setPosition: Function;
   updateEdges: Function;
+  delete: Function
 }
