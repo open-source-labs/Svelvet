@@ -44,6 +44,34 @@ export class Node implements NodeType {
     public borderRadius: number
   ) {}
 
+  setPosition(x: number, y: number) {
+    this.positionX = x;
+    this.positionY = y;
+
+    // //update all the anchors on the node in the anchorsStore
+    // const { anchorsStore, resizeNodesStore } = stores[this.canvasId];
+
+    // anchorsStore.update((anchors) => {
+    //   for (const anchorId in anchors) {
+    //     if (anchors[anchorId].nodeId === this.id) {
+    //       anchors[anchorId].setPositionFromNode();
+    //       //anchors[anchorId].setPosition(movementX, movementY);
+    //     }
+    //   }
+    //   return { ...anchors };
+    // });
+
+    // resizeNodesStore.update((resAnchors) => {
+    //   for (const anchorId in resAnchors) {
+    //     if (resAnchors[anchorId].nodeId === this.id) {
+    //       resAnchors[anchorId].setPosition(movementX, movementY);
+    //       //resAnchors[anchorId].setPosition(movementX, movementY);
+    //     }
+    //   }
+    //   return { ...resAnchors };
+    // });
+  }
+
   /**
    * @function setPosition -
    * @param {number} movementX -

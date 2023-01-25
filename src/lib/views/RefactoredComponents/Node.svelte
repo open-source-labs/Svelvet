@@ -8,7 +8,6 @@
     UserNodeType,
     UserEdgeType,
   } from '$lib/models/types';
-  // import { id } from 'src/playgroundStore';
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
@@ -55,9 +54,16 @@
     if (get(store.options).snap) {
       // If user sets snap attribute as true inside Svelvet
       const snapResize = get(store.options).snapTo;
-      const x = Math.floor(node.positionX / snapResize) * snapResize;
-      const y = Math.floor(node.positionY / snapResize) * snapResize;
-      console.log('!', x, y);
+      const oldX = node.positionX;
+      const oldY = node.positionY;
+      const newX = Math.round(node.positionX / snapResize) * snapResize;
+      const newY = Math.round(node.positionY / snapResize) * snapResize;
+
+      nodesStore.update((nodes) => {
+        const node = nodes[nodeId];
+        node.setPositionFromMovement(newX - oldX, newY - oldY);
+        return { ...nodes };
+      });
     }
   }}
 />
