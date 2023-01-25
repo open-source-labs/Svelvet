@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
-import { dynamicCbCreator } from './anchorCbDev';
+import { dynamicCbCreator, fixedCbCreator } from './anchorCbDev';
 import type {
   NodeType,
   EdgeType,
@@ -53,34 +53,16 @@ function createAnchor(
   const edgeId = edge.id;
   const anchorId = uuidv4();
 
-  // positionCb is the callback from userEdge object. It is possible to be undefined
-  let positionCb: Function;
-  if (sourceOrTarget === 'target') positionCb = edge.targetAnchorCb;
-  else positionCb = edge.sourceAnchorCb;
+  // userCb is the appropriate source or taret callback from userEdge object. It is
+  // possible the user to NOT set userCb in which case userCb will be undefined
+  let userCb: Function;
+  if (sourceOrTarget === 'target') userCb = edge.targetAnchorCb;
+  else userCb = edge.sourceAnchorCb;
 
-  // wrap positionCB so that Anchor is able to set its own x,y position
-  const fixedCb = () => {
-    // get the two anchors
-    const anchors = getAnchors(store, { edgeId: edgeId });
-    if (anchors.length !== 2) throw 'there should be two anchors per edge';
-    let [anchorSelf, anchorOther] = anchors;
-    if (anchorSelf.id !== anchorId)
-      [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
-
-    const node = getNodeById(store, userNode.id);
-    const { positionX, positionY, width, height } = node;
-    const [x, y, angle] = positionCb(positionX, positionY, width, height);
-    anchorSelf.positionX = x;
-    anchorSelf.positionY = y;
-    anchorSelf.angle = angle;
-    // update the other anchor. This is in case the other anchor is a dynamic anchor
-    // The dyanamic anchor has a check that prevents an infinite loop
-    anchorOther.callback();
-  };
-
+  // create anchor callbacks
   const dynamicCb = dynamicCbCreator(store, edgeId, anchorId);
-
-  // Create a new anchor
+  const fixedCb = fixedCbCreator(store, edgeId, anchorId, userNode.id, userCb);
+  // Create a new anchor. The
   const anchor = new Anchor(
     anchorId,
     userNode.id,
@@ -88,7 +70,7 @@ function createAnchor(
     sourceOrTarget,
     -1, // dummy variables for x,y,angle for now
     -1, // dummy variables for x,y,angle for now
-    positionCb === undefined ? dynamicCb : fixedCb,
+    userCb === undefined ? dynamicCb : fixedCb,
     canvasId,
     0 // dummy variables for x,y,angle for now
   );

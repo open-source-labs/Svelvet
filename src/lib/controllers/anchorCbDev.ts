@@ -22,6 +22,35 @@ import {
   getEdgeById,
 } from './storeApi';
 
+export function fixedCbCreator(
+  store: StoreType,
+  edgeId: string,
+  anchorId: string,
+  userNodeId: string,
+  positionCb: Function // positionCb should be a function that takes 4 arguments (x,y,width,height) and returns a 3-array [x,y,angle] that represents the x,y position of the anchor as well as it's angle with respect to it's node.
+) {
+  return fixedCb;
+
+  function fixedCb() {
+    // get the two anchors
+    const anchors = getAnchors(store, { edgeId: edgeId });
+    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    let [anchorSelf, anchorOther] = anchors;
+    if (anchorSelf.id !== anchorId)
+      [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
+
+    const node = getNodeById(store, userNodeId);
+    const { positionX, positionY, width, height } = node;
+    const [x, y, angle] = positionCb(positionX, positionY, width, height);
+    anchorSelf.positionX = x;
+    anchorSelf.positionY = y;
+    anchorSelf.angle = angle;
+    // update the other anchor. This is in case the other anchor is a dynamic anchor
+    // The dyanamic anchor has a check that prevents an infinite loop
+    anchorOther.callback();
+  }
+}
+
 export function dynamicCbCreator(
   store: StoreType,
   edgeId: string,
