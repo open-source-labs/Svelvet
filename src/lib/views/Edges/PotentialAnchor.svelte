@@ -26,9 +26,34 @@
   let moved = false;
   let edgeShouldMove = false;
   $: store = findStore(canvasId);
+
+  let path;
+  let mouseX = x;
+  let mouseY = y;
+  $: {
+    path = `M ${x},${y}L ${mouseX},${mouseY}`;
+    console.log(path);
+  }
 </script>
 
+<svelte:window
+  on:mousemove={(e) => {
+    e.preventDefault();
+    if (edgeShouldMove) {
+      mouseX += e.movementX;
+      mouseY += e.movementY;
+      // onEdgeMove(e, newEdge.id); // re-renders (moves) the edge while the mouse is down and moving
+    }
+  }}
+/>
+
 <div
+  on:mousedown={(e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div)
+    console.log('clicked anchor');
+    edgeShouldMove = true;
+  }}
   class="Anchor"
   style={`
       height:${anchorHeight}px;
