@@ -45,6 +45,9 @@
       // onEdgeMove(e, newEdge.id); // re-renders (moves) the edge while the mouse is down and moving
     }
   }}
+  on:mouseup={(e) => {
+    edgeShouldMove = false; // prevent the new edge from moving
+  }}
 />
 
 <div
