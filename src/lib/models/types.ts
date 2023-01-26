@@ -61,6 +61,7 @@ export interface StoreType {
   nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged
   d3Scale: Writable<number>; // for zoom and pan
   options: Writable<{ [key: string]: any }>;
+  temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
 }
 
 export interface NodeType {
@@ -124,4 +125,15 @@ export interface PotentialAnchorType {
   angle: number;
   canvasId: string;
   deleteAndCascade: Function;
+}
+
+export interface TemporaryEdgeType {
+  id: string;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+  canvasId: string;
+  type: string;
+  edgeColor: string;
 }

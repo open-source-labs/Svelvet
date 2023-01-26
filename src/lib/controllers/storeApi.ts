@@ -48,6 +48,7 @@ import type {
   StoreType,
   UserNodeType,
   UserEdgeType,
+  TemporaryEdgeType,
 } from '$lib/models/types';
 // import { Anchor } from '$lib/models/Anchor';
 // import { Node } from '$lib/models/Node';
@@ -59,6 +60,7 @@ import {
   populateResizeNodeStore,
   populatePotentialAnchorStore,
 } from './util';
+import { TemporaryEdge } from '$lib/models/TemporaryEdge';
 
 // Gets the source anchor for a given edge
 export function getAnchorFromEdge(
@@ -163,6 +165,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     nodeIdSelected: writable(-1),
     d3Scale: writable(1),
     options: writable({}),
+    temporaryEdgeStore: writable([]),
   };
   return stores[canvasId];
 }

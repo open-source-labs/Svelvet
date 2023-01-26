@@ -1,5 +1,6 @@
 <script>
   import { getNodes, getAnchors, findStore } from '$lib/controllers/storeApi';
+  import { TemporaryEdge } from '$lib/models/TemporaryEdge';
 
   import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
@@ -11,42 +12,51 @@
   let anchorWidth = 8;
   let anchorHeight = 8;
 
-  // const {
-  //   nodesStore,
-  //   onEdgeMove,
-  //   setAnchorPosition,
-  //   renderEdge,
-  //   renderNewNode,
-  //   hoveredElement,
-  //   derivedEdges,
-  //   nodeLinkStore,
-  //   nodeCreateStore,
-  // } = findStore(canvasId);
+  const { temporaryEdgeStore } = findStore(canvasId);
   let moving = false;
   let moved = false;
   let edgeShouldMove = false;
-  $: store = findStore(canvasId);
+  // $: store = findStore(canvasId);
 
-  let path;
   let mouseX = x;
   let mouseY = y;
-  $: {
-    path = `M ${x},${y}L ${mouseX},${mouseY}`;
-    console.log(path);
-  }
+
+  import { v4 as uuidv4 } from 'uuid';
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
     e.preventDefault();
     if (edgeShouldMove) {
-      mouseX += e.movementX;
-      mouseY += e.movementY;
-      // onEdgeMove(e, newEdge.id); // re-renders (moves) the edge while the mouse is down and moving
+      temporaryEdgeStore.update((edges) => {
+        if (edges.length === 0) {
+          const newTempEdge = new TemporaryEdge(
+            uuidv4(),
+            mouseX,
+            mouseY,
+            mouseX,
+            mouseY,
+            canvasId,
+            'straight',
+            'black'
+          );
+          return [newTempEdge];
+        } else if (edges.length === 1) {
+          const edge = edges[0];
+          edge.targetX += e.movementX;
+          edge.targetY += e.movementY;
+        } else {
+          throw `there should only be zero or one temporary edge at any given time`;
+        }
+        return [...edges];
+      });
     }
   }}
   on:mouseup={(e) => {
     edgeShouldMove = false; // prevent the new edge from moving
+    temporaryEdgeStore.update((edges) => {
+      return [];
+    });
   }}
 />
 
@@ -54,7 +64,6 @@
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div)
-    console.log('clicked anchor');
     edgeShouldMove = true;
   }}
   class="Anchor"

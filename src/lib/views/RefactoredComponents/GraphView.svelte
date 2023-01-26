@@ -17,6 +17,7 @@
 
   import { findStore } from '$lib/controllers/storeApi';
   import PotentialAnchor from '../Edges/PotentialAnchor.svelte';
+  import TemporaryEdge from '../Edges/TemporaryEdge.svelte';
 
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -36,6 +37,7 @@
     nodesStore,
     anchorsStore,
     potentialAnchorsStore,
+    temporaryEdgeStore,
     resizeNodesStore,
     nodeSelected,
     backgroundStore,
@@ -49,6 +51,7 @@
   $: anchors = Object.values($anchorsStore);
   $: resize = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
+  $: tempEdges = $temporaryEdgeStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -177,6 +180,10 @@
       {:else}
         <SimpleBezierEdge {edge} {canvasId} />
       {/if}
+    {/each}
+
+    {#each tempEdges as temporaryEdge}
+      <TemporaryEdge {temporaryEdge} />
     {/each}
 
     {#each anchors as anchor}
