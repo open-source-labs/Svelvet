@@ -16,6 +16,7 @@
   import Node from './Node.svelte';
 
   import { findStore } from '$lib/controllers/storeApi';
+  import PotentialAnchor from '../Edges/PotentialAnchor.svelte';
 
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -121,6 +122,14 @@
     {#each resize as res}
       <ResizeNode resizeId={res.id} {canvasId} />
     {/each}
+
+    {#each potentialAnchors as potentialAnchor}
+      <PotentialAnchor
+        {canvasId}
+        x={potentialAnchor.positionX}
+        y={potentialAnchor.positionY}
+      />
+    {/each}
   </div>
 </div>
 
@@ -171,10 +180,8 @@
     {/each}
 
     {#each anchors as anchor}
+      <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
-    {/each}
-    {#each potentialAnchors as potentialAnchor}
-      <EdgeAnchor x={potentialAnchor.positionX} y={potentialAnchor.positionY} />
     {/each}
   </g>
 </svg>
