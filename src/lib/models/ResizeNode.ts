@@ -48,7 +48,6 @@ export class ResizeNode implements ResizeNodeType {
     nodesStore.update((nodes) => {
       const node = nodes[nodeId];
       node.setSizeFromMovement(movementX, movementY);
-      console.log(node);
       return { ...nodes };
     });
   }

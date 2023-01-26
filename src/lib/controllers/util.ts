@@ -209,7 +209,7 @@ export function populatePotentialAnchorStore(
   //populates the anchorsStore
   store.potentialAnchorsStore.set(potentialAnchorsStore);
 
-  // set anchor positions. We can only set anchor positions after anchorsStore and nodesStore
+  // set potentialAnchor positions. We can only set potentialAnchor positions after anchorsStore and nodesStore
   // has been populated. TODO: maybe add a check to see that anchorsStore and NodesStore populated?
   const potentialAnchors = Object.values(get(store.potentialAnchorsStore));
   for (const potentialAnchor of potentialAnchors) potentialAnchor.callback();
