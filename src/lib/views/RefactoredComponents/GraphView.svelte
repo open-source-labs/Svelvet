@@ -16,6 +16,8 @@
   import Node from './Node.svelte';
 
   import { findStore } from '$lib/controllers/storeApi';
+  import PotentialAnchor from '../Edges/PotentialAnchor.svelte';
+  import TemporaryEdge from '../Edges/TemporaryEdge.svelte';
 
   // leveraging d3 library to zoom/pan
   let d3 = {
@@ -34,6 +36,8 @@
     edgesStore,
     nodesStore,
     anchorsStore,
+    potentialAnchorsStore,
+    temporaryEdgeStore,
     resizeNodesStore,
     nodeSelected,
     backgroundStore,
@@ -46,7 +50,8 @@
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
   $: resize = Object.values($resizeNodesStore);
-
+  $: potentialAnchors = Object.values($potentialAnchorsStore);
+  $: tempEdges = $temporaryEdgeStore;
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -120,6 +125,14 @@
     {#each resize as res}
       <ResizeNode resizeId={res.id} {canvasId} />
     {/each}
+
+    {#each potentialAnchors as potentialAnchor}
+      <PotentialAnchor
+        {canvasId}
+        x={potentialAnchor.positionX}
+        y={potentialAnchor.positionY}
+      />
+    {/each}
   </div>
 </div>
 
@@ -169,7 +182,12 @@
       {/if}
     {/each}
 
+    {#each tempEdges as temporaryEdge}
+      <TemporaryEdge {temporaryEdge} />
+    {/each}
+
     {#each anchors as anchor}
+      <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}
   </g>

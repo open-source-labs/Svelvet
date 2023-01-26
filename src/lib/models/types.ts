@@ -52,6 +52,7 @@ export interface StoreType {
   edgesStore: Writable<{ [key: string]: EdgeType }>;
   anchorsStore: Writable<{ [key: string]: AnchorType }>;
   resizeNodesStore: Writable<{ [key: string]: ResizeNodeType }>;
+  potentialAnchorsStore: Writable<{ [key: string]: PotentialAnchorType }>;
   widthStore: Writable<number>;
   heightStore: Writable<number>;
   backgroundStore: Writable<boolean>;
@@ -60,6 +61,7 @@ export interface StoreType {
   nodeSelected: Writable<boolean>; // this is used to stop d3 panning when node is being dragged
   d3Scale: Writable<number>; // for zoom and pan
   options: Writable<{ [key: string]: any }>;
+  temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
 }
 
 export interface NodeType {
@@ -106,10 +108,32 @@ export interface AnchorType {
   sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
-  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position
+  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
   angle: number;
   setPositionFromNode: Function;
   setPosition: Function;
   updateEdges: Function;
   delete: Function;
+}
+
+export interface PotentialAnchorType {
+  id: string;
+  nodeId: string;
+  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
+  positionX: number;
+  positionY: number;
+  angle: number;
+  canvasId: string;
+  deleteAndCascade: Function;
+}
+
+export interface TemporaryEdgeType {
+  id: string;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+  canvasId: string;
+  type: string;
+  edgeColor: string;
 }

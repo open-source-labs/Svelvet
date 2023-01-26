@@ -52,8 +52,12 @@ export class Node implements NodeType {
    * @param {number} movementy -
    */
   setPositionFromMovement(movementX: number, movementY: number) {
-    const { nodesStore, anchorsStore, resizeNodesStore } =
-      stores[this.canvasId];
+    const {
+      nodesStore,
+      anchorsStore,
+      resizeNodesStore,
+      potentialAnchorsStore,
+    } = stores[this.canvasId];
 
     //update all necessary data
     this.positionX += movementX;
@@ -77,6 +81,16 @@ export class Node implements NodeType {
       return { ...anchors };
     });
 
+    //update all the anchors on the node in the anchorsStore
+    potentialAnchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === this.id) {
+          anchors[anchorId].callback(); // we don't have to worry about setting partner anchors/etc;
+        }
+      }
+      return { ...anchors };
+    });
+
     resizeNodesStore.update((resAnchors) => {
       for (const anchorId in resAnchors) {
         if (resAnchors[anchorId].nodeId === this.id) {
@@ -93,13 +107,23 @@ export class Node implements NodeType {
     this.width += movementX;
     this.height += movementY;
 
-    const { anchorsStore } = stores[this.canvasId];
+    const { anchorsStore, potentialAnchorsStore } = stores[this.canvasId];
 
     anchorsStore.update((anchors) => {
       for (const anchorId in anchors) {
         if (anchors[anchorId].nodeId === this.id) {
           anchors[anchorId].setPositionFromNode();
           //anchors[anchorId].setPosition(movementX, movementY);
+        }
+      }
+      return { ...anchors };
+    });
+
+    //update all the anchors on the node in the anchorsStore
+    potentialAnchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchors[anchorId].nodeId === this.id) {
+          anchors[anchorId].callback(); // we don't have to worry about setting partner anchors/etc;
         }
       }
       return { ...anchors };
