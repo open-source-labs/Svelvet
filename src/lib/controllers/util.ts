@@ -199,14 +199,11 @@ export function populatePotentialAnchorStore(
     const userNode = nodes[i];
 
     // create 4 potentialAnchors
-    const potentialAnchor = createPotentialAnchor(
-      bottomCb,
-      store,
-      userNode,
-      canvasId
-    );
-    // store anchors
-    potentialAnchorsStore[potentialAnchor.id] = potentialAnchor;
+    for (let cb of [topCb, bottomCb, rightCb, leftCb]) {
+      const anchor = createPotentialAnchor(cb, store, userNode, canvasId);
+      // store potential anchors
+      potentialAnchorsStore[anchor.id] = anchor;
+    }
   }
 
   //populates the anchorsStore
