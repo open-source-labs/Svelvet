@@ -106,10 +106,20 @@ export interface AnchorType {
   sourceOrTarget: 'source' | 'target';
   positionX: number;
   positionY: number;
-  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position
+  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
   angle: number;
   setPositionFromNode: Function;
   setPosition: Function;
   updateEdges: Function;
   delete: Function;
+}
+
+export interface PotentialAnchorType {
+  id: string;
+  nodeId: string;
+  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
+  positionX: number;
+  positionY: number;
+  angle: number;
+  deleteAndCascade: Function;
 }
