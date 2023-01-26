@@ -110,8 +110,6 @@
 <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${canvasId}`}>
-    {#each nodes as node}{/each}
-
     {#each nodes as node}
       {#if node.data.html}
         <Node {node} {canvasId} {nodes} nodeId={node.id}

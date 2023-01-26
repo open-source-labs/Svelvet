@@ -1,6 +1,5 @@
 <script>
   import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
-  import { rightCb, leftCb, topCb, bottomCb } from '$lib/controllers/anchorCb';
   const initialNodes = [
     {
       id: 4,
