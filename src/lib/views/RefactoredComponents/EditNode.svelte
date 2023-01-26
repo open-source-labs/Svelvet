@@ -4,6 +4,7 @@
 
   export let nodeId;
   export let canvasId;
+  export let isEditing;
 
 
   let label;
@@ -20,7 +21,7 @@
 
   const editNode = (e) => {
     e.preventDefault();
-    if (label) currentNode.data = JSON.stringify(label);
+    if (label) currentNode.data[label] = label;
     if (width) currentNode.width = width;
     if (height) currentNode.height = height;
     if (backgroundColor) currentNode.bgColor = backgroundColor;
@@ -33,12 +34,12 @@
   }
 
 </script>
-
+{#if isEditing}
 <div class='EditNode'
 style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.positionY}px' >
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input-{nodeId}" placeholder="{currentNode.data}" bind:value={label}>
+    <input type="text" id="label-input-{nodeId}" placeholder="{currentNode.data[label]}" bind:value={label}>
 
     <label for="bg-color-input">Background Color</label>
     <input type="color" id="bg-color-input-{nodeId}" class="bgci"  bind:value={backgroundColor}>
@@ -48,6 +49,7 @@ style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.posi
     <button on:click={(e) => {
       console.log('on delete button clicked')
       deleteNode(nodeId, canvasId);
+      isEditing = false;
     }}>Delete Node</button>
     <button on:click={editNode}>Submit</button>
   </div>
@@ -65,6 +67,7 @@ style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.posi
   <p>text-color: {$nodesStore[nodeId].textColor}</p> -->
 
 </div>
+{/if}
 
 
 <style>
