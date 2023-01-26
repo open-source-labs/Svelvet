@@ -34,6 +34,7 @@
     edgesStore,
     nodesStore,
     anchorsStore,
+    potentialAnchorsStore,
     resizeNodesStore,
     nodeSelected,
     backgroundStore,
@@ -46,7 +47,7 @@
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
   $: resize = Object.values($resizeNodesStore);
-
+  $: potentialAnchors = Object.values($potentialAnchorsStore);
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -171,6 +172,9 @@
 
     {#each anchors as anchor}
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
+    {/each}
+    {#each potentialAnchors as potentialAnchor}
+      <EdgeAnchor x={potentialAnchor.positionX} y={potentialAnchor.positionY} />
     {/each}
   </g>
 </svg>

@@ -8,7 +8,7 @@
     UserNodeType,
     UserEdgeType,
   } from '$lib/models/types';
-  //   import GraphView from '$lib/views/Containers/GraphView/index.svelte';
+  import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
     createStoreFromUserInput,
@@ -61,6 +61,7 @@
     store.movementStore.set(movement);
     const optionsObj = { snap, snapTo };
     store.options.set(optionsObj);
+    console.log('!!!', get(store.potentialAnchorsStore));
   });
   // // enables data reactivity. TODO: consider adding this back in, it's supposed to cause selvet updates if people push to store
   // Probably need to use findStore, not create store

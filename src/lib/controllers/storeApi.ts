@@ -57,6 +57,7 @@ import {
   populateNodesStore,
   populateEdgesStore,
   populateResizeNodeStore,
+  populatePotentialAnchorStore,
 } from './util';
 
 // Gets the source anchor for a given edge
@@ -182,4 +183,6 @@ export function createStoreFromUserInput(
   populateEdgesStore(store, edges, canvasId);
   //populate resize Store
   populateResizeNodeStore(store, nodes, canvasId);
+  //populate potential anchors
+  populatePotentialAnchorStore(store, nodes, canvasId);
 }
