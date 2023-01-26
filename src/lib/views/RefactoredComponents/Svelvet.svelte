@@ -29,10 +29,16 @@
 
   // sanitize user input
   // This is so that all id's are strings
-  nodes = nodes.map((e) => {
-    e.id = e.id.toString();
-    return e;
+
+  nodes = nodes.map((node) => {
+    node.id = node.id.toString();
+    node.childNodes =
+      node.childNodes === undefined
+        ? []
+        : node.childNodes.map((childId) => childId.toString());
+    return node;
   });
+
   edges = edges.map((e) => {
     e.source = e.source.toString();
     e.target = e.target.toString();
@@ -42,21 +48,22 @@
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
-  const svelvetStore = createStoreEmpty(canvasId);
+  const store = createStoreEmpty(canvasId);
   // stores (state) within stores, so that we cannot access values from everywhere
   //   const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
     createStoreFromUserInput(canvasId, nodes, edges);
-    svelvetStore.widthStore.set(width);
-    svelvetStore.heightStore.set(height);
-    svelvetStore.backgroundStore.set(background);
-    svelvetStore.movementStore.set(movement);
+    store.widthStore.set(width);
+    store.heightStore.set(height);
+    store.backgroundStore.set(background);
+    store.movementStore.set(movement);
     const optionsObj = { snap, snapTo };
-    svelvetStore.options.set(optionsObj);
+    store.options.set(optionsObj);
   });
-  // // enables data reactivity
+  // // enables data reactivity. TODO: consider adding this back in, it's supposed to cause selvet updates if people push to store
+  // Probably need to use findStore, not create store
   // afterUpdate(() => {
   //   svelvetStore.nodesStore.set(nodes);
   //   svelvetStore.edgesStore.set(edges);

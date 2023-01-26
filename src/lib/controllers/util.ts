@@ -225,8 +225,10 @@ export function populateNodesStore(
       userNode.image,
       userNode.src,
       userNode.textColor,
-      userNode.borderRadius
+      userNode.borderRadius,
+      userNode.childNodes === undefined ? [] : userNode.childNodes
     );
+
     nodesStore[nodeId] = node;
   }
   // This is actually what sets the store

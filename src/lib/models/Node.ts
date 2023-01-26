@@ -27,6 +27,7 @@ export class Node implements NodeType {
    * @param {string} src - //not sure
    * @param {string} textColor - the color of the text in the node
    * @param {string} borderRadius - //not sure
+   * @param {string} childNodes - this is for the GroupNodes feature
    */
   constructor(
     public id: string,
@@ -41,7 +42,8 @@ export class Node implements NodeType {
     public image: boolean,
     public src: string,
     public textColor: string,
-    public borderRadius: number
+    public borderRadius: number,
+    public childNodes: string[]
   ) {}
 
   /**
@@ -50,13 +52,22 @@ export class Node implements NodeType {
    * @param {number} movementy -
    */
   setPositionFromMovement(movementX: number, movementY: number) {
+    const { nodesStore, anchorsStore, resizeNodesStore } =
+      stores[this.canvasId];
+
     //update all necessary data
     this.positionX += movementX;
     this.positionY += movementY;
 
-    //update all the anchors on the node in the anchorsStore
-    const { anchorsStore, resizeNodesStore } = stores[this.canvasId];
+    // update children
+    nodesStore.update((nodes) => {
+      for (const childNodeId of this.childNodes) {
+        nodes[childNodeId].setPositionFromMovement(movementX, movementY);
+      }
+      return { ...nodes };
+    });
 
+    //update all the anchors on the node in the anchorsStore
     anchorsStore.update((anchors) => {
       for (const anchorId in anchors) {
         if (anchors[anchorId].nodeId === this.id) {

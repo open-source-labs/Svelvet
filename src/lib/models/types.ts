@@ -25,6 +25,7 @@ export interface UserNodeType {
   targetPosition: 'left' | 'right' | 'top' | 'bottom';
   sourcePosition: 'left' | 'right' | 'top' | 'bottom';
   borderRadius: number;
+  childNodes: string[];
 }
 
 export interface UserEdgeType {
@@ -78,6 +79,7 @@ export interface NodeType {
   textColor: string;
   borderRadius: number;
   canvasId: string;
+  childNodes: string[];
 }
 
 export interface EdgeType {
