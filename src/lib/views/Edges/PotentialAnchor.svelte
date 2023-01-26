@@ -1,11 +1,21 @@
-<script>
+<script lang="ts">
   import { getNodes, getAnchors, findStore } from '$lib/controllers/storeApi';
   import { TemporaryEdge } from '$lib/models/TemporaryEdge';
-
+  import type {
+    NodeType,
+    EdgeType,
+    AnchorType,
+    StoreType,
+    UserNodeType,
+    UserEdgeType,
+    TemporaryEdgeType,
+    PotentialAnchorType,
+  } from '$lib/models/types';
   import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
   export let x;
   export let y;
+  export let potentialAnchor: PotentialAnchorType;
 
   let newEdge;
   let hovered = false;
@@ -32,8 +42,10 @@
         if (edges.length === 0) {
           const newTempEdge = new TemporaryEdge(
             uuidv4(),
+            potentialAnchor.nodeId,
             mouseX,
             mouseY,
+            null,
             mouseX,
             mouseY,
             canvasId,
