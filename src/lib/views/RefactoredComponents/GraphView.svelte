@@ -106,7 +106,7 @@
   <!-- This container is transformed by d3zoom -->
   <div class={`Node Node-${canvasId}`}>
     {#each nodes as node}
-      <Node nodeId={node.id} {canvasId}>{node.data.label}</Node>
+      <Node {node} {canvasId}>{node.data.label}</Node>
     {/each}
     {#each resize as res}
       <ResizeNode resizeId={res.id} {canvasId} />

@@ -12,8 +12,9 @@
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
 
-  export let nodeId: string;
+  export let node: NodeType;
   export let canvasId: string;
+  const nodeId = node.id;
 
   const store = findStore(canvasId);
   // const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
@@ -30,8 +31,6 @@
   } = store;
 
   let isSelected = false;
-  let node: NodeType;
-  $: node = $nodesStore[nodeId];
 </script>
 
 <svelte:window
