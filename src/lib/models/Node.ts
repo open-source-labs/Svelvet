@@ -161,9 +161,7 @@ export class Node implements NodeType {
     for (let anchorSelf of anchors) {
       const edgeId = anchorSelf.edgeId;
       const edge = getEdgeById(store, edgeId);
-      const sourceAnchor = getAnchorFromEdge(store, edgeId, 'source'); // this is a bit wasteful
-      const targetAnchor = getAnchorFromEdge(store, edgeId, 'target');
-      console.log(sourceAnchor, targetAnchor);
+      edge.delete();
     }
 
     // let deletedAnchor;

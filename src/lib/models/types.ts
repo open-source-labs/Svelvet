@@ -99,6 +99,7 @@ export interface EdgeType {
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
+  delete: Function;
 }
 
 export interface AnchorType {

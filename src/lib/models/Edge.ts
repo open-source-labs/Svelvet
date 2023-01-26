@@ -1,3 +1,10 @@
+import {
+  getNodes,
+  getAnchors,
+  findStore,
+  getAnchorFromEdge,
+  getEdgeById,
+} from '../controllers/storeApi';
 import type {
   NodeType,
   EdgeType,
@@ -6,7 +13,6 @@ import type {
   ResizeNodeType,
 } from './types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
 import { stores } from './store';
 
 export class Edge implements EdgeType {
@@ -28,7 +34,17 @@ export class Edge implements EdgeType {
   ) {}
 
   // TODO: implement me
-  handleDelete() {
-    console.log('deleting edge not implemented yet');
+  delete() {
+    const store = stores[this.canvasId];
+    const { nodesStore, anchorsStore, edgesStore } = store;
+    const sourceAnchor = getAnchorFromEdge(store, this.id, 'source'); // this is a bit wasteful
+    const targetAnchor = getAnchorFromEdge(store, this.id, 'target');
+    anchorsStore.update((anchors) => {
+      for (const anchorId in anchors) {
+        if (anchorId === sourceAnchor.id || anchorId == targetAnchor.id)
+          delete anchors[anchorId];
+      }
+      return { ...anchors };
+    });
   }
 }
