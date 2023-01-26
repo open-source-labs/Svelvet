@@ -42,19 +42,19 @@
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
   // this way we can have multiple Svelvet Components on the same page and prevent overlap of information
-  const svelvetStore = createStoreEmpty(canvasId);
+  const store = createStoreEmpty(canvasId);
   // stores (state) within stores, so that we cannot access values from everywhere
   //   const { widthStore, heightStore, nodesStore, derivedEdges } = svelvetStore;
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
     createStoreFromUserInput(canvasId, nodes, edges);
-    svelvetStore.widthStore.set(width);
-    svelvetStore.heightStore.set(height);
-    svelvetStore.backgroundStore.set(background);
-    svelvetStore.movementStore.set(movement);
+    store.widthStore.set(width);
+    store.heightStore.set(height);
+    store.backgroundStore.set(background);
+    store.movementStore.set(movement);
     const optionsObj = { snap, snapTo };
-    svelvetStore.options.set(optionsObj);
+    store.options.set(optionsObj);
   });
   // // enables data reactivity
   // afterUpdate(() => {
