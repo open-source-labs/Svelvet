@@ -52,6 +52,7 @@ export interface StoreType {
   edgesStore: Writable<{ [key: string]: EdgeType }>;
   anchorsStore: Writable<{ [key: string]: AnchorType }>;
   resizeNodesStore: Writable<{ [key: string]: ResizeNodeType }>;
+  potentialAnchorsStore: Writable<{ [key: string]: PotentialAnchorType }>;
   widthStore: Writable<number>;
   heightStore: Writable<number>;
   backgroundStore: Writable<boolean>;
@@ -121,5 +122,6 @@ export interface PotentialAnchorType {
   positionX: number;
   positionY: number;
   angle: number;
+  canvasId: string;
   deleteAndCascade: Function;
 }

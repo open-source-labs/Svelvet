@@ -18,6 +18,8 @@ export class PotentialAnchor implements PotentialAnchorType {
     public positionX: number,
     public positionY: number,
     public angle: number,
-    public deleteAndCascade: Function
+    public canvasId: string
   ) {}
+
+  deleteAndCascade() {}
 }

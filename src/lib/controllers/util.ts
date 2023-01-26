@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
-import { dynamicCbCreator, fixedCbCreator } from './anchorCbDev';
+import {
+  dynamicCbCreator,
+  fixedCbCreator,
+  potentialAnchorCbCreator,
+} from './anchorCbDev';
 import type {
   NodeType,
   EdgeType,
@@ -9,6 +13,7 @@ import type {
   ResizeNodeType,
   UserNodeType,
   UserEdgeType,
+  PotentialAnchorType,
 } from '$lib/models/types';
 import { ResizeNode } from '$lib/models/ResizeNode';
 import { Anchor } from '$lib/models/Anchor';
@@ -22,6 +27,7 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
+import { PotentialAnchor } from '$lib/models/PotentialAnchor';
 /**
  *
  * @param store
@@ -151,6 +157,65 @@ function findUserNodeById(
     if (userNode.id === id) return userNode;
   }
   return null;
+}
+
+function createPotentialAnchor(
+  positionCb: Function,
+  store: StoreType,
+  userNode: UserNodeType,
+  canvasId: string
+) {
+  const anchorId = uuidv4();
+  const fixedCb = potentialAnchorCbCreator(
+    store,
+    anchorId,
+    userNode.id,
+    positionCb
+  );
+  // Create a new anchor. The
+  const anchor = new PotentialAnchor(
+    anchorId,
+    userNode.id,
+    fixedCb,
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    0, // dummy variables for x,y,angle for now
+    canvasId
+  );
+  // return
+  console.log;
+  return anchor;
+}
+
+export function populatePotentialAnchorStore(
+  store: StoreType,
+  nodes: UserNodeType[],
+  canvasId: string
+) {
+  // anchorsStore will populated and eventaully synchronized to store.anchorsStore
+  const potentialAnchorsStore: { [key: string]: PotentialAnchorType } = {};
+  // iterate through user nodes and create four anchors per node
+  for (let i = 0; i < nodes.length; i++) {
+    const userNode = nodes[i];
+
+    // create 4 potentialAnchors
+    const potentialAnchor = createPotentialAnchor(
+      bottomCb,
+      store,
+      userNode,
+      canvasId
+    );
+    // store anchors
+    potentialAnchorsStore[potentialAnchor.id] = potentialAnchor;
+  }
+
+  //populates the anchorsStore
+  store.potentialAnchorsStore.set(potentialAnchorsStore);
+
+  // set anchor positions. We can only set anchor positions after anchorsStore and nodesStore
+  // has been populated. TODO: maybe add a check to see that anchorsStore and NodesStore populated?
+  const potentialAnchors = Object.values(get(store.potentialAnchorsStore));
+  for (const potentialAnchor of potentialAnchors) potentialAnchor.callback();
 }
 
 export function populateAnchorsStore(

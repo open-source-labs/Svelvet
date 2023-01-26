@@ -115,6 +115,13 @@ export function getEdgeById(store: StoreType, id: string) {
   return edge;
 }
 
+export function getPotentialAnchorById(store: StoreType, id: string) {
+  const potentialAnchorsStore = get(store.potentialAnchorsStore);
+  const potentialAnchor = potentialAnchorsStore[id];
+  if (potentialAnchor === undefined) throw 'potential anchor not found';
+  return potentialAnchor;
+}
+
 export function getNodes(
   store: StoreType,
   filter?: { [key: string]: any }
@@ -146,6 +153,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     edgesStore: writable({}),
     anchorsStore: writable({}),
     resizeNodesStore: writable({}),
+    potentialAnchorsStore: writable({}),
     widthStore: writable(600),
     heightStore: writable(600),
     backgroundStore: writable(false),
