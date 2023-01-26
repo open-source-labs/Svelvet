@@ -70,7 +70,7 @@
 
 <!--EditNode component will be displayed if isEditing is true-->
 {#if isEditing}
-  <EditNode {canvasId} {nodeId} />
+  <EditNode {canvasId} {nodeId} {isEditing}/>
 {/if}
 
 <div
