@@ -131,6 +131,7 @@
         {canvasId}
         x={potentialAnchor.positionX}
         y={potentialAnchor.positionY}
+        {potentialAnchor}
       />
     {/each}
   </div>

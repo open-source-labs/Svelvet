@@ -3,7 +3,6 @@
   let path = '';
   $: {
     path = `M ${temporaryEdge.sourceX},${temporaryEdge.sourceY}L ${temporaryEdge.targetX},${temporaryEdge.targetY}`;
-    // console.log(temporaryEdge);
   }
 </script>
 

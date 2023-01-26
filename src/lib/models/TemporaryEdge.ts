@@ -14,8 +14,10 @@ import { stores } from './store';
 export class TemporaryEdge implements TemporaryEdgeType {
   constructor(
     public id: string,
+    public sourceNodeId: string, // this will always be set
     public sourceX: number,
     public sourceY: number,
+    public targetNodeId: string | null, // this will be null until the temporary edge reaches another temporary anchor
     public targetX: number,
     public targetY: number,
     public canvasId: string,
