@@ -33,7 +33,8 @@ export class Edge implements EdgeType {
     public arrow?: boolean
   ) {}
 
-  // TODO: implement me
+  // Calling delete on an edge also deletes associated anchors
+  // TODO: maybe rename delete to make clear that effects will cascade to anchors? Or is documentation enough?
   delete() {
     const store = stores[this.canvasId];
     const { nodesStore, anchorsStore, edgesStore } = store;
@@ -45,6 +46,10 @@ export class Edge implements EdgeType {
           delete anchors[anchorId];
       }
       return { ...anchors };
+    });
+    edgesStore.update((edges) => {
+      delete edges[this.id];
+      return { ...edges };
     });
   }
 }
