@@ -1,5 +1,9 @@
 # README
 
+## Instuctions
+
+To run typedoc, do: `npx typedoc --entryPointStrategy expand src/lib`
+
 ## TODO
 
 - move Svelvet5 code into its own "libOld" folder. Should be independent of changes to new codebase
