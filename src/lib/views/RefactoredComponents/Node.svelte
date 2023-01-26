@@ -17,7 +17,6 @@
   export let nodes: NodeType[];
   //   const nodeId = node.id; // this seems to go stale
   export let nodeId: string;
-  console.log('!!', nodeId);
 
   const store = findStore(canvasId);
   // const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;

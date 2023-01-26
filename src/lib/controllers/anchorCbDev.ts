@@ -35,7 +35,8 @@ export function fixedCbCreator(
   function fixedCb() {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
-    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    if (anchors.length !== 2)
+      throw `there should be two anchors per edge, have: ${anchors.length}`;
     let [anchorSelf, anchorOther] = anchors;
     if (anchorSelf.id !== anchorId)
       [anchorSelf, anchorOther] = [anchorOther, anchorSelf];
@@ -61,7 +62,9 @@ export function dynamicCbCreator(
   function dynamicCb() {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
-    if (anchors.length !== 2) throw 'there should be two anchors per edge';
+    if (anchors.length !== 2)
+      throw `there should be two anchors per edge, have: ${anchors.length}`;
+
     let [anchorSelf, anchorOther] = anchors;
     if (anchorSelf.id !== anchorId)
       [anchorSelf, anchorOther] = [anchorOther, anchorSelf];

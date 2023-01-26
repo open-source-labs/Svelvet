@@ -7,7 +7,13 @@ import type {
   ResizeNodeType,
 } from './types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
+import {
+  getNodes,
+  getAnchors,
+  findStore,
+  getAnchorFromEdge,
+  getEdgeById,
+} from '../controllers/storeApi';
 import { stores } from './store';
 import { populateNodesStore } from '$lib/controllers/util';
 
@@ -135,7 +141,7 @@ export class Node implements NodeType {
    * @TODO implement this
    */
   delete() {
-    console.log('working on waterfall down to delete anchors and edges');
+    const store = stores[this.canvasId];
 
     const { nodesStore, anchorsStore, edgesStore } = stores[this.canvasId];
 
@@ -150,30 +156,39 @@ export class Node implements NodeType {
       return { ...nodes };
     });
 
-    console.log('the deleted node is => ', deletedNode);
+    // variable `anchors` is an array of Anchor objects on the node
+    const anchors = getAnchors(store, { nodeId: this.id });
+    for (let anchorSelf of anchors) {
+      const edgeId = anchorSelf.edgeId;
+      const edge = getEdgeById(store, edgeId);
+      const sourceAnchor = getAnchorFromEdge(store, edgeId, 'source'); // this is a bit wasteful
+      const targetAnchor = getAnchorFromEdge(store, edgeId, 'target');
+      console.log(sourceAnchor, targetAnchor);
+    }
 
-    let deletedAnchor;
+    // let deletedAnchor;
+    // //
 
-    //use the deletedNode info to delete anchors
-    anchorsStore.update((anchors) => {
-      for (const anchorId in anchors) {
-        if (anchors[anchorId].nodeId === deletedNode.id) {
-          deletedAnchor = anchors[anchorId];
-          //use the deletedAnchor info to delete edges
-          let deletedEdge;
-          edgesStore.update((edges) => {
-            for (const edgeId in edges) {
-              if (edges[edgeId].id === deletedAnchor.edgeId) {
-                deletedEdge = edges[edgeId];
-                delete edges[edgeId];
-              }
-            }
-            return { ...edges };
-          });
-          delete anchors[anchorId];
-        }
-      }
-      return { ...anchors };
-    });
+    // anchorsStore.update((anchors) => {
+    //   for (const anchorId in anchors) {
+    //     if (anchors[anchorId].nodeId === deletedNode.id) {
+    //       deletedAnchor = anchors[anchorId];
+    //       //use the deletedAnchor info to delete edges
+    //       let deletedEdge;
+    //       edgesStore.update((edges) => {
+    //         for (const edgeId in edges) {
+    //           if (edges[edgeId].id === deletedAnchor.edgeId) {
+    //             deletedEdge = edges[edgeId];
+    //             delete edges[edgeId];
+    //           }
+    //         }
+    //         return { ...edges };
+    //       });
+    //       delete anchors[anchorId];
+    //     }
+    //   }
+    //   console.log('anchors=', anchors);
+    //   return { ...anchors };
+    // });
   }
 }
