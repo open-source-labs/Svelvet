@@ -29,10 +29,16 @@
 
   // sanitize user input
   // This is so that all id's are strings
-  nodes = nodes.map((e) => {
-    e.id = e.id.toString();
-    return e;
+
+  nodes = nodes.map((node) => {
+    node.id = node.id.toString();
+    node.childNodes =
+      node.childNodes === undefined
+        ? []
+        : node.childNodes.map((childId) => childId.toString());
+    return node;
   });
+
   edges = edges.map((e) => {
     e.source = e.source.toString();
     e.target = e.target.toString();
@@ -56,7 +62,8 @@
     const optionsObj = { snap, snapTo };
     store.options.set(optionsObj);
   });
-  // // enables data reactivity
+  // // enables data reactivity. TODO: consider adding this back in, it's supposed to cause selvet updates if people push to store
+  // Probably need to use findStore, not create store
   // afterUpdate(() => {
   //   svelvetStore.nodesStore.set(nodes);
   //   svelvetStore.edgesStore.set(edges);
