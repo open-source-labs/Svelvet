@@ -37,4 +37,17 @@ export class ResizeNode implements ResizeNodeType {
       return { ...nodes };
     });
   }
+
+  delete() {
+    const store = stores[this.canvasId];
+    const { resizeNodesStore } = stores[this.canvasId];
+    resizeNodesStore.update((resizeNodes) => {
+      for (const resizeNodeId in resizeNodes) {
+        if (resizeNodes[resizeNodeId].id === this.id) {
+          delete resizeNodes[resizeNodeId];
+        }
+      }
+      return { ...resizeNodes };
+    });
+  }
 }

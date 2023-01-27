@@ -55,7 +55,15 @@ export class TemporaryEdge implements TemporaryEdgeType {
     createEdgeAndAnchors(store, sourceNode.id, targetNode.id, this.canvasId);
   }
   createNode() {
-    console.log('doing temporaryEdge.createNode');
-    createNode();
+    if (this.targetPotentialAnchorId !== null)
+      throw 'you should only create a node when you are hovering over blank space';
+    const store = findStore(this.canvasId);
+    // get the source/target potentialAnchor objects
+    const potentialAnchorSource = getPotentialAnchorById(
+      store,
+      this.sourcePotentialAnchorId
+    );
+    const sourceNodeId = potentialAnchorSource.nodeId;
+    createNode(store, sourceNodeId, this.targetX, this.targetY, this.canvasId);
   }
 }

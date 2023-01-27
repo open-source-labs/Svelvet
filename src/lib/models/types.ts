@@ -10,6 +10,7 @@ export interface ResizeNodeType {
   positionY: number;
   setPositionAndCascade: Function;
   setPosition: Function;
+  delete: Function;
 }
 export interface UserNodeType {
   id: string;
@@ -125,7 +126,7 @@ export interface PotentialAnchorType {
   positionY: number;
   angle: number;
   canvasId: string;
-  deleteAndCascade: Function;
+  delete: Function;
 }
 
 export interface TemporaryEdgeType {

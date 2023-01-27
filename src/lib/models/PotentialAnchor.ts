@@ -21,5 +21,16 @@ export class PotentialAnchor implements PotentialAnchorType {
     public canvasId: string
   ) {}
 
-  deleteAndCascade() {}
+  delete() {
+    const { potentialAnchorsStore } = stores[this.canvasId];
+
+    potentialAnchorsStore.update((potentialAnchors) => {
+      for (const potentialAnchorId in potentialAnchors) {
+        if (potentialAnchors[potentialAnchorId].id === this.id) {
+          delete potentialAnchors[potentialAnchorId];
+        }
+      }
+      return { ...potentialAnchors };
+    });
+  }
 }

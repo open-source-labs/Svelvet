@@ -13,6 +13,8 @@ import {
   findStore,
   getAnchorFromEdge,
   getEdgeById,
+  getResizeNodes,
+  getPotentialAnchors,
 } from '../controllers/storeApi';
 import { stores } from './store';
 import { populateNodesStore } from '$lib/controllers/util';
@@ -49,7 +51,7 @@ export class Node implements NodeType {
     public src: string,
     public textColor: string,
     public borderRadius: number,
-    public childNodes: string[]
+    public childNodes: string[] // this is required for feature "node-grouping". Personally, I think this is feature bloat and should be removed
   ) {}
 
   /**
@@ -143,10 +145,7 @@ export class Node implements NodeType {
    */
   delete() {
     const store = stores[this.canvasId];
-
     const { nodesStore, anchorsStore, edgesStore } = stores[this.canvasId];
-
-    const deletedNode = this;
 
     nodesStore.update((nodes) => {
       for (const nodeId in nodes) {
@@ -162,32 +161,20 @@ export class Node implements NodeType {
     for (let anchorSelf of anchors) {
       const edgeId = anchorSelf.edgeId;
       const edge = getEdgeById(store, edgeId);
-      edge.delete();
+      edge.delete(); // this also deletes anchors. TODO: maybe this should be renamed to explicitly say
     }
 
-    // let deletedAnchor;
-    // //
+    // delete the resize nodes
+    const resizeNodesArr = getResizeNodes(store, { nodeId: this.id });
+    // there should be only 1 resize node if option is enabled, 0 if not enabled
+    for (const resizeNode of resizeNodesArr) {
+      resizeNode.delete();
+    }
 
-    // anchorsStore.update((anchors) => {
-    //   for (const anchorId in anchors) {
-    //     if (anchors[anchorId].nodeId === deletedNode.id) {
-    //       deletedAnchor = anchors[anchorId];
-    //       //use the deletedAnchor info to delete edges
-    //       let deletedEdge;
-    //       edgesStore.update((edges) => {
-    //         for (const edgeId in edges) {
-    //           if (edges[edgeId].id === deletedAnchor.edgeId) {
-    //             deletedEdge = edges[edgeId];
-    //             delete edges[edgeId];
-    //           }
-    //         }
-    //         return { ...edges };
-    //       });
-    //       delete anchors[anchorId];
-    //     }
-    //   }
-    //   console.log('anchors=', anchors);
-    //   return { ...anchors };
-    // });
+    // delete the potential anchors
+    const potentialAnchorsArr = getPotentialAnchors(store, { nodeId: this.id });
+    for (const potentialAnchor of potentialAnchorsArr) {
+      potentialAnchor.delete();
+    }
   }
 }
