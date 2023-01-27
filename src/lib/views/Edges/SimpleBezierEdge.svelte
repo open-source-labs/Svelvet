@@ -141,6 +141,8 @@
     centerX: centerX,
     centerY: centerY,
   };
+
+  console.log('!', edge.id);
 </script>
 
 <BaseEdge {baseEdgeProps} />

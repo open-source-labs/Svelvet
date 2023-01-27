@@ -135,7 +135,6 @@
         x={potentialAnchor.positionX}
         y={potentialAnchor.positionY}
         {potentialAnchor}
-        temporaryEdges={tempEdges}
       />
     {/each}
   </div>

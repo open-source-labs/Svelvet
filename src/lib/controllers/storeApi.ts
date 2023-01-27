@@ -212,8 +212,8 @@ export function createEdgeAndAnchors(
     -1,
     -1,
     canvasId,
-    undefined, // no label
-    undefined, // type defaults to bezier curve
+    'asdfasdfasdf', // no label
+    'straight', // type defaults to bezier curve
     undefined,
     undefined,
     undefined,
@@ -254,15 +254,23 @@ export function createEdgeAndAnchors(
 
   // put everything into the store
   const { edgesStore, anchorsStore } = store;
+
+  anchorsStore.update((anchors) => {
+    anchors[sourceAnchorId] = sourceAnchor;
+    anchors[targetAnchorId] = targetAnchor;
+    return { ...anchors };
+  });
   edgesStore.update((edges) => {
     edges[edgeId] = newEdge;
     return { ...edges };
   });
-  anchorsStore.update((anchors) => {
-    anchorsStore[sourceAnchorId] = sourceAnchor;
-    anchorsStore[targetAnchorId] = targetAnchor;
-    return { ...anchors };
-  });
+
+  console.log('after', get(anchorsStore));
+  console.log('after', get(edgesStore));
+
+  // make sure to update positions. TODO: don't need to do this for the entire store
+  const anchors = getAnchors(store);
+  for (const anchor of anchors) anchor.callback();
 }
 
 export function createNode() {}
