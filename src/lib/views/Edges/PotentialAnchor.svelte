@@ -72,9 +72,18 @@
       temporaryEdgeStore.update((edges) => {
         for (let edge of edges) {
           if (potentialAnchorId === edge.targetPotentialAnchorId) {
+            console.log('should create edge here');
             edge.createEdge();
           }
         }
+        return [];
+      });
+    } else if (
+      get(temporaryEdgeStore).length === 1 &&
+      get(temporaryEdgeStore)[0].targetPotentialAnchorId === null
+    ) {
+      console.log('should create node here');
+      temporaryEdgeStore.update((edges) => {
         return [];
       });
     }
@@ -83,8 +92,6 @@
 
 <div
   on:mouseenter={(e) => {
-    console.log('entering : ', potentialAnchorId);
-
     // mouseHover is used to decide whether to create a new edge/node
     mouseHover = true;
     // our mouse is over anchor, so set the target anchor
@@ -92,8 +99,6 @@
       for (let edge of edges) {
         edge.targetPotentialAnchorId = potentialAnchorId;
       }
-      if (edges[0]) console.log(edges[0].targetPotentialAnchorId);
-
       return [...edges];
     });
   }}
