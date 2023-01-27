@@ -8,7 +8,13 @@ import type {
   TemporaryEdgeType,
 } from './types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
+import {
+  getNodes,
+  getAnchors,
+  findStore,
+  createEdgeAndAnchors,
+  createNode,
+} from '../controllers/storeApi';
 import { stores } from './store';
 
 export class TemporaryEdge implements TemporaryEdgeType {
@@ -31,8 +37,10 @@ export class TemporaryEdge implements TemporaryEdgeType {
   //      (4)
   createEdge() {
     console.log('doing temporaryEdge.createEdge');
+    // createEdgeAndAnchors();
   }
   createNode() {
     console.log('doing temporaryEdge.createNode');
+    createNode();
   }
 }

@@ -222,18 +222,47 @@ export function createEdgeAndAnchors(
     undefined
   );
 
-  // create anchors
-  const anchorId = uuidv4();
-  const dynamicCb = dynamicCbCreator(store, edgeId, anchorId);
-  const anchor = new Anchor(
-    anchorId,
+  // create source anchor
+  const sourceAnchorId = uuidv4();
+  const sourceDynamicCb = dynamicCbCreator(store, edgeId, sourceAnchorId);
+  const sourceAnchor = new Anchor(
+    sourceAnchorId,
     sourceNodeId,
     edgeId,
     'source',
     -1, // dummy variables for x,y,angle for now
     -1, // dummy variables for x,y,angle for now
-    dynamicCb,
+    sourceDynamicCb,
     canvasId,
     0 // dummy variables for x,y,angle for now
   );
+
+  // create target anchor
+  const targetAnchorId = uuidv4();
+  const targetDynamicCb = dynamicCbCreator(store, edgeId, targetAnchorId);
+  const targetAnchor = new Anchor(
+    targetAnchorId,
+    targetNodeId,
+    edgeId,
+    'target',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    targetDynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
+
+  // put everything into the store
+  const { edgesStore, anchorsStore } = store;
+  edgesStore.update((edges) => {
+    edges[edgeId] = newEdge;
+    return { ...edges };
+  });
+  anchorsStore.update((anchors) => {
+    anchorsStore[sourceAnchorId] = sourceAnchor;
+    anchorsStore[targetAnchorId] = targetAnchor;
+    return { ...anchors };
+  });
 }
+
+export function createNode() {}
