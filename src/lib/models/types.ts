@@ -140,4 +140,5 @@ export interface TemporaryEdgeType {
   type: string;
   edgeColor: string;
   createEdge: Function;
+  createNode: Function;
 }

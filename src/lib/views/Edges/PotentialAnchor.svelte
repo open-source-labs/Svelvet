@@ -72,7 +72,6 @@
       temporaryEdgeStore.update((edges) => {
         for (let edge of edges) {
           if (potentialAnchorId === edge.targetPotentialAnchorId) {
-            console.log('should create edge here');
             edge.createEdge();
           }
         }
@@ -82,8 +81,11 @@
       get(temporaryEdgeStore).length === 1 &&
       get(temporaryEdgeStore)[0].targetPotentialAnchorId === null
     ) {
-      console.log('should create node here');
       temporaryEdgeStore.update((edges) => {
+        for (let edge of edges) {
+          // note length 1, refactor store to single tempEdge instead of arr of tempEdge
+          edge.createNode();
+        }
         return [];
       });
     }

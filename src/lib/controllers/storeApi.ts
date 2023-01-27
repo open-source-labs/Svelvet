@@ -38,7 +38,12 @@ createStoreFromUserInput(canvasId, nodes, edges)
 
 
 */
-
+import { v4 as uuidv4 } from 'uuid';
+import {
+  dynamicCbCreator,
+  fixedCbCreator,
+  potentialAnchorCbCreator,
+} from './anchorCbDev';
 import { stores } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
 import type {
@@ -50,9 +55,9 @@ import type {
   UserEdgeType,
   TemporaryEdgeType,
 } from '$lib/models/types';
-// import { Anchor } from '$lib/models/Anchor';
-// import { Node } from '$lib/models/Node';
-// import { Edge } from '$lib/models/Edge';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
@@ -188,4 +193,48 @@ export function createStoreFromUserInput(
   populateResizeNodeStore(store, nodes, canvasId);
   //populate potential anchors
   populatePotentialAnchorStore(store, nodes, canvasId);
+}
+
+// WHAT: Creates a new edge and two adaptive anchor points
+// HOW:  First create an edge
+
+export function createEdgeAndAnchors(
+  store: StoreType,
+  sourceNodeId: string,
+  targetNodeId: string,
+  canvasId: string
+) {
+  // create an edge
+  const edgeId = uuidv4();
+  const newEdge = new Edge(
+    edgeId,
+    -1,
+    -1,
+    -1,
+    -1,
+    canvasId,
+    undefined, // no label
+    undefined, // type defaults to bezier curve
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined
+  );
+
+  // create anchors
+  const anchorId = uuidv4();
+  const dynamicCb = dynamicCbCreator(store, edgeId, anchorId);
+  const anchor = new Anchor(
+    anchorId,
+    sourceNodeId,
+    edgeId,
+    'source',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    dynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
 }

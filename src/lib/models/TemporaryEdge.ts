@@ -25,7 +25,14 @@ export class TemporaryEdge implements TemporaryEdgeType {
     public edgeColor: string
   ) {}
 
+  // HOW: (1) Get the source potentialAnchor object
+  //      (2) Get the orientation of the source potential anchor (need to implement, should be left/right/up/down)
+  //      (3) Get source potentialAnchor.nodeId and get the Node object
+  //      (4)
   createEdge() {
     console.log('doing temporaryEdge.createEdge');
+  }
+  createNode() {
+    console.log('doing temporaryEdge.createNode');
   }
 }
