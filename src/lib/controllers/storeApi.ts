@@ -54,6 +54,8 @@ import type {
   UserNodeType,
   UserEdgeType,
   TemporaryEdgeType,
+  ResizeNodeType,
+  PotentialAnchorType,
 } from '$lib/models/types';
 import { Anchor } from '$lib/models/Anchor';
 import { Node } from '$lib/models/Node';
@@ -102,6 +104,49 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   }
   // return list of anchors
   return anchors;
+}
+
+export function getResizeNodes(
+  store: StoreType,
+  filter?: { [key: string]: any }
+) {
+  let resizeNodes = Object.values(get(store.resizeNodesStore));
+  // filter the array for elements that match filter
+  if (filter !== undefined) {
+    resizeNodes = resizeNodes.filter((resizeNode) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (resizeNode[filterKey as keyof ResizeNodeType] !== filterValue)
+          return false;
+      }
+      return true;
+    });
+  }
+  // return list of anchors
+  return resizeNodes;
+}
+
+export function getPotentialAnchors(
+  store: StoreType,
+  filter?: { [key: string]: any }
+) {
+  let potentialAnchorsArr = Object.values(get(store.potentialAnchorsStore));
+  // filter the array for elements that match filter
+  if (filter !== undefined) {
+    potentialAnchorsArr = potentialAnchorsArr.filter((potentialAnchor) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (
+          potentialAnchor[filterKey as keyof PotentialAnchorType] !==
+          filterValue
+        )
+          return false;
+      }
+      return true;
+    });
+  }
+  // return list of anchors
+  return potentialAnchorsArr;
 }
 
 export function getAnchorById(store: StoreType, id: string) {
@@ -270,4 +315,107 @@ export function createEdgeAndAnchors(
   for (const anchor of anchors) anchor.callback();
 }
 
-export function createNode() {}
+// WHAT: Creates a new Node with an edge linking to another node
+// HOW:
+// WHY: This functionality is needed for the "create new node by dragging" feature
+//      See TemporaryEdge.createNode()
+// Inputs:
+// Output: no output, but alters the store. New node/edge/anchor objects are added
+export function createNode(
+  store: StoreType,
+  sourceNodeId: string,
+  targetNodeX: number,
+  targetNodeY: number,
+  canvasId: string
+) {
+  // create a new node
+  const targetNodeId = uuidv4();
+  const node = new Node(
+    targetNodeId,
+    targetNodeX,
+    targetNodeY,
+    100, // width
+    100, // height
+    'white', // background color
+    {
+      label: 'new node',
+    },
+    canvasId,
+    'black', // borderColor
+    false, //  Node has an image
+    '', // src, not sure what this does
+    'black', // text color
+    0, // borderRadius
+    []
+  );
+
+  // create an edge
+  const edgeId = uuidv4();
+  const newEdge = new Edge(
+    edgeId,
+    -1,
+    -1,
+    -1,
+    -1,
+    canvasId,
+    undefined, // undefined defaults to no label
+    undefined, // type=undefined defaults to bezier curve
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined
+  );
+
+  // create source anchor
+  const sourceAnchorId = uuidv4();
+  const sourceDynamicCb = dynamicCbCreator(store, edgeId, sourceAnchorId);
+  const sourceAnchor = new Anchor(
+    sourceAnchorId,
+    sourceNodeId,
+    edgeId,
+    'source',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    sourceDynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
+
+  // create target anchor
+  const targetAnchorId = uuidv4();
+  const targetDynamicCb = dynamicCbCreator(store, edgeId, targetAnchorId);
+  const targetAnchor = new Anchor(
+    targetAnchorId,
+    targetNodeId,
+    edgeId,
+    'target',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    targetDynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
+
+  // put everything into the store
+  const { nodesStore, edgesStore, anchorsStore } = store;
+
+  nodesStore.update((nodes) => {
+    nodes[targetNodeId] = node;
+    return { ...nodes };
+  });
+
+  anchorsStore.update((anchors) => {
+    anchors[sourceAnchorId] = sourceAnchor;
+    anchors[targetAnchorId] = targetAnchor;
+    return { ...anchors };
+  });
+  edgesStore.update((edges) => {
+    edges[edgeId] = newEdge;
+    return { ...edges };
+  });
+  // make sure to update positions. TODO: don't need to do this for the entire store
+  const anchors = getAnchors(store);
+  for (const anchor of anchors) anchor.callback();
+}
