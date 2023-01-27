@@ -55,6 +55,7 @@ import type {
   UserEdgeType,
   TemporaryEdgeType,
   ResizeNodeType,
+  PotentialAnchorType,
 } from '$lib/models/types';
 import { Anchor } from '$lib/models/Anchor';
 import { Node } from '$lib/models/Node';
@@ -123,6 +124,29 @@ export function getResizeNodes(
   }
   // return list of anchors
   return resizeNodes;
+}
+
+export function getPotentialAnchors(
+  store: StoreType,
+  filter?: { [key: string]: any }
+) {
+  let potentialAnchorsArr = Object.values(get(store.potentialAnchorsStore));
+  // filter the array for elements that match filter
+  if (filter !== undefined) {
+    potentialAnchorsArr = potentialAnchorsArr.filter((potentialAnchor) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (
+          potentialAnchor[filterKey as keyof PotentialAnchorType] !==
+          filterValue
+        )
+          return false;
+      }
+      return true;
+    });
+  }
+  // return list of anchors
+  return potentialAnchorsArr;
 }
 
 export function getAnchorById(store: StoreType, id: string) {

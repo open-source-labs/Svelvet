@@ -14,6 +14,7 @@ import {
   getAnchorFromEdge,
   getEdgeById,
   getResizeNodes,
+  getPotentialAnchors,
 } from '../controllers/storeApi';
 import { stores } from './store';
 import { populateNodesStore } from '$lib/controllers/util';
@@ -163,10 +164,17 @@ export class Node implements NodeType {
       edge.delete(); // this also deletes anchors. TODO: maybe this should be renamed to explicitly say
     }
 
+    // delete the resize nodes
     const resizeNodesArr = getResizeNodes(store, { nodeId: this.id });
     // there should be only 1 resize node if option is enabled, 0 if not enabled
     for (const resizeNode of resizeNodesArr) {
       resizeNode.delete();
+    }
+
+    // delete the potential anchors
+    const potentialAnchorsArr = getPotentialAnchors(store, { nodeId: this.id });
+    for (const potentialAnchor of potentialAnchorsArr) {
+      potentialAnchor.delete();
     }
   }
 }

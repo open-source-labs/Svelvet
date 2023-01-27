@@ -126,7 +126,7 @@ export interface PotentialAnchorType {
   positionY: number;
   angle: number;
   canvasId: string;
-  deleteAndCascade: Function;
+  delete: Function;
 }
 
 export interface TemporaryEdgeType {
