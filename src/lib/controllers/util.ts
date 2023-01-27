@@ -81,7 +81,6 @@ function createAnchor(
     0 // dummy variables for x,y,angle for now
   );
   // return
-  console.log;
   return anchor;
 }
 
@@ -183,7 +182,6 @@ function createPotentialAnchor(
     canvasId
   );
   // return
-  console.log;
   return anchor;
 }
 

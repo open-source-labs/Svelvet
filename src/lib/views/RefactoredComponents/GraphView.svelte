@@ -182,7 +182,7 @@
       {:else if edge.type === 'step'}
         <StepEdge {edge} {canvasId} />
       {:else}
-        <SimpleBezierEdge {edge} {canvasId} />
+        <SimpleBezierEdge edgeId={edge.id} {canvasId} />
       {/if}
     {/each}
 

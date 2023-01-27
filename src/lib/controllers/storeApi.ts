@@ -38,7 +38,12 @@ createStoreFromUserInput(canvasId, nodes, edges)
 
 
 */
-
+import { v4 as uuidv4 } from 'uuid';
+import {
+  dynamicCbCreator,
+  fixedCbCreator,
+  potentialAnchorCbCreator,
+} from './anchorCbDev';
 import { stores } from '$lib/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
 import type {
@@ -50,9 +55,9 @@ import type {
   UserEdgeType,
   TemporaryEdgeType,
 } from '$lib/models/types';
-// import { Anchor } from '$lib/models/Anchor';
-// import { Node } from '$lib/models/Node';
-// import { Edge } from '$lib/models/Edge';
+import { Anchor } from '$lib/models/Anchor';
+import { Node } from '$lib/models/Node';
+import { Edge } from '$lib/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
@@ -189,3 +194,80 @@ export function createStoreFromUserInput(
   //populate potential anchors
   populatePotentialAnchorStore(store, nodes, canvasId);
 }
+
+// WHAT: Creates a new edge and two adaptive anchor points
+// HOW:  First create an edge
+export function createEdgeAndAnchors(
+  store: StoreType,
+  sourceNodeId: string,
+  targetNodeId: string,
+  canvasId: string
+) {
+  // create an edge
+  const edgeId = uuidv4();
+  const newEdge = new Edge(
+    edgeId,
+    -1,
+    -1,
+    -1,
+    -1,
+    canvasId,
+    undefined, // undefined defaults to no label
+    undefined, // type=undefined defaults to bezier curve
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined
+  );
+
+  // create source anchor
+  const sourceAnchorId = uuidv4();
+  const sourceDynamicCb = dynamicCbCreator(store, edgeId, sourceAnchorId);
+  const sourceAnchor = new Anchor(
+    sourceAnchorId,
+    sourceNodeId,
+    edgeId,
+    'source',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    sourceDynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
+
+  // create target anchor
+  const targetAnchorId = uuidv4();
+  const targetDynamicCb = dynamicCbCreator(store, edgeId, targetAnchorId);
+  const targetAnchor = new Anchor(
+    targetAnchorId,
+    targetNodeId,
+    edgeId,
+    'target',
+    -1, // dummy variables for x,y,angle for now
+    -1, // dummy variables for x,y,angle for now
+    targetDynamicCb,
+    canvasId,
+    0 // dummy variables for x,y,angle for now
+  );
+
+  // put everything into the store
+  const { edgesStore, anchorsStore } = store;
+
+  anchorsStore.update((anchors) => {
+    anchors[sourceAnchorId] = sourceAnchor;
+    anchors[targetAnchorId] = targetAnchor;
+    return { ...anchors };
+  });
+  edgesStore.update((edges) => {
+    edges[edgeId] = newEdge;
+    return { ...edges };
+  });
+
+  // make sure to update positions. TODO: don't need to do this for the entire store
+  const anchors = getAnchors(store);
+  for (const anchor of anchors) anchor.callback();
+}
+
+export function createNode() {}
