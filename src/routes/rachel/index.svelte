@@ -1,133 +1,106 @@
 <script>
   import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
-  import NodesStoreView from '$lib/views/RefactoredComponents/NodesStoreView.svelte';
   
-
   const initialNodes = [
     {
-      id: 1,
-      position: { x: 225, y: 10 },
-      data: { label: 'Add Images!' },
-      width: 100,
-      height: 100,
-      bgColor: 'white',
-      borderColor: 'transparent',
-      image: true,
-      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
-    },
-    {
       id: 2,
-      position: { x: 390, y: 180 },
-      data: { label: 'Mixed Anchors' },
+      position: { x: 390, y: 150 },
+      data: { label: "Mixed Anchors" },
       width: 125,
       height: 40,
-      bgColor: 'white',
-      textColor: 'black',
-      targetPosition: 'left',
+      bgColor: "white",
+      targetPosition: "right",
+      sourcePosition: "left"
+      /* insert className: '<yourCustomClass>' to see how you can apply custom node styling to existing nodes' */
     },
     {
       id: 3,
       position: { x: 225, y: 260 },
-      data: { label: 'Output Node' },
+      data: { label: "Output Node" },
       width: 100,
       height: 40,
-      bgColor: 'white',
-      textColor: 'black',
+      bgColor: "#FFE4E6"
     },
     {
       id: 4,
       position: { x: 25, y: 180 },
-      data: { label: 'Drag me!' },
+      data: { label: "Drag me!" },
       width: 125,
       height: 40,
-      bgColor: 'white',
-      textColor: 'black',
-      targetPosition: 'right',
+      bgColor: "white",
+      targetPosition: "right"
     },
     {
       id: 5,
       position: { x: 390, y: 380 },
-      data: { label: 'Custom Node' },
+      data: { label: "Custom Node" },
       width: 125,
       height: 40,
-      bgColor: 'green',
-      textColor: 'black',
-      borderColor: 'transparent',
-      borderRadius: 0,
+      bgColor: "#C8FFC7",
+      borderColor: "transparent",
+      borderRadius: 0
     },
     {
       id: 6,
       position: { x: 47.5, y: 360 },
-      data: { label: 'Custom Node' },
+      data: { label: "I am NOT green" },
       width: 80,
       height: 80,
-      borderColor: '#FF4121',
+      borderColor: "#FF4121",
       borderRadius: 30,
-      bgColor: 'grey',
-      textColor: '#FF4121',
+      bgColor: "white",
+      textColor: "#FF4121"
     },
+    {
+      id: 1,
+      position: { x: 175, y: 25 },
+      width: 125,
+      height: 75,
+      data: { label: "This is a custom class" },
+      className: "customClass",
+      targetPosition: "right",
+      sourcePosition: "left"
+    }
   ];
 
   const initialEdges = [
-    { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
+    { id: "e2-3", source: 2, target: 3, animate: true, label: "animated edges" },
+    { id: "e1-4", source: 1, target: 4, animate: true, label: "link to custom className node"},
     {
-      id: 'e2-3',
-      source: 2,
-      target: 3,
-      animate: true,
-      label: 'animated edges',
-    },
-    {
-      id: 'e1-4',
-      source: 1,
-      target: 4,
-      type: 'step',
-      animate: true,
-      edgeColor: '#FF4121',
-    },
-    {
-      id: 'e2-5',
+      id: "e2-5",
       source: 2,
       target: 5,
-      label: 'colored edges',
+      label: "colored edges",
       animate: true,
-      arrow: true,
-      edgeColor: '#FF4121',
-      labelBgColor: '#1F2937',
-      labelTextColor: '#FFE4E6',
+      edgeColor: "#FF4121",
+      labelBgColor: "#1F2937",
+      labelTextColor: "#FFE4E6"
     },
-    { id: 'e2-6', source: 4, target: 6, type: 'straight' },
+    { id: "e4-6", source: 4, target: 6, type: "straight" },
     {
-      id: 'e2-7',
+      id: "e3-6",
       source: 3,
       target: 6,
-      type: 'smoothstep',
-      label: 'colored label',
-      labelBgColor: '#FF4561',
-      labelTextColor: 'white',
-      animate: true,
-    },
+      type: "smoothstep",
+      label: "colored label",
+      labelBgColor: "#FF4561",
+      labelTextColor: "white",
+      animate: true
+    }
   ];
 </script>
 
-
-<Svelvet
-  canvasId="4asdlfkjs"
-  nodes={initialNodes}
-  edges={initialEdges}
-  width={900}
-  height={900}
-  background
+<Svelvet 
+nodes={initialNodes} 
+edges={initialEdges} 
 />
-<NodesStoreView id={'4asdlfkjs'} />
 
-<Svelvet
-  canvasId="4tsdgss32"
-  nodes={initialNodes}
-  edges={initialEdges}
-  width={900}
-  height={900}
-  background
-/>
-<NodesStoreView id={'4tsdgss32'} />
 
+<style>
+  :global(.customClass) {
+    width: 200px !important;
+    height: 200px !important;
+    background-color: #e07589;
+    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121 !important;
+  }
+</style>

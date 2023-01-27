@@ -51,7 +51,7 @@ style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.posi
       deleteNode(nodeId, canvasId);
       isEditing = false;
     }}>Delete Node</button>
-    <button on:click={(e) => {editNode; isEditing = false;}}>Submit</button>
+    <button on:click={(e) => {editNode(e); isEditing = false;}}>Submit</button>
   </div>
 
   <!-- <p>canvasId: {canvasId}</p>

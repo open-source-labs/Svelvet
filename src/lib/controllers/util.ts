@@ -286,7 +286,8 @@ export function populateNodesStore(
       userNode.src,
       userNode.textColor,
       userNode.borderRadius,
-      userNode.childNodes === undefined ? [] : userNode.childNodes
+      userNode.childNodes === undefined ? [] : userNode.childNodes,
+      userNode.className
     );
 
     nodesStore[nodeId] = node;

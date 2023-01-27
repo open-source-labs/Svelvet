@@ -27,6 +27,7 @@ export interface UserNodeType {
   sourcePosition: 'left' | 'right' | 'top' | 'bottom';
   borderRadius: number;
   childNodes: string[];
+  className?: string;
 }
 
 export interface UserEdgeType {
@@ -83,6 +84,7 @@ export interface NodeType {
   borderRadius: number;
   canvasId: string;
   childNodes: string[];
+  className?: string; //This is for custom className for node
 }
 
 export interface EdgeType {
