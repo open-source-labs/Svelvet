@@ -21,7 +21,7 @@
 
   const editNode = (e) => {
     e.preventDefault();
-    if (label) currentNode.data[label] = label;
+    if (label) currentNode.data.label = label;
     if (width) currentNode.width = width;
     if (height) currentNode.height = height;
     if (backgroundColor) currentNode.bgColor = backgroundColor;
@@ -39,7 +39,7 @@
 style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.positionY}px' >
   <form on:submit={editNode}>
     <label for="label-input">Label</label>
-    <input type="text" id="label-input-{nodeId}" placeholder="{currentNode.data[label]}" bind:value={label}>
+    <input type="text" id="label-input-{nodeId}" placeholder="{currentNode.data.label}" bind:value={label}>
 
     <label for="bg-color-input">Background Color</label>
     <input type="color" id="bg-color-input-{nodeId}" class="bgci"  bind:value={backgroundColor}>
@@ -51,7 +51,7 @@ style='left:{currentNode.positionX + currentNode.width}px; top:{currentNode.posi
       deleteNode(nodeId, canvasId);
       isEditing = false;
     }}>Delete Node</button>
-    <button on:click={editNode}>Submit</button>
+    <button on:click={(e) => {editNode; isEditing = false;}}>Submit</button>
   </div>
 
   <!-- <p>canvasId: {canvasId}</p>
