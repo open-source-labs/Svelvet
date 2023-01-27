@@ -166,7 +166,7 @@ export class Node implements NodeType {
     const resizeNodesArr = getResizeNodes(store, { nodeId: this.id });
     // there should be only 1 resize node if option is enabled, 0 if not enabled
     for (const resizeNode of resizeNodesArr) {
-      console.log(resizeNode);
+      resizeNode.delete();
     }
   }
 }

@@ -10,6 +10,7 @@ export interface ResizeNodeType {
   positionY: number;
   setPositionAndCascade: Function;
   setPosition: Function;
+  delete: Function;
 }
 export interface UserNodeType {
   id: string;
