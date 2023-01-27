@@ -93,7 +93,7 @@
     isSelected = false;
     isEditing = isEditing === true ? false : true;
   }}
-  class="Node"
+  class="Node {node.className}"
   style="left: {node.positionX}px;
     top: {node.positionY}px;
     width: {node.width}px;
