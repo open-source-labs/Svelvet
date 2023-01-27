@@ -20,6 +20,9 @@
   export let potentialAnchor: PotentialAnchorType;
   export let temporaryEdges;
 
+  // TODO: pass in primitives
+  const potentialAnchorId = potentialAnchor.id;
+
   let newEdge;
   let hovered = false;
   let anchorWidth = 8;
@@ -28,7 +31,7 @@
   const { temporaryEdgeStore } = findStore(canvasId);
   let moving = false;
   let moved = false;
-  let edgeShouldMove = false;
+  let isDragging = false;
   const store = findStore(canvasId);
 
   let mouseX = x;
@@ -45,70 +48,96 @@
   on:mousemove={(e) => {
     // imelements drawing an (temporary) edge from a potential anchor to the mouse cursor
     e.preventDefault();
-    if (edgeShouldMove) {
+    if (isDragging) {
       temporaryEdgeStore.update((edges) => {
-        if (edges.length === 0) {
-          // say there are no temporary edges. This means the user just clicked on the potential anchor
-          // so the current mouse position = temporary anchor position = mouseX, mouseY
-          const newTempEdge = new TemporaryEdge(
-            uuidv4(),
-            potentialAnchor.nodeId,
-            mouseX,
-            mouseY,
-            null,
-            mouseX,
-            mouseY,
-            canvasId,
-            'straight',
-            'black'
-          );
-          return [newTempEdge];
-        } else if (edges.length === 1) {
-          const edge = edges[0];
-          const d3Scale = get(store.d3Scale);
-          edge.targetX += e.movementX / d3Scale;
-          edge.targetY += e.movementY / d3Scale;
-        } else {
-          throw `there should only be zero or one temporary edge at any given time`;
-        }
-        return [...edges];
+        if (edges.length !== 1)
+          throw `if you are dragging, there should be one edge. We have not implemented multiple edges`;
+        const edge = edges[0];
+        const d3Scale = get(store.d3Scale);
+        edge.targetX += e.movementX / d3Scale;
+        edge.targetY += e.movementY / d3Scale;
+        return [edge];
       });
     }
   }}
   on:mouseup={(e) => {
-    console.log('!!', $temporaryEdgeStore.length);
-    console.log('!!!', temporaryEdges.length);
+    isDragging = false; // prevent the new edge from moving
 
-    edgeShouldMove = false; // prevent the new edge from moving
-    temporaryEdgeStore.update((edges) => {
-      if (mouseHover) console.log('!', edges.length);
-      if (mouseHover && edges.length > 0) {
-        if (edges.length !== 1)
-          throw `there should be exactly one temporary edge`;
-        const tempEdge = edges[0];
-        console.log('creating new edge');
-        console.log(tempEdge);
+    // only do update if temporaryEdgeStore has one element, and if that tempEdge.targetId = potentialAnchorId
+    // otherwise don't do anything (don't even update at all!!!)
+    if (
+      get(temporaryEdgeStore).length === 1 &&
+      get(temporaryEdgeStore)[0].targetPotentialAnchorId === potentialAnchorId
+    ) {
+      temporaryEdgeStore.update((edges) => {
+        for (let edge of edges) {
+          if (potentialAnchorId === edge.targetPotentialAnchorId) {
+            edge.createEdge();
+          }
+        }
         return [];
-      } else {
-        return [];
-      }
-    });
+      });
+    }
   }}
 />
 
 <div
   on:mouseenter={(e) => {
+    console.log('entering : ', potentialAnchorId);
+
     // mouseHover is used to decide whether to create a new edge/node
     mouseHover = true;
+    // our mouse is over anchor, so set the target anchor
+    temporaryEdgeStore.update((edges) => {
+      for (let edge of edges) {
+        edge.targetPotentialAnchorId = potentialAnchorId;
+      }
+      if (edges[0]) console.log(edges[0].targetPotentialAnchorId);
+
+      return [...edges];
+    });
   }}
   on:mouseleave={(e) => {
     // mouseHover is used to decide whether to create a new edge/node
     mouseHover = false;
+
+    // If you are dragging an edge, and your mouse leaves an anchor area, then make sure to
+    // set targetAnchor back to null. We do a check because there are multiple anchorpoints
+    if (isDragging) {
+      temporaryEdgeStore.update((edges) => {
+        for (let edge of edges) {
+          if (edge.targetPotentialAnchorId === potentialAnchorId)
+            edge.targetPotentialAnchorId = null;
+        }
+        return [...edges];
+      });
+    }
   }}
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div)
-    edgeShouldMove = true;
+    isDragging = true;
+    temporaryEdgeStore.update((edges) => {
+      if (edges.length === 0) {
+        // say there are no temporary edges. This means the user just clicked on the potential anchor
+        // so the current mouse position = temporary anchor position = mouseX, mouseY
+        const newTempEdge = new TemporaryEdge(
+          uuidv4(),
+          potentialAnchor.id,
+          mouseX,
+          mouseY,
+          null,
+          mouseX,
+          mouseY,
+          canvasId,
+          'straight',
+          'black'
+        );
+        return [newTempEdge];
+      } else {
+        throw `there should only be zero or one temporary edge at any given time`;
+      }
+    });
   }}
   class="Anchor"
   style={`

@@ -130,11 +130,14 @@ export interface PotentialAnchorType {
 
 export interface TemporaryEdgeType {
   id: string;
+  sourcePotentialAnchorId: string; // this will always be set
   sourceX: number;
   sourceY: number;
+  targetPotentialAnchorId: string | null; // this will be null until the temporary edge reaches another temporary anchor
   targetX: number;
   targetY: number;
   canvasId: string;
   type: string;
   edgeColor: string;
+  createEdge: Function;
 }
