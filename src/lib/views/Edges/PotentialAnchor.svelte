@@ -18,6 +18,7 @@
   export let x;
   export let y;
   export let potentialAnchor: PotentialAnchorType;
+  export let temporaryEdges;
 
   let newEdge;
   let hovered = false;
@@ -32,7 +33,11 @@
 
   let mouseX = x;
   let mouseY = y;
-
+  // whether the mouse is hovering over the potential anchor
+  // determines behavior of releasing the click; if the click is
+  // hovering over an anchor then an edge is created then temporary edges
+  // aer cleared, otherwise the temporary edges are cleared
+  let mouseHover = false;
   import { v4 as uuidv4 } from 'uuid';
 </script>
 
@@ -71,14 +76,35 @@
     }
   }}
   on:mouseup={(e) => {
+    console.log('!!', $temporaryEdgeStore.length);
+    console.log('!!!', temporaryEdges.length);
+
     edgeShouldMove = false; // prevent the new edge from moving
     temporaryEdgeStore.update((edges) => {
-      return [];
+      if (mouseHover) console.log('!', edges.length);
+      if (mouseHover && edges.length > 0) {
+        if (edges.length !== 1)
+          throw `there should be exactly one temporary edge`;
+        const tempEdge = edges[0];
+        console.log('creating new edge');
+        console.log(tempEdge);
+        return [];
+      } else {
+        return [];
+      }
     });
   }}
 />
 
 <div
+  on:mouseenter={(e) => {
+    // mouseHover is used to decide whether to create a new edge/node
+    mouseHover = true;
+  }}
+  on:mouseleave={(e) => {
+    // mouseHover is used to decide whether to create a new edge/node
+    mouseHover = false;
+  }}
   on:mousedown={(e) => {
     e.preventDefault();
     e.stopPropagation(); // Important! Prevents the event from firing on the parent element (the .Nodes div)
