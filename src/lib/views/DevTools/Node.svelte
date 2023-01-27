@@ -37,22 +37,6 @@
   }}
 />
 
-<!-- // This is the function handler for the mouseMove event to update the position of the selected node.
-const onMouseMove = (e: any, nodeID: number) => {
-  coreSvelvetStore.nodesStore.update((n) => {
-    n.forEach((node: Node) => {
-      if (node.id === nodeID) {
-        //retrieve d3Scale value from store
-        const scale = get(coreSvelvetStore.d3Scale);
-        // divide the movement value by scale to keep it proportional to d3Zoom transformations
-        node.position.x += e.movementX / scale;
-        node.position.y += e.movementY / scale;
-      }
-    });
-    return [...n];
-  });
-}; -->
-
 <div
   on:mousedown={(e) => {
     e.preventDefault();
@@ -68,29 +52,8 @@ const onMouseMove = (e: any, nodeID: number) => {
     border-radius: {5}px;
     color: white;"
   id="svelvet-{nodeId}"
-  bind:this={target}
 />
 
-<Moveable
-  {target}
-  origin={true}
-  edge={true}
-  keepRatio={false}
-  renderDirections={['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e']}
-  resizable={true}
-  throttleResize={0}
-  on:resizeStart={() => console.log('asdfasdfa')}
-  on:resize={() => console.log('asdfasdfa')}
-  on:resizeEnd={() => console.log('asdfasdfa')}
-/>
-
-<!--   function onDragStart({ target, set }) {
-    const frame = getFrame(target);
-
-    set([
-    set([frame.get("transform", "scaleX"), frame.get("transform", "scaleY")]);
-    dragStart && onDragStart(dragStart);
-  } -->
 <style>
   .Node {
     position: absolute;
