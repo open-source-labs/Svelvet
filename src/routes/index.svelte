@@ -26,6 +26,8 @@
   import taylor from '../assets/profiles/Taylor-small.png';
   import ernesto from '../assets/profiles/ernesto.png';
   import horacio from '../assets/profiles/horacio.png';
+  import rachel from '../assets/profiles/rachel.png';
+  import michael from '../assets/profiles/michael.png';
 
   import Svelvet from 'svelvet';
 
@@ -232,8 +234,9 @@
   </div>
 </div>
 
+<!-- When a new set of 3 is created the div size may need to be changed. We used tailwind so make sure to update h-[2900px] to change the width accordingly/ -->
 <div
-  class="h-[2400px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
+  class="h-[2900px] contributors:h-1100px] w-full bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400 text-white shadow-xl"
 >
   <div class=" h-full m-12 contributors:m-24">
     <div class=" h-full w-full p-1 flex flex-col justify-around">
@@ -758,7 +761,44 @@
               >
             </div>
           </div>
-          <!-- Card 2: [NAME HERE] -->
+          <!-- Card 2: Rachel -->
+          <div class="contributor-card">
+            <img
+              src={rachel}
+              alt=""
+              class="hidden contributors:block h-32 rounded-full"
+            />
+            <p class="mt-3 mb-1 text-lg leading-6">Rachel <br />He</p>
+            <div class="flex gap-3 ml-3">
+              <a
+                target="_blank"
+                href="https://www.linkedin.com/in/rachel-he-8200563b/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/rachelheplus"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
+          <!-- Card 3: Michael -->
+          <div class="contributor-card">
+            <img
+              src={michael}
+              alt=""
+              class="hidden contributors:block h-32 rounded-full"
+            />
+            <p class="mt-3 mb-1 text-lg leading-6">Michael <br />Chiang</p>
+            <div class="flex gap-3 ml-3">
+              <a
+                target="_blank"
+                href="https://www.linkedin.com/in/michael-chiang-84509025b/"
+                ><img src={linkedin} alt="LinkedIn Icon" /></a
+              >
+              <a target="_blank" href="https://github.com/michael-chiang-dev5"
+                ><img src={github} alt="GitHub Icon" /></a
+              >
+            </div>
+          </div>
         </div>
       </div>
 
