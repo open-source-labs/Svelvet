@@ -51,7 +51,7 @@ export class Node implements NodeType {
     public src: string,
     public textColor: string,
     public borderRadius: number,
-    public childNodes: string[]
+    public childNodes: string[] // this is required for feature "node-grouping". Personally, I think this is feature bloat and should be removed
   ) {}
 
   /**
