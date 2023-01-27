@@ -98,6 +98,8 @@ edges={initialEdges}
 
 <style>
   :global(.customClass) {
+    width: 200;
+    height: 200;
     background-color: #e07589;
     box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121;
   }
