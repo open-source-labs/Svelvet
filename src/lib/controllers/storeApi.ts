@@ -197,7 +197,6 @@ export function createStoreFromUserInput(
 
 // WHAT: Creates a new edge and two adaptive anchor points
 // HOW:  First create an edge
-
 export function createEdgeAndAnchors(
   store: StoreType,
   sourceNodeId: string,

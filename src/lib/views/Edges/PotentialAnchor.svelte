@@ -18,7 +18,6 @@
   export let x;
   export let y;
   export let potentialAnchor: PotentialAnchorType;
-  export let temporaryEdges;
 
   // TODO: pass in primitives
   const potentialAnchorId = potentialAnchor.id;
@@ -34,8 +33,8 @@
   let isDragging = false;
   const store = findStore(canvasId);
 
-  let mouseX = x;
-  let mouseY = y;
+  $: mouseX = x;
+  $: mouseY = y;
   // whether the mouse is hovering over the potential anchor
   // determines behavior of releasing the click; if the click is
   // hovering over an anchor then an edge is created then temporary edges
