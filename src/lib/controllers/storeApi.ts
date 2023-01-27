@@ -212,8 +212,8 @@ export function createEdgeAndAnchors(
     -1,
     -1,
     canvasId,
-    'asdfasdfasdf', // no label
-    'straight', // type defaults to bezier curve
+    undefined, // undefined defaults to no label
+    undefined, // type=undefined defaults to bezier curve
     undefined,
     undefined,
     undefined,
@@ -264,9 +264,6 @@ export function createEdgeAndAnchors(
     edges[edgeId] = newEdge;
     return { ...edges };
   });
-
-  console.log('after', get(anchorsStore));
-  console.log('after', get(edgesStore));
 
   // make sure to update positions. TODO: don't need to do this for the entire store
   const anchors = getAnchors(store);

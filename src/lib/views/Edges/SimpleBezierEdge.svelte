@@ -112,7 +112,12 @@
     return [centerX, centerY, xOffset, yOffset];
   }
   export let canvasId: string;
-  export let edge;
+  export let edgeId: string;
+  const store = findStore(canvasId);
+  const { nodesStore, edgesStore, anchorsStore } = store;
+  let edge;
+  $: edge = $edgesStore[edgeId];
+
   let params;
   $: {
     const store = findStore(canvasId);
@@ -141,8 +146,6 @@
     centerX: centerX,
     centerY: centerY,
   };
-
-  console.log('!', edge.id);
 </script>
 
 <BaseEdge {baseEdgeProps} />
