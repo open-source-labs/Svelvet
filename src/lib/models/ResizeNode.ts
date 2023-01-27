@@ -1,17 +1,5 @@
-import type {
-  NodeType,
-  EdgeType,
-  AnchorType,
-  StoreType,
-  ResizeNodeType,
-} from './types';
-import { writable, derived, get, readable } from 'svelte/store';
-import {
-  getNodes,
-  getAnchors,
-  findStore,
-  getNodeById,
-} from '../controllers/storeApi';
+import type { ResizeNodeType } from './types';
+// import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from './store';
 
 export class ResizeNode implements ResizeNodeType {
@@ -23,31 +11,29 @@ export class ResizeNode implements ResizeNodeType {
     public positionY: number
   ) {}
 
+  //Sets position without updating the Node Store, this will be called when the Node is moved so that the anchor follows.
   setPosition(movementX: number, movementY: number) {
     this.positionX += movementX;
     this.positionY += movementY;
   }
 
   setPositionAndCascade(movementX: number, movementY: number, id: string) {
-    // calculate new anchor position
-    // claculate new node width/height
-    // if width<0 or height<0 return
-
-    // this.positionX = X
-    //update all necessary data
-    this.positionX += movementX;
-    this.positionY += movementY;
+    //declare variables needed to interact with the corresponding node to this resize anchor
     const nodeId = this.nodeId;
-    // console.log('NODEID: ', nodeId);
+    const { nodesStore } = stores[this.canvasId];
 
-    //update all the anchors on the node in the anchorsStore
-    const { resizeNodesStore, nodesStore } = stores[this.canvasId];
-
-    // const store = stores[this.canvasId];
-    // const node = getNodeById(store, nodeId);
+    //Updates the width/height of the corresponding Node
     nodesStore.update((nodes) => {
       const node = nodes[nodeId];
-      node.setSizeFromMovement(movementX, movementY);
+
+      //sets condition so node cannot be less than 20 px in width or height.
+      if (node.width + movementX > 20 && node.height + movementY > 20) {
+        //Updates position to this resizeNode anchor. Must be done within the update method so ensure the position doesn't change if the width goes below 20px
+        this.positionX += movementX;
+        this.positionY += movementY;
+        //setSizeFromMovement will then update the anchors position as the width & height changes
+        node.setSizeFromMovement(movementX, movementY);
+      }
       return { ...nodes };
     });
   }

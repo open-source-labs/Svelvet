@@ -85,7 +85,7 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
   let anchors = Object.values(get(store.anchorsStore));
   // filter the array of anchors for elements that match filter
   // Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will
-  //          return all anchors with sourceOrTarget = source AND poxitionX = 35
+  //return all anchors with sourceOrTarget = source AND poxitionX = 35
   if (filter !== undefined) {
     anchors = anchors.filter((anchor) => {
       for (let filterKey in filter) {

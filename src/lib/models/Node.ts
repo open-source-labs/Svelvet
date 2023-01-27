@@ -108,13 +108,14 @@ export class Node implements NodeType {
     });
   }
 
-  //TODO: Functionality to set width and height to movement difference
+  //Sets the Width and Height of the Node base on ResizeNode's position
   setSizeFromMovement(movementX: number, movementY: number) {
     this.width += movementX;
     this.height += movementY;
 
     const { anchorsStore, potentialAnchorsStore } = stores[this.canvasId];
 
+    //Updates the anchor so it follows the node's position as the dimensions change
     anchorsStore.update((anchors) => {
       for (const anchorId in anchors) {
         if (anchors[anchorId].nodeId === this.id) {
