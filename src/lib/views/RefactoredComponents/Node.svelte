@@ -41,7 +41,12 @@
     if (isSelected) {
       nodesStore.update((nodes) => {
         const node = nodes[nodeId];
-        node.setPositionFromMovement(e.movementX, e.movementY);
+        const d3Scale = get(store.d3Scale);
+        // divide the movement value by scale to keep it proportional to d3Zoom transformations
+        node.setPositionFromMovement(
+          e.movementX / d3Scale,
+          e.movementY / d3Scale
+        );
         return { ...nodes };
       });
     }
@@ -51,6 +56,7 @@
     $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
 
+    // This implements the "snap to grid" feature
     // TODO: fix the TS error
     if (get(store.options).snap) {
       // If user sets snap attribute as true inside Svelvet

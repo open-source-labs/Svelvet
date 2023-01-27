@@ -1,6 +1,8 @@
 <script lang="ts">
   import { getNodes, getAnchors, findStore } from '$lib/controllers/storeApi';
   import { TemporaryEdge } from '$lib/models/TemporaryEdge';
+  import { writable, derived, get, readable } from 'svelte/store';
+
   import type {
     NodeType,
     EdgeType,
@@ -26,7 +28,7 @@
   let moving = false;
   let moved = false;
   let edgeShouldMove = false;
-  // $: store = findStore(canvasId);
+  const store = findStore(canvasId);
 
   let mouseX = x;
   let mouseY = y;
@@ -36,10 +38,13 @@
 
 <svelte:window
   on:mousemove={(e) => {
+    // imelements drawing an (temporary) edge from a potential anchor to the mouse cursor
     e.preventDefault();
     if (edgeShouldMove) {
       temporaryEdgeStore.update((edges) => {
         if (edges.length === 0) {
+          // say there are no temporary edges. This means the user just clicked on the potential anchor
+          // so the current mouse position = temporary anchor position = mouseX, mouseY
           const newTempEdge = new TemporaryEdge(
             uuidv4(),
             potentialAnchor.nodeId,
@@ -55,8 +60,9 @@
           return [newTempEdge];
         } else if (edges.length === 1) {
           const edge = edges[0];
-          edge.targetX += e.movementX;
-          edge.targetY += e.movementY;
+          const d3Scale = get(store.d3Scale);
+          edge.targetX += e.movementX / d3Scale;
+          edge.targetY += e.movementY / d3Scale;
         } else {
           throw `there should only be zero or one temporary edge at any given time`;
         }
