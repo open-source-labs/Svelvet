@@ -1,6 +1,5 @@
 <script>
-  import Svelvet from '$lib/views/RefactoredComponents/Svelvet.svelte';
-  import EdgesStoreView from '$lib/views/RefactoredComponents/EdgesStoreView.svelte';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
 
   const initialNodes = [
     {
@@ -121,8 +120,6 @@
 
 <Svelvet nodes={initialNodes} edges={initialEdges} />
 
-<EdgesStoreView id={'4asdlfkjs'} />
-
 <Svelvet
   canvasId="4tsdgss32"
   nodes={initialNodes}
@@ -131,4 +128,3 @@
   height={900}
   background
 />
-<EdgesStoreView id={'4tsdgss32'} />
