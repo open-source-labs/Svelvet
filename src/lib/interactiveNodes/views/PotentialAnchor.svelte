@@ -4,7 +4,7 @@
     getAnchors,
     findStore,
   } from '$lib/core/controllers/storeApi';
-  import { TemporaryEdge } from '$lib/models/TemporaryEdge';
+  import { TemporaryEdge } from '$lib/interactiveNodes/models/TemporaryEdge';
   import { writable, derived, get, readable } from 'svelte/store';
 
   import type {

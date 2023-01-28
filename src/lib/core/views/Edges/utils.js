@@ -1,4 +1,9 @@
-import { Position } from '../../../views/types/utils';
+const Position = {};
+Position['Left'] = 'left';
+Position['Right'] = 'right';
+Position['Top'] = 'top';
+Position['Bottom'] = 'bottom';
+
 //needed for getCenter funciotn
 const LeftOrRight = [Position.Left, Position.Right];
 //used to determine the position for edge text on a Smooth or Step Edge

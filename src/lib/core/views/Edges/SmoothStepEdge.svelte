@@ -1,7 +1,12 @@
 <script>
   import BaseEdge from './BaseEdge.svelte';
   import { getCenter } from './utils';
-  import { Position } from '../types/utils';
+
+  const Position = {};
+  Position['Left'] = 'left';
+  Position['Right'] = 'right';
+  Position['Top'] = 'top';
+  Position['Bottom'] = 'bottom';
   // These are some helper methods for drawing the round corners
   // The name indicates the direction of the path. "bottomLeftCorner" goes
   // from bottom to the left and "leftBottomCorner" goes from left to the bottom.

@@ -1,6 +1,22 @@
 <script lang="ts">
   import BaseEdge from './BaseEdge.svelte';
-  import { Position } from '../types/utils';
+  // import { Position } from '../types/utils';
+  // // enumerable values (static) set for Position
+  // export var Position;
+  // (function (Position) {
+  //     Position["Left"] = "left";
+  //     Position["Right"] = "right";
+  //     Position["Top"] = "top";
+  //     Position["Bottom"] = "bottom";
+  // })(Position || (Position = {}));
+  // //
+  // // export type CoordinateExtent = [[number, number], [number, number]];
+  const Position = {};
+  Position['Left'] = 'left';
+  Position['Right'] = 'right';
+  Position['Top'] = 'top';
+  Position['Bottom'] = 'bottom';
+
   import { findStore, getAnchorFromEdge } from '$lib/core/controllers/storeApi';
   function calculateControlOffset(distance, curvature) {
     if (distance >= 0) {

@@ -17,7 +17,6 @@ import {
   getPotentialAnchors,
 } from '../controllers/storeApi';
 import { stores } from './store';
-import { populateNodesStore } from '$lib/controllers/util';
 
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {

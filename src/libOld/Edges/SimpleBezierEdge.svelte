@@ -1,6 +1,12 @@
 <script lang="ts">
+  // enumerable values (static) set for Position
+  const Position = {};
+  Position['Left'] = 'left';
+  Position['Right'] = 'right';
+  Position['Top'] = 'top';
+  Position['Bottom'] = 'bottom';
+
   import BaseEdge from '../Edges/BaseEdge.svelte';
-  import { Position } from '../types/utils';
   import type { DerivedEdge } from '../types/types';
 
   // how to create a smooth, controlled beizer edge from source and target positions

@@ -6,7 +6,7 @@ import type {
   StoreType,
   ResizeNodeType,
   TemporaryEdgeType,
-} from './types';
+} from '$lib/core/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -16,8 +16,8 @@ import {
   createNode,
   getPotentialAnchorById,
   getNodeById,
-} from '../controllers/storeApi';
-import { stores } from '../core/models/store';
+} from '$lib/core/controllers/storeApi';
+import { stores } from '$lib/core/models/store';
 
 export class TemporaryEdge implements TemporaryEdgeType {
   constructor(

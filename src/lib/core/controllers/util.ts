@@ -14,11 +14,11 @@ import type {
   UserNodeType,
   UserEdgeType,
   PotentialAnchorType,
-} from '$lib/models/types';
-import { ResizeNode } from '$lib/models/ResizeNode';
-import { Anchor } from '$lib/models/Anchor';
-import { Node } from '$lib/models/Node';
-import { Edge } from '$lib/models/Edge';
+} from '$lib/core/types/types';
+import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
+import { Anchor } from '$lib/core/models/Anchor';
+import { Node } from '$lib/core/models/Node';
+import { Edge } from '$lib/core/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -27,7 +27,7 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
-import { PotentialAnchor } from '$lib/models/PotentialAnchor';
+import { PotentialAnchor } from '$lib/interactiveNodes/models/PotentialAnchor';
 /**
  *
  * @param store
