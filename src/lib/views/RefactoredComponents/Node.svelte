@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { afterUpdate, onMount } from 'svelte';
+
   import { findStore } from '$lib/controllers/storeApi';
   import type {
     NodeType,
@@ -11,6 +13,7 @@
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
+  import { forceCssHeightAndWidth } from '$lib/controllers/getCss';
 
   export let node: NodeType;
   export let canvasId: string;
@@ -33,6 +36,11 @@
   } = store;
 
   let isSelected = false;
+
+  // forceCssHeightAndWidth forces the size of the node to be defined by CSS
+  afterUpdate(() => {
+    if (node.className) forceCssHeightAndWidth(store, node);
+  });
 </script>
 
 <svelte:window
