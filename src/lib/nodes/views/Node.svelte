@@ -41,11 +41,22 @@
   afterUpdate(() => {
     if (node.className) forceCssHeightAndWidth(store, node);
   });
+
+  // this state variable is used for "nodeCallback" functionality
+  // on mouseup, the callback will fire only if userClick is true
+  // isUserClick is set to true on mousedown, but set back to false in two cases
+  //   (1) if the mouse moves, meaning that the node is being dragged
+  //   (2) if the mouse leaves the node
+  let isUserClick = false;
 </script>
 
 <svelte:window
   on:mousemove={(e) => {
     e.preventDefault();
+    // part of the "nodeCallback" feature
+    isUserClick = false;
+
+    // part of the "drag node" feature
     if (isSelected) {
       nodesStore.update((nodes) => {
         const node = nodes[nodeId];
@@ -64,8 +75,10 @@
     $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
 
+    // this implements the "nodeCallback" feature
+    if (node.nodeCallback && isUserClick) node.nodeCallback(node);
+
     // This implements the "snap to grid" feature
-    // TODO: fix the TS error
     if (get(store.options).snap) {
       // If user sets snap attribute as true inside Svelvet
       const snapResize = get(store.options).snapTo;
@@ -89,9 +102,18 @@
 {/if}
 
 <div
+  on:mouseleave={(e) => {
+    // part of the "nodeCallback" feature
+    isUserClick = false;
+  }}
   on:mousedown={(e) => {
     e.preventDefault();
-    $nodeSelected = true; // when $nodeSelected = true, d3 functionality is disabled
+
+    // part of the "nodeCallback" feature
+    isUserClick = true;
+
+    // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
+    $nodeSelected = true;
     isSelected = true;
   }}
   on:contextmenu={(e) => {
