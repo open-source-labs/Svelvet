@@ -1,19 +1,20 @@
-<script lang='ts'>
+<script lang="ts">
   /**
    * import findStore
-  */
-  import { findStore } from "$lib/controllers/storeApi";
+   */
+  import { findStore } from '$lib/store/controllers/storeApi';
 
   export let id: string;
 
   const store = findStore(id);
 
   const { nodesStore } = store;
-
-
 </script>
 
-<h1>This is the StoreView component that displays the store for specific Svelvet component</h1>
+<h1>
+  This is the StoreView component that displays the store for specific Svelvet
+  component
+</h1>
 
 <h1>Svelvet Store Ids: {id}</h1>
 {#each Object.keys($nodesStore) as storeId}
