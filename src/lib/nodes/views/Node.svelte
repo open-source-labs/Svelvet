@@ -1,7 +1,7 @@
 <script lang="ts">
   import { afterUpdate, onMount } from 'svelte';
 
-  import { findStore } from '$lib/core/controllers/storeApi';
+  import { findStore } from '$lib/store/controllers/storeApi';
   import type {
     NodeType,
     EdgeType,
@@ -9,7 +9,7 @@
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/core/types/types';
+  } from '$lib/store/types/types';
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';

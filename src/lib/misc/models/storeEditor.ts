@@ -1,6 +1,6 @@
 // implement functionality to hard-edit store values here
 
-import { findStore, getNodeById } from '../../core/controllers/storeApi';
+import { findStore, getNodeById } from '../../store/controllers/storeApi';
 
 /**
  * @function deleteNode

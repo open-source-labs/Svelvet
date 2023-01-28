@@ -1,13 +1,13 @@
 // this class is for the 4 potential anchors that appear on each node
 
-import type { PotentialAnchorType } from '../../core/types/types';
+import type { PotentialAnchorType } from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
   getAnchors,
   findStore,
-} from '../../core/controllers/storeApi';
-import { stores } from '../../core/models/store';
+} from '../../store/controllers/storeApi';
+import { stores } from '../../store/models/store';
 
 /** Class representing an anchor with a Anchortype alias */
 export class PotentialAnchor implements PotentialAnchorType {

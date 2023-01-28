@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { findStore } from '$lib/core/controllers/storeApi';
-  import type { ResizeNodeType } from '$lib/core/types/types';
+  import { findStore } from '$lib/store/controllers/storeApi';
+  import type { ResizeNodeType } from '$lib/store/types/types';
 
   export let resizeId: string;
   export let canvasId: string;

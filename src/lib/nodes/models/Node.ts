@@ -5,7 +5,7 @@ import type {
   AnchorType,
   StoreType,
   ResizeNodeType,
-} from '../types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -15,8 +15,8 @@ import {
   getEdgeById,
   getResizeNodes,
   getPotentialAnchors,
-} from '../controllers/storeApi';
-import { stores } from './store';
+} from '../../store/controllers/storeApi';
+import { stores } from '../../store/models/store';
 
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {

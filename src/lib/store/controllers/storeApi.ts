@@ -43,8 +43,8 @@ import {
   dynamicCbCreator,
   fixedCbCreator,
   potentialAnchorCbCreator,
-} from './anchorCbDev';
-import { stores } from '$lib/core/models/store';
+} from '../../edges/controllers/anchorCbDev';
+import { stores } from '$lib/store/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
 import type {
   NodeType,
@@ -56,10 +56,10 @@ import type {
   TemporaryEdgeType,
   ResizeNodeType,
   PotentialAnchorType,
-} from '$lib/core/types/types';
-import { Anchor } from '$lib/core/models/Anchor';
-import { Node } from '$lib/core/models/Node';
-import { Edge } from '$lib/core/models/Edge';
+} from '$lib/store/types/types';
+import { Anchor } from '$lib/edges/models/Anchor';
+import { Node } from '$lib/nodes/models/Node';
+import { Edge } from '$lib/edges/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,

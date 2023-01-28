@@ -7,10 +7,14 @@ import type {
   AnchorType,
   StoreType,
   ResizeNodeType,
-} from '../types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
-import { stores } from './store';
+import {
+  getNodes,
+  getAnchors,
+  findStore,
+} from '../../store/controllers/storeApi';
+import { stores } from '../../store/models/store';
 
 /** Class representing an anchor with a Anchortype alias */
 export class Anchor implements AnchorType {

@@ -4,7 +4,7 @@ import {
   findStore,
   getAnchorFromEdge,
   getEdgeById,
-} from '../controllers/storeApi';
+} from '../../store/controllers/storeApi';
 import type {
   NodeType,
   EdgeType,
@@ -13,7 +13,7 @@ import type {
   ResizeNodeType,
 } from '../types/types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { stores } from './store';
+import { stores } from '../../store/models/store';
 
 export class Edge implements EdgeType {
   constructor(

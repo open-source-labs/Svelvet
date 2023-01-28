@@ -7,12 +7,12 @@
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/core/types/types';
+  } from '$lib/store/types/types';
   import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
     createStoreFromUserInput,
-  } from '$lib/core/controllers/storeApi';
+  } from '$lib/store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
 
@@ -62,7 +62,7 @@
     const optionsObj = { snap, snapTo };
     store.options.set(optionsObj);
   });
-  // // enables data reactivity. TODO: consider adding this back in, it's supposed to cause selvet updates if people push to store
+  // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store
   // afterUpdate(() => {
   //   svelvetStore.nodesStore.set(nodes);

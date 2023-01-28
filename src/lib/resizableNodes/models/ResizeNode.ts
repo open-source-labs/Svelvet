@@ -1,6 +1,6 @@
-import type { ResizeNodeType } from '../../core/types/types';
+import type { ResizeNodeType } from '../../store/types/types';
 // import { writable, derived, get, readable } from 'svelte/store';
-import { stores } from '../../core/models/store';
+import { stores } from '../../store/models/store';
 
 export class ResizeNode implements ResizeNodeType {
   constructor(

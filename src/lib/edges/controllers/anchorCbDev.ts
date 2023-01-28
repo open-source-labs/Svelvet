@@ -8,11 +8,7 @@ import type {
   ResizeNodeType,
   UserNodeType,
   UserEdgeType,
-} from '$lib/core/types/types';
-import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
-import { Anchor } from '$lib/core/models/Anchor';
-import { Node } from '$lib/core/models/Node';
-import { Edge } from '$lib/core/models/Edge';
+} from '$lib/store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -21,7 +17,7 @@ import {
   getAnchorById,
   getEdgeById,
   getPotentialAnchorById,
-} from './storeApi';
+} from '../../store/controllers/storeApi';
 
 export function fixedCbCreator(
   store: StoreType,

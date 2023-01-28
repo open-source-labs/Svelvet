@@ -3,19 +3,19 @@
   import { zoom, zoomTransform } from 'd3-zoom';
   import { select, selectAll } from 'd3-selection';
 
-  import SimpleBezierEdge from '$lib/core/views/Edges/SimpleBezierEdge.svelte';
-  import StepEdge from '$lib/core/views/Edges/StepEdge.svelte';
-  import SmoothStepEdge from '$lib/core/views/Edges/SmoothStepEdge.svelte';
+  import SimpleBezierEdge from '$lib/edges/views/Edges/SimpleBezierEdge.svelte';
+  import StepEdge from '$lib/edges/views/Edges/StepEdge.svelte';
+  import SmoothStepEdge from '$lib/edges/views/Edges/SmoothStepEdge.svelte';
 
-  import StraightEdge from '$lib/core/views/Svelvet3Components/StraightEdge.svelte';
+  import StraightEdge from '$lib/edges/views/Svelvet3Components/StraightEdge.svelte';
   //import SmoothStepEdge from './SmoothStepEdge.svelte';
   //  import StepEdge from './StepEdge.svelte';
-  import EdgeAnchor from '$lib/core/views/Svelvet3Components/EdgeAnchor.svelte';
+  import EdgeAnchor from '$lib/edges/views/Svelvet3Components/EdgeAnchor.svelte';
   import ResizeNode from '$lib/resizableNodes/views/ResizeNode.svelte';
 
-  import Node from '$lib/core/views/Svelvet3Components/Node.svelte';
+  import Node from '$lib/nodes/views/Node.svelte';
 
-  import { findStore } from '$lib/core/controllers/storeApi';
+  import { findStore } from '$lib/store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
 

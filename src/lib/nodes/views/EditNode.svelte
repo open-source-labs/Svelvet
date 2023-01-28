@@ -1,5 +1,5 @@
 <script>
-  import { findStore } from '$lib/core/controllers/storeApi';
+  import { findStore } from '$lib/store/controllers/storeApi';
   import { deleteNode } from '$lib/misc/models/storeEditor';
 
   export let nodeId;
