@@ -1,6 +1,6 @@
 // Required for "custom css" feature
 
-import type { NodeType, StoreType } from '$lib/models/types';
+import type { NodeType, StoreType } from '$lib/store/types/types';
 
 // WHAT: For a given node with a user-defined classname, see if there are any css properties for height and width
 //       Get that height and width and set properties in node store. This is necessary for
