@@ -17,7 +17,7 @@
 
   export let node: NodeType;
   export let canvasId: string;
-  export let nodes: NodeType[];
+  // export let nodes: NodeType[];
   //   const nodeId = node.id; // this seems to go stale
   export let nodeId: string;
 
