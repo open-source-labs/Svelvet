@@ -11,7 +11,7 @@ import type {
   AnchorType,
   StoreType,
   ResizeNodeType,
-} from '../types/types';
+} from '$lib/store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
 
