@@ -292,7 +292,8 @@ export function populateNodesStore(
       userNode.textColor,
       userNode.borderRadius,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
-      userNode.className
+      userNode.className,
+      userNode.nodeCallback
     );
 
     nodesStore[nodeId] = node;
