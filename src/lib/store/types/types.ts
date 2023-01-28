@@ -77,6 +77,7 @@ export interface NodeType {
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
+  setExportableData: Function;
   borderColor: string;
   image: boolean;
   src: string;
@@ -103,6 +104,7 @@ export interface EdgeType {
   noHandle?: boolean;
   arrow?: boolean;
   delete: Function;
+  setExportableData: Function;
 }
 
 export interface AnchorType {

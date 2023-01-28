@@ -52,4 +52,38 @@ export class Edge implements EdgeType {
       return { ...edges };
     });
   }
+
+  //this method is going to construct an object that holds all the edge data that can be exported
+  setExportableData() {
+    // public id: string,
+    // public sourceX: number,
+    // public sourceY: number,
+    // public targetX: number,
+    // public targetY: number,
+    // public canvasId: string,
+    // public label?: string,
+    // public type?: string,
+    // public labelBgColor?: string,
+    // public labelTextColor?: string,
+    // public edgeColor?: string,
+    // public animate?: boolean,
+    // public noHandle?: boolean,
+    // public arrow?: boolean
+    const exportableData = {
+      id: this.id,
+      sourceX: this.sourceX,
+      sourceY: this.sourceY,
+      targetX: this.targetX,
+      targetY: this.targetY,
+      label: this.label,
+      type: this.type,
+      labelBgColor: this.labelBgColor,
+      labelTextColor: this.labelTextColor,
+      edgeColor: this.edgeColor,
+      animate: this.animate,
+      noHandle: this.noHandle,
+      arrow: this.arrow
+    }
+    return exportableData;
+  }
 }
