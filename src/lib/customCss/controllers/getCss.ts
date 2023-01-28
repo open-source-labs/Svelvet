@@ -13,6 +13,10 @@ export const forceCssHeightAndWidth = (store: StoreType, node: NodeType) => {
     const styleRules = styleSheet.cssRules;
     for (let j = 0; j < styleRules.length; j++) {
       const rule = styleRules[j];
+
+      // this is necessary to get rid of typescript warning for rule.selectorText
+      if (!(rule instanceof CSSStyleRule)) continue;
+
       if (rule.selectorText === `.${node.className}`) {
         const initialText = rule.cssText; // getting the full text of the CSS rule
         const i = initialText.indexOf('{'); // finding index of first bracket
