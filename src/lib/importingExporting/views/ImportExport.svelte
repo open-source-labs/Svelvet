@@ -1,13 +1,8 @@
 <script lang="ts">
-  /**
-   * import findStore
-   */
+
   import { findStore, createStoreFromUserInput } from '$lib/store/controllers/storeApi';
 
   export let id: string;
-
-  //if shareable needs to come from Svelvet passed-in props
-  let shareable = true;
 
   const store = findStore(id);
 
@@ -75,13 +70,6 @@
 
 </script>
 
-<h1>This is the nodesStore infomation</h1>
-<h1>{JSON.stringify($nodesStore)}</h1>
-<br>
-<h1>This is the edgesStore infomation</h1>
-<h1>{JSON.stringify($edgesStore)}</h1>
-
-{#if shareable}
 <!-- this is for the download button and upload input field -->
 <div id="export-import">
   <a
@@ -100,7 +88,6 @@
   <input type="text" id="store-input" placeholder="Paste JSON here">
   <button id="store-input-btn" on:click={uploadStore}>Upload</button>
 </div>
-{/if}
 
 
 <style>

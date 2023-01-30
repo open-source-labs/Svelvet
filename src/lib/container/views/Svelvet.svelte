@@ -17,6 +17,8 @@
   import GraphView from './GraphView.svelte';
   import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
 
+  import ImportExport from '$lib/importingExporting/views/ImportExport.svelte';
+
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
   let [userNodes, userEdges] = [nodes, edges]; // rename nodes, edges to make clear that they are of UserNodeType (ie, passed in by the user and not the internal representation of a node/edge)
@@ -28,6 +30,10 @@
   export let canvasId: string = uuidv4();
   export let snap: boolean = false;
   export let snapTo: number = 30;
+
+  //default value of shareable will be set to false
+  export let shareable: boolean = false;
+
 
   // sanitize user input
   let output = sanitizeUserNodesAndEdges(userNodes, userEdges);
@@ -66,6 +72,9 @@
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
   <GraphView {canvasId} />
+  {#if shareable}
+    <ImportExport id={canvasId}/>
+  {/if}
 </div>
 
 <style>

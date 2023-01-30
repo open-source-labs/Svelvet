@@ -1,6 +1,6 @@
 <script lang='ts'>
   import Svelvet from '$lib/container/views/Svelvet.svelte';
-  import SvelvetStoreView from '$lib/importingExporting/views/SvelvetStoreView.svelte';
+  import ImportExport from '$lib/importingExporting/views/ImportExport.svelte';
 
   const initialNodes: any[] = [
     {
@@ -39,8 +39,9 @@
   width={900}
   height={900}
   background
+  shareable={true}
 />
-<SvelvetStoreView id={"4tsdgss32"}/>
+
 
 
 
