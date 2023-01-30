@@ -35,8 +35,8 @@ export interface UserEdgeType {
   id: string;
   source: string;
   target: string;
-  sourceAnchorCb: Function;
-  targetAnchorCb: Function;
+  sourceAnchorCb?: Function;
+  targetAnchorCb?: Function;
   label?: string;
   labelBgColor?: string;
   labelTextColor?: string;
@@ -78,6 +78,7 @@ export interface NodeType {
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
+  setExportableData: Function;
   borderColor: string;
   image: boolean;
   src: string;
@@ -105,6 +106,7 @@ export interface EdgeType {
   noHandle?: boolean;
   arrow?: boolean;
   delete: Function;
+  setExportableData: Function;
 }
 
 export interface AnchorType {

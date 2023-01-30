@@ -179,4 +179,25 @@ export class Node implements NodeType {
       potentialAnchor.delete();
     }
   }
+  //this method is going to construct an object that holds all the node data that can be exported
+  setExportableData() {
+    const exportableData = {
+      id: this.id,
+      // canvasId: this.canvasId,
+      width: this.width,
+      height: this.height,
+      position: {x: this.positionX, y: this.positionY},
+      data: this.data,
+      bgColor: this.bgColor,
+      borderColor: this.borderColor,
+      textColor: this.textColor,
+      borderRadius: this.borderRadius,
+      image: this.image,
+      src: this.src,
+      childNodes: this.childNodes,
+      customClassName: this.className
+    }
+
+    return exportableData;
+  }
 }
