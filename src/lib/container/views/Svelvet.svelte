@@ -49,9 +49,8 @@
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
-    // set node/edge related stores
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
-    // set canvas related stores
+    // set canvas related stores. you need to do this before setting node/edge related stores because
+    // initializing nodes/edges might read relevant options from the store.
     store.widthStore.set(width);
     store.heightStore.set(height);
     store.backgroundStore.set(background);
@@ -59,6 +58,9 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
+
+    // set node/edge related stores
+    createStoreFromUserInput(canvasId, userNodes, userEdges);
   });
   // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store

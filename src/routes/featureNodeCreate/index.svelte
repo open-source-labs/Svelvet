@@ -22,7 +22,6 @@
       height: 40,
       bgColor: 'white',
       textColor: 'black',
-      targetPosition: 'left',
     },
   ];
 
@@ -39,4 +38,5 @@
   background
 /> -->
 
+<Svelvet nodes={initialNodes} edges={initialEdges} nodeCreate />
 <Svelvet nodes={initialNodes} edges={initialEdges} />
