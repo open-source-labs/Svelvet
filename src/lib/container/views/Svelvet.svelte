@@ -71,11 +71,11 @@
     const userNodes = output['userNodes'];
     const userEdges = output['userEdges'];
 
-    console.log('afterUpdated callback fired')
-    console.log(nodes)
+    // console.log('afterUpdated callback fired')
+    // console.log(nodes)
 
 
-    console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
+    // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
 
     // set canvas related stores. you need to do this before setting node/edge related stores because
     // initializing nodes/edges might read relevant options from the store.
