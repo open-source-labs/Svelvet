@@ -15,10 +15,12 @@
   } from '$lib/store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
+  import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
 
-  // Declaring variables for Svelvet components which will be usable in other files
-  export let nodes: UserNodeType[]; // TODO: new type to account for users putting in number in ids
-  export let edges: UserEdgeType[]; // TODO: new type to account for users putting in number in ids
+  export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
+  export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
+  let [userNodes, userEdges] = [nodes, edges]; // rename nodes, edges to make clear that they are of UserNodeType (ie, passed in by the user and not the internal representation of a node/edge)
+
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = true;
@@ -28,22 +30,9 @@
   export let snapTo: number = 30;
 
   // sanitize user input
-  // This is so that all id's are strings
-
-  nodes = nodes.map((node) => {
-    node.id = node.id.toString();
-    node.childNodes =
-      node.childNodes === undefined
-        ? []
-        : node.childNodes.map((childId) => childId.toString());
-    return node;
-  });
-
-  edges = edges.map((e) => {
-    e.source = e.source.toString();
-    e.target = e.target.toString();
-    return e;
-  });
+  let output = sanitizeUserNodesAndEdges(userNodes, userEdges);
+  userNodes = output['userNodes'];
+  userEdges = output['userEdges'];
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -54,7 +43,7 @@
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
-    createStoreFromUserInput(canvasId, nodes, edges);
+    createStoreFromUserInput(canvasId, userNodes, userEdges);
     store.widthStore.set(width);
     store.heightStore.set(height);
     store.backgroundStore.set(background);
