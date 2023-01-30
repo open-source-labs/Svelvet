@@ -80,7 +80,6 @@ export class Anchor implements AnchorType {
       // this means that no edge was found, just return without doing anything
 
       if (edge === undefined) {
-        console.log(`edge ${this.edgeId} not found`);
         return { ...edges };
       }
       if (this.sourceOrTarget === 'source') {

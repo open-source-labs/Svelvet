@@ -19,14 +19,14 @@ export interface UserNodeType {
   bgColor: string;
   data: object;
   position: { x: number; y: number };
-  borderColor: string;
-  image: boolean;
-  src: string;
-  textColor: string;
-  targetPosition: 'left' | 'right' | 'top' | 'bottom';
-  sourcePosition: 'left' | 'right' | 'top' | 'bottom';
-  borderRadius: number;
-  childNodes: string[];
+  borderColor?: string;
+  image?: boolean;
+  src?: string;
+  textColor?: string;
+  targetPosition?: 'left' | 'right' | 'top' | 'bottom';
+  sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
+  borderRadius?: number;
+  childNodes?: string[];
   className?: string;
   nodeCallback?: Function;
 }

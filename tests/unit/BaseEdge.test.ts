@@ -1,4 +1,4 @@
-import BaseEdge from '$lib/views/RefactoredComponents/BaseEdge.svelte';
+import BaseEdge from '$lib/edges/views/Edges/BaseEdge.svelte';
 import { render, screen, cleanup } from '@testing-library/svelte';
 
 afterEach(() => cleanup());
