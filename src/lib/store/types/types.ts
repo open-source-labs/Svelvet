@@ -35,8 +35,8 @@ export interface UserEdgeType {
   id: string;
   source: string;
   target: string;
-  sourceAnchorCb: Function;
-  targetAnchorCb: Function;
+  sourceAnchorCb?: Function;
+  targetAnchorCb?: Function;
   label?: string;
   labelBgColor?: string;
   labelTextColor?: string;

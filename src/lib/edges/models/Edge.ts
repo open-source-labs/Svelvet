@@ -11,6 +11,7 @@ import type {
   AnchorType,
   StoreType,
   ResizeNodeType,
+  UserEdgeType,
 } from '$lib/store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
@@ -53,7 +54,7 @@ export class Edge implements EdgeType {
     });
   }
 
-  //this method is going to construct an object that holds all the edge data that can be exported
+  // this method is going to construct an object that holds all the edge data that can be exported
   setExportableData() {
     // public id: string,
     // public sourceX: number,
@@ -69,12 +70,9 @@ export class Edge implements EdgeType {
     // public animate?: boolean,
     // public noHandle?: boolean,
     // public arrow?: boolean
-    const exportableData = {
+
+    const exportableData : UserEdgeType = {
       id: this.id,
-      sourceX: this.sourceX,
-      sourceY: this.sourceY,
-      targetX: this.targetX,
-      targetY: this.targetY,
       label: this.label,
       type: this.type,
       labelBgColor: this.labelBgColor,
@@ -82,8 +80,23 @@ export class Edge implements EdgeType {
       edgeColor: this.edgeColor,
       animate: this.animate,
       noHandle: this.noHandle,
-      arrow: this.arrow
+      arrow: this.arrow,
+      source: 'dummy', // these will be set later
+      target: 'dummy' // these will be set later
     }
+
+    // set source, target on exportableData
+    const store = findStore(this.canvasId);
+    const anchors = getAnchors(store, {edgeId: this.id});
+    if (anchors.length !== 2) throw 'there should be two anchors per edge'
+    for (const anchor of anchors) {
+      if (anchor.sourceOrTarget === 'target') exportableData.target = anchor.nodeId;
+      if (anchor.sourceOrTarget === 'source') exportableData.source = anchor.nodeId;
+    }
+
+    // console.log(exportableData)
+
+
     return exportableData;
   }
 }

@@ -2,7 +2,7 @@
   /**
    * import findStore
    */
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore, createStoreFromUserInput } from '$lib/store/controllers/storeApi';
 
   export let id: string;
 
@@ -50,7 +50,27 @@
 
 
   const uploadStore = () => {
-    console.log('upload store fired; functionality still in progress')
+    
+    //selects store-input 
+    const storeInput = document.getElementById('store-input');
+    //reviver function parses JSON string 
+    const reviver = (key, value) => {
+      //if node object has key of custom, evaluates and allows for custom components to be uploaded  
+      if (key === 'custom') return eval(value);
+      return value;
+    }
+    //grabs input field val
+    const text = storeInput.value;
+    
+    //If the input JSON is empty, should not proceed to the next step
+    if (text === '') {return;}
+
+    const newStore = JSON.parse(text, reviver);
+    
+    //sets nodes/edges from input 
+    createStoreFromUserInput(id, newStore.nodes, newStore.edges);
+    //resets input val to empty string
+    storeInput.value = '';
   }
 
 </script>
