@@ -30,10 +30,10 @@
   export let canvasId: string = uuidv4();
   export let snap: boolean = false;
   export let snapTo: number = 30;
+  export let nodeCreate: boolean = false;
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
-
 
   // sanitize user input
   let output = sanitizeUserNodesAndEdges(userNodes, userEdges);
@@ -49,13 +49,16 @@
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
+    // set node/edge related stores
     createStoreFromUserInput(canvasId, userNodes, userEdges);
+    // set canvas related stores
     store.widthStore.set(width);
     store.heightStore.set(height);
     store.backgroundStore.set(background);
     store.movementStore.set(movement);
-    const optionsObj = { snap, snapTo };
-    store.options.set(optionsObj);
+    const optionsObj = { snap, snapTo }; // TODO: rename to snap
+    store.options.set(optionsObj); //
+    store.nodeCreate.set(nodeCreate);
   });
   // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store
@@ -73,7 +76,7 @@
 <div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
   <GraphView {canvasId} />
   {#if shareable}
-    <ImportExport id={canvasId}/>
+    <ImportExport id={canvasId} />
   {/if}
 </div>
 

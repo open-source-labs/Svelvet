@@ -216,6 +216,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     d3Scale: writable(1),
     options: writable({}),
     temporaryEdgeStore: writable([]),
+    nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
   };
   return stores[canvasId];
 }

@@ -65,6 +65,7 @@ export interface StoreType {
   d3Scale: Writable<number>; // for zoom and pan
   options: Writable<{ [key: string]: any }>;
   temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
+  nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
 }
 
 export interface NodeType {
