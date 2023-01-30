@@ -12,6 +12,7 @@
       borderColor: 'transparent',
       image: true,
       src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+      sourcePosition: 'right',
     },
     {
       id: 2,

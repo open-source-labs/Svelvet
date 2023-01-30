@@ -16,7 +16,6 @@ export function sanitizeUserNodesAndEdges(
   userNodes: UserNodeType[],
   userEdges: UserEdgeType[]
 ) {
-  console.log('sanitizing user input');
   convertIdToString(userNodes);
   convertEdgeIdsToString(userEdges);
   convertAnchorPositionsToCallbacks(userNodes, userEdges);
