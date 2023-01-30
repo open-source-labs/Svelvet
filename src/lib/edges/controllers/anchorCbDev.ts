@@ -26,7 +26,9 @@ export function fixedCbCreator(
   userNodeId: string,
   positionCb: Function // positionCb should be a function that takes 4 arguments (x,y,width,height) and returns a 3-array [x,y,angle] that represents the x,y position of the anchor as well as it's angle with respect to it's node.
 ) {
-  return fixedCb;
+  const rn = fixedCb;
+  rn.type = 'fixed'; // TODO: i have no idea how to fix this typescript warning without abusing any, but otherwise it works
+  return rn;
 
   function fixedCb() {
     // get the two anchors
@@ -43,9 +45,9 @@ export function fixedCbCreator(
     anchorSelf.positionX = x;
     anchorSelf.positionY = y;
     anchorSelf.angle = angle;
-    // update the other anchor. This is in case the other anchor is a dynamic anchor
-    // The dyanamic anchor has a check that prevents an infinite loop
-    anchorOther.callback();
+    // update the other anchor if it is a dynamic anchor
+    // Note dyanamic anchor callbacks have a check that prevents an infinite loop
+    if (anchorOther.callback.type === 'dynamic') anchorOther.callback();
   }
 }
 
@@ -54,7 +56,10 @@ export function dynamicCbCreator(
   edgeId: string,
   anchorId: string
 ) {
-  return dynamicCb;
+  const rn = dynamicCb;
+  rn.type = 'dynamic'; // TODO: i have no idea how to fix this typescript warning without abusing any, but otherwise it works
+  return rn;
+
   function dynamicCb() {
     // get the two anchors
     const anchors = getAnchors(store, { edgeId: edgeId });
