@@ -1,7 +1,7 @@
 <script lang='ts'>
   import Svelvet from '$lib/container/views/Svelvet.svelte';
 
-  const initialNodes: any[] = [
+  let initialNodes: any[] = [
     {
       id: 1,
       position: { x: 225, y: 10 },
@@ -25,9 +25,34 @@
     },
   ];
 
-  const initialEdges: any[] = [
+  let initialEdges: any[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
   ];
+
+
+  const addNodeAndEdge = () => {
+    console.log('addNodeAndEdge fired')
+    const newNode = {
+      id: 3,
+      position: { x: 200, y: 250 },
+      data: { label: 'id=3' },
+      width: 50,
+      height: 50,
+      bgColor: 'white',
+      textColor: 'black',
+      targetPosition: 'left',
+    };
+    
+    const newEdge ={
+      id: 'e2-3', source: 2, target: 3, label: 'new edge'
+    }
+    initialNodes = [...initialNodes, newNode];
+    initialNodes = initialNodes;
+    console.log('updated initial nodes => ', initialNodes)
+    // initialEdges = [...initialEdges, newEdge];
+    // initialEdges = initialEdges;
+    // console.log('updated initial edges => ', initialEdges)
+  }
 
 </script>
 
@@ -41,6 +66,7 @@
   shareable={true}
 />
 
+<button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
 
 
 
