@@ -39,10 +39,10 @@
   }}
   class="ResizeNode"
   style="
-  left: {reactResizeNode.positionX - 5}px;
-  top: {reactResizeNode.positionY - 5}px;
-  width: {10}px;
-  height: {10}px;
+  left: {reactResizeNode.positionX - 10}px;
+  top: {reactResizeNode.positionY - 10}px;
+  width: {20}px;
+  height: {20}px;
   background-color: purple;
   border-color: purple;
   border-radius: 50%;"
@@ -63,10 +63,11 @@
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
-    opacity: 0.5;
+    opacity: 0;
   }
 
   .ResizeNode:hover {
     cursor: nwse-resize;
+    opacity: 0.5;
   }
 </style>

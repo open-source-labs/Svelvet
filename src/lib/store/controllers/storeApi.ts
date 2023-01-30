@@ -216,6 +216,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     d3Scale: writable(1),
     options: writable({}),
     temporaryEdgeStore: writable([]),
+    nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
   };
   return stores[canvasId];
 }
@@ -236,8 +237,10 @@ export function createStoreFromUserInput(
   populateEdgesStore(store, edges, canvasId);
   //populate resize Store
   populateResizeNodeStore(store, nodes, canvasId);
-  //populate potential anchors
-  populatePotentialAnchorStore(store, nodes, canvasId);
+  //populate potential anchors if "node create" feature is turend on
+  if (get(store.nodeCreate)) {
+    populatePotentialAnchorStore(store, nodes, canvasId);
+  }
 }
 
 // WHAT: Creates a new edge and two adaptive anchor points
