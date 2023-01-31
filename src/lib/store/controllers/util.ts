@@ -33,11 +33,15 @@ import {
   getEdgeById,
 } from './storeApi';
 import { PotentialAnchor } from '$lib/interactiveNodes/models/PotentialAnchor';
+
 /**
- *
- * @param store
- * @param canvasId
- * @returns
+ * Creates resize node on the bottom right corner of the targeted Node
+ * 
+ * @param canvasId The canvasId of the Svelvet component that holds the targeted Node
+ * @param nodeId The id of the Node that the resize node attached to
+ * @param posX The number of pixels on the x-axis relative to the left top corner of the targeted Node 
+ * @param posY The number of pixels on the y-axis relative to the left top corner of the targeted Node
+ * @returns A ReziseNode object with randomized id, canvasId, nodeId, posX, and posY
  */
 function createResizeNode(
   canvasId: string,
@@ -49,6 +53,16 @@ function createResizeNode(
   const resizeNode = new ResizeNode(id, canvasId, nodeId, posX, posY);
   return resizeNode;
 }
+
+/**
+ * Creates an Anchor on the targeted Node with infomation the userNode holds
+ * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.  
+ * @param userNode A node that the user specifies. This is NOT the same as a Node object.
+ * @param sourceOrTarget User specified information of source or target
+ * @param canvasId The id of the canvas that holds the Anchor and its attached Node
+ * @param edge An edge that the user specifies. It should target the userNode as source or target. This is NOT the same as an Edge object
+ * @returns An Anchor object
+ */
 
 function createAnchor(
   store: StoreType,
@@ -66,14 +80,16 @@ function createAnchor(
 
   // userCb is the appropriate source or taret callback from userEdge object. It is
   // possible the user to NOT set userCb in which case userCb will be undefined
-  let userCb: Function;
+  let userCb: Function | undefined;
   if (sourceOrTarget === 'target') userCb = edge.targetAnchorCb;
   else userCb = edge.sourceAnchorCb;
 
   // create anchor callbacks
-  const dynamicCb = dynamicCbCreator(store, edgeId, anchorId);
-  const fixedCb = fixedCbCreator(store, edgeId, anchorId, userNode.id, userCb);
-  // Create a new anchor. The
+  let cb: Function;
+  if (userCb === undefined) cb = dynamicCbCreator(store, edgeId, anchorId) 
+  else cb = fixedCbCreator(store, edgeId, anchorId, userNode.id, userCb)
+  
+  // Create a new anchor.
   const anchor = new Anchor(
     anchorId,
     userNode.id,
@@ -81,7 +97,7 @@ function createAnchor(
     sourceOrTarget,
     -1, // dummy variables for x,y,angle for now
     -1, // dummy variables for x,y,angle for now
-    userCb === undefined ? dynamicCb : fixedCb,
+    cb,
     canvasId,
     0 // dummy variables for x,y,angle for now
   );
@@ -89,6 +105,14 @@ function createAnchor(
   return anchor;
 }
 
+
+/**
+ * Populates edgesStore of Edges. This function does not return the edgesStore. Instead it sets the nodesStore of Svelvet store.
+ * 
+ * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.
+ * @param edges An edge that the user specifies. This is NOT the same as a Edge object.
+ * @param canvasId The canvasId of the Svelvet component that holds the Edges
+ */
 export function populateEdgesStore(
   store: StoreType,
   edges: UserEdgeType[],
@@ -152,6 +176,12 @@ export function populateEdgesStore(
   store.edgesStore.set(edgesStore);
 }
 
+/**
+ * Finds userNode by the node id from nodesStore
+ * @param id The id of the Node in its nodesStore
+ * @param userNodes The array of userNodes (NOT the same as Node object)
+ * @returns The node that user specified or null if not found
+ */
 function findUserNodeById(
   id: string,
   userNodes: UserNodeType[]
