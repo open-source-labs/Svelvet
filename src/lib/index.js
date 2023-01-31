@@ -1,7 +1,7 @@
-// import Svelvet from './container/views/Svelvet.svelte';
-// export default Svelvet;
-import DeleteMe from './deleteMe.svelte';
-export default DeleteMe;
+import Svelvet from './container/views/Svelvet.svelte';
+export default Svelvet;
+// import DeleteMe from './deleteMe.svelte';
+// export default DeleteMe;
 
 //export * from './types';
 
