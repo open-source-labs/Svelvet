@@ -21,6 +21,13 @@ To run typedoc, do: `npx typedoc --entryPointStrategy expand src/lib`
 - refactor anchor callbacks to use setPosition so that we cascade changes to edges (needed for resizing)
 - get D3 scaling movement working
 
+## Publishing to npm
+
+- create an account on npm.js
+- make sure you are in directory `src/lib/`
+- `npm version patch` to increment version number
+- `npm publish` to publish to npm. Note that you cannot "overwrite" previous publishes, you must increment the version number
+
 ## Motivation
 
 Svelvet was originally written as a monolith. This increased development speed but made the code fragile. For example, one Svelvet team attempted to implement deletion of edges but found "it would take an entire revamp of the entire node/edge relationship" to fix bugs and ended up scrapping the feature entirely.
