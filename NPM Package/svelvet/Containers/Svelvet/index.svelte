@@ -1,7 +1,7 @@
 
 <script>import GraphView from '../GraphView/index.svelte';
 import { findOrCreateStore } from '../../stores/store';
-import { onMount } from 'svelte';
+import { onMount, afterUpdate } from 'svelte';
 // Declaring variables for Svelvet components which will be usable in other files
 // declaring default values for props
 export let nodes;
@@ -32,6 +32,27 @@ const svelvetStore = findOrCreateStore(key);
 const { widthStore, heightStore, nodesStore, derivedEdges, backgroundColor, isLocked } = svelvetStore;
 // sets the state of the store to the values passed in from the Svelvet Component on initial render
 onMount(() => {
+    svelvetStore.nodesStore.set(nodes);
+    svelvetStore.edgesStore.set(edges);
+    svelvetStore.widthStore.set(width);
+    svelvetStore.heightStore.set(height);
+    svelvetStore.backgroundStore.set(background);
+    svelvetStore.movementStore.set(movement);
+    svelvetStore.snapgrid.set(snap);
+    svelvetStore.backgroundColor.set(bgColor);
+    svelvetStore.snapResize.set(snapTo);  
+    svelvetStore.initZoom.set(initialZoom);
+    svelvetStore.initLocation.set(initialLocation);
+    svelvetStore.isLocked.set(locked)
+    svelvetStore.boundary.set(boundary)
+    svelvetStore.nodeLinkStore.set(nodeLink);
+    svelvetStore.nodeCreateStore.set(nodeCreate);
+    svelvetStore.nodeEditStore.set(nodeEdit);
+    svelvetStore.shareable.set(shareable);
+    svelvetStore.deleteNodes.set(deleteNodes);
+  });
+
+  afterUpdate(() => {
     svelvetStore.nodesStore.set(nodes);
     svelvetStore.edgesStore.set(edges);
     svelvetStore.widthStore.set(width);
