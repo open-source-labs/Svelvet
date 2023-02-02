@@ -21,7 +21,6 @@
 
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
-  let [userNodes, userEdges] = [nodes, edges]; // rename nodes, edges to make clear that they are of UserNodeType (ie, passed in by the user and not the internal representation of a node/edge)
 
   export let width: number = 600;
   export let height: number = 600;
@@ -30,15 +29,12 @@
   export let canvasId: string = uuidv4();
   export let snap: boolean = false;
   export let snapTo: number = 30;
+  export let nodeCreate: boolean = false;
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
 
 
-  // sanitize user input
-  let output = sanitizeUserNodesAndEdges(userNodes, userEdges);
-  userNodes = output['userNodes'];
-  userEdges = output['userEdges'];
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -49,33 +45,61 @@
 
   // sets the state of the store to the values passed in from the Svelvet Component on initial render
   onMount(() => {
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
+    // sanitize user input
+    let output = sanitizeUserNodesAndEdges(nodes, edges);
+    const userNodes = output['userNodes'];
+    const userEdges = output['userEdges'];
+
+    // set canvas related stores. you need to do this before setting node/edge related stores because
+    // initializing nodes/edges might read relevant options from the store.
     store.widthStore.set(width);
     store.heightStore.set(height);
     store.backgroundStore.set(background);
     store.movementStore.set(movement);
-    const optionsObj = { snap, snapTo };
-    store.options.set(optionsObj);
+    const optionsObj = { snap, snapTo }; // TODO: rename to snap
+    store.options.set(optionsObj); //
+    store.nodeCreate.set(nodeCreate);
+
+    // set node/edge related stores
+    createStoreFromUserInput(canvasId, userNodes, userEdges);
   });
   // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store
-  // afterUpdate(() => {
-  //   svelvetStore.nodesStore.set(nodes);
-  //   svelvetStore.edgesStore.set(edges);
-  //   svelvetStore.widthStore.set(width);
-  //   svelvetStore.heightStore.set(height);
-  //   svelvetStore.backgroundStore.set(background);
-  //   svelvetStore.movementStore.set(movement);
-  // });
+  afterUpdate(() => {
+    // sanitize user input
+    let output = sanitizeUserNodesAndEdges(nodes, edges);
+    const userNodes = output['userNodes'];
+    const userEdges = output['userEdges'];
+
+    // console.log('afterUpdated callback fired')
+    // console.log(nodes)
+
+
+    // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
+
+    // set canvas related stores. you need to do this before setting node/edge related stores because
+    // initializing nodes/edges might read relevant options from the store.
+    store.widthStore.set(width);
+    store.heightStore.set(height);
+    store.backgroundStore.set(background);
+    store.movementStore.set(movement);
+    const optionsObj = { snap, snapTo }; // TODO: rename to snap
+    store.options.set(optionsObj); //
+    store.nodeCreate.set(nodeCreate);
+
+    // set node/edge related stores
+    createStoreFromUserInput(canvasId, userNodes, userEdges);
+  });
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
 <div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
   <GraphView {canvasId} />
   {#if shareable}
-    <ImportExport id={canvasId}/>
+    <ImportExport id={canvasId} />
   {/if}
 </div>
+
 
 <style>
   .Svelvet {
