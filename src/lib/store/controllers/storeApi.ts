@@ -33,8 +33,6 @@ populateSvelvetStoreFromUserInput(canvasId, nodes, edges)
          $routes/testingplayground/index.svelte
 - edges: same as nodes, this is an array of objects containing edge info THAT IS DIFFERENT FROM THE EDGE CLASS.
 - Returns: store
-- Notes: this is mis-named, it doesn't actually create a store it populates an existing store so "createStoreEmpty" must be called first.
-         TODO: rename this
 
 
 */
@@ -238,7 +236,7 @@ export function getPotentialAnchorById(store: StoreType, id: string) {
  * 
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param filter An object to specify conditions. 
- * @returns An array of Node objects that matches the conditions specified in filter parameter
+ * @returns An array of Node objects that matches the conditions specified in filter parameter. This array is non-reactive (ie, you cannot use information from this array to force a re-render of a Svelte component)
  */
 export function getNodes(
   store: StoreType,
@@ -308,17 +306,6 @@ export function createStoreEmpty(canvasId: string): StoreType {
 }
 
 
-// populateSvelvetStoreFromUserInput(canvasId, nodes, edges)
-// - canvasId: this the the canvasId of the Svelvet component you are creating a store for
-// - nodes: this is an array of objects containing node info that is defined by the user. NOTE THAT THE STRUCTURE DIFFERS FROM THE NODES CLASS
-//          The whole point of populateSvelvetStoreFromUserInput is to convert nodes into proper Svelvet Node objects. An example of nodes is in 
-//          $routes/testingplayground/index.svelte
-// - edges: same as nodes, this is an array of objects containing edge info THAT IS DIFFERENT FROM THE EDGE CLASS.
-// - Returns: store
-// - Notes: this is mis-named, it doesn't actually create a store it populates an existing store so "createStoreEmpty" must be called first.
-//          TODO: rename this
-
-
 /**
  * populateSvelvetStoreFromUserInput will populate all the states and set these states into the Svelvet store initialized by invoking createStoreEmpty
  * 
@@ -348,8 +335,15 @@ export function populateSvelvetStoreFromUserInput(
   }
 }
 
-// WHAT: Creates a new edge and two adaptive anchor points
-// HOW:  First create an edge
+
+/**
+ * Creates a new edge and two adaptive anchor points and updates the edgesStore and anchorsStore.
+ * 
+ * @param store The Svelvet store containing the state of a Svelvet component
+ * @param sourceNodeId The id of the source Node
+ * @param targetNodeId The id of the target Node
+ * @param canvasId The canvasId of a Svelvet component
+ */
 export function createEdgeAndAnchors(
   store: StoreType,
   sourceNodeId: string,
@@ -423,12 +417,17 @@ export function createEdgeAndAnchors(
   for (const anchor of anchors) anchor.callback();
 }
 
-// WHAT: Creates a new Node with an edge linking to another node
-// HOW:
-// WHY: This functionality is needed for the "create new node by dragging" feature
-//      See TemporaryEdge.createNode()
-// Inputs:
-// Output: no output, but alters the store. New node/edge/anchor objects are added
+
+/**
+ * Creates a new Node when user drags the Edge and releases mouse at a new spot. This functionality is needed for the "create new node by dragging" feature. See TemporaryEdge.createNode()
+ * This function has no output, but alters the store. New Node/Edge/Anchor objects are added to the store.
+ * 
+ * @param store The Svelvet store containing the state of a Svelvet component
+ * @param sourceNodeId The id of the source Node
+ * @param targetNodeX The postion X where user releases the mouse, which should be the x-axis position for the new Node
+ * @param targetNodeY The postion Y where user releases the mouse, which should be the y-axis position for the new Node
+ * @param canvasId The canvasId of a Svelvet component
+ */
 export function createNode(
   store: StoreType,
   sourceNodeId: string,
