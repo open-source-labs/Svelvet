@@ -31,7 +31,7 @@
 
 
   const addNodeAndEdge = () => {
-    console.log('addNodeAndEdge fired')
+    // console.log('addNodeAndEdge fired')
     const newNode = {
       id: 3,
       position: { x: 200, y: 250 },
@@ -48,10 +48,10 @@
     }
     initialNodes = [...initialNodes, newNode];
     // initialNodes = initialNodes;
-    console.log('updated initial nodes => ', initialNodes)
+    // console.log('updated initial nodes => ', initialNodes)
     initialEdges = [...initialEdges, newEdge];
     // initialEdges = initialEdges;
-    console.log('updated initial edges => ', initialEdges)
+    // console.log('updated initial edges => ', initialEdges)
   }
 
 </script>
