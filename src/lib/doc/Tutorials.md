@@ -1,6 +1,6 @@
 # Tutorials
 
-This file contains instructions on how to get utilities running (such as typedoc, npm, etc.)
+This file contains instructions on how to do useful things such as generating developer documentation, publishing to npm, etc.
 
 ## TypeDoc
 
