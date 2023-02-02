@@ -10,10 +10,12 @@ import {
   fixedCbCreator,
   potentialAnchorCbCreator,
 } from '$lib/edges/controllers/anchorCbDev';
+
+import type { AnchorType } from '$lib/edges/types/types';
+
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
   UserNodeType,

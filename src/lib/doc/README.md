@@ -2,7 +2,19 @@
 
 ## Instuctions
 
-To run typedoc, do: `npx typedoc --entryPointStrategy expand src/lib`
+### NPM
+
+#### Publishing to npm
+
+- create an account on npm.js
+- make sure you are in directory `src/lib/`
+- `npm version patch` to increment version number
+- `npm publish` to publish to npm. Note that you cannot "overwrite" previous publishes, you must increment the version number
+
+### Testing npm package
+
+- install locally `npm install svelvet-lime@latest -f`
+- npm run dev
 
 ## TODO
 
@@ -20,20 +32,6 @@ To run typedoc, do: `npx typedoc --entryPointStrategy expand src/lib`
 - new type for userNode, userEdget to fix typescript error from testingplayground/index.svelte
 - refactor anchor callbacks to use setPosition so that we cascade changes to edges (needed for resizing)
 - get D3 scaling movement working
-
-## Publishing to npm
-
-### Publishing to npm
-
-- create an account on npm.js
-- make sure you are in directory `src/lib/`
-- `npm version patch` to increment version number
-- `npm publish` to publish to npm. Note that you cannot "overwrite" previous publishes, you must increment the version number
-
-### Testing npm package
-
-- install locally `npm install svelvet-lime@latest -f`
-- npm run dev
 
 ## Motivation
 

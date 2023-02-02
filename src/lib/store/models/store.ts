@@ -1,7 +1,6 @@
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
 } from '../types/types';

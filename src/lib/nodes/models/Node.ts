@@ -2,7 +2,6 @@
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
 } from '../../store/types/types';
@@ -186,7 +185,7 @@ export class Node implements NodeType {
       // canvasId: this.canvasId,
       width: this.width,
       height: this.height,
-      position: {x: this.positionX, y: this.positionY},
+      position: { x: this.positionX, y: this.positionY },
       data: this.data,
       bgColor: this.bgColor,
       borderColor: this.borderColor,
@@ -195,8 +194,8 @@ export class Node implements NodeType {
       image: this.image,
       src: this.src,
       childNodes: this.childNodes,
-      customClassName: this.className
-    }
+      customClassName: this.className,
+    };
 
     return exportableData;
   }

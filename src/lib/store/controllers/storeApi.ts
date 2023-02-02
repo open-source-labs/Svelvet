@@ -46,10 +46,11 @@ import {
 } from '../../edges/controllers/anchorCbDev';
 import { stores } from '$lib/store/models/store';
 import { writable, derived, get, readable } from 'svelte/store';
+import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
+
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   UserNodeType,
   UserEdgeType,

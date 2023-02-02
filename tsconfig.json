@@ -15,5 +15,5 @@
     "target": "es2020",
     "noImplicitAny": false
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "src/lib/stores/authStore.js"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "src/lib/index.js" ]
 }
