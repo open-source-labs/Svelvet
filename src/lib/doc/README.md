@@ -2,20 +2,6 @@
 
 ## Instuctions
 
-### NPM
-
-#### Publishing to npm
-
-- create an account on npm.js
-- make sure you are in directory `src/lib/`
-- `npm version patch` to increment version number
-- `npm publish` to publish to npm. Note that you cannot "overwrite" previous publishes, you must increment the version number
-
-### Testing npm package
-
-- install locally `npm install svelvet-lime@latest -f`
-- npm run dev
-
 ## TODO
 
 - move Svelvet5 code into its own "libOld" folder. Should be independent of changes to new codebase
