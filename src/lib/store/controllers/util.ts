@@ -177,7 +177,7 @@ export function populateEdgesStore(
 }
 
 /**
- * Finds userNode by the node id from nodesStore
+ * Finds userNode (with UserNodeType; Not the same as the Node) by the node id from nodesStore
  * @param id The id of the Node in its nodesStore
  * @param userNodes The array of userNodes (NOT the same as Node object)
  * @returns The node that user specified or null if not found
@@ -193,6 +193,15 @@ function findUserNodeById(
   return null;
 }
 
+/**
+ * Creates potential anchor based on the user input data in userNode
+ * 
+ * @param positionCb positionCb should be a function that takes 4 arguments (x,y,width,height) and returns a 3-array [x,y,angle] that represents the x,y position of the anchor as well as it's angle with respect to it's node.
+ * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.
+ * @param userNode The array of userNodes (NOT the same as Node object)
+ * @param canvasId The canvasId of the Svelvet component that holds the Anchors
+ * @returns A PotentialAnchor object with default placeholder values for its positionX, positionY, and angle
+ */
 function createPotentialAnchor(
   positionCb: Function,
   store: StoreType,
@@ -220,6 +229,12 @@ function createPotentialAnchor(
   return anchor;
 }
 
+/**
+ * Populates potentialAnchorsStore 
+ * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.
+ * @param nodes An array of nodes with UserNodeType
+ * @param canvasId The canvasId of the Svelvet component that holds the potential anchors
+ */
 export function populatePotentialAnchorStore(
   store: StoreType,
   nodes: UserNodeType[],
@@ -248,6 +263,14 @@ export function populatePotentialAnchorStore(
   for (const potentialAnchor of potentialAnchors) potentialAnchor.callback();
 }
 
+/**
+ * Populates the anchorsStore
+ * 
+ * @param store The Svelvet store
+ * @param nodes An array of user specified nodes
+ * @param edges An array of user specified edges
+ * @param canvasId The canvasId of the Svelvet component that holds the nodes and edges
+ */
 export function populateAnchorsStore(
   store: StoreType,
   nodes: UserNodeType[],
@@ -295,6 +318,13 @@ export function populateAnchorsStore(
   for (const anchor of anchors) anchor.callback();
 }
 
+/**
+ * Populates the nodesStore
+ * 
+ * @param store The Svelvet store
+ * @param nodes An array of user specifed nodes
+ * @param canvasId The canvasId of the Svelvet component that holds the nodes
+ */
 export function populateNodesStore(
   store: StoreType,
   nodes: UserNodeType[],
@@ -332,6 +362,13 @@ export function populateNodesStore(
   store.nodesStore.set(nodesStore);
 }
 
+/**
+ * Populates the resizeNodeStore. If the Node is resizable, a small ResizeNode object is going to be attached to the Node's right bottom corner to react to the mouse drag. 
+ * 
+ * @param store The Svelvet store
+ * @param nodes 
+ * @param canvasId 
+ */
 export function populateResizeNodeStore(
   store: StoreType,
   nodes: UserNodeType[],
