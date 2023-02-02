@@ -11,7 +11,7 @@
   import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
-    createStoreFromUserInput,
+    populateSvelvetStoreFromUserInput,
   } from '$lib/store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
@@ -61,7 +61,7 @@
     store.nodeCreate.set(nodeCreate);
 
     // set node/edge related stores
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
   // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store
@@ -88,7 +88,7 @@
     store.nodeCreate.set(nodeCreate);
 
     // set node/edge related stores
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
 </script>
 
