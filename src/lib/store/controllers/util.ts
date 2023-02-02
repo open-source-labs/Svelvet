@@ -266,7 +266,7 @@ export function populatePotentialAnchorStore(
 /**
  * Populates the anchorsStore
  * 
- * @param store The Svelvet store
+ * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specified nodes
  * @param edges An array of user specified edges
  * @param canvasId The canvasId of the Svelvet component that holds the nodes and edges
@@ -321,7 +321,7 @@ export function populateAnchorsStore(
 /**
  * Populates the nodesStore
  * 
- * @param store The Svelvet store
+ * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specifed nodes
  * @param canvasId The canvasId of the Svelvet component that holds the nodes
  */
@@ -363,11 +363,11 @@ export function populateNodesStore(
 }
 
 /**
- * Populates the resizeNodeStore. If the Node is resizable, a small ResizeNode object is going to be attached to the Node's right bottom corner to react to the mouse drag. 
+ * Populates the resizeNodeStore. If a Node is resizable, a small ResizeNode object is going to be attached to the Node's right bottom corner to react to the mouse drag. 
  * 
- * @param store The Svelvet store
- * @param nodes 
- * @param canvasId 
+ * @param store The Svelvet store containing the state of the Svelvet component
+ * @param nodes An array of user specifed nodes (NOT the same as Node)
+ * @param canvasId The canvasId of the Svelvet component that holds the resizeNodes
  */
 export function populateResizeNodeStore(
   store: StoreType,

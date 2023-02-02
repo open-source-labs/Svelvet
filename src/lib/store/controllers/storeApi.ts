@@ -196,6 +196,17 @@ export function getNodes(
   return nodes;
 }
 
+// findStore(canvasId: string)
+// - Input: canvasId. There can be multiple Svelvet canvases on the same page, and each has their own store
+// - Returns: store
+// - Notes: You will need to call this function on every component you make
+
+/**
+ * findStore is going to return the target Svelvet store with the canvasId provided as argument. 
+ * There can be multiple Svelvet canvases on the same page, and each has their own store with a unique canvasId.
+ * @param canvasId The canvasId of a Svelvet component
+ * @returns The store of a Svelvet component that matches the canvasId 
+ */
 export function findStore(canvasId: string): StoreType {
   return stores[canvasId];
 }
