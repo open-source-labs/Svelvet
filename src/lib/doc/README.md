@@ -1,24 +1,38 @@
-## Important files
+# README
 
-- `$lib/models/store.ts`
-  This implements the Svelvet store. It exports `stores` which is an object of stores; each store within stores corresponds to a different Svelvet canvas (this is so we can have multiple canvases on a single page). It also exports classes `Node`, `Anchor`, and `Edge`. Note that each `Anchor` has a foreign key to `Node`, and that each `Edge` has two foreign keys to source and target `Anchor`.
+This README provides suggestions to developers working on Svelvet.
 
-  The easiest way to understand the store is to think about it like relational database. You have `Node`, `Anchor`, `Edge` tables. Updating a `Node` object (for example dragging it arround) will have cascading changes applied to associated `Anchors`, where the changes will cascade to associated `Edges`. The flow of information is one way, from `Node` to `Anchor` to `Edge`.
+## What is Svelvet?
 
-- `$lib/controllers/storeApi.ts`
-  This implements api methods to interact with the Svelvet store.
+Svelvet is a frontend library that allows users to programmatically create graph diagrams. Graphs are composed of nodes and edges; each edge connects two nodes. There are two main challenges when working with Svelvet: (1) nodes and edges interact in complex ways, making new features difficult to implement without interfering with old features, and (2) Svelvet has an active userbase, making breaking changes undesirable.
 
-- `$lib/views/DevTools`
-  This contains the Svelvet components we pair-programmed our way through. We will not be developing these further, but I have kept them because I think they might be useful for our own learning. You can visualize them on `http://localhost:3000/testingplayground/`
+## Things to think about as a Svelvet developer
 
-- `$lib/views/RefactoredComponents`
-  This contains Svelvet components. You can see them rendered on `http://localhost:3000/testingplayground3/`. This is what we are working on; we should be changing RefactoredComponents to look like the the original components (more about this below). You can visualize them on `http://localhost:3000/testingplayground3/`
+- Svelvet teams have 3.5 weeks to iterate on the project, less if you consider time spent on marketing/deployment. It is important for code to be readable, otherwise future teams will be unable to understand the codebase within a reasonable timeframe.
+- A developer workign on Svelvet may have as little as six weeks of coding experience. It is important to write documentation that is easy understand.
+- Writing non-modular code with zero tests and zero documentation increases technical debt and puts future teams in a bad place. Accumulated technical debt can kill projects.
+- Svelvet has an active userbase. When possible, breaking changes should be avoided. However, if a breaking change must occur, it is better that it happen sooner rather than later.
 
-- `$lib/views/`
-  All folders that are not for `DevTools` and `RefactoredComponents` are Svelvet components from the original team. We will eventually be deleting these but they are useful to have around so we can `diff` files and see what fixes need to be made. You can visualize these components on `http://localhost:3000/testingplayground2/`
+## Suggested [do]s and [don't]s
 
-- `$lib/types/`
-  this these are legacy types needed to run the old Svelvet5 components, we will delete these later
+- DO write modular code, separated by feature. For suggestions, see `./DESIGN_PATTERNS.md`
 
-- `$lib/store/store_old.ts`
-  this is the Svelvet5 store needed to run old components, we will delete this later
+- DO write tests. If you write a feature with no tests, it is impossible for future teams to know whether a modifications to the codebase will break your feature. The fact that Svelvet components interact with each other in complex ways makes tests even more important.
+
+- DO NOT approach development as a feature factory. Writing non-modular code with no documentation and no tests is setting up future teams for failure.
+
+- DO write modular, tested, and documented features. Not only is this good for Svelvet, this is also good for you. A long list of features by itself makes for poor resume; instead, bullet points that mention testing and documentation and specific technologies used to implement specific features make for a stronger resume.
+
+- DO remove poorly written features that have no tests and no documentation, preferably earlier rather than later. While this disrupts the functionality for the userbase, it is important for the long-term health of the OSP. On the flip side, if you want your feature to be maintained in the future, write clean code with tests and documentation.
+
+- DO NOT write typescript and ignore warnings. There's no point in writing typescript without types, and
+
+## Where to start
+
+Here is one way to start understanding the Svelvet codebase
+
+(1) Read the Node class (`$lib/nodes/models/Node.ts`)
+(2) Create a new branch, delete all features except for nodes/container/store, then try to get Svelvet to running only rendering nodes to the screen. Note that you can test Svelvet through the `testingplayground` route at `http://localhost:3000/testingplayground`.
+(3) Try to refactor Node.ts. You may notice that Node.ts has 16 fields, when really only six of them are important (id, canvasId, positionX, positionY, widthX, widthY). Create a new table `NodeAttributes` that links to Node via foreign key, move all attributes (bgColor, textColor, etc) to this new table and get Node rendering again.
+(4) After understanding how Node works, add back the "edges" folder. Try to get Svelvet working rendering only nodes and edges to the screen.
+(5) Node / Edge / Anchor form the core tables of Svelvet. All other feature build on top of these core tables.
