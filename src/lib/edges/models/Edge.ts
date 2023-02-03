@@ -50,8 +50,9 @@ export class Edge implements EdgeType {
     public arrow?: boolean
   ) {}
 
-  // Calling delete on an edge also deletes associated anchors
-  // TODO: maybe rename delete to make clear that effects will cascade to anchors? Or is documentation enough?
+  /**
+   * delete is going to delete the Edge and also delete associated Anchors
+   */
   delete() {
     const store = stores[this.canvasId];
     const { nodesStore, anchorsStore, edgesStore } = store;
@@ -70,7 +71,10 @@ export class Edge implements EdgeType {
     });
   }
 
-  // this method is going to construct an object that holds all the edge data that can be exported
+  /**
+   * setExportableData will construct an object that holds all the edge data that can be exported. This is needed for the Exporting Diagram feature.
+   * @returns The object of exportable edge data. The format of the object should be as close as what user initially passes in to Svelvet.
+   */
   setExportableData() {
     const exportableData: UserEdgeType = {
       id: this.id,
