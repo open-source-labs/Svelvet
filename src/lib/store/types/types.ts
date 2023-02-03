@@ -1,4 +1,5 @@
 import type { Readable, Writable } from 'svelte/store';
+import type { AnchorType } from '$lib/edges/types/types';
 
 export interface ResizeNodeType {
   id: string;
@@ -108,21 +109,6 @@ export interface EdgeType {
   arrow?: boolean;
   delete: Function;
   setExportableData: Function;
-}
-
-export interface AnchorType {
-  id: string; // note that the user never specifies an anchor and they are generated dynamically. id will be a random string.
-  nodeId: string;
-  edgeId: string;
-  sourceOrTarget: 'source' | 'target';
-  positionX: number;
-  positionY: number;
-  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
-  angle: number;
-  setPositionFromNode: Function;
-  setPosition: Function;
-  updateEdges: Function;
-  delete: Function;
 }
 
 export interface PotentialAnchorType {

@@ -3,7 +3,6 @@
   import type {
     NodeType,
     EdgeType,
-    AnchorType,
     StoreType,
     UserNodeType,
     UserEdgeType,
@@ -33,8 +32,6 @@
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
-
-
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -74,7 +71,6 @@
     // console.log('afterUpdated callback fired')
     // console.log(nodes)
 
-
     // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
 
     // set canvas related stores. you need to do this before setting node/edge related stores because
@@ -99,7 +95,6 @@
     <ImportExport id={canvasId} />
   {/if}
 </div>
-
 
 <style>
   .Svelvet {

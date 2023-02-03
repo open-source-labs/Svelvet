@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
+import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
   UserNodeType,
@@ -26,8 +26,8 @@ export function fixedCbCreator(
   userNodeId: string,
   positionCb: Function // positionCb should be a function that takes 4 arguments (x,y,width,height) and returns a 3-array [x,y,angle] that represents the x,y position of the anchor as well as it's angle with respect to it's node.
 ) {
-  const rn = fixedCb;
-  rn.type = 'fixed'; // TODO: i have no idea how to fix this typescript warning without abusing any, but otherwise it works
+  const rn = <AnchorCbType>fixedCb;
+  rn.type = 'fixed';
   return rn;
 
   function fixedCb() {
@@ -56,8 +56,8 @@ export function dynamicCbCreator(
   edgeId: string,
   anchorId: string
 ) {
-  const rn = dynamicCb;
-  rn.type = 'dynamic'; // TODO: i have no idea how to fix this typescript warning without abusing any, but otherwise it works
+  const rn = <AnchorCbType>dynamicCb;
+  rn.type = 'dynamic';
   return rn;
 
   function dynamicCb() {
