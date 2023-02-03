@@ -22,6 +22,7 @@ const mockNodes: UserNodeType[] = [
   },
 ];
 
+
 // test('should mount the node wrapper div', () => {
 //   const { container } = render(Nodes, { node: mockNodes[0] });
 //   expect(container.getElementsByClassName('Node')).toBeTruthy();
