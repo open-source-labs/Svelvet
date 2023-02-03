@@ -55,21 +55,6 @@ export class Edge implements EdgeType {
 
   // this method is going to construct an object that holds all the edge data that can be exported
   setExportableData() {
-    // public id: string,
-    // public sourceX: number,
-    // public sourceY: number,
-    // public targetX: number,
-    // public targetY: number,
-    // public canvasId: string,
-    // public label?: string,
-    // public type?: string,
-    // public labelBgColor?: string,
-    // public labelTextColor?: string,
-    // public edgeColor?: string,
-    // public animate?: boolean,
-    // public noHandle?: boolean,
-    // public arrow?: boolean
-
     const exportableData: UserEdgeType = {
       id: this.id,
       label: this.label,
@@ -94,8 +79,6 @@ export class Edge implements EdgeType {
       if (anchor.sourceOrTarget === 'source')
         exportableData.source = anchor.nodeId;
     }
-
-    // console.log(exportableData)
 
     return exportableData;
   }
