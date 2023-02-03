@@ -15,6 +15,17 @@ import type {
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
 
+/**
+ * Class Edge that implements EdgeType.
+ * @param id The id of the Edge
+ * @param sourceX The X coordinate of the source Anchor 
+ * @param sourceY The Y coordinate of the source Anchor
+ * @param targetX The X coordinate of the target Anchor
+ * @param targetY The Y coordinate of the target Anchor
+ * @param canvasId The canvasId of the Svelvet component that holds the instantiated Edge
+ * @param label The label of the Edge
+ * @param type The type of the Edge 
+ */
 export class Edge implements EdgeType {
   constructor(
     public id: string,
@@ -55,21 +66,6 @@ export class Edge implements EdgeType {
 
   // this method is going to construct an object that holds all the edge data that can be exported
   setExportableData() {
-    // public id: string,
-    // public sourceX: number,
-    // public sourceY: number,
-    // public targetX: number,
-    // public targetY: number,
-    // public canvasId: string,
-    // public label?: string,
-    // public type?: string,
-    // public labelBgColor?: string,
-    // public labelTextColor?: string,
-    // public edgeColor?: string,
-    // public animate?: boolean,
-    // public noHandle?: boolean,
-    // public arrow?: boolean
-
     const exportableData: UserEdgeType = {
       id: this.id,
       label: this.label,
@@ -94,8 +90,6 @@ export class Edge implements EdgeType {
       if (anchor.sourceOrTarget === 'source')
         exportableData.source = anchor.nodeId;
     }
-
-    // console.log(exportableData)
 
     return exportableData;
   }
