@@ -18,7 +18,7 @@ import {
 } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
 
-/** A Node class that uses NodeType interface
+/** A Node class that implements NodeType interface
 * @param {string} id The id of the Node
 * @param {number} positionX The X-axis position of the Node (left top corner of the Node)
 * @param {number} positionY The Y-axis position of the Node (left top corner of the Node)
