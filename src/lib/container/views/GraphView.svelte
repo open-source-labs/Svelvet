@@ -18,14 +18,7 @@
   import { findStore } from '$lib/store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
-
-  // leveraging d3 library to zoom/pan
-  let d3 = {
-    zoom,
-    zoomTransform,
-    select,
-    selectAll,
-  };
+  import { d3ZoomCreator } from '$lib/d3/controllers/d3';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -56,54 +49,27 @@
   const gridSize = 15;
   const dotSize = 10;
 
+  // leveraging d3 library to zoom/pan
+  let d3 = {
+    zoom,
+    zoomTransform,
+    select,
+    selectAll,
+  };
+  const d3Zoom = d3ZoomCreator(
+    nodeSelected,
+    movementStore,
+    backgroundStore,
+    canvasId,
+    gridSize,
+    dotSize,
+    d3Scale,
+    d3
+  );
   onMount(() => {
     d3.select(`.Edges-${canvasId}`).call(d3Zoom);
     d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
   });
-
-  // TODO: Update d3Zoom type (refer to d3Zoom docs)
-  let d3Zoom: any = d3
-    .zoom()
-    .filter(() => !$nodeSelected)
-    .scaleExtent([0.4, 2])
-    .on('zoom', handleZoom);
-
-  // function to handle zoom events - arguments: d3ZoomEvent
-  function handleZoom(this: any, e: any): void {
-    if (!$movementStore) return;
-
-    //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
-    d3Scale.set(e.transform.k);
-    // should not run d3.select below if backgroundStore is false
-    if ($backgroundStore) {
-      d3.select(`#background-${canvasId}`)
-        .attr('x', e.transform.x)
-        .attr('y', e.transform.y)
-        .attr('width', gridSize * e.transform.k)
-        .attr('height', gridSize * e.transform.k)
-        .selectAll('#dot')
-        .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('opacity', Math.min(e.transform.k, 1));
-    }
-    // transform 'g' SVG elements (edge, edge text, edge anchor)
-    d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
-    // transform div elements (nodes)
-    let transform = d3.zoomTransform(this);
-    // selects and transforms all node divs from class 'Node' and performs transformation
-    d3.select(`.Node-${canvasId}`)
-      .style(
-        'transform',
-        'translate(' +
-          transform.x +
-          'px,' +
-          transform.y +
-          'px) scale(' +
-          transform.k +
-          ')'
-      )
-      .style('transform-origin', '0 0');
-  }
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
