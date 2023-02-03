@@ -20,6 +20,7 @@
 
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
+  export let bgColor = '#ffffff'; // this is used to set the background color of the the Svelvet canvas
 
   export let width: number = 600;
   export let height: number = 600;
@@ -89,7 +90,10 @@
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
-<div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
+<div
+  class="Svelvet"
+  style={`width: ${width}px; height: ${height}px; background-color: ${bgColor};`}
+>
   <GraphView {canvasId} />
   {#if shareable}
     <ImportExport id={canvasId} />
