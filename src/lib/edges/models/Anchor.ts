@@ -16,11 +16,11 @@ import {
 } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
 
-/** Class representing an anchor with a Anchortype alias */
+/** Class representing an anchor with an Anchortype alias */
 export class Anchor implements AnchorType {
   /**
-   * creates an anchor.
-   * @param {string} id - id that is created dynamically which will be set to a random string
+   * creates an anchor
+   * @param {string} id - id of anchor which will be set to a random string
    * @param {string} nodeId - id of the node in which this anchor will be set on
    * @param {string} edgeId - id of the edge that will connect the target and source anchors
    * @param {'source' | 'target'} sourceOrTarget - declaring if this anchor will be a source or target

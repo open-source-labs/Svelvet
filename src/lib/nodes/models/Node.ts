@@ -21,7 +21,7 @@ import { stores } from '../../store/models/store';
 /** Class representing an anchor with a Anchortype alias */
 export class Node implements NodeType {
   /**
-   * @param {string} id - id of the node we created genertated by a random string //i think
+   * @param {string} id - id of the node we created genertated by a random string
    * @param {number} positionX - 'X' position of the node
    * @param {number} positionY - 'Y' position of the node
    * @param {number} width - width of the node
@@ -56,9 +56,9 @@ export class Node implements NodeType {
   ) {}
 
   /**
-   * @function setPosition -
+   * @function setPosition - 
    * @param {number} movementX -
-   * @param {number} movementy -
+   * @param {number} movementy - 
    */
   setPositionFromMovement(movementX: number, movementY: number) {
     const {
