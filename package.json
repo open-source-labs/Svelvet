@@ -21,7 +21,7 @@
     "package": "svelte-kit package",
     "preview": "svelte-kit preview",
     "prepare": "svelte-kit sync",
-    "test": "vitest run tests/unit",
+    "test": "vitest run tests/unit --silent=false",
     "test-coverage": "vitest run tests/unit --coverage",
     "test:unit": "vitest tests/unit",
     "check": "svelte-check --tsconfig ./tsconfig.json",
