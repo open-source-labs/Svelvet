@@ -33,7 +33,7 @@
   ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<Svelvet nodes={initialNodes} edges={initialEdges} locked movement="false" />
 
 <style>
   :global(.customClass) {
