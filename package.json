@@ -21,7 +21,7 @@
     "package": "svelte-kit package",
     "preview": "svelte-kit preview",
     "prepare": "svelte-kit sync",
-    "test": "vitest run tests/unit",
+    "test": "vitest run tests/unit --silent=false",
     "test-coverage": "vitest run tests/unit --coverage",
     "test:unit": "vitest tests/unit",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -32,6 +32,7 @@
     "nyc": "nyc mocha"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.20.11",
     "@smui/button": "^6.1.0",
     "@smui/icon-button": "^6.1.0",
     "@sveltejs/adapter-auto": "next",

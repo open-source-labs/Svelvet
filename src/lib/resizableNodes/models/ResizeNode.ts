@@ -30,7 +30,7 @@ export class ResizeNode implements ResizeNodeType {
     this.positionY += movementY;
   }
 
-  setPositionAndCascade(movementX: number, movementY: number, id: string) {
+  setPositionAndCascade(movementX: number, movementY: number) {
     //declare variables needed to interact with the corresponding node to this resize anchor
     const nodeId = this.nodeId;
     const { nodesStore } = stores[this.canvasId];

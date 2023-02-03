@@ -1,7 +1,6 @@
 // import Svelvet from '../../src/lib/Containers/Svelvet/index.svelte';
-import Svelvet from '$lib/views/Containers/Svelvet/index.svelte';
+import Svelvet from '$lib/container/views/Svelvet.svelte';
 import { render, prettyDOM } from '@testing-library/svelte';
-
 
 const handleClick = (e: object) => {
   console.log(e);
