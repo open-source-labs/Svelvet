@@ -3,7 +3,7 @@ import { Node } from '$lib/nodes/models/Node';
 import { v4 as uuidv4 } from 'uuid';
 import {
   createStoreEmpty,
-  createStoreFromUserInput,
+  populateSvelvetStoreFromUserInput,
   findStore,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
@@ -136,7 +136,7 @@ describe('tests ResizeNode', () => {
   // set node/edge related stores
   //create store from user input
   //take the output and feed it to create storeformuserinput
-  createStoreFromUserInput(canvasId, userNodes, userEdges);
+  populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
   const { resizeNodesStore } = store;
 

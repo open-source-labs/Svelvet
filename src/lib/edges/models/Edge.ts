@@ -8,7 +8,6 @@ import {
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
   UserEdgeType,
@@ -71,7 +70,7 @@ export class Edge implements EdgeType {
     // public noHandle?: boolean,
     // public arrow?: boolean
 
-    const exportableData : UserEdgeType = {
+    const exportableData: UserEdgeType = {
       id: this.id,
       label: this.label,
       type: this.type,
@@ -82,20 +81,21 @@ export class Edge implements EdgeType {
       noHandle: this.noHandle,
       arrow: this.arrow,
       source: 'dummy', // these will be set later
-      target: 'dummy' // these will be set later
-    }
+      target: 'dummy', // these will be set later
+    };
 
     // set source, target on exportableData
     const store = findStore(this.canvasId);
-    const anchors = getAnchors(store, {edgeId: this.id});
-    if (anchors.length !== 2) throw 'there should be two anchors per edge'
+    const anchors = getAnchors(store, { edgeId: this.id });
+    if (anchors.length !== 2) throw 'there should be two anchors per edge';
     for (const anchor of anchors) {
-      if (anchor.sourceOrTarget === 'target') exportableData.target = anchor.nodeId;
-      if (anchor.sourceOrTarget === 'source') exportableData.source = anchor.nodeId;
+      if (anchor.sourceOrTarget === 'target')
+        exportableData.target = anchor.nodeId;
+      if (anchor.sourceOrTarget === 'source')
+        exportableData.source = anchor.nodeId;
     }
 
     // console.log(exportableData)
-
 
     return exportableData;
   }

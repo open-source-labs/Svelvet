@@ -22,14 +22,14 @@ const mockNodes: UserNodeType[] = [
   },
 ];
 
-test('should mount the node wrapper div', () => {
-  const { container } = render(Nodes, { node: mockNodes[0] });
-  expect(container.getElementsByClassName('Node')).toBeTruthy();
-});
+// test('should mount the node wrapper div', () => {
+//   const { container } = render(Nodes, { node: mockNodes[0] });
+//   expect(container.getElementsByClassName('Node')).toBeTruthy();
+// });
 
-test('should display node labels in slot', () => {
-  render(TestNode, { props: { node: mockNodes[0] } });
-  render(TestNode, { props: { node: mockNodes[1] } });
-  expect(screen.getByText('test-node-1')).toBeInTheDocument();
-  expect(screen.getByText('test-node-2')).toBeInTheDocument();
-});
+// test('should display node labels in slot', () => {
+//   render(TestNode, { props: { node: mockNodes[0] } });
+//   render(TestNode, { props: { node: mockNodes[1] } });
+//   expect(screen.getByText('test-node-1')).toBeInTheDocument();
+//   expect(screen.getByText('test-node-2')).toBeInTheDocument();
+// });

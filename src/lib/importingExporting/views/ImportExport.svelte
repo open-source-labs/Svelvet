@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import { findStore, createStoreFromUserInput } from '$lib/store/controllers/storeApi';
+  import { findStore, populateSvelvetStoreFromUserInput } from '$lib/store/controllers/storeApi';
 
   export let id: string;
 
@@ -63,7 +63,7 @@
     const newStore = JSON.parse(text, reviver);
     
     //sets nodes/edges from input 
-    createStoreFromUserInput(id, newStore.nodes, newStore.edges);
+    populateSvelvetStoreFromUserInput(id, newStore.nodes, newStore.edges);
     //resets input val to empty string
     storeInput.value = '';
   }

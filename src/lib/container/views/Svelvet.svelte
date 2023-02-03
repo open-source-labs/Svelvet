@@ -3,7 +3,6 @@
   import type {
     NodeType,
     EdgeType,
-    AnchorType,
     StoreType,
     UserNodeType,
     UserEdgeType,
@@ -11,7 +10,7 @@
   import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
-    createStoreFromUserInput,
+    populateSvelvetStoreFromUserInput,
   } from '$lib/store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
@@ -33,8 +32,6 @@
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
-
-
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -61,7 +58,7 @@
     store.nodeCreate.set(nodeCreate);
 
     // set node/edge related stores
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
   // // enables data reactivity. TODO: this needs to be added back in
   // Probably need to use findStore, not create store
@@ -73,7 +70,6 @@
 
     // console.log('afterUpdated callback fired')
     // console.log(nodes)
-
 
     // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
 
@@ -88,7 +84,7 @@
     store.nodeCreate.set(nodeCreate);
 
     // set node/edge related stores
-    createStoreFromUserInput(canvasId, userNodes, userEdges);
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
 </script>
 
@@ -99,7 +95,6 @@
     <ImportExport id={canvasId} />
   {/if}
 </div>
-
 
 <style>
   .Svelvet {
