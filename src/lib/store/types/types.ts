@@ -100,7 +100,7 @@ export interface EdgeType {
   targetY: number;
   canvasId: string;
   label?: string;
-  type?: string;
+  type?: 'straight' | 'smooth' | 'step' | 'bezier';
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
