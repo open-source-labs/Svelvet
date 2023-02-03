@@ -4,7 +4,7 @@
   const initialNodes = [
     {
       id: 1,
-      position: { x: 150, y: 50 },
+      position: { x: 10, y: 10 },
       data: { label: 'default styling' },
       width: 150,
       height: 40,
@@ -12,7 +12,7 @@
     },
     {
       id: 2,
-      position: { x: 50, y: 300 },
+      position: { x: 50, y: 100 },
       data: { label: 'borderColor' },
       width: 150,
       height: 40,
@@ -21,7 +21,7 @@
     },
     {
       id: 3,
-      position: { x: 50, y: 150 },
+      position: { x: 220, y: 30 },
       data: { label: 'textColor' },
       width: 150,
       height: 40,
@@ -30,8 +30,8 @@
     },
     {
       id: 4,
-      position: { x: 250, y: 150 },
-      data: { label: 'Danny Pink' },
+      position: { x: 300, y: 110 },
+      data: { label: 'bgColor' },
       width: 150,
       height: 40,
       textColor: 'white',
@@ -40,54 +40,33 @@
     },
     {
       id: 5,
-      position: { x: 250, y: 250 },
+      position: { x: 85, y: 220 },
       data: { label: 'width and height' },
       width: 90,
-      height: 110,
+      height: 90,
       bgColor: 'white',
     },
     {
       id: 6,
-      position: { x: 250, y: 400 },
+      position: { x: 250, y: 225 },
       data: { label: 'borderRadius' },
       width: 100,
       height: 100,
-      bgColor: 'orange',
-      borderRadius: 30,
-    },
-    {
-      id: 7,
-      position: { x: 50, y: 500 },
-      data: { label: 'clickCallback' },
-      width: 150,
-      height: 40,
       bgColor: 'white',
-      clickCallback: (node) => console.log(node),
+      borderRadius: 50,
     },
   ];
 
-  const initialEdges = [
-    { id: 'e1-2', source: 1, target: 2, label: 'connection' },
-    { id: 'e2-3', source: 2, target: 5, label: 'label' },
-    {
-      id: 'e1-4',
-      source: 5,
-      target: 6,
-      label: 'box',
-      animate: true,
-      arrow: true,
-    },
-    { id: 'e2-5', source: 6, target: 7, animate: true },
-  ];
+  const initialEdges = [];
 </script>
 
 <Svelvet
-  nodes={initialNodes}
-  width={500}
   height={500}
+  width={500}
+  nodes={initialNodes}
   edges={initialEdges}
-  initialLocation={initialNodes[4].position}
-  initialZoom={2}
-  bgColor={'pink'}
+  initialZoom={3}
+  initialLocation={initialNodes[5].position}
+  nodeCreate
   background
 />
