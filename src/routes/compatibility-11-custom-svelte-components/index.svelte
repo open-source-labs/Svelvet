@@ -1,5 +1,5 @@
 <script>
-  import Svelvet from '$lib/container/views/Svelvet.svelte';
+  import Svelvet from 'svelvet-lime';
   import Login from './DummyComponent.svelte';
   import Home from './DummyComponent.svelte';
   import About from './DummyComponent.svelte';
@@ -7,25 +7,25 @@
   const initialNodes = [
     {
       id: 1,
-      position: { x: 0, y: 0 },
+      position: { x: -550, y: -200 },
       data: { custom: Login },
-      width: 50,
-      height: 50,
+      width: 300 * 0.8,
+      height: 300 * 0.8,
       bgColor: 'white',
     },
     {
       id: 2,
-      position: { x: 0, y: 250 },
+      position: { x: -850, y: 250 },
       data: { custom: Home },
-      width: 50,
-      height: 100,
+      width: 300,
+      height: 300,
       bgColor: 'white',
     },
     {
       id: 3,
-      position: { x: 100, y: 250 },
+      position: { x: -450, y: 250 },
       data: { custom: About },
-      width: 70,
+      width: 300,
       height: 300,
       bgColor: 'white',
     },
@@ -38,8 +38,8 @@
 
 <Svelvet
   nodes={initialNodes}
-  width={900}
-  height={900}
+  width={500}
+  height={500}
   initialZoom={0}
   initialLocation={initialNodes[2].position}
   edges={initialEdges}
