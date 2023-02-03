@@ -1,5 +1,6 @@
 import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
 import { Node } from '$lib/nodes/models/Node';
+import { render, cleanup } from '@testing-library/svelte';
 import { v4 as uuidv4 } from 'uuid';
 import {
   createStoreEmpty,
@@ -7,7 +8,13 @@ import {
   findStore,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
-import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
+import type {
+  UserNodeType,
+  UserEdgeType,
+  ResizeNodeType,
+} from '$lib/store/types/types';
+
+afterEach(cleanup);
 
 describe('tests ResizeNode', () => {
   const canvasId = uuidv4();
@@ -138,14 +145,93 @@ describe('tests ResizeNode', () => {
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
-  const { resizeNodesStore } = store;
+  const { resizeNodesStore, nodesStore } = store;
 
-  // resizeNodesStore.update((resizeNode) => {
-  //   for (const resizeNodeId in resizeNode) {
-  //     console.log(resizeNode[resizeNodeId]);
-  //   }
-  // });
+  test('setPosition should update the position X & Y of resizeNode class', () => {
+    //update allows us to iterate through our store returning an item with each resizeNode
+    resizeNodesStore.update((resizeNode) => {
+      for (const id in resizeNode) {
+        //if the current resizeNode has a reference to the nodeId of 1 test that setPosition
+        //I used the nodeId because it was a static input number that won't change for the sake of the test
+        //it is the same as the initialNodes id
+        if (resizeNode[id].nodeId === '1') {
+          resizeNode[id].setPosition(10, 10);
+          expect(resizeNode[id].positionX).toEqual(335);
+          expect(resizeNode[id].positionY).toEqual(120);
+        } else if (resizeNode[id].nodeId === '2') {
+          resizeNode[id].setPosition(-10, -10);
+          expect(resizeNode[id].positionX).toEqual(505);
+          expect(resizeNode[id].positionY).toEqual(210);
+        } else if (resizeNode[id].nodeId === '3') {
+          resizeNode[id].setPosition(0, 0);
+          expect(resizeNode[id].positionX).toEqual(325);
+          expect(resizeNode[id].positionY).toEqual(300);
+        }
+      }
+      return {};
+    });
+  });
 
-  //Then, call set PositionAndCascade on resizeNode and make sure the width/height of the node also changes.
+  //layout is almost identical to the previous test however this function also changes the width of the nodesStore so we have to cross reference that the changes applied to the nodesStore also and not just the resizeNodeStore
+  test('setPositionAndCascade should update position X & Y of resizeNode class & update node width & height', () => {
+    resizeNodesStore.update((resizeNode) => {
+      for (const id in resizeNode) {
+        if (resizeNode[id].nodeId === '1') {
+          resizeNode[id].setPositionAndCascade(10, 10);
+          expect(resizeNode[id].positionX).toEqual(335);
+          expect(resizeNode[id].positionY).toEqual(120);
+
+          nodesStore.update((node) => {
+            for (const nodeId in node) {
+              if (nodeId === '1') {
+                expect(node[nodeId].width).toEqual(110);
+                expect(node[nodeId].height).toEqual(110);
+              }
+            }
+            return {};
+          });
+        } else if (resizeNode[id].nodeId === '2') {
+          resizeNode[id].setPositionAndCascade(-10, -10);
+          expect(resizeNode[id].positionX).toEqual(505);
+          expect(resizeNode[id].positionY).toEqual(210);
+
+          nodesStore.update((node) => {
+            for (const nodeId in node) {
+              if (nodeId === '2') {
+                expect(node[nodeId].width).toEqual(115);
+                expect(node[nodeId].height).toEqual(30);
+              }
+            }
+            return {};
+          });
+        } else if (resizeNode[id].nodeId === '3') {
+          resizeNode[id].setPositionAndCascade(-320, 0);
+          expect(resizeNode[id].positionX).toEqual(325);
+          expect(resizeNode[id].positionY).toEqual(300);
+
+          nodesStore.update((node) => {
+            for (const nodeId in node) {
+              if (nodeId === '3') {
+                expect(node[nodeId].width).toEqual(100);
+                expect(node[nodeId].height).toEqual(40);
+              }
+            }
+            return {};
+          });
+        }
+      }
+      return {};
+    });
+  });
+
   //Make sure when you call delete on the node that the resizeNode also disappears.
+  test('delete function should remove the specific resizeNode object', () => {
+    resizeNodesStore.update((resizeNode) => {
+      for (const id in resizeNode) {
+        resizeNode[id].delete();
+        expect(resizeNode[id]).toBeUndefined();
+      }
+      return {};
+    });
+  });
 });
