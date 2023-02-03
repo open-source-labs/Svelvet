@@ -44,3 +44,16 @@ https://www.svelvet.io/docs/CSS-Background/
 <img src="./images/css-background-after.png" width="150" height="150">
 
 No visual changes. Moved background color out of store in order to minimize store pollution. This means that background color will not be serialized using the import-export-store feature. We talk more about this later in import-export-store section.
+
+## node-grouping
+
+https://www.svelvet.io/docs/node-grouping/
+
+No change in functionality.
+
+## snap-to-grid
+
+https://www.svelvet.io/docs/snap-to-grid/
+http://localhost:3000/compatability-8-snap-to-grid/
+
+No change in functionality
