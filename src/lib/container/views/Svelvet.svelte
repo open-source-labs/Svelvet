@@ -94,7 +94,7 @@
   class="Svelvet"
   style={`width: ${width}px; height: ${height}px; background-color: ${bgColor};`}
 >
-  <GraphView {canvasId} />
+  <GraphView {canvasId} {width} {height} />
   {#if shareable}
     <ImportExport id={canvasId} />
   {/if}

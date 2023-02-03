@@ -18,10 +18,12 @@
   import { findStore } from '$lib/store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
-  import { d3ZoomCreator } from '$lib/d3/controllers/d3';
+  import { determineD3Instance } from '$lib/d3/controllers/d3';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
+  export let width: number;
+  export let height: number;
 
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
@@ -56,16 +58,22 @@
     select,
     selectAll,
   };
-  const d3Zoom = d3ZoomCreator(
-    nodeSelected,
+
+  const boundary = { x: 1050, y: 850 };
+  let d3Zoom = determineD3Instance(
+    boundary,
+    d3,
+    nodes,
+    width,
+    height,
     movementStore,
     backgroundStore,
-    canvasId,
     gridSize,
     dotSize,
-    d3Scale,
-    d3
+    canvasId,
+    d3Scale
   );
+
   onMount(() => {
     d3.select(`.Edges-${canvasId}`).call(d3Zoom);
     d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
