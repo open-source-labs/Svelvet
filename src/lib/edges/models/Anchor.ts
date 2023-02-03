@@ -18,8 +18,7 @@ import {
 } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
 
-/** Class representing an anchor with a Anchortype alias
-* creates an anchor.
+/** Class representing an Anchor that implements Anchortype.
 * @param {string} id The id of the Anchor
 * @param {string} nodeId The id of the Node which the instantiated Anchor will be attached to
 * @param {string} edgeId The id of the Edge which connects to the instantiated Anchor
