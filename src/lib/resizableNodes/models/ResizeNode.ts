@@ -18,7 +18,6 @@ export class ResizeNode implements ResizeNodeType {
     public positionY: number
   ) {}
 
-  //Sets position without updating the Node Store, this will be called when the Node is moved so that the anchor follows.
   /**
    * setPosition will update the positionX and positionY of the ResizeNode. This will be invoked when the Node that this ResizeNode attached to is moving so that the ResizeNode will follow the Node.
    * 
@@ -30,6 +29,11 @@ export class ResizeNode implements ResizeNodeType {
     this.positionY += movementY;
   }
 
+  /**
+   * setPositionAndCascade will update the positionX and positionY of the ResizeNode and also cascade changes to related Node. This will be invoked when the user drags the ResizeNode so the position of the ResizeNode and the width and height of the Node would change accordingly.
+   * @param movementX The mouse movement value on the X-axis
+   * @param movementY The mouse movement value on the Y-axis
+   */
   setPositionAndCascade(movementX: number, movementY: number) {
     //declare variables needed to interact with the corresponding node to this resize anchor
     const nodeId = this.nodeId;
@@ -50,7 +54,10 @@ export class ResizeNode implements ResizeNodeType {
       return { ...nodes };
     });
   }
-
+  
+  /**
+   * delete is going to delete the ResizeNode from the resizeNodesStore.
+   */
   delete() {
     const store = stores[this.canvasId];
     const { resizeNodesStore } = stores[this.canvasId];
