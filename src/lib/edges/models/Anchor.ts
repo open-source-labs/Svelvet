@@ -1,10 +1,12 @@
 /**
  * This is where we create, update  the Anchor store.
  */
+
+import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
+
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
 } from '../../store/types/types';
@@ -38,7 +40,7 @@ export class Anchor implements AnchorType {
     public sourceOrTarget: 'source' | 'target',
     public positionX: number,
     public positionY: number,
-    public callback: Function,
+    public callback: AnchorCbType,
     public canvasId: string,
     public angle: 0 | 90 | 180 | 270
   ) {}
