@@ -1,4 +1,4 @@
-import GraphView from '$lib/views/Containers/GraphView/index.svelte';
+import GraphView from '$lib/container/views/GraphView.svelte';
 import { render, screen } from '@testing-library/svelte';
 
 test('should mount the svg element', () => {
