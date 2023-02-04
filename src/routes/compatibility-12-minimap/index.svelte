@@ -1,5 +1,7 @@
 <script>
-  import Svelvet from 'svelvet';
+  // import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+
   const initialNodes = [
     {
       id: 1,
