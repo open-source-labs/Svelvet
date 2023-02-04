@@ -20,7 +20,7 @@ export interface UserNodeType {
   bgColor: string;
   data: object;
   position: { x: number; y: number };
-  borderColor?: string;
+  borderColor?: string | undefined;
   image?: boolean;
   src?: string;
   textColor?: string;
@@ -81,7 +81,7 @@ export interface NodeType {
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
   setExportableData: Function;
-  borderColor: string;
+  borderColor: string | undefined;
   image: boolean;
   src: string;
   textColor: string;
