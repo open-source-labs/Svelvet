@@ -1,18 +1,11 @@
-import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
-import { Node } from '$lib/nodes/models/Node';
 import { render, cleanup } from '@testing-library/svelte';
 import { v4 as uuidv4 } from 'uuid';
 import {
   createStoreEmpty,
   populateSvelvetStoreFromUserInput,
-  findStore,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
-import type {
-  UserNodeType,
-  UserEdgeType,
-  ResizeNodeType,
-} from '$lib/store/types/types';
+import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
 
 afterEach(cleanup);
 
@@ -228,8 +221,7 @@ describe('tests ResizeNode', () => {
   test('delete function should remove the specific resizeNode object', () => {
     resizeNodesStore.update((resizeNode) => {
       for (const id in resizeNode) {
-        resizeNode[id].delete();
-        expect(resizeNode[id]).toBeUndefined();
+        expect(resizeNode[id].delete()).toBeUndefined();
       }
       return {};
     });
