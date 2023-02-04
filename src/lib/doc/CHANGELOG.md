@@ -44,3 +44,54 @@ https://www.svelvet.io/docs/CSS-Background/
 <img src="./images/css-background-after.png" width="150" height="150">
 
 No visual changes. Moved background color out of store in order to minimize store pollution. This means that background color will not be serialized using the import-export-store feature. We talk more about this later in import-export-store section.
+
+## node-grouping
+
+https://www.svelvet.io/docs/node-grouping/
+
+No change in functionality.
+
+## snap-to-grid
+
+https://www.svelvet.io/docs/snap-to-grid/
+http://localhost:3000/compatability-8-snap-to-grid/
+
+No change in functionality
+
+## html-docs
+
+https://www.svelvet.io/docs/snap-to-grid/
+http://localhost:3000/compatability-8-snap-to-grid/
+
+<img src="./images/html-docs-before.png" width="150" height="150">
+<img src="./images/html-docs-after.png" width="150" height="150">
+
+no change in functionality
+
+## node-create
+
+https://www.svelvet.io/docs/Interactive-Nodes/
+http://localhost:3000/compatibility-10-node-create/
+
+<img src="./images/node-create-before.png" width="150" height="150">
+<img src="./images/node-create-after.png" width="150" height="150">
+
+- Previously, the new node inherits from the old node. Now, the new node is created with default parameters. Note that we have functionality to edit nodes.
+- edge creation works the same as before (not shown)
+- there are now 4 potential anchor points, rather than one source / on target anchor point.
+
+## custom-svelte-components
+
+https://www.svelvet.io/docs/Custom-Svelte/
+http://localhost:3000/compatibility-11-custom-svelte-components/
+
+<img src="./images/custom-svelte-components-before.png" width="150" height="150">
+<img src="./images/custom-svelte-components-after.png" width="150" height="150">
+
+Same functionality as before. The reason why it looks different is because I created my own dummy Svelte component to test.
+
+## Minimap
+
+Not implemented
+
+##

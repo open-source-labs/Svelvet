@@ -72,10 +72,6 @@
         sourceY < targetY
           ? leftTopCorner(targetX, cY, cornerSize)
           : leftBottomCorner(targetX, cY, cornerSize);
-      console.log('SECONDCORDNERPATH: ', secondCornerPath);
-      console.log('TargetX: ', targetX);
-      console.log('cY: ', cY);
-      console.log('cornerSize: ', cornerSize);
     }
     // for non-mixed edge left/right
     if (
