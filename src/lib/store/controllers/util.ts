@@ -383,7 +383,6 @@ export function populateResizeNodeStore(
     );
     resizeNodeStore[resizeNode.id] = resizeNode;
   }
-  // console.log(resizeNode);
-  // console.log('ResizeNodeStore', resizeNodeStore);
+
   store.resizeNodesStore.set(resizeNodeStore);
 }

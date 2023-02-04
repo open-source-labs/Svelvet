@@ -28,19 +28,19 @@ export function sanitizeUserNodesAndEdges(
   return { userNodes, userEdges };
 }
 /**
-* convertAnchorPositionsToCallbacks
-* @description 
-* WHY: This function is in order to maintain compliance with earlier versions of Svelvet.
-* HISTORY: In Svelvet<=5, anchor points were hard-coded onto each node. Each node had a "sourcePosition"
-* "targetPosition" where the edges would be attached. In Svelvet6, the store was re-designed
-* from the ground up into an object-relational data model where anchor points could be attached
-* at any point on the node using callbacks. This enabled features such as custom edge position,
-* adaptive edge positioning, and dynamic edges.
-* The purpose of this function is to parse the old way of specifying edge positions (as two source/target
-* anchors on the node) into the Svelvet6 (where anchors are separate objects) in order to maintain a
-* consistent user experience. However, we suggest that this functionality (parsing Svelvet5 syntax into
-* Svelvet6 syntax) be removed completely in favor of only using Svelvet6 syntax in order to reduce edge cases.
-*/
+ * convertAnchorPositionsToCallbacks
+ * @description
+ * WHY: This function is in order to maintain compliance with earlier versions of Svelvet.
+ * HISTORY: In Svelvet<=5, anchor points were hard-coded onto each node. Each node had a "sourcePosition"
+ * "targetPosition" where the edges would be attached. In Svelvet6, the store was re-designed
+ * from the ground up into an object-relational data model where anchor points could be attached
+ * at any point on the node using callbacks. This enabled features such as custom edge position,
+ * adaptive edge positioning, and dynamic edges.
+ * The purpose of this function is to parse the old way of specifying edge positions (as two source/target
+ * anchors on the node) into the Svelvet6 (where anchors are separate objects) in order to maintain a
+ * consistent user experience. However, we suggest that this functionality (parsing Svelvet5 syntax into
+ * Svelvet6 syntax) be removed completely in favor of only using Svelvet6 syntax in order to reduce edge cases.
+ */
 function convertAnchorPositionsToCallbacks(
   userNodes: UserNodeType[],
   userEdges: UserEdgeType[]
@@ -53,12 +53,6 @@ function convertAnchorPositionsToCallbacks(
   for (let userEdge of userEdges) {
     const userNodeSource = userNodesObj[userEdge.source];
     const userNodeTarget = userNodesObj[userEdge.target];
-
-    if (userNodeSource === undefined) {
-      console.log('!', userNodesObj);
-      console.log('!!', userEdge.source);
-    }
-
     const sourcePosition = userNodeSource.sourcePosition;
     const targetPosition = userNodeTarget.targetPosition;
 

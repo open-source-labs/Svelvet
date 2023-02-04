@@ -59,15 +59,11 @@
     const text = storeInput.value;
 
     //If the input JSON is empty, should not proceed to the next step
-    if (text === '') {
-      return;
-    }
-    console.log('asddsf');
+    if (text === '') return;
 
     const newStore = JSON.parse(text, reviver);
 
     //sets nodes/edges from input
-    console.log(newStore.nodes, newStore.edges);
     populateSvelvetStoreFromUserInput(canvasId, newStore.nodes, newStore.edges);
     //resets input val to empty string
     storeInput.value = '';

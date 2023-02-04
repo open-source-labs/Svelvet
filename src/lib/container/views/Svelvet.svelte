@@ -21,7 +21,7 @@
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
   export let bgColor = '#ffffff'; // this is used to set the background color of the the Svelvet canvas
-
+  export let minimap = false;
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = true;
@@ -73,11 +73,6 @@
     const userNodes = output['userNodes'];
     const userEdges = output['userEdges'];
 
-    // console.log('afterUpdated callback fired')
-    // console.log(nodes)
-
-    // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
-
     // set canvas related stores. you need to do this before setting node/edge related stores because
     // initializing nodes/edges might read relevant options from the store.
     store.widthStore.set(width);
@@ -105,6 +100,7 @@
     {initialLocation}
     {initialZoom}
     {boundary}
+    {minimap}
   />
   {#if shareable}
     <ImportExport {canvasId} />
