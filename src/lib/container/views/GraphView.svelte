@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { zoom, zoomTransform } from 'd3-zoom';
-  import { select, selectAll } from 'd3-selection';
+  import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
+  import { select, selectAll, pointer, local } from 'd3-selection';
 
   import SimpleBezierEdge from '$lib/edges/views/Edges/SimpleBezierEdge.svelte';
   import StepEdge from '$lib/edges/views/Edges/StepEdge.svelte';
@@ -19,6 +19,7 @@
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
   import { determineD3Instance, zoomInit } from '$lib/d3/controllers/d3';
+  import { d3ZoomCreator } from '$lib/d3/controllers/d3Old';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -57,11 +58,24 @@
   let d3 = {
     zoom,
     zoomTransform,
+    zoomIdentity,
     select,
     selectAll,
+    pointer,
   };
 
-  const boundary = { x: 1050, y: 850 };
+  let d3ZoomOld = d3ZoomCreator(
+    nodeSelected,
+    movementStore,
+    backgroundStore,
+    canvasId,
+    gridSize,
+    dotSize,
+    d3Scale,
+    d3
+  );
+
+  const boundary = false;
   let d3Zoom = determineD3Instance(
     boundary,
     d3,
@@ -80,19 +94,19 @@
 
   onMount(() => {
     // actualizes the d3 instance
-    d3.select(`.Edges-${canvasId}`).call(d3Zoom);
-    d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
-    d3.select(`#background-${canvasId}`).call(d3Zoom);
-    d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
-    zoomInit(
-      d3,
-      canvasId,
-      d3Zoom,
-      d3Translate,
-      initialLocation,
-      initialZoom,
-      d3Scale
-    );
+    d3.select(`.Edges-${canvasId}`).call(d3ZoomOld);
+    d3.select(`.Nodes-${canvasId}`).call(d3ZoomOld);
+    // d3.select(`#background-${canvasId}`).call(d3Zoom);
+    // d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+    // zoomInit(
+    //   d3,
+    //   canvasId,
+    //   d3Zoom,
+    //   d3Translate,
+    //   initialLocation,
+    //   initialZoom,
+    //   d3Scale
+    // );
   });
 </script>
 
