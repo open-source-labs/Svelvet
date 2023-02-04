@@ -1,7 +1,8 @@
-<script>import EdgeText from './EdgeText.svelte';
-export let baseEdgeProps;
-// destructuring the props passed in from the parent component
-$: ({
+<script>
+  import EdgeText from './EdgeText.svelte';
+  export let baseEdgeProps;
+  // destructuring the props passed in from the parent component
+  $: ({
     path,
     animate,
     arrow,
@@ -10,21 +11,28 @@ $: ({
     labelTextColor,
     edgeColor,
     centerX,
-    centerY
-} = baseEdgeProps);
-// setting edge text props
-$: edgeTextProps = {
+    centerY,
+  } = baseEdgeProps);
+  // setting edge text props
+  $: edgeTextProps = {
     label: label,
     labelBgColor: labelBgColor,
     labelTextColor: labelTextColor,
     centerX: centerX,
-    centerY: centerY
-};
-const defaultArrow = `0 0, 9 4.5, 0 9`;
+    centerY: centerY,
+  };
+  const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
 
 <defs>
-  <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto">
+  <marker
+    id="arrow"
+    markerWidth="9"
+    markerHeight="9"
+    refX="8"
+    refY="4"
+    orient="auto"
+  >
     <polygon points={defaultArrow} fill="gray" />
   </marker>
 </defs>
