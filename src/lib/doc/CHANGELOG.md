@@ -129,3 +129,7 @@ http://localhost:3000/compatibility-16-nodeEdit/
 https://www.svelvet.io/docs/editNodes/
 
 Feature works as expected. NodeEdit is now active by default. This is to reduce store pollution. In addition, node edit chaning width/height of nodes has been removed because this functionality is duplicated by resizableNodes
+
+## Deletable nodes
+
+This feature has been removed to reduce feature bloat. Its functionality is duplicated by Interactive Editable nodes feature.
