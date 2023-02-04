@@ -1,8 +1,6 @@
 <script>
-  //import Svelvet from '$lib/container/views/Svelvet.svelte';
-  // import DeleteMe from '$lib/deleteMe.svelte';
-  // import DeleteMe from 'svelvet-lime';
-  import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+  // import Svelvet from 'svelvet-lime';
 
   const initialNodes = [
     {

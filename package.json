@@ -84,7 +84,7 @@
     "svelte-moveable": "^0.34.1",
     "svelte-parallax": "^0.6.0",
     "svelvet": "^5.0.7",
-    "svelvet-lime": "^6.0.16",
+    "svelvet-lime": "^6.0.18",
     "uuid": "^9.0.0",
     "yootils": "^0.3.1"
   }
