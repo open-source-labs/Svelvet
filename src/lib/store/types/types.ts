@@ -29,7 +29,7 @@ export interface UserNodeType {
   borderRadius?: number;
   childNodes?: string[];
   className?: string;
-  nodeCallback?: Function;
+  clickCallback?: Function;
 }
 
 export interface UserEdgeType {
@@ -95,7 +95,7 @@ export interface NodeType {
   borderRadius?: number;
   childNodes?: string[];
   className?: string; //This is for custom className for node
-  nodeCallback?: Function; // user-supplied callback that executes when the node is clicked
+  clickCallback?: Function; // user-supplied callback that executes when the node is clicked
 }
 
 export interface EdgeType {

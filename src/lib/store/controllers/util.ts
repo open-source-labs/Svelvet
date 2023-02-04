@@ -350,7 +350,7 @@ export function populateNodesStore(
       userNode.borderRadius,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
       userNode.className,
-      userNode.nodeCallback
+      userNode.clickCallback
     );
 
     nodesStore[nodeId] = node;
