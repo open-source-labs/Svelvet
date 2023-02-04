@@ -5,9 +5,9 @@
   import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
   import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
   import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
-  import StraightEdge from '../../edges/views/Svelvet3Components/StraightEdge.svelte';
+  import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
 
-  import EdgeAnchor from '../../edges/views/Svelvet3Components/EdgeAnchor.svelte';
+  import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
   import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
   import Node from '../../nodes/views/Node.svelte';
 
@@ -163,8 +163,6 @@
       )
       .style('transform-origin', '0 0');
   }
-
-  console.log(minimap);
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
@@ -213,6 +211,7 @@
 <svg
   class={`Edges Edges-${canvasId}`}
   viewBox="0 0 {$widthStore} {$heightStore}"
+  on:contextmenu|preventDefault
 >
   <defs>
     <pattern
@@ -276,5 +275,8 @@
     color: black; /* remove this once color is set to default via types */
     width: 100%;
     height: 100%;
+  }
+  #graphview-container {
+    pointer-events: none;
   }
 </style>

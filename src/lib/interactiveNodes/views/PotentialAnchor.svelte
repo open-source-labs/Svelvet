@@ -163,6 +163,7 @@
     border-radius: 50%;
     cursor: crosshair;
     background-color: rgb(105, 99, 99);
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 
   .Anchor:hover {

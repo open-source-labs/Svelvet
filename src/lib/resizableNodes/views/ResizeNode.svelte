@@ -64,6 +64,7 @@
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     opacity: 0;
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 
   .ResizeNode:hover {

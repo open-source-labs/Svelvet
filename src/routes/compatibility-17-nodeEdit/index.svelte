@@ -1,6 +1,6 @@
 <script>
-  import Svelvet from 'svelvet-lime';
-  // import Svelvet from '$lib/container/views/Svelvet.svelte';
+  // import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
 
   const initialNodes = [
     {
@@ -69,4 +69,5 @@
   initialZoom={3}
   initialLocation={initialNodes[5].position}
   background
+  nodeCreate
 />
