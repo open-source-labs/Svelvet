@@ -64,7 +64,6 @@
     <div class="btn-container">
       <button
         on:click={(e) => {
-          console.log('on delete button clicked');
           const store = findStore(canvasId);
           const node = getNodeById(store, nodeId);
           node.delete();

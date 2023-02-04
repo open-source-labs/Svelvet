@@ -41,7 +41,7 @@
     if (node.className) forceCssHeightAndWidth(store, node);
   });
 
-  // this state variable is used for "nodeCallback" functionality
+  // this state variable is used for "clickCallback" functionality
   // on mouseup, the callback will fire only if userClick is true
   // isUserClick is set to true on mousedown, but set back to false in two cases
   //   (1) if the mouse moves, meaning that the node is being dragged
@@ -51,7 +51,7 @@
   //
   const mousedown = (e) => {
     e.preventDefault();
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = true;
     // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
     $nodeSelected = true;
@@ -65,12 +65,12 @@
     isEditing = isEditing === true ? false : true;
   };
   const mouseleave = (e) => {
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
   };
   const mousemove = (e) => {
     e.preventDefault();
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
     // part of the "drag node" feature
     if (isSelected) {
@@ -88,7 +88,7 @@
   };
 
   const touchmove = (e) => {
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
     // part of the "drag node" feature
     if (isSelected) {
@@ -116,8 +116,8 @@
     $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
 
-    // this implements the "nodeCallback" feature
-    if (node.nodeCallback && isUserClick) node.nodeCallback(node);
+    // this implements the "clickCallback" feature
+    if (node.clickCallback && isUserClick) node.clickCallback(node);
 
     // This implements the "snap to grid" feature
     if (get(store.options).snap) {

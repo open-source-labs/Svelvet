@@ -52,7 +52,7 @@ export class Node implements NodeType {
     public borderRadius?: number,
     public childNodes?: string[],
     public className?: string,
-    public nodeCallback?: Function
+    public clickCallback?: Function
   ) {}
 
   /**
