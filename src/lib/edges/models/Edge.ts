@@ -41,7 +41,7 @@ export class Edge implements EdgeType {
     public targetY: number,
     public canvasId: string,
     public label?: string,
-    public type?: 'straight' | 'smooth' | 'step' | 'bezier',
+    public type?: 'straight' | 'smoothstep' | 'step' | 'bezier',
     public labelBgColor?: string,
     public labelTextColor?: string,
     public edgeColor?: string,
