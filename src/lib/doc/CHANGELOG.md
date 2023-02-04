@@ -94,4 +94,15 @@ Same functionality as before. The reason why it looks different is because I cre
 
 Not implemented
 
+## Initial zoom and location
+
+Same functionality as Svelvet5. It appears the center of the canvas is 0,0
+
+## node classes
+
+<img src="./images/node-classes-before.png" width="150" height="150">
+<img src="./images/node-classes-after.png" width="150" height="150">
+
+You need to put !important in the CSS
+
 ##

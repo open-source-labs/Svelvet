@@ -1,6 +1,6 @@
 <script>
   import Svelvet from 'svelvet-lime';
-
+  // import Svelvet from '$lib/container/views/Svelvet.svelte';
   const initialNodes = [
     {
       id: 2,
@@ -52,7 +52,7 @@
       textColor: '#FF4121',
     },
     {
-      id: 80,
+      id: 1,
       position: { x: 175, y: 25 },
       data: { label: 'This is a custom class' },
       className: 'customClass',
@@ -105,17 +105,17 @@
 <Svelvet
   nodes={initialNodes}
   edges={initialEdges}
-  initialZoom={2}
-  initialLocation={{ x: 275, y: 330 }}
   width={600}
   background
+  initialZoom={2}
+  initialLocation={{ x: 400, y: 380 }}
 />
 
 <style>
   :global(.customClass) {
-    width: 125px;
-    height: 75px;
-    background-color: #ffc1cc;
-    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121;
+    width: 300px !important;
+    height: 300px !important;
+    background-color: #e07589 !important;
+    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121 !important;
   }
 </style>
