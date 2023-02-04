@@ -27,7 +27,8 @@
     ['Diagram Boundary', 'boundary'],
     ['Interactive Editable Nodes', 'editNodes'],
     ['Deletable Nodes', 'delete'],
-    ['Resizable Nodes', 'ResizableNodes']
+    ['Resizable Nodes', 'ResizableNodes'],
+    ['Dynamic Anchors', 'DynamicAnchor']
   ];
 
   // const communityLinks = [
