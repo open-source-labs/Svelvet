@@ -66,6 +66,9 @@
     <br />
     <strong>Edge:</strong> An edge is the connecting line between two nodes.
     <br />
+    <!--Svelvet 6.0 added Anchor -->
+    <strong>Anchor:</strong> An anchor is the connecting point between the node and the edge. 
+    <br />
     <strong>Handle:</strong> A handle is the element or shape that appears at the start or end of each
     edge (e.g. semi-circle or arrowhead).
   </p>
