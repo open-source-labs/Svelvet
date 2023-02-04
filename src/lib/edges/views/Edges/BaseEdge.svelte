@@ -1,7 +1,6 @@
 <script lang="ts">
   import EdgeText from '../Edges/EdgeText.svelte';
   import type { EdgeProps } from '../Edges/types';
-
   export let baseEdgeProps: EdgeProps;
 
   // destructuring the props passed in from the parent component
