@@ -11,7 +11,7 @@ export interface Node<T = any> {
   borderColor?: string;
   borderRadius?: number;
   textColor?: string;
-  nodeCallback?: Function;
+  clickCallback?: Function;
   image?: boolean;
   src?: string;
   sourcePosition?: 'left' | 'right' | 'top' | 'bottom';

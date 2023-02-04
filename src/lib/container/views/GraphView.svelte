@@ -25,7 +25,7 @@
   export let initialZoom = 3;
   export let initialLocation;
   export let boundary = false;
-
+  export let minimap = false;
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
   const {
@@ -127,9 +127,7 @@
     }
   }
 
-  const minimap = true; // QQQ
   const key = canvasId;
-
   function handleZoom(e) {
     if (!$movementStore) return;
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
@@ -165,6 +163,8 @@
       )
       .style('transform-origin', '0 0');
   }
+
+  console.log(minimap);
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->

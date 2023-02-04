@@ -350,7 +350,7 @@ export function populateNodesStore(
       userNode.borderRadius,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
       userNode.className,
-      userNode.nodeCallback
+      userNode.clickCallback
     );
 
     nodesStore[nodeId] = node;
@@ -383,7 +383,6 @@ export function populateResizeNodeStore(
     );
     resizeNodeStore[resizeNode.id] = resizeNode;
   }
-  // console.log(resizeNode);
-  // console.log('ResizeNodeStore', resizeNodeStore);
+
   store.resizeNodesStore.set(resizeNodeStore);
 }

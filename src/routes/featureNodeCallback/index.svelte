@@ -11,7 +11,7 @@
       bgColor: 'white',
       targetPosition: 'right',
       sourcePosition: 'left',
-      nodeCallback: (node) => {
+      clickCallback: (node) => {
         console.log('node object: ', node);
       },
     },
