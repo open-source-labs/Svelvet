@@ -21,6 +21,8 @@
   import { determineD3Instance, zoomInit } from '$lib/d3/controllers/d3';
   import { d3ZoomCreator } from '$lib/d3/controllers/d3Old';
 
+  import MinimapBoundary from '$lib/Minimap/MinimapBoundary.svelte';
+  // import MinimapBoundless from '$lib/Minimap//MinimapBoundless.svelte';
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
   export let width: number;
@@ -96,42 +98,57 @@
       d3Scale
     );
   });
+
+  const minimap = true; // QQQ
+  boundary = { x: 1000, y: 1000 };
+  const miniMapClick = () => {
+    console.log('minimapClick');
+  };
+  const key = canvasId;
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
-  <!-- This container is transformed by d3zoom -->
-  <div class={`Node Node-${canvasId}`}>
-    {#each nodes as node}
-      {#if node.data.html}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          >{@html node.data.html}</Node
-        >
-      {:else if node.data.custom}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          ><svelte:component this={node.data.custom} /></Node
-        >
-      {:else}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}>{node.data.label}</Node
-        >
-      {/if}
-    {/each}
+<div id="graphview-container">
+  {#if minimap && boundary}
+    <MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate} />
+  {:else if minimap}
+    <!-- <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} /> -->
+  {/if}
 
-    {#each resize as res}
-      <ResizeNode resizeId={res.id} {canvasId} />
-    {/each}
+  <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
+    <!-- This container is transformed by d3zoom -->
+    <div class={`Node Node-${canvasId}`}>
+      {#each nodes as node}
+        {#if node.data.html}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{@html node.data.html}</Node
+          >
+        {:else if node.data.custom}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            ><svelte:component this={node.data.custom} /></Node
+          >
+        {:else}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{node.data.label}</Node
+          >
+        {/if}
+      {/each}
 
-    {#each potentialAnchors as potentialAnchor}
-      <PotentialAnchor
-        {canvasId}
-        x={potentialAnchor.positionX}
-        y={potentialAnchor.positionY}
-        {potentialAnchor}
-      />
-    {/each}
+      {#each resize as res}
+        <ResizeNode resizeId={res.id} {canvasId} />
+      {/each}
+
+      {#each potentialAnchors as potentialAnchor}
+        <PotentialAnchor
+          {canvasId}
+          x={potentialAnchor.positionX}
+          y={potentialAnchor.positionY}
+          {potentialAnchor}
+        />
+      {/each}
+    </div>
   </div>
 </div>
-
 <!-- rendering dots on the background depending on the zoom level -->
 <svg
   class={`Edges Edges-${canvasId}`}
