@@ -4,9 +4,9 @@
     populateSvelvetStoreFromUserInput,
   } from '$lib/store/controllers/storeApi';
 
-  export let id: string;
+  export let canvasId: string;
 
-  const store = findStore(id);
+  const store = findStore(canvasId);
 
   const { nodesStore, edgesStore } = store;
 
@@ -48,7 +48,7 @@
 
   const uploadStore = () => {
     //selects store-input
-    const storeInput = document.getElementById('store-input');
+    const storeInput = document.getElementById(`store-input-${canvasId}`); // TODO: do this properly without accessing the DOM directly
     //reviver function parses JSON string
     const reviver = (key, value) => {
       //if node object has key of custom, evaluates and allows for custom components to be uploaded
@@ -62,11 +62,13 @@
     if (text === '') {
       return;
     }
+    console.log('asddsf');
 
     const newStore = JSON.parse(text, reviver);
 
     //sets nodes/edges from input
-    populateSvelvetStoreFromUserInput(id, newStore.nodes, newStore.edges);
+    console.log(newStore.nodes, newStore.edges);
+    populateSvelvetStoreFromUserInput(canvasId, newStore.nodes, newStore.edges);
     //resets input val to empty string
     storeInput.value = '';
   };
@@ -80,7 +82,7 @@
       getData();
       exportNodesAndEdges();
     }}
-    id="downloadState-{id}"
+    id="downloadState-{canvasId}"
     download="svelvet-state.json"
   >
     <svg
@@ -101,7 +103,11 @@
       </g></svg
     >
   </a>
-  <input type="text" id="store-input" placeholder="Paste JSON here" />
+  <input
+    type="text"
+    id={`store-input-${canvasId}`}
+    placeholder="Paste JSON here"
+  />
   <button id="store-input-btn" on:click={uploadStore}>Upload</button>
 </div>
 

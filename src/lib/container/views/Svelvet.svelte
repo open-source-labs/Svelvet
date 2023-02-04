@@ -98,7 +98,7 @@
 >
   <GraphView {canvasId} {width} {height} {initialLocation} {initialZoom} />
   {#if shareable}
-    <ImportExport id={canvasId} />
+    <ImportExport {canvasId} />
   {/if}
 </div>
 
