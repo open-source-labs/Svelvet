@@ -42,7 +42,7 @@ export interface UserEdgeType {
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
-  type?: string;
+  type?: 'straight' | 'smoothstep' | 'step' | 'bezier' | undefined;
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
@@ -83,17 +83,17 @@ export interface NodeType {
   positionY: number;
   bgColor: string;
   data: object;
+  canvasId: string;
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
   setExportableData: Function;
-  borderColor: string | undefined;
-  image: boolean;
-  src: string;
-  textColor: string;
-  borderRadius: number;
-  canvasId: string;
-  childNodes: string[];
+  borderColor?: string | undefined;
+  image?: boolean;
+  src?: string;
+  textColor?: string;
+  borderRadius?: number;
+  childNodes?: string[];
   className?: string; //This is for custom className for node
   nodeCallback?: Function; // user-supplied callback that executes when the node is clicked
 }
@@ -106,7 +106,7 @@ export interface EdgeType {
   targetY: number;
   canvasId: string;
   label?: string;
-  type?: 'straight' | 'smooth' | 'step' | 'bezier';
+  type?: 'straight' | 'smoothstep' | 'step' | 'bezier';
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
