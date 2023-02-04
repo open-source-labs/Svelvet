@@ -68,10 +68,9 @@ import {
 } from './util';
 import { TemporaryEdge } from '$lib/interactiveNodes/models/TemporaryEdge';
 
-
 /**
  * Gets one anchor (source anchor or target anchor) from a given edge
- * 
+ *
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param edgeId The id of a given edge
  * @param sourceOrTarget A string of 'source' or 'target' to specify which anchor the function should return
@@ -97,7 +96,7 @@ export function getAnchorFromEdge(
 
 /**
  * Finds all Anchors that matches the conditions specified in the filter parameter from a Svelvet store and returns these Anchors in an array.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param filter An object to specify conditions. Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will return all anchors with sourceOrTarget = source AND poxitionX = 35
  * @returns An array of Anchors that matches the conditions specified in the filter parameter
@@ -122,9 +121,9 @@ export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
 
 /**
  * Finds all resizeNodes that matches the conditions specified in the filter parameter from a Svelvet store and returns these resizeNodes in an array
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
- * @param filter An object to specify conditions. 
+ * @param filter An object to specify conditions.
  * @returns An array of resizeNode objects that matches the conditions specified in filter parameter
  */
 export function getResizeNodes(
@@ -149,9 +148,9 @@ export function getResizeNodes(
 
 /**
  * Finds all potentialAnchors that matches the conditions specified in the filter parameter from a Svelvet store and returns these potential anchors in an array
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
- * @param filter An object to specify conditions. 
+ * @param filter An object to specify conditions.
  * @returns An array of potential anchors that matches the conditions specified in filter parameter
  */
 export function getPotentialAnchors(
@@ -179,7 +178,7 @@ export function getPotentialAnchors(
 
 /**
  * getAnchorById will look for the targeted Anchor that has the same id in the Svelvet component store.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param id The id of the targeted Anchor
  * @returns The target Anchor object in store.anchorsStore
@@ -192,7 +191,7 @@ export function getAnchorById(store: StoreType, id: string) {
 
 /**
  * getNodeById will look for the targeted Node that has the same id provided in the Svelvet component store.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param id The id of the targeted Node
  * @returns The targeted Node object in store.nodesStore
@@ -206,7 +205,7 @@ export function getNodeById(store: StoreType, id: string) {
 
 /**
  * getEdgeById will look for the targeted Edge that has the same id provided in the Svelvet component store.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param id The id of the targeted Node
  * @returns The targeted Edge object in store.edgesStore
@@ -220,7 +219,7 @@ export function getEdgeById(store: StoreType, id: string) {
 
 /**
  * getPotentialAnchorById will look for the targeted potential Anchor that has the same id provided in the Svelvet component store.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param id The id of the targeted potential Anchor
  * @returns The targeted potential Anchor object in store.potentialAnchorsStore
@@ -234,9 +233,9 @@ export function getPotentialAnchorById(store: StoreType, id: string) {
 
 /**
  * Finds all Nodes that matches the conditions specified in the filter parameter from a Svelvet store and returns these Nodes in an array
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
- * @param filter An object to specify conditions. 
+ * @param filter An object to specify conditions.
  * @returns An array of Node objects that matches the conditions specified in filter parameter. This array is non-reactive (ie, you cannot use information from this array to force a re-render of a Svelte component)
  */
 export function getNodes(
@@ -261,18 +260,17 @@ export function getNodes(
 }
 
 /**
- * findStore is going to return the target Svelvet store with the canvasId provided as argument. 
+ * findStore is going to return the target Svelvet store with the canvasId provided as argument.
  * There can be multiple Svelvet canvases on the same page, and each has their own store with a unique canvasId.
  * @param canvasId The canvasId of a Svelvet component
- * @returns The store of a Svelvet component that matches the canvasId 
+ * @returns The store of a Svelvet component that matches the canvasId
  */
 export function findStore(canvasId: string): StoreType {
   return stores[canvasId];
 }
 
-
 /**
- * createStoreEmpty will initialize a new Svelvet store with a unique canvasId. 
+ * createStoreEmpty will initialize a new Svelvet store with a unique canvasId.
  * If you have multiple Svelvet components on the page, the stores object will look like the following example:
  * const stores = {
  *                  canvasId-1: store of Svelvet component 1,
@@ -281,9 +279,9 @@ export function findStore(canvasId: string): StoreType {
  *                }
  * Notes: This should be called once every time you initialize a new Svelvet canvas, (ie, only in the Svelvet.svelte file).
  * This function will initialize an empty store for the Svelvet component and should be followed by invoking populateSvelvetStoreFromUserInput to populate all the initial state from the user input.
- * 
+ *
  * @param canvasId The canvasId of the newly created Svelvet component
- * @returns An empty store for the newly created Svelvet component. 
+ * @returns An empty store for the newly created Svelvet component.
  */
 export function createStoreEmpty(canvasId: string): StoreType {
   stores[canvasId] = {
@@ -302,14 +300,14 @@ export function createStoreEmpty(canvasId: string): StoreType {
     options: writable({}),
     temporaryEdgeStore: writable([]),
     nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
+    boundary: writable(false),
   };
   return stores[canvasId];
 }
 
-
 /**
  * populateSvelvetStoreFromUserInput will populate all the states and set these states into the Svelvet store initialized by invoking createStoreEmpty
- * 
+ *
  * @param canvasId The canvasId of the Svelvet component you are creating a store for
  * @param nodes This is an array of objects containing node info that is defined by the user. NOTE THAT THE STRUCTURE DIFFERS FROM THE NODES CLASS. The whole point of populateSvelvetStoreFromUserInput is to convert nodes into proper Svelvet Node objects. An example of nodes is in $routes/testingplayground/index.svelte
  * @param edges Same as nodes, this is an array of objects containing edge info THAT IS DIFFERENT FROM THE EDGE CLASS.
@@ -336,10 +334,9 @@ export function populateSvelvetStoreFromUserInput(
   }
 }
 
-
 /**
  * Creates a new edge and two adaptive anchor points and updates the edgesStore and anchorsStore.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param sourceNodeId The id of the source Node
  * @param targetNodeId The id of the target Node
@@ -418,11 +415,10 @@ export function createEdgeAndAnchors(
   for (const anchor of anchors) anchor.callback();
 }
 
-
 /**
  * Creates a new Node when user drags the Edge and releases mouse at a new spot. This functionality is needed for the "create new node by dragging" feature. See TemporaryEdge.createNode()
  * This function has no output, but alters the store. New Node/Edge/Anchor objects are added to the store.
- * 
+ *
  * @param store The Svelvet store containing the state of a Svelvet component
  * @param sourceNodeId The id of the source Node
  * @param targetNodeX The postion X where user releases the mouse, which should be the x-axis position for the new Node

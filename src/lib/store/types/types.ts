@@ -67,6 +67,12 @@ export interface StoreType {
   options: Writable<{ [key: string]: any }>;
   temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
   nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
+  boundary: Writable<boolean | PositionType>;
+}
+
+export interface PositionType {
+  x: number;
+  y: number;
 }
 
 export interface NodeType {

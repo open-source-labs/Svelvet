@@ -5,7 +5,6 @@
   import type {
     NodeType,
     EdgeType,
-    AnchorType,
     StoreType,
     UserNodeType,
     UserEdgeType,
