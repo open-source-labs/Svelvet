@@ -4,7 +4,7 @@
   const initialNodes = [
     {
       id: 1,
-      position: { x: 100, y: 20 },
+      position: { x: 0, y: 0 },
       data: { label: 'Input Node' },
       width: 175,
       height: 40,
@@ -83,7 +83,7 @@
 <Svelvet
   nodes={initialNodes}
   edges={initialEdges}
-  initialZoom={3}
-  initialLocation={{ x: 300, y: 100 }}
+  initialZoom={5}
+  initialLocation={{ x: 100, y: 0 }}
   background
 />

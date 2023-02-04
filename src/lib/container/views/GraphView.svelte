@@ -24,6 +24,8 @@
   export let canvasId: string;
   export let width: number;
   export let height: number;
+  export let initialZoom = 3;
+  export let initialLocation;
 
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
@@ -75,8 +77,6 @@
   );
 
   let d3Translate = { x: 0, y: 0, k: 1 };
-  let initialZoom = 3;
-  let initialLocation = { x: 0, y: 100 };
 
   onMount(() => {
     // actualizes the d3 instance

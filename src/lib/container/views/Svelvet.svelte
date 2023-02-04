@@ -30,6 +30,8 @@
   export let snap: boolean = false;
   export let snapTo: number = 30;
   export let nodeCreate: boolean = false;
+  export let initialZoom = 3;
+  export let initialLocation = { x: 0, y: 0 };
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
@@ -94,7 +96,7 @@
   class="Svelvet"
   style={`width: ${width}px; height: ${height}px; background-color: ${bgColor};`}
 >
-  <GraphView {canvasId} {width} {height} />
+  <GraphView {canvasId} {width} {height} {initialLocation} {initialZoom} />
   {#if shareable}
     <ImportExport id={canvasId} />
   {/if}
