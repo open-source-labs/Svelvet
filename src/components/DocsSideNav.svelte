@@ -26,7 +26,10 @@
     ['Importing & Exporting Diagrams', 'importDiagrams'],
     ['Diagram Boundary', 'boundary'],
     ['Interactive Editable Nodes', 'editNodes'],
-    ['Deletable Nodes', 'delete']
+    ['Deletable Nodes', 'delete'],
+    ['Resizable Nodes', 'ResizableNodes'],
+    ['Dynamic Anchors', 'DynamicAnchor'],
+    ['Custom Anchor Position', 'CustomAnchorPosition'],
   ];
 
   // const communityLinks = [
