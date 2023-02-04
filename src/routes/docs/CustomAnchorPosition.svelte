@@ -10,6 +10,9 @@
   The default anchors can appear at the top, bottom, left, or right center of the node but it does not always satisfy developers' specific needs. So Svelvet 6.0 introduces <code class="code">custom anchor position</code> as a new feature. Developers can now pass in a <code class="code">customed callback function</code> to decide where they want the anchors to appear on the node. 
 </p>
 
+<br/>
+<p class="text-gray-600">TODO: Add intruction of how to create a custom anchor position callback function</p>
+
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Custom Anchor Position</h3>
 <p class="text-gray-600">
