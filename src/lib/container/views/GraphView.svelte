@@ -211,6 +211,7 @@
 <svg
   class={`Edges Edges-${canvasId}`}
   viewBox="0 0 {$widthStore} {$heightStore}"
+  on:contextmenu|preventDefault
 >
   <defs>
     <pattern
