@@ -211,7 +211,6 @@
     background
     minimap={true}
     nodeCreate
-    nodeLink
     boundary={{ x: 1050, y: 850 }}
   />
 </main>
