@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NodeType } from '$lib/store/types/types';
+  import type { NodeType } from '../store/types/types';
 
   export let key;
   export let node: NodeType;

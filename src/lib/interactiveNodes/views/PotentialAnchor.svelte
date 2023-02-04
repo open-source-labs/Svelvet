@@ -3,8 +3,8 @@
     getNodes,
     getAnchors,
     findStore,
-  } from '$lib/store/controllers/storeApi';
-  import { TemporaryEdge } from '$lib/interactiveNodes/models/TemporaryEdge';
+  } from '../../store/controllers/storeApi';
+  import { TemporaryEdge } from '../models/TemporaryEdge';
   import { writable, derived, get, readable } from 'svelte/store';
 
   import type {
@@ -15,7 +15,7 @@
     UserEdgeType,
     TemporaryEdgeType,
     PotentialAnchorType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
   import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
   export let x;

@@ -1,6 +1,6 @@
 <script>
-  import { findStore } from '$lib/store/controllers/storeApi';
-  import { getNodeById } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
+  import { getNodeById } from '../../store/controllers/storeApi';
 
   export let nodeId;
   export let canvasId;

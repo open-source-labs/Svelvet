@@ -4,14 +4,14 @@ import {
   leftCb,
   topCb,
   bottomCb,
-} from '$lib/edges/controllers/anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
+} from '../../edges/controllers/anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
 import {
   dynamicCbCreator,
   fixedCbCreator,
   potentialAnchorCbCreator,
-} from '$lib/edges/controllers/anchorCbDev';
+} from '../../edges/controllers/anchorCbDev';
 
-import type { AnchorType, AnchorCbType } from '$lib/edges/types/types';
+import type { AnchorType, AnchorCbType } from '../../edges/types/types';
 
 import type {
   NodeType,
@@ -21,11 +21,11 @@ import type {
   UserNodeType,
   UserEdgeType,
   PotentialAnchorType,
-} from '$lib/store/types/types';
-import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
-import { Anchor } from '$lib/edges/models/Anchor';
-import { Node } from '$lib/nodes/models/Node';
-import { Edge } from '$lib/edges/models/Edge';
+} from '../types/types';
+import { ResizeNode } from '../../resizableNodes/models/ResizeNode';
+import { Anchor } from '../../edges/models/Anchor';
+import { Node } from '../../nodes/models/Node';
+import { Edge } from '../../edges/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -34,7 +34,7 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
-import { PotentialAnchor } from '$lib/interactiveNodes/models/PotentialAnchor';
+import { PotentialAnchor } from '../../interactiveNodes/models/PotentialAnchor';
 
 /**
  * Creates resize node on the bottom right corner of the targeted Node

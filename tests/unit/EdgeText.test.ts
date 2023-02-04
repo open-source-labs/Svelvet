@@ -1,6 +1,8 @@
 import EdgeText from '$lib/edges/views/Edges/EdgeText.svelte';
-
 import { render, screen, cleanup } from '@testing-library/svelte';
+
+//Should clean up after each test
+afterEach(() => cleanup());
 
 beforeEach(() => {
   const mockEdgeTextProps = {
@@ -10,6 +12,7 @@ beforeEach(() => {
   };
   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
 });
+
 
 describe('edgeText label', () => {
   test('should render the label text', () => {

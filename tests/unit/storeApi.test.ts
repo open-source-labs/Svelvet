@@ -10,7 +10,7 @@ import {
   getNodes,
   findStore,
   createStoreEmpty,
-  createStoreFromUserInput,
+  populateSvelvetStoreFromUserInput,
   createEdgeAndAnchors,
   createNode,
 } from '$lib/store/controllers/storeApi';

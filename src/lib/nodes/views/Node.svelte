@@ -1,18 +1,18 @@
 <script lang="ts">
   import { afterUpdate, onMount } from 'svelte';
 
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
   import type {
     NodeType,
     EdgeType,
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
-  import { forceCssHeightAndWidth } from '$lib/customCss/controllers/getCss';
+  import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
 
   export let node: NodeType;
   export let canvasId: string;

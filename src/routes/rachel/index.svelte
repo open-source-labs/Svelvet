@@ -3,30 +3,58 @@
 
   let initialNodes: any[] = [
     {
-      id: 1,
-      position: { x: 225, y: 10 },
-      data: { label: 'id=1' },
+      id: '1',
+      position: {x: 50, y: 50},
+      data: {label: 'id-1'},
       width: 100,
-      height: 100,
+      height: 50,
       bgColor: 'white',
-      borderColor: 'transparent',
-      image: true,
-      src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+      sourcePosition: 'bottom'
     },
     {
-      id: 2,
-      position: { x: 390, y: 180 },
-      data: { label: 'id=2' },
-      width: 125,
-      height: 40,
+      id: '2',
+      position: {x: 150, y: 200},
+      data: {label: 'id-2'},
+      width: 100,
+      height: 50,
       bgColor: 'white',
-      textColor: 'black',
-      targetPosition: 'left',
+      targetPosition: 'top'
     },
-  ];
-
+    {
+      id: '3',
+      position: {x: 50, y: 50},
+      data: {label: 'id-3'},
+      width: 100,
+      height: 50,
+      bgColor: 'white',
+      sourcePosition: 'right',
+    },
+    {
+      id: '4',
+      position: {x: 150, y: 200},
+      data: {label: 'id-4'},
+      width: 100,
+      height: 50,
+      bgColor: 'white',
+      targetPosition: 'left'
+    },
+  ]
+  
   let initialEdges: any[] = [
-    { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
+    {
+    id: 'bottom_top',
+    source: '1',
+    target: '2',
+    type: 'step',
+    label: 'this is the test edge',
+    },
+    {
+      id: 'right_left',
+      source: '3',
+      target: '4',
+      type: 'step',
+      label: 'this is the test edge',
+    },
   ];
 
 

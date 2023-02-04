@@ -1,5 +1,5 @@
 import type { Readable, Writable } from 'svelte/store';
-import type { AnchorType } from '$lib/edges/types/types';
+import type { AnchorType } from '../../edges/types/types';
 
 export interface ResizeNodeType {
   id: string;
@@ -106,7 +106,7 @@ export interface EdgeType {
   targetY: number;
   canvasId: string;
   label?: string;
-  type?: string;
+  type?: 'straight' | 'smooth' | 'step' | 'bezier';
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
