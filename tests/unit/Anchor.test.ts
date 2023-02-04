@@ -9,7 +9,7 @@ import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
 
 afterEach(cleanup);
 
-describe('tests ResizeNode', () => {
+describe('tests Anchor', () => {
   const canvasId = uuidv4();
   const initialNodes: UserNodeType[] = [
     {
