@@ -1,6 +1,9 @@
-<script>
-  import EdgeText from './EdgeText.svelte';
-  export let baseEdgeProps;
+<script lang="ts">
+  import EdgeText from '../Edges/EdgeText.svelte';
+  import type { EdgeProps } from '../Edges/types';
+
+  export let baseEdgeProps: EdgeProps;
+
   // destructuring the props passed in from the parent component
   $: ({
     path,
@@ -13,6 +16,7 @@
     centerX,
     centerY,
   } = baseEdgeProps);
+
   // setting edge text props
   $: edgeTextProps = {
     label: label,
@@ -21,6 +25,7 @@
     centerX: centerX,
     centerY: centerY,
   };
+
   const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
 
