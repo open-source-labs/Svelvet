@@ -45,14 +45,14 @@
     id: 'bottom_top',
     source: '1',
     target: '2',
-    type: 'step',
+    type: 'smoothstep',
     label: 'this is the test edge',
     },
     {
       id: 'right_left',
       source: '3',
       target: '4',
-      type: 'step',
+      type: 'smoothstep',
       label: 'this is the test edge',
     },
   ];

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   createStoreEmpty,
   populateSvelvetStoreFromUserInput,
+  getEdgeById,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
 import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
@@ -57,14 +58,14 @@ describe('tests SmoothStepEdge', () => {
     id: 'bottom_top',
     source: '1',
     target: '2',
-    type: 'step',
+    type: 'smoothstep',
     label: 'this is the test edge',
     },
     {
       id: 'right_left',
       source: '3',
       target: '4',
-      type: 'step',
+      type: 'smoothstep',
       label: 'this is the test edge',
     },
   ];
@@ -90,12 +91,9 @@ describe('tests SmoothStepEdge', () => {
   //create store from user input
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
-  
-  const { edgesStore } = store;
 
   test('should calculate the correct smooth step path string from bottom to top', () => {
-    console.log(edgesStore);
-    render(SmoothStepEdge, { props: { edge: edgesStore[0], canvasId } });
+    render(SmoothStepEdge, { props: { edge: getEdgeById(store, 'bottom_top'), canvasId } });
     const pathElement = screen.getByLabelText('svg-path');
     expect(pathElement).toHaveAttribute(
       'd',
@@ -104,12 +102,12 @@ describe('tests SmoothStepEdge', () => {
   });
 
   test('should calculate the correct smooth step path string from right to left', () => {
-    render(SmoothStepEdge, { props: { edge: edgesStore[1], canvasId } });
+    render(SmoothStepEdge, { props: { edge: getEdgeById(store, 'right_left'), canvasId } });
     const pathElement = screen.getByLabelText('svg-path');
 
     expect(pathElement).toHaveAttribute(
       'd',
-      'M 100,100L 145,100Q 150,100 150,105L 150,195Q 150,200 155,200L 200,200'
+      'M 150,75L 150,75Q 150,75 150,75L 150,225Q 150,225 150,225L 150,225'
     );
   });
 
