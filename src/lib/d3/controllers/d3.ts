@@ -24,15 +24,12 @@ export function zoomInit(
     // zooms in on selected point
     .transition()
     .duration(0)
-    .call(
-      d3Zoom.scaleBy,
-      Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
-    );
+    .call(d3Zoom.scaleBy, (0.4 + 0.16 * initialZoom).toFixed(2));
 
   // updates d3Translate with d3 object with x, y, and k values to be sent down to the minimap to be further calculated further
   d3Translate = d3.zoomIdentity
     .translate(initialLocation.x, initialLocation.y)
-    .scale(Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2));
+    .scale((0.4 + 0.16 * initialZoom).toFixed(2));
 
   d3.select(`.Nodes-${canvasId}`)
     .transition()
@@ -43,10 +40,7 @@ export function zoomInit(
     .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
     .transition()
     .duration(0)
-    .call(
-      d3Zoom.scaleBy,
-      Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
-    );
+    .call(d3Zoom.scaleBy, (0.4 + 0.16 * initialZoom).toFixed(2));
 
   // sets D3 scale to current k of object
   d3Scale.set(d3.zoomTransform(d3.select(`.Nodes-${canvasId}`)).k);

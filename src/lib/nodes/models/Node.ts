@@ -45,12 +45,12 @@ export class Node implements NodeType {
     public bgColor: string,
     public data: object,
     public canvasId: string,
-    public borderColor: string,
-    public image: boolean,
-    public src: string,
-    public textColor: string,
-    public borderRadius: number,
-    public childNodes: string[],
+    public borderColor?: string,
+    public image?: boolean,
+    public src?: string,
+    public textColor?: string,
+    public borderRadius?: number,
+    public childNodes?: string[],
     public className?: string,
     public nodeCallback?: Function
   ) {}
@@ -86,9 +86,9 @@ export class Node implements NodeType {
 
     // update children
     nodesStore.update((nodes) => {
-      for (const childNodeId of this.childNodes) {
-        nodes[childNodeId].setPositionFromMovement(movementX, movementY);
-      }
+      if (this.childNodes)
+        for (const childNodeId of this.childNodes)
+          nodes[childNodeId].setPositionFromMovement(movementX, movementY);
       return { ...nodes };
     });
 

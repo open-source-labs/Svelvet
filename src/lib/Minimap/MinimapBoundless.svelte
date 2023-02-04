@@ -79,8 +79,6 @@
 
     viewWidth = ($widthStore * widthRatio) / d3Translate.k;
     viewHeight = ($heightStore * heightRatio) / d3Translate.k;
-
-    console.log(d3Translate);
   }
   //get a scale factor from nodeheight and width
   //use that scaling factor to make virtual representation of nodes bigger or smaller
