@@ -42,9 +42,9 @@ import {
   fixedCbCreator,
   potentialAnchorCbCreator,
 } from '../../edges/controllers/anchorCbDev';
-import { stores } from '$lib/store/models/store';
+import { stores } from '../models/store';
 import { writable, derived, get, readable } from 'svelte/store';
-import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
+import type { AnchorCbType, AnchorType } from '../../edges/types/types';
 
 import type {
   NodeType,
@@ -55,10 +55,10 @@ import type {
   TemporaryEdgeType,
   ResizeNodeType,
   PotentialAnchorType,
-} from '$lib/store/types/types';
-import { Anchor } from '$lib/edges/models/Anchor';
-import { Node } from '$lib/nodes/models/Node';
-import { Edge } from '$lib/edges/models/Edge';
+} from '../types/types';
+import { Anchor } from '../../edges/models/Anchor';
+import { Node } from '../../nodes/models/Node';
+import { Edge } from '../../edges/models/Edge';
 import {
   populateAnchorsStore,
   populateNodesStore,
@@ -66,7 +66,7 @@ import {
   populateResizeNodeStore,
   populatePotentialAnchorStore,
 } from './util';
-import { TemporaryEdge } from '$lib/interactiveNodes/models/TemporaryEdge';
+import { TemporaryEdge } from '../../interactiveNodes/models/TemporaryEdge';
 
 /**
  * Gets one anchor (source anchor or target anchor) from a given edge

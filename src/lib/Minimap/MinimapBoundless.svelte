@@ -1,5 +1,5 @@
 <script>
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../store/controllers/storeApi';
   import { onMount, createEventDispatcher } from 'svelte';
   import GreyNode from './GreyNodeBoundless.svelte';
 

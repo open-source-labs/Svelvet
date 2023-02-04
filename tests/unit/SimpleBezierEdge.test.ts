@@ -53,7 +53,7 @@ describe('tests SimpleBezierEdge', () => {
     },
   ]
   
-  const initialEdges = [
+  const initialEdges: UserEdgeType[] = [
     {
     id: 'bottom_top',
     source: '1',

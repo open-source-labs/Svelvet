@@ -1,5 +1,5 @@
 import type { Readable, Writable } from 'svelte/store';
-import type { AnchorType } from '$lib/edges/types/types';
+import type { AnchorType } from '../../edges/types/types';
 
 export interface ResizeNodeType {
   id: string;
