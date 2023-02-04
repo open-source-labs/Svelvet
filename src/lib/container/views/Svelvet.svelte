@@ -60,6 +60,7 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
+    store.boundary.set(boundary);
 
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);

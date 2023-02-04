@@ -117,3 +117,8 @@ As before, any canvas-wide parameters (such as nodeCreate, backgroundColor, etc.
 This feature is fragile since there is no guarantee that it will work with new features involving nodes and edges. In order to future-proof this feature, it would be best to specify that import/export of diagrams only serializes certain parameters.
 
 ## Diagram Boundary
+
+http://localhost:3000/compatibility-15-diagramBoundary/
+https://www.svelvet.io/docs/boundary/
+
+Feature works as expected
