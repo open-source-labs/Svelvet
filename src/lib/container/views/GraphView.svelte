@@ -64,22 +64,11 @@
     pointer,
   };
 
-  let d3ZoomOld = d3ZoomCreator(
-    nodeSelected,
-    movementStore,
-    backgroundStore,
-    canvasId,
-    gridSize,
-    dotSize,
-    d3Scale,
-    d3
-  );
-
   const boundary = false;
   let d3Zoom = determineD3Instance(
     boundary,
     d3,
-    nodes,
+    nodeSelected,
     width,
     height,
     movementStore,
@@ -90,23 +79,23 @@
     d3Scale
   );
 
+  // d3Translate is used for the minimap
   let d3Translate = { x: 0, y: 0, k: 1 };
-
   onMount(() => {
     // actualizes the d3 instance
-    d3.select(`.Edges-${canvasId}`).call(d3ZoomOld);
-    d3.select(`.Nodes-${canvasId}`).call(d3ZoomOld);
-    // d3.select(`#background-${canvasId}`).call(d3Zoom);
-    // d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
-    // zoomInit(
-    //   d3,
-    //   canvasId,
-    //   d3Zoom,
-    //   d3Translate,
-    //   initialLocation,
-    //   initialZoom,
-    //   d3Scale
-    // );
+    d3.select(`.Edges-${canvasId}`).call(d3Zoom);
+    d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
+    d3.select(`#background-${canvasId}`).call(d3Zoom);
+    d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+    d3Translate = zoomInit(
+      d3,
+      canvasId,
+      d3Zoom,
+      d3Translate,
+      initialLocation,
+      initialZoom,
+      d3Scale
+    );
   });
 </script>
 

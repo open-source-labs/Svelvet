@@ -30,9 +30,9 @@ export function zoomInit(
     );
 
   // updates d3Translate with d3 object with x, y, and k values to be sent down to the minimap to be further calculated further
-  // d3Translate = d3.zoomIdentity
-  //   .translate(initialLocation.x, initialLocation.y)
-  //   .scale(Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2));
+  d3Translate = d3.zoomIdentity
+    .translate(initialLocation.x, initialLocation.y)
+    .scale(Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2));
 
   d3.select(`.Nodes-${canvasId}`)
     .transition()
