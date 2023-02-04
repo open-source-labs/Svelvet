@@ -22,16 +22,16 @@
     },
     {
       id: '3',
-      position: {x: 20, y: 20},
+      position: {x: 50, y: 50},
       data: {label: 'id-3'},
       width: 100,
       height: 50,
       bgColor: 'white',
-      sourcePosition: 'right'
+      sourcePosition: 'right',
     },
     {
       id: '4',
-      position: {x: 100, y: 200},
+      position: {x: 150, y: 200},
       data: {label: 'id-4'},
       width: 100,
       height: 50,
@@ -40,17 +40,19 @@
     },
   ]
   
- let initialEdges: any[] = [
+  let initialEdges: any[] = [
     {
     id: 'bottom_top',
     source: '1',
     target: '2',
+    type: 'step',
     label: 'this is the test edge',
     },
     {
       id: 'right_left',
       source: '3',
       target: '4',
+      type: 'step',
       label: 'this is the test edge',
     },
   ];
