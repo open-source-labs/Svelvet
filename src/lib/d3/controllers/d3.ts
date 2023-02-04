@@ -2,6 +2,58 @@ import { zoom, zoomTransform } from 'd3-zoom';
 import { select, selectAll } from 'd3-selection';
 import { writable, derived, get, readable } from 'svelte/store';
 
+export function zoomInit(
+  d3,
+  canvasId,
+  d3Zoom,
+  d3Translate,
+  initialLocation,
+  initialZoom,
+  d3Scale
+) {
+  //set default zoom logic
+  d3.select(`.Edges-${canvasId}`)
+    //makes sure translation is default at center coordinates
+    .transition()
+    .duration(0)
+    .call(d3Zoom.translateTo, 0, 0)
+    //moves camera to coordinates
+    .transition()
+    .duration(0)
+    .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
+    // zooms in on selected point
+    .transition()
+    .duration(0)
+    .call(
+      d3Zoom.scaleBy,
+      Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
+    );
+
+  // updates d3Translate with d3 object with x, y, and k values to be sent down to the minimap to be further calculated further
+  d3Translate = d3.zoomIdentity
+    .translate(initialLocation.x, initialLocation.y)
+    .scale(Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2));
+
+  d3.select(`.Nodes-${canvasId}`)
+    .transition()
+    .duration(0)
+    .call(d3Zoom.translateTo, 0, 0)
+    .transition()
+    .duration(0)
+    .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
+    .transition()
+    .duration(0)
+    .call(
+      d3Zoom.scaleBy,
+      Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
+    );
+
+  // sets D3 scale to current k of object
+  d3Scale.set(d3.zoomTransform(d3.select(`.Nodes-${canvasId}`)).k);
+
+  return d3Translate;
+}
+
 // create d3 instance conditionally based on boundary prop
 export function determineD3Instance(
   boundary,

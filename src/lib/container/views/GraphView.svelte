@@ -18,7 +18,7 @@
   import { findStore } from '$lib/store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
-  import { determineD3Instance } from '$lib/d3/controllers/d3';
+  import { determineD3Instance, zoomInit } from '$lib/d3/controllers/d3';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -74,9 +74,25 @@
     d3Scale
   );
 
+  let d3Translate = { x: 0, y: 0, k: 1 };
+  let initialZoom = 3;
+  let initialLocation = { x: 0, y: 100 };
+
   onMount(() => {
+    // actualizes the d3 instance
     d3.select(`.Edges-${canvasId}`).call(d3Zoom);
     d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
+    d3.select(`#background-${canvasId}`).call(d3Zoom);
+    d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+    zoomInit(
+      d3,
+      canvasId,
+      d3Zoom,
+      d3Translate,
+      initialLocation,
+      initialZoom,
+      d3Scale
+    );
   });
 </script>
 
