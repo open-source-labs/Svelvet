@@ -27,6 +27,7 @@
   export let height: number;
   export let initialZoom = 3;
   export let initialLocation;
+  export let boundary = false;
 
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
@@ -63,8 +64,6 @@
     selectAll,
     pointer,
   };
-
-  const boundary = false;
   let d3Zoom = determineD3Instance(
     boundary,
     d3,
