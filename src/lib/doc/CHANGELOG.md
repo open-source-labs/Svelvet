@@ -105,4 +105,15 @@ Same functionality as Svelvet5. It appears the center of the canvas is 0,0
 
 You need to put !important in the CSS
 
+## ImportDiagrams
+
+https://www.svelvet.io/docs/importDiagrams/
+http://localhost:3000/featureImportExport/
+
+Feature works as expected. Note that previous version of Svelvet did not serialize callbacks (there is no general way to do this since callbacks can involve closures). We do not do serialize callbacks in Svelvet6; this includes anchors which are reset to adaptive upon serialization.
+
+As before, any canvas-wide parameters (such as nodeCreate, backgroundColor, etc.) will not be serialized.
+
+This feature is fragile since there is no guarantee that it will work with new features involving nodes and edges. In order to future-proof this feature, it would be best to specify that import/export of diagrams only serializes certain parameters.
+
 ##
