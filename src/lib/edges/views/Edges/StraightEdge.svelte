@@ -35,4 +35,4 @@
   };
 </script>
 
-<BaseEdge {baseEdgeProps} />
+<BaseEdge {baseEdgeProps} {canvasId} />

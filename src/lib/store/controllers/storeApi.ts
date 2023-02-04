@@ -301,6 +301,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     temporaryEdgeStore: writable([]),
     nodeCreate: writable(false), // this option sets whether the "nodeEdit" feature is enabled
     boundary: writable(false),
+    edgeEditModal: writable(null),
   };
   return stores[canvasId];
 }

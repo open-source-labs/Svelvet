@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { base } from '$app/paths';
+  import { findStore, getEdgeById } from '$lib/store/controllers/storeApi';
   import EdgeText from '../Edges/EdgeText.svelte';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
-
+  export let canvasId;
   // destructuring the props passed in from the parent component
   $: ({
     path,
@@ -23,6 +25,13 @@
     labelTextColor: labelTextColor,
     centerX: centerX,
     centerY: centerY,
+  };
+
+  const edgeId = baseEdgeProps.id;
+  const handleEditModal = () => {
+    const store = findStore(canvasId);
+    const edge = getEdgeById(store, edgeId);
+    edge.delete();
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -58,7 +67,7 @@
     stroke={edgeColor ? edgeColor : 'gray'}
     aria-label="svg-path"
     stroke-width="3"
-    on:contextmenu={() => console.log('hello')}
+    on:contextmenu={handleEditModal}
   />
 {/if}
 
