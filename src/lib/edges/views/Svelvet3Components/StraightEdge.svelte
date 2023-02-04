@@ -1,6 +1,6 @@
 <!-- Handling the rendering of edges -->
 <script lang="ts">
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../../store/controllers/storeApi';
   import BaseEdge from './BaseEdge.svelte';
 
   export let edgeId: string;

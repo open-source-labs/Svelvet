@@ -2,7 +2,7 @@
   import {
     findStore,
     populateSvelvetStoreFromUserInput,
-  } from '$lib/store/controllers/storeApi';
+  } from '../../store/controllers/storeApi';
 
   export let canvasId: string;
 

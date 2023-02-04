@@ -11,20 +11,20 @@ import type {
   StoreType,
   ResizeNodeType,
   UserEdgeType,
-} from '$lib/store/types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
 
 /**
  * Class Edge that implements EdgeType.
  * @param id The id of the Edge
- * @param sourceX The X coordinate of the source Anchor 
+ * @param sourceX The X coordinate of the source Anchor
  * @param sourceY The Y coordinate of the source Anchor
  * @param targetX The X coordinate of the target Anchor
  * @param targetY The Y coordinate of the target Anchor
  * @param canvasId The canvasId of the Svelvet component that holds the instantiated Edge
  * @param label The label of the Edge
- * @param type The type of the Edge 
+ * @param type The type of the Edge
  */
 export class Edge implements EdgeType {
   constructor(

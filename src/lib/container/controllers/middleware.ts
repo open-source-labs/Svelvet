@@ -9,8 +9,8 @@ import {
   leftCb,
   rightCb,
   topCb,
-} from '$lib/edges/controllers/anchorCbUser';
-import type { UserEdgeType, UserNodeType } from '$lib/store/types/types';
+} from '../../edges/controllers/anchorCbUser';
+import type { UserEdgeType, UserNodeType } from '../../store/types/types';
 
 export function sanitizeUserNodesAndEdges(
   userNodes: UserNodeType[],
