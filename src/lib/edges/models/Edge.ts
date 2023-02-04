@@ -29,8 +29,8 @@ import { stores } from '../../store/models/store';
  * @param labelTextColor The text color of the Edge label
  * @param edgeColor The color of the Edge
  * @param animate Boolean value to specify whether the Edge should be animated
- * @param noHandle
- * @param arraw
+ * @param noHandle Boolean value but looks like it is already depracated and can be removed without damage
+ * @param arraw Boolean value to specify whether the Edge displays an arrow near its target Anchor
  */
 export class Edge implements EdgeType {
   constructor(
