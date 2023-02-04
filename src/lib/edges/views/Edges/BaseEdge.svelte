@@ -58,6 +58,8 @@
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
     aria-label="svg-path"
+    stroke-width="3"
+    on:click={() => alert('hello')}
   />
 {/if}
 
