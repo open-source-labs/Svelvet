@@ -92,7 +92,13 @@ Same functionality as before. The reason why it looks different is because I cre
 
 ## Minimap
 
-Not implemented
+http://localhost:3000/compatibility-12-minimap/
+https://www.svelvet.io/docs/Minimap/
+
+Same functionality as before. It looks like there is a big with HTML feature (unrelated to minimap)
+
+<img src="./images/minimap-before.png" width="150" height="150">
+<img src="./images/minimap-after.png" width="150" height="150">
 
 ## Initial zoom and location
 

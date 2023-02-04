@@ -16,12 +16,15 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 </div>
 
+## For future iteration teams:
+
+Read `src/lib/doc/README.md` for suggestions on how to get started!
+
 ## Version Updates
 
 Shout out to our contributors! Here's what's new:
 
 ### Changelog
-
 
 <details><summary>v5.0.0</summary>
 <ul>
