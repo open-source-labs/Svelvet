@@ -21,6 +21,8 @@
   import { determineD3Instance, zoomInit } from '$lib/d3/controllers/d3';
   import { d3ZoomCreator } from '$lib/d3/controllers/d3Old';
 
+  import MinimapBoundary from '$lib/Minimap/MinimapBoundary.svelte';
+  import MinimapBoundless from '$lib/Minimap//MinimapBoundless.svelte';
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
   export let width: number;
@@ -75,7 +77,8 @@
     gridSize,
     dotSize,
     canvasId,
-    d3Scale
+    d3Scale,
+    handleZoom
   );
 
   // d3Translate is used for the minimap
@@ -96,42 +99,121 @@
       d3Scale
     );
   });
+
+  // moves canvas when you click on the minimap
+  // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
+  // moves camera to the clicked node
+  function miniMapClick(event) {
+    // onclick in case of boundless minimap
+    if (!boundary) {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+    // handles case for when minimap has a boundary
+    else {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+  }
+
+  const minimap = true; // QQQ
+  const key = canvasId;
+
+  function handleZoom(e) {
+    if (!$movementStore) return;
+    //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
+    d3Scale.set(e.transform.k);
+    // should not run d3.select below if backgroundStore is false
+    if (backgroundStore) {
+      d3.select(`#background-${canvasId}`)
+        .attr('x', e.transform.x)
+        .attr('y', e.transform.y)
+        .attr('width', gridSize * e.transform.k)
+        .attr('height', gridSize * e.transform.k)
+        .selectAll('#dot')
+        .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
+        .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
+        .attr('opacity', Math.min(e.transform.k, 1));
+    }
+    // transform 'g' SVG elements (edge, edge text, edge anchor)
+    d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
+    // transform div elements (nodes)
+    let transform = d3.zoomTransform(this);
+    d3Translate = transform;
+    // selects and transforms all node divs from class 'Node' and performs transformation
+    d3.select(`.Node-${canvasId}`)
+      .style(
+        'transform',
+        'translate(' +
+          transform.x +
+          'px,' +
+          transform.y +
+          'px) scale(' +
+          transform.k +
+          ')'
+      )
+      .style('transform-origin', '0 0');
+  }
 </script>
 
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
-  <!-- This container is transformed by d3zoom -->
-  <div class={`Node Node-${canvasId}`}>
-    {#each nodes as node}
-      {#if node.data.html}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          >{@html node.data.html}</Node
-        >
-      {:else if node.data.custom}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          ><svelte:component this={node.data.custom} /></Node
-        >
-      {:else}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}>{node.data.label}</Node
-        >
-      {/if}
-    {/each}
+<div id="graphview-container">
+  {#if minimap && boundary}
+    <MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate} />
+  {:else if minimap}
+    <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} />
+  {/if}
 
-    {#each resize as res}
-      <ResizeNode resizeId={res.id} {canvasId} />
-    {/each}
+  <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
+    <!-- This container is transformed by d3zoom -->
+    <div class={`Node Node-${canvasId}`}>
+      {#each nodes as node}
+        {#if node.data.html}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{@html node.data.html}</Node
+          >
+        {:else if node.data.custom}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            ><svelte:component this={node.data.custom} /></Node
+          >
+        {:else}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{node.data.label}</Node
+          >
+        {/if}
+      {/each}
 
-    {#each potentialAnchors as potentialAnchor}
-      <PotentialAnchor
-        {canvasId}
-        x={potentialAnchor.positionX}
-        y={potentialAnchor.positionY}
-        {potentialAnchor}
-      />
-    {/each}
+      {#each resize as res}
+        <ResizeNode resizeId={res.id} {canvasId} />
+      {/each}
+
+      {#each potentialAnchors as potentialAnchor}
+        <PotentialAnchor
+          {canvasId}
+          x={potentialAnchor.positionX}
+          y={potentialAnchor.positionY}
+          {potentialAnchor}
+        />
+      {/each}
+    </div>
   </div>
 </div>
-
 <!-- rendering dots on the background depending on the zoom level -->
 <svg
   class={`Edges Edges-${canvasId}`}
