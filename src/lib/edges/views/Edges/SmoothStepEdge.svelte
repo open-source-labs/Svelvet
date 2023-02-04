@@ -147,7 +147,7 @@
   import {
     findStore,
     getAnchorFromEdge,
-  } from '$lib/store/controllers/storeApi';
+  } from '../../../store/controllers/storeApi';
 
   let params;
   $: {

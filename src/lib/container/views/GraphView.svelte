@@ -2,27 +2,22 @@
   import { onMount } from 'svelte';
   import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
   import { select, selectAll, pointer, local } from 'd3-selection';
+  import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
+  import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
+  import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
+  import StraightEdge from '../../edges/views/Svelvet3Components/StraightEdge.svelte';
 
-  import SimpleBezierEdge from '$lib/edges/views/Edges/SimpleBezierEdge.svelte';
-  import StepEdge from '$lib/edges/views/Edges/StepEdge.svelte';
-  import SmoothStepEdge from '$lib/edges/views/Edges/SmoothStepEdge.svelte';
+  import EdgeAnchor from '../../edges/views/Svelvet3Components/EdgeAnchor.svelte';
+  import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
+  import Node from '../../nodes/views/Node.svelte';
 
-  import StraightEdge from '$lib/edges/views/Svelvet3Components/StraightEdge.svelte';
-  //import SmoothStepEdge from './SmoothStepEdge.svelte';
-  //  import StepEdge from './StepEdge.svelte';
-  import EdgeAnchor from '$lib/edges/views/Svelvet3Components/EdgeAnchor.svelte';
-  import ResizeNode from '$lib/resizableNodes/views/ResizeNode.svelte';
-
-  import Node from '$lib/nodes/views/Node.svelte';
-
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
-  import { determineD3Instance, zoomInit } from '$lib/d3/controllers/d3';
-  import { d3ZoomCreator } from '$lib/d3/controllers/d3Old';
+  import { determineD3Instance, zoomInit } from '../..//d3/controllers/d3';
 
-  import MinimapBoundary from '$lib/Minimap/MinimapBoundary.svelte';
-  import MinimapBoundless from '$lib/Minimap//MinimapBoundless.svelte';
+  import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
+  import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
   export let width: number;

@@ -9,8 +9,8 @@ import {
   leftCb,
   rightCb,
   topCb,
-} from '$lib/edges/controllers/anchorCbUser';
-import type { UserEdgeType, UserNodeType } from '$lib/store/types/types';
+} from '../../edges/controllers/anchorCbUser';
+import type { UserEdgeType, UserNodeType } from '../../store/types/types';
 
 /**
  * sanitizeUserNodesAndEdges will sanitize the data initially passed in to Svelvet component. For example, the node that user specified have an integar as its id but to instantiate a Node and be compatible with uuid we will need to convert the integar id to a string.

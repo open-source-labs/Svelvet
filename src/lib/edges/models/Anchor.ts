@@ -2,7 +2,7 @@
  * This is where we create, update  the Anchor store.
  */
 
-import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
+import type { AnchorCbType, AnchorType } from '../../edges/types/types';
 
 import type {
   NodeType,
@@ -19,18 +19,17 @@ import {
 import { stores } from '../../store/models/store';
 
 /** Class representing an Anchor that implements Anchortype.
-* @param {string} id The id of the Anchor
-* @param {string} nodeId The id of the Node which the instantiated Anchor will be attached to
-* @param {string} edgeId The id of the Edge which connects to the instantiated Anchor
-* @param {'source' | 'target'} sourceOrTarget Specify the Anchor is a source or target 
-* @param {number} positionX The 'X' coordinate of the Anchor
-* @param {number} positionY The 'Y' coordinate of the Anchor
-* @param {function} callback The callback function that will determine the position of this Anchor
-* @param {string} canvasId The canvasId of the Svelvet component that will hold this Anchor
-* @param { number } angle This is the orientation of the anchor and is used to make sure bezier/step curves are rendered perpendicular to the node. Angles are defined along the unit circle. EX: 0 = right side of node, 180 = left side of node.
-*/
+ * @param {string} id The id of the Anchor
+ * @param {string} nodeId The id of the Node which the instantiated Anchor will be attached to
+ * @param {string} edgeId The id of the Edge which connects to the instantiated Anchor
+ * @param {'source' | 'target'} sourceOrTarget Specify the Anchor is a source or target
+ * @param {number} positionX The 'X' coordinate of the Anchor
+ * @param {number} positionY The 'Y' coordinate of the Anchor
+ * @param {function} callback The callback function that will determine the position of this Anchor
+ * @param {string} canvasId The canvasId of the Svelvet component that will hold this Anchor
+ * @param { number } angle This is the orientation of the anchor and is used to make sure bezier/step curves are rendered perpendicular to the node. Angles are defined along the unit circle. EX: 0 = right side of node, 180 = left side of node.
+ */
 export class Anchor implements AnchorType {
-
   constructor(
     public id: string,
     public nodeId: string,
@@ -44,7 +43,7 @@ export class Anchor implements AnchorType {
   ) {}
   /**
    * setPositionFromNode will invoke the user-defined callback to calculate the position of the Anchor, set the position of the Anchor in the anchorsStore, and also update the Edge position accordingly.
-  */
+   */
   setPositionFromNode() {
     /**get node data */
     const store = findStore(this.canvasId);
@@ -90,7 +89,7 @@ export class Anchor implements AnchorType {
       return { ...edges };
     });
   }
-  
+
   /**
    * setPosition will update the positionX and positionY of the Anchor and also cascade changes to related Edge.
    * @param x The X coordinate of the new position for the Anchor
@@ -123,5 +122,4 @@ export class Anchor implements AnchorType {
       return { ...edges };
     });
   }
-
 }

@@ -6,17 +6,17 @@
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
   import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
     populateSvelvetStoreFromUserInput,
-  } from '$lib/store/controllers/storeApi';
+  } from '../../store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
   import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
 
-  import ImportExport from '$lib/importingExporting/views/ImportExport.svelte';
+  import ImportExport from '../../importingExporting/views/ImportExport.svelte';
 
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number

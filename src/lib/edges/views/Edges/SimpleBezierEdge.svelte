@@ -20,7 +20,7 @@
   import {
     findStore,
     getAnchorFromEdge,
-  } from '$lib/store/controllers/storeApi';
+  } from '../../../store/controllers/storeApi';
   function calculateControlOffset(distance, curvature) {
     if (distance >= 0) {
       return 0.5 * distance;

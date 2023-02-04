@@ -11,14 +11,14 @@ import type {
   StoreType,
   ResizeNodeType,
   UserEdgeType,
-} from '$lib/store/types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
 
 /**
  * Class Edge that implements EdgeType.
  * @param id The id of the Edge
- * @param sourceX The X coordinate of the source Anchor 
+ * @param sourceX The X coordinate of the source Anchor
  * @param sourceY The Y coordinate of the source Anchor
  * @param targetX The X coordinate of the target Anchor
  * @param targetY The Y coordinate of the target Anchor
@@ -29,7 +29,7 @@ import { stores } from '../../store/models/store';
  * @param labelTextColor The text color of the Edge label
  * @param edgeColor The color of the Edge
  * @param animate Boolean value to specify whether the Edge should be animated
- * @param noHandle Boolean value but looks like it is already depracated and can be removed without damage 
+ * @param noHandle Boolean value but looks like it is already depracated and can be removed without damage
  * @param arraw Boolean value to specify whether the Edge displays an arrow near its target Anchor
  */
 export class Edge implements EdgeType {
