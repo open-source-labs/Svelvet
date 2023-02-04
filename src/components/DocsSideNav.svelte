@@ -26,7 +26,8 @@
     ['Importing & Exporting Diagrams', 'importDiagrams'],
     ['Diagram Boundary', 'boundary'],
     ['Interactive Editable Nodes', 'editNodes'],
-    ['Deletable Nodes', 'delete']
+    ['Deletable Nodes', 'delete'],
+    ['Resizable Nodes', 'ResizableNodes']
   ];
 
   // const communityLinks = [
