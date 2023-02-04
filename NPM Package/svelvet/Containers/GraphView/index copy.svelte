@@ -12,15 +12,6 @@
   import { findOrCreateStore } from '../../stores/store';
   import MinimapBoundary from '../Minimap/MinimapBoundary.svelte';
 
-  // leveraging d3 library to zoom/pan
-  let d3 = {
-    zoom,
-    zoomTransform,
-    zoomIdentity,
-    select,
-    selectAll,
-    pointer,
-  };
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let nodesStore;
   export let derivedEdges;
@@ -33,8 +24,6 @@
   export let boundary;
 
   // here we lookup the store using the unique key
-  const svelvetStore = findOrCreateStore(key);
-  // svelvetStore.isLocked.set(true)
   const {
     nodeSelected,
     backgroundStore,
@@ -45,170 +34,9 @@
     isLocked,
     shareable,
   } = svelvetStore;
-  // declaring the grid and dot size for d3's transformations and zoom
-  const gridSize = 15;
-  const dotSize = 10;
   // declare prop to be passed down to the minimap
   let d3Translate = { x: 0, y: 0, k: 1 };
   //creating function to pass down
-
-  // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
-  // moves camera to the clicked node
-  function miniMapClick(event) {
-    // onclick in case of boundless minimap
-    if (!boundary) {
-      // For edges
-      d3.select(`.Edges-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
-      // For nodes
-      d3.select(`.Nodes-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
-    }
-    // handles case for when minimap has a boundary
-    else {
-      // For edges
-      d3.select(`.Edges-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
-      // For nodes
-      d3.select(`.Nodes-${key}`)
-        .transition()
-        .duration(500)
-        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
-    }
-  }
-
-  // create d3 instance conditionally based on boundary prop
-  function determineD3Instance() {
-    if (boundary) {
-      return d3
-        .zoom()
-        .filter(() => !$nodeSelected)
-        .scaleExtent([0.4, 2]) // limits for zooming in/out
-        .translateExtent([
-          [0, 0],
-          [boundary.x, boundary.y],
-        ]) // world extent
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .on('zoom', handleZoom);
-    } else {
-      return d3
-        .zoom()
-        .filter(() => !$nodeSelected)
-        .scaleExtent([0.4, 2])
-        .on('zoom', handleZoom);
-    }
-  }
-
-  let d3Zoom = determineD3Instance();
-
-  function zoomInit() {
-    //set default zoom logic
-    d3.select(`.Edges-${key}`)
-      //makes sure translation is default at center coordinates
-      .transition()
-      .duration(0)
-      .call(d3Zoom.translateTo, 0, 0)
-      //moves camera to coordinates
-      .transition()
-      .duration(0)
-      .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
-      // zooms in on selected point
-      .transition()
-      .duration(0)
-      .call(
-        d3Zoom.scaleBy,
-        Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
-      );
-
-    // updates d3Translate with d3 object with x, y, and k values to be sent down to the minimap to be further calculated further
-    d3Translate = d3.zoomIdentity
-      .translate(initialLocation.x, initialLocation.y)
-      .scale(Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2));
-
-    d3.select(`.Nodes-${key}`)
-      .transition()
-      .duration(0)
-      .call(d3Zoom.translateTo, 0, 0)
-      .transition()
-      .duration(0)
-      .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
-      .transition()
-      .duration(0)
-      .call(
-        d3Zoom.scaleBy,
-        Number.parseFloat(0.4 + 0.16 * initialZoom).toFixed(2)
-      );
-
-    // sets D3 scale to current k of object
-    d3Scale.set(d3.zoomTransform(d3.select(`.Nodes-${key}`)).k);
-  }
-
-  onMount(() => {
-    // actualizes the d3 instance
-    d3.select(`.Edges-${key}`).call(d3Zoom);
-    d3.select(`.Nodes-${key}`).call(d3Zoom);
-    d3.select(`#background-${key}`).call(d3Zoom);
-    d3.selectAll('#dot').call(d3Zoom);
-    //actualizes the initial zoom and pan
-    zoomInit();
-  });
-
-  // function to handle zoom events - arguments: d3ZoomEvent
-  function handleZoom(e) {
-    if (!$movementStore) return;
-    //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
-    d3Scale.set(e.transform.k);
-    // should not run d3.select below if backgroundStore is false
-    if ($backgroundStore) {
-      d3.select(`#background-${key}`)
-        .attr('x', e.transform.x)
-        .attr('y', e.transform.y)
-        .attr('width', gridSize * e.transform.k)
-        .attr('height', gridSize * e.transform.k)
-        .selectAll('#dot')
-        .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('opacity', Math.min(e.transform.k, 1));
-    }
-    // transform 'g' SVG elements (edge, edge text, edge anchor)
-    d3.select(`.Edges-${key} g`).attr('transform', e.transform);
-    // transform div elements (nodes)
-    let transform = d3.zoomTransform(this);
-    d3Translate = transform;
-
-    // selects and transforms all node divs from class 'Node' and performs transformation
-    d3.select(`.Node-${key}`)
-      .style(
-        'transform',
-        'translate(' +
-          transform.x +
-          'px,' +
-          transform.y +
-          'px) scale(' +
-          transform.k +
-          ')'
-      )
-      .style('transform-origin', '0 0');
-  }
-
-  // closes the modal when you click outside of the modal
-  const closeEditModal = () => {
-    const input = document.querySelector(`.edit-modal-${key}`);
-    input.style.display = 'none';
-  };
-
-  afterUpdate(() => {
-    if ($shareable) setImportExport();
-  });
 </script>
 
 <div id="graphview-container">

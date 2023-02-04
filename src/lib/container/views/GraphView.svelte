@@ -22,7 +22,7 @@
   import { d3ZoomCreator } from '$lib/d3/controllers/d3Old';
 
   import MinimapBoundary from '$lib/Minimap/MinimapBoundary.svelte';
-  // import MinimapBoundless from '$lib/Minimap//MinimapBoundless.svelte';
+  import MinimapBoundless from '$lib/Minimap//MinimapBoundless.svelte';
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
   export let width: number;
@@ -99,9 +99,41 @@
     );
   });
 
+  // moves canvas when you click on the minimap
+  // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
+  // moves camera to the clicked node
+  function miniMapClick(event) {
+    // onclick in case of boundless minimap
+    if (!boundary) {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+    // handles case for when minimap has a boundary
+    else {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+  }
+
   const minimap = true; // QQQ
-  boundary = { x: 1000, y: 1000 };
-  const miniMapClick = () => {
+  // boundary = { x: 1000, y: 1000 };
+  const miniMapClick2 = () => {
     console.log('minimapClick');
   };
   const key = canvasId;
@@ -112,7 +144,7 @@
   {#if minimap && boundary}
     <MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate} />
   {:else if minimap}
-    <!-- <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} /> -->
+    <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} />
   {/if}
 
   <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>

@@ -111,7 +111,7 @@ export function determineD3Instance(
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
     let d3Translate = transform;
-
+    console.log('1111');
     // selects and transforms all node divs from class 'Node' and performs transformation
     d3.select(`.Node-${canvasId}`)
       .style(
