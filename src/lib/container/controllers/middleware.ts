@@ -53,6 +53,12 @@ function convertAnchorPositionsToCallbacks(
   for (let userEdge of userEdges) {
     const userNodeSource = userNodesObj[userEdge.source];
     const userNodeTarget = userNodesObj[userEdge.target];
+
+    if (userNodeSource === undefined) {
+      console.log('!', userNodesObj);
+      console.log('!!', userEdge.source);
+    }
+
     const sourcePosition = userNodeSource.sourcePosition;
     const targetPosition = userNodeTarget.targetPosition;
 

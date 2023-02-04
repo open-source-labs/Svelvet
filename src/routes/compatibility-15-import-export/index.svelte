@@ -1,5 +1,6 @@
-<script lang='ts'>
-  import Svelvet from '$lib/container/views/Svelvet.svelte';
+<script lang="ts">
+  import Svelvet from 'svelvet-lime';
+  // import Svelvet from '$lib/container/views/Svelvet.svelte';
 
   const initialNodes: any[] = [
     {
@@ -28,21 +29,26 @@
   const initialEdges: any[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
   ];
-
 </script>
 
 <Svelvet
-  canvasId="4tsdgss32"
+  canvasId="canvas1"
   nodes={initialNodes}
   edges={initialEdges}
   width={900}
   height={900}
   background
   shareable={true}
+  nodeCreate
 />
 
-
-
-
-
-
+<Svelvet
+  canvasId="canvas2"
+  nodes={[]}
+  edges={[]}
+  width={900}
+  height={900}
+  background
+  shareable={true}
+  nodeCreate
+/>

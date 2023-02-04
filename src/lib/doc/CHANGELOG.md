@@ -92,6 +92,50 @@ Same functionality as before. The reason why it looks different is because I cre
 
 ## Minimap
 
-Not implemented
+http://localhost:3000/compatibility-12-minimap/
+https://www.svelvet.io/docs/Minimap/
 
-##
+Same functionality as before. It looks like there is a big with HTML feature (unrelated to minimap)
+
+<img src="./images/minimap-before.png" width="150" height="150">
+<img src="./images/minimap-after.png" width="150" height="150">
+
+## Initial zoom and location
+
+Same functionality as Svelvet5. It appears the center of the canvas is 0,0
+
+## node classes
+
+<img src="./images/node-classes-before.png" width="150" height="150">
+<img src="./images/node-classes-after.png" width="150" height="150">
+
+You need to put !important in the CSS
+
+## ImportDiagrams
+
+https://www.svelvet.io/docs/importDiagrams/
+http://localhost:3000/featureImportExport/
+
+Feature works as expected. Note that previous version of Svelvet did not serialize callbacks (there is no general way to do this since callbacks can involve closures). We do not do serialize callbacks in Svelvet6; this includes anchors which are reset to adaptive upon serialization.
+
+As before, any canvas-wide parameters (such as nodeCreate, backgroundColor, etc.) will not be serialized.
+
+This feature is fragile since there is no guarantee that it will work with new features involving nodes and edges. In order to future-proof this feature, it would be best to specify that import/export of diagrams only serializes certain parameters.
+
+## Diagram Boundary
+
+http://localhost:3000/compatibility-15-diagramBoundary/
+https://www.svelvet.io/docs/boundary/
+
+Feature works as expected
+
+## Iteractive Editable nodes
+
+http://localhost:3000/compatibility-16-nodeEdit/
+https://www.svelvet.io/docs/editNodes/
+
+Feature works as expected. NodeEdit is now active by default. This is to reduce store pollution. In addition, node edit chaning width/height of nodes has been removed because this functionality is duplicated by resizableNodes
+
+## Deletable nodes
+
+This feature has been removed to reduce feature bloat. Its functionality is duplicated by Interactive Editable nodes feature.

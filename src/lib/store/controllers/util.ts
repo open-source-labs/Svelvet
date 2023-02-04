@@ -263,7 +263,7 @@ export function populatePotentialAnchorStore(
 }
 
 /**
- * Populates the anchorsStore
+ * Populates the anchorsStore. This will overwrite any data in the AnchorsStore.
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specified nodes
  * @param edges An array of user specified edges
@@ -317,7 +317,7 @@ export function populateAnchorsStore(
 }
 
 /**
- * Populates the nodesStore
+ * Populates the nodesStore. This will overwrite any data in the nodesStore.
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specifed nodes
  * @param canvasId The canvasId of the Svelvet component that holds the nodes

@@ -30,6 +30,9 @@
   export let snap: boolean = false;
   export let snapTo: number = 30;
   export let nodeCreate: boolean = false;
+  export let initialZoom = 3;
+  export let initialLocation = { x: 0, y: 0 };
+  export let boundary = false;
 
   //default value of shareable will be set to false
   export let shareable: boolean = false;
@@ -57,6 +60,7 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
+    store.boundary.set(boundary);
 
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
@@ -94,9 +98,16 @@
   class="Svelvet"
   style={`width: ${width}px; height: ${height}px; background-color: ${bgColor};`}
 >
-  <GraphView {canvasId} />
+  <GraphView
+    {canvasId}
+    {width}
+    {height}
+    {initialLocation}
+    {initialZoom}
+    {boundary}
+  />
   {#if shareable}
-    <ImportExport id={canvasId} />
+    <ImportExport {canvasId} />
   {/if}
 </div>
 
