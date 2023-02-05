@@ -11,11 +11,12 @@
   let height;
   let customClass;
   let backgroundColor;
+  let type: 'straight' | 'smoothstep' | 'step' | 'bezier';
 
   const store = findStore(canvasId);
   const canvasWidth = get(store.widthStore);
   const canvasHeight = get(store.widthStore);
-
+  const edge = getEdgeById(store, edgeId);
   const { edgesStore } = store;
 
   let currentEdge = $edgesStore[edgeId];
@@ -30,12 +31,46 @@
     edge.delete();
     closeModal();
   }
+  function handleSubmit() {
+    console.log('asdf');
+  }
+  console.log(edge.type);
 </script>
 
 <div
   class="EditEdge"
   style="left:{canvasWidth / 3}px; top:{canvasHeight / 3}px"
 >
+  <form on:submit={handleSubmit}>
+    <label for="label-input">Label</label>
+    <input
+      type="text"
+      id="label-input-{edgeId}"
+      placeholder={edge.label}
+      bind:value={label}
+    />
+
+    <label for="bg-color-input">Edge color</label>
+    <input
+      type="color"
+      id="bg-color-input-{edgeId}"
+      class="bgci"
+      bind:value={backgroundColor}
+    />
+    <input
+      type="text"
+      placeholder={edge.edgeColor}
+      bind:value={backgroundColor}
+    />
+
+    <label for="type-input">Type</label>
+    <input
+      type="text"
+      id="type-input-{edgeId}"
+      placeholder={edge.type}
+      bind:value={type}
+    />
+  </form>
   <div class="btn-container">
     <button on:click={handleDelete}>Delete Edge</button>
     <button on:click={closeModal}>Cancel</button>
@@ -58,6 +93,12 @@
     color: #333333;
   }
 
+  label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 0.15rem;
+  }
+
   .btn-container {
     display: flex;
     justify-content: space-between;
@@ -71,9 +112,29 @@
     margin: 0.2rem;
   }
 
+  input {
+    height: 1.6rem;
+    border-color: #e45b56;
+  }
+
+  .bgci {
+    height: 2rem;
+    width: 5rem;
+    padding: 0;
+    border: none;
+    background-color: none;
+  }
+
   button:hover {
     cursor: pointer;
     background-color: #e45b56;
     color: white;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 </style>

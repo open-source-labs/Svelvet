@@ -25,8 +25,22 @@ export function sanitizeUserNodesAndEdges(
   convertIdToString(userNodes);
   convertEdgeIdsToString(userEdges);
   convertAnchorPositionsToCallbacks(userNodes, userEdges);
+  setDefaultEdgeType(userEdges);
   return { userNodes, userEdges };
 }
+
+/**
+ * setDefaultEdgeType ensures a default edge type of 'bezier' if the user does not set one, or sets a nonsense type.
+ * @param userEdges The array of edges that have a UserEdgeType
+ * @returns No return, the function edits the objects in place
+ */
+function setDefaultEdgeType(userEdges) {
+  for (let userEdge of userEdges) {
+    if (!['smoothstep', 'step', 'bezier', 'straight'].includes(userEdge.type))
+      userEdge.type = 'bezier';
+  }
+}
+
 /**
  * convertAnchorPositionsToCallbacks
  * @description
