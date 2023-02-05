@@ -170,7 +170,7 @@
 </script>
 
 {#if $edgeEditModal}
-  <EditEdge edgeId={`${$edgeEditModal}`} {canvasId} isEditing={true} />
+  <EditEdge edgeId={`${$edgeEditModal}`} {canvasId} />
 {/if}
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <div id="graphview-container">

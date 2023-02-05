@@ -1,10 +1,10 @@
 <script lang="ts">
   import { findStore } from '../../store/controllers/storeApi';
   import { getEdgeById } from '../../store/controllers/storeApi';
+  import { writable, derived, get, readable } from 'svelte/store';
 
   export let edgeId: string;
   export let canvasId: string;
-  export let isEditing: boolean;
 
   let label;
   let width;
@@ -13,6 +13,8 @@
   let backgroundColor;
 
   const store = findStore(canvasId);
+  const canvasWidth = get(store.widthStore);
+  const canvasHeight = get(store.widthStore);
 
   const { edgesStore } = store;
 
@@ -30,17 +32,15 @@
   }
 </script>
 
-{#if isEditing}
-  <div
-    class="EditEdge"
-    style="left:{currentEdge.sourceX}px; top:{currentEdge.sourceY}px"
-  >
-    <div class="btn-container">
-      <button on:click={handleDelete}>Delete Edge</button>
-      <button on:click={closeModal}>Cancel</button>
-    </div>
+<div
+  class="EditEdge"
+  style="left:{canvasWidth / 3}px; top:{canvasHeight / 3}px"
+>
+  <div class="btn-container">
+    <button on:click={handleDelete}>Delete Edge</button>
+    <button on:click={closeModal}>Cancel</button>
   </div>
-{/if}
+</div>
 
 <style>
   .EditEdge {
