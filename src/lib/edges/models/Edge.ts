@@ -24,7 +24,7 @@ import { stores } from '../../store/models/store';
  * @param targetY The Y coordinate of the target Anchor
  * @param canvasId The canvasId of the Svelvet component that holds the instantiated Edge
  * @param label The label of the Edge
- * @param type The type of the Edge (options: 'straight', 'smooth', 'step', or 'bezier'). If user doesn't specify, the type will default to 'bezier'.
+ * @param type The type of the Edge (options: 'straight', 'smoothstep', 'step', or 'bezier'). If user doesn't specify, the type will default to 'bezier'.
  * @param labelBgColor The background color of the Edge label
  * @param labelTextColor The text color of the Edge label
  * @param edgeColor The color of the Edge
