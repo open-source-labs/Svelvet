@@ -19,8 +19,6 @@
   const edge = getEdgeById(store, edgeId);
   const { edgesStore } = store;
 
-  let currentEdge = $edgesStore[edgeId];
-
   function closeModal() {
     const store = findStore(canvasId);
     store.edgeEditModal.set(null);
@@ -31,8 +29,19 @@
     edge.delete();
     closeModal();
   }
-  function handleSubmit() {
-    console.log('asdf');
+  function handleSubmit(e) {
+    e.preventDefault();
+    const store = findStore(canvasId);
+    const edge = getEdgeById(store, edgeId);
+    if (label) edge.label = label;
+    if (backgroundColor) edge.edgeColor = backgroundColor;
+    if (type) edge.type = type;
+    // width = '';
+    // height = '';
+    // customClass = '';
+    // label = '';
+    store.edgesStore.set($edgesStore);
+    closeModal();
   }
   console.log(edge.type);
 </script>
@@ -42,7 +51,7 @@
   style="left:{canvasWidth / 3}px; top:{canvasHeight / 3}px"
 >
   <form on:submit={handleSubmit}>
-    <label for="label-input">Label</label>
+    <label for="label-input">Edge label</label>
     <input
       type="text"
       id="label-input-{edgeId}"
@@ -63,7 +72,7 @@
       bind:value={backgroundColor}
     />
 
-    <label for="type-input">Type</label>
+    <label for="type-input">Edge type</label>
     <input
       type="text"
       id="type-input-{edgeId}"
@@ -72,7 +81,8 @@
     />
   </form>
   <div class="btn-container">
-    <button on:click={handleDelete}>Delete Edge</button>
+    <button on:click={handleSubmit}>Submit</button>
+    <button on:click={handleDelete}>Delete</button>
     <button on:click={closeModal}>Cancel</button>
   </div>
 </div>
