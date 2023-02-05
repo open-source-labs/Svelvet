@@ -2,9 +2,9 @@
   import { findStore } from '../../store/controllers/storeApi';
   import { getEdgeById } from '../../store/controllers/storeApi';
 
-  export let edgeId;
-  export let canvasId;
-  export let isEditing;
+  export let edgeId: string;
+  export let canvasId: string;
+  export let isEditing: boolean;
 
   let label;
   let width;
@@ -17,6 +17,17 @@
   const { edgesStore } = store;
 
   let currentEdge = $edgesStore[edgeId];
+
+  function closeModal() {
+    const store = findStore(canvasId);
+    store.edgeEditModal.set(null);
+  }
+  function handleDelete() {
+    const store = findStore(canvasId);
+    const edge = getEdgeById(store, edgeId);
+    edge.delete();
+    closeModal();
+  }
 </script>
 
 {#if isEditing}
@@ -25,15 +36,8 @@
     style="left:{currentEdge.sourceX}px; top:{currentEdge.sourceY}px"
   >
     <div class="btn-container">
-      <button
-        on:click={(e) => {
-          console.log('deleting');
-          //   const store = findStore(canvasId);
-          //   const node = getNodeById(store, nodeId);
-          //   node.delete();
-          //   isEditing = false;
-        }}>Delete Edge</button
-      >
+      <button on:click={handleDelete}>Delete Edge</button>
+      <button on:click={closeModal}>Cancel</button>
     </div>
   </div>
 {/if}

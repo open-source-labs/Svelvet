@@ -27,11 +27,15 @@
     centerY: centerY,
   };
 
+  // Right now, the delete-edge feature deletes an edge when it is right clicked.
+  // In the future, it would be nice to integrate the delete edge feature with a modal
+  // that allows for edge properties to be changed. This is why the function name is
+  // handleEditModal
   const edgeId = baseEdgeProps.id;
   const handleEditModal = () => {
     const store = findStore(canvasId);
-    const edge = getEdgeById(store, edgeId);
-    edge.delete();
+    // const edge = getEdgeById(store, edgeId);
+    store.edgeEditModal.set(edgeId);
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -66,7 +70,7 @@
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
     aria-label="svg-path"
-    stroke-width="3"
+    stroke-width="1"
     on:contextmenu={handleEditModal}
   />
 {/if}

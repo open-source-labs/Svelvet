@@ -18,6 +18,9 @@
 
   import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
   import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
+  import EditNode from '$lib/nodes/views/EditNode.svelte';
+  import EditEdge from '$lib/editEdges/views/EditEdge.svelte';
+
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
   export let width: number;
@@ -41,6 +44,7 @@
     widthStore,
     heightStore,
     d3Scale,
+    edgeEditModal,
   } = store;
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
@@ -165,6 +169,9 @@
   }
 </script>
 
+{#if $edgeEditModal}
+  <EditEdge edgeId={`${$edgeEditModal}`} {canvasId} isEditing={true} />
+{/if}
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <div id="graphview-container">
   {#if minimap && boundary}
