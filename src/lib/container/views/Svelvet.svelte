@@ -37,8 +37,8 @@
   export let initialLocation = { x: 0, y: 0 };
   export let boundary = false;
   export let collapsible = false;
-  //default value of shareable will be set to false
-  export let shareable: boolean = false;
+  export let shareable: boolean = false; // used for "importExport" feature
+  export let locked: boolean = false; // if true, node movement is disabled
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -65,6 +65,7 @@
     store.nodeCreate.set(nodeCreate);
     store.boundary.set(boundary);
     store.collapsibleOption.set(collapsible);
+    store.lockedOption.set(locked);
 
     // make sure that all canvas options are compatible
     sanitizeCanvasOptions(store);
@@ -90,6 +91,7 @@
     store.nodeCreate.set(nodeCreate);
     store.boundary.set(boundary);
     store.collapsibleOption.set(collapsible);
+    store.lockedOption.set(locked);
 
     // make sure that all canvas options are compatible
     sanitizeCanvasOptions(store);

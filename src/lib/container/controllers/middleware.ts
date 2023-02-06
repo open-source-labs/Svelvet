@@ -27,7 +27,6 @@ export function sanitizeCanvasOptions(store: StoreType) {
 
 function enforceCollapsibleCompatibility(store: StoreType) {
   if (get(store.collapsibleOption)) {
-    console.log('asdfdsf');
     store.nodeCreate.set(false);
   }
 }

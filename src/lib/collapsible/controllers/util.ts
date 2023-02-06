@@ -5,13 +5,13 @@ import type {
   StoreType,
   UserEdgeType,
   UserNodeType,
-} from '$lib/store/types/types';
+} from '../../store/types/types';
 import { Collapsible } from '../models/Collapsible';
 import { v4 as uuidv4 } from 'uuid';
 import type { CollapsibleType } from '../types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { getAnchorById, getAnchors } from '../../store/controllers/storeApi';
-import type { AnchorType } from '$lib/edges/types/types';
+import type { AnchorType } from '../../edges/types/types';
 /*
 Initializes store with array of Collapsible objects. You shoould only use this if you want the collapsible feature enabled.
 */

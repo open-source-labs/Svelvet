@@ -22,10 +22,10 @@
 
   import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
   import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
-  import EditNode from '$lib/nodes/views/EditNode.svelte';
-  import EditEdge from '$lib/editEdges/views/EditEdge.svelte';
-  import { filterByCollapsible } from '$lib/collapsible/controllers/util';
-  import type { AnchorType } from '$lib/edges/types/types';
+  import EditNode from '../../nodes/views/EditNode.svelte';
+  import EditEdge from '../../editEdges/views/EditEdge.svelte';
+  import { filterByCollapsible } from '../../collapsible/controllers/util';
+  import type { AnchorType } from '../../edges/types/types';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;

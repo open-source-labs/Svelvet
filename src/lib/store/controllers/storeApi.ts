@@ -67,7 +67,7 @@ import {
   populatePotentialAnchorStore,
 } from './util';
 import { TemporaryEdge } from '../../interactiveNodes/models/TemporaryEdge';
-import { populateCollapsibleStore } from '$lib/collapsible/controllers/util';
+import { populateCollapsibleStore } from '../../collapsible/controllers/util';
 
 /**
  * Gets one anchor (source anchor or target anchor) from a given edge
@@ -305,6 +305,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     edgeEditModal: writable(null), // this is used for edgeEditModal feature. When an edge is right clicked, store.edgeEditModal is set to the edgeId string. This causes a modal to be rendered
     collapsibleStore: writable([]), // this is used for the collaspsible node feature. If the feature is enabled, store.collapsible will be populated with Collapsible objects which will track whether the node should be displayed or not
     collapsibleOption: writable(false),
+    lockedOption: writable(false),
   };
   return stores[canvasId];
 }

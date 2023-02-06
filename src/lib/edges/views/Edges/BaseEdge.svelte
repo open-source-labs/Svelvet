@@ -1,6 +1,6 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import { findStore, getEdgeById } from '$lib/store/controllers/storeApi';
+  import { findStore, getEdgeById } from '../../../store/controllers/storeApi';
   import EdgeText from '../Edges/EdgeText.svelte';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
