@@ -58,7 +58,6 @@ function traverseAndIncrement(store: StoreType, nodeId: string) {
   const collapsibles = get(store.collapsibleStore);
   recursiveTraverse(nodeId);
   store.collapsibleStore.set(collapsibles);
-  console.log('done');
 
   function recursiveTraverse(nId: string) {
     for (const collapsible of collapsibles) {

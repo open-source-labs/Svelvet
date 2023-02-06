@@ -1,6 +1,7 @@
 <script lang="ts">
   import { findStore } from '../../store/controllers/storeApi';
   import type { ResizeNodeType } from '../../store/types/types';
+  import { writable, derived, get, readable } from 'svelte/store';
 
   export let resizeId: string;
   export let canvasId: string;
@@ -19,7 +20,12 @@
     if (isSelected) {
       resizeNodesStore.update((resNode) => {
         const newResNode = resNode[resizeId];
-        newResNode.setPositionAndCascade(e.movementX, e.movementY, resizeId);
+        const d3Scale = get(store.d3Scale);
+        newResNode.setPositionAndCascade(
+          e.movementX / d3Scale,
+          e.movementY / d3Scale,
+          resizeId
+        );
         return { ...resNode };
       });
     }

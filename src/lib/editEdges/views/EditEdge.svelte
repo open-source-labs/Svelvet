@@ -43,7 +43,6 @@
     store.edgesStore.set($edgesStore);
     closeModal();
   }
-  console.log(edge.type);
 </script>
 
 <div
