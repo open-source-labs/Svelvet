@@ -1,7 +1,7 @@
 <script>
-  // import Svelvet from '$lib/container/views/Svelvet.svelte';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
   // import Svelvet from 'svelvet-lime';
-  import Svelvet from 'svelvet';
+  // import Svelvet from 'svelvet';
 
   const initialNodes = [
     {
@@ -32,7 +32,7 @@
   ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} locked movement="false" />
+<Svelvet nodes={initialNodes} edges={initialEdges} />
 
 <style>
   :global(.customClass) {

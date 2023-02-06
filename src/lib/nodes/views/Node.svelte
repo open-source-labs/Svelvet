@@ -70,6 +70,12 @@
   const mouseleave = (e) => {
     // part of the "clickCallback" feature
     isUserClick = false;
+    // re-enables d3 when mouse leaves node
+    $nodeSelected = false;
+  };
+  const mouseenter = (e) => {
+    // disables d3 when mouse enters node
+    nodeSelected.set(true);
   };
   const mousemove = (e) => {
     e.preventDefault();
@@ -116,9 +122,7 @@
 
   const mouseup = (e) => {
     e.preventDefault();
-    $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
-
     // this implements the "clickCallback" feature
     if (node.clickCallback && isUserClick) node.clickCallback(node);
 
@@ -152,11 +156,14 @@
   <EditNode {canvasId} {nodeId} {isEditing} />
 {/if}
 
+<!-- on:wheel prevents page scroll when using mousewheel in the Node -->
 <div
   on:mouseleave={mouseleave}
   on:mousedown={mousedown}
   on:contextmenu={rightclick}
   on:touchstart={mousedown}
+  on:mouseenter={mouseenter}
+  on:wheel={(e) => e.preventDefault()}
   class="Node {node.className}"
   style="left: {node.positionX}px;
     top: {node.positionY}px;

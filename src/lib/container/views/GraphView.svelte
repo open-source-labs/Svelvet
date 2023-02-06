@@ -288,6 +288,8 @@
 </svg>
 
 <style>
+  svg {
+  }
   .Nodes {
     position: absolute;
     width: 100%;

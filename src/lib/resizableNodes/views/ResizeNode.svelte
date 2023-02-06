@@ -26,7 +26,7 @@
   }}
   on:mouseup={(e) => {
     e.preventDefault();
-    $nodeSelected = false;
+    // don't need to set $nodeSelected = false because Node component will do it for you
     isSelected = false;
   }}
 />
@@ -37,6 +37,11 @@
     $nodeSelected = true;
     isSelected = true;
   }}
+  on:mouseover={(e) => ($nodeSelected = true)}
+  on:focus
+  on:mouseleave={(e) => ($nodeSelected = false)}
+  on:mouseenter={(e) => ($nodeSelected = true)}
+  on:wheel|preventDefault
   class="ResizeNode"
   style="
   left: {reactResizeNode.positionX - 10}px;
