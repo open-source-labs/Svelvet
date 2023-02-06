@@ -119,4 +119,5 @@
   background
   shareable={true}
   collapsible={true}
+  locked={true}
 />
