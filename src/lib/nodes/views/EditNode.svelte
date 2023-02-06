@@ -14,8 +14,7 @@
 
   const store = findStore(canvasId);
 
-  const { nodesStore } = store;
-
+  const { nodesStore, nodeSelected } = store;
   let currentNode = $nodesStore[nodeId];
 
   const editNode = (e) => {
@@ -35,6 +34,9 @@
 
 {#if isEditing}
   <div
+    on:mouseover={(e) => ($nodeSelected = true)}
+    on:focus
+    on:wheel|preventDefault
     class="EditNode"
     style="left:{currentNode.positionX +
       currentNode.width}px; top:{currentNode.positionY}px"
@@ -77,18 +79,6 @@
         }}>Submit</button
       >
     </div>
-
-    <!-- <p>canvasId: {canvasId}</p>
-  <p>nodeId: {$nodesStore[nodeId].id}</p>
-  <p>data: {$nodesStore[nodeId].data}</p>
-  <p>positionX: {$nodesStore[nodeId].positionX}</p>
-  <p>positionY: {$nodesStore[nodeId].positionY}</p>
-  <p>width: {$nodesStore[nodeId].width}</p>
-  <p>height: {$nodesStore[nodeId].height}</p>
-  <p>background-color: {$nodesStore[nodeId].bgColor}</p>
-  <p>border-color: {$nodesStore[nodeId].borderColor}</p>
-  <p>border-radius: {$nodesStore[nodeId].borderRadius}</p>
-  <p>text-color: {$nodesStore[nodeId].textColor}</p> -->
   </div>
 {/if}
 
