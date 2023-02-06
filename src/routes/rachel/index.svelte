@@ -92,7 +92,6 @@
   height={900}
   background
   movement={false}
-  locked
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
