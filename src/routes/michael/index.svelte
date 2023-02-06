@@ -118,4 +118,5 @@
   height={900}
   background
   shareable={true}
+  collapsible={true}
 />

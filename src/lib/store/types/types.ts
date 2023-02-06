@@ -71,6 +71,7 @@ export interface StoreType {
   boundary: Writable<boolean | PositionType>;
   edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
   collapsibleStore: Writable<CollapsibleType[]>;
+  collapsibleOption: Writable<boolean>;
 }
 
 export interface PositionType {

@@ -304,6 +304,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     boundary: writable(false),
     edgeEditModal: writable(null), // this is used for edgeEditModal feature. When an edge is right clicked, store.edgeEditModal is set to the edgeId string. This causes a modal to be rendered
     collapsibleStore: writable([]), // this is used for the collaspsible node feature. If the feature is enabled, store.collapsible will be populated with Collapsible objects which will track whether the node should be displayed or not
+    collapsibleOption: writable(false),
   };
   return stores[canvasId];
 }
@@ -332,10 +333,10 @@ export function populateSvelvetStoreFromUserInput(
   //populate resize Store
   populateResizeNodeStore(store, nodes, canvasId);
   //populate potential anchors if "node create" feature is turend on
-  if (get(store.nodeCreate)) {
+  if (get(store.nodeCreate))
     populatePotentialAnchorStore(store, nodes, canvasId);
-  }
-  populateCollapsibleStore(store, nodes, edges, canvasId);
+  if (get(store.collapsibleOption))
+    populateCollapsibleStore(store, nodes, edges, canvasId);
 }
 
 /**
