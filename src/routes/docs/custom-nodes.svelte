@@ -2,12 +2,17 @@
 <script>
   const nodeProps = [
     ['id', '(required) number'],
+    ['width', '(required) number'],
+    ['height', '(required) number'],
+    ['position', '(required) { x: number, y: number }'],
     [
       'data',
       '(required) { label: string } || { custom: name of imported Svelte component } || { html: string of html}',
     ],
-    ['className', 'string (custom class name)'],
-    ['position', '(required) { x: number, y: number }'],
+    ['textColor', 'string of color name, hexcode or rgb'],
+    ['bgColor', 'string of color name, hexcode, or rgb'],
+    ['borderColor', 'string of color name, hexcode or rgb'],
+    ['borderRadius', 'number'],
     [
       'sourcePosition',
       'string (top, bottom, left, right) - defaults to adaptive anchor if unspecified',
@@ -16,14 +21,9 @@
       'targetPosition',
       'string (top, bottom, left, right) - defaults to adaptive anchor if unspecified',
     ],
-    ['width', '(required) number'],
-    ['height', '(required) number'],
-    ['bgColor', 'string of color name, hexcode, or rgb'],
-    ['borderColor', 'string of color name, hexcode or rgb'],
-    ['textColor', 'string of color name, hexcode or rgb'],
+    ['className', 'string (custom class name)'],
     ['image', 'boolean'],
     ['src', 'string of image url'],
-    ['borderRadius', 'number'],
     ['clickCallback', 'Function'],
     ['childNodes', "Array of numbers, put other nodes id's in here"],
   ];

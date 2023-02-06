@@ -1,60 +1,61 @@
-<script lang='ts'>
+<script>
   import Svelvet from '$lib/container/views/Svelvet.svelte';
 
-  let initialNodes: any[] = [
+  // Example data for how library is to be used
+  let initialNodes = [
     {
-      id: '1',
-      position: {x: 50, y: 50},
-      data: {label: 'id-1'},
-      width: 100,
-      height: 50,
-      bgColor: 'white',
-      sourcePosition: 'bottom'
+      id: 11,
+      type: 'input',
+      position: { x: 100, y: 50 },
+      data: { label: 'Input Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
     },
     {
-      id: '2',
-      position: {x: 150, y: 200},
-      data: {label: 'id-2'},
-      width: 100,
-      height: 50,
-      bgColor: 'white',
-      targetPosition: 'top'
+      id: 12,
+      type: 'default',
+      position: { x: 350, y: 250 },
+      data: { label: 'Default Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
     },
     {
-      id: '3',
-      position: {x: 50, y: 50},
-      data: {label: 'id-3'},
-      width: 100,
-      height: 50,
-      bgColor: 'white',
-      sourcePosition: 'right',
+      id: 13,
+      type: 'output',
+      position: { x: 40, y: 400 },
+      data: { label: 'Another Output!' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
     },
     {
-      id: '4',
-      position: {x: 150, y: 200},
-      data: {label: 'id-4'},
-      width: 100,
-      height: 50,
-      bgColor: 'white',
-      targetPosition: 'left'
-    },
-  ]
-  
-  let initialEdges: any[] = [
-    {
-    id: 'bottom_top',
-    source: '1',
-    target: '2',
-    type: 'smoothstep',
-    label: 'this is the test edge',
+      id: 14,
+      type: 'output',
+      position: { x: 400, y: 530 },
+      data: { label: 'You found me!' },
+      width: 175,
+      height: 40,
+      bgColor: '#D3FFC3',
+      textColor: '#FF7C70'
     },
     {
-      id: 'right_left',
-      source: '3',
-      target: '4',
-      type: 'smoothstep',
-      label: 'this is the test edge',
-    },
+      id: 15,
+      type: 'output',
+      position: { x: 50, y: 200 },
+      data: { label: 'Output Node' },
+      width: 175,
+      height: 40,
+      bgColor: 'white'
+    }
+  ];
+
+  let initialEdges = [
+    { id: 'e1-2', source: 11, target: 12 },
+    { id: 'e2-3', source: 12, target: 13, animate: true },
+    { id: 'e2-4', source: 12, target: 14, label: 'pan to see below!', animate: true },
+    { id: 'e1-5', source: 11, target: 15 }
   ];
 
 
@@ -85,13 +86,12 @@
 </script>
 
 <Svelvet
-  canvasId="4tsdgss32"
   nodes={initialNodes}
   edges={initialEdges}
   width={900}
   height={900}
   background
-  shareable={true}
+  movement={false}
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>

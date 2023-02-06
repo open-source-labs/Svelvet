@@ -211,15 +211,15 @@
     <div class={`Node Node-${canvasId}`}>
       {#each filteredNodes as node}
         {#if node.data.html}
-          <Node {node} {canvasId} {nodes} nodeId={node.id}
+          <Node {node} {canvasId} nodeId={node.id}
             >{@html node.data.html}</Node
           >
         {:else if node.data.custom}
-          <Node {node} {canvasId} {nodes} nodeId={node.id}
+          <Node {node} {canvasId} nodeId={node.id}
             ><svelte:component this={node.data.custom} /></Node
           >
         {:else}
-          <Node {node} {canvasId} {nodes} nodeId={node.id}
+          <Node {node} {canvasId} nodeId={node.id}
             >{node.data.label}</Node
           >
         {/if}
