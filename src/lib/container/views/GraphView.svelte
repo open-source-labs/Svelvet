@@ -6,7 +6,11 @@
   import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
   import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
   import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
-  import type { NodeType } from '../../store/types/types';
+  import type {
+    EdgeType,
+    NodeType,
+    ResizeNodeType,
+  } from '../../store/types/types';
   import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
   import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
   import Node from '../../nodes/views/Node.svelte';
@@ -20,6 +24,8 @@
   import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
   import EditNode from '$lib/nodes/views/EditNode.svelte';
   import EditEdge from '$lib/editEdges/views/EditEdge.svelte';
+  import { filterByCollapsible } from '$lib/collapsible/controllers/util';
+  import type { AnchorType } from '$lib/edges/types/types';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -54,38 +60,22 @@
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
 
+  /*
+    This block of code is responsible for reactivity of the collapsible feature
+    When collaspsibleStore changes, nodes/edges/resizeNodes/anchors are filtered so that 
+    only the visible ones are displayed
+  */
   let filteredNodes: NodeType[];
-  let filteredEdges;
-  let filteredResizeNodes;
-  let filteredAnchors;
+  let filteredEdges: EdgeType[];
+  let filteredResizeNodes: ResizeNodeType[];
+  let filteredAnchors: AnchorType[];
   $: {
-    // filter nodes for the collapsible nodes feature
-    filteredNodes = nodes.filter((node) => {
-      const nodeId = node.id;
-      const collapssibleObj = $collapsibleStore.find(
-        (e) => e.nodeId === nodeId
-      );
-      if (collapssibleObj === undefined) return true;
-      return collapssibleObj.isHidden() === false;
-    });
-    const filteredNodeIds = filteredNodes.map((e) => e.id);
-    // filter resizeNodes
-    filteredResizeNodes = resizeNodes.filter((resizeNode) =>
-      filteredNodeIds.includes(resizeNode.nodeId)
-    );
-    filteredAnchors = anchors.filter((selfAnchor) => {
-      const otherAnchorId = selfAnchor.getOtherAnchorId();
-      const otherAnchor = $anchorsStore[otherAnchorId];
-
-      if (
-        filteredNodeIds.includes(selfAnchor.nodeId) &&
-        filteredNodeIds.includes(otherAnchor.nodeId)
-      )
-        return true;
-      return false;
-    });
-    const filteredEdgeIds = new Set(filteredAnchors.map((e) => e.edgeId));
-    filteredEdges = edges.filter((edge) => filteredEdgeIds.has(edge.id));
+    const tmp = $collapsibleStore; // assignment is necessary for reactivity
+    const obj = filterByCollapsible(store, nodes, resizeNodes, anchors, edges);
+    filteredNodes = obj['filteredNodes'];
+    filteredEdges = obj['filteredEdges'];
+    filteredResizeNodes = obj['filteredResizeNodes'];
+    filteredAnchors = obj['filteredAnchors'];
   }
 
   // declaring the grid and dot size for d3's transformations and zoom

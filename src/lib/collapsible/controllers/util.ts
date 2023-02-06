@@ -1,4 +1,7 @@
 import type {
+  EdgeType,
+  NodeType,
+  ResizeNodeType,
   StoreType,
   UserEdgeType,
   UserNodeType,
@@ -8,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { CollapsibleType } from '../types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { getAnchorById, getAnchors } from '../../store/controllers/storeApi';
+import type { AnchorType } from '$lib/edges/types/types';
 /*
 Initializes store with array of Collapsible objects. You shoould only use this if you want the collapsible feature enabled.
 */
@@ -122,4 +126,54 @@ export function getCollapsibles(
   }
   // return list of anchors
   return collapsibles;
+}
+
+/*
+  This function is responsible for filtering nodes should be displayed based on Collapsible.
+  It also filters node-associated elements such as anchors, edges, etc. so that when you collapse a node, the 
+  edges also hide.
+  There is a better way to implement this with foreign keys; when collapsing a node, you would also collapse any rows with a foreign key 
+  linking to that node (like a cascading delete in SQL, but with hiding instead of deleting)
+*/
+export function filterByCollapsible(
+  store: StoreType,
+  nodes: NodeType[],
+  resizeNodes: ResizeNodeType[],
+  anchors: AnchorType[],
+  edges: EdgeType[]
+) {
+  // filter nodes for the collapsible nodes feature
+  const filteredNodes = nodes.filter((node) => {
+    const nodeId = node.id;
+    const collapssibleObj = get(store.collapsibleStore).find(
+      (e) => e.nodeId === nodeId
+    );
+    if (collapssibleObj === undefined) return true;
+    return collapssibleObj.isHidden() === false;
+  });
+  const filteredNodeIds = filteredNodes.map((e) => e.id);
+  // filter resizeNodes
+  const filteredResizeNodes = resizeNodes.filter((resizeNode) =>
+    filteredNodeIds.includes(resizeNode.nodeId)
+  );
+  const filteredAnchors = anchors.filter((selfAnchor) => {
+    const otherAnchorId = selfAnchor.getOtherAnchorId();
+    const otherAnchor = get(store.anchorsStore)[otherAnchorId];
+
+    if (
+      filteredNodeIds.includes(selfAnchor.nodeId) &&
+      filteredNodeIds.includes(otherAnchor.nodeId)
+    )
+      return true;
+    return false;
+  });
+  const filteredEdgeIds = new Set(filteredAnchors.map((e) => e.edgeId));
+  const filteredEdges = edges.filter((edge) => filteredEdgeIds.has(edge.id));
+
+  return {
+    filteredNodes,
+    filteredResizeNodes,
+    filteredAnchors,
+    filteredEdges,
+  };
 }
