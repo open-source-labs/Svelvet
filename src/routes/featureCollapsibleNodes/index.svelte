@@ -127,4 +127,5 @@
   background
   shareable={true}
   collapsible={true}
+  nodeCreate={true}
 />

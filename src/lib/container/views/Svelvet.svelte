@@ -14,7 +14,10 @@
   } from '../../store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
-  import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
+  import {
+    sanitizeCanvasOptions,
+    sanitizeUserNodesAndEdges,
+  } from '../controllers/middleware';
 
   import ImportExport from '../../importingExporting/views/ImportExport.svelte';
 
@@ -62,6 +65,9 @@
     store.nodeCreate.set(nodeCreate);
     store.boundary.set(boundary);
     store.collapsibleOption.set(collapsible);
+
+    // make sure that all canvas options are compatible
+    sanitizeCanvasOptions(store);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
@@ -82,7 +88,11 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
+    store.boundary.set(boundary);
+    store.collapsibleOption.set(collapsible);
 
+    // make sure that all canvas options are compatible
+    sanitizeCanvasOptions(store);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });

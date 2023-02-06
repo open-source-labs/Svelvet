@@ -3,14 +3,34 @@ This file contains "middleware" functions that sanitize user input (UserNodeType
 maintain consistency between previous 
 
 */
-
+import { writable, derived, get, readable } from 'svelte/store';
 import {
   bottomCb,
   leftCb,
   rightCb,
   topCb,
 } from '../../edges/controllers/anchorCbUser';
-import type { UserEdgeType, UserNodeType } from '../../store/types/types';
+import type {
+  StoreType,
+  UserEdgeType,
+  UserNodeType,
+} from '../../store/types/types';
+
+/**
+ * sanitizeCanvasOptions will sanitize the canvas level options so that incompatible features will not be run simulataneously
+ * @param store The array of nodes that have a UserNodeType
+ * @returns void. The store is modified directly
+ */
+export function sanitizeCanvasOptions(store: StoreType) {
+  enforceCollapsibleCompatibility(store);
+}
+
+function enforceCollapsibleCompatibility(store: StoreType) {
+  if (get(store.collapsibleOption)) {
+    console.log('asdfdsf');
+    store.nodeCreate.set(false);
+  }
+}
 
 /**
  * sanitizeUserNodesAndEdges will sanitize the data initially passed in to Svelvet component. For example, the node that user specified have an integar as its id but to instantiate a Node and be compatible with uuid we will need to convert the integar id to a string.
