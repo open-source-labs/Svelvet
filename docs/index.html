@@ -1,0 +1,290 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>svelvet</title><meta name="description" content="Documentation for svelvet"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">svelvet</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>svelvet</h2></div>
+<div class="tsd-panel tsd-typography"><div align="center">
+
+<p><img src="./src/assets/banner.png" alt="banner"></p>
+<p><img src="https://img.shields.io/badge/license-MIT-%23fb7182" alt="MIT License">
+<img src="https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads" alt="NPM Downloads">
+<img src="https://img.shields.io/github/stars/open-source-labs/svelvet?color=%23fb7182" alt="GitHub Stars">
+<img src="https://img.shields.io/github/forks/open-source-labs/Svelvet?color=%23fb7182" alt="GitHub Forks">
+<img src="https://img.shields.io/npm/v/svelvet?color=%23fb7182&label=version" alt="NPM Version"></p>
+
+<a href="#simplify-diagramming-with-svelvet" id="simplify-diagramming-with-svelvet" style="color: inherit; text-decoration: none;">
+  <h1>Simplify Diagramming with Svelvet!</h1>
+</a>
+<p>Svelvet is a lightweight Svelte component library for building interactive node-based diagrams.</p>
+<p><a href="https://svelvet.io/docs/installation/">⚡ Getting Started</a> | <a href="https://svelvet.io/docs/core-concepts/">📚 Documentation</a> | <a href="https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3">⌨️ Blog</a> | <a href="https://twitter.com/svelvet_oslabs">💬 Twitter</a> | <a href="https://www.linkedin.com/company/svelvet/">💼 LinkedIn</a></p>
+</div>
+
+
+<a href="#for-future-iteration-teams" id="for-future-iteration-teams" style="color: inherit; text-decoration: none;">
+  <h2>For future iteration teams:</h2>
+</a>
+<p>Read <code>src/lib/doc/README.md</code> for suggestions on how to get started!</p>
+
+<a href="#version-updates" id="version-updates" style="color: inherit; text-decoration: none;">
+  <h2>Version Updates</h2>
+</a>
+<p>Shout out to our contributors! Here&#39;s what&#39;s new:</p>
+
+<a href="#changelog" id="changelog" style="color: inherit; text-decoration: none;">
+  <h3>Changelog</h3>
+</a>
+<details><summary>v5.0.0</summary>
+<ul>
+  <li>Now compatible with Safari (5.0.7 update)</li>
+  <li>Added interactive node linking & creation</li>
+  <li>Added ability to load custom Svelte components as nodes</li>
+  <li>Added an optional minimap that allows you to visualize larger diagrams</li>
+  <li>Added progammatic initial zoom and location</li>
+  <li>Added custom classes for nodes to allow for uniform styling</li>
+  <li>Added a feature that allows you to export and import diagrams</li>
+  <li>Added an optional boundary to the diagram</li>
+  <li>Added functionality to edit nodes by right-clicking on a node to bring up a modal</li>
+  <li>Added an optional feature that allows users to delete nodes</li>
+  <li>NOTE: Please make sure to give nodes and edges unique IDs to prevent forEach key duplicate error!</li>
+  <li>Solved github issue #s: 65, 78, 80, 81, 85, 86, 104, 105, 146, 147, 148, 151, 153, 158</li>
+  <li>Updated documentation page on website to include new features</li>
+  <li>Updated home page to include newest collaborators</li>
+</ul>
+</details>
+<details><summary>v4.0.0</summary>
+<ul>
+  <li>Added ability to include HTML in inside of nodes (i.e. videos, sounds, etc)</li>
+  <li>Added NPM Package folder in root directory of GitHub repo</li>
+  <li>this folder is used for adding changes to library & pushing updates to NPM; included here to have version control through GitHub</li>
+  <li>Added snap-to-grid functionality for use during runtime in the canvas (GitHub Issue 107)</li>
+  <li>Corrected issue where nodes become magnetized when moved outside of the visible canvas boundaries (GitHub Issues 120 & 125)</li>
+  <li>Removed unused dotenv & node.env dependency from NPM Package package.json (GitHub Issue 118)</li>
+  <li>Moved all dependancies in devDependancies to regular dependancies object, except for d3-zoom which is used by the client during runtime</li>
+  <li>Added group nodes functionality</li>
+  <li>Updated main website page to include newest set of collaborators</li>
+  <li>Added CSS option for canvas background</li>
+  <li>Added documentation for HTML in nodes, snap-to-grid, canvas background coloring, and node grouping to website documents</li>
+  <li>General refactoring throughout application to improve responsiveness and decrease size</li>
+  <li>Created documentation to assist future developers in understanding the flow of data in Svelvet and provide list of potential updates/upgrades</li>
+</ul>
+</details>
+<details><summary>v3.0.0</summary>
+<ul>
+  <li>Added right-click context menu functionality on REPL playground page</li>
+  <li>Added capability to add custom nodes and edges via context menu</li>
+  <li>Added custom node/edge shortcuts for optimized user experience</li>
+  <li>Incorporated dynamic addition of custom node/edge via predictive algorithm</li>
+  <li>Added ability to copy text from code editor</li>
+  <li>Node diagrams now have the option to be fixed in place</li>
+  <li>Added tutorial overlay for REPL playground page</li>
+  <li>Added ability to access quick view documentation via popup modal</li>
+  <li>Updated documentation to allow easier contributor access('.env' file setup)</li>
+  <li>Updated Community link on website to redirect to Svelvet thread on Stackoverflow</li>
+  <li>Implemented skeleton codebase for a Community Forum with full database/route accessibility(for future contributors)</li>
+</ul>
+</details>
+<details><summary>v2.0.2</summary>
+<ul>
+  <li>Added left and right anchor points</li>
+  <li>Added step and smoothstep edge types</li>
+  <li>Incorporated mixed edge functionality</li>
+  <li>Refactored how edge text and labels render for every edge</li>
+  <li>Fixed D3Zoom bias bug</li>
+  <li>Expanded styling options, including label color, label background, and edge color</li>
+  <li>Nodes are now able to contain images and will render differently based on the presence of label text</li>
+  <li>Nodes are now draggable on touch screens and reposition themselves to center on your touch</li>
+  <li>Implemented data reactivity</li>
+  <li>Expanded TypeScripting</li>
+  <li>Added E2E testing using Cypress</li>
+  <li>Expanded unit tests</li>
+  <li>Added a REPL to our documentation site</li>
+  <li>Added SQL database to our REPL</li>
+  <li>Added GitHub OAuth to enable users to save their custom diagrams created in our new REPL</li>
+  <li>Expanded documentation for new features</li>
+  <li>Added full CI/CD pipeline</li>
+</ul>
+</details>
+<details><summary>v1.0.3</summary>
+<ul>
+  <li>Fixed bug with running tests</li>
+  <li>Added ability to render multiple unique Svelvet components</li>
+  <li>Added a 'clickCallback' customization option for nodes</li>
+</ul>
+</details>
+<details><summary>v1.0.2</summary>
+<ul>
+  <li>Fixed bug with importing types for TypeScript applications</li>
+  <li>Added a 'borderRadius' customization option for nodes</li>
+  <li>Fixed SVG zoom/pan bug (zoom/pan is now limited to Svelvet component only)</li>
+</ul>
+</details>
+
+
+<a href="#key-features" id="key-features" style="color: inherit; text-decoration: none;">
+  <h2>Key Features</h2>
+</a>
+<ul>
+<li><strong>Easy to use:</strong> To get <a href="https://svelvet.io/docs/basic-usage/">started</a> with Svelvet, all you need is data for nodes and edges. Visit our <a href="https://svelvet.io/">documentation website</a> for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!</li>
+<li><strong>Interactive:</strong> Elegant and smooth interface when selecting a node to drag it across the graph.</li>
+<li><strong>Customizable:</strong> Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!</li>
+<li><strong>Fast rendering:</strong> Re-rendering is based on changes to initial values for nodes, edges and optional background and <em>movement</em> (collaborator credit to <a href="https://github.com/dvisockas">dvisockas</a>).</li>
+<li><strong>Reliable:</strong> Svelvet is written in TypeScript and tested with <a href="https://vitest.dev/">Vitest</a>, <a href="https://www.cypress.io/">Cypress</a> and <a href="https://testing-library.com/docs/svelte-testing-library/intro/">Svelte Testing Library</a>. Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.</li>
+<li><strong>Room to Grow:</strong> There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.</li>
+</ul>
+<p><img src="./src/assets/readme-gif.gif" alt="screenshot"></p>
+
+<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+  <h2>Installation</h2>
+</a>
+<p>Svelvet is available as both an npm and a yarn package. You can install it by running one of the two commands:</p>
+<pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">svelvet</span>
+</code></pre>
+<pre><code class="language-bash"><span class="hl-0">yarn </span><span class="hl-1">add</span><span class="hl-0"> </span><span class="hl-1">svelvet</span>
+</code></pre>
+
+<a href="#quick-start" id="quick-start" style="color: inherit; text-decoration: none;">
+  <h2>Quick Start</h2>
+</a>
+<p>Start by importing Svelvet into your application:</p>
+<pre><code class="language-bash"><span class="hl-0">import </span><span class="hl-1">Svelvet</span><span class="hl-0"> </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-1">&#39;svelvet&#39;</span><span class="hl-0">;</span>
+</code></pre>
+<p>A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. By default, Svelvet components allow for the ability to move nodes and edges as well as pan and zoom. However, if you would like to render a fixed diagram, simply pass in the movement attribute and set it&#39;s value to false! You can add a dot-grid background like the example below. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!</p>
+<pre><code class="language-bash"><span class="hl-0">&lt;Svelvet </span><span class="hl-2">nodes</span><span class="hl-0">=</span><span class="hl-1">{nodes}</span><span class="hl-0"> </span><span class="hl-2">edges</span><span class="hl-0">=</span><span class="hl-1">{edges}</span><span class="hl-0"> movement background /&gt;</span>
+</code></pre>
+<p>Visit our <a href="https://svelvet.io">website</a> to learn more on how to customize your nodes and edges to your liking!</p>
+
+<a href="#testing" id="testing" style="color: inherit; text-decoration: none;">
+  <h2>Testing</h2>
+</a>
+<p>Testing is done with Vitest and the Svelte Testing Library. You can find tests in the <a href="https://github.com/open-source-labs/Svelvet/tree/main/tests">/tests</a> folder. In order to run the tests use the command:</p>
+<p>For Unit testing</p>
+<pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">run</span><span class="hl-0"> </span><span class="hl-1">test:unit</span>
+</code></pre>
+<p>For End-to-End testing</p>
+<pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">run</span><span class="hl-0"> </span><span class="hl-1">cypress:open</span>
+</code></pre>
+
+<a href="#the-svelvet-team" id="the-svelvet-team" style="color: inherit; text-decoration: none;">
+  <h2>The Svelvet Team</h2>
+</a>
+<ul>
+<li>Aaron Willett • <a href="https://www.linkedin.com/in/awillettnyc/">LinkedIn</a> • <a href="https://github.com/awillettnyc">Github</a></li>
+<li>Alexander Zambrano • <a href="https://www.linkedin.com/in/alexander-z-8b7716b0/">LinkedIn</a> • <a href="https://github.com/azambran21">Github</a></li>
+<li>Andrew Widjaja • <a href="https://www.linkedin.com/in/andrew-widjaja/">LinkedIn</a> • <a href="https://github.com/andrew-widjaja">Github</a></li>
+<li>Anu Sharma • <a href="https://www.linkedin.com/in/anu-sharma-6936a686/">LinkedIn</a> • <a href="https://github.com/anulepau">Github</a></li>
+<li>Justin Wouters • <a href="https://www.linkedin.com/in/justinwouters/">LinkedIn</a> • <a href="https://github.com/justinwouters">Github</a></li>
+<li>Walter DeVault • <a href="https://www.linkedin.com/in/walter-devault/">LinkedIn</a> • <a href="https://github.com/TensionCoding">Github</a></li>
+<li>Ali Adams • <a href="https://www.linkedin.com/in/alimadams/">LinkedIn</a> • <a href="https://github.com/AliA12336">Github</a></li>
+<li>Von Garcia • <a href="https://www.linkedin.com/in/gerard-von-g-3964bb160/">LinkedIn</a> • <a href="https://github.com/vongarcia97">Github</a></li>
+<li>Damian Lim • <a href="https://www.linkedin.com/in/lim-damian/">LinkedIn</a> • <a href="https://github.com/limd96">Github</a></li>
+<li>Christopher Mander • <a href="https://www.linkedin.com/in/christopher-mander/">LinkedIn</a> • <a href="https://github.com/cpmander">Github</a></li>
+<li>David Jakubiec • <a href="https://www.linkedin.com/in/david-jakubiec-16783384/">LinkedIn</a> • <a href="https://github.com/davidjakubiec">Github</a></li>
+<li>Jeffrey Wentworth • <a href="https://www.linkedin.com/in/jeffreywentworth/">LinkedIn</a> • <a href="https://github.com/jeffreywentworth">Github</a></li>
+<li>Johnny Tran • <a href="https://www.linkedin.com/in/tranpjohnny/">LinkedIn</a> • <a href="https://github.com/JTraan">Github</a></li>
+<li>Samee Vohra • <a href="https://www.linkedin.com/in/sameev/">LinkedIn</a> • <a href="https://github.com/sameev">Github</a></li>
+<li>Abhi Gullapalli • <a href="https://www.linkedin.com/in/viswa-gullapalli-442802253/">LinkedIn</a> • <a href="https://github.com/aubertlone">Github</a></li>
+<li>Ian Hnizdo • <a href="https://www.linkedin.com/in/ian-hnizdo/">LinkedIn</a> • <a href="">Github</a></li>
+<li>Mauricio Castro • <a href="https://www.linkedin.com/in/mauricioacastro/">LinkedIn</a> • <a href="https://github.com/sher85">Github</a></li>
+<li>Ryan Potter • <a href="www.linkedin.com/in/ryan-potter-0105b6100">LinkedIn</a> • <a href="https://github.com/rpotter0811">Github</a></li>
+<li>Emma Ferguson • <a href="https://www.linkedin.com/in/emma-ferguson-33858725a/">LinkedIn</a> • <a href="https://github.com/emmanotly">Github</a></li>
+<li>Dillon McKenna • <a href="https://www.linkedin.com/in/dillon-mckenna/">LinkedIn</a> • <a href="https://github.com/dmckenna44">Github</a></li>
+<li>Taylor Alan • <a href="https://www.linkedin.com/in/taylor-alan-026a49226/">LinkedIn</a> • <a href="https://github.com/taylien96">Github</a></li>
+<li>Timmy Lem • <a href="https://www.linkedin.com/in/timmy-lem/">LinkedIn</a> • <a href="https://github.com/timmylem01">Github</a></li>
+<li>Tony Lim • <a href="https://www.linkedin.com/in/tonylim467/">LinkedIn</a> • <a href="https://github.com/tonyy467">Github</a></li>
+</ul>
+
+<a href="#forking-the-repository" id="forking-the-repository" style="color: inherit; text-decoration: none;">
+  <h2>Forking the Repository</h2>
+</a>
+<p>If you&#39;d like to fork the repository and run it locally, you&#39;ll need to perform a couple of steps to in order to get everything working properly:</p>
+<ul>
+<li>Create an account on <a href="https://supabase.com/">Supabase</a></li>
+<li>Create a new project in Supabase (you can name this whatever you want)</li>
+<li>Rename the &#39;supabase_env&#39; file to &#39;.env&#39; and paste in the API keys from your newly created supabase project into the .env file</li>
+</ul>
+<p>Once that is done you should be able to render the website locally on localhost:3000, although you will be missing some minor functionality tied to the production database (e.g. OAuth login).</p>
+
+<a href="#how-to-contribute" id="how-to-contribute" style="color: inherit; text-decoration: none;">
+  <h2>How to Contribute</h2>
+</a>
+<p>The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!</p>
+<ul>
+<li>Premade node menu with drag &amp; drop abilities</li>
+<li>Select and Delete a specific edge</li>
+<li>Rotating and resizing of nodes</li>
+<li>Expandable and collapsible parent nodes that can hide/show their children nodes</li>
+<li>Add documentation/video tutorial on how to set up a Svelvet demo</li>
+<li>Custom error handling</li>
+<li>Increase test coverage for scalability</li>
+<li>More styling and customization of edges for complex Svelvet flow diagrams</li>
+<li>Community Forum</li>
+<li>GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.</li>
+</ul>
+
+<a href="#credits" id="credits" style="color: inherit; text-decoration: none;">
+  <h2>Credits</h2>
+</a>
+<p>Inspired by <a href="https://github.com/wbkd/react-flow">React Flow</a>, Svelvet expands the tools available to Svelte developers and makes Svelte more inviting to both new and seasoned software engineers. Under the hood, Svelvet depends on the <a href="https://github.com/d3/d3-zoom">d3-zoom</a> library to zoom and pan across the graph.</p>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h2>License</h2>
+</a>
+<p>Svelvet is developed under the <a href="https://github.com/open-source-labs/Svelvet/blob/main/LICENSE">MIT license</a>.</p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">svelvet</a>
+<ul>
+<li class="tsd-kind-module"><a href="modules/Minimap_GreyNodeBoundary.html">Minimap/<wbr/>Grey<wbr/>Node<wbr/>Boundary</a></li>
+<li class="tsd-kind-module"><a href="modules/Minimap_GreyNodeBoundless_svelte.html">Minimap/<wbr/>Grey<wbr/>Node<wbr/>Boundless.svelte</a></li>
+<li class="tsd-kind-module"><a href="modules/Minimap_MinimapBoundary.html">Minimap/<wbr/>Minimap<wbr/>Boundary</a></li>
+<li class="tsd-kind-module"><a href="modules/Minimap_MinimapBoundless_svelte.html">Minimap/<wbr/>Minimap<wbr/>Boundless.svelte</a></li>
+<li class="tsd-kind-module"><a href="modules/container_controllers_middleware.html">container/controllers/middleware</a></li>
+<li class="tsd-kind-module"><a href="modules/container_types_types.html">container/types/types</a></li>
+<li class="tsd-kind-module"><a href="modules/customCss_controllers_getCss.html">custom<wbr/>Css/controllers/get<wbr/>Css</a></li>
+<li class="tsd-kind-module"><a href="modules/d3_controllers_d3.html">d3/controllers/d3</a></li>
+<li class="tsd-kind-module"><a href="modules/d3_controllers_d3Old.html">d3/controllers/d3<wbr/>Old</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_controllers_anchorCbDev.html">edges/controllers/anchor<wbr/>Cb<wbr/>Dev</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_controllers_anchorCbUser.html">edges/controllers/anchor<wbr/>Cb<wbr/>User</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_models_Anchor.html">edges/models/<wbr/>Anchor</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_models_Edge.html">edges/models/<wbr/>Edge</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_types_types.html">edges/types/types</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_views_Edges_types.html">edges/views/<wbr/>Edges/types</a></li>
+<li class="tsd-kind-module"><a href="modules/edges_views_Edges_utils.html">edges/views/<wbr/>Edges/utils</a></li>
+<li class="tsd-kind-module"><a href="modules/interactiveNodes_models_PotentialAnchor.html">interactive<wbr/>Nodes/models/<wbr/>Potential<wbr/>Anchor</a></li>
+<li class="tsd-kind-module"><a href="modules/interactiveNodes_models_TemporaryEdge.html">interactive<wbr/>Nodes/models/<wbr/>Temporary<wbr/>Edge</a></li>
+<li class="tsd-kind-module"><a href="modules/nodes_models_Node.html">nodes/models/<wbr/>Node</a></li>
+<li class="tsd-kind-module"><a href="modules/resizableNodes_models_ResizeNode.html">resizable<wbr/>Nodes/models/<wbr/>Resize<wbr/>Node</a></li>
+<li class="tsd-kind-module"><a href="modules/store_controllers_storeApi.html">store/controllers/store<wbr/>Api</a></li>
+<li class="tsd-kind-module"><a href="modules/store_controllers_util.html">store/controllers/util</a></li>
+<li class="tsd-kind-module"><a href="modules/store_models_store.html">store/models/store</a></li>
+<li class="tsd-kind-module"><a href="modules/store_types_types.html">store/types/types</a></li></ul></li></ul></div></details></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>
