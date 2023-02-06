@@ -3,7 +3,7 @@
 </script>
 
 <div>
-  <h2 class="text-4xl font-semibold mb-12">Click to Unfold and Collapse the Diagram</h2>
+  <h2 class="text-4xl font-semibold mb-12">Unfold and Collapse the Diagram</h2>
 </div>
 
 <p class="text-gray-600">

@@ -2,7 +2,7 @@
 
 <p class="text-gray-600">
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> allows users to interactively edit nodes in their diagrams. 
-  To access this feature, pass the  <code class="bg-rose-100 rounded-lg p-1">nodeEdit</code> prop into your <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> application 
+  To access this feature, pass the  <code class="bg-rose-100 rounded-lg p-1">editable</code> prop and set the value to true into your <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> application 
   and <code class="bg-rose-100 rounded-lg p-1">right-click</code> on any node to bring up a modal that will have customizable options!
   Nodes with custom classes cannot be edited via the modal because their class styling will take priority. 
 </p> 
