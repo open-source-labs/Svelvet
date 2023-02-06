@@ -54,7 +54,11 @@ function findTargets(store: StoreType, nodeId: string): string[] {
 }
 
 // traverses tree and increments hideCount
-function traverseAndIncrement(store: StoreType, nodeId: string) {
+function traverseAndIncrement(
+  store: StoreType,
+  nodeId: string,
+  operation: 'increment' | 'decrement'
+) {
   const collapsibles = get(store.collapsibleStore);
   recursiveTraverse(nodeId);
   store.collapsibleStore.set(collapsibles);
@@ -75,5 +79,7 @@ function traverseAndIncrement(store: StoreType, nodeId: string) {
 export function collapse(store: StoreType, nodeId: string) {
   const targetNodeIds = findTargets(store, nodeId);
   for (const targetNodeId of targetNodeIds)
-    traverseAndIncrement(store, targetNodeId);
+    traverseAndIncrement(store, targetNodeId, 'increment');
 }
+
+export function toggleExpandAndCollapse() {}
