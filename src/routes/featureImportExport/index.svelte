@@ -1,10 +1,7 @@
-<script>
-  //import Svelvet from '$lib/container/views/Svelvet.svelte';
-  // import DeleteMe from '$lib/deleteMe.svelte';
-  // import DeleteMe from 'svelvet-lime';
-  import Svelvet from 'svelvet-lime';
+<script lang='ts'>
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
 
-  const initialNodes = [
+  const initialNodes: any[] = [
     {
       id: 1,
       position: { x: 225, y: 10 },
@@ -28,18 +25,24 @@
     },
   ];
 
-  const initialEdges = [
+  const initialEdges: any[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
   ];
+
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<Svelvet
+  canvasId="4tsdgss32"
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+  shareable={true}
+/>
 
-<style>
-  :global(.customClass) {
-    width: 300px;
-    height: 300px;
-    background-color: #e07589;
-    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121 !important;
-  }
-</style>
+
+
+
+
+

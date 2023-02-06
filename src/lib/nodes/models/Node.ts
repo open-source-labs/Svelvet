@@ -2,7 +2,6 @@
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
 } from '../../store/types/types';
@@ -18,25 +17,25 @@ import {
 } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
 
-/** Class representing an anchor with a Anchortype alias */
+/** A Node class that uses NodeType interface
+* @param {string} id The id of the Node
+* @param {number} positionX The X-axis position of the Node (left top corner of the Node)
+* @param {number} positionY The Y-axis position of the Node (left top corner of the Node)
+* @param {number} width The width of the Node
+* @param {number} height The height of the Node
+* @param {string} bgColor The background color of the node
+* @param {object} data A data object that user can specify; possible keys are 'label' and 'custom';
+* @param {string} canvasId The canvasId of the Svelvet component that the instantiated Node will be on.
+* @param {string} borderColor The border color of the Node
+* @param {boolean} image A boolean set to true if the Node needs to display an image
+* @param {string} src The src link for the image; image and src are closely tied and a src link is only needed when image sets to true
+* @param {string} textColor The color of the text in the Node
+* @param {string} borderRadius The border radius of the Node
+* @param {string} childNodes An array of node ids that will be grouped as child nodes of this Node. This is for the GroupNodes feature. The current implementation of this feature works one way but not the other (when you drag the parent node, the child nodes will move as a group but when you drag the child node, the parent node would not move along)
+* @param {string} className The custom class name if user specifies. This is for the custom className feature for Node.
+*/
 export class Node implements NodeType {
-  /**
-   * @param {string} id - id of the node we created genertated by a random string
-   * @param {number} positionX - 'X' position of the node
-   * @param {number} positionY - 'Y' position of the node
-   * @param {number} width - width of the node
-   * @param {number} height - height of the node
-   * @param {string} bgColor - background color of node
-   * @param {object} data - //note sure
-   * @param {string} canvasId - //note sure
-   * @param {string} borderColor - border color of node
-   * @param {boolean} image - //not sure
-   * @param {string} src - //not sure
-   * @param {string} textColor - the color of the text in the node
-   * @param {string} borderRadius - //not sure
-   * @param {string} childNodes - this is for the GroupNodes feature
-   * @param {string} className - this is for the custom className for Node
-   */
+
   constructor(
     public id: string,
     public positionX: number,
@@ -51,14 +50,15 @@ export class Node implements NodeType {
     public src: string,
     public textColor: string,
     public borderRadius: number,
-    public childNodes: string[], // this is required for feature "node-grouping". Personally, I think this is feature bloat and should be removed
-    public className?: string
+    public childNodes: string[], 
+    public className?: string,
+    public nodeCallback?: Function
   ) {}
 
   /**
-   * @function setPosition - 
-   * @param {number} movementX -
-   * @param {number} movementy - 
+   * setPositionFromMovement will update the positionX and positionY of the Node when user drags a Node around on the canvas, reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and Edges.
+   * @param {number} movementX The mouse movement value on the X-axis 
+   * @param {number} movementy The mouse movement value on the Y-axis
    */
   setPositionFromMovement(movementX: number, movementY: number) {
     const {
@@ -111,7 +111,13 @@ export class Node implements NodeType {
     });
   }
 
-  //Sets the Width and Height of the Node base on ResizeNode's position
+  
+  /**
+   * setSizeFromMovement will update the width and height of the Node when user resizes the Node by dragging at the right bottom corner (where the ResizedNode attached), reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and potential Anchors.
+   * 
+   * @param movementX The mouse movement value on the X-axis
+   * @param movementY The mouse movement value on the Y-axis
+   */
   setSizeFromMovement(movementX: number, movementY: number) {
     this.width += movementX;
     this.height += movementY;
@@ -141,8 +147,7 @@ export class Node implements NodeType {
   }
 
   /**
-   * @function delete - will handle the deletion of a node (should waterfall down to delete anchors and edges)
-   * @TODO implement this
+   * delete will handle the deletion of a Node (also waterfall down to delete anchors and edges)
    */
   delete() {
     const store = stores[this.canvasId];
@@ -177,5 +182,31 @@ export class Node implements NodeType {
     for (const potentialAnchor of potentialAnchorsArr) {
       potentialAnchor.delete();
     }
+  }
+
+  /**
+   * setExportableData is going to construct an object that holds all the node data that can be exported. This method is used for Exporting Diagrams feature.
+   * 
+   * @returns An object with all the exportable data of the Node. The format of this object should align with the original format of node data user provided.
+   */
+  setExportableData() {
+    const exportableData = {
+      id: this.id,
+      // canvasId: this.canvasId,
+      width: this.width,
+      height: this.height,
+      position: { x: this.positionX, y: this.positionY },
+      data: this.data,
+      bgColor: this.bgColor,
+      borderColor: this.borderColor,
+      textColor: this.textColor,
+      borderRadius: this.borderRadius,
+      image: this.image,
+      src: this.src,
+      childNodes: this.childNodes,
+      customClassName: this.className,
+    };
+
+    return exportableData;
   }
 }

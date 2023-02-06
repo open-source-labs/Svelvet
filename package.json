@@ -21,7 +21,7 @@
     "package": "svelte-kit package",
     "preview": "svelte-kit preview",
     "prepare": "svelte-kit sync",
-    "test": "vitest run tests/unit",
+    "test": "vitest run tests/unit --silent=false",
     "test-coverage": "vitest run tests/unit --coverage",
     "test:unit": "vitest tests/unit",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -32,6 +32,7 @@
     "nyc": "nyc mocha"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.20.11",
     "@smui/button": "^6.1.0",
     "@smui/icon-button": "^6.1.0",
     "@sveltejs/adapter-auto": "next",
@@ -83,6 +84,7 @@
     "svelte-moveable": "^0.34.1",
     "svelte-parallax": "^0.6.0",
     "svelvet": "^5.0.7",
+    "svelvet-lime": "^6.0.12",
     "uuid": "^9.0.0",
     "yootils": "^0.3.1"
   }

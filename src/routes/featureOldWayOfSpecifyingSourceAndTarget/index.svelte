@@ -1,8 +1,5 @@
 <script>
-  //import Svelvet from '$lib/container/views/Svelvet.svelte';
-  // import DeleteMe from '$lib/deleteMe.svelte';
-  // import DeleteMe from 'svelvet-lime';
-  import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
 
   const initialNodes = [
     {
@@ -15,6 +12,7 @@
       borderColor: 'transparent',
       image: true,
       src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
+      sourcePosition: 'right',
     },
     {
       id: 2,
@@ -33,13 +31,12 @@
   ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<!-- <Svelvet
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+/> -->
 
-<style>
-  :global(.customClass) {
-    width: 300px;
-    height: 300px;
-    background-color: #e07589;
-    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121 !important;
-  }
-</style>
+<Svelvet nodes={initialNodes} edges={initialEdges} />

@@ -1,8 +1,7 @@
 {
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2020", "DOM"],
@@ -15,5 +14,5 @@
     "target": "es2020",
     "noImplicitAny": false
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "src/lib/stores/authStore.js"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "src/lib/index.js"]
 }

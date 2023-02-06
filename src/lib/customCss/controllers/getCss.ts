@@ -1,12 +1,11 @@
 // Required for "custom css" feature
 
-import type { NodeType, StoreType } from '$lib/models/types';
+import type { NodeType, StoreType } from '$lib/store/types/types';
 
 // WHAT: For a given node with a user-defined classname, see if there are any css properties for height and width
 //       Get that height and width and set properties in node store. This is necessary for
 export const forceCssHeightAndWidth = (store: StoreType, node: NodeType) => {
   let width, height, innerText;
-  //   const styleRules = document.styleSheets[1].cssRules; // getting the right stylesheet and cssRules from the CSS object model
   // Look through each CSS rule to find the one the user defined
   for (let i = 0; i < document.styleSheets.length; i++) {
     const styleSheet = document.styleSheets[i];

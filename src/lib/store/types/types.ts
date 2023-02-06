@@ -1,4 +1,5 @@
 import type { Readable, Writable } from 'svelte/store';
+import type { AnchorType } from '$lib/edges/types/types';
 
 export interface ResizeNodeType {
   id: string;
@@ -19,23 +20,24 @@ export interface UserNodeType {
   bgColor: string;
   data: object;
   position: { x: number; y: number };
-  borderColor: string;
-  image: boolean;
-  src: string;
-  textColor: string;
-  targetPosition: 'left' | 'right' | 'top' | 'bottom';
-  sourcePosition: 'left' | 'right' | 'top' | 'bottom';
-  borderRadius: number;
-  childNodes: string[];
+  borderColor?: string;
+  image?: boolean;
+  src?: string;
+  textColor?: string;
+  targetPosition?: 'left' | 'right' | 'top' | 'bottom';
+  sourcePosition?: 'left' | 'right' | 'top' | 'bottom';
+  borderRadius?: number;
+  childNodes?: string[];
   className?: string;
+  nodeCallback?: Function;
 }
 
 export interface UserEdgeType {
   id: string;
   source: string;
   target: string;
-  sourceAnchorCb: Function;
-  targetAnchorCb: Function;
+  sourceAnchorCb?: Function;
+  targetAnchorCb?: Function;
   label?: string;
   labelBgColor?: string;
   labelTextColor?: string;
@@ -64,6 +66,7 @@ export interface StoreType {
   d3Scale: Writable<number>; // for zoom and pan
   options: Writable<{ [key: string]: any }>;
   temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
+  nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
 }
 
 export interface NodeType {
@@ -77,6 +80,7 @@ export interface NodeType {
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
+  setExportableData: Function;
   borderColor: string;
   image: boolean;
   src: string;
@@ -85,6 +89,7 @@ export interface NodeType {
   canvasId: string;
   childNodes: string[];
   className?: string; //This is for custom className for node
+  nodeCallback?: Function; // user-supplied callback that executes when the node is clicked
 }
 
 export interface EdgeType {
@@ -103,21 +108,7 @@ export interface EdgeType {
   noHandle?: boolean;
   arrow?: boolean;
   delete: Function;
-}
-
-export interface AnchorType {
-  id: string; // note that the user never specifies an anchor and they are generated dynamically. id will be a random string.
-  nodeId: string;
-  edgeId: string;
-  sourceOrTarget: 'source' | 'target';
-  positionX: number;
-  positionY: number;
-  callback: Function; // callback is used to calculate positionX, positionY based on parent node's data, and set the anchor position // TODO: rename to something better
-  angle: number;
-  setPositionFromNode: Function;
-  setPosition: Function;
-  updateEdges: Function;
-  delete: Function;
+  setExportableData: Function;
 }
 
 export interface PotentialAnchorType {

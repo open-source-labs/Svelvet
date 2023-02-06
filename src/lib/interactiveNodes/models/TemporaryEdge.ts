@@ -2,7 +2,6 @@
 import type {
   NodeType,
   EdgeType,
-  AnchorType,
   StoreType,
   ResizeNodeType,
   TemporaryEdgeType,

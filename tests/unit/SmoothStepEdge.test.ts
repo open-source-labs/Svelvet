@@ -1,4 +1,4 @@
-import SmoothStepEdge from '$lib/views/RefactoredComponents/SmoothStepEdge.svelte';
+import SmoothStepEdge from '$lib/edges/views/Edges/SmoothStepEdge.svelte';
 
 import { render, screen, cleanup } from '@testing-library/svelte';
 

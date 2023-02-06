@@ -8,9 +8,8 @@ import {
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
 import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
-import { populateAnchorsStore } from '$lib/store/controllers/util';
 
-describe('tests node', () => {
+describe('tests ResizeNode', () => {
   const canvasId = uuidv4();
   const initialNodes: UserNodeType[] = [
     {
@@ -139,41 +138,14 @@ describe('tests node', () => {
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
-  const { nodesStore } = store;
+  const { resizeNodesStore } = store;
 
-  // console.log('NODESTORE :', nodesStore)
-  // nodesStore.update((node) => {
-  //   console.log('NODE:', node)
-  //   for (const nodeId in node) {
-  //     console.log('NODEID:', node[nodeId]);
+  // resizeNodesStore.update((resizeNode) => {
+  //   for (const resizeNodeId in resizeNode) {
+  //     console.log(resizeNode[resizeNodeId]);
   //   }
   // });
-test('set position from movement should update position X & Y based on mouse movement', () => {
-
-  nodesStore.update((node) => {
-    for (const nodeId in node) {
-      if(nodeId === '1') {
-        node[nodeId].setPositionFromMovement(10, 10);
-        expect(node[nodeId].positionX).toBe(235)
-        expect(node[nodeId].positionY).toBe(20)
-      }
-      if(nodeId === '2') {
-        node[nodeId].setPositionFromMovement(-10, 10);
-        expect(node[nodeId].positionX).toBe(380)
-        expect(node[nodeId].positionY).toBe(190)
-      }
-      if(nodeId === '3') {
-        node[nodeId].setPositionFromMovement(-10, -10);
-        expect(node[nodeId].positionX).toBe(215)
-        expect(node[nodeId].positionY).toBe(250)
-      }
-      // when setPositionsFromMovement runs it should cascade to the anchors edges and resizenode
-    }
-  });
-})
-
 
   //Then, call set PositionAndCascade on resizeNode and make sure the width/height of the node also changes.
   //Make sure when you call delete on the node that the resizeNode also disappears.
 });
-
