@@ -137,6 +137,7 @@ export function populateEdgesStore(
       animate,
       noHandle,
       arrow,
+      clickCallback,
     } = userEdge;
 
     const anchors = getAnchors(store, { edgeId: edgeId });
@@ -170,7 +171,8 @@ export function populateEdgesStore(
       edgeColor,
       animate,
       noHandle,
-      arrow
+      arrow,
+      clickCallback
     );
   }
   store.edgesStore.set(edgesStore);
