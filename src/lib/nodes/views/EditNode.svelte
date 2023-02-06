@@ -106,6 +106,7 @@
     user-select: text;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
     color: #333333;
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 
   label {
