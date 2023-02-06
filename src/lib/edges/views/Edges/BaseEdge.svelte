@@ -27,15 +27,23 @@
     centerY: centerY,
   };
 
-  // Right now, the delete-edge feature deletes an edge when it is right clicked.
-  // In the future, it would be nice to integrate the delete edge feature with a modal
-  // that allows for edge properties to be changed. This is why the function name is
-  // handleEditModal
+  // Click event handlers
+  // At some point in the future, it would be good to refactor event handling to use the flux architecture
+  //  ie, events will create an action that will be dispatched to some centralized reducer.
+  //  or in other words, the creators of Redux knew what they were doing.
+  // The advantage of this re-design would be greater modularity; views would be agnostic to the exact features implmemented,
+  //   and they would be only responsible to detecting events and dispatch actions.
   const edgeId = baseEdgeProps.id;
-  const handleEditModal = () => {
+  const handleRightClick = () => {
     const store = findStore(canvasId);
-    // const edge = getEdgeById(store, edgeId);
+    // handles edgeEdit feature
     store.edgeEditModal.set(edgeId);
+  };
+  const handleClick = () => {
+    const store = findStore(canvasId);
+    const edge = getEdgeById(store, edgeId);
+    // handles edge clickCallback feature
+    if (edge.clickCallback) edge.clickCallback(edge);
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -54,7 +62,7 @@
   </marker>
 </defs>
 
-<!-- This is an invisible edge that is used to  -->
+<!-- This is an invisible edge that is used to implement event events, because the visible edge is thin and hard to click on -->
 <path
   id={`edgeSelector`}
   d={path}
@@ -62,7 +70,8 @@
   stroke={'red'}
   stroke-opacity="0"
   stroke-width="20"
-  on:contextmenu={handleEditModal}
+  on:contextmenu={handleRightClick}
+  on:click={handleClick}
 />
 
 {#if arrow}

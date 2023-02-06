@@ -3,30 +3,59 @@
 
   const initialNodes = [
     {
+      id: 1,
+      position: { x: 225, y: 10 },
+      data: { label: 'Click me!' },
+      width: 100,
+      height: 100,
+      bgColor: 'white',
+      borderColor: 'transparent',
+      clickCallback: (node) => {
+        alert('you clicked node 1!');
+      },
+    },
+    {
       id: 2,
-      position: { x: 390, y: 150 },
-      data: { label: 'Mixed Anchors' },
+      position: { x: 390, y: 180 },
+      data: { label: 'Click the edge!' },
       width: 125,
       height: 40,
       bgColor: 'white',
-      targetPosition: 'right',
-      sourcePosition: 'left',
-      clickCallback: (node) => {
-        console.log('node object: ', node);
+      textColor: 'black',
+      targetPosition: 'left',
+      clickCallback: (edge) => {
+        alert('you clicked node 2!');
       },
     },
   ];
 
-  const initialEdges = [];
+  const initialEdges = [
+    {
+      id: 'e1-2',
+      source: 1,
+      target: 2,
+      label: 'edge label',
+      clickCallback: (edge) => {
+        alert('you clicked an edge!');
+      },
+    },
+  ];
 </script>
 
-<Svelvet nodes={initialNodes} edges={initialEdges} />
+<Svelvet
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+/>
 
-<style>
-  :global(.customClass) {
-    width: 300px;
-    height: 300px;
-    background-color: #e07589;
-    box-shadow: 0px -50px 0px 0px #c1f9ff, 0px 50px 0px 0px #ff4121 !important;
-  }
-</style>
+<Svelvet
+  nodes={initialNodes}
+  edges={initialEdges}
+  width={900}
+  height={900}
+  background
+/>
+
+<!-- <Canvas nodes={initialNodes} edges={initialEdges} /> -->
