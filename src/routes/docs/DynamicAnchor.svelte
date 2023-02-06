@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script>
 
 </script>
 
@@ -14,10 +14,11 @@
   Now you don't even need to specify <code class="code">sourcePosition</code> and <code class="code">targetPosition</code> in your node object anymore because Svelvet is going to take care of generating optimal anchors based on the relative posistions between two nodes.
 </p>
 
+<img alt="Dynamic Anchor Demo" src="/src/assets/dynamicAnchorDemo.gif"/>
+
 <p class="text-gray-600">
   The diagram generated using Svelvet 6.0 below has dynamic anchors on every node. Drag the node around and see how the anchors are changing dynamically!
 </p>
-
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Dynamic Anchors</h3>
 <p class="text-gray-600">
@@ -32,3 +33,10 @@
   allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
+
+<style>
+  img {
+    width: 500px;
+    height: 500px
+  }
+</style>
