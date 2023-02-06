@@ -74,6 +74,7 @@ export interface StoreType {
   collapsibleStore: Writable<CollapsibleType[]>;
   collapsibleOption: Writable<boolean>;
   lockedOption: Writable<boolean>;
+  editableOption: Writable<boolean>;
 }
 
 export interface PositionType {

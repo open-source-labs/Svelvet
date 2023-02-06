@@ -306,6 +306,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     collapsibleStore: writable([]), // this is used for the collaspsible node feature. If the feature is enabled, store.collapsible will be populated with Collapsible objects which will track whether the node should be displayed or not
     collapsibleOption: writable(false),
     lockedOption: writable(false),
+    editableOption: writable(false),
   };
   return stores[canvasId];
 }

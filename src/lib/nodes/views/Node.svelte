@@ -33,6 +33,7 @@
     anchorsStore,
     nodeSelected,
     resizeNodesStore,
+    editableOption,
   } = store;
 
   let isSelected = false;
@@ -151,8 +152,8 @@
   on:touchend={mouseup}
 />
 
-<!--EditNode component will be displayed if isEditing is true-->
-{#if isEditing}
+<!--EditNode component will be displayed if isEditing is true and if the canvas option "edtiable" is set true-->
+{#if isEditing && $editableOption}
   <EditNode {canvasId} {nodeId} {isEditing} />
 {/if}
 
