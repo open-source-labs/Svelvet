@@ -1,6 +1,7 @@
 <script lang="ts">
   import { findStore, getEdgeById } from '../../../store/controllers/storeApi';
   import EdgeText from '../Edges/EdgeText.svelte';
+  import { writable, derived, get, readable } from 'svelte/store';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
   export let canvasId;
@@ -35,8 +36,9 @@
   const edgeId = baseEdgeProps.id;
   const handleRightClick = () => {
     const store = findStore(canvasId);
+    const { editableOption } = store;
     // handles edgeEdit feature
-    store.edgeEditModal.set(edgeId);
+    if (get(editableOption)) store.edgeEditModal.set(edgeId);
   };
   const handleClick = () => {
     const store = findStore(canvasId);

@@ -99,7 +99,7 @@ export function getAnchorFromEdge(
  * Finds all Anchors that matches the conditions specified in the filter parameter from a Svelvet store and returns these Anchors in an array.
  *
  * @param store The Svelvet store containing the state of a Svelvet component
- * @param filter An object to specify conditions. Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will return all anchors with sourceOrTarget = source AND poxitionX = 35
+ * @param filter An object to specify conditions. Example: if filter = \{ sourceOrTarget: 'source', positionX: 35 \} then we will return all anchors with sourceOrTarget = source AND poxitionX = 35
  * @returns An array of Anchors that matches the conditions specified in the filter parameter
  */
 export function getAnchors(store: StoreType, filter?: { [key: string]: any }) {
@@ -273,11 +273,11 @@ export function findStore(canvasId: string): StoreType {
 /**
  * createStoreEmpty will initialize a new Svelvet store with a unique canvasId.
  * If you have multiple Svelvet components on the page, the stores object will look like the following example:
- * const stores = {
+ * const stores = \{
  *                  canvasId-1: store of Svelvet component 1,
  *                  canvasId-2: store of Svelvet component 2,
  *                  canvasId-3: store of Svelvet component 3,
- *                }
+ *                \}
  * Notes: This should be called once every time you initialize a new Svelvet canvas, (ie, only in the Svelvet.svelte file).
  * This function will initialize an empty store for the Svelvet component and should be followed by invoking populateSvelvetStoreFromUserInput to populate all the initial state from the user input.
  *
@@ -306,6 +306,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     collapsibleStore: writable([]), // this is used for the collaspsible node feature. If the feature is enabled, store.collapsible will be populated with Collapsible objects which will track whether the node should be displayed or not
     collapsibleOption: writable(false),
     lockedOption: writable(false),
+    editableOption: writable(false),
   };
   return stores[canvasId];
 }

@@ -67,7 +67,10 @@ export class Node implements NodeType {
       resizeNodesStore,
       potentialAnchorsStore,
       boundary,
+      lockedOption,
     } = stores[this.canvasId];
+
+    if (get(lockedOption)) return; // don't do anything if locked is enabled
 
     // boundary sets the boundary of the canvas, or else it is false if their is no boundary
     // check if out of bounds, and if so return without doing anything
