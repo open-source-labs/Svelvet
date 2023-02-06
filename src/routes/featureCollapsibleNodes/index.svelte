@@ -113,6 +113,10 @@
 <p>
   Node connectivity must form a tree, ie, each node can only have one parent.
 </p>
+<p>
+  Note that collapsible, when enabled, will disable 'interactiveNodes' as these
+  features are incompatible.
+</p>
 
 <Svelvet
   canvasId="canvas1"
