@@ -13,7 +13,7 @@
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
   import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
-  import { toggleExpandAndCollapse } from '$lib/collapsible/controllers/util';
+  import { toggleExpandAndCollapse } from '../../collapsible/controllers/util';
 
   export let node: NodeType;
   export let canvasId: string;

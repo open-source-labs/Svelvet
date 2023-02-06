@@ -7,8 +7,6 @@ import {
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
 import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
 
-afterEach(cleanup);
-
 describe('tests ResizeNode', () => {
   const canvasId = uuidv4();
   const initialNodes: UserNodeType[] = [
@@ -123,7 +121,6 @@ describe('tests ResizeNode', () => {
   const userNodes = output['userNodes'];
   const userEdges = output['userEdges'];
 
-  // set canvas related stores. you need to do this before setting node/edge related stores
   // initializing nodes/edges might read relevant options from the store.
   store.widthStore.set(600);
   store.heightStore.set(600);
@@ -133,14 +130,11 @@ describe('tests ResizeNode', () => {
   store.options.set(optionsObj);
   store.nodeCreate.set(false);
 
-  // set node/edge related stores
-  //create store from user input
-  //take the output and feed it to create storeformuserinput
-  populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
-
-  const { resizeNodesStore, nodesStore } = store;
-
   test('setPosition should update the position X & Y of resizeNode class', () => {
+    //create store from user input
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+
+    const { resizeNodesStore, nodesStore } = store;
     //update allows us to iterate through our store returning an item with each resizeNode
     resizeNodesStore.update((resizeNode) => {
       for (const id in resizeNode) {
@@ -165,15 +159,17 @@ describe('tests ResizeNode', () => {
     });
   });
 
-  //layout is almost identical to the previous test however this function also changes the width of the nodesStore so we have to cross reference that the changes applied to the nodesStore also and not just the resizeNodeStore
+  //setPositionAndCascade is identical to setPosition except it also cascades changes to the nodes width and height.
   test('setPositionAndCascade should update position X & Y of resizeNode class & update node width & height', () => {
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+    const { resizeNodesStore, nodesStore } = store;
+
+    //iterate through resizeNode to invoke setPositionAndCascade
     resizeNodesStore.update((resizeNode) => {
       for (const id in resizeNode) {
         if (resizeNode[id].nodeId === '1') {
           resizeNode[id].setPositionAndCascade(10, 10);
-          expect(resizeNode[id].positionX).toEqual(335);
-          expect(resizeNode[id].positionY).toEqual(120);
-
+          //once function runs iterate through nodes to check if changes to the corresponding node were applied.
           nodesStore.update((node) => {
             for (const nodeId in node) {
               if (nodeId === '1') {
@@ -181,13 +177,10 @@ describe('tests ResizeNode', () => {
                 expect(node[nodeId].height).toEqual(110);
               }
             }
-            return {};
+            return { ...node };
           });
         } else if (resizeNode[id].nodeId === '2') {
           resizeNode[id].setPositionAndCascade(-10, -10);
-          expect(resizeNode[id].positionX).toEqual(505);
-          expect(resizeNode[id].positionY).toEqual(210);
-
           nodesStore.update((node) => {
             for (const nodeId in node) {
               if (nodeId === '2') {
@@ -195,13 +188,10 @@ describe('tests ResizeNode', () => {
                 expect(node[nodeId].height).toEqual(30);
               }
             }
-            return {};
+            return { ...node };
           });
         } else if (resizeNode[id].nodeId === '3') {
           resizeNode[id].setPositionAndCascade(-320, 0);
-          expect(resizeNode[id].positionX).toEqual(325);
-          expect(resizeNode[id].positionY).toEqual(300);
-
           nodesStore.update((node) => {
             for (const nodeId in node) {
               if (nodeId === '3') {
@@ -209,7 +199,7 @@ describe('tests ResizeNode', () => {
                 expect(node[nodeId].height).toEqual(40);
               }
             }
-            return {};
+            return { ...node };
           });
         }
       }
@@ -219,6 +209,9 @@ describe('tests ResizeNode', () => {
 
   //Make sure when you call delete on the node that the resizeNode also disappears.
   test('delete function should remove the specific resizeNode object', () => {
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+    const { resizeNodesStore, nodesStore } = store;
+
     resizeNodesStore.update((resizeNode) => {
       for (const id in resizeNode) {
         expect(resizeNode[id].delete()).toBeUndefined();

@@ -55,10 +55,6 @@ export class Anchor implements AnchorType {
    * setPositionFromNode will invoke the user-defined callback to calculate the position of the Anchor, set the position of the Anchor in the anchorsStore, and also update the Edge position accordingly.
    */
   setPositionFromNode() {
-    /**get node data */
-    const store = findStore(this.canvasId);
-    const node = getNodes(store, { id: this.nodeId })[0]; // TODO add error checking for zero elements, this means that there is no node corresponding to this.nodeId
-    const { positionX, positionY, width, height } = node;
     // calculate the new position of the anchor using user-defined callback
     this.callback();
     const { edgesStore } = stores[this.canvasId];
