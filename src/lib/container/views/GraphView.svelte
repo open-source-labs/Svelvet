@@ -6,7 +6,7 @@
   import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
   import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
   import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
-
+  import type { NodeType } from '../../store/types/types';
   import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
   import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
   import Node from '../../nodes/views/Node.svelte';
@@ -50,13 +50,16 @@
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
-  $: resize = Object.values($resizeNodesStore);
+  $: resizeNodes = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
 
-  let filteredNodes;
+  let filteredNodes: NodeType[];
+  let filteredEdges;
+  let filteredResizeNodes;
+  let filteredAnchors;
   $: {
-    // filter nodes/edges for the collapsible nodes feature
+    // filter nodes for the collapsible nodes feature
     filteredNodes = nodes.filter((node) => {
       const nodeId = node.id;
       const collapssibleObj = $collapsibleStore.find(
@@ -64,6 +67,22 @@
       );
       if (collapssibleObj === undefined) return true;
       return collapssibleObj.isHidden() === false;
+    });
+    const filteredNodeIds = filteredNodes.map((e) => e.id);
+    // filter resizeNodes
+    filteredResizeNodes = resizeNodes.filter((resizeNode) =>
+      filteredNodeIds.includes(resizeNode.nodeId)
+    );
+    filteredAnchors = anchors.filter((selfAnchor) => {
+      const otherAnchorId = selfAnchor.getOtherAnchorId();
+      const otherAnchor = $anchorsStore[otherAnchorId];
+
+      if (
+        filteredNodeIds.includes(selfAnchor.nodeId) &&
+        filteredNodeIds.includes(otherAnchor.nodeId)
+      )
+        return true;
+      return false;
     });
   }
 
@@ -214,7 +233,7 @@
         {/if}
       {/each}
 
-      {#each resize as res}
+      {#each filteredResizeNodes as res}
         <ResizeNode resizeId={res.id} {canvasId} />
       {/each}
 
@@ -280,7 +299,7 @@
       <TemporaryEdge {temporaryEdge} />
     {/each}
 
-    {#each anchors as anchor}
+    {#each filteredAnchors as anchor}
       <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}

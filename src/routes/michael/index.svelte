@@ -118,5 +118,4 @@
   height={900}
   background
   shareable={true}
-  nodeCreate
 />
