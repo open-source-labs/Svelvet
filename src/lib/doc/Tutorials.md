@@ -15,9 +15,8 @@ This command will create documentation in root folder `./docs`.
 ## Publishing to npm
 
 - create an account on npm.js
-
+- Within the `src/lib` directory, type `npm version patch` to increment version number
 - In the base directory, type `npm run package`. This will use svelte-kit's package feature to create an npm package in `./package`.
-- Within the `./package` directory, type `npm version patch` to increment version number
 - Within the `./package` directory, type `npm publish` to publish to npm. Note that you cannot "overwrite" previous publishes, you must increment the version number
 
 ## Testing npm package
