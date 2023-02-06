@@ -3,8 +3,8 @@
     getNodes,
     getAnchors,
     findStore,
-  } from '$lib/store/controllers/storeApi';
-  import { TemporaryEdge } from '$lib/interactiveNodes/models/TemporaryEdge';
+  } from '../../store/controllers/storeApi';
+  import { TemporaryEdge } from '../models/TemporaryEdge';
   import { writable, derived, get, readable } from 'svelte/store';
 
   import type {
@@ -15,7 +15,7 @@
     UserEdgeType,
     TemporaryEdgeType,
     PotentialAnchorType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
   import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
   export let x;
@@ -163,6 +163,7 @@
     border-radius: 50%;
     cursor: crosshair;
     background-color: rgb(105, 99, 99);
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 
   .Anchor:hover {

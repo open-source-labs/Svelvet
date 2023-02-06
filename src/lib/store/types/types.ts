@@ -1,5 +1,6 @@
+import type { CollapsibleType } from '$lib/collapsible/types/types';
 import type { Readable, Writable } from 'svelte/store';
-import type { AnchorType } from '$lib/edges/types/types';
+import type { AnchorType } from '../../edges/types/types';
 
 export interface ResizeNodeType {
   id: string;
@@ -20,7 +21,7 @@ export interface UserNodeType {
   bgColor: string;
   data: object;
   position: { x: number; y: number };
-  borderColor?: string;
+  borderColor?: string | undefined;
   image?: boolean;
   src?: string;
   textColor?: string;
@@ -29,7 +30,7 @@ export interface UserNodeType {
   borderRadius?: number;
   childNodes?: string[];
   className?: string;
-  nodeCallback?: Function;
+  clickCallback?: Function;
 }
 
 export interface UserEdgeType {
@@ -42,7 +43,7 @@ export interface UserEdgeType {
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
-  type?: string;
+  type?: 'straight' | 'smoothstep' | 'step' | 'bezier' | undefined;
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
@@ -67,6 +68,15 @@ export interface StoreType {
   options: Writable<{ [key: string]: any }>;
   temporaryEdgeStore: Writable<TemporaryEdgeType[]>;
   nodeCreate: Writable<boolean>; // this option sets whether the "nodeEdit" feature is enabled
+  boundary: Writable<boolean | PositionType>;
+  edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
+  collapsibleStore: Writable<CollapsibleType[]>;
+  collapsibleOption: Writable<boolean>;
+}
+
+export interface PositionType {
+  x: number;
+  y: number;
 }
 
 export interface NodeType {
@@ -77,19 +87,19 @@ export interface NodeType {
   positionY: number;
   bgColor: string;
   data: object;
+  canvasId: string;
   setPositionFromMovement: Function;
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
   setExportableData: Function;
-  borderColor: string;
-  image: boolean;
-  src: string;
-  textColor: string;
-  borderRadius: number;
-  canvasId: string;
-  childNodes: string[];
+  borderColor?: string | undefined;
+  image?: boolean;
+  src?: string;
+  textColor?: string;
+  borderRadius?: number;
+  childNodes?: string[];
   className?: string; //This is for custom className for node
-  nodeCallback?: Function; // user-supplied callback that executes when the node is clicked
+  clickCallback?: Function; // user-supplied callback that executes when the node is clicked
 }
 
 export interface EdgeType {
@@ -100,7 +110,7 @@ export interface EdgeType {
   targetY: number;
   canvasId: string;
   label?: string;
-  type?: string;
+  type?: 'straight' | 'smoothstep' | 'step' | 'bezier';
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;

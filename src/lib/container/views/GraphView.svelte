@@ -1,35 +1,34 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { zoom, zoomTransform } from 'd3-zoom';
-  import { select, selectAll } from 'd3-selection';
+  import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
+  import { select, selectAll, pointer, local } from 'd3-selection';
+  import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
+  import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
+  import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
+  import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
+  import type { NodeType } from '../../store/types/types';
+  import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
+  import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
+  import Node from '../../nodes/views/Node.svelte';
 
-  import SimpleBezierEdge from '$lib/edges/views/Edges/SimpleBezierEdge.svelte';
-  import StepEdge from '$lib/edges/views/Edges/StepEdge.svelte';
-  import SmoothStepEdge from '$lib/edges/views/Edges/SmoothStepEdge.svelte';
-
-  import StraightEdge from '$lib/edges/views/Svelvet3Components/StraightEdge.svelte';
-  //import SmoothStepEdge from './SmoothStepEdge.svelte';
-  //  import StepEdge from './StepEdge.svelte';
-  import EdgeAnchor from '$lib/edges/views/Svelvet3Components/EdgeAnchor.svelte';
-  import ResizeNode from '$lib/resizableNodes/views/ResizeNode.svelte';
-
-  import Node from '$lib/nodes/views/Node.svelte';
-
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
   import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
   import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
+  import { determineD3Instance, zoomInit } from '../..//d3/controllers/d3';
 
-  // leveraging d3 library to zoom/pan
-  let d3 = {
-    zoom,
-    zoomTransform,
-    select,
-    selectAll,
-  };
+  import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
+  import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
+  import EditNode from '$lib/nodes/views/EditNode.svelte';
+  import EditEdge from '$lib/editEdges/views/EditEdge.svelte';
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
-
+  export let width: number;
+  export let height: number;
+  export let initialZoom = 3;
+  export let initialLocation;
+  export let boundary = false;
+  export let minimap = false;
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
   const {
@@ -45,37 +44,136 @@
     widthStore,
     heightStore,
     d3Scale,
+    edgeEditModal,
+    collapsibleStore,
   } = store;
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
-  $: resize = Object.values($resizeNodesStore);
+  $: resizeNodes = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
+
+  let filteredNodes: NodeType[];
+  let filteredEdges;
+  let filteredResizeNodes;
+  let filteredAnchors;
+  $: {
+    // filter nodes for the collapsible nodes feature
+    filteredNodes = nodes.filter((node) => {
+      const nodeId = node.id;
+      const collapssibleObj = $collapsibleStore.find(
+        (e) => e.nodeId === nodeId
+      );
+      if (collapssibleObj === undefined) return true;
+      return collapssibleObj.isHidden() === false;
+    });
+    const filteredNodeIds = filteredNodes.map((e) => e.id);
+    // filter resizeNodes
+    filteredResizeNodes = resizeNodes.filter((resizeNode) =>
+      filteredNodeIds.includes(resizeNode.nodeId)
+    );
+    filteredAnchors = anchors.filter((selfAnchor) => {
+      const otherAnchorId = selfAnchor.getOtherAnchorId();
+      const otherAnchor = $anchorsStore[otherAnchorId];
+
+      if (
+        filteredNodeIds.includes(selfAnchor.nodeId) &&
+        filteredNodeIds.includes(otherAnchor.nodeId)
+      )
+        return true;
+      return false;
+    });
+    const filteredEdgeIds = new Set(filteredAnchors.map((e) => e.edgeId));
+    filteredEdges = edges.filter((edge) => filteredEdgeIds.has(edge.id));
+  }
+
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
 
+  // leveraging d3 library to zoom/pan
+  let d3 = {
+    zoom,
+    zoomTransform,
+    zoomIdentity,
+    select,
+    selectAll,
+    pointer,
+  };
+  let d3Zoom = determineD3Instance(
+    boundary,
+    d3,
+    nodeSelected,
+    width,
+    height,
+    movementStore,
+    backgroundStore,
+    gridSize,
+    dotSize,
+    canvasId,
+    d3Scale,
+    handleZoom
+  );
+
+  // d3Translate is used for the minimap
+  let d3Translate = { x: 0, y: 0, k: 1 };
   onMount(() => {
+    // actualizes the d3 instance
     d3.select(`.Edges-${canvasId}`).call(d3Zoom);
     d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
+    d3.select(`#background-${canvasId}`).call(d3Zoom);
+    d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+    d3Translate = zoomInit(
+      d3,
+      canvasId,
+      d3Zoom,
+      d3Translate,
+      initialLocation,
+      initialZoom,
+      d3Scale
+    );
   });
 
-  // TODO: Update d3Zoom type (refer to d3Zoom docs)
-  let d3Zoom: any = d3
-    .zoom()
-    .filter(() => !$nodeSelected)
-    .scaleExtent([0.4, 2])
-    .on('zoom', handleZoom);
+  // moves canvas when you click on the minimap
+  // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
+  // moves camera to the clicked node
+  function miniMapClick(event) {
+    // onclick in case of boundless minimap
+    if (!boundary) {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+    // handles case for when minimap has a boundary
+    else {
+      // For edges
+      d3.select(`.Edges-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+      // For nodes
+      d3.select(`.Nodes-${key}`)
+        .transition()
+        .duration(500)
+        .call(d3Zoom.translateTo, event.detail.x, event.detail.y);
+    }
+  }
 
-  // function to handle zoom events - arguments: d3ZoomEvent
-  function handleZoom(this: any, e: any): void {
+  const key = canvasId;
+  function handleZoom(e) {
     if (!$movementStore) return;
-
     //add a store that contains the current value of the d3-zoom's scale to be used in onMouseMove function
     d3Scale.set(e.transform.k);
     // should not run d3.select below if backgroundStore is false
-    if ($backgroundStore) {
+    if (backgroundStore) {
       d3.select(`#background-${canvasId}`)
         .attr('x', e.transform.x)
         .attr('y', e.transform.y)
@@ -90,6 +188,7 @@
     d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
+    d3Translate = transform;
     // selects and transforms all node divs from class 'Node' and performs transformation
     d3.select(`.Node-${canvasId}`)
       .style(
@@ -106,44 +205,56 @@
   }
 </script>
 
+{#if $edgeEditModal}
+  <EditEdge edgeId={`${$edgeEditModal}`} {canvasId} />
+{/if}
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
-<div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
-  <!-- This container is transformed by d3zoom -->
-  <div class={`Node Node-${canvasId}`}>
-    {#each nodes as node}
-      {#if node.data.html}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          >{@html node.data.html}</Node
-        >
-      {:else if node.data.custom}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}
-          ><svelte:component this={node.data.custom} /></Node
-        >
-      {:else}
-        <Node {node} {canvasId} {nodes} nodeId={node.id}>{node.data.label}</Node
-        >
-      {/if}
-    {/each}
+<div id="graphview-container">
+  {#if minimap && boundary}
+    <MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate} />
+  {:else if minimap}
+    <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} />
+  {/if}
 
-    {#each resize as res}
-      <ResizeNode resizeId={res.id} {canvasId} />
-    {/each}
+  <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
+    <!-- This container is transformed by d3zoom -->
+    <div class={`Node Node-${canvasId}`}>
+      {#each filteredNodes as node}
+        {#if node.data.html}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{@html node.data.html}</Node
+          >
+        {:else if node.data.custom}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            ><svelte:component this={node.data.custom} /></Node
+          >
+        {:else}
+          <Node {node} {canvasId} {nodes} nodeId={node.id}
+            >{node.data.label}</Node
+          >
+        {/if}
+      {/each}
 
-    {#each potentialAnchors as potentialAnchor}
-      <PotentialAnchor
-        {canvasId}
-        x={potentialAnchor.positionX}
-        y={potentialAnchor.positionY}
-        {potentialAnchor}
-      />
-    {/each}
+      {#each filteredResizeNodes as res}
+        <ResizeNode resizeId={res.id} {canvasId} />
+      {/each}
+
+      {#each potentialAnchors as potentialAnchor}
+        <PotentialAnchor
+          {canvasId}
+          x={potentialAnchor.positionX}
+          y={potentialAnchor.positionY}
+          {potentialAnchor}
+        />
+      {/each}
+    </div>
   </div>
 </div>
-
 <!-- rendering dots on the background depending on the zoom level -->
 <svg
   class={`Edges Edges-${canvasId}`}
   viewBox="0 0 {$widthStore} {$heightStore}"
+  on:contextmenu|preventDefault
 >
   <defs>
     <pattern
@@ -174,7 +285,7 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    {#each edges as edge}
+    {#each filteredEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge edgeId={edge.id} {canvasId} />
       {:else if edge.type === 'smoothstep'}
@@ -190,7 +301,7 @@
       <TemporaryEdge {temporaryEdge} />
     {/each}
 
-    {#each anchors as anchor}
+    {#each filteredAnchors as anchor}
       <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}
@@ -198,6 +309,8 @@
 </svg>
 
 <style>
+  svg {
+  }
   .Nodes {
     position: absolute;
     width: 100%;
@@ -207,5 +320,8 @@
     color: black; /* remove this once color is set to default via types */
     width: 100%;
     height: 100%;
+  }
+  #graphview-container {
+    pointer-events: none;
   }
 </style>

@@ -1,6 +1,6 @@
 <script>
-  import { findStore } from '$lib/store/controllers/storeApi';
-  import { deleteNode } from '$lib/misc/models/storeEditor';
+  import { findStore } from '../../store/controllers/storeApi';
+  import { getNodeById } from '../../store/controllers/storeApi';
 
   export let nodeId;
   export let canvasId;
@@ -64,8 +64,9 @@
     <div class="btn-container">
       <button
         on:click={(e) => {
-          console.log('on delete button clicked');
-          deleteNode(nodeId, canvasId);
+          const store = findStore(canvasId);
+          const node = getNodeById(store, nodeId);
+          node.delete();
           isEditing = false;
         }}>Delete Node</button
       >

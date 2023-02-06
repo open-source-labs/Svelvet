@@ -4,14 +4,14 @@ import {
   leftCb,
   topCb,
   bottomCb,
-} from '$lib/edges/controllers/anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
+} from '../../edges/controllers/anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
 import {
   dynamicCbCreator,
   fixedCbCreator,
   potentialAnchorCbCreator,
-} from '$lib/edges/controllers/anchorCbDev';
+} from '../../edges/controllers/anchorCbDev';
 
-import type { AnchorType, AnchorCbType } from '$lib/edges/types/types';
+import type { AnchorType, AnchorCbType } from '../../edges/types/types';
 
 import type {
   NodeType,
@@ -21,11 +21,11 @@ import type {
   UserNodeType,
   UserEdgeType,
   PotentialAnchorType,
-} from '$lib/store/types/types';
-import { ResizeNode } from '$lib/resizableNodes/models/ResizeNode';
-import { Anchor } from '$lib/edges/models/Anchor';
-import { Node } from '$lib/nodes/models/Node';
-import { Edge } from '$lib/edges/models/Edge';
+} from '../types/types';
+import { ResizeNode } from '../../resizableNodes/models/ResizeNode';
+import { Anchor } from '../../edges/models/Anchor';
+import { Node } from '../../nodes/models/Node';
+import { Edge } from '../../edges/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,
@@ -34,13 +34,13 @@ import {
   getAnchorById,
   getEdgeById,
 } from './storeApi';
-import { PotentialAnchor } from '$lib/interactiveNodes/models/PotentialAnchor';
+import { PotentialAnchor } from '../../interactiveNodes/models/PotentialAnchor';
 
 /**
  * Creates resize node on the bottom right corner of the targeted Node
  * @param canvasId The canvasId of the Svelvet component that holds the targeted Node
  * @param nodeId The id of the Node that the resize node attached to
- * @param posX The number of pixels on the x-axis relative to the left top corner of the targeted Node 
+ * @param posX The number of pixels on the x-axis relative to the left top corner of the targeted Node
  * @param posY The number of pixels on the y-axis relative to the left top corner of the targeted Node
  * @returns A ReziseNode object with randomized id, canvasId, nodeId, posX, and posY
  */
@@ -57,7 +57,7 @@ function createResizeNode(
 
 /**
  * Creates an Anchor on the targeted Node with infomation the userNode holds
- * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.  
+ * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.
  * @param userNode A node that the user specifies. This is NOT the same as a Node object.
  * @param sourceOrTarget User specified information of source or target
  * @param canvasId The id of the canvas that holds the Anchor and its attached Node
@@ -229,7 +229,7 @@ function createPotentialAnchor(
 }
 
 /**
- * Populates potentialAnchorsStore 
+ * Populates potentialAnchorsStore
  * @param store An object containing the state of the Svelvet component. You can access the following through `store`: nodesStore, edgesStore, anchorsStore, etc.
  * @param nodes An array of nodes with UserNodeType
  * @param canvasId The canvasId of the Svelvet component that holds the potential anchors
@@ -263,7 +263,7 @@ export function populatePotentialAnchorStore(
 }
 
 /**
- * Populates the anchorsStore
+ * Populates the anchorsStore. This will overwrite any data in the AnchorsStore.
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specified nodes
  * @param edges An array of user specified edges
@@ -317,7 +317,7 @@ export function populateAnchorsStore(
 }
 
 /**
- * Populates the nodesStore
+ * Populates the nodesStore. This will overwrite any data in the nodesStore.
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specifed nodes
  * @param canvasId The canvasId of the Svelvet component that holds the nodes
@@ -350,7 +350,7 @@ export function populateNodesStore(
       userNode.borderRadius,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
       userNode.className,
-      userNode.nodeCallback
+      userNode.clickCallback
     );
 
     nodesStore[nodeId] = node;
@@ -360,7 +360,7 @@ export function populateNodesStore(
 }
 
 /**
- * Populates the resizeNodeStore. If a Node is resizable, a small ResizeNode object is going to be attached to the Node's right bottom corner to react to the mouse drag. 
+ * Populates the resizeNodeStore. If a Node is resizable, a small ResizeNode object is going to be attached to the Node's right bottom corner to react to the mouse drag.
  * @param store The Svelvet store containing the state of the Svelvet component
  * @param nodes An array of user specifed nodes (NOT the same as Node)
  * @param canvasId The canvasId of the Svelvet component that holds the resizeNodes
@@ -383,7 +383,6 @@ export function populateResizeNodeStore(
     );
     resizeNodeStore[resizeNode.id] = resizeNode;
   }
-  // console.log(resizeNode);
-  // console.log('ResizeNodeStore', resizeNodeStore);
+
   store.resizeNodesStore.set(resizeNodeStore);
 }

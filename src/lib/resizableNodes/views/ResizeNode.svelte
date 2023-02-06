@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { findStore } from '$lib/store/controllers/storeApi';
-  import type { ResizeNodeType } from '$lib/store/types/types';
+  import { findStore } from '../../store/controllers/storeApi';
+  import type { ResizeNodeType } from '../../store/types/types';
+  import { writable, derived, get, readable } from 'svelte/store';
 
   export let resizeId: string;
   export let canvasId: string;
@@ -19,14 +20,19 @@
     if (isSelected) {
       resizeNodesStore.update((resNode) => {
         const newResNode = resNode[resizeId];
-        newResNode.setPositionAndCascade(e.movementX, e.movementY, resizeId);
+        const d3Scale = get(store.d3Scale);
+        newResNode.setPositionAndCascade(
+          e.movementX / d3Scale,
+          e.movementY / d3Scale,
+          resizeId
+        );
         return { ...resNode };
       });
     }
   }}
   on:mouseup={(e) => {
     e.preventDefault();
-    $nodeSelected = false;
+    // don't need to set $nodeSelected = false because Node component will do it for you
     isSelected = false;
   }}
 />
@@ -37,6 +43,11 @@
     $nodeSelected = true;
     isSelected = true;
   }}
+  on:mouseover={(e) => ($nodeSelected = true)}
+  on:focus
+  on:mouseleave={(e) => ($nodeSelected = false)}
+  on:mouseenter={(e) => ($nodeSelected = true)}
+  on:wheel|preventDefault
   class="ResizeNode"
   style="
   left: {reactResizeNode.positionX - 10}px;
@@ -64,6 +75,7 @@
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     opacity: 0;
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 
   .ResizeNode:hover {

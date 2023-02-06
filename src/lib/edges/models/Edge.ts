@@ -11,10 +11,27 @@ import type {
   StoreType,
   ResizeNodeType,
   UserEdgeType,
-} from '$lib/store/types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import { stores } from '../../store/models/store';
 
+/**
+ * Class Edge that implements EdgeType.
+ * @param id The id of the Edge
+ * @param sourceX The X coordinate of the source Anchor
+ * @param sourceY The Y coordinate of the source Anchor
+ * @param targetX The X coordinate of the target Anchor
+ * @param targetY The Y coordinate of the target Anchor
+ * @param canvasId The canvasId of the Svelvet component that holds the instantiated Edge
+ * @param label The label of the Edge
+ * @param type The type of the Edge (options: 'straight', 'smoothstep', 'step', or 'bezier'). If user doesn't specify, the type will default to 'bezier'.
+ * @param labelBgColor The background color of the Edge label
+ * @param labelTextColor The text color of the Edge label
+ * @param edgeColor The color of the Edge
+ * @param animate Boolean value to specify whether the Edge should be animated
+ * @param noHandle Boolean value but looks like it is already depracated and can be removed without damage
+ * @param arraw Boolean value to specify whether the Edge displays an arrow near its target Anchor
+ */
 export class Edge implements EdgeType {
   constructor(
     public id: string,
@@ -24,7 +41,7 @@ export class Edge implements EdgeType {
     public targetY: number,
     public canvasId: string,
     public label?: string,
-    public type?: string,
+    public type?: 'straight' | 'smoothstep' | 'step' | 'bezier',
     public labelBgColor?: string,
     public labelTextColor?: string,
     public edgeColor?: string,
@@ -33,8 +50,9 @@ export class Edge implements EdgeType {
     public arrow?: boolean
   ) {}
 
-  // Calling delete on an edge also deletes associated anchors
-  // TODO: maybe rename delete to make clear that effects will cascade to anchors? Or is documentation enough?
+  /**
+   * delete is going to delete the Edge and also delete associated Anchors
+   */
   delete() {
     const store = stores[this.canvasId];
     const { nodesStore, anchorsStore, edgesStore } = store;
@@ -53,23 +71,11 @@ export class Edge implements EdgeType {
     });
   }
 
-  // this method is going to construct an object that holds all the edge data that can be exported
+  /**
+   * setExportableData will construct an object that holds all the edge data that can be exported. This is needed for the Exporting Diagram feature.
+   * @returns The object of exportable edge data. The format of the object should be as close as what user initially passes in to Svelvet.
+   */
   setExportableData() {
-    // public id: string,
-    // public sourceX: number,
-    // public sourceY: number,
-    // public targetX: number,
-    // public targetY: number,
-    // public canvasId: string,
-    // public label?: string,
-    // public type?: string,
-    // public labelBgColor?: string,
-    // public labelTextColor?: string,
-    // public edgeColor?: string,
-    // public animate?: boolean,
-    // public noHandle?: boolean,
-    // public arrow?: boolean
-
     const exportableData: UserEdgeType = {
       id: this.id,
       label: this.label,
@@ -94,8 +100,6 @@ export class Edge implements EdgeType {
       if (anchor.sourceOrTarget === 'source')
         exportableData.source = anchor.nodeId;
     }
-
-    // console.log(exportableData)
 
     return exportableData;
   }

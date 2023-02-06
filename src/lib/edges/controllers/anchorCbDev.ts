@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are callbacks used to calculate anchor position relative to node
-import type { AnchorCbType, AnchorType } from '$lib/edges/types/types';
+import type { AnchorCbType, AnchorType } from '../../edges/types/types';
 import type {
   NodeType,
   EdgeType,
@@ -8,7 +8,7 @@ import type {
   ResizeNodeType,
   UserNodeType,
   UserEdgeType,
-} from '$lib/store/types/types';
+} from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
   getNodes,

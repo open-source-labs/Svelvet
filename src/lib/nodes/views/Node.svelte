@@ -1,19 +1,19 @@
 <script lang="ts">
   import { afterUpdate, onMount } from 'svelte';
 
-  import { findStore } from '$lib/store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
   import type {
     NodeType,
     EdgeType,
-    AnchorType,
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
-  import { forceCssHeightAndWidth } from '$lib/customCss/controllers/getCss';
+  import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
+  import { toggleExpandAndCollapse } from '$lib/collapsible/controllers/util';
 
   export let node: NodeType;
   export let canvasId: string;
@@ -42,7 +42,7 @@
     if (node.className) forceCssHeightAndWidth(store, node);
   });
 
-  // this state variable is used for "nodeCallback" functionality
+  // this state variable is used for "clickCallback" functionality
   // on mouseup, the callback will fire only if userClick is true
   // isUserClick is set to true on mousedown, but set back to false in two cases
   //   (1) if the mouse moves, meaning that the node is being dragged
@@ -52,8 +52,10 @@
   //
   const mousedown = (e) => {
     e.preventDefault();
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = true;
+    // part of the "collapsible" feature
+    toggleExpandAndCollapse(store, nodeId);
     // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
     $nodeSelected = true;
     isSelected = true;
@@ -66,12 +68,18 @@
     isEditing = isEditing === true ? false : true;
   };
   const mouseleave = (e) => {
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
+    // re-enables d3 when mouse leaves node
+    $nodeSelected = false;
+  };
+  const mouseenter = (e) => {
+    // disables d3 when mouse enters node
+    nodeSelected.set(true);
   };
   const mousemove = (e) => {
     e.preventDefault();
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
     // part of the "drag node" feature
     if (isSelected) {
@@ -89,7 +97,7 @@
   };
 
   const touchmove = (e) => {
-    // part of the "nodeCallback" feature
+    // part of the "clickCallback" feature
     isUserClick = false;
     // part of the "drag node" feature
     if (isSelected) {
@@ -114,11 +122,9 @@
 
   const mouseup = (e) => {
     e.preventDefault();
-    $nodeSelected = false; // tells other components that node is no longer being clicked. This is so d3 is inactive during node movement.
     isSelected = false;
-
-    // this implements the "nodeCallback" feature
-    if (node.nodeCallback && isUserClick) node.nodeCallback(node);
+    // this implements the "clickCallback" feature
+    if (node.clickCallback && isUserClick) node.clickCallback(node);
 
     // This implements the "snap to grid" feature
     if (get(store.options).snap) {
@@ -150,11 +156,14 @@
   <EditNode {canvasId} {nodeId} {isEditing} />
 {/if}
 
+<!-- on:wheel prevents page scroll when using mousewheel in the Node -->
 <div
   on:mouseleave={mouseleave}
   on:mousedown={mousedown}
   on:contextmenu={rightclick}
   on:touchstart={mousedown}
+  on:mouseenter={mouseenter}
+  on:wheel={(e) => e.preventDefault()}
   class="Node {node.className}"
   style="left: {node.positionX}px;
     top: {node.positionY}px;
@@ -193,5 +202,6 @@
     border: solid 1px black;
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+    pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
   }
 </style>

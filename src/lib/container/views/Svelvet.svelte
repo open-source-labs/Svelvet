@@ -6,21 +6,22 @@
     StoreType,
     UserNodeType,
     UserEdgeType,
-  } from '$lib/store/types/types';
+  } from '../../store/types/types';
   import { writable, derived, get, readable } from 'svelte/store';
   import {
     createStoreEmpty,
     populateSvelvetStoreFromUserInput,
-  } from '$lib/store/controllers/storeApi';
+  } from '../../store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
   import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
 
-  import ImportExport from '$lib/importingExporting/views/ImportExport.svelte';
+  import ImportExport from '../../importingExporting/views/ImportExport.svelte';
 
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
-
+  export let bgColor = '#ffffff'; // this is used to set the background color of the the Svelvet canvas
+  export let minimap = false;
   export let width: number = 600;
   export let height: number = 600;
   export let background: boolean = true;
@@ -29,7 +30,10 @@
   export let snap: boolean = false;
   export let snapTo: number = 30;
   export let nodeCreate: boolean = false;
-
+  export let initialZoom = 3;
+  export let initialLocation = { x: 0, y: 0 };
+  export let boundary = false;
+  export let collapsible = false;
   //default value of shareable will be set to false
   export let shareable: boolean = false;
 
@@ -56,7 +60,8 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
-
+    store.boundary.set(boundary);
+    store.collapsibleOption.set(collapsible);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
@@ -67,11 +72,6 @@
     let output = sanitizeUserNodesAndEdges(nodes, edges);
     const userNodes = output['userNodes'];
     const userEdges = output['userEdges'];
-
-    // console.log('afterUpdated callback fired')
-    // console.log(nodes)
-
-    // console.log('should be sanitized nodes and edges? => ', userNodes, userEdges)
 
     // set canvas related stores. you need to do this before setting node/edge related stores because
     // initializing nodes/edges might read relevant options from the store.
@@ -89,10 +89,21 @@
 </script>
 
 <!-- Now that a store has been created from the initial nodes and initial edges we drill props from the store down to the D3 GraphView along with the unique key -->
-<div class="Svelvet" style={`width: ${width}px; height: ${height}px`}>
-  <GraphView {canvasId} />
+<div
+  class="Svelvet"
+  style={`width: ${width}px; height: ${height}px; background-color: ${bgColor};`}
+>
+  <GraphView
+    {canvasId}
+    {width}
+    {height}
+    {initialLocation}
+    {initialZoom}
+    {boundary}
+    {minimap}
+  />
   {#if shareable}
-    <ImportExport id={canvasId} />
+    <ImportExport {canvasId} />
   {/if}
 </div>
 

@@ -176,4 +176,3 @@ test('set position from movement should update position X & Y based on mouse mov
   //Then, call set PositionAndCascade on resizeNode and make sure the width/height of the node also changes.
   //Make sure when you call delete on the node that the resizeNode also disappears.
 });
-

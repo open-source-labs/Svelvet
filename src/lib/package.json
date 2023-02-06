@@ -1,6 +1,6 @@
 {
   "name": "svelvet-lime",
-  "version": "6.0.12",
+  "version": "6.0.24",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
@@ -27,7 +27,6 @@
     "@testing-library/svelte": "^3.1.1",
     "@types/d3-zoom": "^3.0.1",
     "@types/jest": "^27.5.1",
-    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "acorn": "^8.7.1",
@@ -61,7 +60,9 @@
   "type": "module",
   "main": "./index.js",
   "dependencies": {
-    "d3-zoom": "^3.0.0"
+    "d3-zoom": "^3.0.0",
+    "@types/uuid": "^9.0.0",
+    "uuid": "^9.0.0"
   },
   "exports": {
     ".": "./index.js"
