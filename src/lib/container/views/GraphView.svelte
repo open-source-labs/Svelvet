@@ -84,6 +84,8 @@
         return true;
       return false;
     });
+    const filteredEdgeIds = new Set(filteredAnchors.map((e) => e.edgeId));
+    filteredEdges = edges.filter((edge) => filteredEdgeIds.has(edge.id));
   }
 
   // declaring the grid and dot size for d3's transformations and zoom
@@ -283,7 +285,7 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    {#each edges as edge}
+    {#each filteredEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge edgeId={edge.id} {canvasId} />
       {:else if edge.type === 'smoothstep'}
