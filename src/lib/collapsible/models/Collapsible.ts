@@ -25,10 +25,15 @@ export class Collapsible implements CollapsibleType {
   constructor(
     public id: string,
     public nodeId: string,
-    public hideCount: number
+    public hideCount: number,
+    public state: 'expanded' | 'collapsed'
   ) {}
 
   isHidden() {
     return this.hideCount > 0;
+  }
+
+  toggleState() {
+    this.state = this.state === 'expanded' ? 'collapsed' : 'expanded';
   }
 }

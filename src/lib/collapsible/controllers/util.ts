@@ -19,7 +19,7 @@ export function populateCollapsibleStore(
 ) {
   const newCollapsibleStore: CollapsibleType[] = [];
   for (let userNode of userNodes) {
-    const collapsible = new Collapsible(uuidv4(), userNode.id, 0);
+    const collapsible = new Collapsible(uuidv4(), userNode.id, 0, 'expanded');
     newCollapsibleStore.push(collapsible);
   }
   store.collapsibleStore.set(newCollapsibleStore);
@@ -66,7 +66,8 @@ function traverseAndIncrement(
   function recursiveTraverse(nId: string) {
     for (const collapsible of collapsibles) {
       if (collapsible.nodeId === nId) {
-        collapsible.hideCount++;
+        if (operation === 'increment') collapsible.hideCount++;
+        else collapsible.hideCount--;
         const targetIds = findTargets(store, nId);
         for (const targetId of targetIds) {
           recursiveTraverse(targetId);
@@ -76,10 +77,49 @@ function traverseAndIncrement(
   }
 }
 
-export function collapse(store: StoreType, nodeId: string) {
+function collapse(store: StoreType, nodeId: string) {
   const targetNodeIds = findTargets(store, nodeId);
   for (const targetNodeId of targetNodeIds)
     traverseAndIncrement(store, targetNodeId, 'increment');
 }
+function expand(store: StoreType, nodeId: string) {
+  const targetNodeIds = findTargets(store, nodeId);
+  for (const targetNodeId of targetNodeIds)
+    traverseAndIncrement(store, targetNodeId, 'decrement');
+}
 
-export function toggleExpandAndCollapse() {}
+export function toggleExpandAndCollapse(store: StoreType, nodeId: string) {
+  const collapsibles = getCollapsibles(store, { nodeId: nodeId });
+  if (collapsibles.length === 0) return; // when the collapsible feature is disabled, there will be no collapbsible objects
+  if (collapsibles.length > 1)
+    throw 'there should only be one collapsible object per node';
+  const collapsible = collapsibles[0];
+  if (collapsible.state === 'expanded') collapse(store, nodeId);
+  else expand(store, nodeId);
+  store.collapsibleStore.update((arr) => {
+    for (const c of arr) if (c.id === collapsible.id) c.toggleState();
+    return [...arr];
+  });
+}
+
+export function getCollapsibles(
+  store: StoreType,
+  filter?: { [key: string]: any }
+) {
+  let collapsibles = Object.values(get(store.collapsibleStore));
+  // filter the array of anchors for elements that match filter
+  // Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will
+  //return all anchors with sourceOrTarget = source AND poxitionX = 35
+  if (filter !== undefined) {
+    collapsibles = collapsibles.filter((collapsible) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (collapsible[filterKey as keyof CollapsibleType] !== filterValue)
+          return false;
+      }
+      return true;
+    });
+  }
+  // return list of anchors
+  return collapsibles;
+}

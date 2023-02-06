@@ -13,7 +13,7 @@
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
   import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
-  import { collapse } from '$lib/collapsible/controllers/util';
+  import { toggleExpandAndCollapse } from '$lib/collapsible/controllers/util';
 
   export let node: NodeType;
   export let canvasId: string;
@@ -55,7 +55,7 @@
     // part of the "clickCallback" feature
     isUserClick = true;
     // part of the "collapsible" feature
-    collapse(store, nodeId);
+    toggleExpandAndCollapse(store, nodeId);
     // when $nodeSelected = true, d3 functionality is disabled. The prevents panning while the node is being dragged
     $nodeSelected = true;
     isSelected = true;
