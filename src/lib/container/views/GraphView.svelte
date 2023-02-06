@@ -45,6 +45,7 @@
     heightStore,
     d3Scale,
     edgeEditModal,
+    collapsibleStore,
   } = store;
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
@@ -52,6 +53,20 @@
   $: resize = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
+
+  let filteredNodes;
+  $: {
+    // filter nodes/edges for the collapsible nodes feature
+    filteredNodes = nodes.filter((node) => {
+      const nodeId = node.id;
+      const collapssibleObj = $collapsibleStore.find(
+        (e) => e.nodeId === nodeId
+      );
+      if (collapssibleObj === undefined) return true;
+      return collapssibleObj.isHidden() === false;
+    });
+  }
+
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -183,7 +198,7 @@
   <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
     <!-- This container is transformed by d3zoom -->
     <div class={`Node Node-${canvasId}`}>
-      {#each nodes as node}
+      {#each filteredNodes as node}
         {#if node.data.html}
           <Node {node} {canvasId} {nodes} nodeId={node.id}
             >{@html node.data.html}</Node

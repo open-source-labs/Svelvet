@@ -27,4 +27,8 @@ export class Collapsible implements CollapsibleType {
     public nodeId: string,
     public hideCount: number
   ) {}
+
+  isHidden() {
+    return this.hideCount > 0;
+  }
 }

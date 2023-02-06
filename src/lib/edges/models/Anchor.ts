@@ -41,6 +41,16 @@ export class Anchor implements AnchorType {
     public canvasId: string,
     public angle: 0 | 90 | 180 | 270
   ) {}
+
+  getOtherAnchorId() {
+    const store = stores[this.canvasId];
+    const anchors = getAnchors(store, { edgeId: this.edgeId });
+    if (anchors.length !== 2)
+      throw 'something is wrong, every anchor should have exactly one other associated anchor';
+    const anchor = anchors.filter((anchor) => anchor.id !== this.id)[0];
+    return anchor.id;
+  }
+
   /**
    * setPositionFromNode will invoke the user-defined callback to calculate the position of the Anchor, set the position of the Anchor in the anchorsStore, and also update the Edge position accordingly.
    */
