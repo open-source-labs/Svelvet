@@ -33,7 +33,7 @@
   export let initialZoom = 3;
   export let initialLocation = { x: 0, y: 0 };
   export let boundary = false;
-
+  export let collapsible = false;
   //default value of shareable will be set to false
   export let shareable: boolean = false;
 
@@ -61,7 +61,7 @@
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
     store.boundary.set(boundary);
-
+    store.collapsibleOption.set(collapsible);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });

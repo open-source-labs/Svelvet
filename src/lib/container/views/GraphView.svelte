@@ -6,7 +6,7 @@
   import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
   import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
   import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
-
+  import type { NodeType } from '../../store/types/types';
   import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
   import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
   import Node from '../../nodes/views/Node.svelte';
@@ -45,13 +45,49 @@
     heightStore,
     d3Scale,
     edgeEditModal,
+    collapsibleStore,
   } = store;
   $: nodes = Object.values($nodesStore);
   $: edges = Object.values($edgesStore);
   $: anchors = Object.values($anchorsStore);
-  $: resize = Object.values($resizeNodesStore);
+  $: resizeNodes = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
+
+  let filteredNodes: NodeType[];
+  let filteredEdges;
+  let filteredResizeNodes;
+  let filteredAnchors;
+  $: {
+    // filter nodes for the collapsible nodes feature
+    filteredNodes = nodes.filter((node) => {
+      const nodeId = node.id;
+      const collapssibleObj = $collapsibleStore.find(
+        (e) => e.nodeId === nodeId
+      );
+      if (collapssibleObj === undefined) return true;
+      return collapssibleObj.isHidden() === false;
+    });
+    const filteredNodeIds = filteredNodes.map((e) => e.id);
+    // filter resizeNodes
+    filteredResizeNodes = resizeNodes.filter((resizeNode) =>
+      filteredNodeIds.includes(resizeNode.nodeId)
+    );
+    filteredAnchors = anchors.filter((selfAnchor) => {
+      const otherAnchorId = selfAnchor.getOtherAnchorId();
+      const otherAnchor = $anchorsStore[otherAnchorId];
+
+      if (
+        filteredNodeIds.includes(selfAnchor.nodeId) &&
+        filteredNodeIds.includes(otherAnchor.nodeId)
+      )
+        return true;
+      return false;
+    });
+    const filteredEdgeIds = new Set(filteredAnchors.map((e) => e.edgeId));
+    filteredEdges = edges.filter((edge) => filteredEdgeIds.has(edge.id));
+  }
+
   // declaring the grid and dot size for d3's transformations and zoom
   const gridSize = 15;
   const dotSize = 10;
@@ -183,7 +219,7 @@
   <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>
     <!-- This container is transformed by d3zoom -->
     <div class={`Node Node-${canvasId}`}>
-      {#each nodes as node}
+      {#each filteredNodes as node}
         {#if node.data.html}
           <Node {node} {canvasId} {nodes} nodeId={node.id}
             >{@html node.data.html}</Node
@@ -199,7 +235,7 @@
         {/if}
       {/each}
 
-      {#each resize as res}
+      {#each filteredResizeNodes as res}
         <ResizeNode resizeId={res.id} {canvasId} />
       {/each}
 
@@ -249,7 +285,7 @@
 
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
-    {#each edges as edge}
+    {#each filteredEdges as edge}
       {#if edge.type === 'straight'}
         <StraightEdge edgeId={edge.id} {canvasId} />
       {:else if edge.type === 'smoothstep'}
@@ -265,7 +301,7 @@
       <TemporaryEdge {temporaryEdge} />
     {/each}
 
-    {#each anchors as anchor}
+    {#each filteredAnchors as anchor}
       <!-- note that these are SVG -->
       <EdgeAnchor x={anchor.positionX} y={anchor.positionY} />
     {/each}
@@ -273,6 +309,8 @@
 </svg>
 
 <style>
+  svg {
+  }
   .Nodes {
     position: absolute;
     width: 100%;

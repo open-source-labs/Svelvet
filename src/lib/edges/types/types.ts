@@ -15,4 +15,5 @@ export interface AnchorType {
   setPositionFromNode: Function;
   setPosition: Function;
   updateEdges: Function;
+  getOtherAnchorId: Function;
 }
