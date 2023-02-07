@@ -1,22 +1,15 @@
 // table for the "connecting edge" feature
 import type {
-  NodeType,
-  EdgeType,
-  StoreType,
-  ResizeNodeType,
   TemporaryEdgeType,
 } from '../../store/types/types';
-import { writable, derived, get, readable } from 'svelte/store';
+
 import {
-  getNodes,
-  getAnchors,
   findStore,
   createEdgeAndAnchors,
   createNode,
   getPotentialAnchorById,
   getNodeById,
 } from '../../store/controllers/storeApi';
-import { stores } from '../../store/models/store';
 
 export class TemporaryEdge implements TemporaryEdgeType {
   constructor(

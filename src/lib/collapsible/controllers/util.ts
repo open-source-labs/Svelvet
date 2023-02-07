@@ -9,7 +9,7 @@ import type {
 import { Collapsible } from '../models/Collapsible';
 import { v4 as uuidv4 } from 'uuid';
 import type { CollapsibleType } from '../types/types';
-import { writable, derived, get, readable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { getAnchorById, getAnchors } from '../../store/controllers/storeApi';
 import type { AnchorType } from '../../edges/types/types';
 /*

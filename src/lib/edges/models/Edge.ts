@@ -1,18 +1,13 @@
 import {
-  getNodes,
   getAnchors,
   findStore,
   getAnchorFromEdge,
-  getEdgeById,
 } from '../../store/controllers/storeApi';
 import type {
-  NodeType,
   EdgeType,
-  StoreType,
-  ResizeNodeType,
   UserEdgeType,
 } from '../../store/types/types';
-import { writable, derived, get, readable } from 'svelte/store';
+
 import { stores } from '../../store/models/store';
 
 /**

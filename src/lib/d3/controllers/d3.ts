@@ -1,6 +1,6 @@
-import { zoom, zoomTransform } from 'd3-zoom';
-import { select, selectAll } from 'd3-selection';
-import { writable, derived, get, readable } from 'svelte/store';
+// import { zoom, zoomTransform } from 'd3-zoom';
+// import { select, selectAll } from 'd3-selection';
+import { get } from 'svelte/store';
 
 export function zoomInit(
   d3,

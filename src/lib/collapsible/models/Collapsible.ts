@@ -2,19 +2,6 @@
  * This model implements functionality for nodes to expand and collapse their children
  */
 
-import type {
-  NodeType,
-  EdgeType,
-  StoreType,
-  ResizeNodeType,
-} from '../../store/types/types';
-import { writable, derived, get, readable } from 'svelte/store';
-import {
-  getNodes,
-  getAnchors,
-  findStore,
-} from '../../store/controllers/storeApi';
-import { stores } from '../../store/models/store';
 import type { CollapsibleType } from '../types/types';
 
 /** Class that implements collapsible/expandable functionality for Node objects
