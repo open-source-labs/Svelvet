@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte';
+  import { afterUpdate } from 'svelte';
 
   import { findStore } from '../../store/controllers/storeApi';
   import type {
     NodeType,
-    EdgeType,
-    StoreType,
-    UserNodeType,
-    UserEdgeType,
   } from '../../store/types/types';
 
   import EditNode from './EditNode.svelte';

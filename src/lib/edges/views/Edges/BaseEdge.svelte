@@ -1,7 +1,7 @@
 <script lang="ts">
   import { findStore, getEdgeById } from '../../../store/controllers/storeApi';
   import EdgeText from '../Edges/EdgeText.svelte';
-  import { writable, derived, get, readable } from 'svelte/store';
+  import { get } from 'svelte/store';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
   export let canvasId;

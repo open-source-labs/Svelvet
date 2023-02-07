@@ -1,7 +1,5 @@
 <script lang="ts">
   import {
-    getNodes,
-    getAnchors,
     findStore,
   } from '../../store/controllers/storeApi';
   import { TemporaryEdge } from '../models/TemporaryEdge';

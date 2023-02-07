@@ -3,7 +3,7 @@ This file contains "middleware" functions that sanitize user input (UserNodeType
 maintain consistency between previous 
 
 */
-import { writable, derived, get, readable } from 'svelte/store';
+import { get } from 'svelte/store';
 import {
   bottomCb,
   leftCb,

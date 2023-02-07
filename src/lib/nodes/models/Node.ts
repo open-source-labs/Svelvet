@@ -1,17 +1,10 @@
 /** this is where we create our node store */
 import type {
   NodeType,
-  EdgeType,
-  StoreType,
-  ResizeNodeType,
-  PositionType,
 } from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
 import {
-  getNodes,
   getAnchors,
-  findStore,
-  getAnchorFromEdge,
   getEdgeById,
   getResizeNodes,
   getPotentialAnchors,

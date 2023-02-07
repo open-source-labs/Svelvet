@@ -4,17 +4,8 @@
 
 import type { AnchorCbType, AnchorType } from '../../edges/types/types';
 
-import type {
-  NodeType,
-  EdgeType,
-  StoreType,
-  ResizeNodeType,
-} from '../../store/types/types';
-import { writable, derived, get, readable } from 'svelte/store';
 import {
-  getNodes,
   getAnchors,
-  findStore,
 } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
 
