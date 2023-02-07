@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Node from '$lib/Nodes/index.svelte';
+  import Node from '$lib/nodes/views/Node.svelte';
 
   export let node: any;
 </script>

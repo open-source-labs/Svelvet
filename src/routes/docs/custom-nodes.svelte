@@ -2,21 +2,30 @@
 <script>
   const nodeProps = [
     ['id', '(required) number'],
-    ['data', '(required) { label: string } || { custom: name of imported Svelte component } || { html: string of html}'],
-    ['className', 'string (custom class name)'],
-    ['position', '(required) { x: number, y: number }'],
-    ['sourcePosition', 'string (top, bottom, left, right) - defaults to "bottom" if unspecified'],
-    ['targetPosition', 'string (top, bottom, left, right) - defaults to "top" if unspecified'],
     ['width', '(required) number'],
     ['height', '(required) number'],
+    ['position', '(required) { x: number, y: number }'],
+    [
+      'data',
+      '(required) { label: string } || { custom: name of imported Svelte component } || { html: string of html}',
+    ],
+    ['textColor', 'string of color name, hexcode or rgb'],
     ['bgColor', 'string of color name, hexcode, or rgb'],
     ['borderColor', 'string of color name, hexcode or rgb'],
-    ['textColor', 'string of color name, hexcode or rgb'],
+    ['borderRadius', 'number'],
+    [
+      'sourcePosition',
+      'string (top, bottom, left, right) - defaults to adaptive anchor if unspecified',
+    ],
+    [
+      'targetPosition',
+      'string (top, bottom, left, right) - defaults to adaptive anchor if unspecified',
+    ],
+    ['className', 'string (custom class name)'],
     ['image', 'boolean'],
     ['src', 'string of image url'],
-    ['borderRadius', 'number'],
     ['clickCallback', 'Function'],
-    ['childNodes', 'Array of numbers, put other nodes id\'s in here'],
+    ['childNodes', "Array of numbers, put other nodes id's in here"],
   ];
 </script>
 
@@ -25,10 +34,11 @@
 </div>
 
 <p class="text-gray-600">
-  <code class="code">Svelvet</code> provides the ability to customize each node to your liking. To customize
-  your nodes, provide any of the following properties below in the node object. You can display your
-  desired text, change colors (background, border and text), define multiple source and target handles,
-  and set your own dimensions. Below you can find example implementations of these properties.
+  <code class="code">Svelvet</code> provides the ability to customize each node to
+  your liking. To customize your nodes, provide any of the following properties below
+  in the node object. You can display your desired text, change colors (background,
+  border and text), define multiple source and target handles, and set your own dimensions.
+  Below you can find example implementations of these properties.
 </p>
 <p class="text-gray-600 mt-2">
   Current customizations include node
@@ -40,10 +50,11 @@
 </p>
 <br />
 <p class="text-gray-600">
-  <code class="bg-rose-100 rounded-lg p-1">sourcePosition</code> represents the anchor point
-  location on the source node and is set to "bottom" by default. <br />
-  <code class="bg-rose-100 rounded-lg p-1">targetPosition</code> represents the anchor point location
-  on the target node and is set to "top" by default.
+  <code class="bg-rose-100 rounded-lg p-1">sourcePosition</code> represents the
+  anchor point location on the source node and is set to "bottom" by default.
+  <br />
+  <code class="bg-rose-100 rounded-lg p-1">targetPosition</code> represents the anchor
+  point location on the target node and is set to "top" by default.
 </p>
 <!-- NOTE: may want to add note regarding differences when using an image with / without a label -->
 
@@ -65,9 +76,9 @@
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Implementing Custom Nodes</h3>
 
-<iframe src="https://codesandbox.io/embed/custom-nodes-forked-1ml2fb?autoresize=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark"
+<iframe src="https://codesandbox.io/embed/sweet-lewin-iqkhx3?fontsize=14&hidenavigation=1&theme=dark"
      style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-     title="custom-nodes (forked)"
+     title="Feature Custom Nodes"
      allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
