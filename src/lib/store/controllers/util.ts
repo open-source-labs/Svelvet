@@ -205,23 +205,18 @@ function findUserNodeById(
  * @param canvasId The canvasId of the Svelvet component that holds the Anchors
  * @returns A PotentialAnchor object with default placeholder values for its positionX, positionY, and angle
  */
-function createPotentialAnchor(
+export function createPotentialAnchor(
   positionCb: Function,
   store: StoreType,
-  userNode: UserNodeType,
+  nodeId: string,
   canvasId: string
 ) {
   const anchorId = uuidv4();
-  const fixedCb = potentialAnchorCbCreator(
-    store,
-    anchorId,
-    userNode.id,
-    positionCb
-  );
+  const fixedCb = potentialAnchorCbCreator(store, anchorId, nodeId, positionCb);
   // Create a new anchor. The
   const anchor = new PotentialAnchor(
     anchorId,
-    userNode.id,
+    nodeId,
     fixedCb,
     -1, // dummy variables for x,y,angle for now
     -1, // dummy variables for x,y,angle for now
@@ -251,7 +246,7 @@ export function populatePotentialAnchorStore(
 
     // create 4 potentialAnchors
     for (let cb of [topCb, bottomCb, rightCb, leftCb]) {
-      const anchor = createPotentialAnchor(cb, store, userNode, canvasId);
+      const anchor = createPotentialAnchor(cb, store, userNode.id, canvasId);
       // store potential anchors
       potentialAnchorsStore[anchor.id] = anchor;
     }

@@ -65,9 +65,16 @@ import {
   populateEdgesStore,
   populateResizeNodeStore,
   populatePotentialAnchorStore,
+  createPotentialAnchor,
 } from './util';
 import { TemporaryEdge } from '../../interactiveNodes/models/TemporaryEdge';
 import { populateCollapsibleStore } from '../../collapsible/controllers/util';
+import {
+  rightCb,
+  topCb,
+  bottomCb,
+  leftCb,
+} from '$lib/edges/controllers/anchorCbUser';
 
 /**
  * Gets one anchor (source anchor or target anchor) from a given edge
@@ -364,14 +371,16 @@ export function createEdgeAndAnchors(
     -1,
     -1,
     canvasId,
-    undefined, // undefined defaults to no label
-    undefined, // type=undefined defaults to bezier curve
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined
+    '',
+    'bezier',
+    'black',
+    'black',
+    'black',
+    false,
+    true,
+    false,
+    () => {},
+    ''
   );
 
   // create source anchor
@@ -463,7 +472,31 @@ export function createNode(
     () => {}
   );
 
-  // create new potential anchor
+  // create new potential anchor, we do this because if we create
+  const potentialAnchorRight = createPotentialAnchor(
+    rightCb,
+    store,
+    targetNodeId,
+    canvasId
+  );
+  const potentialAnchorLeft = createPotentialAnchor(
+    leftCb,
+    store,
+    targetNodeId,
+    canvasId
+  );
+  const potentialAnchorTop = createPotentialAnchor(
+    topCb,
+    store,
+    targetNodeId,
+    canvasId
+  );
+  const potentialAnchorBottom = createPotentialAnchor(
+    bottomCb,
+    store,
+    targetNodeId,
+    canvasId
+  );
 
   // create an edge
   const edgeId = uuidv4();
@@ -517,7 +550,7 @@ export function createNode(
   );
 
   // put everything into the store
-  const { nodesStore, edgesStore, anchorsStore } = store;
+  const { nodesStore, edgesStore, anchorsStore, potentialAnchorsStore } = store;
 
   nodesStore.update((nodes) => {
     nodes[targetNodeId] = node;
@@ -529,11 +562,20 @@ export function createNode(
     anchors[targetAnchorId] = targetAnchor;
     return { ...anchors };
   });
+  potentialAnchorsStore.update((anchors) => {
+    anchors[potentialAnchorRight.id] = potentialAnchorRight;
+    anchors[potentialAnchorTop.id] = potentialAnchorTop;
+    anchors[potentialAnchorBottom.id] = potentialAnchorBottom;
+    anchors[potentialAnchorLeft.id] = potentialAnchorLeft;
+    return { ...anchors };
+  });
   edgesStore.update((edges) => {
     edges[edgeId] = newEdge;
     return { ...edges };
   });
-  // make sure to update positions. TODO: don't need to do this for the entire store
+  // make sure to update positions of anchors and potential anchors. TODO: don't need to do this for the entire store
   const anchors = getAnchors(store);
   for (const anchor of anchors) anchor.callback();
+  const potAnchors = getPotentialAnchors(store);
+  for (const anchor of potAnchors) anchor.callback();
 }

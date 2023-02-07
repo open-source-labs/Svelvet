@@ -70,4 +70,5 @@
   initialLocation={initialNodes[5].position}
   background
   nodeCreate
+  editable
 />

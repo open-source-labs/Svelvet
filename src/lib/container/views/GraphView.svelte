@@ -211,17 +211,13 @@
     <div class={`Node Node-${canvasId}`}>
       {#each filteredNodes as node}
         {#if node.data.html}
-          <Node {node} {canvasId} nodeId={node.id}
-            >{@html node.data.html}</Node
-          >
+          <Node {node} {canvasId} nodeId={node.id}>{@html node.data.html}</Node>
         {:else if node.data.custom}
           <Node {node} {canvasId} nodeId={node.id}
             ><svelte:component this={node.data.custom} /></Node
           >
         {:else}
-          <Node {node} {canvasId} nodeId={node.id}
-            >{node.data.label}</Node
-          >
+          <Node {node} {canvasId} nodeId={node.id}>{node.data.label}</Node>
         {/if}
       {/each}
 
@@ -234,7 +230,7 @@
           {canvasId}
           x={potentialAnchor.positionX}
           y={potentialAnchor.positionY}
-          {potentialAnchor}
+          potentialAnchorId={potentialAnchor.id}
         />
       {/each}
     </div>
