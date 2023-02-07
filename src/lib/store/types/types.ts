@@ -113,16 +113,16 @@ export interface EdgeType {
   targetX: number;
   targetY: number;
   canvasId: string;
-  label?: string;
-  type?: 'straight' | 'smoothstep' | 'step' | 'bezier';
-  labelBgColor?: string;
-  labelTextColor?: string;
-  edgeColor?: string;
-  animate?: boolean;
-  noHandle?: boolean;
-  arrow?: boolean;
-  clickCallback?: Function;
-  className?: string;
+  label: string;
+  type: 'straight' | 'smoothstep' | 'step' | 'bezier';
+  labelBgColor: string;
+  labelTextColor: string;
+  edgeColor: string;
+  animate: boolean;
+  noHandle: boolean;
+  arrow: boolean;
+  clickCallback: Function;
+  className: string;
   delete: Function;
   setExportableData: Function;
 }

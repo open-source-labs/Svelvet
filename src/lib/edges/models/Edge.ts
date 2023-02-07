@@ -40,16 +40,16 @@ export class Edge implements EdgeType {
     public targetX: number,
     public targetY: number,
     public canvasId: string,
-    public label?: string,
-    public type?: 'straight' | 'smoothstep' | 'step' | 'bezier',
-    public labelBgColor?: string,
-    public labelTextColor?: string,
-    public edgeColor?: string,
-    public animate?: boolean,
-    public noHandle?: boolean,
-    public arrow?: boolean,
-    public clickCallback?: Function,
-    public className?: string
+    public label: string,
+    public type: 'straight' | 'smoothstep' | 'step' | 'bezier',
+    public labelBgColor: string,
+    public labelTextColor: string,
+    public edgeColor: string,
+    public animate: boolean,
+    public noHandle: boolean,
+    public arrow: boolean,
+    public clickCallback: Function,
+    public className: string
   ) {}
 
   /**

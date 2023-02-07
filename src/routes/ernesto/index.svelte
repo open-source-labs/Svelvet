@@ -114,6 +114,7 @@
   width={900}
   height={900}
   background
+  editable={true}
 />
 
 <Svelvet
@@ -122,6 +123,7 @@
   width={900}
   height={900}
   background
+  editable={true}
 />
 
 <!-- <Canvas nodes={initialNodes} edges={initialEdges} /> -->

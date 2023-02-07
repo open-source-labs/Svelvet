@@ -165,16 +165,16 @@ export function populateEdgesStore(
       targetAnchor.positionX,
       targetAnchor.positionY,
       canvasId,
-      label,
-      type,
-      labelBgColor,
-      labelTextColor,
-      edgeColor,
-      animate,
-      noHandle,
-      arrow,
-      clickCallback,
-      className
+      userEdge.label === undefined ? '' : userEdge.label,
+      userEdge.type === undefined ? 'bezier' : userEdge.type,
+      userEdge.labelBgColor === undefined ? 'white' : userEdge.labelBgColor,
+      userEdge.labelTextColor === undefined ? 'black' : userEdge.labelTextColor,
+      userEdge.edgeColor === undefined ? 'black' : userEdge.edgeColor,
+      userEdge.animate === undefined ? false : userEdge.animate,
+      userEdge.noHandle === undefined ? false : userEdge.noHandle,
+      userEdge.arrow === undefined ? false : userEdge.arrow,
+      userEdge.clickCallback === undefined ? () => {} : userEdge.clickCallback,
+      userEdge.className === undefined ? '' : userEdge.className
     );
   }
   store.edgesStore.set(edgesStore);
