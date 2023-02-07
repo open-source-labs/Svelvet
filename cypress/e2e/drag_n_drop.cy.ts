@@ -16,8 +16,8 @@ describe('Drag n Drop', () => {
           const endX: number = Number($div2[0].style.left.match(/\d+/)[0])
           const endY: number = Number($div2[0].style.top.match(/\d+/)[0])
           
-          expect(typeof(endX - startX)).to.eq(typeof(x))
-          expect(typeof(endY - startY)).to.eq(typeof(y))
+          expect(endX - startX).to.eq(x)
+          expect(endY - startY).to.eq(y)
         })
       })
     }
