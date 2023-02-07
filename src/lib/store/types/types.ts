@@ -48,6 +48,7 @@ export interface UserEdgeType {
   noHandle?: boolean;
   arrow?: boolean;
   clickCallback?: Function;
+  className?: string;
 }
 
 /*
@@ -121,6 +122,7 @@ export interface EdgeType {
   noHandle?: boolean;
   arrow?: boolean;
   clickCallback?: Function;
+  className?: string;
   delete: Function;
   setExportableData: Function;
 }

@@ -48,7 +48,8 @@ export class Edge implements EdgeType {
     public animate?: boolean,
     public noHandle?: boolean,
     public arrow?: boolean,
-    public clickCallback?: Function
+    public clickCallback?: Function,
+    public className?: string
   ) {}
 
   /**
