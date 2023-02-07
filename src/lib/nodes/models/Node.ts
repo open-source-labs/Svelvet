@@ -58,7 +58,7 @@ export class Node implements NodeType {
   /**
    * setPositionFromMovement will update the positionX and positionY of the Node when user drags a Node around on the canvas, reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and Edges.
    * @param {number} movementX The mouse movement value on the X-axis
-   * @param {number} movementy The mouse movement value on the Y-axis
+   * @param {number} movementY The mouse movement value on the Y-axis
    */
   setPositionFromMovement(movementX: number, movementY: number) {
     const {

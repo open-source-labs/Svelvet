@@ -140,8 +140,4 @@ describe('tests Anchor', () => {
 
   const { nodesStore, anchorsStore } = store;
 
-  anchorsStore.update((anchor) => {
-    console.log(anchor);
-    return {};
-  });
 });

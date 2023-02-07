@@ -42,39 +42,7 @@ describe('tests node', () => {
       height: 40,
       bgColor: 'white',
       textColor: 'black',
-    },
-    {
-      id: '4',
-      position: { x: 25, y: 180 },
-      data: { label: 'Drag me!' },
-      width: 125,
-      height: 40,
-      bgColor: 'white',
-      textColor: 'black',
-      targetPosition: 'right',
-    },
-    {
-      id: '5',
-      position: { x: 390, y: 380 },
-      data: { label: 'Custom Node' },
-      width: 125,
-      height: 40,
-      bgColor: 'green',
-      textColor: 'black',
-      borderColor: 'transparent',
-      borderRadius: 0,
-    },
-    {
-      id: '6',
-      position: { x: 47.5, y: 360 },
-      data: { label: 'Custom Node' },
-      width: 80,
-      height: 80,
-      borderColor: '#FF4121',
-      borderRadius: 30,
-      bgColor: 'grey',
-      textColor: '#FF4121',
-    },
+    }
   ];
 
   const initialEdges: UserEdgeType[] = [
@@ -87,35 +55,13 @@ describe('tests node', () => {
       label: 'animated edges',
     },
     {
-      id: 'e1-4',
-      source: '1',
-      target: '4',
+      id: 'e3-1',
+      source: '3',
+      target: '1',
       type: 'step',
       animate: true,
       edgeColor: '#FF4121',
-    },
-    {
-      id: 'e2-5',
-      source: '2',
-      target: '5',
-      label: 'colored edges',
-      animate: true,
-      arrow: true,
-      edgeColor: '#FF4121',
-      labelBgColor: '#1F2937',
-      labelTextColor: '#FFE4E6',
-    },
-    { id: 'e2-6', source: '4', target: '6', type: 'straight' },
-    {
-      id: 'e2-7',
-      source: '3',
-      target: '6',
-      type: 'smoothstep',
-      label: 'colored label',
-      labelBgColor: '#FF4561',
-      labelTextColor: 'white',
-      animate: true,
-    },
+    }
   ];
   //cosnt store =  invoke createEmptyStore?
   const store = createStoreEmpty(canvasId);
@@ -139,7 +85,7 @@ describe('tests node', () => {
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
-  const { nodesStore } = store;
+  const { nodesStore, anchorsStore, edgesStore} = store;
 
   // console.log('NODESTORE :', nodesStore)
   // nodesStore.update((node) => {
@@ -149,30 +95,68 @@ describe('tests node', () => {
   //   }
   // });
 test('set position from movement should update position X & Y based on mouse movement', () => {
-
-  nodesStore.update((node) => {
-    for (const nodeId in node) {
+  nodesStore.update((nodes) => {
+    for (const nodeId in nodes) {
       if(nodeId === '1') {
-        node[nodeId].setPositionFromMovement(10, 10);
-        expect(node[nodeId].positionX).toBe(235)
-        expect(node[nodeId].positionY).toBe(20)
+        nodes[nodeId].setPositionFromMovement(10, 10);
+        expect(nodes[nodeId].positionX).toBe(235)
+        expect(nodes[nodeId].positionY).toBe(20)
       }
       if(nodeId === '2') {
-        node[nodeId].setPositionFromMovement(-10, 10);
-        expect(node[nodeId].positionX).toBe(380)
-        expect(node[nodeId].positionY).toBe(190)
+        nodes[nodeId].setPositionFromMovement(-10, 10);
+        expect(nodes[nodeId].positionX).toBe(380)
+        expect(nodes[nodeId].positionY).toBe(190)
       }
       if(nodeId === '3') {
-        node[nodeId].setPositionFromMovement(-10, -10);
-        expect(node[nodeId].positionX).toBe(215)
-        expect(node[nodeId].positionY).toBe(250)
+        nodes[nodeId].setPositionFromMovement(-10, -10);
+        expect(nodes[nodeId].positionX).toBe(215)
+        expect(nodes[nodeId].positionY).toBe(250)
       }
       // when setPositionsFromMovement runs it should cascade to the anchors edges and resizenode
     }
+    return {...nodes}
   });
 })
+test('setSizeFromMovement should update the height and width of the node when resizes the Node by dragging at the right bottom corner (where the ResizedNode attached), reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and potential Anchors', () => {
+  nodesStore.update((nodes) => {
+    for (const nodeId in nodes) {
+      if(nodeId === '1') {
+        nodes[nodeId].setSizeFromMovement(10, 10);
+        expect(nodes[nodeId].width).toBe(110);
+        expect(nodes[nodeId].height).toBe(110);
 
+        anchorsStore.update((anchors) => {
+          for (const anchorId in anchors) {
+            if(anchors[anchorId].nodeId === '1' && anchors[anchorId].sourceOrTarget === 'target') {
+              expect(anchors[anchorId].positionX).toEqual(290);
+              expect(anchors[anchorId].positionY).toEqual(130);
+            } else if(anchors[anchorId].nodeId === '1' && anchors[anchorId].sourceOrTarget === 'source') {
+              expect(anchors[anchorId].positionX).toEqual(345);
+              expect(anchors[anchorId].positionY).toEqual(75);
+            }
+          }
+          return {...anchors}
+        })
+    } else if(nodeId === '2') {
+        nodes[nodeId].setSizeFromMovement(10, 10);
+        expect(nodes[nodeId].width).toBe(135);
+        expect(nodes[nodeId].height).toBe(50);
 
+        anchorsStore.update((anchors) => {
+          for (const anchorId in anchors) {
+            if(anchors[anchorId].nodeId === '2' && anchors[anchorId].sourceOrTarget === 'target') {
+              console.log(anchors[anchorId].positionX, anchors[anchorId].positionY)
+            } else if(anchors[anchorId].nodeId === '2' && anchors[anchorId].sourceOrTarget === 'source') {
+              console.log(anchors[anchorId].positionX, anchors[anchorId].positionY)
+            }
+          }
+          return {...anchors}
+        })
+    } 
+  }
+  return {...nodes}
+})
+})
   //Then, call set PositionAndCascade on resizeNode and make sure the width/height of the node also changes.
   //Make sure when you call delete on the node that the resizeNode also disappears.
 });
