@@ -5,7 +5,8 @@ import type {
   ResizeNodeType,
 } from '../types/types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
+import { getNodes, findStore } from '../controllers/storeApi';
+import { getEdgeById, getAnchors } from '../../edges/controllers/util';
 
 /**
   `store` is a dictionary of Svelvet stores.

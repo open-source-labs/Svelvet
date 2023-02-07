@@ -3,11 +3,8 @@
  */
 
 import type { AnchorCbType, AnchorType } from '../../edges/types/types';
-
-import {
-  getAnchors,
-} from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
+import { getAnchors } from '../controllers/util';
 
 /** Class representing an Anchor that implements Anchortype.
  * @param {string} id The id of the Anchor

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { findStore } from '../../store/controllers/storeApi';
-  import { getEdgeById } from '../../store/controllers/storeApi';
   import { writable, derived, get, readable } from 'svelte/store';
+
+  import { getEdgeById } from '../../edges/controllers/util';
 
   export let edgeId: string;
   export let canvasId: string;
