@@ -31,7 +31,7 @@
     ['Dynamic Anchors', 'DynamicAnchor'],
     ['Custom Anchor Position', 'CustomAnchorPosition'],
     ['Adaptive Anchors', 'AdaptiveAnchors'],
-    ['Edit Edges', 'editEdge'],
+    ['Interactive Editable Edges', 'editEdge'],
     ['Unfold and Collapse', 'Unfold-collapse']
   ];
 
