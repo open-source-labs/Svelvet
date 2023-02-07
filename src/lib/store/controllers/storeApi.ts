@@ -441,6 +441,7 @@ export function createNode(
 ) {
   // create a new node
   const targetNodeId = uuidv4();
+
   const node = new Node(
     targetNodeId,
     targetNodeX,
@@ -457,8 +458,12 @@ export function createNode(
     '', // src, not sure what this does
     'black', // text color
     0, // borderRadius
-    []
+    [],
+    '',
+    () => {}
   );
+
+  // create new potential anchor
 
   // create an edge
   const edgeId = uuidv4();
@@ -469,14 +474,16 @@ export function createNode(
     -1,
     -1,
     canvasId,
-    undefined, // undefined defaults to no label
-    undefined, // type=undefined defaults to bezier curve
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined
+    '',
+    'bezier',
+    'black',
+    'black',
+    'black',
+    false,
+    true,
+    false,
+    () => {},
+    ''
   );
 
   // create source anchor
