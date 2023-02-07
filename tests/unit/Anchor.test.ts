@@ -135,8 +135,6 @@ describe('tests Anchor', () => {
 
   const { anchorsStore, edgesStore } = store;
 
-<<<<<<< HEAD
-=======
   //current train of thought is to use if statements to check if this is a source or target, based on that we can call callback and know what we should expect.
   // Iteration is in order... e1-2 source, => target and so on.
 
@@ -219,5 +217,4 @@ describe('tests Anchor', () => {
       return {};
     });
   });
->>>>>>> c2875f5c25acab4a7484ca593890926afa0d0c3a
 });
