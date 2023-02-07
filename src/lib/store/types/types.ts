@@ -96,14 +96,14 @@ export interface NodeType {
   delete: Function; //This is the method to delete the node from the store
   setSizeFromMovement: Function;
   setExportableData: Function;
-  borderColor?: string | undefined;
-  image?: boolean;
-  src?: string;
-  textColor?: string;
-  borderRadius?: number;
-  childNodes?: string[];
-  className?: string; //This is for custom className for node
-  clickCallback?: Function; // user-supplied callback that executes when the node is clicked
+  borderColor: string;
+  image: boolean;
+  src: string;
+  textColor: string;
+  borderRadius: number;
+  childNodes: string[];
+  className: string; //This is for custom className for node
+  clickCallback: Function; // user-supplied callback that executes when the node is clicked
 }
 
 export interface EdgeType {

@@ -45,14 +45,14 @@ export class Node implements NodeType {
     public bgColor: string,
     public data: object,
     public canvasId: string,
-    public borderColor?: string,
-    public image?: boolean,
-    public src?: string,
-    public textColor?: string,
-    public borderRadius?: number,
-    public childNodes?: string[],
-    public className?: string,
-    public clickCallback?: Function
+    public borderColor: string,
+    public image: boolean,
+    public src: string,
+    public textColor: string,
+    public borderRadius: number,
+    public childNodes: string[],
+    public className: string,
+    public clickCallback: Function
   ) {}
 
   /**

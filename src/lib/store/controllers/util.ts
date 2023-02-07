@@ -338,6 +338,7 @@ export function populateNodesStore(
     const userNode: UserNodeType = nodes[i];
     const nodeId = userNode.id;
 
+    // TODO: move sanitizing default values to middleware
     const node = new Node(
       nodeId.toString(),
       userNode.position.x,
@@ -347,14 +348,14 @@ export function populateNodesStore(
       userNode.bgColor,
       userNode.data,
       canvasId,
-      userNode.borderColor,
-      userNode.image,
-      userNode.src,
-      userNode.textColor,
-      userNode.borderRadius,
+      userNode.borderColor === undefined ? 'black' : userNode.borderColor,
+      userNode.image === undefined ? false : userNode.image,
+      userNode.src === undefined ? '' : userNode.src,
+      userNode.textColor === undefined ? '' : userNode.textColor,
+      userNode.borderRadius === undefined ? 0 : userNode.borderRadius,
       userNode.childNodes === undefined ? [] : userNode.childNodes,
-      userNode.className,
-      userNode.clickCallback
+      userNode.className === undefined ? '' : userNode.className,
+      userNode.clickCallback === undefined ? () => {} : userNode.clickCallback
     );
 
     nodesStore[nodeId] = node;
