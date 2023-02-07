@@ -13,13 +13,14 @@
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
   import { forceCssHeightAndWidth } from '../../customCss/controllers/getCss';
-  import { toggleExpandAndCollapse } from '$lib/collapsible/controllers/util';
+  import { toggleExpandAndCollapse } from '../../collapsible/controllers/util';
 
   export let node: NodeType;
   export let canvasId: string;
   // export let nodes: NodeType[];
   //   const nodeId = node.id; // this seems to go stale
   export let nodeId: string;
+
 
   const store = findStore(canvasId);
   // const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
@@ -33,6 +34,7 @@
     anchorsStore,
     nodeSelected,
     resizeNodesStore,
+    editableOption,
   } = store;
 
   let isSelected = false;
@@ -151,8 +153,8 @@
   on:touchend={mouseup}
 />
 
-<!--EditNode component will be displayed if isEditing is true-->
-{#if isEditing}
+<!--EditNode component will be displayed if isEditing is true and if the canvas option "edtiable" is set true-->
+{#if isEditing && $editableOption}
   <EditNode {canvasId} {nodeId} {isEditing} />
 {/if}
 

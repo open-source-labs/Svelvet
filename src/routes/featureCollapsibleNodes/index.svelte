@@ -1,16 +1,17 @@
 <script lang="ts">
-  const asdf = {
+  // import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+
+  const data = {
     nodes: [
       {
         id: '1',
         width: 100,
         height: 100,
         position: { x: -215.90909090909093, y: -271.81818181818176 },
-        data: { label: '1' },
+        data: { label: 'click to toggle children' },
         bgColor: 'white',
         borderColor: 'transparent',
-        image: true,
-        src: 'https://svelvet.io/_app/assets/Logo%201-cc7b0baf.svg',
         childNodes: [],
       },
       {
@@ -18,7 +19,7 @@
         width: 125,
         height: 40,
         position: { x: -14.599880784679721, y: -308.44788239466266 },
-        data: { label: '2a' },
+        data: { label: '' },
         bgColor: 'white',
         textColor: 'black',
         childNodes: [],
@@ -28,7 +29,7 @@
         width: 125,
         height: 40,
         position: { x: -9.999999999999996, y: -173.40909090909088 },
-        data: { label: '2b' },
+        data: { label: 'Click to toggle children' },
         bgColor: 'white',
         textColor: 'black',
         childNodes: [],
@@ -38,7 +39,7 @@
         width: 125,
         height: 40,
         position: { x: -9.999999999999972, y: -65.4545454545454 },
-        data: { label: '2c' },
+        data: { label: '' },
         bgColor: 'white',
         textColor: 'black',
         childNodes: [],
@@ -48,7 +49,7 @@
         width: 125,
         height: 40,
         position: { x: 200.6473652838072, y: -279.10075026201787 },
-        data: { label: '3a' },
+        data: { label: 'click to toggle children' },
         bgColor: 'white',
         textColor: 'black',
         childNodes: [],
@@ -58,7 +59,7 @@
         width: 100,
         height: 100,
         position: { x: 210.82628755426623, y: -170.711059495278 },
-        data: { label: 'new node' },
+        data: { label: '' },
         bgColor: 'white',
         borderColor: 'black',
         textColor: 'black',
@@ -72,7 +73,7 @@
         width: 100,
         height: 100,
         position: { x: 445.43022472664, y: -321.65402130438576 },
-        data: { label: 'new node' },
+        data: { label: '' },
         bgColor: 'white',
         borderColor: 'black',
         textColor: 'black',
@@ -105,20 +106,26 @@
       },
     ],
   };
-
-  // import Svelvet from 'svelvet-lime';
-  import Svelvet from '$lib/container/views/Svelvet.svelte';
 </script>
+
+<h1>Collapsible node feature</h1>
+<p>Click on a node to collapse its children. Click again to expand.</p>
+<p>
+  Node connectivity must form a tree, ie, each node can only have one parent.
+</p>
+<p>
+  Note that collapsible, when enabled, will disable 'interactiveNodes' as these
+  features are incompatible.
+</p>
 
 <Svelvet
   canvasId="canvas1"
-  nodes={asdf['nodes']}
-  edges={asdf['edges']}
+  nodes={data['nodes']}
+  edges={data['edges']}
   width={900}
   height={900}
   background
   shareable={true}
   collapsible={true}
-  locked={true}
-  editable={true}
+  nodeCreate={true}
 />

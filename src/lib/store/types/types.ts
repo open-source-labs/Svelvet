@@ -1,4 +1,4 @@
-import type { CollapsibleType } from '$lib/collapsible/types/types';
+import type { CollapsibleType } from '../../collapsible/types/types';
 import type { Readable, Writable } from 'svelte/store';
 import type { AnchorType } from '../../edges/types/types';
 
@@ -47,6 +47,8 @@ export interface UserEdgeType {
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
+  clickCallback?: Function;
+  className?: string;
 }
 
 /*
@@ -72,6 +74,8 @@ export interface StoreType {
   edgeEditModal: Writable<null | string>; // this options is used to place the edgeEdit modal when an edge is right-clicked. null is no modal, positionType if modal should be placed at position defined by postionType.x, positionType.y
   collapsibleStore: Writable<CollapsibleType[]>;
   collapsibleOption: Writable<boolean>;
+  lockedOption: Writable<boolean>;
+  editableOption: Writable<boolean>;
 }
 
 export interface PositionType {
@@ -117,6 +121,8 @@ export interface EdgeType {
   animate?: boolean;
   noHandle?: boolean;
   arrow?: boolean;
+  clickCallback?: Function;
+  className?: string;
   delete: Function;
   setExportableData: Function;
 }

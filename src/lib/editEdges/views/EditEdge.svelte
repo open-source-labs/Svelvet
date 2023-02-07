@@ -17,7 +17,7 @@
   const canvasWidth = get(store.widthStore);
   const canvasHeight = get(store.widthStore);
   const edge = getEdgeById(store, edgeId);
-  const { edgesStore } = store;
+  const { edgesStore, nodeSelected } = store;
 
   function closeModal() {
     const store = findStore(canvasId);
@@ -48,6 +48,9 @@
 <div
   class="EditEdge"
   style="left:{canvasWidth / 3}px; top:{canvasHeight / 3}px"
+  on:mouseover={(e) => ($nodeSelected = true)}
+  on:focus
+  on:wheel|preventDefault
 >
   <form on:submit={handleSubmit}>
     <label for="label-input">Edge label</label>

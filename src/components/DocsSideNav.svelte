@@ -30,6 +30,9 @@
     ['Resizable Nodes', 'ResizableNodes'],
     ['Dynamic Anchors', 'DynamicAnchor'],
     ['Custom Anchor Position', 'CustomAnchorPosition'],
+    ['Adaptive Anchors', 'AdaptiveAnchors'],
+    ['Interactive Editable Edges', 'editEdge'],
+    ['Unfold and Collapse', 'Unfold-collapse']
   ];
 
   // const communityLinks = [

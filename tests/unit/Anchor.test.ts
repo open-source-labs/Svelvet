@@ -1,4 +1,3 @@
-import { render, cleanup } from '@testing-library/svelte';
 import { v4 as uuidv4 } from 'uuid';
 import {
   createStoreEmpty,
@@ -6,8 +5,15 @@ import {
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
 import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
+import {
+  rightCb,
+  leftCb,
+  topCb,
+  bottomCb,
+} from '$lib/edges/controllers/anchorCbUser';
 
-afterEach(cleanup);
+//Only necessary if we need to reset the DOM after each test.
+// afterEach(cleanup);
 
 describe('tests Anchor', () => {
   const canvasId = uuidv4();
@@ -77,13 +83,22 @@ describe('tests Anchor', () => {
   ];
 
   const initialEdges: UserEdgeType[] = [
-    { id: 'e1-2', source: '1', target: '2', label: 'edge label' },
+    {
+      id: 'e1-2',
+      source: '1',
+      target: '2',
+      label: 'edge label',
+      sourceAnchorCb: topCb,
+      targetAnchorCb: leftCb,
+    },
     {
       id: 'e2-3',
       source: '2',
       target: '3',
       animate: true,
       label: 'animated edges',
+      sourceAnchorCb: bottomCb,
+      targetAnchorCb: rightCb,
     },
     {
       id: 'e1-4',
@@ -92,28 +107,8 @@ describe('tests Anchor', () => {
       type: 'step',
       animate: true,
       edgeColor: '#FF4121',
-    },
-    {
-      id: 'e2-5',
-      source: '2',
-      target: '5',
-      label: 'colored edges',
-      animate: true,
-      arrow: true,
-      edgeColor: '#FF4121',
-      labelBgColor: '#1F2937',
-      labelTextColor: '#FFE4E6',
-    },
-    { id: 'e2-6', source: '4', target: '6', type: 'straight' },
-    {
-      id: 'e2-7',
-      source: '3',
-      target: '6',
-      type: 'smoothstep',
-      label: 'colored label',
-      labelBgColor: '#FF4561',
-      labelTextColor: 'white',
-      animate: true,
+      sourceAnchorCb: bottomCb,
+      targetAnchorCb: topCb,
     },
   ];
   //cosnt store =  invoke createEmptyStore?
@@ -138,6 +133,91 @@ describe('tests Anchor', () => {
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
-  const { nodesStore, anchorsStore } = store;
+  const { anchorsStore, edgesStore } = store;
 
+<<<<<<< HEAD
+=======
+  //current train of thought is to use if statements to check if this is a source or target, based on that we can call callback and know what we should expect.
+  // Iteration is in order... e1-2 source, => target and so on.
+
+  test("tests that setPositionFromNode is changing the anchor's position accordingly", () => {
+    anchorsStore.update((anchor) => {
+      for (const id in anchor) {
+        if (
+          anchor[id].sourceOrTarget === 'target' &&
+          anchor[id].edgeId === 'e1-2'
+        ) {
+          expect(anchor[id].positionX).toEqual(390);
+          expect(anchor[id].positionY).toEqual(200);
+        } else if (
+          anchor[id].sourceOrTarget === 'source' &&
+          anchor[id].edgeId === 'e1-2'
+        ) {
+          expect(anchor[id].positionX).toEqual(275);
+          expect(anchor[id].positionY).toEqual(10);
+        } else if (
+          anchor[id].sourceOrTarget === 'source' &&
+          anchor[id].edgeId === 'e2-3'
+        ) {
+          expect(anchor[id].positionX).toEqual(452.5);
+          expect(anchor[id].positionY).toEqual(220);
+        } else if (
+          anchor[id].sourceOrTarget === 'target' &&
+          anchor[id].edgeId === 'e2-3'
+        ) {
+          expect(anchor[id].positionX).toEqual(325);
+          expect(anchor[id].positionY).toEqual(280);
+        }
+      }
+      return {};
+    });
+  });
+
+  test('should update edgesStore position X and Y when setPositionFromNode is called', () => {
+    populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
+
+    anchorsStore.update((anchor) => {
+      for (const id in anchor) {
+        if (
+          anchor[id].sourceOrTarget === 'target' &&
+          anchor[id].edgeId === 'e1-2'
+        ) {
+          edgesStore.update((edge) => {
+            expect(edge['e1-2'].targetX).toEqual(390);
+            expect(edge['e1-2'].targetY).toEqual(200);
+            return { ...edge };
+          });
+        } else if (
+          anchor[id].sourceOrTarget === 'source' &&
+          anchor[id].edgeId === 'e1-2'
+        ) {
+          edgesStore.update((edge) => {
+            expect(edge['e1-2'].sourceX).toEqual(275);
+            expect(edge['e1-2'].sourceY).toEqual(10);
+            return { ...edge };
+          });
+        } else if (
+          anchor[id].sourceOrTarget === 'source' &&
+          anchor[id].edgeId === 'e2-3'
+        ) {
+          edgesStore.update((edge) => {
+            expect(edge['e2-3'].sourceX).toEqual(452.5);
+            expect(edge['e2-3'].sourceY).toEqual(220);
+            return { ...edge };
+          });
+        } else if (
+          anchor[id].sourceOrTarget === 'target' &&
+          anchor[id].edgeId === 'e2-3'
+        ) {
+          edgesStore.update((edge) => {
+            expect(edge['e2-3'].targetX).toEqual(325);
+            expect(edge['e2-3'].targetY).toEqual(280);
+            return { ...edge };
+          });
+        }
+      }
+      return {};
+    });
+  });
+>>>>>>> c2875f5c25acab4a7484ca593890926afa0d0c3a
 });

@@ -14,7 +14,10 @@
   } from '../../store/controllers/storeApi';
   import { afterUpdate, onMount } from 'svelte';
   import GraphView from './GraphView.svelte';
-  import { sanitizeUserNodesAndEdges } from '../controllers/middleware';
+  import {
+    sanitizeCanvasOptions,
+    sanitizeUserNodesAndEdges,
+  } from '../controllers/middleware';
 
   import ImportExport from '../../importingExporting/views/ImportExport.svelte';
 
@@ -34,8 +37,9 @@
   export let initialLocation = { x: 0, y: 0 };
   export let boundary = false;
   export let collapsible = false;
-  //default value of shareable will be set to false
-  export let shareable: boolean = false;
+  export let shareable: boolean = false; // used for "importExport" feature
+  export let locked: boolean = false; // if true, node movement is disabled
+  export let editable: boolean = false;
 
   // generates a unique string for each svelvet component's unique store instance
   // creates a store that uses the unique sting as the key to create and look up the corresponding store
@@ -62,6 +66,11 @@
     store.nodeCreate.set(nodeCreate);
     store.boundary.set(boundary);
     store.collapsibleOption.set(collapsible);
+    store.lockedOption.set(locked);
+    store.editableOption.set(editable);
+
+    // make sure that all canvas options are compatible
+    sanitizeCanvasOptions(store);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });
@@ -82,7 +91,13 @@
     const optionsObj = { snap, snapTo }; // TODO: rename to snap
     store.options.set(optionsObj); //
     store.nodeCreate.set(nodeCreate);
+    store.boundary.set(boundary);
+    store.collapsibleOption.set(collapsible);
+    store.lockedOption.set(locked);
+    store.editableOption.set(editable);
 
+    // make sure that all canvas options are compatible
+    sanitizeCanvasOptions(store);
     // set node/edge related stores
     populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
   });

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { base } from '$app/paths';
-  import { findStore, getEdgeById } from '$lib/store/controllers/storeApi';
+  import { findStore, getEdgeById } from '../../../store/controllers/storeApi';
   import EdgeText from '../Edges/EdgeText.svelte';
+  import { writable, derived, get, readable } from 'svelte/store';
   import type { EdgeProps } from '../Edges/types';
   export let baseEdgeProps: EdgeProps;
   export let canvasId;
@@ -27,15 +27,27 @@
     centerY: centerY,
   };
 
-  // Right now, the delete-edge feature deletes an edge when it is right clicked.
-  // In the future, it would be nice to integrate the delete edge feature with a modal
-  // that allows for edge properties to be changed. This is why the function name is
-  // handleEditModal
+  // Click event handlers
+  // At some point in the future, it would be good to refactor event handling to use the flux architecture
+  //  ie, events will create an action that will be dispatched to some centralized reducer.
+  //  or in other words, the creators of Redux knew what they were doing.
+  // The advantage of this re-design would be greater modularity; views would be agnostic to the exact features implmemented,
+  //   and they would be only responsible to detecting events and dispatch actions.
   const edgeId = baseEdgeProps.id;
-  const handleEditModal = () => {
+  const store = findStore(canvasId);
+  const edge = getEdgeById(store, edgeId);
+  const handleRightClick = () => {
     const store = findStore(canvasId);
-    // const edge = getEdgeById(store, edgeId);
-    store.edgeEditModal.set(edgeId);
+    const { editableOption } = store;
+    // handles edgeEdit feature
+    if (get(editableOption)) store.edgeEditModal.set(edgeId);
+  };
+  const handleClick = () => {
+    const store = findStore(canvasId);
+    const edge = getEdgeById(store, edgeId);
+    // handles edge clickCallback feature
+    if (edge.clickCallback) edge.clickCallback(edge);
+    console.log(edge.className);
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -54,7 +66,7 @@
   </marker>
 </defs>
 
-<!-- This is an invisible edge that is used to  -->
+<!-- This is an invisible edge that is used to implement event events, because the visible edge is thin and hard to click on -->
 <path
   id={`edgeSelector`}
   d={path}
@@ -62,12 +74,13 @@
   stroke={'red'}
   stroke-opacity="0"
   stroke-width="20"
-  on:contextmenu={handleEditModal}
+  on:contextmenu={handleRightClick}
+  on:click={handleClick}
 />
 
 {#if arrow}
   <path
-    class={animate ? 'animate' : ''}
+    class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
@@ -76,7 +89,7 @@
   />
 {:else}
   <path
-    class={animate ? 'animate' : ''}
+    class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
