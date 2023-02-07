@@ -573,7 +573,9 @@ export function createNode(
     edges[edgeId] = newEdge;
     return { ...edges };
   });
-  // make sure to update positions. TODO: don't need to do this for the entire store
+  // make sure to update positions of anchors and potential anchors. TODO: don't need to do this for the entire store
   const anchors = getAnchors(store);
   for (const anchor of anchors) anchor.callback();
+  const potAnchors = getPotentialAnchors(store);
+  for (const anchor of potAnchors) anchor.callback();
 }
