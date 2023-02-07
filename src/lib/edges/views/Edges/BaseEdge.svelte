@@ -34,6 +34,8 @@
   // The advantage of this re-design would be greater modularity; views would be agnostic to the exact features implmemented,
   //   and they would be only responsible to detecting events and dispatch actions.
   const edgeId = baseEdgeProps.id;
+  const store = findStore(canvasId);
+  const edge = getEdgeById(store, edgeId);
   const handleRightClick = () => {
     const store = findStore(canvasId);
     const { editableOption } = store;
@@ -45,6 +47,7 @@
     const edge = getEdgeById(store, edgeId);
     // handles edge clickCallback feature
     if (edge.clickCallback) edge.clickCallback(edge);
+    console.log(edge.className);
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -77,7 +80,7 @@
 
 {#if arrow}
   <path
-    class={animate ? 'animate' : ''}
+    class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
@@ -86,7 +89,7 @@
   />
 {:else}
   <path
-    class={animate ? 'animate' : ''}
+    class={animate ? `animate ${edge.className}` : `${edge.className}`}
     d={path}
     fill="transparent"
     stroke={edgeColor ? edgeColor : 'gray'}
