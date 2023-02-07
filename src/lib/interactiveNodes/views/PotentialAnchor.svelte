@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     findStore,
+    getPotentialAnchorById,
   } from '../../store/controllers/storeApi';
   import { TemporaryEdge } from '../models/TemporaryEdge';
   import { writable, derived, get, readable } from 'svelte/store';
@@ -18,10 +19,10 @@
   export let canvasId;
   export let x;
   export let y;
-  export let potentialAnchor: PotentialAnchorType;
+  export let potentialAnchorId: string;
 
-  // TODO: pass in primitives
-  const potentialAnchorId = potentialAnchor.id;
+  const store = findStore(canvasId);
+  const potentialAnchor = getPotentialAnchorById(store, potentialAnchorId);
 
   let newEdge;
   let hovered = false;
@@ -32,7 +33,6 @@
   let moving = false;
   let moved = false;
   let isDragging = false;
-  const store = findStore(canvasId);
 
   $: mouseX = x;
   $: mouseY = y;
