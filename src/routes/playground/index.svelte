@@ -1,62 +1,22 @@
+<!-- 
+  We have replaced the repl with StackBlitz for now until the repl store can be fixed.
+  To see original repl component, see src/routes/playground-backup/index.svelte
+ -->
 <script>
-  // REPL
-  import { onMount } from 'svelte';
-  import { browser } from '$app/env';
-  import { userInfoStore } from '../../authStoreTs';
-  import black_logo from '../../assets/Logo 1 black.svg';
-  import Repl from '../../repl';
-  import PlaygoundTips from '../../repl/shortcuts/PlaygoundTips.svelte';
-  import { tipsToggle, docsToggle } from '../../playgroundStore';
-  import DocsModal from '../../repl/shortcuts/DocsModal.svelte';
-
-  let { user_name } = userInfoStore;
-
-  const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
-  const svelteUrl = `https://unpkg.com/svelte@3`;
-
-  let repl = null;
-
-  onMount(() =>
-    repl.set({
-      components: [
-        {
-          name: 'App',
-          type: 'svelte',
-          source: ``,
-        },
-      ],
-    })
-  );
 </script>
 
-<!-- if there's a username, render the name in the playground? else just have playground? follow the svelvet font on the top left? -->
-{#if user_name}
-  <div
-    class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide"
-  >
-    {$user_name} PLAYGR<img src={black_logo} alt="Svelvet logo in black" />UND
-  </div>
-{:else}
-  <div
-    class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide"
-  >
-    {$user_name}PLAYGR<img src={black_logo} alt="Svelvet logo in black" />UND
-  </div>
-{/if}
-<!-- playground tips and tricks  -->
-<!-- {#if $tipsToggle === true}
-  <PlaygoundTips />
-{/if}
-{#if $docsToggle === true}
-  <DocsModal />
-{/if} -->
-
-<!-- REPL -->
 <div class="REPL-container">
   <!-- Replaced  repl with stackblitz until we can figure out the store  -->
   <!-- {#if browser}
     <Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
   {/if} -->
+
+  <p>
+    If you are using a non-chromium based browser, use this direct <a
+      href="https://stackblitz.com/edit/sveltejs-kit-template-default-wyqprd?file=src/routes/+layout.svelte"
+      style="color: blue">link</a
+    > instead
+  </p>
 
   <iframe
     src="https://stackblitz.com/edit/sveltejs-kit-template-default-wyqprd?embed=1&file=src/routes/+layout.svelte"
