@@ -6,16 +6,17 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: 'tests/setupTests.ts'
+    setupFiles: 'tests/setupTests.ts',
   },
   alias: {
-    $lib: '/src/lib'
+    $lib: '/src/lib',
+    $libOld: '/src/libOld',
   },
   plugins: [
     svelte({
       configFile: './svelte.config.js',
       hot: !process.env.VITEST,
-      compilerOptions: { dev: true }
-    })
-  ]
+      compilerOptions: { dev: true },
+    }),
+  ],
 });

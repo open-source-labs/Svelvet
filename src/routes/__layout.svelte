@@ -3,12 +3,9 @@
   import Footer from '../components/Footer.svelte';
   import TopNav from '../components/TopNav.svelte';
   import '../app.css';
-
-
-  
 </script>
 
-{#if $page.url.pathname === '/testingplayground'}
+{#if $page.url.pathname === '/testingplayground' || $page.url.pathname === '/testingplayground2'}
   <slot />
 {:else}
   <div class="">
@@ -18,4 +15,4 @@
     <slot />
   </div>
   <Footer />
-  {/if}
+{/if}

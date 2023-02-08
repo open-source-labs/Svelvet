@@ -26,7 +26,13 @@
     ['Importing & Exporting Diagrams', 'importDiagrams'],
     ['Diagram Boundary', 'boundary'],
     ['Interactive Editable Nodes', 'editNodes'],
-    ['Deletable Nodes', 'delete']
+    ['Deletable Nodes', 'delete'],
+    ['Resizable Nodes', 'ResizableNodes'],
+    ['Dynamic Anchors', 'DynamicAnchor'],
+    ['Custom Anchor Position', 'CustomAnchorPosition'],
+    ['Adaptive Anchors', 'AdaptiveAnchors'],
+    ['Interactive Editable Edges', 'editEdge'],
+    ['Unfold and Collapse', 'Unfold-collapse']
   ];
 
   // const communityLinks = [

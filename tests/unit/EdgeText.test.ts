@@ -1,14 +1,18 @@
-import EdgeText from '$lib/Edges/EdgeText.svelte';
+import EdgeText from '$lib/edges/views/Edges/EdgeText.svelte';
 import { render, screen, cleanup } from '@testing-library/svelte';
+
+//Should clean up after each test
+afterEach(() => cleanup());
 
 beforeEach(() => {
   const mockEdgeTextProps = {
     centerX: 100,
     centerY: 150,
-    label: 'edge text test'
+    label: 'edge text test',
   };
   render(EdgeText, { props: { edgeTextProps: mockEdgeTextProps } });
 });
+
 
 describe('edgeText label', () => {
   test('should render the label text', () => {

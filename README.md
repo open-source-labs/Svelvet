@@ -22,6 +22,22 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details><summary>v6.0.0</summary>
+<ul>
+  <li>Added adaptive anchors. Anchors now automatically arrange themselves in an aesthetically pleasing way without user input. Adaptive anchors are now the default anchor mode.</li>
+  <li>Added dynamic anchors. Anchors now automatically shift position when nodes are moved to preserve aesthetics.</li>
+  <li>Added custom positioning of anchors. Users are able to specify custom positions of anchors using callbacks</li>
+  <li>Added accessibiilty features for edges. Edges now highlight on hover to make edge interactions easier.</li>
+  <li>Added functionality to resize nodes by dragging their bottom-right corner</li>
+  <li>Added custom classes for edges to allow for uniform styling</li>
+  <li>Added click event for edges that execute a user-defined callback</li>
+  <li>Added functionality to edit edges by right-clicking on a node to bring up a modal</li>
+  <li>Added feature to expand and collapse tree nodes. 
+  <li>Updated documentation page on website to include new features</li>
+  <li>Updated home page to include newest collaborators</li>
+  <li>Solved github issue #s: </li>
+</ul>
+</details>
 
 <details><summary>v5.0.0</summary>
 <ul>
@@ -189,6 +205,10 @@ npm run cypress:open
 - Taylor Alan • [LinkedIn](https://www.linkedin.com/in/taylor-alan-026a49226/) • [Github](https://github.com/taylien96)
 - Timmy Lem • [LinkedIn](https://www.linkedin.com/in/timmy-lem/) • [Github](https://github.com/timmylem01)
 - Tony Lim • [LinkedIn](https://www.linkedin.com/in/tonylim467/) • [Github](https://github.com/tonyy467)
+- Ernesto Gonzalez • [LinkedIn](www.linkedin.com/in/ernesto-gonzalez123) • [Github](https://github.com/ErnestoGonza)
+- Michael Chiang • [LinkedIn](https://www.linkedin.com/in/michael-chiang-84509025b/) • [Github](https://github.com/michael-chiang-dev5)
+- Rachel He • [LinkedIn](https://www.linkedin.com/in/rachel-he-8200563b/) • [Github](https://github.com/rachelheplus)
+- Horacio Vallejo • [LinkedIn](https://www.linkedin.com/in/horacio-vallejo-100643187/) • [Github](https://github.com/horaciovallejo)
 
 ## Forking the Repository
 
@@ -202,12 +222,12 @@ Once that is done you should be able to render the website locally on localhost:
 
 ## How to Contribute
 
+Read `src/lib/doc/README.md` for suggestions on how to get started!
+
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
 - Premade node menu with drag & drop abilities
-- Select and Delete a specific edge
-- Rotating and resizing of nodes
-- Expandable and collapsible parent nodes that can hide/show their children nodes
+- Rotating of nodes
 - Add documentation/video tutorial on how to set up a Svelvet demo
 - Custom error handling
 - Increase test coverage for scalability
