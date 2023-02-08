@@ -1,3 +1,7 @@
+# CHANGELOG
+
+This article documents the changes from Svelvet5 to Svelvet6. It is for internal use.
+
 ## custom-nodes
 
 https://www.svelvet.io/docs/custom-nodes/
