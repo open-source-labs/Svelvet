@@ -21,4 +21,4 @@ This command will create documentation in root folder `./docs`.
 
 ## Testing npm package
 
-- install locally with `npm install svelvet-lime@latest -f`. Note that if you have a previously installed version of svelvet, you must force a re-install otherwise you will be using an outdated npm package.
+- install locally with `npm install svelvet-lime@latest -f`, where svelvet-lime is replaced with whatever you named your package. Note that if you have a previously installed version of svelvet, you must force a re-install otherwise you will be using an outdated npm package.

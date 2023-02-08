@@ -23,7 +23,7 @@ Too Long Didn't Read: The main takeaway can be summed up as: make the Svelvet st
 
 ### A longer explanation
 
-The store holds Svelvet's internal state. We urge future developers to structure the store as a relational object rather than an unstructured object. To give a simpler analogy, if Svelvet was a full-stack app with a backend and database, you should use a postgreSQL instead of mongoDB to store the internal state of Svelvet because nodes/edges are inherently relational. We give an example of a bad design pattern and a good design pattern below.
+The store holds Svelvet's internal state. We urge future developers to structure the store as a relational object rather than an unstructured object. To give an analogy, if Svelvet was a full-stack app with a backend and database, you should use a postgreSQL instead of mongoDB to store the internal state of Svelvet because nodes/edges are inherently relational. We give an example of a bad design pattern and a good design pattern below.
 
 Suppose you want to implement a "resizableNodes" feature, where users can resize nodes by dragging a node corner. One (bad) way to do this is by could do this by hacking in an extra div on the Node component representing a draggable control point, then hacking in a "resizeNode" method on the Node object so that when the control point is dragged the node is resized. While it may be easier to throw everything on an unstructured Node object, this is bad for modularity. As more and more features get added in, the Node object becomes bloated, difficult to read, and difficult to debug.
 
