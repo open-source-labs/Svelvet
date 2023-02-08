@@ -6,11 +6,6 @@
 </script>
 
 <div class="REPL-container">
-  <!-- Replaced  repl with stackblitz until we can figure out the store  -->
-  <!-- {#if browser}
-    <Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
-  {/if} -->
-
   <p>
     If you are using a non-chromium based browser, use this direct <a
       href="https://stackblitz.com/edit/sveltejs-kit-template-default-wyqprd?file=src/routes/+layout.svelte"
@@ -32,28 +27,10 @@
   @media screen and (max-width: 539px) {
     .REPL-container {
       display: block;
-      /* margin: 2em auto 2em; */
-      /* position: absolute; */
-      /* width: 80%; */
-      /* height: 80%; */
       inline-size: 100%;
       block-size: 50em;
       margin-left: 0.25em;
       margin-right: 0.25em;
-
-      /* inline-size: 800px;
-      block-size: 800px; */
-    }
-    .user-welcome {
-      font-size: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 0.25em;
-    }
-    .user-welcome img {
-      display: inline-block;
-      height: 1.85rem;
     }
   }
 
@@ -61,23 +38,8 @@
     .REPL-container {
       display: block;
       margin: 2em auto 2em;
-      /* position: absolute; */
-      /* width: 80%; */
-      /* height: 80%; */
       inline-size: 80%;
       block-size: 50em;
-
-      /* inline-size: 800px;
-      block-size: 800px; */
-    }
-    .user-welcome {
-      display: flex;
-      justify-content: flex-end;
-      padding: 1em 1em 1em;
-      padding-right: 2em;
-    }
-    .user-welcome img {
-      height: 1.85rem;
     }
   }
 </style>
