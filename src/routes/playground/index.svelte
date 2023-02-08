@@ -1,5 +1,4 @@
 <script>
-
   // REPL
   import { onMount } from 'svelte';
   import { browser } from '$app/env';
@@ -7,9 +6,9 @@
   import black_logo from '../../assets/Logo 1 black.svg';
   import Repl from '../../repl';
   import PlaygoundTips from '../../repl/shortcuts/PlaygoundTips.svelte';
-  import {tipsToggle, docsToggle} from '../../playgroundStore';
+  import { tipsToggle, docsToggle } from '../../playgroundStore';
   import DocsModal from '../../repl/shortcuts/DocsModal.svelte';
-  
+
   let { user_name } = userInfoStore;
 
   const rollupUrl = `https://unpkg.com/rollup@1/dist/rollup.browser.js`;
@@ -23,43 +22,53 @@
         {
           name: 'App',
           type: 'svelte',
-          source: ``
-        }
-      ]
+          source: ``,
+        },
+      ],
     })
   );
 </script>
 
 <!-- if there's a username, render the name in the playground? else just have playground? follow the svelvet font on the top left? -->
 {#if user_name}
-  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide">
+  <div
+    class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide"
+  >
     {$user_name} PLAYGR<img src={black_logo} alt="Svelvet logo in black" />UND
   </div>
 {:else}
-  <div class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide">
+  <div
+    class="user-welcome text-3xl text-gray-700 font-nunito font-medium tracking-wide"
+  >
     {$user_name}PLAYGR<img src={black_logo} alt="Svelvet logo in black" />UND
   </div>
 {/if}
 <!-- playground tips and tricks  -->
-{#if ($tipsToggle === true)}
+<!-- {#if $tipsToggle === true}
   <PlaygoundTips />
 {/if}
-{#if ($docsToggle === true)}
-<DocsModal />
-{/if}
+{#if $docsToggle === true}
+  <DocsModal />
+{/if} -->
 
 <!-- REPL -->
-<!-- <div class="REPL-container" style="inline-size: 400px; block-size: 400px;"> -->
 <div class="REPL-container">
-  {#if browser}
+  <!-- Replaced  repl with stackblitz until we can figure out the store  -->
+  <!-- {#if browser}
     <Repl {rollupUrl} {svelteUrl} embedded relaxed bind:this={repl} />
-  {/if}
+  {/if} -->
+
+  <iframe
+    src="https://stackblitz.com/edit/sveltejs-kit-template-default-wyqprd?embed=1&file=src/routes/+layout.svelte"
+    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+    title="Custom Svelte Components"
+    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  />
 </div>
+
 <!-- <meta http-equiv="refresh" content="15"> -->
-
 <style>
-
-
   @media screen and (max-width: 539px) {
     .REPL-container {
       display: block;
