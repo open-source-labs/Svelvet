@@ -30,7 +30,7 @@
 <p class="text-gray-600">
   See the Stackblitz below for the implementation!
 </p>
-<iframe src="https://stackblitz.com/edit/sveltejs-kit-template-default-w7fvtb?embed=1&file=src/routes/+page.svelte"
+<iframe src="https://stackblitz.com/edit/svelvet6-custom-anchors?embed=1&file=src/routes/+page.svelte"
   style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
   title="jolly-tess-p8vxf9"
   allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
