@@ -2,7 +2,7 @@ import { rightCb, leftCb, topCb, bottomCb } from './anchorCbUser'; // these are 
 import type { AnchorCbType } from '../../edges/types/types';
 import type { StoreType } from '../../store/types/types';
 
-import { getPotentialAnchorById } from '../../store/controllers/storeApi';
+import { getPotentialAnchorById } from '../../interactiveNodes/controllers/util';
 
 import { getAnchors } from './util';
 import { getNodeById } from '../../nodes/controllers/util';

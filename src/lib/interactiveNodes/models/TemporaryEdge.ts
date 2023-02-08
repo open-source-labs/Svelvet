@@ -5,9 +5,8 @@ import {
   findStore,
   createEdgeAndAnchors,
   createNode,
-  getPotentialAnchorById,
 } from '../../store/controllers/storeApi';
-
+import { getPotentialAnchorById } from '../controllers/util';
 import { getNodeById } from '../..//nodes/controllers/util';
 
 export class TemporaryEdge implements TemporaryEdgeType {

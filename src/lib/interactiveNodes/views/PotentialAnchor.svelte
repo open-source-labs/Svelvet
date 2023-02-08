@@ -1,11 +1,8 @@
 <script lang="ts">
-  import {
-    findStore,
-    getPotentialAnchorById,
-  } from '../../store/controllers/storeApi';
+  import { findStore } from '../../store/controllers/storeApi';
   import { TemporaryEdge } from '../models/TemporaryEdge';
   import { writable, derived, get, readable } from 'svelte/store';
-
+  import { getPotentialAnchorById } from '../controllers/util';
   import type {
     NodeType,
     EdgeType,
