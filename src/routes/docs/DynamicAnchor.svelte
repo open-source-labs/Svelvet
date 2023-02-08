@@ -1,5 +1,4 @@
 <script>
-  import rachel from '../../assets/profiles/rachel.png';
   import DynamicAnchor from '../../assets/dynamicAnchorDemo.gif';
 </script>
 
