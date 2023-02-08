@@ -30,15 +30,20 @@
     edgeToggle,
     nodeToggle,
     advancedEdgeToggle,
-    advancedNodeToggle
+    advancedNodeToggle,
   } from '../playgroundStore';
   import NodeModal from './Output/NodeModal.svelte';
   import { onMount, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
   import Message from './Message.svelte';
-  import { addCodeToDB, getCodeFromDB, updateCodeInDB, deleteCodeFromDB } from '../supabase-db';
+  import {
+    addCodeToDB,
+    getCodeFromDB,
+    updateCodeInDB,
+    deleteCodeFromDB,
+  } from '../supabase-db';
   import { userInfoStore } from '../authStoreTs';
-  import {clickOutside} from './shortcuts/clickoutside'
+  import { clickOutside } from './shortcuts/clickoutside';
 
   const dispatch = createEventDispatcher();
 
@@ -109,7 +114,7 @@
   export function markText({ from, to }) {
     if (editor)
       editor.markText(editor.posFromIndex(from), editor.posFromIndex(to), {
-        className: 'mark-text'
+        className: 'mark-text',
       });
   }
 
@@ -132,7 +137,10 @@
     await copyToClipboard();
   }
 
-  export async function getCodeEditorValue(id: number, diagramName: string): Promise<void> {
+  export async function getCodeEditorValue(
+    id: number,
+    diagramName: string
+  ): Promise<void> {
     const codeToSave = editor.getValue();
     let found = false;
 
@@ -154,7 +162,9 @@
       editor.setValue('');
       alert('Diagram saved to database successfully!');
     } else if (!diagramName) {
-      alert('Please provide a name for your diagram before attempting to save.');
+      alert(
+        'Please provide a name for your diagram before attempting to save.'
+      );
     } else if (!found) {
       alert(
         'You have reached the limit in terms of how many diagrams you can store. Please delete one to save a new diagram.'
@@ -184,19 +194,19 @@
   const modes = {
     js: {
       name: 'javascript',
-      json: false
+      json: false,
     },
     json: {
       name: 'javascript',
-      json: true
+      json: true,
     },
     svelte: {
       name: 'handlebars',
-      base: 'text/html'
+      base: 'text/html',
     },
     md: {
-      name: 'markdown'
-    }
+      name: 'markdown',
+    },
   };
 
   const refs = {};
@@ -222,7 +232,7 @@
         { line, ch },
         { line, ch: ch + 1 },
         {
-          className: 'error-loc'
+          className: 'error-loc',
         }
       );
 
@@ -258,7 +268,7 @@
           editor.setValue(
             code ||
               `<script>
-  import Svelvet from 'svelvet';
+  import Svelvet from 'svelvetrabbits';
 	const initialNodes = [
 	  {
 		id: 1,
@@ -357,7 +367,7 @@
       tabSize: 2,
       value: '',
       mode: modes[mode] || {
-        name: mode
+        name: mode,
       },
       readOnly: readonly,
       autoCloseBrackets: true,
@@ -373,11 +383,11 @@
           cm.foldCode(cm.getCursor());
         },
         // allow escaping the CodeMirror with Esc Tab
-        'Esc Tab': false
+        'Esc Tab': false,
       }),
       foldGutter: true,
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      theme
+      theme,
     };
 
     if (!tab) {
@@ -413,23 +423,19 @@
   function sleep(ms) {
     return new Promise((fulfil) => setTimeout(fulfil, ms));
   }
-//   let newNode = `{
-// id: ${$idNumber},
-//  position: { x:${$positionX}, y:${$positionY}},
-//  data: { label: "${$data}" },
-//  width: ${$width},
-//  height: ${$height},
-//  borderColor: "${$borderColor}",
-//  borderRadius: ${$borderRadius},
-//  bgColor: "${$bgColor}",
-//  textColor: "${$textColor}"
-// },`;
+  //   let newNode = `{
+  // id: ${$idNumber},
+  //  position: { x:${$positionX}, y:${$positionY}},
+  //  data: { label: "${$data}" },
+  //  width: ${$width},
+  //  height: ${$height},
+  //  borderColor: "${$borderColor}",
+  //  borderRadius: ${$borderRadius},
+  //  bgColor: "${$bgColor}",
+  //  textColor: "${$textColor}"
+  // },`;
 
   $: if ($buildToggle === true) {
-
-
-
-    
     let newNode = `{
 id: ${$idNumber},
  position: { x:${$positionX}, y:${$positionY}},
@@ -445,35 +451,47 @@ id: ${$idNumber},
  clickCallback: node => console.log(node),
 },`;
 
-if($edgeToggle === true && $nodeToggle === false && $advancedNodeToggle === false) { newNode = ''
-}
-  let newEdge = `{ id: 'e${$source}-${$target}', source: ${$source}, target: ${$target}, label: '${$edgeLabel}', animate: ${$animate}, arrow: ${$arrow}, edgeColor: '${$edgeColor}', labelBgColor: '${$labelBgColor}', labelTextColor: '${$labelTextColor}', },`;
+    if (
+      $edgeToggle === true &&
+      $nodeToggle === false &&
+      $advancedNodeToggle === false
+    ) {
+      newNode = '';
+    }
+    let newEdge = `{ id: 'e${$source}-${$target}', source: ${$source}, target: ${$target}, label: '${$edgeLabel}', animate: ${$animate}, arrow: ${$arrow}, edgeColor: '${$edgeColor}', labelBgColor: '${$labelBgColor}', labelTextColor: '${$labelTextColor}', },`;
 
-    editor.setValue(code || $editStrP1 + newNode + $editStrP2 + newEdge + editStrP3);
-   $buildToggle = $nodeToggle = $edgeToggle = $advancedNodeToggle = $advancedEdgeToggle = false;
+    editor.setValue(
+      code || $editStrP1 + newNode + $editStrP2 + newEdge + editStrP3
+    );
+    $buildToggle =
+      $nodeToggle =
+      $edgeToggle =
+      $advancedNodeToggle =
+      $advancedEdgeToggle =
+        false;
 
-    $idNumber ++;
+    $idNumber++;
     $editStrP1 += newNode;
     $editStrP2 += newEdge;
     $positionX += 20;
     $positionY += 20;
     $source++;
     $target++;
-
   }
 </script>
+
 <!-- <div  use:clickOutside on:outclick={() => ($inputToggle = false)}> -->
-  {#if $inputToggle === true}
-  <NodeModal/>
-  {/if}
+{#if $inputToggle === true}
+  <NodeModal />
+{/if}
 <!-- </div> -->
 
 <div class="codemirror-container" bind:offsetWidth={w} bind:offsetHeight={h}>
   <textarea bind:this={refs.editor} readonly value={code} />
-  
+
   {#if !CodeMirror}
     <pre style="position: absolute; left: 0; top: 0">{code}</pre>
-   
+
     <div style="position: absolute; width: 100%; bottom: 0">
       <Message kind="info">loading editor...</Message>
     </div>
