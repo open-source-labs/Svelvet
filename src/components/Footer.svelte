@@ -51,7 +51,7 @@
       >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
       <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
-      <a target="_blank" href="https://twitter.com/Svelvet_OSLabs">Twitter</a>
+      <a target="_blank" href="https://twitter.com/SvelvetOSLabs">Twitter</a>
       <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a
       >
     </div>
