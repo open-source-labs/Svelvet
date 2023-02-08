@@ -17,10 +17,9 @@
   Position['Top'] = 'top';
   Position['Bottom'] = 'bottom';
 
-  import {
-    findStore,
-    getAnchorFromEdge,
-  } from '../../../store/controllers/storeApi';
+  import { findStore } from '../../../store/controllers/storeApi';
+  import { getAnchorFromEdge } from '../../../edges/controllers/util';
+
   function calculateControlOffset(distance, curvature) {
     if (distance >= 0) {
       return 0.5 * distance;

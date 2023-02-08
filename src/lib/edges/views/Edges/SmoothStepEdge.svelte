@@ -144,10 +144,8 @@
   export let borderRadius = 5;
   export let canvasId;
 
-  import {
-    findStore,
-    getAnchorFromEdge,
-  } from '../../../store/controllers/storeApi';
+  import { findStore } from '../../../store/controllers/storeApi';
+  import { getAnchorFromEdge } from '../../../edges/controllers/util';
 
   let params;
   $: {

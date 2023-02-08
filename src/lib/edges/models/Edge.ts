@@ -1,15 +1,8 @@
-import {
-  getAnchors,
-  findStore,
-  getAnchorFromEdge,
-} from '../../store/controllers/storeApi';
-import type {
-  EdgeType,
-  UserEdgeType,
-} from '../../store/types/types';
+import { findStore } from '../../store/controllers/storeApi';
+import type { EdgeType, UserEdgeType } from '../../store/types/types';
 
 import { stores } from '../../store/models/store';
-
+import { getAnchors, getAnchorFromEdge } from '../../edges/controllers/util';
 /**
  * Class Edge that implements EdgeType.
  * @param id The id of the Edge

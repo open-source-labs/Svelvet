@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { findStore, getEdgeById } from '../../../store/controllers/storeApi';
+  import { findStore } from '../../../store/controllers/storeApi';
+  import { getEdgeById } from '../../../edges/controllers/util';
   import EdgeText from '../Edges/EdgeText.svelte';
   import { get } from 'svelte/store';
   import type { EdgeProps } from '../Edges/types';

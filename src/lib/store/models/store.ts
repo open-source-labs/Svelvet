@@ -1,11 +1,4 @@
-import type {
-  NodeType,
-  EdgeType,
-  StoreType,
-  ResizeNodeType,
-} from '../types/types';
-import { writable, derived, get, readable } from 'svelte/store';
-import { getNodes, getAnchors, findStore } from '../controllers/storeApi';
+import type { StoreType } from '../types/types';
 
 /**
   `store` is a dictionary of Svelvet stores.

@@ -27,14 +27,8 @@ import { Anchor } from '../../edges/models/Anchor';
 import { Node } from '../../nodes/models/Node';
 import { Edge } from '../../edges/models/Edge';
 import { writable, derived, get, readable } from 'svelte/store';
-import {
-  getNodes,
-  getAnchors,
-  getNodeById,
-  getAnchorById,
-  getEdgeById,
-} from './storeApi';
 import { PotentialAnchor } from '../../interactiveNodes/models/PotentialAnchor';
+import { getEdgeById, getAnchors } from '$lib/edges/controllers/util';
 
 /**
  * Creates resize node on the bottom right corner of the targeted Node

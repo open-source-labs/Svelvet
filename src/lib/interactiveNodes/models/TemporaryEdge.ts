@@ -1,15 +1,12 @@
 // table for the "connecting edge" feature
-import type {
-  TemporaryEdgeType,
-} from '../../store/types/types';
+import type { TemporaryEdgeType } from '../../store/types/types';
+import { getPotentialAnchorById } from '../controllers/util';
+import { findStore } from '../../store/controllers/storeApi';
+import { createEdgeAndAnchors } from '../controllers/createEdgeAndAnchors';
 
-import {
-  findStore,
-  createEdgeAndAnchors,
-  createNode,
-  getPotentialAnchorById,
-  getNodeById,
-} from '../../store/controllers/storeApi';
+import { createNode } from '../controllers/createNode';
+
+import { getNodeById } from '../..//nodes/controllers/util';
 
 export class TemporaryEdge implements TemporaryEdgeType {
   constructor(
