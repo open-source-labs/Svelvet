@@ -1,7 +1,7 @@
 /** this is where we create our node store */
 import type { NodeType } from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
-import { getPotentialAnchors } from '../../store/controllers/storeApi';
+import { getPotentialAnchors } from '../../interactiveNodes/controllers/util';
 import { stores } from '../../store/models/store';
 import { getAnchors, getEdgeById } from '../../edges/controllers/util';
 import { getResizeNodes } from '../../resizableNodes/controllers/util';

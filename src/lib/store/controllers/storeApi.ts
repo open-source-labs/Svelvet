@@ -32,28 +32,19 @@ populateSvelvetStoreFromUserInput(canvasId, nodes, edges)
 
 
 */
-import { getAnchors, getEdgeById } from '../../edges/controllers/util';
-import { getNodeById } from '../../nodes/controllers/util';
+import { getAnchors } from '../../edges/controllers/util';
 
 import { v4 as uuidv4 } from 'uuid';
-import {
-  dynamicCbCreator,
-  fixedCbCreator,
-  potentialAnchorCbCreator,
-} from '../../edges/controllers/anchorCbDev';
+import { dynamicCbCreator } from '../../edges/controllers/anchorCbDev';
 import { stores } from '../models/store';
-import { writable, derived, get, readable } from 'svelte/store';
-import type { AnchorCbType, AnchorType } from '../../edges/types/types';
+import { writable, get } from 'svelte/store';
+import { getPotentialAnchors } from '../../interactiveNodes/controllers/util';
 
 import type {
   NodeType,
-  EdgeType,
   StoreType,
   UserNodeType,
   UserEdgeType,
-  TemporaryEdgeType,
-  ResizeNodeType,
-  PotentialAnchorType,
 } from '../types/types';
 import { Anchor } from '../../edges/models/Anchor';
 import { Node } from '../../nodes/models/Node';
@@ -66,7 +57,6 @@ import {
   populatePotentialAnchorStore,
   createPotentialAnchor,
 } from './util';
-import { TemporaryEdge } from '../../interactiveNodes/models/TemporaryEdge';
 import { populateCollapsibleStore } from '../../collapsible/controllers/util';
 import {
   rightCb,
@@ -74,36 +64,6 @@ import {
   bottomCb,
   leftCb,
 } from '$lib/edges/controllers/anchorCbUser';
-
-/**
- * Finds all potentialAnchors that matches the conditions specified in the filter parameter from a Svelvet store and returns these potential anchors in an array
- *
- * @param store The Svelvet store containing the state of a Svelvet component
- * @param filter An object to specify conditions.
- * @returns An array of potential anchors that matches the conditions specified in filter parameter
- */
-export function getPotentialAnchors(
-  store: StoreType,
-  filter?: { [key: string]: any }
-) {
-  let potentialAnchorsArr = Object.values(get(store.potentialAnchorsStore));
-  // filter the array for elements that match filter
-  if (filter !== undefined) {
-    potentialAnchorsArr = potentialAnchorsArr.filter((potentialAnchor) => {
-      for (let filterKey in filter) {
-        const filterValue = filter[filterKey];
-        if (
-          potentialAnchor[filterKey as keyof PotentialAnchorType] !==
-          filterValue
-        )
-          return false;
-      }
-      return true;
-    });
-  }
-  // return list of anchors
-  return potentialAnchorsArr;
-}
 
 /**
  * getAnchorById will look for the targeted Anchor that has the same id in the Svelvet component store.
