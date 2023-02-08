@@ -10,9 +10,8 @@ import { Collapsible } from '../models/Collapsible';
 import { v4 as uuidv4 } from 'uuid';
 import type { CollapsibleType } from '../types/types';
 import { get } from 'svelte/store';
-import { getAnchorById } from '../../store/controllers/storeApi';
 import type { AnchorType } from '../../edges/types/types';
-
+import { getAnchorById } from '../../edges/controllers/util';
 import { getAnchors } from '../../edges/controllers/util';
 
 /*

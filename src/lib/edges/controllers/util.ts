@@ -67,3 +67,16 @@ export function getEdgeById(store: StoreType, id: string) {
   if (edge === undefined) throw 'edge not found';
   return edge;
 }
+
+/**
+ * getAnchorById will look for the targeted Anchor that has the same id in the Svelvet component store.
+ *
+ * @param store The Svelvet store containing the state of a Svelvet component
+ * @param id The id of the targeted Anchor
+ * @returns The target Anchor object in store.anchorsStore
+ */
+export function getAnchorById(store: StoreType, id: string) {
+  const anchorsStore = get(store.anchorsStore);
+  const anchor = anchorsStore[id];
+  return anchor;
+}

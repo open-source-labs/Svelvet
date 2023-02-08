@@ -1,5 +1,6 @@
 import type { StoreType, PotentialAnchorType } from '../../store/types/types';
 import { get } from 'svelte/store';
+import type { NodeType } from '../../store/types/types';
 
 /**
  * getPotentialAnchorById will look for the targeted potential Anchor that has the same id provided in the Svelvet component store.
@@ -43,4 +44,32 @@ export function getPotentialAnchors(
   }
   // return list of anchors
   return potentialAnchorsArr;
+}
+
+/**
+ * Finds all Nodes that matches the conditions specified in the filter parameter from a Svelvet store and returns these Nodes in an array
+ *
+ * @param store The Svelvet store containing the state of a Svelvet component
+ * @param filter An object to specify conditions.
+ * @returns An array of Node objects that matches the conditions specified in filter parameter. This array is non-reactive (ie, you cannot use information from this array to force a re-render of a Svelte component)
+ */
+export function getNodes(
+  store: StoreType,
+  filter?: { [key: string]: any }
+): NodeType[] {
+  let nodes = Object.values(get(store.nodesStore));
+  // filter the array of anchors for elements that match filter
+  // Example: if filter = {sourceOrTarget: 'source', positionX: 35} then we will
+  //          return all anchors with sourceOrTarget = source AND poxitionX = 35
+  if (filter !== undefined) {
+    nodes = nodes.filter((node) => {
+      for (let filterKey in filter) {
+        const filterValue = filter[filterKey];
+        if (node[filterKey as keyof NodeType] !== filterValue) return false;
+      }
+      return true;
+    });
+  }
+  // return list of nodes
+  return nodes;
 }
