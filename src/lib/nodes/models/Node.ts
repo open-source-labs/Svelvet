@@ -1,13 +1,10 @@
 /** this is where we create our node store */
 import type { NodeType } from '../../store/types/types';
 import { writable, derived, get, readable } from 'svelte/store';
-import {
-  getResizeNodes,
-  getPotentialAnchors,
-} from '../../store/controllers/storeApi';
+import { getPotentialAnchors } from '../../store/controllers/storeApi';
 import { stores } from '../../store/models/store';
-import { getAnchors, getEdgeById } from '../..//edges/controllers/util';
-
+import { getAnchors, getEdgeById } from '../../edges/controllers/util';
+import { getResizeNodes } from '../../resizableNodes/controllers/util';
 /** A Node class that implements NodeType interface
  * @param {string} id The id of the Node
  * @param {number} positionX The X-axis position of the Node (left top corner of the Node)
