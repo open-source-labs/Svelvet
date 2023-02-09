@@ -1,14 +1,12 @@
 <script>
-  import { findStore } from '../store/controllers/storeApi';
   import { onMount, createEventDispatcher } from 'svelte';
   import GreyNode from './GreyNodeBoundary.svelte';
 
   export let key;
   export let boundary;
   export let d3Translate;
-
-  const svelvetStore = findStore(key);
-  const { nodesStore, heightStore, widthStore } = svelvetStore;
+  export let store;
+  const { nodesStore, heightStore, widthStore } = store; // for whatever reason, the REPL does not allow Minimap in particular to use findStoreById. We have to pass in the store directly
   const dispatch = createEventDispatcher(); // dispatch creates a message to be sent
   let mapHeight = 100;
   let mapWidth = 100;
