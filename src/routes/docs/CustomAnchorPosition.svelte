@@ -16,18 +16,6 @@
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Custom Anchor Position</h3>
 <p class="text-gray-600">
-  See the Code Sandbox below for the implementation!
-</p>
-<iframe src="https://codesandbox.io/embed/jolly-tess-p8vxf9?fontsize=14&hidenavigation=1&theme=dark"
-  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="jolly-tess-p8vxf9"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-></iframe>
-
-<br />
-
-<p class="text-gray-600">
   See the Stackblitz below for the implementation!
 </p>
 <iframe src="https://stackblitz.com/edit/svelvet6-custom-anchors?embed=1&file=src/routes/+page.svelte"
@@ -36,3 +24,18 @@
   allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe> 
+
+
+<!--The iframe below is a Code Sandbox demo for the same feature. However, Code Sandbox is having issue during Svelvet 6 launch time. That's why we switch to Stackblitz instead-->
+
+<!-- <p class="text-gray-600">
+  See the Code Sandbox below for the implementation!
+</p>
+<iframe src="https://codesandbox.io/embed/jolly-tess-p8vxf9?fontsize=14&hidenavigation=1&theme=dark"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="jolly-tess-p8vxf9"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe> -->
+
+<!-- <br /> -->
