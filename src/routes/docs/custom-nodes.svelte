@@ -84,18 +84,9 @@
 ></iframe>
  -->
 
-<iframe
-  src="https://stackblitz.com/edit/customnodes?embed=1&file=src/routes/+layout.svelte"
-  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="adaptive-anchors-demo"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/>
-
-<p>
-  StackBlitz embeds do not work on non-Chromium browsers. If you are using
-  Firefox, use this direct <a
+<p class="text-gray-600">
+  Click <a
     href="https://stackblitz.com/edit/customnodes?file=src/routes/+layout.svelte"
-    style="color: blue">link</a
-  > instead
+    style="color: blue">here</a
+  > for a sandbox!
 </p>
