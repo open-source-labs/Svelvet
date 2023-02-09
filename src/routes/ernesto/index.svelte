@@ -114,6 +114,7 @@
   width={900}
   height={900}
   background
+  locked={true}
   editable={true}
 />
 
@@ -123,6 +124,7 @@
   width={900}
   height={900}
   background
+  locked={false}
   editable={true}
 />
 
