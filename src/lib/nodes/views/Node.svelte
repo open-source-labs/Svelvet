@@ -31,6 +31,7 @@
     nodeSelected,
     resizeNodesStore,
     editableOption,
+    lockedOption
   } = store;
 
   let isSelected = false;
@@ -140,6 +141,8 @@
       });
     }
   };
+
+  console.log('what is lockedOption?', $lockedOption)
 </script>
 
 <svelte:window
@@ -170,7 +173,8 @@
     background-color: {node.bgColor};
     border-color: {node.borderColor};
     border-radius: {node.borderRadius}px;
-    color: {node.textColor};"
+    color: {node.textColor};
+    cursor: {$lockedOption ? "default" : "grab"}"
   id="svelvet-{node.id}"
 >
   <!-- This executes if node.image is present without node.label -->
@@ -191,7 +195,6 @@
     position: absolute;
     display: grid;
     user-select: none;
-    cursor: move;
     justify-content: center;
     overscroll-behavior: auto;
     align-items: center;

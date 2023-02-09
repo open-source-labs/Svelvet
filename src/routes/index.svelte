@@ -141,6 +141,7 @@
 <svelte:head>
   <title>Svelvet</title>
 </svelte:head>
+
 <div class="css-blurry-gradient" />
 
 <div

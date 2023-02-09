@@ -1,5 +1,5 @@
 <script>
-  import DynamicAnchor from '../../assets/dynamicAnchorDemo.gif';
+  import DynamicAnchor from '../../assets/features/dynamicAnchorDemo.gif';
 </script>
 
 <div>
