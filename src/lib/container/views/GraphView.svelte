@@ -201,9 +201,15 @@
 <!-- This is the container that holds GraphView and we have disabled right click functionality to prevent a sticking behavior -->
 <div id="graphview-container">
   {#if minimap && boundary}
-    <MinimapBoundary on:message={miniMapClick} {key} {boundary} {d3Translate} />
+    <MinimapBoundary
+      on:message={miniMapClick}
+      {key}
+      {boundary}
+      {d3Translate}
+      {store}
+    />
   {:else if minimap}
-    <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} />
+    <MinimapBoundless on:message={miniMapClick} {key} {d3Translate} {store} />
   {/if}
 
   <div class={`Nodes Nodes-${canvasId}`} on:contextmenu|preventDefault>

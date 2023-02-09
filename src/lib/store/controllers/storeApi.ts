@@ -117,9 +117,10 @@ export function populateSvelvetStoreFromUserInput(
   populateEdgesStore(store, edges, canvasId);
   //populate resize Store
   populateResizeNodeStore(store, nodes, canvasId);
-  //populate potential anchors if "node create" feature is turend on
+  //populate potential anchors if "node create" feature is turned on
   if (get(store.nodeCreate))
     populatePotentialAnchorStore(store, nodes, canvasId);
+  // populatate collapsible objects if "collapsible" feature is turned on
   if (get(store.collapsibleOption))
     populateCollapsibleStore(store, nodes, edges, canvasId);
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { v4 as uuidv4 } from 'uuid';
+  const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
   import type {
     NodeType,
     EdgeType,
@@ -7,7 +7,7 @@
     UserNodeType,
     UserEdgeType,
   } from '../../store/types/types';
-  
+
   import {
     createStoreEmpty,
     populateSvelvetStoreFromUserInput,
@@ -29,7 +29,7 @@
   export let height: number = 600;
   export let background: boolean = true;
   export let movement: boolean = true;
-  export let canvasId: string = uuidv4();
+  export let canvasId: string = pkStringGenerator();
   export let snap: boolean = false;
   export let snapTo: number = 30;
   export let nodeCreate: boolean = false;
