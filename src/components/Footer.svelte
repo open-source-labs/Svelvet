@@ -1,13 +1,19 @@
-<footer class="hidden md:flex flex-col pt-10 pb-5 border-t text-sm" style="display:block">
+<footer
+  class="hidden md:flex flex-col pt-10 pb-5 border-t text-sm"
+  style="display:block"
+>
   <div class="hidden md:flex justify-around text-sm px-16">
     <div class="flex flex-col space-y-3 text-gray-600">
-      <a href="/docs/installation" class="text-gray-700 font-semibold">Getting Started</a>
+      <a href="/docs/installation" class="text-gray-700 font-semibold"
+        >Getting Started</a
+      >
       <a href="/docs/installation">Installation</a>
       <a href="/docs/basic-usage">Basic Usage</a>
       <a href="/docs/core-concepts">Core Concepts</a>
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
-      <a href="/docs/custom-nodes" class="text-gray-700 font-semibold">Guides</a>
+      <a href="/docs/custom-nodes" class="text-gray-700 font-semibold">Guides</a
+      >
       <a href="/docs/custom-nodes">Custom Nodes</a>
       <a href="/docs/custom-edges">Custom Edges</a>
       <a href="/docs/pan-and-zoom">Panning and Zooming</a>
@@ -24,8 +30,8 @@
       <a href="/docs/Node-Classes">Node Classes</a>
       <a href="/docs/importDiagrams">Importing & Exporting Diagrams</a>
       <a href="/docs/boundary">Diagram Boundary</a>
-      <a href="/docs/editNodes">Interactive Editable Nodes</a>
-      <a href="/docs/delete">Deletable Nodes</a>
+      <!-- <a href="/docs/editNodes">Interactive Editable Nodes</a> -->
+      <!-- <a href="/docs/delete">Deletable Nodes</a> -->
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
       <a href="/" class="text-gray-700 font-semibold">Community</a>
@@ -49,10 +55,17 @@
         href="https://medium.com/@efergus1/svelvet-5-0-a-community-driven-update-cfcc93e7b7a7"
         >Svelvet 5.0</a
       >
-      <a target="_blank" href="https://github.com/open-source-labs/Svelvet">GitHub</a>
-      <a target="_blank" href="https://www.linkedin.com/company/svelvet/">LinkedIn</a>
+      <a target="_blank" href="https://github.com/open-source-labs/Svelvet"
+        >GitHub</a
+      >
+      <a target="_blank" href="https://www.linkedin.com/company/svelvet/"
+        >LinkedIn</a
+      >
       <a target="_blank" href="https://twitter.com/SvelvetOSLabs">Twitter</a>
-      <a target="_blank" href="https://stackoverflow.com/questions/tagged/svelvet">Stack Overflow</a
+      <a
+        target="_blank"
+        href="https://stackoverflow.com/questions/tagged/svelvet"
+        >Stack Overflow</a
       >
     </div>
   </div>
@@ -60,7 +73,8 @@
     <div class="text-xs">
       &copy; 2022 Svelvet | <a
         target="_blank"
-        href="https://github.com/open-source-labs/Svelvet/blob/main/LICENSE">MIT License</a
+        href="https://github.com/open-source-labs/Svelvet/blob/main/LICENSE"
+        >MIT License</a
       >
     </div>
     <div class="text-xs">

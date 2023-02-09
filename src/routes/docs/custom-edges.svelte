@@ -68,18 +68,9 @@
 />
  -->
 
-<iframe
-  src="https://stackblitz.com/edit/sveltejs-kit-template-default-8sdfen?embed=1&file=src/routes/+layout.svelte"
-  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-  title="CSS-Backgrounds (forked)"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/>
-
-<p>
-  StackBlitz does not load on non-Chromium browsers. If you are using Firefox,
-  use this direct <a
-    href="https://stackblitz.com/edit/sveltejs-kit-template-default-8sdfen?file=src/routes/+layout.svelte"
-    style="color: blue">link</a
-  > instead
+<p class="text-gray-600">
+  Click <a
+    href="https://stackblitz.com/edit/custom-edges?file=README.md"
+    style="color: blue">here</a
+  > for a sandbox!
 </p>

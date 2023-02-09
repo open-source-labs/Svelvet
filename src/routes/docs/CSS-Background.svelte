@@ -1,4 +1,121 @@
 <script>
+  import Svelvet from 'svelvet-lime';
+
+  const initialNodes = [
+    {
+      id: 1,
+      position: { x: 250, y: 250 },
+      data: { label: 'Parent' },
+      width: 75,
+      height: 75,
+      bgColor: 'white',
+      borderRadius: 50,
+      borderColor: 'red',
+      childNodes: [2, 3, 4, 5, 6, 7],
+    },
+    {
+      id: 2,
+      position: { x: 100, y: 100 },
+      data: { label: 'borderColor' },
+      width: 150,
+      height: 40,
+      borderColor: 'red',
+      bgColor: 'white',
+    },
+    {
+      id: 3,
+      position: { x: 400, y: 100 },
+      data: { label: 'textColor' },
+      width: 150,
+      height: 40,
+      textColor: '#3F6FD6',
+      bgColor: 'white',
+    },
+    {
+      id: 4,
+      position: { x: 50, y: 300 },
+      data: { label: 'Danny Pink' },
+      width: 150,
+      height: 40,
+      textColor: 'white',
+      borderColor: 'transparent',
+      bgColor: '#FF9ABD',
+    },
+    {
+      id: 5,
+      position: { x: 500, y: 250 },
+      data: { label: 'width and height' },
+      width: 90,
+      height: 110,
+      bgColor: 'white',
+    },
+    {
+      id: 6,
+      position: { x: 500, y: 500 },
+      data: { label: 'borderRadius' },
+      width: 100,
+      height: 100,
+      bgColor: 'orange',
+      borderRadius: 30,
+      borderColor: 'blue',
+    },
+    {
+      id: 7,
+      position: { x: 50, y: 500 },
+      data: { label: 'clickCallback' },
+      width: 150,
+      height: 40,
+      bgColor: 'white',
+      childNodes: [8, 9],
+      clickCallback: (node) => console.log(node),
+    },
+    {
+      id: 8,
+      position: { x: 50, y: 575 },
+      data: { label: 'childNode1' },
+      width: 75,
+      height: 50,
+    },
+    {
+      id: 9,
+      position: { x: 150, y: 575 },
+      data: { label: 'childNode2' },
+      width: 100,
+      height: 50,
+    },
+  ];
+
+  const initialEdges = [
+    { id: 'e1-2', source: 1, target: 2, label: 'connection' },
+    { id: 'e2-3', source: 2, target: 3, label: 'label' },
+    {
+      id: 'e1-4',
+      source: 1,
+      target: 4,
+      label: 'box',
+      animate: true,
+      arrow: true,
+    },
+    { id: 'e2-5', source: 1, target: 5, animate: true },
+    { id: 'e1-6', source: 1, target: 6, arrow: true },
+    { id: 'e1-7', source: 1, target: 7, animate: true },
+    {
+      id: 'e7-8',
+      source: 7,
+      target: 8,
+      arrow: true,
+      animate: true,
+      label: 'child',
+    },
+    {
+      id: 'e7-9',
+      source: 7,
+      target: 9,
+      arrow: true,
+      animate: true,
+      label: 'child',
+    },
+  ];
 </script>
 
 <div>
@@ -13,8 +130,6 @@
     </p>
   </div>
 
-  <h3 class="text-xl font-semibold mt-12">Background Color</h3>
-
   <!-- 
 <iframe src="https://codesandbox.io/embed/css-backgrounds-forked-hky5i1?autoresize=1&fontsize=14&hidenavigation=1&module=%2FApp.svelte&theme=dark"
      style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
@@ -23,28 +138,24 @@
      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
  -->
-  <iframe
-    src="https://stackblitz.com/edit/sveltejs-kit-template-default-8sdfen?embed=1&file=src/routes/+layout.svelte"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="CSS-Backgrounds (forked)"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-  />
-
-  <p>
-    StackBlitz does not load on non-Chromium browsers. If you are using Firefox,
-    use this direct <a
+  <h3 class="text-xl font-semibold mt-12">CSS-Background</h3>
+  <br />
+  <p class="text-gray-600">
+    Click <a
       href="https://stackblitz.com/edit/sveltejs-kit-template-default-8sdfen?file=src/routes/+layout.svelte"
-      style="color: blue">link</a
-    > instead
+      style="color: blue">here</a
+    > for a sandbox, or test it out below!
   </p>
+  <br />
 
-  <div>
-    <p class="my-4 text-gray-600">
-      Look at the bottom with the Svelvet declaration and you'll see a property
-      called bgColor set equal to 'pink'. To make the background whatever CSS
-      color you want you merely need to just put in your new string whether it
-      be hexadecimal or string colors.
-    </p>
-  </div>
+  <Svelvet
+    nodes={initialNodes}
+    width={500}
+    height={500}
+    edges={initialEdges}
+    initialLocation={initialNodes[4].position}
+    initialZoom={2}
+    bgColor={'pink'}
+    background
+  />
 </div>

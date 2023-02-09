@@ -34,7 +34,8 @@
     <a
       id="home"
       href="/"
-      class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6">svelvet</a
+      class="text-3xl text-gray-700 font-nunito font-medium tracking-wide ml-2 mr-6"
+      >svelvet</a
     >
   </div>
   <button class="outline-none mobile-menu-button pl-8 " on:click={toggleMenu}>
@@ -50,7 +51,10 @@
   >
     <ul class="overflow-y-auto ">
       <li class:bg-rose-100={activeLink === '/'}>
-        <a on:click={toggleMenu} href="/" class="block py-4 px-12 font-medium text-gray-800">Home</a
+        <a
+          on:click={toggleMenu}
+          href="/"
+          class="block py-4 px-12 font-medium text-gray-800">Home</a
         >
       </li>
 
@@ -71,18 +75,24 @@
       {#if showGettingStarted}
         <ul transition:slide class="cursor-pointer bg-white">
           <li class:bg-rose-100={activeLink.includes('installation')}>
-            <a on:click={toggleMenu} href="/docs/installation" class="block py-4 px-12 shadow-inner"
-              >Installation</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/installation"
+              class="block py-4 px-12 shadow-inner">Installation</a
             >
           </li>
           <li class:bg-rose-100={activeLink.includes('basic-usage')}>
-            <a on:click={toggleMenu} href="/docs/basic-usage" class="block py-4 px-12"
-              >Basic Usage</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/basic-usage"
+              class="block py-4 px-12">Basic Usage</a
             >
           </li>
           <li class:bg-rose-100={activeLink.includes('core-concepts')}>
-            <a on:click={toggleMenu} href="/docs/core-concepts" class="block py-4 px-12"
-              >Core Concepts</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/core-concepts"
+              class="block py-4 px-12">Core Concepts</a
             >
           </li>
         </ul>
@@ -105,59 +115,121 @@
       {#if showGuides}
         <ul transition:slide class="cursor-pointer bg-white">
           <li class:bg-rose-100={activeLink.includes('custom-nodes')}>
-            <a on:click={toggleMenu} href="/docs/custom-nodes" class="block py-4 px-12 shadow-inner"
-              >Custom Nodes</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/custom-nodes"
+              class="block py-4 px-12 shadow-inner">Custom Nodes</a
             >
           </li>
           <li class:bg-rose-100={activeLink.includes('custom-edges')}>
-            <a on:click={toggleMenu} href="/docs/custom-edges" class="block py-4 px-12"
-              >Custom Edges</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/custom-edges"
+              class="block py-4 px-12">Custom Edges</a
             >
           </li>
           <li class:bg-rose-100={activeLink.includes('pan-and-zoom')}>
-            <a on:click={toggleMenu} href="/docs/pan-and-zoom" class="block py-4 px-12"
-              >Pan and Zoom</a
+            <a
+              on:click={toggleMenu}
+              href="/docs/pan-and-zoom"
+              class="block py-4 px-12">Pan and Zoom</a
             >
           </li>
           <li class:bg-rose-100={activeLink.includes('typescript')}>
-            <a on:click={toggleMenu} href="/docs/typescript" class="block py-4 px-12">TypeScript</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/typescript"
+              class="block py-4 px-12">TypeScript</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('testing')}>
-            <a on:click={toggleMenu} href="/docs/testing" class="block py-4 px-12">Testing</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/testing"
+              class="block py-4 px-12">Testing</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('snap-to-grid')}>
-            <a on:click={toggleMenu} href="/docs/snap-to-grid" class="block py-4 px-12">Snap-To-Grid</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/snap-to-grid"
+              class="block py-4 px-12">Snap-To-Grid</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('HTML-Docs')}>
-            <a on:click={toggleMenu} href="/docs/HTML-Docs" class="block py-4 px-12">HTML-Docs</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/HTML-Docs"
+              class="block py-4 px-12">HTML-Docs</a
+            >
           </li>
-          <li class:bg-rose-100={activeLink.includes('Interactive Node Linking & Creation')}>
-            <a on:click={toggleMenu} href="/docs/Interactive-Nodes" class="block py-4 px-12">Interactive Node Linking & Creation</a>
+          <li
+            class:bg-rose-100={activeLink.includes(
+              'Interactive Node Linking & Creation'
+            )}
+          >
+            <a
+              on:click={toggleMenu}
+              href="/docs/Interactive-Nodes"
+              class="block py-4 px-12">Interactive Node Linking & Creation</a
+            >
           </li>
-          <li class:bg-rose-100={activeLink.includes('Custom Svelte Components')}>
-            <a on:click={toggleMenu} href="/docs/Custom-Svelte" class="block py-4 px-12">Custom Svelte Components</a>
+          <li
+            class:bg-rose-100={activeLink.includes('Custom Svelte Components')}
+          >
+            <a
+              on:click={toggleMenu}
+              href="/docs/Custom-Svelte"
+              class="block py-4 px-12">Custom Svelte Components</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('Minimap')}>
-            <a on:click={toggleMenu} href="/docs/Minimap" class="block py-4 px-12">Minimap</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/Minimap"
+              class="block py-4 px-12">Minimap</a
+            >
           </li>
-          <li class:bg-rose-100={activeLink.includes('Initial Zoom & Location')}>
-            <a on:click={toggleMenu} href="/docs/Initial-Zoom-Location" class="block py-4 px-12">Initial Zoom & Location</a>
+          <li
+            class:bg-rose-100={activeLink.includes('Initial Zoom & Location')}
+          >
+            <a
+              on:click={toggleMenu}
+              href="/docs/Initial-Zoom-Location"
+              class="block py-4 px-12">Initial Zoom & Location</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('Node Classes')}>
-            <a on:click={toggleMenu} href="/docs/Node-Classes" class="block py-4 px-12">Node Classes</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/Node-Classes"
+              class="block py-4 px-12">Node Classes</a
+            >
           </li>
-          <li class:bg-rose-100={activeLink.includes('Importing & Exporting Diagrams')}>
-            <a on:click={toggleMenu} href="/docs/importDiagrams" class="block py-4 px-12">Importing & Exporting Diagrams</a>
+          <li
+            class:bg-rose-100={activeLink.includes(
+              'Importing & Exporting Diagrams'
+            )}
+          >
+            <a
+              on:click={toggleMenu}
+              href="/docs/importDiagrams"
+              class="block py-4 px-12">Importing & Exporting Diagrams</a
+            >
           </li>
           <li class:bg-rose-100={activeLink.includes('Diagram Boundary')}>
-            <a on:click={toggleMenu} href="/docs/boundary" class="block py-4 px-12">Diagram Boundary</a>
+            <a
+              on:click={toggleMenu}
+              href="/docs/boundary"
+              class="block py-4 px-12">Diagram Boundary</a
+            >
           </li>
-          <li class:bg-rose-100={activeLink.includes('Interactive Editable Nodes')}>
+          <!-- <li class:bg-rose-100={activeLink.includes('Interactive Editable Nodes')}>
             <a on:click={toggleMenu} href="/docs/editNodes" class="block py-4 px-12">Interactive Editable Nodes</a>
           </li>
           <li class:bg-rose-100={activeLink.includes('Deletable Nodes')}>
             <a on:click={toggleMenu} href="/docs/delete" class="block py-4 px-12">Deletable Nodes</a>
-          </li>
+          </li> -->
         </ul>
       {/if}
 

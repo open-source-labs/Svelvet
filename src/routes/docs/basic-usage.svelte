@@ -36,22 +36,12 @@
 </div>
  -->
 
-<div class="my-8 border border-gray-200 rounded-lg shadow-lg shadow-slate-100">
-  <iframe
-    src="https://stackblitz.com/edit/sveltejs-kit-template-default-przg8a?embed=1&file=src/routes/+layout.svelte"
-    style="width:100%; height:600px; border:0; border-radius: 8px; overflow:hidden;"
-    title="basic-usage"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-  />
-</div>
-
-<p>
-  StackBlitz does not load on non-Chromium browsers. If you are using Firefox,
-  use this direct <a
+<p class="my-4 text-gray-600">
+  Click
+  <a
     href="https://stackblitz.com/edit/sveltejs-kit-template-default-przg8a?file=src/routes/+layout.svelte"
-    style="color: blue">link</a
-  > instead
+    style="color: blue">here</a
+  > for a sandbox!
 </p>
 
 <style>
