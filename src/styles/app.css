@@ -1,0 +1,38 @@
+/* Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+/* Nunito font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  .btn {
+    @apply w-fit py-2 px-6 border rounded-full transition-all duration-300 ease-in;
+  }
+
+  .btn-white {
+    @apply bg-white text-gray-800 border-white shadow-lg 
+           hover:bg-gray-100 hover:shadow-transparent;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white border-primary shadow-lg 
+           hover:bg-transparent hover:text-primary hover:shadow-transparent;
+  }
+
+  .btn-gray-dark {
+    @apply bg-gray-800 text-white border-gray-800 shadow-lg 
+           hover:bg-transparent hover:text-gray-800 hover:shadow-transparent;
+  }
+
+  .code {
+    @apply bg-rose-100 rounded-lg p-1 inline;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-r from-[#F66F52] via-[#f86f6f] to-rose-400;
+  }
+}
