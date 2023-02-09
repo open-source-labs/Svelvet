@@ -123,7 +123,8 @@
   width={500}
   height={500}
   edges={initialEdges}
-  initialZoom={1}
-  initialLocation={{ x: 350, y: 350 }}
+  initialLocation={initialNodes[4].position}
+  initialZoom={2}
+  bgColor={'pink'}
   background
 />
