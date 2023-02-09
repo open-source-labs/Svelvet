@@ -1,21 +1,23 @@
-<script>
-  import { page } from '$app/stores';
-  import Footer from '../components/Footer.svelte';
-  import TopNav from '../components/TopNav.svelte';
-  import '../app.css';
+<script lang="ts">
+  import { page } from '$app/stores'
+  import { windowStore } from '../stores/windowStore'
+  import Footer from '../components/Footer.svelte'
+  import Navbar from '../components/Navbar.svelte'
+  import '../styles/app.css'
 
-
-  
+  let { width, height, scrollY, scrollX } = windowStore 
+ 
 </script>
+
+<svelte:window bind:innerWidth={$width} 
+               bind:innerHeight={$height} 
+               bind:scrollY={$scrollY} 
+               bind:scrollX={$scrollX} />
 
 {#if $page.url.pathname === '/testingplayground'}
   <slot />
 {:else}
-  <div class="">
-    <div class="sticky top-0 left-0 right-0 z-50">
-      <TopNav />
-    </div>
-    <slot />
-  </div>
+  <Navbar />
+  <slot />
   <Footer />
-  {/if}
+{/if}
