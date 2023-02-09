@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 import {
   rightCb,
   leftCb,
@@ -44,7 +44,7 @@ function createResizeNode(
   posX: number,
   posY: number
 ) {
-  const id = uuidv4();
+  const id = pkStringGenerator();
   const resizeNode = new ResizeNode(id, canvasId, nodeId, posX, posY);
   return resizeNode;
 }
@@ -71,7 +71,7 @@ function createAnchor(
     throw `you cannot create an anchor without a user node (for now)`;
 
   const edgeId = edge.id;
-  const anchorId = uuidv4();
+  const anchorId = pkStringGenerator();
 
   // userCb is the appropriate source or taret callback from userEdge object. It is
   // possible the user to NOT set userCb in which case userCb will be undefined
@@ -205,7 +205,7 @@ export function createPotentialAnchor(
   nodeId: string,
   canvasId: string
 ) {
-  const anchorId = uuidv4();
+  const anchorId = pkStringGenerator();
   const fixedCb = potentialAnchorCbCreator(store, anchorId, nodeId, positionCb);
   // Create a new anchor. The
   const anchor = new PotentialAnchor(

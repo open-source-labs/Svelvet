@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 import type { StoreType, PotentialAnchorType } from '../../store/types/types';
 import { get } from 'svelte/store';
 import { Node } from '../../nodes/models/Node';
@@ -31,7 +31,7 @@ export function createEdgeAndAnchors(
   canvasId: string
 ) {
   // create an edge
-  const edgeId = uuidv4();
+  const edgeId = pkStringGenerator();
   const newEdge = new Edge(
     edgeId,
     -1,
@@ -52,7 +52,7 @@ export function createEdgeAndAnchors(
   );
 
   // create source anchor
-  const sourceAnchorId = uuidv4();
+  const sourceAnchorId = pkStringGenerator();
   const sourceDynamicCb = dynamicCbCreator(store, edgeId, sourceAnchorId);
   const sourceAnchor = new Anchor(
     sourceAnchorId,
@@ -67,7 +67,7 @@ export function createEdgeAndAnchors(
   );
 
   // create target anchor
-  const targetAnchorId = uuidv4();
+  const targetAnchorId = pkStringGenerator();
   const targetDynamicCb = dynamicCbCreator(store, edgeId, targetAnchorId);
   const targetAnchor = new Anchor(
     targetAnchorId,

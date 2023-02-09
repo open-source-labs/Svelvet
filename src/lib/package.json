@@ -1,6 +1,6 @@
 {
-  "name": "svelvet",
-  "version": "6.0.1",
+  "name": "svelvet-lime",
+  "version": "6.0.33",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
     "svelte",
@@ -60,9 +60,7 @@
   "type": "module",
   "main": "./index.js",
   "dependencies": {
-    "d3-zoom": "^3.0.0",
-    "@types/uuid": "^9.0.0",
-    "uuid": "^9.0.0"
+    "d3-zoom": "^3.0.0"
   },
   "exports": {
     ".": "./index.js"

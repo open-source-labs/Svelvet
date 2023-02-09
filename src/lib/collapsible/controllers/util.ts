@@ -7,12 +7,13 @@ import type {
   UserNodeType,
 } from '../../store/types/types';
 import { Collapsible } from '../models/Collapsible';
-import { v4 as uuidv4 } from 'uuid';
 import type { CollapsibleType } from '../types/types';
 import { get } from 'svelte/store';
 import type { AnchorType } from '../../edges/types/types';
 import { getAnchorById } from '../../edges/controllers/util';
 import { getAnchors } from '../../edges/controllers/util';
+
+const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 
 /*
 Initializes store with array of Collapsible objects. You shoould only use this if you want the collapsible feature enabled.
@@ -25,7 +26,12 @@ export function populateCollapsibleStore(
 ) {
   const newCollapsibleStore: CollapsibleType[] = [];
   for (let userNode of userNodes) {
-    const collapsible = new Collapsible(uuidv4(), userNode.id, 0, 'expanded');
+    const collapsible = new Collapsible(
+      pkStringGenerator(),
+      userNode.id,
+      0,
+      'expanded'
+    );
     newCollapsibleStore.push(collapsible);
   }
   store.collapsibleStore.set(newCollapsibleStore);

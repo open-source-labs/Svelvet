@@ -38,7 +38,7 @@
   // hovering over an anchor then an edge is created then temporary edges
   // aer cleared, otherwise the temporary edges are cleared
   let mouseHover = false;
-  import { v4 as uuidv4 } from 'uuid';
+  const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
 </script>
 
 <svelte:window
@@ -126,7 +126,7 @@
         // say there are no temporary edges. This means the user just clicked on the potential anchor
         // so the current mouse position = temporary anchor position = mouseX, mouseY
         const newTempEdge = new TemporaryEdge(
-          uuidv4(),
+          pkStringGenerator(),
           potentialAnchor.id,
           mouseX,
           mouseY,
