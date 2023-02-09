@@ -11,7 +11,7 @@
 </p>
 
 <iframe
-  src="https://codesandbox.io/embed/adaptive-anchors-demo-hlg140?fontsize=14&hidenavigation=1&theme=dark"
+  src="https://stackblitz.com/edit/sveltejs-kit-template-default-t2wcvo?embed=1&file=src/routes/+layout.svelte"
   style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
   title="adaptive-anchors-demo"
   allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
@@ -19,3 +19,6 @@
 />
 
 <br />
+
+<style>
+</style>

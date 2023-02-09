@@ -268,7 +268,6 @@
           editor.setValue(
             code ||
               `<script>
-  import Svelvet from 'svelvetrabbits';
 	const initialNodes = [
 	  {
 		id: 1,
