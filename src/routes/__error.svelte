@@ -1,6 +1,3 @@
-<script>
-  import image404 from '../assets/404.svg';
-</script>
 
 <div class="grid place-content-center justify-items-center h-full my-5">
   <p class="font-bold text-[#ffe3e7] text-[8rem] leading-none">404</p>
@@ -8,5 +5,5 @@
     Sorry! We couldn't find that page!
   </p>
 
-  <img src={image404} alt="404 graphic" class="w-5/6 md:w-1/2" />
+  <img src="/assets/404.svg" alt="404 graphic" class="w-5/6 md:w-1/2" />
 </div>
