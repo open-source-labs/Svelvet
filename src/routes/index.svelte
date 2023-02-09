@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte'
   import Svelvet from 'svelvet'
   import { windowStore } from '../stores/windowStore'
 
@@ -6,7 +7,7 @@
   let heroHight: number = 650
   $: if ($width) updateNodesPosition()
 
-  const updateNodesPosition = () => {
+  const updateNodesPosition = async () => {
     if ($width > 1536) {
       initialNodes[0].position = { x: $width - 600, y: 100 }
       initialNodes[1].position = { x: $width - 400, y: 280 }
@@ -34,14 +35,14 @@
       initialNodes[5].position = { x: 42.5, y: 760 }
       heroHight = 900
     }
+    await tick()
     initialNodes = initialNodes
-    console.log($width)
   }
   
   let initialNodes = [
     {
       id: 1,
-      position: { x: 1250, y: 100 },
+      position: { x: 1450, y: 100 },
       data: { label: 'Add Images!' },
       width: 100,
       height: 100,
@@ -52,7 +53,7 @@
     },
     {
       id: 2,
-      position: { x: 1450, y: 280 },
+      position: { x: 1650, y: 280 },
       data: { label: 'Mixed Anchors' },
       width: 125,
       height: 40,
@@ -103,7 +104,7 @@
     }
   ];
 
-  const initialEdges = [
+  let initialEdges = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
     { id: 'e2-3', source: 2, target: 3, animate: true, label: 'animated edges' },
     { id: 'e1-4', source: 1, target: 4, type: 'step', animate: true, edgeColor: '#FF4121' },
