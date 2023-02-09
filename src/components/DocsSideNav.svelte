@@ -5,7 +5,7 @@
   const gettingStartedLinks = [
     ['Installation', 'installation'],
     ['Basic Usage', 'basic-usage'],
-    ['Core Concepts', 'core-concepts']
+    ['Core Concepts', 'core-concepts'],
   ];
 
   const guideLinks = [
@@ -25,14 +25,14 @@
     ['Node Classes', 'Node-Classes'],
     ['Importing & Exporting Diagrams', 'importDiagrams'],
     ['Diagram Boundary', 'boundary'],
-    ['Interactive Editable Nodes', 'editNodes'],
-    ['Deletable Nodes', 'delete'],
+    // ['Interactive Editable Nodes', 'editNodes'],
+    // ['Deletable Nodes', 'delete'],
     ['Resizable Nodes', 'ResizableNodes'],
     ['Dynamic Anchors', 'DynamicAnchor'],
     ['Custom Anchor Position', 'CustomAnchorPosition'],
     ['Adaptive Anchors', 'AdaptiveAnchors'],
     ['Interactive Editable Edges', 'editEdge'],
-    ['Unfold and Collapse', 'Unfold-collapse']
+    ['Unfold and Collapse', 'Unfold-collapse'],
   ];
 
   // const communityLinks = [
@@ -58,7 +58,9 @@
         <a
           id={link[0]}
           href="/docs/{link[1]}"
-          class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
+          class="border-l px-4 hover:border-rose-300  {activeLink.includes(
+            link[1]
+          )
             ? 'text-rose-500 hover:text-rose-500 border-rose-300'
             : 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
         >
@@ -72,7 +74,9 @@
         <a
           id={link[0]}
           href="/docs/{link[1]}"
-          class="border-l px-4 hover:border-rose-300  {activeLink.includes(link[1])
+          class="border-l px-4 hover:border-rose-300  {activeLink.includes(
+            link[1]
+          )
             ? 'text-rose-500 hover:text-rose-500 border-rose-300'
             : 'hover:text-gray-700 border-gray-100'}">{link[0]}</a
         >

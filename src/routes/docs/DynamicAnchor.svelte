@@ -1,7 +1,5 @@
 <script>
   import Svelvet from 'svelvet';
-  import DynamicAnchor from '../../assets/features/dynamicAnchorDemo.gif';
-  import Logo from '../../assets/High Resolution Logo.png';
   const initialNodes = [
     {
       id: 1,
@@ -16,10 +14,8 @@
       position: { x: 700, y: 210 },
       data: { label: 'Drag me around!' },
       width: 100,
-      height: 200,
-      image: true,
+      height: 100,
       bgColor: 'white',
-      src: Logo,
     },
   ];
 
@@ -30,7 +26,7 @@
       target: 4,
       type: 'bezier',
       animate: true,
-      label: 'labeled',
+      label: 'dynamic anchor',
     },
   ];
 </script>
@@ -52,11 +48,10 @@
   posistions between two nodes.
 </p>
 
-<img alt="Dynamic Anchor Demo" src={DynamicAnchor} />
+<br />
 
 <p class="text-gray-600">
-  The diagram generated using Svelvet 6.0 below has dynamic anchors on every
-  node. Drag the node around and see how the anchors are changing dynamically!
+  Drag the node around and see how the anchors are changing dynamically!
 </p>
 
 <div
@@ -76,7 +71,12 @@
 </div>
 
 <h3 class="text-xl font-semibold mt-12 mb-6">Dynamic Anchors</h3>
-<p class="text-gray-600">See the Code Sandbox below for the implementation!</p>
+<p class="text-gray-600">
+  Click <a
+    href="https://stackblitz.com/edit/dynamic-anchor?file=README.md"
+    style="color: blue">here</a
+  > for a sandbox!
+</p>
 
 <br />
 
