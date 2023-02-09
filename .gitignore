@@ -8,3 +8,4 @@ node_modules
 .env.*
 !.env.example
 coverage
+generateNpmPackage.sh

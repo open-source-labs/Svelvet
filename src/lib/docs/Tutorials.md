@@ -7,7 +7,7 @@ This file contains instructions on how to do useful things such as generating de
 You may notice TSDoc comments throughout our code. These TSDoc comments can be converted into documentation using TypeDoc:
 
 ```
-$ npx typedoc --entryPointStrategy expand src/lib
+npx typedoc --entryPointStrategy expand src/lib
 ```
 
 This command will create documentation in root folder `./docs`.
