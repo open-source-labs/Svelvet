@@ -1,6 +1,6 @@
-<script lang='ts'>
-  import Svelvet from '$lib/container/views/Svelvet.svelte';
-
+<script lang="ts">
+  // import Svelvet from '$lib/container/views/Svelvet.svelte';
+  import Svelvet from 'svelvetrabbits';
   let initialNodes: any[] = [
     {
       id: 1,
@@ -29,9 +29,7 @@
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
   ];
 
-
   const addNodeAndEdge = () => {
-    // console.log('addNodeAndEdge fired')
     const newNode = {
       id: 3,
       position: { x: 200, y: 250 },
@@ -42,18 +40,17 @@
       textColor: 'black',
       targetPosition: 'left',
     };
-    
-    const newEdge ={
-      id: 'e2-3', source: 2, target: 3, label: 'new edge'
-    }
+    const newEdge = {
+      id: 'e2-3',
+      source: 2,
+      target: 3,
+      label: 'new edge',
+    };
     initialNodes = [...initialNodes, newNode];
-    // initialNodes = initialNodes;
-    // console.log('updated initial nodes => ', initialNodes)
     initialEdges = [...initialEdges, newEdge];
-    // initialEdges = initialEdges;
-    // console.log('updated initial edges => ', initialEdges)
-  }
+  };
 
+  let zoom = 1;
 </script>
 
 <Svelvet
@@ -62,19 +59,21 @@
   edges={initialEdges}
   width={900}
   height={900}
+  initialZoom={zoom}
   background
   shareable={true}
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
+<button
+  on:click={() => {
+    zoom++;
+  }}>Click to change zoom</button
+>
+<button on:click={addNodeAndEdge}>Click to change position</button>
 
 <style>
   button {
     border: 1px solid black;
   }
 </style>
-
-
-
-
-
