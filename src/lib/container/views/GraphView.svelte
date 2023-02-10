@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
   import { select, selectAll, pointer, local } from 'd3-selection';
   import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
@@ -124,6 +124,23 @@
       d3Scale
     );
   });
+
+  // This is necessary to make Graphview reactive to changes in initialZoom
+  // When initialZoom changes, then zoomInit will set the zoom/position
+  let prev = initialZoom;
+  $: if (initialZoom !== prev) {
+    prev = initialZoom;
+    console.log(initialZoom);
+    d3Translate = zoomInit(
+      d3,
+      canvasId,
+      d3Zoom,
+      d3Translate,
+      initialLocation,
+      initialZoom,
+      d3Scale
+    );
+  }
 
   // moves canvas when you click on the minimap
   // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)

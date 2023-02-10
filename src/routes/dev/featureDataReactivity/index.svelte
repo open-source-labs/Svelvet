@@ -28,12 +28,13 @@
   let initialEdges: any[] = [
     { id: 'e1-2', source: 1, target: 2, label: 'edge label' },
   ];
+  let newId = 3;
 
   const addNodeAndEdge = () => {
     const newNode = {
-      id: 3,
+      id: ++newId,
       position: { x: 200, y: 250 },
-      data: { label: 'id=3' },
+      data: { label: newId.toString() },
       width: 50,
       height: 50,
       bgColor: 'white',
@@ -41,20 +42,20 @@
       targetPosition: 'left',
     };
     const newEdge = {
-      id: 'e2-3',
+      id: `edge-${newId}`,
       source: 2,
-      target: 3,
+      target: newId,
       label: 'new edge',
     };
     initialNodes = [...initialNodes, newNode];
     initialEdges = [...initialEdges, newEdge];
   };
 
-  let zoom = 1;
+  $: zoom = 1;
 </script>
 
 <Svelvet
-  canvasId="4tsdgss32"
+  canvasId="canvasId"
   nodes={initialNodes}
   edges={initialEdges}
   width={900}
@@ -68,9 +69,15 @@
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
 <button
   on:click={() => {
-    zoom++;
-  }}>Click to change zoom</button
+    zoom += 0.1;
+  }}>Click to increase zoom</button
 >
+<button
+  on:click={() => {
+    zoom -= 0.1;
+  }}>Click to decrease zoom</button
+>
+
 <button on:click={addNodeAndEdge}>Click to change position</button>
 
 <style>
