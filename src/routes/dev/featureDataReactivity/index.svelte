@@ -52,6 +52,7 @@
   };
 
   $: zoom = 1;
+  $: initialPosition = { x: 0, y: 0 };
 </script>
 
 <Svelvet
@@ -64,6 +65,7 @@
   background
   shareable={true}
   editable={true}
+  initialLocation={initialPosition}
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
@@ -77,8 +79,18 @@
     zoom -= 0.1;
   }}>Click to decrease zoom</button
 >
-
-<button on:click={addNodeAndEdge}>Click to change position</button>
+<button
+  on:click={() => {
+    initialPosition.x += 50;
+    initialPosition = initialPosition;
+  }}>Click to increase x position</button
+>
+<button
+  on:click={() => {
+    initialPosition.y += 50;
+    initialPosition = initialPosition;
+  }}>Click to increase y position</button
+>
 
 <style>
   button {

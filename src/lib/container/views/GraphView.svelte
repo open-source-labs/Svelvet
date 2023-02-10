@@ -127,10 +127,17 @@
 
   // This is necessary to make Graphview reactive to changes in initialZoom
   // When initialZoom changes, then zoomInit will set the zoom/position
-  let prev = initialZoom;
-  $: if (initialZoom !== prev) {
-    prev = initialZoom;
-    console.log(initialZoom);
+  let prevZoom = initialZoom;
+  let prevInitialLocationX = initialLocation.x;
+  let prevInitialLocationY = initialLocation.y;
+  $: if (
+    initialZoom !== prevZoom ||
+    prevInitialLocationX !== initialLocation.x ||
+    prevInitialLocationY !== initialLocation.y
+  ) {
+    prevZoom = initialZoom;
+    prevInitialLocationX = initialLocation.x;
+    prevInitialLocationY = initialLocation.y;
     d3Translate = zoomInit(
       d3,
       canvasId,
