@@ -66,6 +66,7 @@
   shareable={true}
   editable={true}
   initialLocation={initialPosition}
+  minimap={true}
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>
