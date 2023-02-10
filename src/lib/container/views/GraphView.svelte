@@ -153,7 +153,6 @@
   // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
   // moves camera to the clicked node
   function miniMapClick(event) {
-    console.log('minimap clicked');
     // onclick in case of boundless minimap
     if (!boundary) {
       // For edges
