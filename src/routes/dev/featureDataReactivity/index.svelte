@@ -1,6 +1,6 @@
 <script lang="ts">
-  // import Svelvet from '$lib/container/views/Svelvet.svelte';
-  import Svelvet from 'svelvetrabbits';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+  // import Svelvet from 'svelvetrabbits';
   let initialNodes: any[] = [
     {
       id: 1,
@@ -62,6 +62,7 @@
   initialZoom={zoom}
   background
   shareable={true}
+  editable={true}
 />
 
 <button on:click={addNodeAndEdge}>Click to add new node and new edge</button>

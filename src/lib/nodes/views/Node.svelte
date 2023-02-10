@@ -2,9 +2,7 @@
   import { afterUpdate } from 'svelte';
 
   import { findStore } from '../../store/controllers/storeApi';
-  import type {
-    NodeType,
-  } from '../../store/types/types';
+  import type { NodeType } from '../../store/types/types';
 
   import EditNode from './EditNode.svelte';
   import { writable, derived, get, readable } from 'svelte/store';
@@ -16,7 +14,6 @@
   // export let nodes: NodeType[];
   //   const nodeId = node.id; // this seems to go stale
   export let nodeId: string;
-
 
   const store = findStore(canvasId);
   // const { nodesStore, edgesStore, anchorsStore, nodeSelected } = store;
@@ -31,7 +28,7 @@
     nodeSelected,
     resizeNodesStore,
     editableOption,
-    lockedOption
+    lockedOption,
   } = store;
 
   let isSelected = false;
@@ -50,7 +47,7 @@
 
   //
   const mousedown = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     // part of the "clickCallback" feature
     isUserClick = true;
     // part of the "collapsible" feature
@@ -141,8 +138,6 @@
       });
     }
   };
-
-  console.log('what is lockedOption?', $lockedOption)
 </script>
 
 <svelte:window
@@ -174,7 +169,7 @@
     border-color: {node.borderColor};
     border-radius: {node.borderRadius}px;
     color: {node.textColor};
-    cursor: {$lockedOption ? "default" : "grab"}"
+    cursor: {$lockedOption ? 'default' : 'grab'}"
   id="svelvet-{node.id}"
 >
   <!-- This executes if node.image is present without node.label -->
@@ -204,5 +199,10 @@
     border-radius: 5px;
     box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
     pointer-events: auto; /* this is needed for pointer events to work since we disable them in graphview */
+  }
+  /* the default behavior when click/dragging an image is to move it. This interferes with node dragging. We disable pointer events on img to prevent this */
+  /* Alternatively, we could use e.preventDefault() on mouseDown. However, this interferes with embedded Svelvet forms */
+  img {
+    pointer-events: none;
   }
 </style>

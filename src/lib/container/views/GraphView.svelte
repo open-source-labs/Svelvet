@@ -219,9 +219,9 @@
         {#if node.data.html}
           <Node {node} {canvasId} nodeId={node.id}>{@html node.data.html}</Node>
         {:else if node.data.custom}
-          <Node {node} {canvasId} nodeId={node.id}
-            ><svelte:component this={node.data.custom} /></Node
-          >
+          <Node {node} {canvasId} nodeId={node.id}>
+            <svelte:component this={node.data.custom} />
+          </Node>
         {:else}
           <Node {node} {canvasId} nodeId={node.id}>{node.data.label}</Node>
         {/if}
