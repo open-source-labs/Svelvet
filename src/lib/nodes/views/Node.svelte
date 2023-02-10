@@ -47,7 +47,7 @@
 
   //
   const mousedown = (e) => {
-    // e.preventDefault();
+    // we cannot use e.preventDefault because it will disable clicks on components such as input fields
     // part of the "clickCallback" feature
     isUserClick = true;
     // part of the "collapsible" feature
