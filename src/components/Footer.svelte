@@ -55,6 +55,11 @@
         href="https://medium.com/@efergus1/svelvet-5-0-a-community-driven-update-cfcc93e7b7a7"
         >Svelvet 5.0</a
       >
+      <a
+      target="_blank"
+      href="https://medium.com/@hor.val/svelvet-6-0-the-svelte-component-library-for-building-interactive-node-based-diagrams-81dafa2d50cd"
+      >Svelvet 6.0</a
+     >
       <a target="_blank" href="https://github.com/open-source-labs/Svelvet"
         >GitHub</a
       >
