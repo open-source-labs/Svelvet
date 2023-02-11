@@ -1,5 +1,5 @@
 <script>
-  import Svelvet from 'svelvet-lime';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
   import Login from './DummyComponent.svelte';
   import Home from './DummyComponent.svelte';
   import About from './DummyComponent.svelte';

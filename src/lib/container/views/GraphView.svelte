@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
   import { select, selectAll, pointer, local } from 'd3-selection';
   import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
@@ -125,6 +125,30 @@
     );
   });
 
+  // This is necessary to make Graphview reactive to changes in initialZoom
+  // When initialZoom changes, then zoomInit will set the zoom/position
+  let prevZoom = initialZoom;
+  let prevInitialLocationX = initialLocation.x;
+  let prevInitialLocationY = initialLocation.y;
+  $: if (
+    initialZoom !== prevZoom ||
+    prevInitialLocationX !== initialLocation.x ||
+    prevInitialLocationY !== initialLocation.y
+  ) {
+    prevZoom = initialZoom;
+    prevInitialLocationX = initialLocation.x;
+    prevInitialLocationY = initialLocation.y;
+    d3Translate = zoomInit(
+      d3,
+      canvasId,
+      d3Zoom,
+      d3Translate,
+      initialLocation,
+      initialZoom,
+      d3Scale
+    );
+  }
+
   // moves canvas when you click on the minimap
   // handles case for when minimap sends message back to initiate translation event (click to traverse minimap)
   // moves camera to the clicked node
@@ -219,9 +243,9 @@
         {#if node.data.html}
           <Node {node} {canvasId} nodeId={node.id}>{@html node.data.html}</Node>
         {:else if node.data.custom}
-          <Node {node} {canvasId} nodeId={node.id}
-            ><svelte:component this={node.data.custom} /></Node
-          >
+          <Node {node} {canvasId} nodeId={node.id}>
+            <svelte:component this={node.data.custom} />
+          </Node>
         {:else}
           <Node {node} {canvasId} nodeId={node.id}>{node.data.label}</Node>
         {/if}
