@@ -2,20 +2,14 @@
   import editEdgeDemo from '../../assets/features/feature_node_edge_edit.gif';
 </script>
 
-<h2 class="text-4xl font-semibold mb-12">Interactive Editable Edges</h2>
+<h2 class="text-4xl font-semibold mb-12">Interactive Editable Nodes and Edges</h2>
 
 <p class="text-gray-600">
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> also allows users to
-  interactively edit edges in their diagrams, just like how Editable Nodes
-  works. The edit modal of edges are also enabled using the same
-  <code class="bg-rose-100 rounded-lg p-1">editable</code>
-  prop as the node edit modal. The editable nodes and editable edges functionlities
-  are closely tied to each other so you'll be enable and disable both of them at
-  the same time. When you hover the mouse on an editable edge, the edge will display
-  a light purple shadow.
-  <code class="bg-rose-100 rounded-lg p-1">Right click</code> on the edge to bring
-  up a modal that will have customizable options! You can change the edge label,
-  edge type and delete the edge throught the modal.
+  interactively edit nodes and edges in their diagrams using the <code class="bg-rose-100 rounded-lg p-1">editable</code>
+  prop. 
+  <code class="bg-rose-100 rounded-lg p-1">Right click</code> on a node or edge to bring
+  up a modal that will have customizable options! You can also delete nodes and edges using this modal.
 </p>
 
 <br />

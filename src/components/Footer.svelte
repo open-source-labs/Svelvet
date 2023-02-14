@@ -30,7 +30,7 @@
       <a href="/docs/Node-Classes">Node Classes</a>
       <a href="/docs/importDiagrams">Importing & Exporting Diagrams</a>
       <a href="/docs/boundary">Diagram Boundary</a>
-      <!-- <a href="/docs/editNodes">Interactive Editable Nodes</a> -->
+      <a href="/docs/editEdge">Interactive Editable Nodes and Edges</a> 
       <!-- <a href="/docs/delete">Deletable Nodes</a> -->
     </div>
     <div class="flex flex-col space-y-3 text-gray-600">
