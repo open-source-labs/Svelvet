@@ -48,6 +48,7 @@
     const edge = getEdgeById(store, edgeId);
     // handles edge clickCallback feature
     if (edge.clickCallback) edge.clickCallback(edge);
+    console.log(edge.className);
   };
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
@@ -76,6 +77,7 @@
   stroke-width="20"
   on:contextmenu={handleRightClick}
   on:click={handleClick}
+  on:keypress={()=>{}}
 />
 
 {#if arrow}

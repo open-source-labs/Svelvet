@@ -93,6 +93,7 @@
   };
 
   const touchmove = (e) => {
+    e.preventDefault();
     // part of the "clickCallback" feature
     isUserClick = false;
     // part of the "drag node" feature
@@ -138,13 +139,12 @@
       });
     }
   };
+
 </script>
 
 <svelte:window
   on:mousemove={mousemove}
   on:mouseup={mouseup}
-  on:touchmove={touchmove}
-  on:touchend={mouseup}
 />
 
 <!--EditNode component will be displayed if isEditing is true and if the canvas option "edtiable" is set true-->
@@ -157,7 +157,11 @@
   on:mouseleave={mouseleave}
   on:mousedown={mousedown}
   on:contextmenu={rightclick}
+
+  on:touchmove={touchmove}
   on:touchstart={mousedown}
+  on:touchend={mouseup}
+
   on:mouseenter={mouseenter}
   on:wheel={(e) => e.preventDefault()}
   class="Node {node.className}"
