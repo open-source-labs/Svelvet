@@ -8,7 +8,7 @@
   <code class="bg-rose-100 rounded-lg p-1">Svelvet</code> also allows users to
   interactively edit nodes and edges in their diagrams using the <code class="bg-rose-100 rounded-lg p-1">editable</code>
   prop. 
-  <code class="bg-rose-100 rounded-lg p-1">Right click</code> on a node or edge to bring
+  Right click on a node or edge to bring
   up a modal that will have customizable options! You can also delete nodes and edges using this modal.
 </p>
 
