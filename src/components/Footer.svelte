@@ -19,7 +19,7 @@
       <a href="/docs/pan-and-zoom">Panning and Zooming</a>
       <a href="/docs/typescript">Usage with TypeScript</a>
       <a href="/docs/testing">Testing</a>
-      <a href="/docs/CSS-background">CSS-Background</a>
+      <a href="/docs/CSS-Background">CSS-Background</a>
       <a href="/docs/node-grouping">Node-Grouping</a>
       <a href="/docs/snap-to-grid">Snap-To-Grid</a>
       <a href="/docs/HTML-Docs">HTML-Docs</a>
