@@ -1,6 +1,9 @@
 <script lang="ts">
-  import Svelvet from '$lib/container/views/Svelvet.svelte';
-  import type { UserNodeType, UserEdgeType } from '$lib/types/types';
+  // import Svelvet from '$lib/container/views/Svelvet.svelte';
+  // import type { UserNodeType, UserEdgeType } from '$lib/types/types';
+  import Svelvet from 'svelvet-lime';
+  import type { UserNodeType, UserEdgeType } from 'svelvet-lime';
+
   const initialNodes: UserNodeType[] = [
     {
       id: '1',
