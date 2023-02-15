@@ -5,7 +5,7 @@ import {
   populateSvelvetStoreFromUserInput,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
-import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
+import type { UserNodeType, UserEdgeType } from '$lib/types/types';
 
 describe('tests ResizeNode', () => {
   const canvasId = uuidv4();

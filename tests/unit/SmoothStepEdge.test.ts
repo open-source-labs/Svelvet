@@ -10,7 +10,7 @@ import {
 import { getEdgeById } from '$lib/edges/controllers/util';
 
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
-import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
+import type { UserNodeType, UserEdgeType } from '$lib/types/types';
 
 afterEach(() => cleanup());
 

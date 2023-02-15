@@ -1,12 +1,6 @@
 <script lang="ts">
   const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
-  import type {
-    NodeType,
-    EdgeType,
-    StoreType,
-    UserNodeType,
-    UserEdgeType,
-  } from '../../store/types/types';
+  import type { UserEdgeType, UserNodeType } from '../../types/types';
 
   import {
     createStoreEmpty,

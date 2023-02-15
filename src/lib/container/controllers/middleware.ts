@@ -10,11 +10,8 @@ import {
   rightCb,
   topCb,
 } from '../../edges/controllers/anchorCbUser';
-import type {
-  StoreType,
-  UserEdgeType,
-  UserNodeType,
-} from '../../store/types/types';
+import type { StoreType } from '../../store/types/types';
+import type { UserEdgeType, UserNodeType } from '../../types/types';
 
 /**
  * sanitizeCanvasOptions will sanitize the canvas level options so that incompatible features will not be run simulataneously

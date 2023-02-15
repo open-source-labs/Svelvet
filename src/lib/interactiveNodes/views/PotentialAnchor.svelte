@@ -7,11 +7,11 @@
     NodeType,
     EdgeType,
     StoreType,
-    UserNodeType,
-    UserEdgeType,
     TemporaryEdgeType,
     PotentialAnchorType,
   } from '../../store/types/types';
+  import type { UserNodeType, UserEdgeType } from '../../types/types';
+
   import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
   export let x;
