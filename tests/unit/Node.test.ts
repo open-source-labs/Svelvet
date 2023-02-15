@@ -7,7 +7,7 @@ import {
   findStore,
 } from '$lib/store/controllers/storeApi';
 import { sanitizeUserNodesAndEdges } from '$lib/container/controllers/middleware';
-import type { UserNodeType, UserEdgeType } from '$lib/store/types/types';
+import type { UserNodeType, UserEdgeType } from '$lib/types/types';
 import { populateAnchorsStore } from '$lib/store/controllers/util';
 
 describe('tests node', () => {
@@ -42,7 +42,7 @@ describe('tests node', () => {
       height: 40,
       bgColor: 'white',
       textColor: 'black',
-    }
+    },
   ];
 
   const initialEdges: UserEdgeType[] = [
@@ -61,7 +61,7 @@ describe('tests node', () => {
       type: 'step',
       animate: true,
       edgeColor: '#FF4121',
-    }
+    },
   ];
   //cosnt store =  invoke createEmptyStore?
   const store = createStoreEmpty(canvasId);
@@ -85,7 +85,7 @@ describe('tests node', () => {
   //take the output and feed it to create storeformuserinput
   populateSvelvetStoreFromUserInput(canvasId, userNodes, userEdges);
 
-  const { nodesStore, anchorsStore, edgesStore} = store;
+  const { nodesStore, anchorsStore, edgesStore } = store;
 
   // console.log('NODESTORE :', nodesStore)
   // nodesStore.update((node) => {
@@ -94,69 +94,87 @@ describe('tests node', () => {
   //     console.log('NODEID:', node[nodeId]);
   //   }
   // });
-test('set position from movement should update position X & Y based on mouse movement', () => {
-  nodesStore.update((nodes) => {
-    for (const nodeId in nodes) {
-      if(nodeId === '1') {
-        nodes[nodeId].setPositionFromMovement(10, 10);
-        expect(nodes[nodeId].positionX).toBe(235)
-        expect(nodes[nodeId].positionY).toBe(20)
+  test('set position from movement should update position X & Y based on mouse movement', () => {
+    nodesStore.update((nodes) => {
+      for (const nodeId in nodes) {
+        if (nodeId === '1') {
+          nodes[nodeId].setPositionFromMovement(10, 10);
+          expect(nodes[nodeId].positionX).toBe(235);
+          expect(nodes[nodeId].positionY).toBe(20);
+        }
+        if (nodeId === '2') {
+          nodes[nodeId].setPositionFromMovement(-10, 10);
+          expect(nodes[nodeId].positionX).toBe(380);
+          expect(nodes[nodeId].positionY).toBe(190);
+        }
+        if (nodeId === '3') {
+          nodes[nodeId].setPositionFromMovement(-10, -10);
+          expect(nodes[nodeId].positionX).toBe(215);
+          expect(nodes[nodeId].positionY).toBe(250);
+        }
+        // when setPositionsFromMovement runs it should cascade to the anchors edges and resizenode
       }
-      if(nodeId === '2') {
-        nodes[nodeId].setPositionFromMovement(-10, 10);
-        expect(nodes[nodeId].positionX).toBe(380)
-        expect(nodes[nodeId].positionY).toBe(190)
-      }
-      if(nodeId === '3') {
-        nodes[nodeId].setPositionFromMovement(-10, -10);
-        expect(nodes[nodeId].positionX).toBe(215)
-        expect(nodes[nodeId].positionY).toBe(250)
-      }
-      // when setPositionsFromMovement runs it should cascade to the anchors edges and resizenode
-    }
-    return {...nodes}
+      return { ...nodes };
+    });
   });
-})
-test('setSizeFromMovement should update the height and width of the node when resizes the Node by dragging at the right bottom corner (where the ResizedNode attached), reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and potential Anchors', () => {
-  nodesStore.update((nodes) => {
-    for (const nodeId in nodes) {
-      if(nodeId === '1') {
-        nodes[nodeId].setSizeFromMovement(10, 10);
-        expect(nodes[nodeId].width).toBe(110);
-        expect(nodes[nodeId].height).toBe(110);
+  test('setSizeFromMovement should update the height and width of the node when resizes the Node by dragging at the right bottom corner (where the ResizedNode attached), reflect the changes in real time in the nodesStore, and also cascade the changes to all relative elements like Anchors and potential Anchors', () => {
+    nodesStore.update((nodes) => {
+      for (const nodeId in nodes) {
+        if (nodeId === '1') {
+          nodes[nodeId].setSizeFromMovement(10, 10);
+          expect(nodes[nodeId].width).toBe(110);
+          expect(nodes[nodeId].height).toBe(110);
 
-        anchorsStore.update((anchors) => {
-          for (const anchorId in anchors) {
-            if(anchors[anchorId].nodeId === '1' && anchors[anchorId].sourceOrTarget === 'target') {
-              expect(anchors[anchorId].positionX).toEqual(290);
-              expect(anchors[anchorId].positionY).toEqual(130);
-            } else if(anchors[anchorId].nodeId === '1' && anchors[anchorId].sourceOrTarget === 'source') {
-              expect(anchors[anchorId].positionX).toEqual(345);
-              expect(anchors[anchorId].positionY).toEqual(75);
+          anchorsStore.update((anchors) => {
+            for (const anchorId in anchors) {
+              if (
+                anchors[anchorId].nodeId === '1' &&
+                anchors[anchorId].sourceOrTarget === 'target'
+              ) {
+                expect(anchors[anchorId].positionX).toEqual(290);
+                expect(anchors[anchorId].positionY).toEqual(130);
+              } else if (
+                anchors[anchorId].nodeId === '1' &&
+                anchors[anchorId].sourceOrTarget === 'source'
+              ) {
+                expect(anchors[anchorId].positionX).toEqual(345);
+                expect(anchors[anchorId].positionY).toEqual(75);
+              }
             }
-          }
-          return {...anchors}
-        })
-    } else if(nodeId === '2') {
-        nodes[nodeId].setSizeFromMovement(10, 10);
-        expect(nodes[nodeId].width).toBe(135);
-        expect(nodes[nodeId].height).toBe(50);
+            return { ...anchors };
+          });
+        } else if (nodeId === '2') {
+          nodes[nodeId].setSizeFromMovement(10, 10);
+          expect(nodes[nodeId].width).toBe(135);
+          expect(nodes[nodeId].height).toBe(50);
 
-        anchorsStore.update((anchors) => {
-          for (const anchorId in anchors) {
-            if(anchors[anchorId].nodeId === '2' && anchors[anchorId].sourceOrTarget === 'target') {
-              console.log(anchors[anchorId].positionX, anchors[anchorId].positionY)
-            } else if(anchors[anchorId].nodeId === '2' && anchors[anchorId].sourceOrTarget === 'source') {
-              console.log(anchors[anchorId].positionX, anchors[anchorId].positionY)
+          anchorsStore.update((anchors) => {
+            for (const anchorId in anchors) {
+              if (
+                anchors[anchorId].nodeId === '2' &&
+                anchors[anchorId].sourceOrTarget === 'target'
+              ) {
+                console.log(
+                  anchors[anchorId].positionX,
+                  anchors[anchorId].positionY
+                );
+              } else if (
+                anchors[anchorId].nodeId === '2' &&
+                anchors[anchorId].sourceOrTarget === 'source'
+              ) {
+                console.log(
+                  anchors[anchorId].positionX,
+                  anchors[anchorId].positionY
+                );
+              }
             }
-          }
-          return {...anchors}
-        })
-    } 
-  }
-  return {...nodes}
-})
-})
+            return { ...anchors };
+          });
+        }
+      }
+      return { ...nodes };
+    });
+  });
   //Then, call set PositionAndCascade on resizeNode and make sure the width/height of the node also changes.
   //Make sure when you call delete on the node that the resizeNode also disappears.
 });

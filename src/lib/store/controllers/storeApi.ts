@@ -33,7 +33,8 @@ populateSvelvetStoreFromUserInput(canvasId, nodes, edges)
 import { stores } from '../models/store';
 import { writable, get } from 'svelte/store';
 
-import type { StoreType, UserNodeType, UserEdgeType } from '../types/types';
+import type { StoreType } from '../types/types';
+import type { UserNodeType, UserEdgeType } from '../../types/types';
 import {
   populateAnchorsStore,
   populateNodesStore,

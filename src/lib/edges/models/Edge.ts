@@ -1,5 +1,6 @@
 import { findStore } from '../../store/controllers/storeApi';
-import type { EdgeType, UserEdgeType } from '../../store/types/types';
+import type { UserEdgeType } from '../../types/types';
+import type { EdgeType } from '../../store/types/types';
 
 import { stores } from '../../store/models/store';
 import { getAnchors, getAnchorFromEdge } from '../../edges/controllers/util';

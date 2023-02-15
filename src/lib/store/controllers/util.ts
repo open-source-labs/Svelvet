@@ -18,10 +18,10 @@ import type {
   EdgeType,
   StoreType,
   ResizeNodeType,
-  UserNodeType,
-  UserEdgeType,
   PotentialAnchorType,
 } from '../types/types';
+import type { UserNodeType, UserEdgeType } from '../../types/types';
+
 import { ResizeNode } from '../../resizableNodes/models/ResizeNode';
 import { Anchor } from '../../edges/models/Anchor';
 import { Node } from '../../nodes/models/Node';

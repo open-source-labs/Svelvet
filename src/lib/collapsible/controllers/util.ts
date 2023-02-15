@@ -3,9 +3,8 @@ import type {
   NodeType,
   ResizeNodeType,
   StoreType,
-  UserEdgeType,
-  UserNodeType,
 } from '../../store/types/types';
+import type { UserEdgeType, UserNodeType } from '../../types/types';
 import { Collapsible } from '../models/Collapsible';
 import type { CollapsibleType } from '../types/types';
 import { get } from 'svelte/store';
