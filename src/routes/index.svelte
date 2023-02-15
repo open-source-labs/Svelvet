@@ -754,7 +754,7 @@
             <div class="flex gap-3 ml-3">
               <a
                 target="_blank"
-                href="www.linkedin.com/in/ernesto-gonzalez-a168221a7"
+                href="https://www.linkedin.com/in/ernesto-gonzalez-a168221a7"
                 ><img src={linkedin} alt="LinkedIn Icon" /></a
               >
               <a target="_blank" href="https://github.com/TheRaftMaker"
