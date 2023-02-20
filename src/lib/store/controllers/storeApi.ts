@@ -91,6 +91,7 @@ export function createStoreEmpty(canvasId: string): StoreType {
     collapsibleOption: writable(false),
     lockedOption: writable(false),
     editableOption: writable(false),
+    d3ZoomParameters: writable({}),
   };
   return stores[canvasId];
 }
