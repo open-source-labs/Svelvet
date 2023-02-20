@@ -1,6 +1,6 @@
 <script lang="ts">
   import Svelvet from 'svelvet-lime';
-  import type { UserNodeType, UserEdgeType } from 'svelvet-lime';
+  import type { UserNodeType, UserEdgeType } from 'limemc53';
 
   const initialNodes: UserNodeType[] = [
     {
