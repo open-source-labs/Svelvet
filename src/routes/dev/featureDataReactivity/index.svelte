@@ -6,8 +6,8 @@
   //   getD3Zoom,
   // } from '$lib/store/controllers/userApi';
 
-  import Svelvet from 'limemc53';
-  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'limemc53';
+  import Svelvet from 'svelvet';
+  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
 
   let initialNodes = [
     {
