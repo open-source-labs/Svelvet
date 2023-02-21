@@ -6,9 +6,9 @@
   //   getD3Zoom,
   // } from '$lib/store/controllers/userApi';
 
-  import Svelvet from 'svelvet-lime';
-  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet-lime';
-  import type { UserNodeType } from 'svelvet-lime';
+  import Svelvet from 'svelvet';
+  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
+  import type { UserNodeType } from 'svelvet';
 
   let initialNodes: UserNodeType[] = [
     {

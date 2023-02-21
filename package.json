@@ -1,5 +1,5 @@
 {
-  "name": "svelvet-lime",
+  "name": "svelvet",
   "version": "6.0.10",
   "description": "A lightweight Svelte component library for building interactive node-based flow diagrams",
   "keywords": [
