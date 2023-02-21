@@ -1,16 +1,12 @@
 <script lang="ts">
-  // import Svelvet from '$lib/container/views/Svelvet.svelte';
-  // import {
-  //   getD3PositionY,
-  //   getD3PositionX,
-  //   getD3Zoom,
-  // } from '$lib/store/controllers/userApi';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+  import { getD3PositionY, getD3PositionX, getD3Zoom } from '$lib/types/types';
 
-  import Svelvet from 'svelvet';
-  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
-  import type { UserNodeType } from 'svelvet';
+  // import Svelvet from 'svelvet';
+  // import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
+  // import type { UserNodeType } from 'svelvet';
 
-  let initialNodes: UserNodeType[] = [
+  let initialNodes = [
     {
       id: '1',
       position: { x: 0, y: 0 },
