@@ -1,13 +1,13 @@
 <script lang="ts">
-  // import Svelvet from '$lib/container/views/Svelvet.svelte';
-  // import {
-  //   getD3PositionY,
-  //   getD3PositionX,
-  //   getD3Zoom,
-  // } from '$lib/store/controllers/userApi';
+  import Svelvet from '$lib/container/views/Svelvet.svelte';
+  import {
+    getD3PositionY,
+    getD3PositionX,
+    getD3Zoom,
+  } from '$lib/store/controllers/userApi';
 
-  import Svelvet from 'svelvet';
-  import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
+  // import Svelvet from 'svelvet';
+  // import { getD3PositionX, getD3PositionY, getD3Zoom } from 'svelvet';
 
   let initialNodes = [
     {
@@ -132,6 +132,8 @@
   background
   initialLocation={initialPosition}
   minimap={true}
+  resizable={false}
+  highlightEdges={false}
 />
 
 <button on:click={addNodeAndEdge}>add new node/edge</button>

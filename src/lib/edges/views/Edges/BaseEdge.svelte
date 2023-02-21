@@ -37,6 +37,7 @@
   const edgeId = baseEdgeProps.id;
   const store = findStore(canvasId);
   const edge = getEdgeById(store, edgeId);
+  const highlightEdgesOption = get(store.highlightEdgesOption);
   const handleRightClick = () => {
     const store = findStore(canvasId);
     const { editableOption } = store;
@@ -67,18 +68,21 @@
   </marker>
 </defs>
 
-<!-- This is an invisible edge that is used to implement event events, because the visible edge is thin and hard to click on -->
-<path
-  id={`edgeSelector`}
-  d={path}
-  fill="transparent"
-  stroke={'red'}
-  stroke-opacity="0"
-  stroke-width="20"
-  on:contextmenu={handleRightClick}
-  on:click={handleClick}
-  on:keypress={()=>{}}
-/>
+<!-- This is an invisible edge that is used to implement event events, because the visible edge is thin and hard to click on. It 
+highlights on hover -->
+{#if highlightEdgesOption}
+  <path
+    id={`edgeSelector`}
+    d={path}
+    fill="transparent"
+    stroke={'red'}
+    stroke-opacity="0"
+    stroke-width="20"
+    on:contextmenu={handleRightClick}
+    on:click={handleClick}
+    on:keypress={() => {}}
+  />
+{/if}
 
 {#if arrow}
   <path
