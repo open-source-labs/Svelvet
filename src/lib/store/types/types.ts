@@ -40,6 +40,11 @@ export interface StoreType {
   collapsibleOption: Writable<boolean>;
   lockedOption: Writable<boolean>;
   editableOption: Writable<boolean>;
+  d3ZoomParameters: Writable<{
+    [key: string]: number;
+  }>;
+  resizableOption: Writable<boolean>;
+  highlightEdgesOption: Writable<boolean>;
 }
 
 export interface PositionType {

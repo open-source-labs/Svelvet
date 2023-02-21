@@ -20,34 +20,37 @@ export function zoomInit(
     //moves camera to coordinates
     .transition()
     .duration(0)
-    .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
+    .call(
+      d3Zoom.translateTo,
+      initialLocation.x / initialZoom,
+      initialLocation.y / initialZoom
+    )
     // zooms in on selected point
     .transition()
     .duration(0)
     .call(d3Zoom.scaleTo, initialZoom.toFixed(2));
-
   // updates d3Translate with d3 object with x, y, and k values to be sent down to the minimap to be further calculated further
   d3Translate = d3.zoomIdentity
     .translate(initialLocation.x, initialLocation.y)
     .scale(initialZoom.toFixed(2));
-
   d3.select(`.Nodes-${canvasId}`)
     .transition()
     .duration(0)
     .call(d3Zoom.translateTo, 0, 0)
     .transition()
     .duration(0)
-    .call(d3Zoom.translateTo, initialLocation.x, initialLocation.y)
+    .call(
+      d3Zoom.translateTo,
+      initialLocation.x / initialZoom,
+      initialLocation.y / initialZoom
+    )
     .transition()
     .duration(0)
     .call(d3Zoom.scaleTo, initialZoom.toFixed(2));
-
   // sets D3 scale to current k of object
   d3Scale.set(d3.zoomTransform(d3.select(`.Nodes-${canvasId}`)).k);
-
   return d3Translate;
 }
-
 // create d3 instance conditionally based on boundary prop
 export function determineD3Instance(
   boundary,

@@ -203,6 +203,7 @@
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
     d3Translate = transform;
+    store.d3ZoomParameters.set({ ...transform }); // record x,y position of pan, and zoom level
     // selects and transforms all node divs from class 'Node' and performs transformation
     d3.select(`.Node-${canvasId}`)
       .style(
