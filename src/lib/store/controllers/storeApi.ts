@@ -90,8 +90,10 @@ export function createStoreEmpty(canvasId: string): StoreType {
     collapsibleStore: writable([]), // this is used for the collaspsible node feature. If the feature is enabled, store.collapsible will be populated with Collapsible objects which will track whether the node should be displayed or not
     collapsibleOption: writable(false),
     lockedOption: writable(false),
-    editableOption: writable(false),
-    d3ZoomParameters: writable({}),
+    editableOption: writable(false), // true if you want nodes/edges to be editable. See feature editEdges
+    d3ZoomParameters: writable({}), // this stores d3 parameters x, y, and zoom. This isn't used for anything other than giving users a way to access d3 zoom parameters if they want to build on top of Svelvet
+    resizableOption: writable(true), // option to turn on/off resizable nodes.
+    highlightEdgesOption: writable(true), // option to turn on/off highlightable edges
   };
   return stores[canvasId];
 }
