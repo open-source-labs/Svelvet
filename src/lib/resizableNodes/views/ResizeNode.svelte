@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { findStore } from '../../store/controllers/storeApi';
   import type { ResizeNodeType } from '../../store/types/types';
   import { writable, derived, get, readable } from 'svelte/store';
@@ -12,11 +13,8 @@
   let isSelected = false;
   let reactResizeNode: ResizeNodeType;
   $: reactResizeNode = $resizeNodesStore[resizeId];
-</script>
 
-<svelte:window
-  on:mousemove={(e) => {
-    e.preventDefault();
+  const mousemove = (e) => {
     if (isSelected) {
       resizeNodesStore.update((resNode) => {
         const newResNode = resNode[resizeId];
@@ -29,13 +27,19 @@
         return { ...resNode };
       });
     }
-  }}
-  on:mouseup={(e) => {
-    e.preventDefault();
-    // don't need to set $nodeSelected = false because Node component will do it for you
+  };
+  const mouseup = (e) => {
     isSelected = false;
-  }}
-/>
+  };
+  onMount(() => {
+    const graphview = document.getElementById("graphview-container");
+    if (graphview) {
+      graphview.addEventListener("mousemove", mousemove);
+      graphview.addEventListener("mouseup", mouseup);
+    }
+  });
+</script>
+
 
 <div
   on:mousedown={(e) => {

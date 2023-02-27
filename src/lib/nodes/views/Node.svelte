@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
 
   import { findStore } from '../../store/controllers/storeApi';
   import type { NodeType } from '../../store/types/types';
@@ -140,12 +140,14 @@
     }
   };
 
+  onMount(() => {
+    const graphview = document.getElementById("graphview-container");
+    if (graphview) {
+      graphview.addEventListener("mousemove", mousemove);
+      graphview.addEventListener("mouseup", mouseup);
+    }
+  });
 </script>
-
-<svelte:window
-  on:mousemove={mousemove}
-  on:mouseup={mouseup}
-/>
 
 <!--EditNode component will be displayed if isEditing is true and if the canvas option "edtiable" is set true-->
 {#if isEditing && $editableOption}
