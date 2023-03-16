@@ -25,9 +25,13 @@
 {/if}
 
 <!-- Navbar -->
+
+<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+<!-- GOTTA FIX THIS FIRST DIV !!! THIS IS MAKING THE WEIRD SPACING IN HOMEPAGE -->
+
 <div
   class:shadow-lg={y > 5}
-  class="static hidden md:flex justify-between px-8 py-3 w-screen border-b h-16 bg-white"
+  class="static hidden md:flex justify-between px-8 py-3 w-screen bg-white"
 >
   <div class="flex items-center justify-center">
     <img src={logo} alt="Logo" class="aspect-ratio-auto h-8" />
@@ -44,7 +48,7 @@
     <p
       class="text-xs rounded-full px-4 py-1 bg-rose-100 text-red-400 tracking-wider"
     >
-      v6.0.0
+      v7.0.0
     </p>
   </div>
 
