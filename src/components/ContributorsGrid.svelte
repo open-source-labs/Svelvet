@@ -10,6 +10,17 @@
         <Contributor {...contributor} />
       {/each}
     </ul>
+
+    <p class="text-gray-100 text-center mt-5 md:mb-0">
+      Svelvet is open source and has room for many more features. We welcome
+      contributors!
+    </p>
+    <a
+      href="https://github.com/open-source-labs/Svelvet"
+      target="_blank"
+      class="self-center w-fit border-2 border-transparent hover:border-white mt-4 py-2 px-5 rounded-full hover:ease-in duration-100 hover:text-white hover:bg-transparent bg-white text-gray-800 "
+      >See Svelvet on GitHub</a
+    >
   </article>
   
   <style>
