@@ -19,32 +19,42 @@
 	const { x, y } = parentPosition;
 	const { x: targetX, y: targetY } = targetPosition;
 
-	$: boxWidth = Math.abs($targetX - $x) + $width;
-	$: boxHeight = $targetY - $y - $height;
+	let curveStrength = 0.2;
 
-	$: flipHorizontal = $targetX - $x < 0;
-	$: flipVertical = boxHeight < 0;
+	$: deltaY = $targetY - $y;
+	$: deltaX = $targetX - $x;
 
-	$: buffer = Math.min(30, Math.abs(boxHeight) * 1.1);
+	$: boxHeight = Math.abs(deltaY) + $height;
+	$: boxWidth = Math.abs(deltaX) + $width;
 
-	let curveStrength = 0.5;
+	$: targetCenter = $width / 2;
+	$: sourceCenter = $width / 2;
 
-	$: path = `M ${$width / 2}, ${flipVertical ? Math.abs(boxHeight) + buffer : 0}
+	$: flipHorizontal = deltaX < 0;
+	$: flipVertical = deltaY < 0;
+
+	$: buffer = 30;
+	$: sourceAnchorX = sourceCenter;
+	$: targetAnchorX = boxWidth - targetCenter;
+	$: sourceAnchorY = flipVertical ? boxHeight + buffer : $height + buffer;
+	$: targetAnchorY = flipVertical ? buffer : boxHeight - $height + buffer;
+
+	$: sourceControlPointY = sourceAnchorY + Math.max(boxHeight * curveStrength, 60);
+	$: targetControlPointY = targetAnchorY - Math.max(boxHeight * curveStrength, 60);
+
+	$: path = `M ${sourceAnchorX}, ${sourceAnchorY}
     ${
 			curve
-				? `C ${$width / 2}, ${
-						flipVertical ? Math.abs(boxHeight) + buffer * 3 : boxHeight * (1 - curveStrength)
-				  }
-				${Math.abs(boxWidth) - $width / 2}, ${flipVertical ? -buffer : Math.abs(boxHeight) * curveStrength}`
+				? `C ${sourceAnchorX}, ${sourceControlPointY} ${targetAnchorX}, ${targetControlPointY}`
 				: ''
 		}
-    ${boxWidth - $width / 2}, ${flipVertical ? buffer : Math.abs(boxHeight)} `;
+    ${targetAnchorX}, ${targetAnchorY} `;
 </script>
 
 <svg
-	width={Math.abs(boxWidth)}
-	height={flipVertical ? Math.abs(boxHeight) + buffer * 2 : Math.abs(boxHeight) + strokeWidth}
-	style="top: {flipVertical ? $targetY - buffer : $y + $height};
+	width={boxWidth}
+	height={boxHeight + buffer * 2}
+	style="top: {Math.min($y - buffer, $targetY - buffer)};
     left: {flipHorizontal ? $targetX : $x};
 	transform: scaleX({flipHorizontal ? -1 : 1});"
 >
@@ -57,6 +67,6 @@
 		z-index: 10;
 		position: absolute;
 		pointer-events: none;
-		/* border: solid 0.5px red; */
+		border: solid 0.5px red;
 	}
 </style>

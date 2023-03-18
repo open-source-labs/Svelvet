@@ -29,7 +29,7 @@
 	};
 
 	const scaleBounds = { min: MIN_SCALE, max: MAX_SCALE };
-	const { transforms, isLocked } = graph;
+	const { transforms, isLocked, selectedNodes } = graph;
 	const { scale, translation } = transforms;
 	const { x: translationX, y: translationY } = translation;
 
@@ -80,6 +80,7 @@
 			anchor.y = e.clientY - graphBounds.top;
 			anchor.x = e.clientX - graphBounds.left;
 		}
+		$selectedNodes = new Set();
 	}
 
 	function onMouseUp() {

@@ -7,6 +7,7 @@
 	import type { NodeKey, NodeStore } from '$lib/types';
 	import ResizeControls from '../ResizeControls/ResizeControls.svelte';
 	import Anchor from '../Anchor/Anchor.svelte';
+	import { activeKeys } from '$lib/stores';
 
 	// ASSIGN PROPS TO LOCAL VARIABLES
 	export let node: WritableNode;
@@ -36,6 +37,17 @@
 	function onMouseDown(e: MouseEvent) {
 		if ($isLocked) return;
 		moving = true;
+		if ($activeKeys['Shift'] && $selectedNodes.has(id)) {
+			$selectedNodes.delete(id);
+			$selectedNodes = $selectedNodes;
+		} else if ($activeKeys['Shift'] && !$selectedNodes.has(id)) {
+			$selectedNodes.add(id);
+			$selectedNodes = $selectedNodes;
+		} else if (!$activeKeys['Shift'] && !$selectedNodes.has(id)) {
+			$selectedNodes.clear();
+			$selectedNodes.add(id);
+			$selectedNodes = $selectedNodes;
+		}
 	}
 
 	function onMouseMove(e: MouseEvent) {
@@ -68,27 +80,19 @@
 		moving = false;
 	}
 
-	function handleClick() {
-		if ($selectedNodes.has(id)) {
-			$selectedNodes.delete(id);
-			$selectedNodes = $selectedNodes;
-		} else {
-			$selectedNodes.add(id);
-			$selectedNodes = $selectedNodes;
-		}
-	}
+	function handleClick() {}
 
 	// create an array of all the parent node keys
 	$: parentNodesArray = Array.from($inputNodes).map((node) => node.configObject);
 	const { configObject } = $node;
 </script>
 
-<svelte:window on:mousemove={onMouseMove} />
+<svelte:window on:mousemove={onMouseMove} on:mouseup|stopPropagation={onMouseUp} />
 <!-- NODE COMPONENT START -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	on:mouseup|self={onMouseUp}
-	on:mousedown|self|stopPropagation={onMouseDown}
+	on:mousedown|stopPropagation={onMouseDown}
 	on:click={handleClick}
 	on:touchstart={handleClick}
 	on:keydown={handleKey}
@@ -151,7 +155,6 @@
 <style>
 	.input-anchor-wrapper {
 		position: absolute;
-
 		width: 100%;
 		height: 100%;
 		display: flex;
@@ -164,7 +167,6 @@
 	}
 	.output-anchor-wrapper {
 		position: absolute;
-
 		width: 100%;
 		height: 100%;
 		display: flex;
@@ -200,6 +202,7 @@
 		top: 0px;
 		padding: 5px;
 		border-bottom: solid 1px black;
+		user-select: none;
 	}
 
 	.graph-node {

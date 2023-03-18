@@ -53,6 +53,7 @@
 	}
 	:global() * {
 		box-sizing: border-box;
+		user-select: none;
 	}
 	:root {
 		--dark-background: hsl(0, 2%, 10%);
