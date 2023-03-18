@@ -7,6 +7,7 @@
 	export let curve: boolean = true;
 	export let edgeNumber = 1;
 	export let edgeCount = 1;
+	export let active = false;
 
 	let flipHorizontal = false;
 	let flipVertical = false;
@@ -56,7 +57,8 @@
 	height={boxHeight + buffer * 2}
 	style="top: {Math.min($y - buffer, $targetY - buffer)};
     left: {flipHorizontal ? $targetX : $x};
-	transform: scaleX({flipHorizontal ? -1 : 1});"
+	transform: scaleX({flipHorizontal ? -1 : 1});
+	z-index: {active ? 10 : -10}"
 >
 	<path d={path} stroke="gray" stroke-width={strokeWidth} fill="transparent" />
 </svg>
@@ -64,9 +66,8 @@
 <style>
 	svg {
 		box-sizing: border-box;
-		z-index: 10;
 		position: absolute;
 		pointer-events: none;
-		border: solid 0.5px red;
+		/* border: solid 0.5px red; */
 	}
 </style>

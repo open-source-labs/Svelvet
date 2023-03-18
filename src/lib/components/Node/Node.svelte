@@ -138,6 +138,7 @@
 <!-- FOR EACH CONNECTION, RENDER AN EDGE -->
 {#each Array.from($outputNodes) as outputNode, index}
 	<Edge
+		active={$selectedNodes.has($node.id)}
 		edgeCount={Array.from($inputNodes).length}
 		edgeNumber={index + 1}
 		{curve}
