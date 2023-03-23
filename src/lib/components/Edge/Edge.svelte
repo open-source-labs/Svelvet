@@ -21,6 +21,7 @@
 	const { x: targetX, y: targetY } = targetPosition;
 
 	let curveStrength = 0.2;
+	let buffer = 30;
 
 	$: deltaY = $targetY - $y;
 	$: deltaX = $targetX - $x;
@@ -28,39 +29,73 @@
 	$: boxHeight = Math.abs(deltaY) + $height;
 	$: boxWidth = Math.abs(deltaX) + $width;
 
+	$: stepFlip = deltaY - buffer - $height;
+
 	$: targetCenter = $width / 2;
 	$: sourceCenter = $width / 2;
 
 	$: flipHorizontal = deltaX < 0;
 	$: flipVertical = deltaY < 0;
 
-	$: buffer = 30;
 	$: sourceAnchorX = sourceCenter;
 	$: targetAnchorX = boxWidth - targetCenter;
 	$: sourceAnchorY = flipVertical ? boxHeight + buffer : $height + buffer;
 	$: targetAnchorY = flipVertical ? buffer : boxHeight - $height + buffer;
 
-	$: sourceControlPointY = sourceAnchorY + Math.max(boxHeight * curveStrength, 60);
-	$: targetControlPointY = targetAnchorY - Math.max(boxHeight * curveStrength, 60);
+	$: sourceControlPointY = boxHeight - 60;
+	$: targetControlPointY = 60;
 
-	$: path = `M ${sourceAnchorX}, ${sourceAnchorY}
-    ${
-			curve
-				? `C ${sourceAnchorX}, ${sourceControlPointY} ${targetAnchorX}, ${targetControlPointY}`
-				: ''
+	$: cornerRadius = 10;
+	$: cornerRadiusString = `${cornerRadius} ${cornerRadius}`;
+	$: cornerRadiusFlipped = `${cornerRadius} -${cornerRadius}`;
+
+	$: rightDownArc = `${cornerRadiusString} 0 0 1 ${cornerRadiusString}`;
+	$: downRightArc = `${cornerRadiusString} 0 0 0 ${cornerRadiusString}`;
+	$: rightUpArc = `${cornerRadiusString} 0 0 0 ${cornerRadiusFlipped}`;
+	$: upRightArc = `${cornerRadiusString} 0 0 1 ${cornerRadiusFlipped}`;
+
+	$: bezierPath = `M ${sourceAnchorX}, ${sourceAnchorY}
+	${
+		curve
+			? `C ${sourceAnchorX}, ${sourceControlPointY} ${targetAnchorX}, ${targetControlPointY}`
+			: ''
+	}
+	${targetAnchorX}, ${targetAnchorY}`;
+
+	$: stepPath = `M ${sourceAnchorX}, ${sourceAnchorY}
+		l 0 ${Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadius)} 
+		a ${downRightArc}
+		l ${
+			stepFlip < 0
+				? Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2
+				: Math.abs(sourceAnchorX - targetAnchorX) - cornerRadius * 2
+		} 0
+		a ${stepFlip < 0 ? rightUpArc : rightDownArc}
+		l 0 ${
+			stepFlip < 0
+				? -(sourceAnchorY - targetAnchorY + cornerRadius * 2)
+				: Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadius)
 		}
-    ${targetAnchorX}, ${targetAnchorY} `;
+		
+		${
+			stepFlip < 0
+				? `a ${upRightArc}
+		l  ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2} 0
+		a ${rightDownArc}
+		l  0 ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2}`
+				: ''
+		}`;
 </script>
 
 <svg
 	width={boxWidth}
 	height={boxHeight + buffer * 2}
-	style="top: {Math.min($y - buffer, $targetY - buffer)};
+	style="top: {Math.min($y, $targetY) - buffer};
     left: {flipHorizontal ? $targetX : $x};
 	transform: scaleX({flipHorizontal ? -1 : 1});
 	z-index: {active ? 10 : -10}"
 >
-	<path d={path} stroke="gray" stroke-width={strokeWidth} fill="transparent" />
+	<path d={stepPath} stroke="gray" stroke-width={strokeWidth} fill="transparent" />
 </svg>
 
 <style>
@@ -68,6 +103,6 @@
 		box-sizing: border-box;
 		position: absolute;
 		pointer-events: none;
-		/* border: solid 0.5px red; */
+		border: solid 0.5px red;
 	}
 </style>

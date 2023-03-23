@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
-	import type { Graph, Node as NodeType } from '../../types';
-	import type { Writable } from 'svelte/store';
+	import type { Graph } from '../../types';
 	import type { NodeStore } from '../../types';
 
 	export let nodeStore: NodeStore;
@@ -13,6 +12,3 @@
 {#each Object.values($nodeStore) as node}
 	<Node {node} {selectedNodes} {transforms} {isLocked} {nodeStore} />
 {/each}
-
-<style>
-</style>

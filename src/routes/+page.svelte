@@ -1,16 +1,17 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap } from '$lib';
+	import { Svelvet, Controls, Minimap, Node } from '$lib';
 
 	const mermaid = `Brian --> Svelvet
 	Jen --> Svelvet
 	Britta --> Svelvet
-	Thomas --> Svelvet
-	Svelvet --> Okay`;
+	Thomas|Geometry|musgraveConfig --> Svelvet
+	Svelvet --> Kevin
+	Kevin --> Whatever`;
 </script>
 
 <div class="wrapper">
-	<Svelvet theme="dark" {mermaid} width={600} height={600}>
-		<!-- <Controls /> -->
+	<Svelvet theme="light" {mermaid} width={600} height={600}>
+		<!-- <Controls  /> -->
 		<!-- <Minimap /> -->
 	</Svelvet>
 </div>
