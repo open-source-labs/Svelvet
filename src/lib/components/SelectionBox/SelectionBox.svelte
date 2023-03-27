@@ -6,7 +6,8 @@
 
 	export let graph;
 
-	const { selectedNodes } = graph;
+	const { groups, nodes: nodeStore } = graph;
+	const { selected: selectedNodes } = groups;
 
 	interface Node {
 		id: string;
@@ -59,7 +60,17 @@
 			}
 		});
 		console.log({ nodeIdsUnderSelection });
-		$selectedNodes = new Set(nodeIdsUnderSelection);
+		$selectedNodes = new Set(
+			nodeIdsUnderSelection.map((id) => {
+				let foundNode;
+				const storedNode = nodeStore.get(id);
+				storedNode.subscribe((node) => {
+					foundNode = node;
+				});
+
+				return foundNode;
+			})
+		);
 		$selectedNodes = $selectedNodes;
 	}
 </script>

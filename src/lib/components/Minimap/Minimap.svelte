@@ -1,24 +1,39 @@
-<!-- <script>
-	import { nodeStore } from '../../store/store';
-	import Canvas from '../canvas/Canvas.svelte';
+<script lang="ts">
+	import { graphStore } from '$lib/stores';
+	import { getContext } from 'svelte';
+	import MinimapNode from './MinimapNode.svelte';
+	import type { Graph } from '$lib/types';
+	import type { Writable } from 'svelte/store';
+
+	let graph: Writable<Graph>;
+
+	let { graphId } = getContext('graphId');
+	graph = graphStore.get(graphId);
+	const { nodes, bounds } = $graph;
+	const { top, bottom, left, right } = bounds;
+	$: boundsWidth = $right - $left;
+	$: boundsHeight = $bottom - $top;
+	$: aspectRatio = boundsWidth / boundsHeight;
+
+	console.log($left, $right, $top, $bottom);
 </script>
 
 <div class="minimap-wrapper">
-	<Canvas minimap={true} forcedScale={0.1} />
+	<div
+		class="node-wrapper"
+		style={`${
+			boundsWidth > boundsHeight ? `width: 75%` : 'height: 75%'
+		}; aspect-ratio: ${aspectRatio}`}
+	>
+		{#each Object.values($nodes) as node}
+			<MinimapNode {node} {bounds} />
+		{/each}
+	</div>
 </div>
 
 <style>
-	/* .minimap-wrapper {
-		background-color: white;
-		position: absolute;
-		right: 10px;
-		bottom: 10px;
-		width: 100px;
-		height: 100px;
-		border-radius: 10px;
-	} */
-
 	.minimap-wrapper {
+		box-sizing: border-box;
 		position: absolute;
 		width: 100px;
 		height: 100px;
@@ -30,5 +45,12 @@
 		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
 		border: solid 1px black;
 		z-index: 10;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
-</style> -->
+	.node-wrapper {
+		box-sizing: border-box;
+		position: absolute;
+	}
+</style>

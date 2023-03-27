@@ -5,7 +5,7 @@
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
-	import { cursorPosition } from '$lib/stores/CursorStore';
+	import { cursorPosition, initialClickPosition } from '$lib/stores/CursorStore';
 
 	export let graph: Graph;
 	export let MAX_SCALE = 4;
@@ -29,9 +29,11 @@
 	};
 
 	const scaleBounds = { min: MIN_SCALE, max: MAX_SCALE };
-	const { transforms, isLocked, selectedNodes } = graph;
+	const { transforms, isLocked, groups } = graph;
+	const { selected } = $groups;
 	const { scale, translation } = transforms;
 	const { x: translationX, y: translationY } = translation;
+	const { x: cursorX, y: cursorY } = cursorPosition;
 
 	let isMovable = false;
 	let selecting: boolean = false;
@@ -72,6 +74,7 @@
 	}
 
 	function onMouseDown(e: MouseEvent) {
+		$initialClickPosition = { x: $cursorX, y: $cursorY };
 		if (!$activeKeys['Shift']) {
 			$isLocked = true;
 			isMovable = true;
@@ -80,7 +83,7 @@
 			anchor.y = e.clientY - graphBounds.top;
 			anchor.x = e.clientX - graphBounds.left;
 		}
-		$selectedNodes = new Set();
+		$selected = new Set();
 	}
 
 	function onMouseUp() {
@@ -141,20 +144,61 @@
 		$translationX = 0;
 	}
 
-	function handleGraphPan(e: MouseEvent) {
-		if (isMovable) {
-			$translationX += e.movementX;
-			$translationY += e.movementY;
-		} else {
-			updateCursorStore(e);
-		}
+	$: if (isMovable) {
+		let newX = $cursorX - $initialClickPosition.x;
+		let newY = $cursorY - $initialClickPosition.y;
+
+		$translationX += newX * $scale;
+		$translationY += newY * $scale;
 	}
 
 	function updateCursorStore(e: MouseEvent) {
 		const { clientX, clientY } = e;
-		const { x, y } = cursorPosition;
-		x.set(clientX - graphBounds.left);
-		y.set(clientY - graphBounds.top);
+
+		const offsetX = (graphBounds.width * (1 - $scale)) / 2 + $translationX;
+		const offsetY = (graphBounds.height * (1 - $scale)) / 2 + $translationY;
+
+		const newX = (clientX - graphBounds.left - offsetX) / $scale;
+		const newY = (clientY - graphBounds.top - offsetY) / $scale;
+
+		cursorX.set(newX);
+		cursorY.set(newY);
+	}
+
+	const throttledOnMouseMove = throttle(updateCursorStore, 10);
+	const debouncedHandleScroll = debounce(handleScroll, 10);
+
+	function throttle<T extends unknown[], R>(
+		func: (...args: T) => R,
+		limit: number
+	): (...args: T) => void {
+		let lastCall = 0;
+
+		return (...args: T) => {
+			const now = new Date().getTime();
+
+			if (now - lastCall >= limit) {
+				lastCall = now;
+				func(...args);
+			}
+		};
+	}
+
+	function debounce<T extends unknown[], R>(
+		func: (...args: T) => R,
+		wait: number
+	): (...args: T) => void {
+		let timeout: ReturnType<typeof setTimeout> | null;
+
+		return (...args: T) => {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+
+			timeout = setTimeout(() => {
+				func(...args);
+			}, wait);
+		};
 	}
 </script>
 
@@ -164,7 +208,7 @@
 	class="wrapper"
 	tabindex={0}
 	role="presentation"
-	on:wheel|preventDefault={handleScroll}
+	on:wheel|preventDefault={debouncedHandleScroll}
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	on:mousedown={onMouseDown}
@@ -181,7 +225,7 @@
 	</div>
 </table>
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove|preventDefault={handleGraphPan} />
+<svelte:window on:mouseup={onMouseUp} on:mousemove|preventDefault={throttledOnMouseMove} />
 
 <style>
 	.wrapper {
@@ -197,7 +241,7 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		/* outline: solid 1px red; */
+		outline: solid 1px red;
 	}
 	.wrapper:focus {
 		outline: none;

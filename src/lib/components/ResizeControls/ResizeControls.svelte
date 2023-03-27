@@ -17,9 +17,9 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		z-index: 100;
+		z-index: 1;
 		pointer-events: none;
 		border-radius: 8px;
-		border: solid 2px rgb(103, 159, 243);
+		border: solid 2px rgb(207, 248, 250);
 	}
 </style>

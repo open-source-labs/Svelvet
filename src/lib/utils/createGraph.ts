@@ -17,8 +17,17 @@ export function createGraph(id: string): Graph {
 				y: writable(0)
 			}
 		},
+		bounds: {
+			top: writable(Infinity),
+			left: writable(Infinity),
+			right: writable(-Infinity),
+			bottom: writable(-Infinity)
+		},
 		data: createStore<DataObject>(),
 		isLocked: writable(false),
-		selectedNodes: writable(new Set())
+		connectingFrom: writable(null),
+		groups: writable({
+			selected: writable(new Set<Node>())
+		})
 	};
 }

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Node } from '$lib/types';
+	import type { Node, XYPosition } from '$lib/types';
 	import { cursorPosition } from '$lib/stores/CursorStore';
 
 	export let inputNode: Node;
-	export let targetPosition = cursorPosition;
+	export let targetPosition: XYPosition;
 	export let curve: boolean = true;
 	export let edgeNumber = 1;
 	export let edgeCount = 1;
@@ -13,15 +13,16 @@
 	let flipVertical = false;
 	let anchorGap = 5;
 	let offset = anchorGap * (edgeNumber - Math.ceil(edgeCount / 2));
-	let strokeWidth = 4;
+	let strokeWidth = 3;
 
 	const parentPosition = inputNode.position;
 	const { width, height } = inputNode.dimensions;
 	const { x, y } = parentPosition;
 	const { x: targetX, y: targetY } = targetPosition;
 
-	let curveStrength = 0.2;
+	let curveStrength = 0.4;
 	let buffer = 30;
+	let cornerRadiusConstant = 10;
 
 	$: deltaY = $targetY - $y;
 	$: deltaX = $targetX - $x;
@@ -42,12 +43,13 @@
 	$: sourceAnchorY = flipVertical ? boxHeight + buffer : $height + buffer;
 	$: targetAnchorY = flipVertical ? buffer : boxHeight - $height + buffer;
 
-	$: sourceControlPointY = boxHeight - 60;
-	$: targetControlPointY = 60;
+	$: sourceControlPointY = sourceAnchorY + (targetAnchorY - sourceAnchorY) * curveStrength;
+	$: targetControlPointY = sourceAnchorY - (sourceAnchorY - targetAnchorY) * curveStrength;
 
-	$: cornerRadius = 10;
-	$: cornerRadiusString = `${cornerRadius} ${cornerRadius}`;
-	$: cornerRadiusFlipped = `${cornerRadius} -${cornerRadius}`;
+	$: cornerRadiusX = Math.min(cornerRadiusConstant, Math.abs(deltaX));
+	$: cornerRadiusY = Math.min(cornerRadiusConstant, Math.abs(deltaY));
+	$: cornerRadiusString = `${cornerRadiusX} ${cornerRadiusY}`;
+	$: cornerRadiusFlipped = `${cornerRadiusX} -${cornerRadiusY}`;
 
 	$: rightDownArc = `${cornerRadiusString} 0 0 1 ${cornerRadiusString}`;
 	$: downRightArc = `${cornerRadiusString} 0 0 0 ${cornerRadiusString}`;
@@ -63,26 +65,26 @@
 	${targetAnchorX}, ${targetAnchorY}`;
 
 	$: stepPath = `M ${sourceAnchorX}, ${sourceAnchorY}
-		l 0 ${Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadius)} 
+		l 0 ${Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadiusX)} 
 		a ${downRightArc}
 		l ${
 			stepFlip < 0
-				? Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2
-				: Math.abs(sourceAnchorX - targetAnchorX) - cornerRadius * 2
+				? Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2
+				: Math.abs(sourceAnchorX - targetAnchorX) - cornerRadiusX * 2
 		} 0
 		a ${stepFlip < 0 ? rightUpArc : rightDownArc}
 		l 0 ${
 			stepFlip < 0
-				? -(sourceAnchorY - targetAnchorY + cornerRadius * 2)
-				: Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadius)
+				? -(sourceAnchorY - targetAnchorY + cornerRadiusX * 2)
+				: Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadiusX)
 		}
 		
 		${
 			stepFlip < 0
 				? `a ${upRightArc}
-		l  ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2} 0
+		l  ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2} 0
 		a ${rightDownArc}
-		l  0 ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadius * 2}`
+		l  0 ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2}`
 				: ''
 		}`;
 </script>
@@ -95,14 +97,24 @@
 	transform: scaleX({flipHorizontal ? -1 : 1});
 	z-index: {active ? 10 : -10}"
 >
-	<path d={stepPath} stroke="gray" stroke-width={strokeWidth} fill="transparent" />
+	<path d={bezierPath} stroke="black" stroke-width={strokeWidth + 1.5} fill="transparent" />
+	<path d={bezierPath} stroke="white" stroke-width={strokeWidth} fill="transparent" />
 </svg>
 
 <style>
 	svg {
-		box-sizing: border-box;
 		position: absolute;
 		pointer-events: none;
-		border: solid 0.5px red;
+		/* border: solid 0.5px red; */
+	}
+
+	.animate {
+		stroke-dasharray: 5;
+		animation: dash 50000s linear;
+	}
+	@keyframes dash {
+		from {
+			stroke-dashoffset: 1000000;
+		}
 	}
 </style>

@@ -24,7 +24,7 @@ export function populateNodes(string: string) {
 		const [parentTitle, parentComponent, parentConfig] = parentNodeString.split('|');
 		const [childTitle, childComponent, childConfig] = childNodeString.split('|');
 		//const [parentTitle, childTitle] = edge.split('~~>');
-		console.log({ childComponent });
+
 		if (parentTitle === currentParent) {
 			childCount++;
 		} else {

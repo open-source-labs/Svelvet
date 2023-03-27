@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { graphStore } from '$lib/stores';
+	import type { Graph } from '$lib/types';
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
 	const ZOOM_INCREMENT = 0.1;
+	let graph: Writable<Graph>;
+	let { graphId } = getContext('graphId');
+	console.log(graphId);
+	graph = graphStore.get(graphId);
 
-	export let graph;
-
-	const { transforms, isLocked } = graph;
+	const { transforms, isLocked } = $graph;
 	const { scale, translation } = transforms;
 	const { x: xOffset, y: yOffset } = translation;
 

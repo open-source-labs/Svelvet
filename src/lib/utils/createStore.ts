@@ -16,7 +16,7 @@ export function createStore<T extends { id: Key }>() {
 		subscribe: typeof subscribe;
 		set: typeof set;
 		update: typeof update;
-		add: (item: T) => Writable<T>;
+		add: (item: T) => TData;
 		get: (key: Key) => Writable<T>;
 	}
 
@@ -26,7 +26,7 @@ export function createStore<T extends { id: Key }>() {
 		update,
 		add: (item: T) => {
 			data[item.id] = writable(item);
-			return data[item.id];
+			return data;
 		},
 		get: (key: Key) => {
 			return data[key];
