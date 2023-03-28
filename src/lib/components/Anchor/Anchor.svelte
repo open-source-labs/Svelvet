@@ -1,12 +1,18 @@
 <script lang="ts">
 	import type { Graph, Node } from '$lib/types';
 	import { writable } from 'svelte/store';
+	import { source } from '$lib/stores';
 
 	// export let nodeId: string;
 	// export let mode: string;
 	// export let direction: string = 'TD';
 	// export let node: Node;
 	// export let graph: Graph;
+
+	export let input;
+	export let object;
+	export let label;
+	export let type = 'input';
 
 	// import { createNode } from '$lib/utils/createNode';
 
@@ -45,6 +51,16 @@
 		// outputNodes.update((nodes) => {
 		// 	return new Set([...nodes, dummyNode]);
 		// });
+		if (!$source) {
+			console.log("Source doesn't exist");
+			console.log($object);
+			$source = object;
+			console.log($source);
+		} else {
+			console.log('Source exists');
+			$object[label] = $source;
+			$source = null;
+		}
 	}
 
 	function handleMove(e: MouseEvent) {
@@ -70,12 +86,16 @@
 	}
 </script>
 
-<div on:mousedown|stopPropagation={handleClick} on:mouseup={connect} class="anchor" />
+<div
+	style={type === 'output' ? 'right: -6px;' : 'left: -6px;'}
+	on:mousedown|stopPropagation={handleClick}
+	on:mouseup={connect}
+	class="anchor"
+/>
 
 <style>
 	.anchor {
 		position: absolute;
-		left: -6px;
 		z-index: 12;
 		width: 12px;
 		height: 12px;

@@ -14,6 +14,8 @@
 
 	let sliding = false;
 
+	$: connection = $value.value || $value;
+
 	// Begin sliding on mousedown
 	function startSlide() {
 		sliding = true;
@@ -63,7 +65,7 @@
 			bind:this={sliderElement}
 			id="slider-input"
 			class="input"
-			style="--percentage: {($value / max) * 100}%"
+			style="--percentage: {(($value - min) / max) * 100}%"
 			type="text"
 			on:keydown|stopPropagation={(event) => {
 				// Update value on arrow key presses
@@ -79,8 +81,8 @@
 				sliderElement.select();
 			}}
 			on:mousedown|stopPropagation|preventDefault={startSlide}
-			on:blur={() => (value = round(value, rounding))}
-			bind:value={$value}
+			on:blur={() => ($value = round($value, rounding))}
+			bind:value={connection}
 			aria-label={label}
 		/>
 		<!-- Increase value button -->

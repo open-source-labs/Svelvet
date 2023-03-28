@@ -1,27 +1,33 @@
-<script lang="ts">
+<script>
+	import Anchor from '../Anchor/Anchor.svelte';
 	import Slider from '../Slider/Slider.svelte';
+	export let input;
+	export let label;
+	export let config;
+	export let object;
+	export let connectable = false;
 
-	export let type: string;
-	export let value: number | string;
-	export let driveable: boolean;
+	const { type, value, min, max, step, rounding } = config;
 </script>
 
-{#if driveable}
-	<Input />
-{/if}
-
-<div class="parameter-wrapper">
-	{#if type === 'slider'}
-		<Slider {value} />
+<div class="input">
+	<Slider {label} {min} {max} {step} {rounding} value={input} />
+	{#if connectable}
+		<Anchor {input} {object} {label} />
 	{/if}
 </div>
 
-{#if mode === 'output'}
-	<Output />
-{/if}
-
 <style>
-	.parameter-wrapper {
+	.anchor {
+		width: 10px;
+		height: 10px;
+		background-color: white;
+		border-radius: 50%;
+		border: solid 1px black;
+	}
+
+	.input {
+		/* border: solid 1px green; */
 		display: flex;
 		align-items: center;
 		justify-content: center;

@@ -17,17 +17,76 @@
 				type: 'slider',
 				initial: 50,
 				min: 0,
-				max: 100,
+				max: 60,
 				step: 1,
 				rounding: 3,
 				label: 'Value',
-				input: null
+				connection: null
 			}
 		},
 		processor: (inputs, properties) => {
-			return {
-				value: properties.value
-			};
+			console.log('Running');
+			return properties.value;
+		}
+	};
+
+	const addConfig = {
+		title: 'Value',
+		description: 'Outputs a value',
+		inputs: {
+			value1: {
+				id: 'value',
+				type: 'slider',
+				initial: 50,
+				min: 0,
+				max: 60,
+				step: 1,
+				rounding: 3,
+				label: 'Value',
+				connection: null
+			},
+			value2: {
+				id: 'value',
+				type: 'slider',
+				initial: 50,
+				min: 0,
+				max: 60,
+				step: 1,
+				rounding: 3,
+				label: 'Value',
+				connection: null
+			}
+		},
+		properties: {
+			value1: {
+				id: 'value',
+				type: 'slider',
+				initial: 50,
+				min: 0,
+				max: 60,
+				step: 1,
+				rounding: 3,
+				label: 'Value',
+				connection: null
+			},
+			value2: {
+				id: 'value',
+				type: 'slider',
+				initial: 50,
+				min: 0,
+				max: 60,
+				step: 1,
+				rounding: 3,
+				label: 'Value',
+				connection: null
+			}
+		},
+		processor: (inputs, properties) => {
+			console.log('Running');
+
+			return Object.values(inputs)
+				.concat(Object.values(properties))
+				.reduce((a, b) => a + b);
 		}
 	};
 
@@ -46,7 +105,7 @@
 				step: 0.01,
 				rounding: 3,
 				label: 'Value',
-				input: null
+				connection: null
 			},
 			value2: {
 				id: 'value2',
@@ -57,7 +116,7 @@
 				step: 0.01,
 				rounding: 3,
 				label: 'Value',
-				input: null
+				connection: null
 			},
 			value3: {
 				id: 'value2',
@@ -68,14 +127,12 @@
 				step: 0.01,
 				rounding: 3,
 				label: 'Value',
-				input: null
+				connection: null
 			}
 		},
 		processor: (inputs, properties) => {
 			console.log('Running');
-			return {
-				value: Math.min(inputs.value1, inputs.value2, inputs.value3)
-			};
+			return Object.values(inputs).reduce((a, b) => Math.min(a, b));
 		}
 	};
 
@@ -91,6 +148,15 @@
 		{
 			id: '3',
 			config: valueConfig
+		},
+
+		{
+			id: '4',
+			config: valueConfig
+		},
+		{
+			id: '5',
+			config: addConfig
 		}
 	];
 </script>

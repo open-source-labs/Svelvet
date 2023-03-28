@@ -1,6 +1,6 @@
 import type { Writable } from 'svelte/store';
 import type { derived } from 'svelte/store';
-import type { XYPosition, NodeKey, Dimensions } from '.';
+import type { XYPosition, NodeKey, Dimensions, ConfigObject } from '.';
 
 export interface Node {
 	id: NodeKey;
@@ -22,6 +22,7 @@ export interface Node {
 	focusable: Writable<boolean>;
 	resizing: Writable<boolean>;
 	componentRef: string;
+	config?: ConfigObject;
 }
 
 export type Property = any;

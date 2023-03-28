@@ -2,12 +2,14 @@
 	import Anchor from '../Anchor/Anchor.svelte';
 	import Slider from '../Slider/Slider.svelte';
 	export let output;
+	export let label;
+	export let store;
 	//const { type, value, min, max, step, rounding, label, driven } = input;
 </script>
 
-<div class="output">
-	<p>Output</p>
-	<Anchor />
+<div class="input">
+	<p>{$store}</p>
+	<Anchor object={store} {label} type="output" />
 </div>
 
 <style>
@@ -19,10 +21,15 @@
 		border: solid 1px black;
 	}
 
-	.output {
-		border: solid 1px green;
+	.input {
+		/* border: solid 1px green; */
 		display: flex;
 		align-items: center;
+		align-self: end;
 		justify-content: center;
+	}
+
+	p {
+		margin: 0;
 	}
 </style>

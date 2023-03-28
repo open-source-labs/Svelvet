@@ -1,5 +1,5 @@
 import type { UserProperties } from './node';
-import type { Inputs, Properties, Outputs } from './node';
+import type { Inputs, Properties } from './node';
 
 export interface ConfigObject {
 	[key: string]: unknown;
@@ -15,6 +15,7 @@ export interface ConfigObject {
 			max?: number;
 			step?: number;
 			rounding?: number;
+			connection: null | string;
 		};
 	};
 	outputs?: {

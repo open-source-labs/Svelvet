@@ -14,7 +14,7 @@
 	export let theme = 'light';
 	export let width: number = 100;
 	export let height: number = 100;
-	export let graphId: GraphKey = Math.floor(Math.random() * 100).toString();
+	export let graphId: GraphKey = '1'; //Math.floor(Math.random() * 100).toString();
 	export let style: BackgroundStyles = 'dots';
 	export let nodes: Array<UserNode> = [];
 	export let edges: Array<object> = [];

@@ -11,8 +11,8 @@
 	import type { Writable } from 'svelte/store';
 	import type { Node } from '$lib/types';
 	import Parameter from '../Parameter/Parameter.svelte';
-	import Input from '../Input/Input.svelte';
 	import { json } from '@sveltejs/kit';
+	import Output from '../Output/Output.svelte';
 
 	// ASSIGN PROPS TO LOCAL VARIABLES
 	export let node: WritableNode;
@@ -24,7 +24,7 @@
 
 	const { isLocked, transforms, bounds, nodes: nodeStore, groups } = graph;
 
-	const { dimensions, inputs, outputs, properties, position, draggable, id, group } = $node;
+	const { dimensions, inputs, outputs, properties, position, draggable, id, group, config } = $node;
 	const { scale } = transforms;
 	const { width, height } = dimensions;
 	const { x, y } = position;
@@ -32,7 +32,8 @@
 	const { selected } = $groups;
 
 	const { x: cursorX, y: cursorY } = cursorPosition;
-
+	console.log($inputs);
+	console.log(config);
 	// Dynamically import the component for the node
 	onMount(async () => {
 		const { width: DOMwidth, height: DOMheight } = DOMnode.getBoundingClientRect();
@@ -141,13 +142,10 @@
 	// 	console.log(id);
 	// 	console.log($outputs);
 	// }
-
-	function update() {
-		properties.update((properties) => {
-			properties.value.initial++;
-			return properties;
-		});
+	$: {
 	}
+
+	function connect() {}
 </script>
 
 <svelte:window on:mouseup|stopPropagation={onMouseUp} />
@@ -177,24 +175,32 @@
 		<button on:click={() => (collapsed = !collapsed)}>+</button>
 		<p class="node-name" style="color: black">{$node.id}</p>
 	</div>
-
 	{#if !collapsed}
 		<div class="line" />
 		<section class="parameters">
-			<!-- {#if $outputs}
-				{#each Object.values($outputs) as output}
-					<p>{output}</p>
-				{/each}
-			{/if} -->
+			{#if $outputs}
+				<Output store={outputs} />
+			{/if}
 			{#if $properties}
 				{#each Object.keys($properties) as key}
-					<Input label={key} input={$properties[key]} />
+					<Parameter
+						object={properties}
+						config={config ? config.properties[key] : null}
+						label={key}
+						input={$properties[key]}
+					/>
 				{/each}
 			{/if}
-			{#if $outputs}<h1>{JSON.stringify($outputs.value)}</h1>{/if}
+
 			{#if $inputs}
 				{#each Object.keys($inputs) as key}
-					<Input label={key} input={$inputs[key]} />
+					<Parameter
+						connectable
+						object={inputs}
+						config={config ? config.inputs[key] : null}
+						label={key}
+						input={$inputs[key]}
+					/>
 				{/each}
 			{/if}
 		</section>

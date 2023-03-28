@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { GraphKey, NodeKey, NodeStore, DataStore, Node } from '.';
+import type { GraphKey, NodeKey, NodeStore, DataStore, Node, Input } from '.';
 
 export interface Graph {
 	id: GraphKey;
@@ -13,7 +13,7 @@ export interface Graph {
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
-	connectingFrom: Writable<Node | null>;
+	connectingFrom: Writable<Input>;
 	groups: Writable<Groups>;
 }
 
