@@ -6,6 +6,7 @@ export function createGraph(id: string): Graph {
 	return {
 		id,
 		nodes: createStore<Node>(),
+		edges: writable(new Map()),
 		transforms: {
 			translation: {
 				x: writable(0),

@@ -1,50 +1,55 @@
 <script lang="ts">
 	import type { Node, XYPosition } from '$lib/types';
 	import { cursorPosition } from '$lib/stores/CursorStore';
-
-	export let inputNode: Node;
-	export let targetPosition: XYPosition;
-	export let curve: boolean = true;
-	export let edgeNumber = 1;
-	export let edgeCount = 1;
+	import { get } from 'svelte/store';
+	export let sourceNode: Node;
+	export let targetNode: Node;
+	export let sourceAnchor: string;
+	export let targetAnchor: string;
+	export let curve = true;
 	export let active = false;
+
+	// const targetNode: Node = get(nodeStore.get('5'));
+
+	const { x: sourceAnchorOffsetX, y: sourceAnchorOffsetY } = sourceNode.anchors[sourceAnchor];
+	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode.anchors[targetAnchor];
 
 	let flipHorizontal = false;
 	let flipVertical = false;
-	let anchorGap = 5;
-	let offset = anchorGap * (edgeNumber - Math.ceil(edgeCount / 2));
 	let strokeWidth = 3;
 
-	const parentPosition = inputNode.position;
-	const { width, height } = inputNode.dimensions;
-	const { x, y } = parentPosition;
-	const { x: targetX, y: targetY } = targetPosition;
+	const { width: sourceWidth, height: sourceHeight } = sourceNode.dimensions;
+	const { width: targetWidth, height: targetHeight } = targetNode.dimensions;
+	const { x: sourceNodeX, y: sourceNodeY } = sourceNode.position;
+	const { x: targetNodeX, y: targetNodeY } = targetNode.position;
 
 	let curveStrength = 0.4;
 	let buffer = 30;
 	let cornerRadiusConstant = 10;
 
-	$: deltaY = $targetY - $y;
-	$: deltaX = $targetX - $x;
-
-	$: boxHeight = Math.abs(deltaY) + $height;
-	$: boxWidth = Math.abs(deltaX) + $width;
-
-	$: stepFlip = deltaY - buffer - $height;
-
-	$: targetCenter = $width / 2;
-	$: sourceCenter = $width / 2;
+	$: deltaY = $targetNodeY - $sourceNodeY;
+	$: deltaX = $targetNodeX - $sourceNodeX;
 
 	$: flipHorizontal = deltaX < 0;
 	$: flipVertical = deltaY < 0;
 
-	$: sourceAnchorX = sourceCenter;
-	$: targetAnchorX = boxWidth - targetCenter;
-	$: sourceAnchorY = flipVertical ? boxHeight + buffer : $height + buffer;
-	$: targetAnchorY = flipVertical ? buffer : boxHeight - $height + buffer;
+	$: boxHeight = Math.abs(deltaY) + (flipVertical ? $sourceHeight : $targetHeight);
+	$: boxWidth = Math.abs(deltaX) + $targetWidth;
 
-	$: sourceControlPointY = sourceAnchorY + (targetAnchorY - sourceAnchorY) * curveStrength;
-	$: targetControlPointY = sourceAnchorY - (sourceAnchorY - targetAnchorY) * curveStrength;
+	$: stepFlip = deltaY - buffer - $targetHeight;
+
+	$: sourceAnchorX = sourceAnchorOffsetX;
+	$: sourceAnchorY = flipVertical
+		? boxHeight + buffer - $sourceHeight + sourceAnchorOffsetY
+		: sourceAnchorOffsetY + buffer;
+
+	$: targetAnchorY = flipVertical
+		? buffer + targetAnchorOffsetY
+		: boxHeight - $targetHeight + buffer + targetAnchorOffsetY;
+	$: targetAnchorX = boxWidth - $targetWidth;
+
+	$: sourceControlPointX = sourceAnchorX + (targetAnchorX - sourceAnchorX) * curveStrength;
+	$: targetControlPointX = sourceAnchorX - (sourceAnchorX - targetAnchorX) * curveStrength;
 
 	$: cornerRadiusX = Math.min(cornerRadiusConstant, Math.abs(deltaX));
 	$: cornerRadiusY = Math.min(cornerRadiusConstant, Math.abs(deltaY));
@@ -59,7 +64,7 @@
 	$: bezierPath = `M ${sourceAnchorX}, ${sourceAnchorY}
 	${
 		curve
-			? `C ${sourceAnchorX}, ${sourceControlPointY} ${targetAnchorX}, ${targetControlPointY}`
+			? `C ${sourceControlPointX}, ${sourceAnchorY} ${targetControlPointX}, ${targetAnchorY}`
 			: ''
 	}
 	${targetAnchorX}, ${targetAnchorY}`;
@@ -92,8 +97,8 @@
 <svg
 	width={boxWidth}
 	height={boxHeight + buffer * 2}
-	style="top: {Math.min($y, $targetY) - buffer};
-    left: {flipHorizontal ? $targetX : $x};
+	style="top: {Math.min($sourceNodeY, $targetNodeY) - buffer};
+    left: {flipHorizontal ? $targetNodeX : $sourceNodeX};
 	transform: scaleX({flipHorizontal ? -1 : 1});
 	z-index: {active ? 10 : -10}"
 >

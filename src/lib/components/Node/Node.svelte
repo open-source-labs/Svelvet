@@ -1,17 +1,14 @@
 <script lang="ts">
 	import Edge from '../Edge/Edge.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
-	import type { ConfigObject, Graph, WritableNode } from '$lib/types';
-	import ResizeControls from '../ResizeControls/ResizeControls.svelte';
-	import Anchor from '../Anchor/Anchor.svelte';
+	import type { Graph, WritableNode } from '$lib/types';
 	import { activeKeys } from '$lib/stores';
-	import Slider from '../Slider/Slider.svelte';
 	import { cursorPosition, initialClickPosition } from '$lib/stores/CursorStore';
 	import type { Writable } from 'svelte/store';
+	import { get } from 'svelte/store';
 	import type { Node } from '$lib/types';
 	import Parameter from '../Parameter/Parameter.svelte';
-	import { json } from '@sveltejs/kit';
 	import Output from '../Output/Output.svelte';
 
 	// ASSIGN PROPS TO LOCAL VARIABLES
@@ -24,7 +21,18 @@
 
 	const { isLocked, transforms, bounds, nodes: nodeStore, groups } = graph;
 
-	const { dimensions, inputs, outputs, properties, position, draggable, id, group, config } = $node;
+	const {
+		dimensions,
+		anchors,
+		inputs,
+		outputs,
+		properties,
+		position,
+		draggable,
+		id,
+		group,
+		config
+	} = $node;
 	const { scale } = transforms;
 	const { width, height } = dimensions;
 	const { x, y } = position;
@@ -32,8 +40,7 @@
 	const { selected } = $groups;
 
 	const { x: cursorX, y: cursorY } = cursorPosition;
-	console.log($inputs);
-	console.log(config);
+	setContext('nodeId', $node.id);
 	// Dynamically import the component for the node
 	onMount(async () => {
 		const { width: DOMwidth, height: DOMheight } = DOMnode.getBoundingClientRect();
@@ -210,16 +217,16 @@
 <!-- NODE COMPONENT END -->
 
 <!-- FOR EACH CONNECTION, RENDER AN EDGE -->
-<!-- {#each Array.from($inputNodes) as inputNode, index}
-	<Edge
-		active={$selected.has($node)}
-		edgeCount={Array.from($inputNodes).length}
-		edgeNumber={index + 1}
-		{curve}
-		{inputNode}
-		targetPosition={$node.position}
-	/>
-{/each} -->
+
+<!-- <Edge
+	sourceNode={$node}
+	targetNodeId="5"
+	{nodeStore}
+	sourceAnchor="output"
+	targetAnchor="value2"
+	{curve}
+	active={$selected.has($node)}
+/> -->
 
 <!-- RENDER EDGES END -->
 

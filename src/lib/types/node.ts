@@ -7,6 +7,12 @@ export interface Node {
 	dimensions: Dimensions;
 	position: XYPosition;
 	inputs: Writable<Inputs>;
+	anchors: {
+		[key: string]: {
+			x: number;
+			y: number;
+		};
+	};
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
 	outputs: ReturnType<typeof derived>;

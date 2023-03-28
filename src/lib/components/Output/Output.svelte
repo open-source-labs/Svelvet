@@ -2,7 +2,7 @@
 	import Anchor from '../Anchor/Anchor.svelte';
 	import Slider from '../Slider/Slider.svelte';
 	export let output;
-	export let label;
+	export let label = 'output';
 	export let store;
 	//const { type, value, min, max, step, rounding, label, driven } = input;
 </script>

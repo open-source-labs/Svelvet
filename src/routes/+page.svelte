@@ -58,7 +58,7 @@
 			}
 		},
 		properties: {
-			value1: {
+			property1: {
 				id: 'value',
 				type: 'slider',
 				initial: 50,
@@ -69,7 +69,7 @@
 				label: 'Value',
 				connection: null
 			},
-			value2: {
+			property2: {
 				id: 'value',
 				type: 'slider',
 				initial: 50,

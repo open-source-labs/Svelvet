@@ -2,7 +2,9 @@
 	import type { Graph, Node } from '$lib/types';
 	import { writable } from 'svelte/store';
 	import { source } from '$lib/stores';
-
+	import { onMount, getContext } from 'svelte';
+	import { get } from 'svelte/store';
+	import { graphStore } from '$lib/stores';
 	// export let nodeId: string;
 	// export let mode: string;
 	// export let direction: string = 'TD';
@@ -11,8 +13,15 @@
 
 	export let input;
 	export let object;
-	export let label;
+	export let label: string;
 	export let type = 'input';
+
+	const nodeId = getContext('nodeId');
+	const { graphId } = getContext('graphId');
+	const graph = graphStore.get(graphId);
+
+	const { nodes, edges, connectingFrom } = get(graph);
+	const node = nodes.get(nodeId);
 
 	// import { createNode } from '$lib/utils/createNode';
 
@@ -51,15 +60,22 @@
 		// outputNodes.update((nodes) => {
 		// 	return new Set([...nodes, dummyNode]);
 		// });
+		console.log(anchor.offsetLeft);
 		if (!$source) {
+			console.log(node);
 			console.log("Source doesn't exist");
 			console.log($object);
 			$source = object;
+			$connectingFrom = $node;
 			console.log($source);
+			console.log($edges);
 		} else {
 			console.log('Source exists');
 			$object[label] = $source;
 			$source = null;
+			$edges.set($connectingFrom, { targetNode: $node, anchorId: label });
+			$edges = $edges;
+			console.log($edges);
 		}
 	}
 
@@ -84,9 +100,20 @@
 		// 	});
 		// }
 	}
+	let anchor: HTMLDivElement;
+
+	onMount(() => {
+		console.log('THIS', nodeId, graphId);
+
+		const { anchors } = get(node);
+		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
+		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
+		console.log(get(node));
+	});
 </script>
 
 <div
+	bind:this={anchor}
 	style={type === 'output' ? 'right: -6px;' : 'left: -6px;'}
 	on:mousedown|stopPropagation={handleClick}
 	on:mouseup={connect}
@@ -107,5 +134,11 @@
 	}
 	.anchor:hover {
 		background-color: rgb(200, 200, 200);
+	}
+	svg {
+		height: 20px;
+		right: 0px;
+		position: absolute;
+		border: solid 1px red;
 	}
 </style>

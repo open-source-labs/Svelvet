@@ -38,6 +38,7 @@ export function createNode(userNode: UserNode): Node {
 		selectable: writable(true),
 		connectable: writable(true),
 		deletable: writable(true),
+		anchors: {},
 		zIndex: writable(0),
 		ariaLabel: `Node ${id}`,
 		focusable: writable(true),
@@ -45,6 +46,7 @@ export function createNode(userNode: UserNode): Node {
 		collapsed: writable(false),
 		hidden: writable(false),
 		inputs: writable({}),
+		outputs: derived([], () => ({} as Outputs)),
 		properties: writable({}),
 		processor: (inputs: any, properties: any) => ({ ...inputs, ...properties }),
 		componentRef: userNode.componentRef || 'default'
@@ -132,53 +134,6 @@ function createCustomDerivedStore(
 			unsubscribeInputs();
 			unsubscribeProperties();
 			unsubscribeFns.forEach((fn) => fn());
-		}
-	};
-}
-
-function other(
-	inputs: Writable<Inputs>,
-	properties: Writable<Properties>,
-	processor: (inputs: any, properties: any) => any
-) {
-	const outputStore = writable({});
-
-	const updateOutputStore = () => {
-		const currentInputs: { [key: string]: any } = {};
-		const currentProperties: { [key: string]: any } = {};
-
-		for (const key in get(inputs)) {
-			currentInputs[key] = get(get(inputs)[key]);
-		}
-
-		for (const key in get(properties)) {
-			currentProperties[key] = get(get(properties)[key]);
-		}
-
-		outputStore.set(processor(currentInputs, currentProperties));
-	};
-
-	const subscribeToNestedStores = (store: Writable<any>) => {
-		for (const key in get(store)) {
-			const unsubscribe = get(store)[key].subscribe(() => {
-				updateOutputStore();
-			});
-		}
-	};
-
-	subscribeToNestedStores(inputs);
-	subscribeToNestedStores(properties);
-
-	return {
-		subscribe: outputStore.subscribe,
-		unsubscribe: () => {
-			// Unsubscribe from input and property store subscriptions.
-			for (const key in get(inputs)) {
-				get(inputs)[key].unsubscribe();
-			}
-			for (const key in get(properties)) {
-				get(properties)[key].unsubscribe();
-			}
 		}
 	};
 }

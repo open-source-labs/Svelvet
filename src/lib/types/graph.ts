@@ -13,8 +13,16 @@ export interface Graph {
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
-	connectingFrom: Writable<Input>;
+	connectingFrom: Writable<Node>;
 	groups: Writable<Groups>;
+	edges: Writable<Edges>;
+}
+
+export type Edges = Map<Node, Connection>;
+
+export interface Connection {
+	anchorId: string;
+	targetNode: Node;
 }
 
 export interface Groups {
@@ -33,3 +41,14 @@ export interface GraphTransforms {
 		y: Writable<number>;
 	};
 }
+
+// {
+// 	outputId: [{
+// 		anchorId:
+// 		node:
+// 	},
+// 	{
+// 		anchorId:
+// 		node:
+// 	}]
+// }
