@@ -5,16 +5,15 @@
 	import { onMount, getContext } from 'svelte';
 	import { get } from 'svelte/store';
 	import { graphStore } from '$lib/stores';
-	// export let nodeId: string;
-	// export let mode: string;
-	// export let direction: string = 'TD';
-	// export let node: Node;
-	// export let graph: Graph;
+	import Edge from '../Edge/Edge.svelte';
+	import { cursorPosition } from '$lib/stores/CursorStore';
 
 	export let input;
 	export let object;
 	export let label: string;
 	export let type = 'input';
+
+	let potentialEdge = false;
 
 	const nodeId = getContext('nodeId');
 	const { graphId } = getContext('graphId');
@@ -23,82 +22,25 @@
 	const { nodes, edges, connectingFrom } = get(graph);
 	const node = nodes.get(nodeId);
 
-	// import { createNode } from '$lib/utils/createNode';
-
-	// const { transforms, connectingFrom, nodes } = graph;
-	// const { scale } = transforms;
-
-	// const dummyNode = createNode({id: 'dummy'});
-
-	// const { position, dimensions, inputs } = dummyNode;
-	// const { width, height } = dimensions;
-	// const { x, y } = position;
-
-	// const { position: nodePosition, dimensions: nodeDimensions } = node;
-	// const { width: nodeWidth, height: nodeHeight } = nodeDimensions;
-	// const { x: nodeX, y: nodeY } = nodePosition;
-
-	// const { outputs } = node;
-
-	// $: axis = direction === 'TD' ? 'Y' : 'X';
-
-	let connecting = false;
-
 	function handleClick(e: MouseEvent) {
-		// console.log('click');
-		// $connectingFrom = node;
-		// $x = $nodeX;
-		// $y = $nodeY + $nodeHeight;
-		// $inputs = $inputs.add(node);
-		// nodes.update((nodes) => {
-		// 	return { ...nodes, dummy: writable(dummyNode) };
-		// });
-		// connecting = true;
-		// $width = $nodeWidth;
-		// $x = $nodeX;
-		// $y = $nodeY + $nodeHeight;
-		// outputNodes.update((nodes) => {
-		// 	return new Set([...nodes, dummyNode]);
-		// });
-		console.log(anchor.offsetLeft);
 		if (!$source) {
-			console.log(node);
-			console.log("Source doesn't exist");
-			console.log($object);
 			$source = object;
 			$connectingFrom = $node;
-			console.log($source);
-			console.log($edges);
+			potentialEdge = true;
 		} else {
-			console.log('Source exists');
-			$object[label] = $source;
-			$source = null;
-			$edges.set($connectingFrom, { targetNode: $node, anchorId: label });
-			$edges = $edges;
-			console.log($edges);
 		}
 	}
 
-	function handleMove(e: MouseEvent) {
-		// const { movementX, movementY } = e;
-		// $x += movementX / $scale;
-		// $y += movementY / $scale;
-	}
-
 	function removeTemporaryEdge() {
-		// nodes.update((nodes) => {
-		// 	delete nodes.dummy;
-		// 	return { ...nodes };
-		// });
+		$connectingFrom = null;
+		$source = null;
 	}
 
 	function connect() {
-		// const { inputs } = node;
-		// if ($connectingFrom) {
-		// 	inputs.update((nodes): Set<Node> => {
-		// 		return new Set([...nodes, $connectingFrom]);
-		// 	});
-		// }
+		$object[label] = $source;
+		$source = null;
+		$edges.set($connectingFrom, { targetNode: $node, anchorId: label });
+		$edges = $edges;
 	}
 	let anchor: HTMLDivElement;
 
@@ -120,6 +62,8 @@
 	class="anchor"
 />
 
+<svelte:window on:mouseup|stopPropagation={removeTemporaryEdge} />
+
 <style>
 	.anchor {
 		position: absolute;
@@ -134,11 +78,5 @@
 	}
 	.anchor:hover {
 		background-color: rgb(200, 200, 200);
-	}
-	svg {
-		height: 20px;
-		right: 0px;
-		position: absolute;
-		border: solid 1px red;
 	}
 </style>

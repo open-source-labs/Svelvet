@@ -13,7 +13,7 @@ export interface Graph {
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
-	connectingFrom: Writable<Node>;
+	connectingFrom: Writable<Node | null>;
 	groups: Writable<Groups>;
 	edges: Writable<Edges>;
 }

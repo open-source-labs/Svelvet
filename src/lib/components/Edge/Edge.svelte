@@ -1,10 +1,9 @@
 <script lang="ts">
 	import type { Node, XYPosition } from '$lib/types';
-	import { cursorPosition } from '$lib/stores/CursorStore';
-	import { get } from 'svelte/store';
+
 	export let sourceNode: Node;
 	export let targetNode: Node;
-	export let sourceAnchor: string;
+	export let sourceAnchor: string = 'output';
 	export let targetAnchor: string;
 	export let curve = true;
 	export let active = false;
@@ -12,16 +11,17 @@
 	// const targetNode: Node = get(nodeStore.get('5'));
 
 	const { x: sourceAnchorOffsetX, y: sourceAnchorOffsetY } = sourceNode.anchors[sourceAnchor];
-	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode.anchors[targetAnchor];
+	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode?.anchors[targetAnchor];
 
 	let flipHorizontal = false;
 	let flipVertical = false;
 	let strokeWidth = 3;
 
 	const { width: sourceWidth, height: sourceHeight } = sourceNode.dimensions;
-	const { width: targetWidth, height: targetHeight } = targetNode.dimensions;
+	const { width: targetWidth, height: targetHeight } = targetNode?.dimensions;
+
 	const { x: sourceNodeX, y: sourceNodeY } = sourceNode.position;
-	const { x: targetNodeX, y: targetNodeY } = targetNode.position;
+	const { x: targetNodeX, y: targetNodeY } = targetNode?.position;
 
 	let curveStrength = 0.4;
 	let buffer = 30;
@@ -44,8 +44,8 @@
 		: sourceAnchorOffsetY + buffer;
 
 	$: targetAnchorY = flipVertical
-		? buffer + targetAnchorOffsetY
-		: boxHeight - $targetHeight + buffer + targetAnchorOffsetY;
+		? buffer + (targetAnchorOffsetY || 0) || 0
+		: boxHeight - $targetHeight + buffer + targetAnchorOffsetY || 0;
 	$: targetAnchorX = boxWidth - $targetWidth;
 
 	$: sourceControlPointX = sourceAnchorX + (targetAnchorX - sourceAnchorX) * curveStrength;
