@@ -6,7 +6,8 @@ export function moveNodes(
 	graph: Graph,
 	deltaX: number,
 	deltaY: number,
-	nodeGroup: Writable<Set<Node>>
+	nodeGroup: Writable<Set<Node>>,
+	snapTo?: number
 ) {
 	const { bounds } = graph;
 
@@ -30,8 +31,12 @@ export function moveNodes(
 
 			const newX = oldX + deltaX;
 			const newY = oldY + deltaY;
-			x.set(newX);
-			y.set(newY);
+
+			const snapX = newX % snapTo;
+			const snapY = newY % snapTo;
+
+			x.set(newX - snapX);
+			y.set(newY - snapY);
 
 			if (deltaX < 0) {
 				if (newX < leftBounds) {

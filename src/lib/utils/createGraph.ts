@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { DataObject, Graph, Node, NodeKey } from '$lib/types';
 import { createStore } from './createStore';
 
-export function createGraph(id: string): Graph {
+export function createGraph(id: string, initialZoom: number): Graph {
 	return {
 		id,
 		nodes: createStore<Node>(),
@@ -12,7 +12,7 @@ export function createGraph(id: string): Graph {
 				x: writable(0),
 				y: writable(0)
 			},
-			scale: writable(1),
+			scale: writable(initialZoom),
 			cursor: {
 				x: writable(0),
 				y: writable(0)

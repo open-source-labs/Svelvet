@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { activeKeys } from '$lib/stores';
-	import type { Graph } from '$lib/types';
+	import type { Graph, XYPair } from '$lib/types';
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
@@ -15,6 +15,9 @@
 	export let ZOOM_INCREMENT = 0.01;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
+
+	export let boundary: XYPair;
+	export let fixedZoom: boolean = false;
 
 	onMount(() => {
 		graphBounds = graphDOMElement.getBoundingClientRect();
@@ -48,6 +51,7 @@
 	const activeIntervals: ActiveIntervals = {};
 
 	function handleScroll(e: WheelEvent) {
+		if (fixedZoom) return;
 		const { clientX, clientY, deltaY } = e;
 		const currentTranslation = { x: $translationX, y: $translationY };
 		const pointerPosition = { x: clientX, y: clientY };

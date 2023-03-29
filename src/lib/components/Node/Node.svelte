@@ -28,15 +28,16 @@
 	export let bgColor: Node['bgColor'];
 	export let borderColor: Node['borderColor'];
 	export let textColor: Node['textColor'];
-	export let label: Node['label'];
+	export let label: Node['label'] = 'Node';
+	export let resizable = false;
 
 	export let nodeId: string = Math.random().toString(36).substring(2, 8);
 	//export let node: Node = createNode({ id: nodeId, dimensions: { width, height } });
 	export let graph: Graph = get(graphStore.get(getContext('graphId').graphId));
 
-	let isMovable = false;
+	let isMoving = false;
 	let isCollapsed = false;
-	let isResizable = { width: false, height: false };
+	let isResizing = { width: false, height: false };
 
 	let DOMnode: HTMLElement;
 	let DynamicComponent: ComponentType;
@@ -51,23 +52,24 @@
 	const { x: cursorX, y: cursorY } = cursorPosition;
 
 	setContext('nodeId', id);
+	const snapTo: number = getContext('snapTo');
 
 	// Creates reactive variable for whether the node is selected
 	// We use this as a class directive in the component
 	$: selected = $selectedNodes.has(node);
 
 	// If the node isResizable, update the dimensions stores
-	$: if (isResizable.width || isResizable.height) {
-		if (isResizable.height) $heightStore = $cursorY - $y;
-		if (isResizable.width) $widthStore = $cursorX - $x;
+	$: if (isResizing.width || isResizing.height) {
+		if (isResizing.height) $heightStore = $cursorY - $y;
+		if (isResizing.width) $widthStore = $cursorX - $x;
 	}
 
 	// If the node isMovable, update the position stores
-	$: if (isMovable) {
+	$: if (isMoving) {
 		const newX = $cursorX - $initialClickPosition.x;
 		const newY = $cursorY - $initialClickPosition.y;
 
-		if ($group) moveNodes(graph, newX - $x, newY - $y, $groups[$group]);
+		if ($group) moveNodes(graph, newX - $x, newY - $y, $groups[$group], snapTo);
 	}
 
 	// Dynamically import the component for the node
@@ -88,7 +90,7 @@
 		$initialClickPosition = { x: $cursorX - $x, y: $cursorY - $y };
 
 		// Allow node to be moved
-		isMovable = true;
+		isMoving = true;
 
 		// If you click on a node that is already selected
 		// Without holding shift, do nothing
@@ -109,8 +111,8 @@
 
 	function onMouseUp() {
 		setResize(null);
-		if (!isMovable) return;
-		isMovable = false;
+		if (!isMoving) return;
+		isMoving = false;
 	}
 
 	function toggleSelected() {
@@ -138,11 +140,11 @@
 
 	function setResize(mode: 'width' | 'height' | 'both' | null) {
 		if (mode === null) {
-			isResizable.width = false;
-			isResizable.height = false;
+			isResizing.width = false;
+			isResizing.height = false;
 		} else {
-			isResizable.width = mode === 'width' || mode === 'both';
-			isResizable.height = mode === 'height' || mode === 'both';
+			isResizing.width = mode === 'width' || mode === 'both';
+			isResizing.height = mode === 'height' || mode === 'both';
 		}
 	}
 </script>
@@ -165,7 +167,7 @@
     height: {$heightStore}px;
     left: {$x}px;
     top: {$y}px;
-    cursor: {$draggable ? (isMovable ? 'grabbing' : 'grab') : 'not-allowed'};
+    cursor: {$draggable ? (isMoving ? 'grabbing' : 'grab') : 'not-allowed'};
 	{borderRadius && `--border-radius: ${borderRadius}px`};
 	{bgColor && `--node-background: ${bgColor}`};
 	{textColor && `--text-color: ${textColor}`};
@@ -213,9 +215,11 @@
 			{/if}
 		</section>
 	{/if}
-	<div class="resize-width" on:mousedown|stopPropagation={() => setResize('width')} />
-	<div class="resize-height" on:mousedown|stopPropagation={() => setResize('height')} />
-	<div class="resize-both" on:mousedown|stopPropagation={() => setResize('both')} />
+	{#if resizable}
+		<div class="resize-width" on:mousedown|stopPropagation={() => setResize('width')} />
+		<div class="resize-height" on:mousedown|stopPropagation={() => setResize('height')} />
+		<div class="resize-both" on:mousedown|stopPropagation={() => setResize('both')} />
+	{/if}
 </div>
 
 <!-- NODE COMPONENT END -->
@@ -300,7 +304,7 @@
 	}
 
 	.selected {
-		z-index: 1;
+		z-index: 10;
 		--border-color: black;
 	}
 

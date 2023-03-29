@@ -29,7 +29,7 @@ export function createNode(userNode: NodeConfig): Node {
 		resizing: writable(false),
 		collapsed: writable(false),
 		hidden: writable(false),
-		header: header || true,
+		header: header || false,
 		inputs: writable({}),
 		outputs: derived([], () => null),
 		properties: writable({}),

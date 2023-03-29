@@ -213,7 +213,14 @@
 </script>
 
 <div class="wrapper">
-	<Svelvet theme="dark" nodes={initialNodes}>
+	<Svelvet
+		theme="dark"
+		nodes={testNodes}
+		snapTo={60}
+		fixedZoom
+		initialZoom={1}
+		boundary={{ x: 1050, y: 850 }}
+	>
 		<Controls />
 		<Minimap />
 		<NodeAdder />

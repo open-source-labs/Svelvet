@@ -3,12 +3,20 @@
 	import Background from '../Background/Background.svelte';
 	import ZoomPanWrapper from '../ZoomPanWrapper/ZoomPanWrapper.svelte';
 	import { onMount, setContext } from 'svelte';
-	import type { GraphKey, BackgroundStyles, NodeStore, Graph } from '$lib/types';
+	import type {
+		GraphKey,
+		BackgroundStyles,
+		NodeStore,
+		Graph,
+		NodeConfig,
+		XYPair
+	} from '$lib/types';
 	import { graphStore } from '$lib/stores';
 	import { createGraph, createNode } from '$lib/utils/';
 	import { populateNodes } from './populateNodes';
 	import { populateStore } from './populateStore';
-	import type { NodeConfig } from '$lib/utils/';
+	import Minimap from '$lib/components/Minimap/Minimap.svelte';
+	import Controls from '$lib/components/Controls/Controls.svelte';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -18,12 +26,20 @@
 	export let style: BackgroundStyles = 'dots';
 	export let nodes: Array<NodeConfig> = [];
 	export let edges: Array<object> = [];
+	export let snapTo = 1;
+	export let initialZoom = 1;
+	export let minimap = false;
+	export let controls = false;
+	export let boundary: XYPair = { x: Infinity, y: Infinity };
+	export let fixedZoom = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
 
+	setContext('snapTo', snapTo);
+
 	onMount(() => {
-		graph = createGraph(graphId);
+		graph = createGraph(graphId, initialZoom);
 
 		if (nodes.length) {
 			const nodeObjects = generateNodes(nodes);
@@ -37,9 +53,13 @@
 		}
 
 		graphStore.add(graph);
+
+		// const { transforms } = graph;
+		// const { scale } = transforms;
+		// scale.set(initialZooom);
 	});
 
-	function generateNodes(nodes: Array<UserNode>) {
+	function generateNodes(nodes: Array<NodeConfig>) {
 		const nodeObjects = nodes.map((node) => createNode(node));
 		return nodeObjects;
 	}
@@ -49,7 +69,7 @@
 
 <div class="svelvet-wrapper" style="width: 100%; height: 100%; cursor">
 	{#if graph}
-		<ZoomPanWrapper {graph}>
+		<ZoomPanWrapper {fixedZoom} {graph} {boundary}>
 			<GraphRenderer
 				--node-background="var(--node-background-{theme})"
 				--text-color="var(--text-color-{theme})"
@@ -58,6 +78,12 @@
 		</ZoomPanWrapper>
 		<Background --background-color="var(--{theme}-background)" {style} {graph} />
 		<slot {graphId} />
+		{#if minimap}
+			<Minimap />
+		{/if}
+		{#if controls}
+			<Controls />
+		{/if}
 	{/if}
 </div>
 
