@@ -11,6 +11,7 @@
 	import { moveNodes } from './util';
 
 	export let collapsible: boolean = false;
+	export let hidden: boolean = false;
 	export let header: boolean = false;
 	export let width: number = 100;
 	export let height: number = 100;
@@ -197,7 +198,7 @@
 						object={properties}
 						config={config ? config.properties[key] : null}
 						label={key}
-						input={$properties[key]}
+						parameterStore={$properties[key]}
 					/>
 				{/each}
 			{/if}
@@ -209,7 +210,7 @@
 						object={inputs}
 						config={config ? config.inputs[key] : null}
 						label={key}
-						input={$inputs[key]}
+						parameterStore={$inputs[key]}
 					/>
 				{/each}
 			{/if}
