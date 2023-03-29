@@ -35,7 +35,7 @@
 	};
 
 	const scaleBounds = { min: MIN_SCALE, max: MAX_SCALE };
-	const { transforms, isLocked, groups } = graph;
+	const { transforms, isLocked, groups, connectingFrom } = graph;
 	const { selected } = $groups;
 	const { scale, translation } = transforms;
 	const { x: translationX, y: translationY } = translation;
@@ -97,6 +97,7 @@
 		$isLocked = false;
 		selecting = false;
 		isMovable = false;
+		$connectingFrom = null;
 		anchor.y = 0;
 		anchor.x = 0;
 	}
@@ -117,6 +118,7 @@
 					const newX = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 
 					if (get($groups['selected']).size) {
+						console.log('moving nodes');
 						moveNodes(graph, -newX / 100, 0, $groups['selected']);
 					} else {
 						translateGraph({ x: newX, y: null });

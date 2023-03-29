@@ -30,7 +30,7 @@
 	export let borderColor: Node['borderColor'];
 	export let textColor: Node['textColor'];
 	export let label: Node['label'] = 'Node';
-	export let resizable = false;
+	export let resizable = true;
 
 	export let nodeId: string = Math.random().toString(36).substring(2, 8);
 	//export let node: Node = createNode({ id: nodeId, dimensions: { width, height } });
@@ -43,7 +43,7 @@
 	let DOMnode: HTMLElement;
 	let DynamicComponent: ComponentType;
 
-	const { isLocked, transforms, bounds, nodes: nodeStore, groups } = graph;
+	const { isLocked, connectingFrom, transforms, bounds, nodes: nodeStore, groups } = graph;
 
 	const { width: widthStore, height: heightStore } = dimensions;
 	const { x, y } = position;
@@ -190,12 +190,14 @@
 		<section class="parameters">
 			{#if label && !header}<p class="node-name">{label}</p>{/if}
 			{#if $outputs}
-				<Output store={outputs} />
+				<Output {graph} outputStore={outputs} {connectingFrom} {node} />
 			{/if}
 			{#if $properties}
 				{#each Object.keys($properties) as key}
 					<Parameter
-						object={properties}
+						{node}
+						{graph}
+						store={properties}
 						config={config ? config.properties[key] : null}
 						label={key}
 						parameterStore={$properties[key]}
@@ -206,8 +208,10 @@
 			{#if $inputs}
 				{#each Object.keys($inputs) as key}
 					<Parameter
+						{node}
+						{graph}
 						connectable
-						object={inputs}
+						store={inputs}
 						config={config ? config.inputs[key] : null}
 						label={key}
 						parameterStore={$inputs[key]}

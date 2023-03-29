@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node } from '$lib';
 	import NodeAdder from '$lib/components/NodeAdder/NodeAdder.svelte';
-	import type { NodeConfig } from '$lib/types';
+	import type { ConfigObject, NodeConfig, Inputs, Properties } from '$lib/types';
 	// const mermaid = `Brian --> Svelvet
 	// Jen --> Svelvet
 	// Britta --> Svelvet
 	// Thomas|Geometry|musgraveConfig --> Svelvet
 	// Svelvet --> Kevin`;
-
+	const returnValue = (inputs: Inputs, properties: Properties) => {
+		return properties.value;
+	};
 	const valueConfig = {
 		title: 'Value',
 		description: 'Outputs a value',
@@ -24,13 +26,10 @@
 				connection: null
 			}
 		},
-		processor: (inputs, properties) => {
-			console.log('Running');
-			return properties.value;
-		}
+		processor: returnValue
 	};
 
-	const addConfig = {
+	const addConfig: ConfigObject = {
 		title: 'Value',
 		description: 'Outputs a value',
 		inputs: {
@@ -100,7 +99,7 @@
 		title: 'Minimum',
 		description: 'Returns minimum',
 		inputs: inputsStressTest,
-		processor: (inputs, properties) => {
+		processor: (inputs: Inputs, properties: Properties) => {
 			console.log('Running');
 			return Object.values(inputs).reduce((a, b) => Math.min(a, b));
 		}

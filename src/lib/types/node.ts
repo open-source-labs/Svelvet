@@ -71,22 +71,6 @@ export interface NodeConfig {
 
 export type Properties = Record<string, Parameter>;
 
-export interface UserProperty {
-	id: string;
-	label: string;
-	type: string;
-	input: null | string;
-	initial: unknown;
-	min?: number;
-	max?: number;
-	step?: number;
-	rounding?: number;
-}
-
-export interface UserProperties {
-	[key: string]: UserProperty;
-}
-
 export type WritableNode = Writable<Node>;
 
 export type Parameter = number | string | object | boolean;

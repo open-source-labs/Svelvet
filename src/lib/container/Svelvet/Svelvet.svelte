@@ -37,6 +37,7 @@
 	let nodeStore: NodeStore;
 
 	setContext('snapTo', snapTo);
+	setContext('graphId', graphId);
 
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);
@@ -63,8 +64,6 @@
 		const nodeObjects = nodes.map((node) => createNode(node));
 		return nodeObjects;
 	}
-
-	setContext('graphId', { graphId });
 </script>
 
 <div class="svelvet-wrapper" style="width: 100%; height: 100%; cursor">
@@ -88,6 +87,15 @@
 </div>
 
 <style>
+	/* Reset */
+	:global(*) {
+		box-sizing: border-box;
+		user-select: none;
+		margin: 0;
+	}
+	:global(html, body) {
+		height: 100%;
+	}
 	.svelvet-wrapper {
 		position: absolute;
 		overflow: hidden;
@@ -101,10 +109,7 @@
 		outline: none;
 		box-shadow: 0 0 0 2px blue;
 	}
-	:global(*) {
-		box-sizing: border-box;
-		user-select: none;
-	}
+
 	:root {
 		--dark-background: hsl(0, 1%, 21%);
 		--light-background: hsl(0, 0%, 93%);
