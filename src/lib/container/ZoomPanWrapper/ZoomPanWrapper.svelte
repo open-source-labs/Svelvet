@@ -15,6 +15,7 @@
 	export let ZOOM_INCREMENT = 0.01;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
+	export let disableSelection = false;
 
 	export let boundary: XYPair;
 	export let fixedZoom: boolean = false;
@@ -232,7 +233,7 @@
 	on:mousedown={onMouseDown}
 	bind:this={graphDOMElement}
 >
-	{#if selecting}
+	{#if selecting && !disableSelection}
 		<SelectionBox {anchor} {graph} />
 	{/if}
 	<div

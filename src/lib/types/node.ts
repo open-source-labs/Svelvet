@@ -1,6 +1,6 @@
 import type { Writable } from 'svelte/store';
 import type { derived } from 'svelte/store';
-import type { XYPosition, NodeKey, Dimensions, ConfigObject, CSSColorString } from '.';
+import type { XYPosition, NodeKey, XYPair, Dimensions, ConfigObject, CSSColorString } from '.';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
@@ -8,12 +8,7 @@ export interface Node {
 	dimensions: Dimensions;
 	position: XYPosition;
 	inputs: Writable<Inputs>;
-	anchors: {
-		[key: string]: {
-			x: number;
-			y: number;
-		};
-	};
+	anchors: Record<string, XYPair>;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
 	outputs: ReturnType<typeof derived>;
@@ -36,6 +31,13 @@ export interface Node {
 	bgColor?: CSSColorString;
 	borderColor?: CSSColorString;
 	textColor?: CSSColorString;
+}
+
+export interface DummyNode {
+	id?: never;
+	anchors: Record<string, XYPair>;
+	position: XYPosition;
+	dimensions: Dimensions;
 }
 
 // This defines an interface for the user-defined node object

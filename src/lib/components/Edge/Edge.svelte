@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { Node, XYPosition } from '$lib/types';
+	import type { DummyNode, Node } from '$lib/types';
 
 	export let sourceNode: Node;
-	export let targetNode: Node;
+	export let targetNode: Node | DummyNode;
 	export let sourceAnchor: string = 'output';
-	export let targetAnchor: string;
+	export let targetAnchor: string = 'cursor';
 	export let curve = true;
 	export let active = false;
 
-	// const targetNode: Node = get(nodeStore.get('5'));
+	let animate = true;
 
 	const { x: sourceAnchorOffsetX, y: sourceAnchorOffsetY } = sourceNode.anchors[sourceAnchor];
-	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode?.anchors[targetAnchor];
+	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode.anchors[targetAnchor];
 
 	let flipHorizontal = false;
 	let flipVertical = false;
@@ -42,7 +42,7 @@
 
 	$: stepFlip = deltaY - buffer - $targetHeight;
 
-	$: sourceAnchorX = flipHorizontal ? buffer : sourceAnchorOffsetX;
+	$: sourceAnchorX = flipHorizontal ? buffer : $sourceWidth;
 	$: sourceAnchorY = flipVertical
 		? Math.abs(deltaY) + sourceAnchorOffsetY + buffer
 		: sourceAnchorOffsetY + buffer;
@@ -105,6 +105,7 @@
     left: {flipHorizontal ? $targetNodeX - buffer : $sourceNodeX};
 	transform: scaleX({flipHorizontal ? -1 : 1});
 	z-index: {active ? 10 : -10}"
+	class:animate
 >
 	<path d={bezierPath} stroke="black" stroke-width={strokeWidth + 1.5} fill="transparent" />
 	<path d={bezierPath} stroke="white" stroke-width={strokeWidth} fill="transparent" />

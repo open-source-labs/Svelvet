@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { graphStore } from '$lib/stores';
-	import { getContext } from 'svelte';
+	import { getContext as getContextBase } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
 	import type { Graph } from '$lib/types';
 	import type { Writable } from 'svelte/store';
+	import type { GetContext } from '$lib/types';
 
 	let graph: Writable<Graph>;
-
+	const getContext = getContextBase as GetContext;
 	let graphId = getContext('graphId');
 	graph = graphStore.get(graphId);
 	const { nodes, bounds } = $graph;

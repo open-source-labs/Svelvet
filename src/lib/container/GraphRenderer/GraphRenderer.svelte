@@ -24,7 +24,6 @@
 {#if $connectingFrom}
 	<Edge
 		sourceNode={$connectingFrom}
-		targetAnchor="cursor"
 		targetNode={{
 			anchors: { cursor: { x: 0, y: 0 } },
 			position: cursorPosition,

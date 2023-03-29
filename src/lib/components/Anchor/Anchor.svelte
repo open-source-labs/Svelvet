@@ -12,9 +12,9 @@
 	// const graph = graphStore.get(getContext('graphId'));
 	const { nodes } = graph;
 	const node = nodes.get(getContext('nodeId'));
+	const { anchors, dimensions } = get(node);
 
 	onMount(() => {
-		const { anchors } = get(node);
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
 		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
 	});

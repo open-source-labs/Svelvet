@@ -207,7 +207,7 @@
 </script>
 
 <div class="wrapper">
-	<Svelvet theme="dark" nodes={initialNodes}>
+	<Svelvet theme="dark" nodes={initialNodes} disableSelection>
 		<Controls />
 		<Minimap />
 		<NodeAdder />

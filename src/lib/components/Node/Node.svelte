@@ -39,6 +39,8 @@
 	let isMoving = false;
 	let isCollapsed = false;
 	let isResizing = { width: false, height: false };
+	let minWidth = 0;
+	let minHeight = 0;
 
 	let DOMnode: HTMLElement;
 	let DynamicComponent: ComponentType;
@@ -61,8 +63,8 @@
 
 	// If the node isResizable, update the dimensions stores
 	$: if (isResizing.width || isResizing.height) {
-		if (isResizing.height) $heightStore = $cursorY - $y;
-		if (isResizing.width) $widthStore = $cursorX - $x;
+		if (isResizing.height) $heightStore = Math.max(minHeight, $cursorY - $y);
+		if (isResizing.width) $widthStore = Math.max(minWidth, $cursorX - $x);
 	}
 
 	// If the node isMovable, update the position stores
@@ -79,6 +81,21 @@
 		$widthStore = DOMwidth;
 		console.log({ borderRadius });
 		$heightStore = DOMheight;
+
+		const min = calculateFitContentWidth(DOMnode);
+		minWidth = min.width;
+		minHeight = min.height;
+
+		function calculateFitContentWidth(element) {
+			element.style.width = 'fit-content';
+			element.style.height = 'fit-content';
+			const width = element.offsetWidth;
+			const height = element.offsetHeight;
+			element.style.width = DOMwidth;
+			element.style.height = DOMheight;
+			return { width, height };
+		}
+
 		if (!componentRef) return;
 		DynamicComponent = (await import(`../${componentRef}/${componentRef}.svelte`)).default;
 	});
@@ -129,6 +146,7 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
+		// If node is focused, hitting enter will toggle the selected state
 		if (e.key === 'Enter') {
 			toggleSelected();
 		} else if (e.key === 'Backspace') {

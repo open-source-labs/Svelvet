@@ -32,6 +32,7 @@
 	export let controls = false;
 	export let boundary: XYPair = { x: Infinity, y: Infinity };
 	export let fixedZoom = false;
+	export let disableSelection = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
@@ -68,7 +69,7 @@
 
 <div class="svelvet-wrapper" style="width: 100%; height: 100%; cursor">
 	{#if graph}
-		<ZoomPanWrapper {fixedZoom} {graph} {boundary}>
+		<ZoomPanWrapper {fixedZoom} {graph} {boundary} {disableSelection}>
 			<GraphRenderer
 				--node-background="var(--node-background-{theme})"
 				--text-color="var(--text-color-{theme})"

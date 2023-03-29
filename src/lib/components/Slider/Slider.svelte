@@ -3,7 +3,7 @@
 	import { writable, type Writable } from 'svelte/store';
 	import type { Parameter } from '$lib/types';
 
-	export let parameterStore: Writable<Parameter> = writable(0.5);
+	export let parameterStore: Writable<number> = writable(0.5);
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
