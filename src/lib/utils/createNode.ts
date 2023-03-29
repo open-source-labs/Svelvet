@@ -29,7 +29,6 @@ export function createNode(userNode: NodeConfig): Node {
 		resizing: writable(false),
 		collapsed: writable(false),
 		hidden: writable(false),
-		header: header || false,
 		inputs: writable({}),
 		outputs: derived([], () => null),
 		properties: writable({}),
@@ -42,6 +41,7 @@ export function createNode(userNode: NodeConfig): Node {
 	if (borderColor) newNode.borderColor = borderColor;
 	if (borderRadius) newNode.borderRadius = borderRadius;
 	if (textColor) newNode.textColor = textColor;
+	if (header) newNode.header = true;
 
 	if (config) {
 		const { properties, processor, inputs } = config;

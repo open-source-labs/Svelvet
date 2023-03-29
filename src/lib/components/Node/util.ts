@@ -32,8 +32,13 @@ export function moveNodes(
 			const newX = oldX + deltaX;
 			const newY = oldY + deltaY;
 
-			const snapX = newX % snapTo;
-			const snapY = newY % snapTo;
+			let snapX = 0;
+			let snapY = 0;
+
+			if (snapTo) {
+				snapX = newX % snapTo;
+				snapY = newY % snapTo;
+			}
 
 			x.set(newX - snapX);
 			y.set(newY - snapY);

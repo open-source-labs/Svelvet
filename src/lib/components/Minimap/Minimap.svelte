@@ -7,7 +7,7 @@
 
 	let graph: Writable<Graph>;
 
-	let { graphId } = getContext('graphId');
+	let graphId = getContext('graphId');
 	graph = graphStore.get(graphId);
 	const { nodes, bounds } = $graph;
 	const { top, bottom, left, right } = bounds;

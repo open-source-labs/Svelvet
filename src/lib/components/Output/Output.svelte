@@ -1,27 +1,28 @@
-<script>
+<script lang="ts">
 	import Anchor from '../Anchor/Anchor.svelte';
-	import Slider from '../Slider/Slider.svelte';
-	export let output;
+	import type { Writable } from 'svelte/store';
+	import type { Node, Graph } from '$lib/types';
+
+	export let outputStore;
 	export let label = 'output';
-	export let store;
-	//const { type, value, min, max, step, rounding, label, driven } = input;
+	export let node: Node;
+	export let connectingFrom: Writable<Node | null>;
+	export let graph: Graph;
+
+	function startConnection() {
+		if (!$connectingFrom) {
+			$connectingFrom = node;
+		}
+	}
 </script>
 
-<div class="input">
-	<p>{$store}</p>
-	<Anchor object={store} {label} type="output" />
+<div class="output" on:mousedown|stopPropagation={startConnection}>
+	<p>{$outputStore}</p>
+	<Anchor {graph} {label} isOutput />
 </div>
 
 <style>
-	.anchor {
-		width: 10px;
-		height: 10px;
-		background-color: white;
-		border-radius: 50%;
-		border: solid 1px black;
-	}
-
-	.input {
+	.output {
 		/* border: solid 1px green; */
 		display: flex;
 		align-items: center;

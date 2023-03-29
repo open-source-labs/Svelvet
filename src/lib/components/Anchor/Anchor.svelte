@@ -1,62 +1,26 @@
 <script lang="ts">
-	import type { Graph, Node } from '$lib/types';
-	import { writable } from 'svelte/store';
-	import { source } from '$lib/stores';
+	import type { Graph } from '$lib/types';
 	import { onMount, getContext } from 'svelte';
 	import { get } from 'svelte/store';
-	import { graphStore } from '$lib/stores';
-	import Edge from '../Edge/Edge.svelte';
-	import { cursorPosition } from '$lib/stores/CursorStore';
 
-	export let object;
+	export let isOutput = false;
 	export let label: string;
-	export let type = 'input';
+	export let graph: Graph;
 
-	let potentialEdge = false;
+	let anchor: HTMLButtonElement;
 
-	const nodeId = getContext('nodeId');
-	const { graphId } = getContext('graphId');
-	const graph = graphStore.get(graphId);
-
-	const { nodes, edges, connectingFrom } = get(graph);
-	const node = nodes.get(nodeId);
-
-	function handleClick(e: MouseEvent) {
-		if (!$source) {
-			$source = object;
-			$connectingFrom = $node;
-			potentialEdge = true;
-		}
-	}
-
-	function removeTemporaryEdge() {
-		$connectingFrom = null;
-		$source = null;
-	}
-
-	function connect() {
-		if (!$connectingFrom) return;
-		$object[label] = $source;
-		$source = null;
-		const currentConnections = $edges.get($connectingFrom);
-		if (currentConnections) {
-			currentConnections.push({ targetNode: $node, anchorId: label });
-		} else {
-			$edges.set($connectingFrom, [{ targetNode: $node, anchorId: label }]);
-		}
-		$edges = $edges;
-	}
-	let anchor: HTMLDivElement;
+	// const graph = graphStore.get(getContext('graphId'));
+	const { nodes } = graph;
+	const node = nodes.get(getContext('nodeId'));
 
 	onMount(() => {
 		const { anchors } = get(node);
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
 		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
-		console.log(get(node));
 	});
 
 	let color = 'gray';
-	$: side = type === 'output' ? 'right' : 'left';
+	$: side = isOutput ? 'right' : 'left';
 </script>
 
 <button
@@ -64,14 +28,8 @@
 	style="
 		--color: {color};
 		{side}: {-6}px;"
-	on:mousedown|stopPropagation={handleClick}
-	on:mouseup={connect}
-	on:mouseover={() => (color = 'goldenrod')}
-	on:mouseleave={() => (color = 'gray')}
 	class="anchor"
 />
-
-<svelte:window on:mouseup|stopPropagation={removeTemporaryEdge} />
 
 <style>
 	.anchor {
@@ -84,6 +42,9 @@
 		cursor: pointer;
 		border: solid 1px black;
 		pointer-events: auto;
+	}
+	.anchor:hover {
+		background-color: white;
 	}
 	/* reset button styles*/
 	button {
