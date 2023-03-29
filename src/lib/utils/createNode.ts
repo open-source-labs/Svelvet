@@ -1,37 +1,21 @@
-import { writable, derived, readable } from 'svelte/store';
-import type { Readable, Writable } from 'svelte/store';
-import type { Node, ConfigObject, Inputs, Outputs, Properties } from '$lib/types';
+import { writable, derived } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import type { Node, NodeConfig, Inputs, Properties, Parameter } from '$lib/types';
 import { get } from 'svelte/store';
-export interface UserNode {
-	id: string;
-	dimensions?: {
-		width: number;
-		height: number;
-	};
-	position?: {
-		x: number;
-		y: number;
-	};
-	data?: object;
-	group?: string;
-	inputs?: Inputs;
-	outputs?: Outputs;
-	componentRef?: string;
-	config?: ConfigObject;
-}
 
-export function createNode(userNode: UserNode): Node {
-	const { id, config } = userNode;
+export function createNode(userNode: NodeConfig): Node {
+	const { id, config, width, height, dimensions, header, position } = userNode;
+	const { bgColor, borderColor, borderRadius, textColor } = userNode;
 
 	const newNode: Node = {
 		id,
 		position: {
-			x: writable(userNode?.position?.x || 0),
-			y: writable(userNode?.position?.y || 0)
+			x: writable(position?.x || 0),
+			y: writable(position?.y || 0)
 		},
 		dimensions: {
-			width: writable(userNode?.dimensions?.width || 100),
-			height: writable(userNode?.dimensions?.height || 100)
+			width: writable(dimensions?.width || width || 100),
+			height: writable(dimensions?.height || height || 100)
 		},
 		group: writable(null),
 		draggable: writable(true),
@@ -45,12 +29,19 @@ export function createNode(userNode: UserNode): Node {
 		resizing: writable(false),
 		collapsed: writable(false),
 		hidden: writable(false),
+		header: header || true,
 		inputs: writable({}),
-		outputs: derived([], () => ({} as Outputs)),
+		outputs: derived([], () => null),
 		properties: writable({}),
-		processor: (inputs: any, properties: any) => ({ ...inputs, ...properties }),
-		componentRef: userNode.componentRef || 'default'
+		processor: (inputs, properties) => ({ ...inputs, ...properties }),
+		componentRef: userNode.componentRef || 'default',
+		label: userNode?.data?.label || null
 	};
+
+	if (bgColor) newNode.bgColor = bgColor;
+	if (borderColor) newNode.borderColor = borderColor;
+	if (borderRadius) newNode.borderRadius = borderRadius;
+	if (textColor) newNode.textColor = textColor;
 
 	if (config) {
 		const { properties, processor, inputs } = config;
@@ -100,7 +91,7 @@ function createCustomDerivedStore(
 			currentProperties[key] = get(get(properties)[key]);
 		}
 
-		outputStore.set(processor(currentInputs, currentProperties));
+		outputStore.update(() => processor(currentInputs, currentProperties));
 	};
 
 	const unsubscribeFns: (() => void)[] = [];
@@ -113,8 +104,8 @@ function createCustomDerivedStore(
 		}
 	};
 
-	subscribeToNestedStores(inputs);
-	subscribeToNestedStores(properties);
+	// subscribeToNestedStores(inputs);
+	// subscribeToNestedStores(properties);
 
 	const unsubscribeInputs = inputs.subscribe(() => {
 		unsubscribeFns.forEach((fn) => fn());

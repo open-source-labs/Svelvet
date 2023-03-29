@@ -8,7 +8,7 @@
 	import { createGraph, createNode } from '$lib/utils/';
 	import { populateNodes } from './populateNodes';
 	import { populateStore } from './populateStore';
-	import type { UserNode } from '$lib/utils/';
+	import type { NodeConfig } from '$lib/utils/';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -16,7 +16,7 @@
 	export let height: number = 100;
 	export let graphId: GraphKey = '1'; //Math.floor(Math.random() * 100).toString();
 	export let style: BackgroundStyles = 'dots';
-	export let nodes: Array<UserNode> = [];
+	export let nodes: Array<NodeConfig> = [];
 	export let edges: Array<object> = [];
 
 	let graph: Graph;
@@ -47,10 +47,14 @@
 	setContext('graphId', { graphId });
 </script>
 
-<div class="svelvet-wrapper" style="width: 100%; height: 100%;">
+<div class="svelvet-wrapper" style="width: 100%; height: 100%; cursor">
 	{#if graph}
 		<ZoomPanWrapper {graph}>
-			<GraphRenderer {graph} />
+			<GraphRenderer
+				--node-background="var(--node-background-{theme})"
+				--text-color="var(--text-color-{theme})"
+				{graph}
+			/>
 		</ZoomPanWrapper>
 		<Background --background-color="var(--{theme}-background)" {style} {graph} />
 		<slot {graphId} />
@@ -76,7 +80,11 @@
 		user-select: none;
 	}
 	:root {
-		--dark-background: hsl(0, 2%, 10%);
+		--dark-background: hsl(0, 1%, 21%);
 		--light-background: hsl(0, 0%, 93%);
+		--node-background-light: hsl(0, 0%, 93%);
+		--node-background-dark: hsl(0, 0%, 11%);
+		--text-color-dark: hsl(0, 0%, 93%);
+		--text-color-light: hsl(0, 0%, 21%);
 	}
 </style>

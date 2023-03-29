@@ -6,10 +6,12 @@
 	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import { cursorPosition, initialClickPosition } from '$lib/stores/CursorStore';
+	import { moveNodes } from '$lib/components/Node/util';
+	import { get } from 'svelte/store';
 
 	export let graph: Graph;
-	export let MAX_SCALE = 4;
-	export let MIN_SCALE = 0.4;
+	export let MAX_SCALE = 3;
+	export let MIN_SCALE = 0.2;
 	export let ZOOM_INCREMENT = 0.01;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
@@ -25,7 +27,8 @@
 		ArrowLeft: (key) => handleArrowKey(key),
 		ArrowRight: (key) => handleArrowKey(key),
 		ArrowUp: (key) => handleArrowKey(key),
-		ArrowDown: (key) => handleArrowKey(key)
+		ArrowDown: (key) => handleArrowKey(key),
+		Control: () => $groups['selected'].set(new Set())
 	};
 
 	const scaleBounds = { min: MIN_SCALE, max: MAX_SCALE };
@@ -108,10 +111,19 @@
 
 				if (axis === 'x') {
 					const newX = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					translateGraph({ x: newX, y: null });
+
+					if (get($groups['selected']).size) {
+						moveNodes(graph, -newX / 100, 0, $groups['selected']);
+					} else {
+						translateGraph({ x: newX, y: null });
+					}
 				} else {
 					const newY = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					translateGraph({ x: null, y: newY });
+					if (get($groups['selected']).size) {
+						moveNodes(graph, 0, -newY / 100, $groups['selected']);
+					} else {
+						translateGraph({ x: null, y: newY });
+					}
 				}
 			}, 5);
 			activeIntervals[key] = interval;
@@ -241,7 +253,9 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		outline: solid 1px red;
+		/* will-change: transform; */
+		backface-visibility: hidden;
+		/* outline: solid 1px red; */
 	}
 	.wrapper:focus {
 		outline: none;

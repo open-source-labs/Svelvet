@@ -18,18 +18,12 @@
 </div>
 
 <style>
-	.anchor {
-		width: 10px;
-		height: 10px;
-		background-color: white;
-		border-radius: 50%;
-		border: solid 1px black;
-	}
-
 	.input {
 		/* border: solid 1px green; */
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 100%;
+		height: 20px;
 	}
 </style>

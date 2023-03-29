@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { DataObject, Graph, Node } from '$lib/types';
+import type { DataObject, Graph, Node, NodeKey } from '$lib/types';
 import { createStore } from './createStore';
 
 export function createGraph(id: string): Graph {

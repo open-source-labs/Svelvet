@@ -33,20 +33,24 @@
 	$: flipHorizontal = deltaX < 0;
 	$: flipVertical = deltaY < 0;
 
-	$: boxHeight = Math.abs(deltaY) + (flipVertical ? $sourceHeight : $targetHeight);
+	$: boxHeight = Math.max(
+		$sourceHeight,
+		$targetHeight,
+		Math.abs(deltaY) + (flipVertical ? $sourceHeight : $targetHeight)
+	);
 	$: boxWidth = Math.abs(deltaX) + $targetWidth;
 
 	$: stepFlip = deltaY - buffer - $targetHeight;
 
-	$: sourceAnchorX = sourceAnchorOffsetX;
+	$: sourceAnchorX = flipHorizontal ? buffer : sourceAnchorOffsetX;
 	$: sourceAnchorY = flipVertical
-		? boxHeight + buffer - $sourceHeight + sourceAnchorOffsetY
+		? Math.abs(deltaY) + sourceAnchorOffsetY + buffer
 		: sourceAnchorOffsetY + buffer;
 
 	$: targetAnchorY = flipVertical
 		? buffer + (targetAnchorOffsetY || 0) || 0
 		: boxHeight - $targetHeight + buffer + targetAnchorOffsetY || 0;
-	$: targetAnchorX = boxWidth - $targetWidth;
+	$: targetAnchorX = flipHorizontal ? boxWidth : boxWidth - $targetWidth;
 
 	$: sourceControlPointX = sourceAnchorX + (targetAnchorX - sourceAnchorX) * curveStrength;
 	$: targetControlPointX = sourceAnchorX - (sourceAnchorX - targetAnchorX) * curveStrength;
@@ -95,10 +99,10 @@
 </script>
 
 <svg
-	width={boxWidth}
+	width={flipHorizontal ? boxWidth + buffer : boxWidth}
 	height={boxHeight + buffer * 2}
 	style="top: {Math.min($sourceNodeY, $targetNodeY) - buffer};
-    left: {flipHorizontal ? $targetNodeX : $sourceNodeX};
+    left: {flipHorizontal ? $targetNodeX - buffer : $sourceNodeX};
 	transform: scaleX({flipHorizontal ? -1 : 1});
 	z-index: {active ? 10 : -10}"
 >

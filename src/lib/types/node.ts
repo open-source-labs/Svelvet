@@ -1,7 +1,8 @@
 import type { Writable } from 'svelte/store';
 import type { derived } from 'svelte/store';
-import type { XYPosition, NodeKey, Dimensions, ConfigObject } from '.';
+import type { XYPosition, NodeKey, Dimensions, ConfigObject, CSSColorString } from '.';
 
+// This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
 	dimensions: Dimensions;
@@ -25,14 +26,50 @@ export interface Node {
 	deletable: Writable<boolean>;
 	zIndex: Writable<number>;
 	ariaLabel: string;
+	header?: true;
 	focusable: Writable<boolean>;
 	resizing: Writable<boolean>;
 	componentRef: string;
 	config?: ConfigObject;
+	borderRadius?: number;
+	label?: string;
+	bgColor?: CSSColorString;
+	borderColor?: CSSColorString;
+	textColor?: CSSColorString;
 }
 
-export type Property = any;
-export type Properties = Record<string, Input>;
+// This defines an interface for the user-defined node object
+// Passed to the createNode function
+export interface NodeConfig {
+	id: string;
+	dimensions?: {
+		width: number;
+		height: number;
+	};
+	position?: {
+		x: number;
+		y: number;
+	};
+	data?: object;
+	group?: string;
+	inputs?: Inputs;
+	outputs?: Outputs;
+	componentRef?: string;
+	config?: ConfigObject;
+	width?: number;
+	height?: number;
+	header?: true;
+	borderColor?: CSSColorString;
+	bgColor?: CSSColorString;
+	borderRadius?: number;
+	borderWidth?: number;
+	textColor?: CSSColorString;
+	sourcePostion?: 'top' | 'bottom' | 'left' | 'right';
+	targetPostion?: 'top' | 'bottom' | 'left' | 'right';
+	clickCallback?: (node: Node) => void;
+}
+
+export type Properties = Record<string, Parameter>;
 
 export interface UserProperty {
 	id: string;
@@ -52,8 +89,9 @@ export interface UserProperties {
 
 export type WritableNode = Writable<Node>;
 
-export type Input = any;
-export type Inputs = Record<string, Input>;
+export type Parameter = number | string | object | boolean;
+
+export type Inputs = Record<string, Parameter>;
 
 export interface Output {
 	id: string;

@@ -39,7 +39,12 @@
 	function connect() {
 		$object[label] = $source;
 		$source = null;
-		$edges.set($connectingFrom, { targetNode: $node, anchorId: label });
+		const currentConnections = $edges.get($connectingFrom);
+		if (currentConnections) {
+			currentConnections.push({ targetNode: $node, anchorId: label });
+		} else {
+			$edges.set($connectingFrom, [{ targetNode: $node, anchorId: label }]);
+		}
 		$edges = $edges;
 	}
 	let anchor: HTMLDivElement;
@@ -52,13 +57,20 @@
 		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
 		console.log(get(node));
 	});
+
+	let color = 'gray';
+	$: side = type === 'output' ? 'right' : 'left';
 </script>
 
 <div
 	bind:this={anchor}
-	style={type === 'output' ? 'right: -6px;' : 'left: -6px;'}
+	style="
+		--color: {color};
+		{side}: {-6}px;"
 	on:mousedown|stopPropagation={handleClick}
 	on:mouseup={connect}
+	on:mouseover={() => (color = 'goldenrod')}
+	on:mouseleave={() => (color = 'gray')}
 	class="anchor"
 />
 
@@ -67,16 +79,12 @@
 <style>
 	.anchor {
 		position: absolute;
-		z-index: 12;
 		width: 12px;
 		height: 12px;
 		border-radius: 50%;
-		background-color: rgb(143, 140, 140);
+		background-color: var(--color);
 		cursor: pointer;
 		border: solid 1px black;
 		pointer-events: auto;
-	}
-	.anchor:hover {
-		background-color: rgb(200, 200, 200);
 	}
 </style>

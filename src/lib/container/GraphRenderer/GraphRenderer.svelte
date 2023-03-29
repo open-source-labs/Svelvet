@@ -2,19 +2,23 @@
 	import Node from '$lib/components/Node/Node.svelte';
 	import type { Graph } from '../../types';
 	import Edge from '$lib/components/Edge/Edge.svelte';
-	export let graph: Graph;
 	import { cursorPosition } from '$lib/stores/CursorStore';
-	import { writable } from 'svelte/store';
+	import { writable, get } from 'svelte/store';
+
+	export let graph: Graph;
 	const { nodes, edges, connectingFrom } = graph;
-	console.log({ edges });
 </script>
 
 {#each Object.values($nodes) as node}
-	<Node {node} {graph} />
+	{#if node}
+		<Node {...get(node)} {graph} />
+	{/if}
 {/each}
 
-{#each Array.from($edges) as [sourceNode, { targetNode, anchorId }]}
-	<Edge {sourceNode} {targetNode} sourceAnchor="output" targetAnchor={anchorId} curve />
+{#each Array.from($edges) as [sourceNode, targets]}
+	{#each targets as { targetNode, anchorId }}
+		<Edge {sourceNode} {targetNode} sourceAnchor="output" targetAnchor={anchorId} curve />
+	{/each}
 {/each}
 
 {#if $connectingFrom}

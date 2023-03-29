@@ -18,7 +18,7 @@ export interface Graph {
 	edges: Writable<Edges>;
 }
 
-export type Edges = Map<Node, Connection>;
+export type Edges = Map<Node, Array<Connection>>;
 
 export interface Connection {
 	anchorId: string;
@@ -41,14 +41,3 @@ export interface GraphTransforms {
 		y: Writable<number>;
 	};
 }
-
-// {
-// 	outputId: [{
-// 		anchorId:
-// 		node:
-// 	},
-// 	{
-// 		anchorId:
-// 		node:
-// 	}]
-// }
