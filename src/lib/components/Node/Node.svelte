@@ -118,11 +118,11 @@
 	function toggleSelected() {
 		if (selected) {
 			$group = null;
-			$selectedNodes.delete(node);
+			if (node) $selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		} else {
 			$group = 'selected';
-			$selectedNodes.add(node);
+			if (node) $selectedNodes.add(node);
 			$selectedNodes = $selectedNodes;
 		}
 	}
@@ -132,7 +132,7 @@
 			toggleSelected();
 		} else if (e.key === 'Backspace') {
 			nodeStore.update((nodes) => {
-				nodes[id] = null;
+				nodes[id].set(null);
 				return nodes;
 			});
 		}

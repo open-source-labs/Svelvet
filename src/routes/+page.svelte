@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node } from '$lib';
 	import NodeAdder from '$lib/components/NodeAdder/NodeAdder.svelte';
-
+	import type { NodeConfig } from '$lib/types';
 	// const mermaid = `Brian --> Svelvet
 	// Jen --> Svelvet
 	// Britta --> Svelvet
@@ -147,7 +147,7 @@
 			config: valueConfig
 		}));
 
-	const testNodes = [
+	const testNodes: Array<NodeConfig> = [
 		{
 			id: 1,
 			position: { x: 50, y: 50 },

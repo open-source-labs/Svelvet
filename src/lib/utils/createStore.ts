@@ -4,7 +4,7 @@ import type { Key } from '$lib/types';
 
 export function createStore<T extends { id: Key }>() {
 	type TData = {
-		[key: Key]: Writable<T>;
+		[key: Key]: Writable<T | null>;
 	};
 
 	const data = {} as TData;
@@ -17,7 +17,7 @@ export function createStore<T extends { id: Key }>() {
 		set: typeof set;
 		update: typeof update;
 		add: (item: T) => TData;
-		get: (key: Key) => Writable<T>;
+		get: (key: Key) => Writable<T | null>;
 	}
 
 	const store: Store = {

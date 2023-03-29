@@ -80,8 +80,8 @@ function createCustomDerivedStore(
 	const outputStore = writable({});
 
 	const updateOutputStore = () => {
-		const currentInputs: { [key: string]: any } = {};
-		const currentProperties: { [key: string]: any } = {};
+		const currentInputs: { [key: string]: Parameter } = {};
+		const currentProperties: { [key: string]: Parameter } = {};
 
 		for (const key in get(inputs)) {
 			currentInputs[key] = get(get(inputs)[key]);
@@ -98,7 +98,7 @@ function createCustomDerivedStore(
 
 	const subscribeToNestedStores = (store: Writable<any>) => {
 		for (const key in get(store)) {
-			const unsubscribe = get(store)[key].subscribe(() => {
+			get(store)[key].subscribe(() => {
 				updateOutputStore();
 			});
 		}

@@ -181,4 +181,5 @@ type NamedColors =
 	| 'white'
 	| 'whitesmoke'
 	| 'yellow'
-	| 'yellowgreen';
+	| 'yellowgreen'
+	| 'transparent';

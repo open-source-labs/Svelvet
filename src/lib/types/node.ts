@@ -41,7 +41,7 @@ export interface Node {
 // This defines an interface for the user-defined node object
 // Passed to the createNode function
 export interface NodeConfig {
-	id: string;
+	id: NodeKey;
 	dimensions?: {
 		width: number;
 		height: number;

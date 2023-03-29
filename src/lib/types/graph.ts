@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { GraphKey, NodeKey, NodeStore, DataStore, Node, Input } from '.';
+import type { GraphKey, NodeStore, DataStore, Node } from '.';
 
 export interface Graph {
 	id: GraphKey;
