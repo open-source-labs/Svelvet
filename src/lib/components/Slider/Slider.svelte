@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { activeKeys } from '$lib/stores';
 	import { writable, type Writable } from 'svelte/store';
+	import type { Parameter } from '$lib/types';
 
-	export let value: Writable<any> = writable(0.5);
+	export let parameterStore: Writable<Parameter> = writable(0.5);
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
@@ -10,11 +11,28 @@
 	export let label = 'Value';
 	export let driven = false;
 	export let input: null | unknown = null;
-	const numbers = new Set(['.', 'Enter', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']);
+
+	const validInput = new Set([
+		'.',
+		'Enter',
+		'ArrowUp',
+		'ArrowDown',
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7',
+		'8',
+		'9',
+		'.'
+	]);
 
 	let sliding = false;
 
-	$: connection = $value.value || $value;
+	$: connection = $parameterStore.value || $parameterStore;
 
 	// Begin sliding on mousedown
 	function startSlide() {
@@ -36,10 +54,10 @@
 
 	// Update the value based on the direction and increment
 	function updateValue(direction: number, increment = step) {
-		const newValue = round($value + increment * direction, rounding);
+		const newValue = round($parameterStore + increment * direction, rounding);
 		console.log(newValue);
 		if (newValue >= min && newValue <= max) {
-			$value = newValue;
+			$parameterStore = newValue;
 		}
 	}
 
@@ -56,14 +74,14 @@
 	function validateInput() {
 		const number = parseFloat(sliderElement.value);
 		if (Number.isNaN(number)) {
-			sliderElement.value = $value;
+			sliderElement.value = $parameterStore;
 		}
 		if (number < min) {
-			$value = min;
+			$parameterStore = min;
 		} else if (number > max) {
-			$value = max;
+			$parameterStore = max;
 		} else {
-			$value = number;
+			$parameterStore = number;
 		}
 
 		sliderElement.blur();
@@ -82,7 +100,7 @@
 			bind:this={sliderElement}
 			id="slider-input"
 			class="input"
-			style="--percentage: {(($value - min) / max) * 100}%"
+			style="--percentage: {(($parameterStore - min) / max) * 100}%"
 			type="text"
 			on:wheel|stopPropagation|preventDefault={(event) => {
 				// Update value on mouse wheel scroll
@@ -91,11 +109,17 @@
 			on:keydown|stopPropagation={(e) => {
 				const { key } = e;
 
-				if (!numbers.has(key)) return;
+				if (!validInput.has(key)) return;
 
-				if (key === 'Enter') {
-					validateInput();
+				if (key === 'ArrowUp') {
+					e.preventDefault(); // Stops cursor from moving
+					updateValue(1);
+				} else if (key === 'ArrowDown') {
+					e.preventDefault(); // Stops cursor from moving
+					updateValue(-1);
 				}
+
+				if (key === 'Enter') validateInput();
 			}}
 			on:blur={validateInput}
 			on:click={() => {

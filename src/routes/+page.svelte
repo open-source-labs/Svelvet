@@ -60,33 +60,23 @@
 		properties: {
 			property1: {
 				id: 'value',
-				type: 'slider',
-				initial: 50,
-				min: 0,
-				max: 60,
-				step: 1,
-				rounding: 3,
-				label: 'Value',
-				connection: null
-			},
-			property2: {
-				id: 'value',
-				type: 'slider',
-				initial: 50,
-				min: 0,
-				max: 60,
-				step: 1,
-				rounding: 3,
+				type: 'radio',
+				initial: 1,
+				options: ['add', 'multiply', 'max'],
 				label: 'Value',
 				connection: null
 			}
 		},
 		processor: (inputs, properties) => {
 			console.log('Running');
-
-			return Object.values(inputs)
-				.concat(Object.values(properties))
-				.reduce((a, b) => a + b);
+			switch (properties.property1) {
+				case 'add':
+					return inputs.value1 + inputs.value2;
+				case 'multiply':
+					return inputs.value1 * inputs.value2;
+				case 'max':
+					return Math.max(inputs.value1, inputs.value2);
+			}
 		}
 	};
 
@@ -119,24 +109,29 @@
 	const initialNodes = [
 		{
 			id: '1',
-			config: mathConfig
+			config: mathConfig,
+			header: true
 		},
 		{
 			id: '2',
-			config: valueConfig
+			config: valueConfig,
+			header: true
 		},
 		{
 			id: '3',
-			config: valueConfig
+			config: valueConfig,
+			header: true
 		},
 
 		{
 			id: '4',
-			config: valueConfig
+			config: valueConfig,
+			header: true
 		},
 		{
 			id: '5',
-			config: addConfig
+			config: addConfig,
+			header: true
 		}
 	];
 
@@ -213,14 +208,7 @@
 </script>
 
 <div class="wrapper">
-	<Svelvet
-		theme="dark"
-		nodes={testNodes}
-		snapTo={60}
-		fixedZoom
-		initialZoom={1}
-		boundary={{ x: 1050, y: 850 }}
-	>
+	<Svelvet theme="dark" nodes={initialNodes}>
 		<Controls />
 		<Minimap />
 		<NodeAdder />

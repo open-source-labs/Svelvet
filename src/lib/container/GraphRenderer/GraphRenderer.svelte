@@ -10,7 +10,7 @@
 </script>
 
 {#each Object.values($nodes) as node}
-	{#if node}
+	{#if get(node).hidden}
 		<Node {...get(node)} {graph} />
 	{/if}
 {/each}

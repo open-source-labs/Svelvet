@@ -8,7 +8,6 @@
 	import Edge from '../Edge/Edge.svelte';
 	import { cursorPosition } from '$lib/stores/CursorStore';
 
-	export let input;
 	export let object;
 	export let label: string;
 	export let type = 'input';
@@ -27,7 +26,6 @@
 			$source = object;
 			$connectingFrom = $node;
 			potentialEdge = true;
-		} else {
 		}
 	}
 
@@ -37,6 +35,7 @@
 	}
 
 	function connect() {
+		if (!$connectingFrom) return;
 		$object[label] = $source;
 		$source = null;
 		const currentConnections = $edges.get($connectingFrom);
@@ -50,8 +49,6 @@
 	let anchor: HTMLDivElement;
 
 	onMount(() => {
-		console.log('THIS', nodeId, graphId);
-
 		const { anchors } = get(node);
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
 		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
@@ -62,7 +59,7 @@
 	$: side = type === 'output' ? 'right' : 'left';
 </script>
 
-<div
+<button
 	bind:this={anchor}
 	style="
 		--color: {color};
@@ -87,5 +84,14 @@
 		cursor: pointer;
 		border: solid 1px black;
 		pointer-events: auto;
+	}
+	/* reset button styles*/
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
+		cursor: pointer;
+		outline: inherit;
 	}
 </style>
