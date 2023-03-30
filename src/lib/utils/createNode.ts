@@ -28,7 +28,7 @@ export function createNode(userNode: NodeConfig): Node {
 		focusable: writable(true),
 		resizing: writable(false),
 		collapsed: writable(false),
-		hidden: writable(false),
+		visible: writable(true),
 		inputs: writable({}),
 		outputs: derived([], () => null),
 		properties: writable({}),

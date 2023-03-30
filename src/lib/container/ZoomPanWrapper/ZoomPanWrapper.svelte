@@ -84,7 +84,6 @@
 	function onMouseDown(e: MouseEvent) {
 		$initialClickPosition = { x: $cursorX, y: $cursorY };
 		if (!$activeKeys['Shift']) {
-			$isLocked = true;
 			isMovable = true;
 		} else {
 			selecting = true;
@@ -95,7 +94,6 @@
 	}
 
 	function onMouseUp() {
-		$isLocked = false;
 		selecting = false;
 		isMovable = false;
 		$connectingFrom = null;

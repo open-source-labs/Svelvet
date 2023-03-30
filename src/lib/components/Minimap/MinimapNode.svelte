@@ -4,7 +4,7 @@
 	export let node: WritableNode;
 	export let bounds;
 
-	const { position, dimensions } = $node;
+	const { position, dimensions, visible } = $node;
 	const { width, height } = dimensions;
 	const { x, y } = position;
 	const { top, bottom, left, right } = bounds;
@@ -15,7 +15,11 @@
 	$: DOMheight = ($height / boundsHeight) * 100;
 </script>
 
-<div
+<button
+	on:click={() => {
+		visible.set(!$visible);
+	}}
+	class:hidden={!$visible}
 	class="minimap-node"
 	style="width: {DOMwidth}%;
     aspect-ratio: {$width}/{$height};
@@ -29,5 +33,9 @@
 		background-color: white;
 		border-radius: 2px;
 		border: solid 0.5px black;
+		cursor: pointer;
+	}
+	.hidden {
+		opacity: 25%;
 	}
 </style>

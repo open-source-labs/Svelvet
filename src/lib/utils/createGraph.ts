@@ -28,7 +28,8 @@ export function createGraph(id: string, initialZoom: number): Graph {
 		isLocked: writable(false),
 		connectingFrom: writable(null),
 		groups: writable({
-			selected: writable(new Set<Node>())
+			selected: writable(new Set<Node>()),
+			hidden: writable(new Set<Node>())
 		})
 	};
 }

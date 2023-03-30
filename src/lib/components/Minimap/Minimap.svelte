@@ -10,13 +10,13 @@
 	const getContext = getContextBase as GetContext;
 	let graphId = getContext('graphId');
 	graph = graphStore.get(graphId);
-	const { nodes, bounds } = $graph;
+	const { nodes, bounds, groups } = $graph;
+	const { hidden } = $groups;
 	const { top, bottom, left, right } = bounds;
+
 	$: boundsWidth = $right - $left;
 	$: boundsHeight = $bottom - $top;
 	$: aspectRatio = boundsWidth / boundsHeight;
-
-	console.log($left, $right, $top, $bottom);
 </script>
 
 <div class="minimap-wrapper">
@@ -27,7 +27,7 @@
 		}; aspect-ratio: ${aspectRatio}`}
 	>
 		{#each Object.values($nodes) as node}
-			<MinimapNode {node} {bounds} />
+			<MinimapNode {node} {bounds} {hidden} />
 		{/each}
 	</div>
 </div>

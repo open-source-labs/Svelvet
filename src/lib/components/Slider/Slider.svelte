@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { activeKeys } from '$lib/stores';
 	import { writable, type Writable } from 'svelte/store';
 	import type { Parameter } from '$lib/types';
-
-	export let parameterStore: Writable<number> = writable(0.5);
+	export let parameterStore: Writable<Parameter> = writable(0.5);
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
@@ -32,7 +30,11 @@
 
 	let sliding = false;
 
-	$: connection = $parameterStore.value || $parameterStore;
+	$: previous = parameterStore;
+
+	$: if (parameterStore !== previous) {
+		driven = !driven;
+	}
 
 	// Begin sliding on mousedown
 	function startSlide() {
@@ -74,7 +76,7 @@
 	function validateInput() {
 		const number = parseFloat(sliderElement.value);
 		if (Number.isNaN(number)) {
-			sliderElement.value = $parameterStore;
+			sliderElement.value = $parameterStore.toString();
 		}
 		if (number < min) {
 			$parameterStore = min;
@@ -100,6 +102,7 @@
 			bind:this={sliderElement}
 			id="slider-input"
 			class="input"
+			class:driven
 			style="--percentage: {(($parameterStore - min) / max) * 100}%"
 			type="text"
 			on:wheel|stopPropagation|preventDefault={(event) => {
@@ -128,7 +131,7 @@
 				sliderElement.select();
 			}}
 			on:mousedown|stopPropagation|preventDefault={startSlide}
-			value={connection}
+			value={$parameterStore}
 			aria-label={label}
 		/>
 		<!-- Increase value button -->
@@ -153,6 +156,14 @@
 		width: 100%;
 		height: 100%;
 		cursor: ew-resize;
+	}
+
+	.driven {
+		background: linear-gradient(
+			90deg,
+			rgb(190, 91, 91) var(--percentage),
+			rgb(255, 255, 255) var(--percentage)
+		);
 	}
 
 	button {

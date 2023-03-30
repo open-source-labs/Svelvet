@@ -2,11 +2,10 @@
 	import { Svelvet, Controls, Minimap, Node } from '$lib';
 	import NodeAdder from '$lib/components/NodeAdder/NodeAdder.svelte';
 	import type { ConfigObject, NodeConfig, Inputs, Properties } from '$lib/types';
-	// const mermaid = `Brian --> Svelvet
-	// Jen --> Svelvet
-	// Britta --> Svelvet
-	// Thomas|Geometry|musgraveConfig --> Svelvet
-	// Svelvet --> Kevin`;
+	const mermaid = `A & B --> C
+	C--> D
+	D --> E
+	E --> F`;
 	const returnValue = (inputs: Inputs, properties: Properties) => {
 		return properties.value;
 	};
@@ -204,10 +203,23 @@
 			clickCallback: (node) => console.log(node)
 		}
 	];
+
+	// const initialEdges = [
+	// 	{
+	// 		id: 'e1-2',
+	// 		source: '2',
+	// 		target: { anchorId: 'bottom-1', nodeId: '5' }
+	// 	},
+	// 	{
+	// 		id: 'e3-2',
+	// 		source: '3',
+	// 		target: { anchorId: 'bottom-2', nodeId: '5' }
+	// 	}
+	// ];
 </script>
 
 <div class="wrapper">
-	<Svelvet theme="dark" nodes={initialNodes} disableSelection>
+	<Svelvet theme="dark" {mermaid}>
 		<Controls />
 		<Minimap />
 		<NodeAdder />

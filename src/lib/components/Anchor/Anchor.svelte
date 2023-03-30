@@ -13,10 +13,14 @@
 	const { nodes } = graph;
 	const node = nodes.get(getContext('nodeId'));
 	const { anchors, dimensions } = get(node);
+	const { width, height } = dimensions;
 
 	onMount(() => {
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
-		anchors[label] = { x: offsetLeft + offsetWidth / 2, y: offsetTop + offsetHeight / 2 };
+		anchors[label] = {
+			x: offsetLeft + offsetWidth / 2,
+			y: offsetTop + offsetHeight / 2
+		};
 	});
 
 	let color = 'gray';

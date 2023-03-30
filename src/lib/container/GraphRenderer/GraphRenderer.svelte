@@ -7,22 +7,28 @@
 
 	export let graph: Graph;
 	const { nodes, edges, connectingFrom } = graph;
+
+	$: console.log($edges);
 </script>
 
-{#each Object.values($nodes) as node}
-	{#if get(node).hidden}
-		<Node {...get(node)} {graph} />
-	{/if}
+{#each Object.values($nodes) as node (get(node).id)}
+	<Node {...get(node)} {graph} />
 {/each}
 
-{#each Array.from($edges) as [sourceNode, targets]}
-	{#each targets as { targetNode, anchorId }}
-		<Edge {sourceNode} {targetNode} sourceAnchor="output" targetAnchor={anchorId} curve />
-	{/each}
+{#each Array.from($edges) as [anchorId, connection] (anchorId)}
+	{@const { sourceNode, targetNode } = connection}
+	<Edge
+		{sourceNode}
+		{targetNode}
+		sourceAnchor="output"
+		targetAnchor={anchorId.split('-')[1]}
+		curve
+	/>
 {/each}
 
 {#if $connectingFrom}
 	<Edge
+		step={false}
 		sourceNode={$connectingFrom}
 		targetNode={{
 			anchors: { cursor: { x: 0, y: 0 } },

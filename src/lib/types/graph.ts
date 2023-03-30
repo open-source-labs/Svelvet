@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { GraphKey, NodeStore, DataStore, Node } from '.';
+import type { GraphKey, NodeStore, DataStore, Node, NodeKey } from '.';
 
 export interface Graph {
 	id: GraphKey;
@@ -17,16 +17,17 @@ export interface Graph {
 	groups: Writable<Groups>;
 	edges: Writable<Edges>;
 }
-
-export type Edges = Map<Node, Array<Connection>>;
+export type AnchorKey = `${NodeKey}-${string}`;
+export type Edges = Map<AnchorKey, Connection>;
 
 export interface Connection {
-	anchorId: string;
+	sourceNode: Node;
 	targetNode: Node;
 }
 
 export interface Groups {
 	selected: Writable<Set<Node>>;
+	hidden: Writable<Set<Node>>;
 	[key: string]: Writable<Set<Node>>;
 }
 

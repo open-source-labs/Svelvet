@@ -17,6 +17,9 @@
 	import { populateStore } from './populateStore';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
+	import { populateMermaidNodes } from './flowchartDrawer';
+	import { flowChartParser } from '$lib/utils/parser';
+	import { get } from 'svelte/store';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -43,16 +46,45 @@
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);
 
-		if (nodes.length) {
+		if (nodes.length && !mermaid) {
 			const nodeObjects = generateNodes(nodes);
 			populateStore(nodeObjects, graph);
+			nodeStore = graph.nodes;
 		}
 
+		// if (mermaid.length) {
+		// 	const createdNodes = populateNodes(mermaid);
+		// 	populateStore(Object.values(createdNodes), graph);
+		// 	nodeStore = graph.nodes;
+		// }
+
 		if (mermaid.length) {
-			const createdNodes = populateNodes(mermaid);
+			const mermaidNodes = flowChartParser(mermaid);
+			console.log({ mermaidNodes });
+			const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
+			console.log({ createdNodes });
 			populateStore(Object.values(createdNodes), graph);
 			nodeStore = graph.nodes;
 		}
+		const { edges: edgeStore } = graph;
+
+		console.log(get(nodeStore));
+
+		edges.forEach((edge) => {
+			const { source, target } = edge;
+
+			const sourceNode = get(nodeStore.get(source));
+			const targetNode = get(nodeStore.get(target.nodeId));
+			const currentConnections = get(edgeStore).get(sourceNode);
+			console.log(sourceNode, targetNode, currentConnections);
+			const newConnection = { targetNode: targetNode, anchorId: target.anchorId };
+
+			if (currentConnections) {
+				currentConnections.push(newConnection);
+			} else {
+				get(edgeStore).set(sourceNode, [newConnection]);
+			}
+		});
 
 		graphStore.add(graph);
 

@@ -3,24 +3,35 @@
 	import Slider from '../Slider/Slider.svelte';
 	import RadioGroup from '../RadioGroup/RadioGroup.svelte';
 	import type { Parameter, Node, Graph, ParameterConfig } from '$lib/types';
+	import type { Writable } from 'svelte/store';
 
-	export let parameterStore: Parameter;
+	export let parameterStore: Writable<Parameter>;
 	export let label: string;
 	export let config: ParameterConfig;
 	export let connectable = false;
 	export let node: Node;
 	export let graph: Graph;
 
-	const { type } = config;
+	console.log(node);
+
+	//const { type } = config;
+
+	const { edges } = graph;
+
+	$: driven = $edges.has(`${node.id}-${label}`);
 </script>
 
 <div class="parameter">
-	{#if type === 'slider'}
-		<Slider {...config} {parameterStore} />
-	{/if}
-	{#if type === 'radio'}
-		<RadioGroup {...config} {parameterStore} />
-	{/if}
+	<!-- {#if !driven}
+		{#if type === 'slider'}
+			<Slider {...config} {parameterStore} {driven} />
+		{/if}
+		{#if type === 'radio'}
+			<RadioGroup {...config} {parameterStore} />
+		{/if}
+	{:else}
+		<p class="driven-label">{label}</p>
+	{/if} -->
 	{#if connectable}
 		<Input {graph} {node} {label} />
 	{/if}
@@ -34,5 +45,10 @@
 		justify-content: center;
 		width: 100%;
 		height: 20px;
+	}
+
+	.driven-label {
+		padding-left: 0.5rem;
+		width: 100%;
 	}
 </style>

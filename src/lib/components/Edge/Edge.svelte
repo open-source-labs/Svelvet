@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { DummyNode, Node } from '$lib/types';
-
+	import { get } from 'svelte/store';
 	export let sourceNode: Node;
 	export let targetNode: Node | DummyNode;
 	export let sourceAnchor: string = 'output';
@@ -8,123 +8,366 @@
 	export let curve = true;
 	export let active = false;
 
-	let animate = true;
+	export let animate = false;
+	export let dynamic = false;
+	export let step = false;
 
-	const { x: sourceAnchorOffsetX, y: sourceAnchorOffsetY } = sourceNode.anchors[sourceAnchor];
-	const { x: targetAnchorOffsetX, y: targetAnchorOffsetY } = targetNode.anchors[targetAnchor];
-
-	let flipHorizontal = false;
-	let flipVertical = false;
+	let curveStrength = 0.4;
+	let buffer = 60;
+	let cornerRadiusConstant = 8;
 	let strokeWidth = 3;
+	let path: string;
 
+	let anchorRadius = -2;
+	const { anchors: sourceAnchors } = sourceNode;
+	const { anchors: targetAnchors } = targetNode;
+
+	let { x: initSourceAnchorOffsetX, y: initSourceAnchorOffsetY } = sourceAnchors[sourceAnchor];
+	let { x: initTargetAnchorOffsetX, y: initTargetAnchorOffsetY } = targetAnchors[targetAnchor];
+
+	let sourceAnchorPercentageX =
+		initSourceAnchorOffsetX / (get(sourceNode.dimensions.width) + anchorRadius);
+	let sourceAnchorPercentageY =
+		initSourceAnchorOffsetY / (get(sourceNode.dimensions.height) + anchorRadius);
+
+	let targetAnchorPercentageX =
+		initTargetAnchorOffsetX / (get(targetNode.dimensions.width) + anchorRadius);
+	let targetAnchorPercentageY =
+		initTargetAnchorOffsetY / (get(targetNode.dimensions.height) + anchorRadius);
+
+	// let sourceAnchorPercentageX = 0.5;
+	// let sourceAnchorPercentageY = 0;
+
+	// let targetAnchorPercentageX = 0.5;
+	// let targetAnchorPercentageY = 1;
+
+	let offsetY = 0;
+	let offsetX = 0;
+
+	$: preferHorizontal = horizontalGap > verticalGap;
+
+	$: if (dynamic) {
+		sourceAnchorPercentageX = preferHorizontal ? (sourceRight < $targetNodeX ? 1 : 0) : 0.5;
+		sourceAnchorPercentageY = preferHorizontal ? 0.5 : sourceBottom < $targetNodeY ? 1 : 0;
+		targetAnchorPercentageX = preferHorizontal ? (sourceRight < $targetNodeX ? 0 : 1) : 0.5;
+		targetAnchorPercentageY = preferHorizontal ? 0.5 : sourceBottom < $targetNodeY ? 0 : 1;
+	}
+
+	$: horizontalGap = Math.max($targetNodeX - sourceRight, 0, $sourceNodeX - targetRight);
+	$: verticalGap = Math.max($targetNodeY - sourceBottom, 0, $sourceNodeY - targetBottom);
+
+	$: sourceNode.dimensions;
+	$: targetNode?.dimensions;
 	const { width: sourceWidth, height: sourceHeight } = sourceNode.dimensions;
 	const { width: targetWidth, height: targetHeight } = targetNode?.dimensions;
 
+	$: sourceNode.position;
+	$: targetNode?.position;
 	const { x: sourceNodeX, y: sourceNodeY } = sourceNode.position;
 	const { x: targetNodeX, y: targetNodeY } = targetNode?.position;
 
-	let curveStrength = 0.4;
-	let buffer = 30;
-	let cornerRadiusConstant = 10;
+	// Pixel value of the anchor point on the source node
+	$: sourceAnchorOffsetX = $sourceWidth * sourceAnchorPercentageX;
+	$: sourceAnchorOffsetY = $sourceHeight * sourceAnchorPercentageY;
 
-	$: deltaY = $targetNodeY - $sourceNodeY;
+	// Pixel value of the anchor point on the target node
+	$: targetAnchorOffsetX = $targetWidth * targetAnchorPercentageX;
+	$: targetAnchorOffsetY = $targetHeight * targetAnchorPercentageY;
+
+	$: sourceRight = $sourceNodeX + $sourceWidth;
+	$: sourceBottom = $sourceNodeY + $sourceHeight;
+	$: targetRight = $targetNodeX + $targetWidth;
+	$: targetBottom = $targetNodeY + $targetHeight;
+
 	$: deltaX = $targetNodeX - $sourceNodeX;
+	$: deltaY = $targetNodeY - $sourceNodeY;
 
-	$: flipHorizontal = deltaX < 0;
-	$: flipVertical = deltaY < 0;
+	$: minX = Math.min($sourceNodeX, $targetNodeX);
+	$: minY = Math.min($sourceNodeY, $targetNodeY);
+	$: maxX = Math.max(sourceRight, targetRight);
+	$: maxY = Math.max(sourceBottom, targetBottom);
 
-	$: boxHeight = Math.max(
-		$sourceHeight,
-		$targetHeight,
-		Math.abs(deltaY) + (flipVertical ? $sourceHeight : $targetHeight)
-	);
-	$: boxWidth = Math.abs(deltaX) + $targetWidth;
+	$: minWidth = Math.min($sourceWidth, $targetWidth);
 
-	$: stepFlip = deltaY - buffer - $targetHeight;
+	$: boxHeight = maxY - minY + 2 * buffer;
+	$: boxWidth = maxX - minX + 2 * buffer;
 
-	$: sourceAnchorX = flipHorizontal ? buffer : $sourceWidth;
-	$: sourceAnchorY = flipVertical
-		? Math.abs(deltaY) + sourceAnchorOffsetY + buffer
-		: sourceAnchorOffsetY + buffer;
+	$: sourceAnchorPosX = buffer + sourceAnchorOffsetX + Math.max(-deltaX, 0);
+	$: sourceAnchorPosY = buffer + sourceAnchorOffsetY + Math.max(-deltaY, 0);
 
-	$: targetAnchorY = flipVertical
-		? buffer + (targetAnchorOffsetY || 0) || 0
-		: boxHeight - $targetHeight + buffer + targetAnchorOffsetY || 0;
-	$: targetAnchorX = flipHorizontal ? boxWidth : boxWidth - $targetWidth;
+	$: targetAnchorPosX = buffer + targetAnchorOffsetX + Math.max(deltaX, 0);
+	$: targetAnchorPosY = buffer + targetAnchorOffsetY + Math.max(deltaY, 0);
 
-	$: sourceControlPointX = sourceAnchorX + (targetAnchorX - sourceAnchorX) * curveStrength;
-	$: targetControlPointX = sourceAnchorX - (sourceAnchorX - targetAnchorX) * curveStrength;
+	let sourceControlPointX: number = 0;
+	let sourceControlPointY: number = 0;
+	let targetControlPointX: number = 0;
+	let targetControlPointY: number = 0;
 
-	$: cornerRadiusX = Math.min(cornerRadiusConstant, Math.abs(deltaX));
-	$: cornerRadiusY = Math.min(cornerRadiusConstant, Math.abs(deltaY));
-	$: cornerRadiusString = `${cornerRadiusX} ${cornerRadiusY}`;
-	$: cornerRadiusFlipped = `${cornerRadiusX} -${cornerRadiusY}`;
+	$: sourceControlPointX =
+		sourceAnchorPercentageX === 1
+			? sourceAnchorPosX + offsetX
+			: sourceAnchorPercentageX === 0
+			? sourceAnchorPosX - offsetX
+			: sourceAnchorPosX;
 
-	$: rightDownArc = `${cornerRadiusString} 0 0 1 ${cornerRadiusString}`;
-	$: downRightArc = `${cornerRadiusString} 0 0 0 ${cornerRadiusString}`;
-	$: rightUpArc = `${cornerRadiusString} 0 0 0 ${cornerRadiusFlipped}`;
-	$: upRightArc = `${cornerRadiusString} 0 0 1 ${cornerRadiusFlipped}`;
+	$: sourceControlPointY =
+		sourceAnchorPercentageY === 1
+			? sourceAnchorPosY + offsetY
+			: sourceAnchorPercentageY === 0
+			? sourceAnchorPosY - offsetY
+			: sourceAnchorPosY;
 
-	$: bezierPath = `M ${sourceAnchorX}, ${sourceAnchorY}
-	${
-		curve
-			? `C ${sourceControlPointX}, ${sourceAnchorY} ${targetControlPointX}, ${targetAnchorY}`
-			: ''
+	$: targetControlPointX =
+		targetAnchorPercentageX === 1
+			? targetAnchorPosX + offsetX
+			: targetAnchorPercentageX === 0
+			? targetAnchorPosX - offsetX
+			: targetAnchorPosX;
+
+	$: targetControlPointY =
+		targetAnchorPercentageY === 1
+			? targetAnchorPosY + offsetY
+			: targetAnchorPercentageY === 0
+			? targetAnchorPosY - offsetY
+			: targetAnchorPosY;
+
+	$: anchorDeltaX = targetAnchorPosX - sourceAnchorPosX;
+	$: anchorDeltaY = targetAnchorPosY - sourceAnchorPosY;
+
+	$: {
+		const curveStrengthY = Math.max(10, Math.abs(verticalGap) * curveStrength);
+
+		offsetY = Math.min(
+			150,
+			Math.abs(anchorDeltaX) > minWidth / 2 || Math.abs(anchorDeltaY) > 0
+				? Math.min(150, Math.abs(Math.max(0, growth(verticalGap, 30)))) + curveStrengthY
+				: curveStrengthY
+		);
 	}
-	${targetAnchorX}, ${targetAnchorY}`;
 
-	$: stepPath = `M ${sourceAnchorX}, ${sourceAnchorY}
-		l 0 ${Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadiusX)} 
-		a ${downRightArc}
-		l ${
-			stepFlip < 0
-				? Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2
-				: Math.abs(sourceAnchorX - targetAnchorX) - cornerRadiusX * 2
-		} 0
-		a ${stepFlip < 0 ? rightUpArc : rightDownArc}
-		l 0 ${
-			stepFlip < 0
-				? -(sourceAnchorY - targetAnchorY + cornerRadiusX * 2)
-				: Math.max(10, (targetAnchorY - sourceAnchorY) / 2 - cornerRadiusX)
+	$: {
+		const curveStrengthX = Math.max(10, Math.abs(horizontalGap) * curveStrength);
+
+		offsetX = Math.min(
+			150,
+			Math.abs(anchorDeltaY) > minWidth / 2 || Math.abs(anchorDeltaX) > 0
+				? Math.min(150, Math.abs(Math.max(0, growth(horizontalGap, 30)))) + curveStrengthX
+				: curveStrengthX
+		);
+	}
+
+	function growth(x: number, threshold: number) {
+		if (x < threshold) {
+			return (threshold - x) * 0.6;
+		} else {
+			return 0;
 		}
-		
-		${
-			stepFlip < 0
-				? `a ${upRightArc}
-		l  ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2} 0
-		a ${rightDownArc}
-		l  0 ${Math.abs(sourceAnchorX - targetAnchorX) / 2 - cornerRadiusX * 2}`
-				: ''
-		}`;
+	}
+
+	$: path = `M ${sourceAnchorPosX}, ${sourceAnchorPosY}
+	C ${sourceControlPointX}, ${sourceControlPointY}
+	${targetControlPointX}, ${targetControlPointY}
+	${targetAnchorPosX}, ${targetAnchorPosY}`;
+
+	let straight = false;
+	$: if (straight) {
+		path = `M ${sourceAnchorPosX}, ${sourceAnchorPosY} L ${targetAnchorPosX}, ${targetAnchorPosY}`;
+	}
+
+	let cornerRadiusX = 0;
+	let cornerRadiusY = 0;
+	let cornerRadiusString = '0 0';
+	let cornerRadiusFlipped = '0 0';
+	let rightDownArc = '0 0 0 0 0 0';
+	let downRightArc = '0 0 0 0 0 0';
+	let rightUpArc = '0 0 0 0 0 0';
+	let upRightArc = '0 0 0 0 0 0';
+	let leftDownArc = '0 0 0 0 0 0';
+	let downLeftArc = '0 0 0 0 0 0';
+	let leftUpArc = '0 0 0 0 0 0';
+	let upLeftArc = '0 0 0 0 0 0';
+
+	$: stepFlip = targetAnchorPosX < sourceAnchorPosX;
+	let lineGap = 20;
+	$: if (step) {
+		cornerRadiusX =
+			Math.abs(anchorDeltaX) > cornerRadiusConstant * 2
+				? cornerRadiusConstant
+				: Math.floor(Math.abs(anchorDeltaX) / 2 + 1);
+		cornerRadiusY =
+			Math.abs(anchorDeltaY) > cornerRadiusConstant * 2
+				? cornerRadiusConstant
+				: Math.floor(Math.abs(anchorDeltaY) / 2 + 1);
+		cornerRadiusString = `${cornerRadiusX} ${cornerRadiusY}`;
+		cornerRadiusFlipped = `${cornerRadiusX} -${cornerRadiusY}`;
+
+		rightDownArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusString} `;
+		downRightArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusString} `;
+		rightUpArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusFlipped} `;
+		upRightArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusFlipped} `;
+		leftDownArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusString} `;
+		downLeftArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusString} `;
+		leftUpArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusFlipped} `;
+		upLeftArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusFlipped} `;
+
+		const arcStrings = {
+			rightdown: rightDownArc,
+			downright: downRightArc,
+			rightup: rightUpArc,
+			upright: upRightArc,
+			leftdown: leftDownArc,
+			downleft: downLeftArc,
+			leftup: leftUpArc,
+			upleft: upLeftArc
+		};
+
+		const { steps, distance } = calculatePath();
+
+		path = steps.reduce((acc, curr, index) => {
+			let stepDistanceString = '';
+			let arcString = '';
+			let multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
+			if (curr === 'left') {
+				stepDistanceString += ` l ${-distance[index] + multiplier * cornerRadiusX} 0 `;
+			} else if (curr === 'right') {
+				stepDistanceString += ` l ${distance[index] - multiplier * cornerRadiusX} 0 `;
+			} else if (curr === 'up') {
+				stepDistanceString += ` l 0 ${-distance[index] + multiplier * cornerRadiusY} `;
+			} else if (curr === 'down') {
+				stepDistanceString += ` l 0 ${distance[index] - multiplier * cornerRadiusY} `;
+			}
+
+			arcString = arcStrings[`${curr}${steps[index + 1]}`] || '';
+			return acc + stepDistanceString + arcString;
+		}, `M ${sourceAnchorPosX}, ${sourceAnchorPosY}`);
+	}
+
+	function calculatePath() {
+		const steps = [];
+		const distance = [];
+		let sourceSide =
+			sourceAnchorPercentageX === 1
+				? 'right'
+				: sourceAnchorPercentageX === 0
+				? 'left'
+				: sourceAnchorPercentageY === 1
+				? 'down'
+				: 'up';
+
+		let axis = sourceSide === 'left' || sourceSide === 'right' ? 'x' : 'y';
+		let oppositeAxis = axis === 'x' ? 'y' : 'x';
+
+		let oppositeSourceSide =
+			sourceSide === 'left'
+				? 'right'
+				: sourceSide === 'right'
+				? 'left'
+				: sourceSide === 'up'
+				? 'down'
+				: 'up';
+
+		let oppositeTargetSide =
+			oppositeSourceSide === 'left'
+				? 'right'
+				: oppositeSourceSide === 'right'
+				? 'left'
+				: oppositeSourceSide === 'up'
+				? 'down'
+				: 'up';
+		let targetSide =
+			targetAnchorPercentageX === 1
+				? 'right'
+				: targetAnchorPercentageX === 0
+				? 'left'
+				: targetAnchorPercentageY === 1
+				? 'down'
+				: 'up';
+
+		let sourceTargetFacing = targetSide === oppositeSourceSide;
+		let oppositeInitialDirection =
+			sourceSide === 'left' || sourceSide === 'right'
+				? anchorDeltaY > 0
+					? 'down'
+					: 'up'
+				: anchorDeltaX > 0
+				? 'right'
+				: 'left';
+
+		let direction = {
+			x: anchorDeltaX,
+			y: anchorDeltaY
+		};
+
+		steps.push(sourceSide);
+		if (sourceTargetFacing) {
+			distance.push(Math.abs(direction[axis]) / 2);
+			steps.push(oppositeInitialDirection);
+			distance.push(Math.abs(direction[oppositeAxis]));
+			steps.push(sourceSide);
+			distance.push(Math.abs(direction[axis]) / 2);
+		} else {
+			distance.push(buffer);
+		}
+		return { steps, distance };
+	}
 </script>
 
-<svg
-	width={flipHorizontal ? boxWidth + buffer : boxWidth}
-	height={boxHeight + buffer * 2}
-	style="top: {Math.min($sourceNodeY, $targetNodeY) - buffer};
-    left: {flipHorizontal ? $targetNodeX - buffer : $sourceNodeX};
-	transform: scaleX({flipHorizontal ? -1 : 1});
-	z-index: {active ? 10 : -10}"
-	class:animate
+<div
+	class="wrapper"
+	style="width: {boxWidth}px; height: {boxHeight}px; top: {minY - buffer}px;
+left: {minX - buffer}px;"
 >
-	<path d={bezierPath} stroke="black" stroke-width={strokeWidth + 1.5} fill="transparent" />
-	<path d={bezierPath} stroke="white" stroke-width={strokeWidth} fill="transparent" />
-</svg>
+	<svg class:active>
+		<path class:animate d={path} stroke="white" stroke-width={strokeWidth} fill="transparent" />
+	</svg>
+	<div
+		style="top: {sourceAnchorPosY + anchorDeltaY / 2}px; left: {sourceAnchorPosX +
+			anchorDeltaX / 2}px"
+		class="label"
+	>
+		HELLO
+	</div>
+</div>
 
 <style>
 	svg {
+		width: 100%;
+		height: 100%;
 		position: absolute;
 		pointer-events: none;
-		/* border: solid 0.5px red; */
+		z-index: -10;
+		border: solid 0.5px red;
+	}
+	.wrapper {
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.label {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: fit-content;
+		height: 2rem;
+		color: white;
+		background-color: blue;
+		padding: 10px;
+		transform: translateX(-50%) translateY(-50%);
+	}
+	.active {
+		z-index: 10;
 	}
 
 	.animate {
 		stroke-dasharray: 5;
-		animation: dash 50000s linear;
+		animation: dash 1s linear infinite;
+		will-change: stroke-dashoffset;
 	}
+
 	@keyframes dash {
 		from {
-			stroke-dashoffset: 1000000;
+			stroke-dashoffset: 30;
 		}
 	}
 </style>

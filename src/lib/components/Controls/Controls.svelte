@@ -1,17 +1,22 @@
 <script lang="ts">
 	import { graphStore } from '$lib/stores';
-	import type { Graph, GraphContext } from '$lib/types';
+	import type { Graph, Key } from '$lib/types';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
 	const ZOOM_INCREMENT = 0.1;
 	let graph: Writable<Graph>;
-	let graphId = getContext<GraphContext>('graphId');
+	let graphId = getContext<Key>('graphId');
 	graph = graphStore.get(graphId);
 
-	const { transforms, isLocked } = $graph;
+	const { transforms, isLocked, groups } = $graph;
+	const { hidden } = $groups;
 	const { scale, translation } = transforms;
 	const { x: xOffset, y: yOffset } = translation;
+
+	function unhideAll() {
+		hidden.set(new Set());
+	}
 
 	function zoomIn() {
 		// Zoom in by 10%
@@ -39,6 +44,9 @@
 </script>
 
 <nav class="controls-wrapper">
+	{#if $hidden.size > 0}
+		<button on:click={unhideAll}>Unhide</button>
+	{/if}
 	<button on:click={zoomIn}>+</button>
 	<button on:click={zoomOut}>-</button>
 	<button on:click={resetTransforms}>Reset</button>

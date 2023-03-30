@@ -11,10 +11,10 @@ export interface Node {
 	anchors: Record<string, XYPair>;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
-	outputs: ReturnType<typeof derived>;
+	outputs: Writable<Parameter>;
 	group: Writable<string | null>;
 	collapsed: Writable<boolean>;
-	hidden: Writable<boolean>;
+	visible: Writable<boolean>;
 	draggable: Writable<boolean>;
 	selectable: Writable<boolean>;
 	connectable: Writable<boolean>;
@@ -71,17 +71,17 @@ export interface NodeConfig {
 	clickCallback?: (node: Node) => void;
 }
 
-export type Properties = Record<string, Parameter>;
+export type Properties = Record<string, Writable<Parameter>>;
 
 export type WritableNode = Writable<Node>;
 
 export type Parameter = number | string | object | boolean;
 
-export type Inputs = Record<string, Parameter>;
+export type Inputs = Record<string, Writable<Parameter>>;
 
 export interface Output {
 	id: string;
 	label: string;
-	value: Writable<unknown | null>;
+	value: Writable<Parameter | null>;
 }
 export type Outputs = Record<string, Output>;

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { Graph, Node } from '$lib/types';
+	import type { Graph, Node, AnchorKey } from '$lib/types';
 	import Anchor from '../Anchor/Anchor.svelte';
+	import { writable, get } from 'svelte/store';
 
 	export let node: Node;
 	export let label: string;
@@ -10,22 +11,39 @@
 
 	const { inputs } = node;
 
+	let anchorId: AnchorKey = `${node.id}-${label}`;
+
 	function makeConnection() {
 		if (!$connectingFrom) return;
 		$inputs[label] = $connectingFrom.outputs;
 
-		const currentConnections = $edges.get($connectingFrom);
-		if (currentConnections) {
-			currentConnections.push({ targetNode: node, anchorId: label });
-		} else {
-			$edges.set($connectingFrom, [{ targetNode: node, anchorId: label }]);
-		}
+		$edges.set(anchorId, { targetNode: node, sourceNode: $connectingFrom });
+
 		$edges = $edges;
 		$connectingFrom = null;
 	}
+
+	function removeConnection() {
+		$inputs[label] = writable(get($inputs[label]));
+		$edges.delete(anchorId);
+		$edges = $edges;
+	}
+
+	function detachEdge() {
+		const test = $edges.get(anchorId);
+		if (test) {
+			const { sourceNode } = test;
+			$connectingFrom = sourceNode;
+			removeConnection();
+		}
+	}
 </script>
 
-<div class="input" on:mouseup|stopPropagation={makeConnection} on:mousedown|stopPropagation>
+<div
+	class="input"
+	on:mouseup|stopPropagation={makeConnection}
+	on:mousedown|stopPropagation={detachEdge}
+>
 	<Anchor {label} {graph} />
 </div>
 
