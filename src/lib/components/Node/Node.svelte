@@ -8,15 +8,24 @@
 	import Parameter from '../Parameter/Parameter.svelte';
 	import Output from '../Output/Output.svelte';
 	import { createNode } from '$lib/utils';
-	import { moveNodes } from './util';
+	import { moveNodes } from './moveNodes';
 	import type { Writable } from 'svelte/store';
+	import Resizer from '../Resizer/Resizer.svelte';
+	import { calculateFitContentWidth } from './calculateFitContent';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+	function handleClick() {
+		dispatch('nodeClicked', { node, selected });
+	}
 
 	export let collapsible: boolean = true;
 	export let visible: Node['visible'];
 	export let header: boolean = true;
 	export let width: number = 100;
 	export let height: number = 100;
-	export let dimensions;
+	export let dimensions: Node['dimensions'];
 	export let inputs: Node['inputs'];
 	export let outputs: Node['outputs'];
 	export let properties: Node['properties'];
@@ -35,10 +44,10 @@
 
 	export let nodeId: string = Math.random().toString(36).substring(2, 8);
 	//export let node: Node = createNode({ id: nodeId, dimensions: { width, height } });
-	export let graph: Graph = get(graphStore.get(getContext('graphId').graphId));
+	export let graph: Graph = graphStore.get(getContext('graphId').graphId);
 
-	let isMoving = false;
-	let isCollapsed = false;
+	let isMovable = false;
+	let collapsed = false;
 	let isResizing = { width: false, height: false };
 	let minWidth = 0;
 	let minHeight = 0;
@@ -50,9 +59,8 @@
 
 	const { width: widthStore, height: heightStore } = dimensions;
 	const { x, y } = position;
-	const { top, bottom, left, right } = bounds;
 	const { selected: selectedNodes, hidden: hiddenNodes } = $groups;
-	const node = get(graph.nodes.get(id));
+	const node = graph.nodes.get(id);
 	const { x: cursorX, y: cursorY } = cursorPosition;
 
 	setContext('nodeId', id);
@@ -62,27 +70,14 @@
 	// We use this as a class directive in the component
 	$: selected = $selectedNodes.has(node);
 
-	// If the node isResizable, update the dimensions stores
-	$: if (isResizing.width || isResizing.height) {
-		if (isResizing.height) $heightStore = Math.max(minHeight, $cursorY - $y);
-		if (isResizing.width) $widthStore = Math.max(minWidth, $cursorX - $x);
-	}
-
-	// If the node isMovable, update the position stores
-	$: if (isMoving) {
-		const newX = $cursorX - $initialClickPosition.x;
-		const newY = $cursorY - $initialClickPosition.y;
-
-		if ($group) moveNodes(graph, newX - $x, newY - $y, $groups[$group], snapTo);
-	}
-
-	$: {
-		if ($hiddenNodes.has(node)) {
-			$visible = false;
-		} else {
-			$visible = true;
-		}
-	}
+	setContext('resizeData', {
+		heightStore,
+		widthStore,
+		minHeight,
+		minWidth,
+		x,
+		y
+	});
 
 	// Dynamically import the component for the node
 	onMount(async () => {
@@ -95,53 +90,13 @@
 		minWidth = min.width;
 		minHeight = min.height;
 
-		function calculateFitContentWidth(element: HTMLElement) {
-			element.style.width = 'fit-content';
-			element.style.height = 'fit-content';
-			const width = element.offsetWidth;
-			const height = element.offsetHeight;
-			$heightStore = height;
-			$widthStore = width;
-			element.style.width = DOMwidth + 'px';
-			element.style.height = DOMheight + 'px';
-			return { width, height };
-		}
-
 		if (!componentRef) return;
 		DynamicComponent = (await import(`../${componentRef}/${componentRef}.svelte`)).default;
 	});
 
-	function handleClick() {
-		// Check if graph is locked
-		if ($isLocked) return;
-
-		// Update initial click position store
-		$initialClickPosition = { x: $cursorX - $x, y: $cursorY - $y };
-
-		// Allow node to be moved
-		isMoving = true;
-
-		// If you click on a node that is already selected
-		// Without holding shift, do nothing
-		if (!$activeKeys['Shift'] && selected) return;
-
-		// If you click on a new node outside of the current group, clear the group
-		if (!$activeKeys['Shift'] && !selected) {
-			Array.from($selectedNodes).forEach((node) => {
-				const { group } = node;
-				group.set(null);
-			});
-			$selectedNodes.clear();
-		}
-
-		// Toggle the selected state of the node
-		toggleSelected();
-	}
-
 	function onMouseUp() {
-		setResize(null);
-		if (!isMoving) return;
-		isMoving = false;
+		isResizing.width = false;
+		isResizing.height = false;
 	}
 
 	function toggleSelected() {
@@ -166,196 +121,95 @@
 		}
 	}
 
-	function setResize(mode: 'width' | 'height' | 'both' | null) {
-		if (mode === null) {
-			isResizing.width = false;
-			isResizing.height = false;
-		} else {
-			isResizing.width = mode === 'width' || mode === 'both';
-			isResizing.height = mode === 'height' || mode === 'both';
-		}
-	}
-
-	function hide() {
+	function hideNode() {
 		$hiddenNodes.add(node);
 		$hiddenNodes = $hiddenNodes;
 	}
+
+	// Dynamic CSS styles based on store values
+	$: nodeWidth = `${$widthStore}px`;
+	$: nodeHeight = `${$heightStore}px`;
+	$: nodeLeft = `${$x}px`;
+	$: nodeTop = `${$y}px`;
 </script>
 
 <svelte:window on:mouseup|stopPropagation={onMouseUp} />
 
-<!-- NODE COMPONENT START -->
-
-{#if $visible}
-	<div
-		bind:this={DOMnode}
-		on:mouseup={onMouseUp}
-		on:mousedown|stopPropagation={handleClick}
-		on:keydown={handleKeydown}
-		tabindex={0}
-		class="graph-node"
-		id="node-{id}"
-		role="button"
-		class:selected
-		class:collapsed={isCollapsed}
-		style="width: {$widthStore}px;
-		    height: {$heightStore}px;
-		    left: {$x}px;
-		    top: {$y}px;
-		    cursor: {$draggable ? (isMoving ? 'grabbing' : 'grab') : 'not-allowed'};
+<div
+	bind:this={DOMnode}
+	on:mouseup={onMouseUp}
+	on:mousedown|stopPropagation={handleClick}
+	on:keydown={handleKeydown}
+	tabindex={0}
+	class="graph-node"
+	{id}
+	role="button"
+	style:height={nodeHeight}
+	style:width={nodeWidth}
+	style:left={nodeLeft}
+	style:top={nodeTop}
+	class:selected
+	class:collapsed
+	style:cursor={$draggable ? (isMovable ? 'grabbing' : 'grab') : 'not-allowed'}
+	style="
 			{borderRadius && `--border-radius: ${borderRadius}px`};
 			{bgColor && `--node-background: ${bgColor}`};
 			{textColor && `--text-color: ${textColor}`};
 			{borderColor && `--border-color: ${borderColor}`}"
-	>
-		<!-- {#if DynamicComponent}
+>
+	<!-- {#if DynamicComponent}
 				<svelte:component this={DynamicComponent} self={configObject} data={parentNodesArray} />
 			{/if} -->
-		{#if header}
-			<header class="header-wrapper">
-				{#if collapsible}
-					<button
-						on:click={() => {
-							isCollapsed = !isCollapsed;
-						}}>+</button
-					>
-				{/if}
-				<button on:click={hide}> - </button>
-				<p class="node-name">{label || id}</p>
-			</header>
-			<div class="header-divider" />
-		{/if}
-		{#if !isCollapsed}
-			<section class="parameters">
-				{#if label && !header}<p class="node-name">{label}</p>{/if}
-				{#if $outputs}
-					<Output {graph} outputStore={outputs} {connectingFrom} {node} />
-				{/if}
-				{#if $properties}
-					{#each Object.keys($properties) as key}
-						<Parameter
-							{node}
-							{graph}
-							store={properties}
-							config={config ? config.properties[key] : null}
-							label={key}
-							parameterStore={$properties[key]}
-						/>
-					{/each}
-				{/if}
+	{#if header}
+		<header class="header-wrapper">
+			{#if collapsible}
+				<button
+					on:click={() => {
+						collapsed = !collapsed;
+					}}>+</button
+				>
+			{/if}
+			<button on:click={hideNode}> - </button>
+			<p class="node-name">{label || id}</p>
+		</header>
+		<div class="header-divider" />
+	{/if}
+	{#if !collapsed}
+		<section class="parameters">
+			{#if label && !header}<p class="node-name">{label}</p>{/if}
+			{#if $outputs}
+				<Output {graph} outputStore={outputs} {connectingFrom} {node} />
+			{/if}
 
-				{#if $inputs}
-					{#each Object.keys($inputs) as key}
-						<Parameter
-							{node}
-							{graph}
-							connectable
-							store={inputs}
-							config={config ? config.inputs[key] : null}
-							label={key}
-							parameterStore={$inputs[key]}
-						/>
-					{/each}
-				{/if}
-			</section>
-		{/if}
-		{#if resizable}
-			<div class="resize-width" on:mousedown|stopPropagation={() => setResize('width')} />
-			<div class="resize-height" on:mousedown|stopPropagation={() => setResize('height')} />
-			<div class="resize-both" on:mousedown|stopPropagation={() => setResize('both')} />
-		{/if}
-	</div>
-{/if}
+			{#each Object.entries($properties) as [key, property] (key)}
+				<Parameter
+					{node}
+					{graph}
+					store={properties}
+					config={config ? config.properties[key] : null}
+					label={key}
+					parameterStore={property}
+				/>
+			{/each}
 
-<!-- NODE COMPONENT END -->
+			{#each Object.keys($inputs) as key}
+				<Parameter
+					{node}
+					{graph}
+					connectable
+					store={inputs}
+					config={config ? config.inputs[key] : null}
+					label={key}
+					parameterStore={$inputs[key]}
+				/>
+			{/each}
+		</section>
+	{/if}
+	{#if resizable}
+		<Resizer width height both {graph} />
+	{/if}
+</div>
 
-<!-- STYLES -->
 <style>
-	.resize-width {
-		width: 5px;
-		height: calc(100% - 4px);
-		position: absolute;
-		right: -1px;
-		top: -1px;
-		cursor: ew-resize;
-	}
-
-	.resize-both {
-		width: 6px;
-		height: 6px;
-		position: absolute;
-		bottom: -1px;
-		right: -1px;
-		cursor: nwse-resize;
-	}
-
-	.resize-height {
-		width: calc(100% - 4px);
-		height: 5px;
-		position: absolute;
-		left: -1px;
-		bottom: -1px;
-		cursor: ns-resize;
-	}
-
-	.header-divider {
-		width: 100%;
-		height: 1px;
-		background-color: hsl(54, 81%, 48%);
-	}
-	.parameters {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 5px;
-		padding: 8px 8px;
-		width: 100%;
-		/* outline: solid 1px red; */
-	}
-
-	.graph-node {
-		--border-color: white;
-		border: solid 1px var(--border-color);
-		border-radius: var(--border-radius, 10px);
-		display: flex;
-		flex-direction: column;
-		justify-content: start;
-		align-items: center;
-		min-width: fit-content !important;
-		min-height: fit-content !important;
-		user-select: none;
-		cursor: grab;
-		position: absolute;
-		color: var(--text-color);
-		background-color: var(--node-background);
-		box-shadow: 1px 4px 8px 0 rgba(0, 0, 0, 0.2);
-		margin: 0;
-		padding: 0;
-	}
-
-	.node-name {
-		margin: 0px;
-		color: var(--node-background);
-	}
-
-	.header-wrapper {
-		width: 100%;
-		height: 2rem;
-		padding: 5px;
-		display: flex;
-		gap: 6px;
-		background-color: rgb(237, 213, 4);
-		border-radius: var(--border-radius, 10px) var(--border-radius, 10px) 0 0;
-	}
-
-	.selected {
-		z-index: 10;
-		--border-color: black;
-	}
-
-	.collapsed {
-		height: min-content;
-		overflow: hidden;
-	}
+	@import url('./Node.css');
 </style>

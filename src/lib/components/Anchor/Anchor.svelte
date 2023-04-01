@@ -6,13 +6,14 @@
 	export let isOutput = false;
 	export let label: string;
 	export let graph: Graph;
+	export let driven;
 
 	let anchor: HTMLButtonElement;
 
 	// const graph = graphStore.get(getContext('graphId'));
 	const { nodes } = graph;
 	const node = nodes.get(getContext('nodeId'));
-	const { anchors, dimensions } = get(node);
+	const { anchors, dimensions } = node;
 	const { width, height } = dimensions;
 
 	onMount(() => {
@@ -28,6 +29,7 @@
 </script>
 
 <button
+	class:driven
 	bind:this={anchor}
 	style="
 		--color: {color};
@@ -39,7 +41,7 @@
 	.anchor {
 		position: absolute;
 		width: 12px;
-		z-index: 2;
+		z-index: 12;
 		height: 12px;
 		border-radius: 50%;
 		background-color: var(--color);
@@ -58,5 +60,8 @@
 		font: inherit;
 		cursor: pointer;
 		outline: inherit;
+	}
+	.driven {
+		background-color: white;
 	}
 </style>

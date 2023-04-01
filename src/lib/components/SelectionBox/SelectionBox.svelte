@@ -1,28 +1,36 @@
 <script lang="ts">
-	let height = 0;
-	let width = 0;
-	export let anchor = { x: 0, y: 0 };
 	import { onMount } from 'svelte';
+	import { cursorPositionRaw } from '$lib/stores/CursorStore';
+	import type { Graph, Node, NodeDOMBounds } from '$lib/types';
+	import { activeKeys } from '$lib/stores';
 
-	export let graph;
+	export let graph: Graph;
+	export let anchor = { x: 0, y: 0 };
+	export let adding = false;
+
+	export let creating = false;
 
 	const { groups, nodes: nodeStore } = graph;
-	const { selected: selectedNodes } = groups;
+	const { selected: selectedNodes } = $groups;
 
-	interface Node {
-		id: string;
-		top: number;
-		left: number;
-		width: number;
-		height: number;
-	}
-	let nodes: Array<Node>;
+	let nodes: Array<NodeDOMBounds>;
 	let box: HTMLDivElement;
-	let selectionBoxBounds: DOMRect;
 
-	onMount(() => {
-		updateNodes();
-	});
+	$: height = $cursorPositionRaw.y - anchor.y;
+	$: width = $cursorPositionRaw.x - anchor.x;
+	$: top = Math.min(anchor.y, anchor.y + height);
+	$: left = Math.min(anchor.x, anchor.x + width);
+
+	$: CSStop = `${top}px`;
+	$: CSSleft = `${left}px`;
+	$: CSSheight = `${Math.abs(height)}px`;
+	$: CSSwidth = `${Math.abs(width)}px`;
+
+	$: if (width || height) {
+		selectNodes();
+	}
+
+	onMount(updateNodes);
 
 	function updateNodes() {
 		const DOMnodes = Array.from(document.querySelectorAll('.graph-node'));
@@ -33,57 +41,42 @@
 		});
 	}
 
-	function resizeSelectionBox(e: MouseEvent) {
-		const { movementX, movementY } = e;
-		height += movementY;
-		width += movementX;
-
-		if (box) {
-			selectionBoxBounds = box.getBoundingClientRect();
-			checkSelections();
-		}
-	}
-	function checkSelections() {
-		console.log(selectionBoxBounds);
+	function selectNodes() {
 		if (!nodes) return;
 
-		const nodeIdsUnderSelection: Array<string> = [];
-		console.log(nodes);
-		nodes.forEach((node) => {
+		const nodesUnderSelection = nodes.reduce((accumulator, node) => {
 			if (
-				node.top < selectionBoxBounds.top + selectionBoxBounds.height &&
-				node.top + node.height > selectionBoxBounds.top &&
-				node.left < selectionBoxBounds.left + selectionBoxBounds.width &&
-				node.left + node.width > selectionBoxBounds.left
+				left <= node.left &&
+				top <= node.top &&
+				left + Math.abs(width) >= node.left + node.width &&
+				top + Math.abs(height) >= node.top + node.height
 			) {
-				nodeIdsUnderSelection.push(node.id);
+				accumulator.push(graph.nodes.get(node.id));
 			}
-		});
-		console.log({ nodeIdsUnderSelection });
-		$selectedNodes = new Set(
-			nodeIdsUnderSelection.map((id) => {
-				let foundNode;
-				const storedNode = nodeStore.get(id);
-				storedNode.subscribe((node) => {
-					foundNode = node;
-				});
+			return accumulator;
+		}, [] as Array<Node>);
 
-				return foundNode;
-			})
-		);
+		if (adding) {
+			nodesUnderSelection.forEach((node) => {
+				$selectedNodes.add(node);
+			});
+		} else {
+			$selectedNodes = new Set(nodesUnderSelection);
+		}
 		$selectedNodes = $selectedNodes;
+		console.log($selectedNodes);
 	}
 </script>
 
 <div
+	class:creating
 	bind:this={box}
 	class="selection-box"
-	style={`height: ${Math.abs(height)}px;
-    width: ${Math.abs(width)}px;
-    ${height > 0 ? `top: ${anchor.y}px` : `top: ${anchor.y + height}px`}; 
-    ${width > 0 ? `left: ${anchor.x}px` : `left: ${anchor.x + width}px`}; `}
+	style:height={CSSheight}
+	style:width={CSSwidth}
+	style:top={CSStop}
+	style:left={CSSleft}
 />
-<svelte:window on:mousemove={resizeSelectionBox} />
 
 <style>
 	.selection-box {
@@ -92,7 +85,12 @@
 		border: 1px dashed rgb(84, 148, 252);
 		border-radius: 5px;
 		pointer-events: none;
-		z-index: 10;
+		z-index: 100;
 		cursor: crosshair;
+	}
+
+	.creating {
+		background-color: rgba(220, 189, 13, 0.438);
+		border: 1px solid goldenrod;
 	}
 </style>

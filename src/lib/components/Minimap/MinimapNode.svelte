@@ -1,10 +1,12 @@
 <script lang="ts">
-	import type { WritableNode } from '$lib/types';
+	import type { Node } from '$lib/types';
 
-	export let node: WritableNode;
+	export let node: Node;
 	export let bounds;
+	export let hidden = false;
+	export let toggleHidden: (node: Node) => void;
 
-	const { position, dimensions, visible } = $node;
+	const { position, dimensions, visible } = node;
 	const { width, height } = dimensions;
 	const { x, y } = position;
 	const { top, bottom, left, right } = bounds;
@@ -16,10 +18,8 @@
 </script>
 
 <button
-	on:click={() => {
-		visible.set(!$visible);
-	}}
-	class:hidden={!$visible}
+	on:click={() => toggleHidden(node)}
+	class:hidden
 	class="minimap-node"
 	style="width: {DOMwidth}%;
     aspect-ratio: {$width}/{$height};

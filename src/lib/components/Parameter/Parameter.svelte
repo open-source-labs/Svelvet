@@ -4,6 +4,7 @@
 	import RadioGroup from '../RadioGroup/RadioGroup.svelte';
 	import type { Parameter, Node, Graph, ParameterConfig } from '$lib/types';
 	import type { Writable } from 'svelte/store';
+	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
 
 	export let parameterStore: Writable<Parameter>;
 	export let label: string;
@@ -14,26 +15,27 @@
 
 	console.log(node);
 
-	//const { type } = config;
+	const { type } = config;
 
 	const { edges } = graph;
 
 	$: driven = $edges.has(`${node.id}-${label}`);
+
+	const components = {
+		slider: Slider,
+		radio: RadioGroup,
+		color: ColorPicker
+	};
 </script>
 
 <div class="parameter">
-	<!-- {#if !driven}
-		{#if type === 'slider'}
-			<Slider {...config} {parameterStore} {driven} />
-		{/if}
-		{#if type === 'radio'}
-			<RadioGroup {...config} {parameterStore} />
-		{/if}
+	{#if !driven}
+		<svelte:component this={components[type]} {...config} {parameterStore} />
 	{:else}
 		<p class="driven-label">{label}</p>
-	{/if} -->
+	{/if}
 	{#if connectable}
-		<Input {graph} {node} {label} />
+		<Input {graph} {node} {label} {driven} />
 	{/if}
 </div>
 

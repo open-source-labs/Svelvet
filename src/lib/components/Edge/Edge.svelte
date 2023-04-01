@@ -1,12 +1,16 @@
 <script lang="ts">
 	import type { DummyNode, Node } from '$lib/types';
 	import { get } from 'svelte/store';
+	import { writable } from 'svelte/store';
+	import { cursorPosition } from '$lib/stores/CursorStore';
+
 	export let sourceNode: Node;
 	export let targetNode: Node | DummyNode;
 	export let sourceAnchor: string = 'output';
 	export let targetAnchor: string = 'cursor';
 	export let curve = true;
 	export let active = false;
+	export let cursor = false;
 
 	export let animate = false;
 	export let dynamic = false;
@@ -25,16 +29,22 @@
 	let { x: initSourceAnchorOffsetX, y: initSourceAnchorOffsetY } = sourceAnchors[sourceAnchor];
 	let { x: initTargetAnchorOffsetX, y: initTargetAnchorOffsetY } = targetAnchors[targetAnchor];
 
-	let sourceAnchorPercentageX =
-		initSourceAnchorOffsetX / (get(sourceNode.dimensions.width) + anchorRadius);
-	let sourceAnchorPercentageY =
-		initSourceAnchorOffsetY / (get(sourceNode.dimensions.height) + anchorRadius);
+	const { dimensions, position } = sourceNode;
+	const { width: sourceWidth, height: sourceHeight } = dimensions;
+	const { x: sourceNodeX, y: sourceNodeY } = position;
 
-	let targetAnchorPercentageX =
-		initTargetAnchorOffsetX / (get(targetNode.dimensions.width) + anchorRadius);
-	let targetAnchorPercentageY =
-		initTargetAnchorOffsetY / (get(targetNode.dimensions.height) + anchorRadius);
+	const { dimensions: targetDimensions, position: targetPosition } = targetNode;
+	const { width: targetWidth, height: targetHeight } = targetDimensions;
+	const { x: targetNodeX, y: targetNodeY } = targetPosition;
 
+	let sourceAnchorPercentageX = 1;
+	let sourceAnchorPercentageY = initSourceAnchorOffsetY / ($sourceHeight + 2 * anchorRadius);
+
+	let targetAnchorPercentageX = initTargetAnchorOffsetX / ($targetWidth + anchorRadius);
+	let targetAnchorPercentageY = initTargetAnchorOffsetY / ($targetHeight + anchorRadius);
+
+	console.log(initSourceAnchorOffsetX, $sourceWidth, anchorRadius);
+	console.log(sourceAnchorPercentageX);
 	// let sourceAnchorPercentageX = 0.5;
 	// let sourceAnchorPercentageY = 0;
 
@@ -55,16 +65,6 @@
 
 	$: horizontalGap = Math.max($targetNodeX - sourceRight, 0, $sourceNodeX - targetRight);
 	$: verticalGap = Math.max($targetNodeY - sourceBottom, 0, $sourceNodeY - targetBottom);
-
-	$: sourceNode.dimensions;
-	$: targetNode?.dimensions;
-	const { width: sourceWidth, height: sourceHeight } = sourceNode.dimensions;
-	const { width: targetWidth, height: targetHeight } = targetNode?.dimensions;
-
-	$: sourceNode.position;
-	$: targetNode?.position;
-	const { x: sourceNodeX, y: sourceNodeY } = sourceNode.position;
-	const { x: targetNodeX, y: targetNodeY } = targetNode?.position;
 
 	// Pixel value of the anchor point on the source node
 	$: sourceAnchorOffsetX = $sourceWidth * sourceAnchorPercentageX;
@@ -117,19 +117,21 @@
 			? sourceAnchorPosY - offsetY
 			: sourceAnchorPosY;
 
-	$: targetControlPointX =
-		targetAnchorPercentageX === 1
-			? targetAnchorPosX + offsetX
-			: targetAnchorPercentageX === 0
-			? targetAnchorPosX - offsetX
-			: targetAnchorPosX;
+	$: targetControlPointX = cursor
+		? targetAnchorPosX
+		: targetAnchorPercentageX === 1
+		? targetAnchorPosX + offsetX
+		: targetAnchorPercentageX === 0
+		? targetAnchorPosX - offsetX
+		: targetAnchorPosX;
 
-	$: targetControlPointY =
-		targetAnchorPercentageY === 1
-			? targetAnchorPosY + offsetY
-			: targetAnchorPercentageY === 0
-			? targetAnchorPosY - offsetY
-			: targetAnchorPosY;
+	$: targetControlPointY = cursor
+		? targetAnchorPosY
+		: targetAnchorPercentageY === 1
+		? targetAnchorPosY + offsetY
+		: targetAnchorPercentageY === 0
+		? targetAnchorPosY - offsetY
+		: targetAnchorPosY;
 
 	$: anchorDeltaX = targetAnchorPosX - sourceAnchorPosX;
 	$: anchorDeltaY = targetAnchorPosY - sourceAnchorPosY;
@@ -320,13 +322,13 @@ left: {minX - buffer}px;"
 	<svg class:active>
 		<path class:animate d={path} stroke="white" stroke-width={strokeWidth} fill="transparent" />
 	</svg>
-	<div
+	<!-- <div
 		style="top: {sourceAnchorPosY + anchorDeltaY / 2}px; left: {sourceAnchorPosX +
 			anchorDeltaX / 2}px"
 		class="label"
 	>
 		HELLO
-	</div>
+	</div> -->
 </div>
 
 <style>
@@ -335,8 +337,8 @@ left: {minX - buffer}px;"
 		height: 100%;
 		position: absolute;
 		pointer-events: none;
-		z-index: -10;
-		border: solid 0.5px red;
+		z-index: -1;
+		/* border: solid 0.5px red; */
 	}
 	.wrapper {
 		position: absolute;
@@ -352,8 +354,10 @@ left: {minX - buffer}px;"
 		height: 2rem;
 		color: white;
 		background-color: blue;
+		border-radius: 5px;
 		padding: 10px;
 		transform: translateX(-50%) translateY(-50%);
+		z-index: 11;
 	}
 	.active {
 		z-index: 10;

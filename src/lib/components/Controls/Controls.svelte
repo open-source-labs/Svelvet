@@ -3,16 +3,18 @@
 	import type { Graph, Key } from '$lib/types';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import { zoomGraph, calculateTranslation } from '$lib/utils';
 
 	const ZOOM_INCREMENT = 0.1;
-	let graph: Writable<Graph>;
+	let graph: Graph;
 	let graphId = getContext<Key>('graphId');
 	graph = graphStore.get(graphId);
 
-	const { transforms, isLocked, groups } = $graph;
+	const { transforms, isLocked, groups } = graph;
 	const { hidden } = $groups;
 	const { scale, translation } = transforms;
 	const { x: xOffset, y: yOffset } = translation;
+	const { x: translationX, y: translationY } = translation;
 
 	function unhideAll() {
 		hidden.set(new Set());
@@ -24,8 +26,15 @@
 	}
 
 	function zoomOut() {
+		console.log('HEY');
 		// Zoom out by 10%
+
 		$scale *= 1 - ZOOM_INCREMENT;
+		// console.log($scale);
+		// const translateX = 1600 * ZOOM_INCREMENT * $scale;
+		// console.log(translateX);
+		// $translationX += translateX / 10;
+		// $translationY += translateX / 10;
 	}
 
 	function resetTransforms() {

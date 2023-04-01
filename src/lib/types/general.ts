@@ -10,6 +10,14 @@ export interface XYPair {
 	y: number;
 }
 
+export interface NodeDOMBounds {
+	id: string;
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+}
+
 export interface Dimensions {
 	width: Writable<number>;
 	height: Writable<number>;

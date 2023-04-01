@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { writable, type Writable } from 'svelte/store';
 	import type { Parameter } from '$lib/types';
+	import { cursorPosition, initialClickPosition } from '$lib/stores/CursorStore';
+	import { get } from 'svelte/store';
+
 	export let parameterStore: Writable<Parameter> = writable(0.5);
 	export let min = 0;
 	export let max = 100;
@@ -38,20 +41,23 @@
 
 	// Begin sliding on mousedown
 	function startSlide() {
+		window.addEventListener('mouseup', stopSlide, { once: true });
 		sliding = true;
 	}
 
 	// Stop sliding on mouseup
 	function stopSlide() {
 		sliding = false;
+		window.removeEventListener('mouseup', stopSlide);
 	}
 
-	// Slide on mousemove if sliding is true
-	function slide(event: MouseEvent) {
-		if (sliding) {
-			const { movementX } = event;
-			updateValue(Math.sign(movementX), step);
-		}
+	const { x: initialX, y: initialY } = $initialClickPosition;
+	const { x: cursorX, y: cursorY } = cursorPosition;
+	let previousX = initialX;
+
+	$: if (sliding) {
+		updateValue(Math.sign(($cursorX - previousX) / 10), step);
+		previousX = get(cursorX);
 	}
 
 	// Update the value based on the direction and increment
@@ -91,17 +97,14 @@
 </script>
 
 {#if !input}
-	<button on:click={() => updateValue(-1)}>−</button>
+	<button class="button" on:click={() => updateValue(-1)}>−</button>
 	<div class="slider">
-		<!-- Decrease value button -->
-
-		<!-- Slider label -->
 		<label for="slider-input" class="input-label">{label}</label>
-		<!-- Slider input -->
+
 		<input
 			bind:this={sliderElement}
 			id="slider-input"
-			class="input"
+			class="slider-input"
 			class:driven
 			style="--percentage: {(($parameterStore - min) / max) * 100}%"
 			type="text"
@@ -134,63 +137,12 @@
 			value={$parameterStore}
 			aria-label={label}
 		/>
-		<!-- Increase value button -->
 	</div>
-	<button on:click={() => updateValue(1)}>+</button>
+	<button class="button" on:click={() => updateValue(1)}>+</button>
 {:else}
 	<p>{label}</p>
 {/if}
 
-<svelte:window on:mousemove={slide} on:mouseup|stopPropagation={stopSlide} />
-
 <style>
-	.input {
-		background: linear-gradient(
-			90deg,
-			rgb(91, 169, 190) var(--percentage),
-			rgb(255, 255, 255) var(--percentage)
-		);
-		border: solid 1px rgb(57, 57, 57);
-		border-radius: 6px;
-		text-align: right;
-		width: 100%;
-		height: 100%;
-		cursor: ew-resize;
-	}
-
-	.driven {
-		background: linear-gradient(
-			90deg,
-			rgb(190, 91, 91) var(--percentage),
-			rgb(255, 255, 255) var(--percentage)
-		);
-	}
-
-	button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		color: white;
-		cursor: pointer;
-	}
-	button:hover {
-		color: rgb(91, 169, 190);
-	}
-
-	.input:active {
-		cursor: none;
-	}
-
-	.input-label {
-		margin-left: 0.5rem;
-		position: absolute;
-		pointer-events: none;
-	}
-	.slider {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-	}
+	@import url('./Slider.css');
 </style>

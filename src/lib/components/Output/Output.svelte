@@ -2,6 +2,7 @@
 	import Anchor from '../Anchor/Anchor.svelte';
 	import type { Writable } from 'svelte/store';
 	import type { Node, Graph } from '$lib/types';
+	import Visualizer from '../Visualizer/Visualizer.svelte';
 
 	export let outputStore;
 	export let label = 'output';
@@ -14,10 +15,17 @@
 			$connectingFrom = node;
 		}
 	}
+
+	console.log('outputStore', $outputStore);
 </script>
 
 <div class="output" on:mousedown|stopPropagation={startConnection}>
-	<p>{$outputStore}</p>
+	{#if typeof $outputStore === 'object'}
+		<Visualizer {outputStore} />
+	{:else}
+		<p>{$outputStore}</p>
+	{/if}
+
 	<Anchor {graph} {label} isOutput />
 </div>
 

@@ -1,3 +1,5 @@
+import type { CSSColorString } from './general';
+
 export type ParameterConfig = SliderConfig | RadioConfig;
 
 export interface SliderConfig {
@@ -19,4 +21,8 @@ export interface RadioConfig {
 	label: string;
 	options: string[];
 	connection?: string | null;
+}
+
+export interface ColorConfig {
+	initial: CSSColorString;
 }

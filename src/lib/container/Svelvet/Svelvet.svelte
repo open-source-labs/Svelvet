@@ -1,25 +1,21 @@
 <script lang="ts">
-	import GraphRenderer from '../GraphRenderer/GraphRenderer.svelte';
-	import Background from '../Background/Background.svelte';
-	import ZoomPanWrapper from '../ZoomPanWrapper/ZoomPanWrapper.svelte';
 	import { onMount, setContext } from 'svelte';
 	import type {
-		GraphKey,
-		BackgroundStyles,
-		NodeStore,
 		Graph,
+		GraphKey,
 		NodeConfig,
-		XYPair
+		XYPair,
+		BackgroundStyles,
+		NodeStore
 	} from '$lib/types';
-	import { graphStore } from '$lib/stores';
-	import { createGraph, createNode } from '$lib/utils/';
-	import { populateNodes } from './populateNodes';
+	import { createGraph } from '$lib/utils';
 	import { populateStore } from './populateStore';
-	import Minimap from '$lib/components/Minimap/Minimap.svelte';
-	import Controls from '$lib/components/Controls/Controls.svelte';
-	import { populateMermaidNodes } from './flowchartDrawer';
-	import { flowChartParser } from '$lib/utils/parser';
 	import { get } from 'svelte/store';
+	import { flowChartParser } from '$lib/utils/parser';
+	import { populateMermaidNodes } from './flowchartDrawer';
+	import { graphStore } from '$lib/stores';
+	import { createNode } from '$lib/utils';
+	import Flow from './Flow.svelte';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -45,7 +41,6 @@
 
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);
-
 		if (nodes.length && !mermaid) {
 			const nodeObjects = generateNodes(nodes);
 			populateStore(nodeObjects, graph);
@@ -70,21 +65,21 @@
 
 		console.log(get(nodeStore));
 
-		edges.forEach((edge) => {
-			const { source, target } = edge;
+		// edges.forEach((edge) => {
+		// 	const { source, target } = edge;
 
-			const sourceNode = get(nodeStore.get(source));
-			const targetNode = get(nodeStore.get(target.nodeId));
-			const currentConnections = get(edgeStore).get(sourceNode);
-			console.log(sourceNode, targetNode, currentConnections);
-			const newConnection = { targetNode: targetNode, anchorId: target.anchorId };
+		// 	const sourceNode = nodeStore.get(source);
+		// 	const targetNode = nodeStore.get(target.nodeId);
+		// 	const currentConnections = get(edgeStore).get(sourceNode);
+		// 	console.log(sourceNode, targetNode, currentConnections);
+		// 	const newConnection = { targetNode: targetNode, anchorId: target.anchorId };
 
-			if (currentConnections) {
-				currentConnections.push(newConnection);
-			} else {
-				get(edgeStore).set(sourceNode, [newConnection]);
-			}
-		});
+		// 	if (currentConnections) {
+		// 		currentConnections.push(newConnection);
+		// 	} else {
+		// 		get(edgeStore).set(sourceNode, [newConnection]);
+		// 	}
+		// });
 
 		graphStore.add(graph);
 
@@ -99,56 +94,20 @@
 	}
 </script>
 
-<div class="svelvet-wrapper" style="width: 100%; height: 100%; cursor">
-	{#if graph}
-		<ZoomPanWrapper {fixedZoom} {graph} {boundary} {disableSelection}>
-			<GraphRenderer
-				--node-background="var(--node-background-{theme})"
-				--text-color="var(--text-color-{theme})"
-				{graph}
-			/>
-		</ZoomPanWrapper>
-		<Background --background-color="var(--{theme}-background)" {style} {graph} />
-		<slot {graphId} />
-		{#if minimap}
-			<Minimap />
-		{/if}
-		{#if controls}
-			<Controls />
-		{/if}
-	{/if}
-</div>
+{#if graph}
+	<Flow {...$$props} {graph} />
+{/if}
 
 <style>
-	/* Reset */
 	:global(*) {
+		font-family: 'Rubik';
 		box-sizing: border-box;
 		user-select: none;
 		margin: 0;
+		line-height: 1rem;
+		font-size: 0.85rem;
 	}
 	:global(html, body) {
 		height: 100%;
-	}
-	.svelvet-wrapper {
-		position: absolute;
-		overflow: hidden;
-		cursor: move;
-		border-radius: 20px;
-		background-color: white;
-		width: 100%;
-		height: 100%;
-	}
-	.svelvet-wrapper:focus {
-		outline: none;
-		box-shadow: 0 0 0 2px blue;
-	}
-
-	:root {
-		--dark-background: hsl(0, 1%, 21%);
-		--light-background: hsl(0, 0%, 93%);
-		--node-background-light: hsl(0, 0%, 93%);
-		--node-background-dark: hsl(0, 0%, 11%);
-		--text-color-dark: hsl(0, 0%, 93%);
-		--text-color-light: hsl(0, 0%, 21%);
 	}
 </style>

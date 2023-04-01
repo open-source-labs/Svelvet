@@ -5,18 +5,29 @@
 	import type { Graph } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 	import type { GetContext } from '$lib/types';
+	import type { Node } from '$lib/types';
 
-	let graph: Writable<Graph>;
+	let graph: Graph;
 	const getContext = getContextBase as GetContext;
 	let graphId = getContext('graphId');
 	graph = graphStore.get(graphId);
-	const { nodes, bounds, groups } = $graph;
+	const { nodes, bounds, groups } = graph;
 	const { hidden } = $groups;
 	const { top, bottom, left, right } = bounds;
 
 	$: boundsWidth = $right - $left;
 	$: boundsHeight = $bottom - $top;
 	$: aspectRatio = boundsWidth / boundsHeight;
+
+	function toggleHidden(node: Node) {
+		console.log('toggleHidden', node);
+		if ($hidden.has(node)) {
+			$hidden.delete(node);
+		} else {
+			$hidden.add(node);
+		}
+		$hidden = $hidden;
+	}
 </script>
 
 <div class="minimap-wrapper">
@@ -27,7 +38,7 @@
 		}; aspect-ratio: ${aspectRatio}`}
 	>
 		{#each Object.values($nodes) as node}
-			<MinimapNode {node} {bounds} {hidden} />
+			<MinimapNode {node} {bounds} hidden={$hidden.has(node)} {toggleHidden} />
 		{/each}
 	</div>
 </div>

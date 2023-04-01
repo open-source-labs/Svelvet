@@ -6,6 +6,7 @@
 	export let node: Node;
 	export let label: string;
 	export let graph: Graph;
+	export let driven: boolean;
 
 	const { edges, connectingFrom } = graph;
 
@@ -44,7 +45,7 @@
 	on:mouseup|stopPropagation={makeConnection}
 	on:mousedown|stopPropagation={detachEdge}
 >
-	<Anchor {label} {graph} />
+	<Anchor {label} {graph} {driven} />
 </div>
 
 <style>
