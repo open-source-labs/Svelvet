@@ -43,7 +43,10 @@ export function createGraph(id: string, initialZoom: number): Graph {
 		groups: writable({
 			selected: writable(new Set<Node>()),
 			hidden: writable(new Set<Node>())
-		})
+		}),
+		groupProperties: writable({}),
+		activeGroup: writable(null),
+		initialNodePositions: writable([])
 	};
 
 	return graph;

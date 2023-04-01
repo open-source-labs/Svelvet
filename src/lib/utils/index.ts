@@ -5,3 +5,4 @@ export * from './createGraph';
 export * from './createNode';
 export * from './throttle';
 export * from './debounce';
+export * from './getRandomColor';
