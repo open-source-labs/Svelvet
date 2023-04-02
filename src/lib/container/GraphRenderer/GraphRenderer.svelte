@@ -15,14 +15,10 @@
 	export let theme: string;
 	export let isMovable: boolean;
 
-	$: isLocked = graph.isLocked;
 	$: activeGroup = graph.activeGroup;
 	$: groups = graph.groups;
-	$: selectedGroup = $groups.selected;
-	$: selectedNodes = selectedGroup.nodes;
-	$: selectedParent = selectedGroup.parent;
+
 	$: initialNodePositions = graph.initialNodePositions;
-	$: groupBoxes = graph.groupBoxes;
 	$: cursor = graph.cursor;
 	$: transforms = graph.transforms;
 	$: x = transforms.translation.x;
@@ -43,61 +39,10 @@
 		$initialClickPosition = $cursor;
 		$initialNodePositions = captureGroup($groups[groupName].nodes);
 	}
-
-	function handleNodeClicked(event: CustomEvent) {
-		console.log(event);
-		if ($isLocked) return;
-		const { node, selected } = event.detail;
-		const { group } = node;
-		$initialClickPosition = $cursor;
-		const nodeGroup: string = get(group);
-		let groupData: Group;
-		let parent;
-		let isParent = false;
-
-		if (nodeGroup) {
-			groupData = $groups[nodeGroup];
-			parent = get(groupData.parent);
-			isParent = parent === node;
-		}
-
-		if (isParent) {
-			$activeGroup = nodeGroup;
-		} else {
-			$activeGroup = 'selected';
-		}
-
-		// If you click on a node that is already selected
-		if (!$activeKeys['Shift'] && selected) {
-			$activeGroup = 'selected';
-		} else {
-			// If you click on a new node outside of the current group, clear the group
-			if (!$activeKeys['Shift'] && !selected && !$activeKeys['Meta']) {
-				$selectedNodes.clear();
-				$selectedNodes = $selectedNodes;
-			}
-
-			// Toggle the selected state of the node
-			toggleSelected();
-		}
-
-		// Capture the initial positions of the nodes in the group
-		$initialNodePositions = captureGroup($groups['selected'].nodes);
-
-		function toggleSelected() {
-			if (selected) {
-				if (node) $selectedNodes.delete(node);
-				$selectedNodes = $selectedNodes;
-			} else {
-				if (node) $selectedNodes.add(node);
-				$selectedNodes = $selectedNodes;
-			}
-		}
-	}
 </script>
 
 <ZoomPanWrapper>
-	<NodeRenderer on:nodeClicked={handleNodeClicked} />
+	<NodeRenderer />
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
 </ZoomPanWrapper>

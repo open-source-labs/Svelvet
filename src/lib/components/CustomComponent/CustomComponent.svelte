@@ -1,16 +1,28 @@
-<script>
+<script lang="ts">
 	// This is used to test the custom component import functionality
+	export let heading: string;
+	export let paragraph: string;
+
+	function onClick() {
+		alert('Hello World!');
+	}
 </script>
 
 <div>
-	<h1>Custom Component</h1>
-	<p>This is a custom component</p>
+	<h1>{heading}</h1>
+	<p>{paragraph}</p>
+	<button on:click={onClick}>Click Me</button>
 </div>
 
 <style>
 	div {
-		border: solid 1px green;
-		width: 400px;
-		height: 400px;
+		width: 600px;
+		height: 300px;
+		background-color: rgb(99, 183, 219);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		font-size: 4rem;
 	}
 </style>

@@ -6,19 +6,21 @@
 	import type { Writable } from 'svelte/store';
 	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
 	import { getContext, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 
 	export let parameterStore: Writable<Parameter>;
 	export let label: string;
 	export let config: ParameterConfig;
 	export let connectable = false;
 
+	const drivenStore = writable(false);
+	$: driven = $drivenStore;
+
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 
-	$: driven = $edges.has(`${node.id}-${label}`);
-
 	setContext<string>('label', label);
-	setContext<boolean>('driven', driven);
+	setContext<Writable<boolean>>('driven', drivenStore);
 
 	const { type } = config;
 

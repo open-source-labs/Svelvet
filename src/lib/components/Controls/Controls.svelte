@@ -25,7 +25,6 @@
 	}
 
 	function zoomOut() {
-		console.log('HEY');
 		// Zoom out by 10%
 
 		$scale *= 1 - ZOOM_INCREMENT;

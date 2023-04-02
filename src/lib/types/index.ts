@@ -7,3 +7,4 @@ export * from './store';
 export * from './keypress';
 export * from './config';
 export * from './context';
+export * from './edge';

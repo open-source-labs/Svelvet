@@ -27,6 +27,6 @@ export function populateStore(nodes: Node[], graph: Graph) {
 			bottom.set(nodeY + nodeHeight);
 		}
 
-		graph.nodes.add(node);
+		graph.nodes.add(node, node.id);
 	}
 }

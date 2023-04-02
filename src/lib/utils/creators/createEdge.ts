@@ -1,6 +1,16 @@
-import type { InputKey, NodeKey, OutputKey, WritableEdge, Edge, CSSColorString } from '$lib/types';
+import type {
+	InputKey,
+	NodeKey,
+	OutputKey,
+	WritableEdge,
+	Edge,
+	CSSColorString,
+	Connection,
+	EdgeConfig
+} from '$lib/types';
 import { writable } from 'svelte/store';
 import { makeObjectValuesWritable } from '../writables';
+import * as s from '$lib/constants/styles';
 
 export function createNativeEdge(edge: Edge): WritableEdge {
 	const { target, source, type, color, width, label, animated } = edge;
@@ -63,5 +73,38 @@ export function createNativeEdge(edge: Edge): WritableEdge {
 			};
 		}
 	}
+	return writableEdge;
+}
+
+export function createEdge(connection: Connection, config?: EdgeConfig): WritableEdge {
+	const writableEdge: WritableEdge = {
+		target: {
+			node: writable(connection.target),
+			input: writable(connection.input)
+		},
+		source: {
+			node: writable(connection.source),
+			output: writable(connection.output)
+		},
+		type: writable(config?.type || s.EDGE_TYPE),
+		color: writable(config?.color || s.EDGE_COLOR),
+		width: writable(config?.width?.toString() + 'px' || s.EDGE_WIDTH),
+		animated: writable(config?.animated || false)
+	};
+	if (config?.label) {
+		const baseLabel = {
+			text: writable(config?.label.text),
+			color: writable(config?.label?.color || s.EDGE_LABEL_COLOR),
+			textColor: writable(config?.label?.textColor || s.EDGE_LABEL_TEXT_COLOR),
+			fontSize: writable(config?.label?.fontSize || s.EDGE_LABEL_FONT_SIZE),
+			dimensions: {
+				width: writable(config?.label.dimensions?.width || s.EDGE_LABEL_WIDTH),
+				height: writable(config?.label.dimensions?.height || s.EDGE_LABEL_HEIGHT)
+			},
+			borderRadius: writable(config?.label.borderRadius || s.EDGE_LABEL_BORDER_RADIUS)
+		};
+		writableEdge.label = baseLabel;
+	}
+
 	return writableEdge;
 }

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { Graph, Node } from '$lib/types';
+	import type { Graph, Node, InputKey, OutputKey } from '$lib/types';
 	import { onMount, getContext } from 'svelte';
 	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
+	import type { Writable } from 'svelte/store';
 
 	export let isOutput = false;
-	export let color = 'gray';
 
 	const label = getContext<string>('label');
-	const driven = getContext<boolean>('driven');
+	const driven = getContext<Writable<boolean>>('driven');
 	const node = getContext<Node>('node');
 
 	let anchor: HTMLButtonElement;
@@ -16,7 +16,9 @@
 
 	onMount(() => {
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
-		anchors[label] = {
+		const ioKey: InputKey | OutputKey = `${isOutput ? 'O' : 'I'}-${label}/${node.id}`;
+
+		anchors[ioKey] = {
 			x: offsetLeft + offsetWidth / 2,
 			y: offsetTop + offsetHeight / 2
 		};
@@ -29,7 +31,7 @@
 	style:--default-width={`${ANCHOR_SIZE}px`}
 	style:--default-color={ANCHOR_COLOR}
 	style:--default-radius={ANCHOR_RADIUS}
-	class:driven
+	class:driven={$driven}
 	bind:this={anchor}
 	style="{side}: -6px"
 	class="anchor"

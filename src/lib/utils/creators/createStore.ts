@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { Key } from '$lib/types';
 
-export function createStore<T extends { id: Key }>() {
+export function createStore<T, Key>() {
 	type TData = {
 		[key: Key]: T;
 	};
@@ -15,7 +15,7 @@ export function createStore<T extends { id: Key }>() {
 		subscribe: typeof subscribe;
 		set: typeof set;
 		update: typeof update;
-		add: (item: T) => TData;
+		add: (item: T, key: Key) => TData;
 		get: (key: Key) => T;
 		delete: (key: Key) => boolean;
 	}
@@ -24,10 +24,10 @@ export function createStore<T extends { id: Key }>() {
 		subscribe,
 		set,
 		update,
-		add: (item: T) => {
+		add: (item: T, key: Key) => {
 			// Use the update method to add the item
 			update((currentData) => {
-				currentData[item.id] = item;
+				currentData[key] = item;
 				return currentData;
 			});
 			return data;

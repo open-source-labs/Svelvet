@@ -1,12 +1,21 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type { GraphKey, BackgroundStyles, Graph, NodeConfig, XYPair, GroupBox } from '$lib/types';
+	import type {
+		Theme,
+		GraphKey,
+		BackgroundStyles,
+		Graph,
+		NodeConfig,
+		XYPair,
+		GroupBox
+	} from '$lib/types';
 	import { get, writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../GraphRenderer/GraphRenderer.svelte';
+	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
@@ -65,6 +74,7 @@
 	$: connectingFrom = graph.connectingFrom;
 	$: activeGroup = graph.activeGroup;
 	$: initialNodePositions = graph.initialNodePositions;
+	$: editing = graph.editing;
 
 	onMount(() => {
 		updateGraphBounds();
@@ -100,7 +110,7 @@
 				color: writable(getRandomColor())
 			};
 
-			groupBoxes.add(groupBox);
+			groupBoxes.add(groupBox, groupName);
 
 			Array.from($selected).forEach((node) => {
 				node.group.set(groupName);
@@ -246,6 +256,7 @@
 	}
 
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
+	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -260,13 +271,16 @@
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >
+	{#if $editing}
+		<Editor editing={$editing} />
+	{/if}
 	<GraphRenderer {theme} {isMovable} />
 	<Background --background-color="var(--{theme}-background)" {style} />
 	<slot />
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	{#if selecting && !disableSelection}
-		<SelectionBox {creating} {anchor} {graph} adding={$activeKeys['Meta'] === true} />
+		<SelectionBox {creating} {anchor} {graph} {adding} />
 	{/if}
 </section>
 

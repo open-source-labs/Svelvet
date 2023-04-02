@@ -1,6 +1,15 @@
 import type { Writable } from 'svelte/store';
 import type { derived } from 'svelte/store';
-import type { XYPosition, NodeKey, XYPair, Dimensions, ConfigObject, CSSColorString } from '.';
+import type {
+	XYPosition,
+	NodeKey,
+	InputKey,
+	XYPair,
+	Dimensions,
+	ConfigObject,
+	CSSColorString,
+	OutputKey
+} from '.';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
@@ -8,7 +17,7 @@ export interface Node {
 	dimensions: Dimensions;
 	position: XYPosition;
 	inputs: Writable<Inputs>;
-	anchors: Record<string, XYPair>;
+	anchors: Record<InputKey | OutputKey, XYPair>;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
 	outputs: Writable<Parameter>;
@@ -21,14 +30,17 @@ export interface Node {
 	deletable: Writable<boolean>;
 	zIndex: Writable<number>;
 	ariaLabel: string;
-	header?: true;
+	collapsible: Writable<boolean>;
+	header: Writable<boolean>;
 	focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
+	props: object | null;
 	componentRef: string;
+	component: ConstructorOfATypedSvelteComponent | null;
 	config?: ConfigObject;
-	borderRadius?: number;
-	label?: string;
-	bgColor?: CSSColorString;
+	borderRadius: Writable<string>;
+	label: Writable<string | null>;
+	bgColor: Writable<CSSColorString | null>;
 	borderColor?: CSSColorString;
 	textColor?: CSSColorString;
 }
@@ -56,11 +68,12 @@ export interface NodeConfig {
 	group?: string;
 	inputs?: Inputs;
 	outputs?: Outputs;
-	componentRef?: string;
+	component?: ConstructorOfATypedSvelteComponent;
 	config?: ConfigObject;
 	width?: number;
 	height?: number;
 	header?: true;
+	props?: object;
 	borderColor?: CSSColorString;
 	bgColor?: CSSColorString;
 	borderRadius?: number;

@@ -1,12 +1,13 @@
 import { writable, derived } from 'svelte/store';
 import type { Readable } from 'svelte/store';
-import type { DataObject, Graph, Node, GroupBox } from '$lib/types';
+import type { Graph, Node, GroupBox, EdgeKey, GraphKey, GroupKey } from '$lib/types';
 import { createStore } from './createStore';
 import type { Writable } from 'svelte/store';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import { calculateRelativeCursor } from '$lib/utils/calculators/calculateRelativeCursor';
+import type { WritableEdge, NodeKey } from '$lib/types';
 
-export function createGraph(id: string, initialZoom: number): Graph {
+export function createGraph(id: GraphKey, initialZoom: number): Graph {
 	const bounds = {
 		top: writable(Infinity),
 		left: writable(Infinity),
@@ -24,8 +25,8 @@ export function createGraph(id: string, initialZoom: number): Graph {
 
 	const graph: Graph = {
 		id,
-		nodes: createStore<Node>(),
-		edges: writable(new Map()),
+		nodes: createStore<Node, NodeKey>(),
+		edges: createStore<WritableEdge, EdgeKey>(),
 		transforms: {
 			translation,
 			scale,
@@ -36,15 +37,16 @@ export function createGraph(id: string, initialZoom: number): Graph {
 		},
 		dimensions,
 		bounds,
+		editing: writable(null),
 		cursor: createDerivedCursorStore(cursorPositionRaw, dimensions, translation, scale),
-		data: createStore<DataObject>(),
 		isLocked: writable(false),
+		outputRemoved: writable(),
 		connectingFrom: writable(null),
 		groups: writable({
 			selected: { parent: writable(null), nodes: writable(new Set<Node>()) },
 			hidden: { parent: writable(null), nodes: writable(new Set<Node>()) }
 		}),
-		groupBoxes: createStore<GroupBox>(),
+		groupBoxes: createStore<GroupBox, GroupKey>(),
 		activeGroup: writable(null),
 		initialNodePositions: writable([])
 	};

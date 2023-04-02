@@ -1,13 +1,16 @@
-import type { CSSColorString } from '$lib/types';
+import type { CSSColorString, EdgeStyle } from '$lib/types';
 
 export const NODE_WIDTH = 50;
 export const NODE_HEIGHT = 50;
-export const NODE_BORDER_RADIUS = 10;
-export const NODE_BORDER_WIDTH = 2;
+export const NODE_BORDER_RADIUS = '10px';
+export const NODE_BORDER_WIDTH = '1px';
 export const NODE_FONT_SIZE = 12;
 export const NODE_COLOR_DARK: CSSColorString = 'hsl(0, 0%, 11%)';
 export const NODE_COLOR_LIGHT: CSSColorString = '#FFF';
-export const NODE_BORDER_COLOR: CSSColorString = '#000';
+export const NODE_BORDER_COLOR_DARK: CSSColorString = 'hsl(0, 0%, 5%)';
+export const NODE_BORDER_COLOR_LIGHT: CSSColorString = 'hsl(0, 0%, 50%)';
+export const NODE_BORDER_COLOR_LIGHT_SELECTED: CSSColorString = 'hsl(0, 0%, 11%)';
+export const NODE_BORDER_COLOR_DARK_SELECTED: CSSColorString = 'hsl(0, 0%, 90%)';
 export const NODE_FONT_COLOR_LIGHT: CSSColorString = '#000';
 export const NODE_FONT_COLOR_DARK: CSSColorString = '#FFF';
 export const NODE_FONT_FAMILY = 'sans-serif';
@@ -15,13 +18,15 @@ export const NODE_FONT_WEIGHT = 'normal';
 export const NODE_FONT_STYLE = 'normal';
 
 export const EDGE_WIDTH = 4;
-export const EDGE_LABEL_BORDER_RADIUS = 10;
-export const EDGE_LABEL_WIDTH = 100;
-export const EDGE_LABEL_HEIGHT = 50;
+export const EDGE_LABEL_BORDER_RADIUS = '10px';
+export const EDGE_LABEL_WIDTH = '100px';
+export const EDGE_LABEL_HEIGHT = '50px';
 export const EDGE_COLOR: CSSColorString = '#FFF';
 export const EDGE_FONT_COLOR: CSSColorString = '#000';
 export const EDGE_LABEL_COLOR: CSSColorString = '#000';
 export const EDGE_LABEL_TEXT_COLOR: CSSColorString = '#fff';
+export const EDGE_LABEL_FONT_SIZE = '12px';
+export const EDGE_TYPE: EdgeStyle = 'bezier';
 
 export const THEME = 'light';
 

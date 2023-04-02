@@ -7,40 +7,43 @@
 	import Resizer from '../Resizer/Resizer.svelte';
 	import { calculateFitContentWidth } from '$lib/utils';
 	import { createEventDispatcher } from 'svelte';
-	import { NODE_COLOR_LIGHT, NODE_COLOR_DARK } from '$lib/constants';
+	import * as s from '$lib/constants/styles';
+	import { createNode } from '$lib/utils';
 
 	const dispatch = createEventDispatcher();
 
-	function handleClick() {
-		dispatch('nodeClicked', { node, selected });
+	function handleClick(e: MouseEvent) {
+		const { button } = e;
+		dispatch('nodeClicked', { node, selected, button });
 	}
 
-	export let collapsible: boolean = true;
-	export let visible: Node['visible'];
-	export let header: boolean = true;
-	export let width: number = 100;
-	export let height: number = 100;
-	export let dimensions: Node['dimensions'];
-	export let inputs: Node['inputs'];
-	export let outputs: Node['outputs'];
-	export let properties: Node['properties'];
-	export let componentRef: Node['componentRef'];
-	export let position: Node['position'];
-	export let draggable: Node['draggable'];
-	export let id: Node['id'];
-	export let group: Node['group'];
-	export let config: Node['config'];
-	export let borderRadius: Node['borderRadius'];
-	export let bgColor: Node['bgColor'];
-	export let borderColor: Node['borderColor'];
-	export let textColor: Node['textColor'];
-	export let label: Node['label'] = 'Node';
-	export let resizable = true;
 	export let node: Node;
 
+	$: collapsible = node.collapsible;
+	$: header = node.header;
+	$: widthStore = node.dimensions.width;
+	$: heightStore = node.dimensions.height;
+	$: inputs = node.inputs;
+	$: outputs = node.outputs;
+	$: properties = node.properties;
+	$: componentRef = node.componentRef;
+	$: x = node.position.x;
+	$: y = node.position.y;
+	$: draggable = node.draggable;
+	$: id = node.id;
+	$: group = node.group;
+	$: config = node.config;
+	$: borderRadius = node.borderRadius;
+	$: bgColor = node.bgColor;
+	$: borderColor = node.borderColor;
+	$: textColor = node.textColor;
+	$: label = node.label;
+	$: resizable = node.resizable;
+	$: component = node.component;
+
 	const graph: Graph = getContext<Graph>('graph');
-	setContext<Node>('node', node);
 	const theme = getContext<Theme>('theme');
+	setContext<Node>('node', node);
 
 	let isMovable = false;
 	let collapsed = false;
@@ -52,9 +55,6 @@
 	let DynamicComponent: ComponentType;
 
 	const { isLocked, connectingFrom, transforms, bounds, nodes: nodeStore, groups } = graph;
-
-	const { width: widthStore, height: heightStore } = dimensions;
-	const { x, y } = position;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
 	const snapTo: number = getContext('snapTo');
@@ -64,8 +64,6 @@
 	$: selectedNodes = selectedNodeGroup.nodes;
 	$: selected = $selectedNodes.has(node);
 	$: hiddenNodes = hiddenNodesGroup.nodes;
-
-	$: console.log($selectedNodes);
 
 	// Dynamically import the component for the node
 	onMount(async () => {
@@ -121,10 +119,25 @@
 
 	const styles = {
 		light: {
-			background: NODE_COLOR_LIGHT
+			background: s.NODE_COLOR_LIGHT,
+			border: {
+				color: s.NODE_BORDER_COLOR_DARK,
+				selected: {
+					color: s.NODE_BORDER_COLOR_LIGHT_SELECTED
+				}
+			}
 		},
 		dark: {
-			background: NODE_COLOR_DARK
+			background: s.NODE_COLOR_DARK,
+			border: {
+				color: s.NODE_BORDER_COLOR_DARK,
+				selected: {
+					color: s.NODE_BORDER_COLOR_DARK_SELECTED
+				}
+			}
+		},
+		border: {
+			width: s.NODE_BORDER_WIDTH
 		}
 	};
 </script>
@@ -144,16 +157,16 @@
 	style:top={nodeTop}
 	class:selected
 	class:collapsed
-	style:--node-default-background={styles[theme].background}
+	style:--node-default-background={$bgColor || styles[theme].background}
+	style:--node-default-border={borderColor || styles[theme].border.color}
+	style:--node-default-border-width={styles.border.width}
+	style:--node-default-border-radius={$borderRadius || s.NODE_BORDER_RADIUS}
+	style:--node-default-selected-border={styles[theme].border.selected.color}
 	style:cursor={$draggable ? (isMovable ? 'grabbing' : 'grab') : 'not-allowed'}
-	style="
-			{borderRadius && `--border-radius: ${borderRadius}px`};
-			{bgColor && `--node-background: ${bgColor}`};
-			{textColor && `--text-color: ${textColor}`};
-			{borderColor && `--border-color: ${borderColor}`}"
 	bind:this={DOMnode}
 	on:mouseup={onMouseUp}
-	on:mousedown|stopPropagation|preventDefault={handleClick}
+	on:mousedown|preventDefault|stopPropagation={handleClick}
+	on:contextmenu|preventDefault|stopPropagation
 	on:keydown={handleKeydown}
 >
 	{#if header}
@@ -166,13 +179,13 @@
 				>
 			{/if}
 			<button on:click={hideNode}> - </button>
-			<p class="node-name">{label || id}</p>
+			<p class="node-name">{$label || id}</p>
 			<h1>{$group}</h1>
 		</header>
 		<div class="header-divider" />
 	{/if}
-	{#if DynamicComponent}
-		<svelte:component this={DynamicComponent} self={configObject} data={parentNodesArray} />
+	{#if component}
+		<svelte:component this={component} {...node.props} />
 	{:else if !collapsed}
 		<section class="parameters">
 			{#if label && !header}<p class="node-name">{label}</p>{/if}

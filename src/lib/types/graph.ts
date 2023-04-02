@@ -2,21 +2,20 @@ import type { Writable, Readable } from 'svelte/store';
 import type {
 	GraphKey,
 	NodeStore,
-	DataStore,
 	Node,
-	NodeKey,
 	CSSColorString,
 	XYPair,
 	XYPosition,
 	Dimensions,
-	GroupBoxStore
+	GroupBoxStore,
+	EdgeStore,
+	OutputKey
 } from '.';
 
 export interface Graph {
 	id: GraphKey;
 	nodes: NodeStore;
 	transforms: GraphTransforms;
-	data: DataStore;
 	isLocked: Writable<boolean>;
 	bounds: {
 		top: Writable<number>;
@@ -27,19 +26,21 @@ export interface Graph {
 	dimensions: Writable<DOMRect>;
 	cursor: Readable<{ x: number; y: number }>;
 	connectingFrom: Writable<Node | null>;
+	outputRemoved: Writable<OutputKey>;
 	groups: Writable<Groups>;
-	edges: Writable<Edges>;
+	edges: EdgeStore;
 	groupBoxes: GroupBoxStore;
+	editing: Writable<Node | null>;
 	activeGroup: Writable<string | null>;
 	initialNodePositions: Writable<XYPair[]>;
 }
-export type AnchorKey = `${NodeKey}-${string}`;
-export type Edges = Map<AnchorKey, Connection>;
+// export type AnchorKey = `${NodeKey}-${string}`;
+// export type Edges = Map<AnchorKey, Connection>;
 
-export interface Connection {
-	sourceNode: Node;
-	targetNode: Node;
-}
+// export interface Connection {
+// 	sourceNode: Node;
+// 	targetNode: Node;
+// }
 
 export interface Groups {
 	selected: Group;

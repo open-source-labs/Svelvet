@@ -19,7 +19,7 @@
 	export let dark = false;
 	export let width: number = 100;
 	export let height: number = 100;
-	export let graphId: GraphKey = '1'; //Math.floor(Math.random() * 100).toString();
+	export let graphId: GraphKey = 'G-1'; //Math.floor(Math.random() * 100).toString();
 	export let style: BackgroundStyles = 'dots';
 	export let nodes: Array<NodeConfig> = [];
 	export let edges: Array<object> = [];
@@ -79,7 +79,7 @@
 		// 	}
 		// });
 
-		graphStore.add(graph);
+		graphStore.add(graph, graphId);
 
 		// const { transforms } = graph;
 		// const { scale } = transforms;

@@ -6,3 +6,4 @@ export * from './parser';
 export * from './calculators';
 export * from './creators';
 export * from './moveNodes';
+export * from './clickOutside';

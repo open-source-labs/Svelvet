@@ -14,7 +14,13 @@
 	$: transform = `translate(${$x}px, ${$y}px) scale(${$scale})`;
 </script>
 
-<div style:transform class={className} role="presentation">
+<div
+	on:contextmenu|preventDefault
+	on:click|preventDefault
+	style:transform
+	class={className}
+	role="presentation"
+>
 	<slot />
 </div>
 

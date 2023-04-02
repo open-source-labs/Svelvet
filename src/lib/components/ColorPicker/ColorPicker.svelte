@@ -2,8 +2,9 @@
 	import type { Writable } from 'svelte/store';
 	import type { Parameter } from '$lib/types';
 	import { getContext } from 'svelte';
+	import { NODE_COLOR_DARK } from '$lib/constants';
 
-	export let parameterStore: Writable<Parameter>;
+	export let parameterStore: Writable<Parameter> = getContext('colorStore');
 	const label = getContext<string>('label');
 
 	function handleChange(event: Event) {
@@ -14,7 +15,9 @@
 </script>
 
 <div class="color-picker">
-	<p>{label}</p>
+	{#if label}
+		<p>{label}</p>
+	{/if}
 	<input
 		type="color"
 		id="color-input"
@@ -22,7 +25,11 @@
 		bind:value={$parameterStore}
 		on:input={handleChange}
 	/>
-	<label for="color-input" class="color-display" style="background-color: {$parameterStore}" />
+	<label
+		for="color-input"
+		class="color-display"
+		style="background-color: {$parameterStore !== null ? $parameterStore : NODE_COLOR_DARK}"
+	/>
 </div>
 
 <style>

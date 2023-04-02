@@ -1,40 +1,62 @@
 <script lang="ts">
-	import type { Graph, Node, AnchorKey } from '$lib/types';
+	import type { Graph, Node, Connection, EdgeKey, InputKey, OutputKey } from '$lib/types';
 	import Anchor from '../Anchor/Anchor.svelte';
 	import { writable, get } from 'svelte/store';
-	import { getContext } from 'svelte';
+	import { getContext, onDestroy } from 'svelte';
+	import { createEdge } from '$lib/utils';
+	import type { Writable } from 'svelte/store';
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 	const label = getContext<string>('label');
+	const driven = getContext<Writable<boolean>>('driven');
 
-	let anchorId: AnchorKey = `${node.id}-${label}`;
+	const inputKey: InputKey = `I-${label}/${node.id}`;
+	const outputKey: Writable<OutputKey> = writable(`O-?/N-?/${graph.id}` as OutputKey);
+
+	$: outputRemoved = graph.outputRemoved;
+	$: edgeKey = `${$outputKey}+${inputKey}` as EdgeKey;
 
 	$: edges = graph.edges;
 	$: connectingFrom = graph.connectingFrom;
 	$: inputs = node.inputs;
 
+	$: if ($outputRemoved === $outputKey) removeConnection();
+
 	function makeConnection() {
 		if (!$connectingFrom) return;
 		$inputs[label] = $connectingFrom.outputs;
 
-		$edges.set(anchorId, { targetNode: node, sourceNode: $connectingFrom });
+		$outputKey = `O-output/${$connectingFrom.id}`;
 
-		$edges = $edges;
+		const connection: Connection = {
+			source: $connectingFrom,
+			target: node,
+			input: inputKey,
+			output: $outputKey
+		};
+
+		edges.add(createEdge(connection), `${$outputKey}+${inputKey}`);
+
+		$driven = true;
 		$connectingFrom = null;
 	}
 
+	onDestroy(() => {
+		removeConnection();
+	});
+
 	function removeConnection() {
 		$inputs[label] = writable(get($inputs[label]));
-		$edges.delete(anchorId);
-		$edges = $edges;
+		edges.delete(edgeKey);
+		$driven = false;
 	}
 
 	function detachEdge() {
-		const test = $edges.get(anchorId);
+		const test = edges.get(edgeKey);
 		if (test) {
-			const { sourceNode } = test;
-			$connectingFrom = sourceNode;
+			const { source } = test;
+			$connectingFrom = get(source.node);
 			removeConnection();
 		}
 	}

@@ -1,8 +1,17 @@
 import { writable, derived } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { Node, NodeConfig, Inputs, Properties, Parameter } from '$lib/types';
+import type {
+	Node,
+	NodeConfig,
+	Inputs,
+	Properties,
+	Parameter,
+	InputKey,
+	OutputKey,
+	ParameterKey
+} from '$lib/types';
 import { get } from 'svelte/store';
-import { NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
+import { NODE_BORDER_RADIUS, NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
 
 export function createNode(userNode: NodeConfig): Node {
 	const { id, config, width, height, dimensions, header, position } = userNode;
@@ -28,19 +37,23 @@ export function createNode(userNode: NodeConfig): Node {
 		ariaLabel: `Node ${id}`,
 		focusable: writable(true),
 		resizable: writable(true),
+		header: writable(userNode.header),
 		collapsed: writable(false),
 		visible: writable(true),
+		collapsible: writable(true),
 		inputs: writable({}),
+		props: userNode.props || null,
 		outputs: derived([], () => null),
+		borderRadius: writable(borderRadius?.toString() || NODE_BORDER_RADIUS),
 		properties: writable({}),
+		bgColor: writable(bgColor || null),
+		component: userNode.component || null,
 		processor: (inputs, properties) => ({ ...inputs, ...properties }),
 		componentRef: userNode.componentRef || 'default',
-		label: userNode?.data?.label || null
+		label: writable(userNode?.data?.label || null)
 	};
 
-	if (bgColor) newNode.bgColor = bgColor;
 	if (borderColor) newNode.borderColor = borderColor;
-	if (borderRadius) newNode.borderRadius = borderRadius;
 	if (textColor) newNode.textColor = textColor;
 	if (header) newNode.header = true;
 
@@ -51,6 +64,7 @@ export function createNode(userNode: NodeConfig): Node {
 
 		if (inputs) {
 			for (const key in inputs) {
+				//const inputKey: InputKey = `I-${key}/N-${id}`
 				const input = inputs[key];
 				inputsStore[key] = writable(input.initial);
 			}
@@ -58,6 +72,7 @@ export function createNode(userNode: NodeConfig): Node {
 
 		if (properties) {
 			for (const key in properties) {
+				//const propertyKey: ParameterKey = `P-${key}/N-${id}`
 				const property = properties[key];
 				propertiesStore[key] = writable(property.initial);
 			}
@@ -91,7 +106,7 @@ function createCustomDerivedStore(
 		for (const key in get(properties)) {
 			currentProperties[key] = get(get(properties)[key]);
 		}
-
+		console.log(currentInputs, currentProperties);
 		outputStore.update(() => processor(currentInputs, currentProperties));
 	};
 

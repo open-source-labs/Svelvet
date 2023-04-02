@@ -47,7 +47,7 @@
 					initial = index;
 				}}
 			/>
-			{label}
+			<p>{label}</p>
 		</label>
 	{/each}
 </div>
@@ -55,12 +55,22 @@
 <style>
 	.label {
 		cursor: pointer;
-		display: inline-block;
 		margin-right: 0.5rem;
 		user-select: none;
+		display: flex;
+	}
+	.group-container {
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+	p {
+		margin-left: 0.5rem;
 	}
 
 	.option {
 		cursor: pointer;
+		width: 100%;
 	}
 </style>

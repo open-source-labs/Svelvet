@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CSSColorString, DummyNode, Node } from '$lib/types';
+	import type { CSSColorString, DummyNode, Node, OutputKey, WritableEdge } from '$lib/types';
 	import EdgeLabel from '../EdgeLabel/EdgeLabel.svelte';
 	import { EDGE_WIDTH, EDGE_COLOR } from '$lib/constants';
 	import { get } from 'svelte/store';
@@ -17,12 +17,26 @@
 
 	export let sourceNode: Node;
 	export let targetNode: Node | DummyNode;
-	export let sourceAnchor: string = 'output';
+	export let sourceAnchor: OutputKey = `O-output/${sourceNode.id}`;
 	export let targetAnchor: string = 'cursor';
 	export let curve = true;
 	export let active = false;
 	export let cursor = false;
 	export let label: string | null = null;
+	export let edge: WritableEdge;
+
+	// $: source = edge.source.node;
+	// $: target = edge.target.node;
+	// $: sourceAnchorStore = edge.target.input;
+	// $: targetAnchorStore = edge.source.output;
+	// $: typeStore = edge.type;
+	// $: width = edge.width;
+
+	// $: sourceNode = sourceNode || $source;
+	// $: targetNode = targetNode || $target;
+	// $: sourceAnchor = sourceAnchor || 'output';
+	// $: targetAnchor = targetAnchor || 'cursor';
+	// $: curve = curve || $typeStore === 'bezier';
 
 	export let animate = false;
 	export let dynamic = false;
@@ -368,7 +382,7 @@
 			class:animate
 			d={path}
 			style:--default-edge-color={EDGE_COLOR}
-			style:--default-edge-stroke-width={`${EDGE_WIDTH}px`}
+			style:--default-edge-stroke-width={EDGE_WIDTH}
 			stroke-width={strokeWidth}
 			fill="transparent"
 		/>
@@ -380,6 +394,8 @@
 
 <style>
 	path {
+		pointer-events: auto;
+		cursor: pointer;
 		stroke: var(--edge-color, var(--default-edge-color));
 		stroke-width: var(--edge-stroke-width, var(--default-edge-stroke-width));
 	}
@@ -387,9 +403,12 @@
 		width: 100%;
 		height: 100%;
 		position: absolute;
+		z-index: 6;
 		pointer-events: none;
-		z-index: -1;
 		/* border: solid 0.5px red; */
+	}
+	path:hover {
+		stroke: red;
 	}
 	.wrapper {
 		position: absolute;

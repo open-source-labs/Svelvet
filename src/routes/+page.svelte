@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node } from '$lib';
+	import { Svelvet, Controls, Minimap, Node, SpecialNode } from '$lib';
+	import CustomComponent from '$lib/components/CustomComponent/CustomComponent.svelte';
+	import MinimapNode from '$lib/components/Minimap/MinimapNode.svelte';
 	import NodeAdder from '$lib/components/NodeAdder/NodeAdder.svelte';
 	import type { ConfigObject, NodeConfig, Inputs, Properties } from '$lib/types';
 	const mermaid = `A & B --> C
@@ -357,9 +359,13 @@
 
 <div class="wrapper">
 	<Svelvet dark nodes={initialNodes}>
-		<Controls />
+		<SpecialNode
+			position={{ x: 100, y: 400 }}
+			componentRef={CustomComponent}
+			props={{ heading: 'Hello', paragraph: 'World' }}
+		/>
+
 		<Minimap />
-		<NodeAdder />
 	</Svelvet>
 </div>
 
