@@ -1,4 +1,5 @@
 import type { Node, Graph } from '$lib/types';
+import { get } from 'svelte/store';
 
 export function populateStore(nodes: Node[], graph: Graph) {
 	for (const node of nodes) {
@@ -8,48 +9,24 @@ export function populateStore(nodes: Node[], graph: Graph) {
 		const { bounds } = graph;
 		const { top, left, right, bottom } = bounds;
 
-		let graphTop, graphLeft, graphRight, graphBottom;
-		let nodeWidth, nodeHeight, nodeX, nodeY;
+		const nodeWidth = get(width);
+		const nodeHeight = get(height);
+		const nodeX = get(x);
+		const nodeY = get(y);
 
-		width.subscribe((width) => {
-			nodeWidth = width;
-		});
-		height.subscribe((height) => {
-			nodeHeight = height;
-		});
-		x.subscribe((x) => {
-			nodeX = x;
-		});
-		y.subscribe((y) => {
-			nodeY = y;
-		});
-
-		top.subscribe((top) => {
-			graphTop = top;
-		});
-		left.subscribe((left) => {
-			graphLeft = left;
-		});
-		right.subscribe((right) => {
-			graphRight = right;
-		});
-		bottom.subscribe((bottom) => {
-			graphBottom = bottom;
-		});
-
-		if (nodeX < graphLeft) {
+		if (nodeX < get(left)) {
 			left.set(nodeX);
 		}
-		if (nodeY < graphTop) {
+		if (nodeY < get(top)) {
 			top.set(nodeY);
 		}
-		if (nodeX + nodeWidth > graphRight) {
+		if (nodeX + nodeWidth > get(right)) {
 			right.set(nodeX + nodeWidth);
 		}
-		if (nodeY + nodeHeight > graphBottom) {
+		if (nodeY + nodeHeight > get(bottom)) {
 			bottom.set(nodeY + nodeHeight);
 		}
-		console.log('adding');
+
 		graph.nodes.add(node);
 	}
 }

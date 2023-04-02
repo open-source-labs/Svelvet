@@ -1,91 +1,103 @@
 <script lang="ts">
-	import Node from '$lib/components/Node/Node.svelte';
-	import Edge from '$lib/components/Edge/Edge.svelte';
-	import type { Graph } from '../../types';
-	import GroupBoundingBox from '$lib/components/GroupBoundingBox/GroupBoundingBox.svelte';
+	import type { Graph, Group, GroupBox } from '$lib/types';
+	import ZoomPanWrapper from '../ZoomPanWrapper/ZoomPanWrapper.svelte';
+	import { updateTranslation } from '$lib/utils';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
-	import { moveNodes } from '$lib/components/Node/moveNodes';
-	import { writable } from 'svelte/store';
+	import { activeKeys } from '$lib/stores';
+	import { captureGroup, moveNodes } from '$lib/utils';
+	import { get } from 'svelte/store';
+	import { getContext } from 'svelte';
+	import NodeRenderer from '../NodeRenderer/NodeRenderer.svelte';
+	import GroupBoxRenderer from '../GroupBoxRenderer/GroupBoxRenderer.svelte';
+	import EdgeRenderer from '../EdgeRenderer/EdgeRenderer.svelte';
 
-	export let nodes: Graph['nodes'];
-	export let edges: Graph['edges'];
-	export let graph: Graph;
-	export let connectingFrom: Graph['connectingFrom'];
+	const graph = getContext<Graph>('graph');
+	export let theme: string;
+	export let isMovable: boolean;
 
-	const { groups, groupProperties, cursor: cursorStore, activeGroup } = graph;
+	$: isLocked = graph.isLocked;
+	$: activeGroup = graph.activeGroup;
+	$: groups = graph.groups;
+	$: selectedGroup = $groups.selected;
+	$: selectedNodes = selectedGroup.nodes;
+	$: selectedParent = selectedGroup.parent;
+	$: initialNodePositions = graph.initialNodePositions;
+	$: groupBoxes = graph.groupBoxes;
+	$: cursor = graph.cursor;
+	$: transforms = graph.transforms;
+	$: x = transforms.translation.x;
+	$: y = transforms.translation.y;
 
-	$: hidden = $groups.hidden;
-
-	let dummyNodePosition = {
-		x: writable(0),
-		y: writable(0)
-	};
-
-	$: {
-		dummyNodePosition.x.set($cursorStore.x);
-		dummyNodePosition.y.set($cursorStore.y);
+	$: if (isMovable) {
+		[$x, $y] = updateTranslation($initialClickPosition, $cursor, transforms);
 	}
 
-	import { get } from 'svelte/store';
+	$: if ($activeGroup) {
+		$cursor; // This necessary to trigger the update
+		moveNodes(graph, $initialClickPosition, $initialNodePositions, $activeGroup);
+	}
 
-	function unpackStores(obj: any) {
-		if (typeof obj !== 'object' || obj === null) {
-			return obj;
+	function handleGroupClicked(event: CustomEvent) {
+		const { groupName } = event.detail;
+		$activeGroup = groupName;
+		$initialClickPosition = $cursor;
+		$initialNodePositions = captureGroup($groups[groupName].nodes);
+	}
+
+	function handleNodeClicked(event: CustomEvent) {
+		console.log(event);
+		if ($isLocked) return;
+		const { node, selected } = event.detail;
+		const { group } = node;
+		$initialClickPosition = $cursor;
+		const nodeGroup: string = get(group);
+		let groupData: Group;
+		let parent;
+		let isParent = false;
+
+		if (nodeGroup) {
+			groupData = $groups[nodeGroup];
+			parent = get(groupData.parent);
+			isParent = parent === node;
 		}
 
-		if (obj.hasOwnProperty('subscribe')) {
-			return get(obj);
+		if (isParent) {
+			$activeGroup = nodeGroup;
+		} else {
+			$activeGroup = 'selected';
 		}
 
-		const result = Array.isArray(obj) ? [] : {};
+		// If you click on a node that is already selected
+		if (!$activeKeys['Shift'] && selected) {
+			$activeGroup = 'selected';
+		} else {
+			// If you click on a new node outside of the current group, clear the group
+			if (!$activeKeys['Shift'] && !selected && !$activeKeys['Meta']) {
+				$selectedNodes.clear();
+				$selectedNodes = $selectedNodes;
+			}
 
-		for (const key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				const value = obj[key];
-				result[key] = unpackStores(value);
+			// Toggle the selected state of the node
+			toggleSelected();
+		}
+
+		// Capture the initial positions of the nodes in the group
+		$initialNodePositions = captureGroup($groups['selected'].nodes);
+
+		function toggleSelected() {
+			if (selected) {
+				if (node) $selectedNodes.delete(node);
+				$selectedNodes = $selectedNodes;
+			} else {
+				if (node) $selectedNodes.add(node);
+				$selectedNodes = $selectedNodes;
 			}
 		}
-
-		return result;
 	}
-
-	// $: if ($activeGroup) {
-	// 	console.log('moving');
-	// 	const newX = cursor.x - $initialClickPosition.x;
-	// 	const newY = cursor.y - $initialClickPosition.y;
-	// 	moveNodes(graph, newX, newY, $groups[$activeGroup], 1);
-	// }
 </script>
 
-{#each Object.entries($nodes) as [id, node] (id)}
-	{#if !$hidden.has(node)}
-		<Node on:nodeClicked {...node} {graph} />
-	{/if}
-{/each}
-
-{#each Array.from($edges) as [anchorId, connection] (`${connection.targetNode}-${anchorId}`)}
-	<Edge
-		sourceNode={connection.sourceNode}
-		targetNode={connection.targetNode}
-		sourceAnchor="output"
-		targetAnchor={anchorId.split('-')[1]}
-	/>
-{/each}
-
-{#if $connectingFrom}
-	<Edge
-		active
-		sourceNode={$connectingFrom}
-		targetNode={{
-			anchors: { cursor: { x: 0, y: 0.5 } },
-			position: dummyNodePosition,
-			dimensions: { width: writable(0), height: writable(0) }
-		}}
-		animate
-		cursor
-	/>
-{/if}
-
-{#each Object.entries($groupProperties) as [id, group] (id)}
-	<GroupBoundingBox on:groupClick {...group} groupName={id} />
-{/each}
+<ZoomPanWrapper>
+	<NodeRenderer on:nodeClicked={handleNodeClicked} />
+	<EdgeRenderer />
+	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
+</ZoomPanWrapper>

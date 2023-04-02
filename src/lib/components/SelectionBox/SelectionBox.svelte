@@ -11,11 +11,11 @@
 	export let creating = false;
 
 	const { groups, nodes: nodeStore } = graph;
-	const { selected: selectedNodes } = $groups;
 
 	let nodes: Array<NodeDOMBounds>;
 	let box: HTMLDivElement;
 
+	$: selectedNodes = $groups.selected.nodes;
 	$: height = $cursorPositionRaw.y - anchor.y;
 	$: width = $cursorPositionRaw.x - anchor.x;
 	$: top = Math.min(anchor.y, anchor.y + height);
@@ -64,7 +64,6 @@
 			$selectedNodes = new Set(nodesUnderSelection);
 		}
 		$selectedNodes = $selectedNodes;
-		console.log($selectedNodes);
 	}
 </script>
 

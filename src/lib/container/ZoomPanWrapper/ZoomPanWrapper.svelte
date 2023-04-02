@@ -1,21 +1,20 @@
 <script lang="ts">
-	import type { GraphKey, GraphTransforms } from '$lib/types';
-	import type { Writable } from 'svelte/store';
+	import type { Graph } from '$lib/types';
+	import { getContext } from 'svelte';
 
-	export let id: GraphKey;
-	export let transforms: GraphTransforms;
+	const graph = getContext<Graph>('graph');
 
-	const { translation, scale } = transforms;
-	const { x, y } = translation;
-
-	// Reactive statement to update the transform attribute of the wrapper
-	// We apply this with the style directive below
-	$: transform = `translate(${$x}px, ${$y}px) scale(${$scale})`;
+	$: scale = graph.transforms.scale;
+	$: x = graph.transforms.translation.x;
+	$: y = graph.transforms.translation.y;
 
 	const className = 'svelvet-graph-wrapper';
+
+	// Reactive statement to update the transform attribute of the wrapper
+	$: transform = `translate(${$x}px, ${$y}px) scale(${$scale})`;
 </script>
 
-<div style:transform {id} class={className} role="presentation">
+<div style:transform class={className} role="presentation">
 	<slot />
 </div>
 

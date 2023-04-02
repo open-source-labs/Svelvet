@@ -1,12 +1,7 @@
 <script lang="ts">
 	import type { CSSColorString, Dimensions, XYPosition } from '$lib/types';
-	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
-	const dispatch = createEventDispatcher();
-
-	function dispatchClick() {
-		dispatch('groupClick', { groupName });
-	}
+	import { createEventDispatcher } from 'svelte';
 
 	export let dimensions: Dimensions;
 	export let position: XYPosition;
@@ -20,10 +15,16 @@
 	$: left = $x;
 
 	$: id = `${groupName}-bounding-box`;
-	console.log({ width, height, color, top });
+
+	const dispatch = createEventDispatcher();
+
+	function dispatchClick() {
+		dispatch('groupClick', { groupName });
+	}
 </script>
 
 <div
+	on:contextmenu|stopPropagation|preventDefault={() => console.log('clickeddd')}
 	on:mousedown|stopPropagation|preventDefault={dispatchClick}
 	class="bounding-box-border"
 	{id}

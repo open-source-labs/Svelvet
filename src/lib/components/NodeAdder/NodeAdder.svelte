@@ -1,45 +1,30 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { graphStore } from '$lib/stores';
-	import { createNode } from '$lib/utils/createNode';
+	import { createNode } from '$lib/utils';
 	import { populateStore } from '$lib/container/Svelvet/populateStore';
 	import { writable } from 'svelte/store';
-	import type { Inputs, Outputs } from '$lib/types';
-	let { graphId } = getContext('graphId');
-	let graph = graphStore.get(graphId);
+	import type { Inputs, Outputs, Graph } from '$lib/types';
+	import { get } from 'svelte/store';
+
+	const graph = getContext<Graph>('graph');
 
 	let title: string;
 	let inputs: string;
 	let outputs: string;
 	let formIsVisible = false;
 
+	$: nodes = graph.nodes;
+
 	function addNode() {
-		const inputsObject = inputs.split(',').reduce((acc: Inputs, input: string) => {
-			acc[input.trim()] = null;
-			return acc;
-		}, {});
-
-		const outputsObject = outputs.split(',').reduce((acc: Outputs, output: string) => {
-			acc[output.trim()] = null;
-			return acc;
-		}, {});
-
-		const newNode = createNode(
-			title,
-			100,
-			200,
-			300,
-			100,
-			[],
-			'self',
-			{},
-			inputsObject,
-			outputsObject
-		);
-
-		$graph.nodes.update((nodes) => {
-			return { ...nodes, [newNode.id]: writable(newNode) };
+		const newNode = createNode({
+			id: Math.random(),
+			position: { x: Math.random() * 400, y: Math.random() * 400 }
 		});
+
+		nodes.add(newNode);
+
+		console.log($nodes);
 	}
 
 	function toggleForm() {
@@ -47,7 +32,7 @@
 	}
 </script>
 
-<button on:click={toggleForm} class="node-adder"> Add Node </button>
+<button on:click={addNode} class="node-adder"> Add Node </button>
 
 {#if formIsVisible}
 	<div class="form">
@@ -63,7 +48,9 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: 100;
+		z-index: 100000;
+		width: 100x;
+		height: 100px;
 	}
 
 	.form {

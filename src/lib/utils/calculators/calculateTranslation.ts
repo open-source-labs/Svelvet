@@ -7,7 +7,6 @@ export function calculateTranslation(
 	pointerPosition: XYPair,
 	bounds: DOMRect
 ) {
-	console.log('calculateTranslation', pointerPosition);
 	const newTranslation = { x: 0, y: 0 };
 
 	// Calculate the cursor position relative to the wrapper

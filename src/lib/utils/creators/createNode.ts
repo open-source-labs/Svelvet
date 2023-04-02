@@ -2,6 +2,7 @@ import { writable, derived } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { Node, NodeConfig, Inputs, Properties, Parameter } from '$lib/types';
 import { get } from 'svelte/store';
+import { NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
 
 export function createNode(userNode: NodeConfig): Node {
 	const { id, config, width, height, dimensions, header, position } = userNode;
@@ -14,8 +15,8 @@ export function createNode(userNode: NodeConfig): Node {
 			y: writable(position?.y || 0)
 		},
 		dimensions: {
-			width: writable(dimensions?.width || width || 100),
-			height: writable(dimensions?.height || height || 100)
+			width: writable(dimensions?.width || width || NODE_WIDTH),
+			height: writable(dimensions?.height || height || NODE_HEIGHT)
 		},
 		group: writable(null),
 		draggable: writable(true),
@@ -26,7 +27,7 @@ export function createNode(userNode: NodeConfig): Node {
 		zIndex: writable(0),
 		ariaLabel: `Node ${id}`,
 		focusable: writable(true),
-		resizing: writable(false),
+		resizable: writable(true),
 		collapsed: writable(false),
 		visible: writable(true),
 		inputs: writable({}),

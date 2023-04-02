@@ -1,20 +1,18 @@
 <script lang="ts">
-	import type { Graph } from '$lib/types';
+	import type { Graph, Node } from '$lib/types';
 	import { onMount, getContext } from 'svelte';
-	import { get } from 'svelte/store';
+	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 
 	export let isOutput = false;
-	export let label: string;
-	export let graph: Graph;
-	export let driven;
+	export let color = 'gray';
+
+	const label = getContext<string>('label');
+	const driven = getContext<boolean>('driven');
+	const node = getContext<Node>('node');
 
 	let anchor: HTMLButtonElement;
 
-	// const graph = graphStore.get(getContext('graphId'));
-	const { nodes } = graph;
-	const node = nodes.get(getContext('nodeId'));
-	const { anchors, dimensions } = node;
-	const { width, height } = dimensions;
+	$: anchors = node.anchors;
 
 	onMount(() => {
 		const { offsetLeft, offsetTop, offsetHeight, offsetWidth } = anchor;
@@ -24,27 +22,27 @@
 		};
 	});
 
-	let color = 'gray';
 	$: side = isOutput ? 'right' : 'left';
 </script>
 
 <button
+	style:--default-width={`${ANCHOR_SIZE}px`}
+	style:--default-color={ANCHOR_COLOR}
+	style:--default-radius={ANCHOR_RADIUS}
 	class:driven
 	bind:this={anchor}
-	style="
-		--color: {color};
-		{side}: {-6}px;"
+	style="{side}: -6px"
 	class="anchor"
 />
 
 <style>
 	.anchor {
 		position: absolute;
-		width: 12px;
+		width: var(--anchor-size, var(--default-width));
+		height: var(--anchor-size, var(--default-width));
 		z-index: 12;
-		height: 12px;
-		border-radius: 50%;
-		background-color: var(--color);
+		border-radius: var(--anchor-radius, var(--default-radius));
+		background-color: var(--anchor-color, var(--default-color));
 		cursor: pointer;
 		border: solid 1px black;
 		pointer-events: auto;

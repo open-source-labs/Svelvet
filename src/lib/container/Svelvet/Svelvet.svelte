@@ -8,17 +8,15 @@
 		BackgroundStyles,
 		NodeStore
 	} from '$lib/types';
-	import { createGraph } from '$lib/utils';
 	import { populateStore } from './populateStore';
 	import { get } from 'svelte/store';
-	import { flowChartParser } from '$lib/utils/parser';
+	import { flowChartParser, createNode, createGraph } from '$lib/utils/';
 	import { populateMermaidNodes } from './flowchartDrawer';
 	import { graphStore } from '$lib/stores';
-	import { createNode } from '$lib/utils';
 	import Flow from './Flow.svelte';
 
 	export let mermaid = '';
-	export let theme = 'light';
+	export let dark = false;
 	export let width: number = 100;
 	export let height: number = 100;
 	export let graphId: GraphKey = '1'; //Math.floor(Math.random() * 100).toString();
@@ -37,7 +35,7 @@
 	let nodeStore: NodeStore;
 
 	setContext('snapTo', snapTo);
-	setContext('graphId', graphId);
+	setContext('theme', dark ? 'dark' : 'light');
 
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);
@@ -95,7 +93,7 @@
 </script>
 
 {#if graph}
-	<Flow {...$$props} {graph} />
+	<Flow {...$$props} {graph}><slot /></Flow>
 {/if}
 
 <style>

@@ -55,7 +55,7 @@
 	cursor: grab;
 	position: absolute;
 	color: var(--text-color);
-	background-color: var(--node-background);
+	background-color: var(--node-background, var(--node-default-background));
 	box-shadow: 1px 4px 8px 0 rgba(0, 0, 0, 0.2);
 	margin: 0;
 	padding: 0;

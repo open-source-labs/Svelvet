@@ -1,4 +1,4 @@
-import { moveNodes } from '$lib/components/Node/moveNodes';
+import { moveNodes } from '$lib/utils';
 
 interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {}
 const activeIntervals: ActiveIntervals = {};
@@ -19,7 +19,7 @@ export function handleArrowKey(
 	const endOffset = startOffset + direction * 50 * multiplier;
 
 	if (!activeIntervals[key]) {
-		let interval = setInterval(() => {
+		const interval = setInterval(() => {
 			const time = performance.now() - start;
 
 			if (axis === 'x') {

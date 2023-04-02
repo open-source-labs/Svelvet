@@ -1,10 +1,10 @@
 import { writable, derived } from 'svelte/store';
 import type { Readable } from 'svelte/store';
-import type { DataObject, Graph, Node } from '$lib/types';
+import type { DataObject, Graph, Node, GroupBox } from '$lib/types';
 import { createStore } from './createStore';
 import type { Writable } from 'svelte/store';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
-import { calculateRelativeCursor } from './calculateRelativeCursor';
+import { calculateRelativeCursor } from '$lib/utils/calculators/calculateRelativeCursor';
 
 export function createGraph(id: string, initialZoom: number): Graph {
 	const bounds = {
@@ -41,10 +41,10 @@ export function createGraph(id: string, initialZoom: number): Graph {
 		isLocked: writable(false),
 		connectingFrom: writable(null),
 		groups: writable({
-			selected: writable(new Set<Node>()),
-			hidden: writable(new Set<Node>())
+			selected: { parent: writable(null), nodes: writable(new Set<Node>()) },
+			hidden: { parent: writable(null), nodes: writable(new Set<Node>()) }
 		}),
-		groupProperties: writable({}),
+		groupBoxes: createStore<GroupBox>(),
 		activeGroup: writable(null),
 		initialNodePositions: writable([])
 	};

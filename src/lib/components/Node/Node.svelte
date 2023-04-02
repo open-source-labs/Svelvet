@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
-	import type { Graph, Node, WritableNode } from '$lib/types';
-	import { activeKeys, graphStore } from '$lib/stores';
-	import { cursorPosition, initialClickPosition } from '$lib/stores/CursorStore';
-	import { get } from 'svelte/store';
+	import type { Graph, Node, Theme } from '$lib/types';
 	import Parameter from '../Parameter/Parameter.svelte';
 	import Output from '../Output/Output.svelte';
-	import { createNode } from '$lib/utils';
-	import { moveNodes } from './moveNodes';
-	import type { Writable } from 'svelte/store';
 	import Resizer from '../Resizer/Resizer.svelte';
-	import { calculateFitContentWidth } from './calculateFitContent';
+	import { calculateFitContentWidth } from '$lib/utils';
 	import { createEventDispatcher } from 'svelte';
+	import { NODE_COLOR_LIGHT, NODE_COLOR_DARK } from '$lib/constants';
 
 	const dispatch = createEventDispatcher();
 
@@ -41,10 +36,11 @@
 	export let textColor: Node['textColor'];
 	export let label: Node['label'] = 'Node';
 	export let resizable = true;
+	export let node: Node;
 
-	export let nodeId: string = Math.random().toString(36).substring(2, 8);
-	//export let node: Node = createNode({ id: nodeId, dimensions: { width, height } });
-	export let graph: Graph = graphStore.get(getContext('graphId').graphId);
+	const graph: Graph = getContext<Graph>('graph');
+	setContext<Node>('node', node);
+	const theme = getContext<Theme>('theme');
 
 	let isMovable = false;
 	let collapsed = false;
@@ -59,36 +55,29 @@
 
 	const { width: widthStore, height: heightStore } = dimensions;
 	const { x, y } = position;
-	const { selected: selectedNodes, hidden: hiddenNodes } = $groups;
-	const node = graph.nodes.get(id);
-	const { x: cursorX, y: cursorY } = cursorPosition;
+	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
-	setContext('nodeId', id);
 	const snapTo: number = getContext('snapTo');
 
 	// Creates reactive variable for whether the node is selected
 	// We use this as a class directive in the component
+	$: selectedNodes = selectedNodeGroup.nodes;
 	$: selected = $selectedNodes.has(node);
+	$: hiddenNodes = hiddenNodesGroup.nodes;
 
-	setContext('resizeData', {
-		heightStore,
-		widthStore,
-		minHeight,
-		minWidth,
-		x,
-		y
-	});
+	$: console.log($selectedNodes);
 
 	// Dynamically import the component for the node
 	onMount(async () => {
-		const { width: DOMwidth, height: DOMheight } = DOMnode.getBoundingClientRect();
-		$widthStore = DOMwidth;
-		console.log({ borderRadius });
-		$heightStore = DOMheight;
-
-		const min = calculateFitContentWidth(DOMnode);
-		minWidth = min.width;
-		minHeight = min.height;
+		// Not every browser handles fit-content well, so this is a workaround
+		// We assign fit-content, calculate those dimensions
+		// And reassign the width store the max value of
+		// The initial dom dimensions, the min dimenions calculated, or the initial store value
+		// Spend more time looking into this and see if there is a more obvious fix
+		const nodeRect = DOMnode.getBoundingClientRect();
+		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
+		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
 
 		if (!componentRef) return;
 		DynamicComponent = (await import(`../${componentRef}/${componentRef}.svelte`)).default;
@@ -101,11 +90,9 @@
 
 	function toggleSelected() {
 		if (selected) {
-			$group = null;
 			if (node) $selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		} else {
-			$group = 'selected';
 			if (node) $selectedNodes.add(node);
 			$selectedNodes = $selectedNodes;
 		}
@@ -131,35 +118,44 @@
 	$: nodeHeight = `${$heightStore}px`;
 	$: nodeLeft = `${$x}px`;
 	$: nodeTop = `${$y}px`;
+
+	const styles = {
+		light: {
+			background: NODE_COLOR_LIGHT
+		},
+		dark: {
+			background: NODE_COLOR_DARK
+		}
+	};
 </script>
 
 <svelte:window on:mouseup|stopPropagation={onMouseUp} />
 
+<!-- svelte-ignore a11y-non-interactive-element -->
 <div
-	bind:this={DOMnode}
-	on:mouseup={onMouseUp}
-	on:mousedown|stopPropagation={handleClick}
-	on:keydown={handleKeydown}
-	tabindex={0}
+	role="figure"
+	aria-labelledby="node"
 	class="graph-node"
+	tabindex="-1"
 	{id}
-	role="button"
 	style:height={nodeHeight}
 	style:width={nodeWidth}
 	style:left={nodeLeft}
 	style:top={nodeTop}
 	class:selected
 	class:collapsed
+	style:--node-default-background={styles[theme].background}
 	style:cursor={$draggable ? (isMovable ? 'grabbing' : 'grab') : 'not-allowed'}
 	style="
 			{borderRadius && `--border-radius: ${borderRadius}px`};
 			{bgColor && `--node-background: ${bgColor}`};
 			{textColor && `--text-color: ${textColor}`};
 			{borderColor && `--border-color: ${borderColor}`}"
+	bind:this={DOMnode}
+	on:mouseup={onMouseUp}
+	on:mousedown|stopPropagation|preventDefault={handleClick}
+	on:keydown={handleKeydown}
 >
-	<!-- {#if DynamicComponent}
-				<svelte:component this={DynamicComponent} self={configObject} data={parentNodesArray} />
-			{/if} -->
 	{#if header}
 		<header class="header-wrapper">
 			{#if collapsible}
@@ -171,42 +167,39 @@
 			{/if}
 			<button on:click={hideNode}> - </button>
 			<p class="node-name">{label || id}</p>
+			<h1>{$group}</h1>
 		</header>
 		<div class="header-divider" />
 	{/if}
-	{#if !collapsed}
+	{#if DynamicComponent}
+		<svelte:component this={DynamicComponent} self={configObject} data={parentNodesArray} />
+	{:else if !collapsed}
 		<section class="parameters">
 			{#if label && !header}<p class="node-name">{label}</p>{/if}
 			{#if $outputs}
-				<Output {graph} outputStore={outputs} {connectingFrom} {node} />
+				<Output outputStore={outputs} {connectingFrom} />
 			{/if}
 
 			{#each Object.entries($properties) as [key, property] (key)}
 				<Parameter
-					{node}
-					{graph}
-					store={properties}
 					config={config ? config.properties[key] : null}
 					label={key}
 					parameterStore={property}
 				/>
 			{/each}
 
-			{#each Object.keys($inputs) as key}
+			{#each Object.entries($inputs) as [key, input] (key)}
 				<Parameter
-					{node}
-					{graph}
 					connectable
-					store={inputs}
 					config={config ? config.inputs[key] : null}
 					label={key}
-					parameterStore={$inputs[key]}
+					parameterStore={input}
 				/>
 			{/each}
 		</section>
 	{/if}
 	{#if resizable}
-		<Resizer width height both {graph} />
+		<Resizer width height both {minWidth} {minHeight} />
 	{/if}
 </div>
 

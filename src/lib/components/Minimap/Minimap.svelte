@@ -1,20 +1,17 @@
 <script lang="ts">
 	import { graphStore } from '$lib/stores';
-	import { getContext as getContextBase } from 'svelte';
+	import { getContext } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
 	import type { Graph } from '$lib/types';
 	import type { Writable } from 'svelte/store';
-	import type { GetContext } from '$lib/types';
 	import type { Node } from '$lib/types';
 
-	let graph: Graph;
-	const getContext = getContextBase as GetContext;
-	let graphId = getContext('graphId');
-	graph = graphStore.get(graphId);
+	let graph: Graph = getContext<Graph>('graph');
 	const { nodes, bounds, groups } = graph;
-	const { hidden } = $groups;
+
 	const { top, bottom, left, right } = bounds;
 
+	$: hidden = $groups.hidden.nodes;
 	$: boundsWidth = $right - $left;
 	$: boundsHeight = $bottom - $top;
 	$: aspectRatio = boundsWidth / boundsHeight;

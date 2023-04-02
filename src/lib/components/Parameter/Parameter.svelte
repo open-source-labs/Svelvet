@@ -5,21 +5,24 @@
 	import type { Parameter, Node, Graph, ParameterConfig } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
+	import { getContext, setContext } from 'svelte';
 
 	export let parameterStore: Writable<Parameter>;
 	export let label: string;
 	export let config: ParameterConfig;
 	export let connectable = false;
-	export let node: Node;
-	export let graph: Graph;
 
-	console.log(node);
+	const node = getContext<Node>('node');
+	const graph = getContext<Graph>('graph');
+
+	$: driven = $edges.has(`${node.id}-${label}`);
+
+	setContext<string>('label', label);
+	setContext<boolean>('driven', driven);
 
 	const { type } = config;
 
 	const { edges } = graph;
-
-	$: driven = $edges.has(`${node.id}-${label}`);
 
 	const components = {
 		slider: Slider,
@@ -35,7 +38,7 @@
 		<p class="driven-label">{label}</p>
 	{/if}
 	{#if connectable}
-		<Input {graph} {node} {label} {driven} />
+		<Input />
 	{/if}
 </div>
 

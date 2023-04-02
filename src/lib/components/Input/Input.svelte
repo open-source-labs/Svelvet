@@ -2,17 +2,17 @@
 	import type { Graph, Node, AnchorKey } from '$lib/types';
 	import Anchor from '../Anchor/Anchor.svelte';
 	import { writable, get } from 'svelte/store';
+	import { getContext } from 'svelte';
 
-	export let node: Node;
-	export let label: string;
-	export let graph: Graph;
-	export let driven: boolean;
-
-	const { edges, connectingFrom } = graph;
-
-	const { inputs } = node;
+	const node = getContext<Node>('node');
+	const graph = getContext<Graph>('graph');
+	const label = getContext<string>('label');
 
 	let anchorId: AnchorKey = `${node.id}-${label}`;
+
+	$: edges = graph.edges;
+	$: connectingFrom = graph.connectingFrom;
+	$: inputs = node.inputs;
 
 	function makeConnection() {
 		if (!$connectingFrom) return;
@@ -45,7 +45,7 @@
 	on:mouseup|stopPropagation={makeConnection}
 	on:mousedown|stopPropagation={detachEdge}
 >
-	<Anchor {label} {graph} {driven} />
+	<Anchor />
 </div>
 
 <style>

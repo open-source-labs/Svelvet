@@ -6,15 +6,14 @@
 	import { zoomGraph, calculateTranslation } from '$lib/utils';
 
 	const ZOOM_INCREMENT = 0.1;
-	let graph: Graph;
-	let graphId = getContext<Key>('graphId');
-	graph = graphStore.get(graphId);
+	let graph: Graph = getContext<Graph>('graph');
 
 	const { transforms, isLocked, groups } = graph;
-	const { hidden } = $groups;
 	const { scale, translation } = transforms;
 	const { x: xOffset, y: yOffset } = translation;
 	const { x: translationX, y: translationY } = translation;
+
+	$: hidden = $groups.hidden.nodes;
 
 	function unhideAll() {
 		hidden.set(new Set());

@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store';
-import type { Writable } from 'svelte/store';
 import type { Key } from '$lib/types';
 
 export function createStore<T extends { id: Key }>() {
@@ -18,6 +17,7 @@ export function createStore<T extends { id: Key }>() {
 		update: typeof update;
 		add: (item: T) => TData;
 		get: (key: Key) => T;
+		delete: (key: Key) => boolean;
 	}
 
 	const store: Store = {
@@ -25,11 +25,27 @@ export function createStore<T extends { id: Key }>() {
 		set,
 		update,
 		add: (item: T) => {
-			data[item.id] = item;
+			// Use the update method to add the item
+			update((currentData) => {
+				currentData[item.id] = item;
+				return currentData;
+			});
 			return data;
 		},
 		get: (key: Key) => {
 			return data[key];
+		},
+		delete: (key: Key) => {
+			// Use the update method to delete the item by key
+			let deleted = false;
+			update((currentData) => {
+				if (key in currentData) {
+					delete currentData[key];
+					deleted = true;
+				}
+				return currentData;
+			});
+			return deleted;
 		}
 	};
 

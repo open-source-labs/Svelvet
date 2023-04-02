@@ -1,9 +1,8 @@
-const MIN_SCALE = 0.4;
-const MAX_SCALE = 4;
+import { MIN_ZOOM, MAX_ZOOM } from '$lib/constants';
 
 export function calculateZoom(scale: number, delta: number, zoomIncrement: number) {
 	const scaleAdjustment = delta * zoomIncrement;
 	const newScale = scale - scaleAdjustment;
 
-	return Number(Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale)).toFixed(9));
+	return Number(Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newScale)).toFixed(9));
 }

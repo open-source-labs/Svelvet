@@ -23,7 +23,7 @@ export interface Node {
 	ariaLabel: string;
 	header?: true;
 	focusable: Writable<boolean>;
-	resizing: Writable<boolean>;
+	resizable: Writable<boolean>;
 	componentRef: string;
 	config?: ConfigObject;
 	borderRadius?: number;

@@ -8,7 +8,8 @@ import type {
 	CSSColorString,
 	XYPair,
 	XYPosition,
-	Dimensions
+	Dimensions,
+	GroupBoxStore
 } from '.';
 
 export interface Graph {
@@ -28,7 +29,7 @@ export interface Graph {
 	connectingFrom: Writable<Node | null>;
 	groups: Writable<Groups>;
 	edges: Writable<Edges>;
-	groupProperties: Writable<{ [key: string]: GroupProperty }>;
+	groupBoxes: GroupBoxStore;
 	activeGroup: Writable<string | null>;
 	initialNodePositions: Writable<XYPair[]>;
 }
@@ -45,7 +46,6 @@ export interface Groups {
 	hidden: Group;
 	[key: string]: Group;
 }
-export type Group = Writable<Set<Node>>;
 
 export interface Bounds {
 	top: Writable<number>;
@@ -53,10 +53,19 @@ export interface Bounds {
 	width: Writable<number>;
 	height: Writable<number>;
 }
-export interface GroupProperty {
+
+export type GroupBoxes = Record<string, GroupBox>;
+
+export interface GroupBox {
+	id: string;
 	dimensions: Dimensions;
 	position: XYPosition;
 	color: Writable<CSSColorString>;
+}
+
+export interface Group {
+	parent: Writable<Node | GroupBox | null>;
+	nodes: Writable<Set<Node>>;
 }
 
 export interface GraphTransforms {

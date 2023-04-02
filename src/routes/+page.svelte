@@ -356,10 +356,10 @@
 </script>
 
 <div class="wrapper">
-	<Svelvet theme="dark" nodes={initialNodes} controls minimap>
-		<!-- <Controls />
-		<Minimap /> -->
-		<!-- <NodeAdder />  -->
+	<Svelvet dark nodes={initialNodes}>
+		<Controls />
+		<Minimap />
+		<NodeAdder />
 	</Svelvet>
 </div>
 

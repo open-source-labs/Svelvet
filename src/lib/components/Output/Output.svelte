@@ -1,32 +1,32 @@
 <script lang="ts">
 	import Anchor from '../Anchor/Anchor.svelte';
 	import type { Writable } from 'svelte/store';
-	import type { Node, Graph } from '$lib/types';
+	import type { Node, Parameter } from '$lib/types';
 	import Visualizer from '../Visualizer/Visualizer.svelte';
+	import { setContext, getContext } from 'svelte';
 
-	export let outputStore;
+	export let outputStore: Writable<Parameter>;
 	export let label = 'output';
-	export let node: Node;
 	export let connectingFrom: Writable<Node | null>;
-	export let graph: Graph;
+
+	setContext<string>('label', label);
+	const node = getContext<Node>('node');
 
 	function startConnection() {
 		if (!$connectingFrom) {
 			$connectingFrom = node;
 		}
 	}
-
-	console.log('outputStore', $outputStore);
 </script>
 
 <div class="output" on:mousedown|stopPropagation={startConnection}>
 	{#if typeof $outputStore === 'object'}
 		<Visualizer {outputStore} />
 	{:else}
-		<p>{$outputStore}</p>
+		<p>{label}</p>
 	{/if}
 
-	<Anchor {graph} {label} isOutput />
+	<Anchor isOutput />
 </div>
 
 <style>

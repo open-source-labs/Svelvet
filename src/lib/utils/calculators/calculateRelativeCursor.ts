@@ -8,7 +8,6 @@ export const calculateRelativeCursor = (
 	translationX: number,
 	translationY: number
 ) => {
-	console.log('Cursoring');
 	const { clientX, clientY } = e;
 	const scaleCapture = scale;
 
@@ -26,5 +25,6 @@ export const calculateRelativeCursor = (
 
 	const newCursorX = newX / scaleCapture;
 	const newCursorY = newY / scaleCapture;
+
 	return { x: newCursorX, y: newCursorY };
 };

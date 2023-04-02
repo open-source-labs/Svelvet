@@ -3,5 +3,5 @@ export function calculateFitContentWidth(element: HTMLElement) {
 	element.style.height = 'fit-content';
 	const width = element.offsetWidth;
 	const height = element.offsetHeight;
-	return { width, height };
+	return [width, height];
 }

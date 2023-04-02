@@ -1,4 +1,4 @@
-import { createNode } from '$lib/utils/createNode';
+import { createNode } from '$lib/utils/';
 
 import type { Node } from '$lib/types';
 

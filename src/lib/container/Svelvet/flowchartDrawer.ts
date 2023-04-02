@@ -1,4 +1,4 @@
-import { createNode } from '$lib/utils/createNode';
+import { createNode } from '$lib/utils';
 
 import type { Inputs, Node, NodeConfig } from '$lib/types';
 import type { FlowChart, Node as FlowChartNode } from '../../types/parser';

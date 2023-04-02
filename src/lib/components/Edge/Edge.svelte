@@ -1,8 +1,19 @@
 <script lang="ts">
-	import type { DummyNode, Node } from '$lib/types';
+	import type { CSSColorString, DummyNode, Node } from '$lib/types';
+	import EdgeLabel from '../EdgeLabel/EdgeLabel.svelte';
+	import { EDGE_WIDTH, EDGE_COLOR } from '$lib/constants';
 	import { get } from 'svelte/store';
-	import { writable } from 'svelte/store';
-	import { cursorPosition } from '$lib/stores/CursorStore';
+	type StepDirection = 'left' | 'right' | 'up' | 'down';
+
+	type ArcStringKey =
+		| 'leftup'
+		| 'leftdown'
+		| 'rightup'
+		| 'rightdown'
+		| 'upleft'
+		| 'upright'
+		| 'downleft'
+		| 'downright';
 
 	export let sourceNode: Node;
 	export let targetNode: Node | DummyNode;
@@ -11,6 +22,7 @@
 	export let curve = true;
 	export let active = false;
 	export let cursor = false;
+	export let label: string | null = null;
 
 	export let animate = false;
 	export let dynamic = false;
@@ -43,8 +55,6 @@
 	let targetAnchorPercentageX = initTargetAnchorOffsetX / ($targetWidth + anchorRadius);
 	let targetAnchorPercentageY = initTargetAnchorOffsetY / ($targetHeight + anchorRadius);
 
-	console.log(initSourceAnchorOffsetX, $sourceWidth, anchorRadius);
-	console.log(sourceAnchorPercentageX);
 	// let sourceAnchorPercentageX = 0.5;
 	// let sourceAnchorPercentageY = 0;
 
@@ -69,6 +79,10 @@
 	// Pixel value of the anchor point on the source node
 	$: sourceAnchorOffsetX = $sourceWidth * sourceAnchorPercentageX;
 	$: sourceAnchorOffsetY = $sourceHeight * sourceAnchorPercentageY;
+	let sourceAnchorOffsetNoResizeX = get(sourceWidth) * sourceAnchorPercentageX;
+	let sourceAnchorOffsetNoResizeY = get(sourceHeight) * sourceAnchorPercentageY;
+	let targetAnchorOffsetNoResizeX = get(targetWidth) * targetAnchorPercentageX;
+	let targetAnchorOffsetNoResizeY = get(targetHeight) * targetAnchorPercentageY;
 
 	// Pixel value of the anchor point on the target node
 	$: targetAnchorOffsetX = $targetWidth * targetAnchorPercentageX;
@@ -92,11 +106,23 @@
 	$: boxHeight = maxY - minY + 2 * buffer;
 	$: boxWidth = maxX - minX + 2 * buffer;
 
-	$: sourceAnchorPosX = buffer + sourceAnchorOffsetX + Math.max(-deltaX, 0);
-	$: sourceAnchorPosY = buffer + sourceAnchorOffsetY + Math.max(-deltaY, 0);
+	$: sourceAnchorPosX =
+		buffer +
+		(dynamic || sourceAnchorPercentageX === 1 ? sourceAnchorOffsetX : sourceAnchorOffsetNoResizeX) +
+		Math.max(-deltaX, 0);
+	$: sourceAnchorPosY =
+		buffer +
+		(dynamic || sourceAnchorPercentageY === 1 ? sourceAnchorOffsetY : sourceAnchorOffsetNoResizeY) +
+		Math.max(-deltaY, 0);
 
-	$: targetAnchorPosX = buffer + targetAnchorOffsetX + Math.max(deltaX, 0);
-	$: targetAnchorPosY = buffer + targetAnchorOffsetY + Math.max(deltaY, 0);
+	$: targetAnchorPosX =
+		buffer +
+		(dynamic || targetAnchorPercentageX === 1 ? targetAnchorOffsetX : targetAnchorOffsetNoResizeX) +
+		Math.max(deltaX, 0);
+	$: targetAnchorPosY =
+		buffer +
+		(dynamic || targetAnchorPercentageY === 1 ? targetAnchorOffsetY : targetAnchorOffsetNoResizeY) +
+		Math.max(deltaY, 0);
 
 	let sourceControlPointX: number = 0;
 	let sourceControlPointY: number = 0;
@@ -223,12 +249,17 @@
 			upleft: upLeftArc
 		};
 
+		function buildArcStringKey(a: StepDirection, b: StepDirection): ArcStringKey {
+			return `${a}${b}` as ArcStringKey;
+		}
+
 		const { steps, distance } = calculatePath();
 
 		path = steps.reduce((acc, curr, index) => {
 			let stepDistanceString = '';
 			let arcString = '';
 			let multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
+
 			if (curr === 'left') {
 				stepDistanceString += ` l ${-distance[index] + multiplier * cornerRadiusX} 0 `;
 			} else if (curr === 'right') {
@@ -239,15 +270,19 @@
 				stepDistanceString += ` l 0 ${distance[index] - multiplier * cornerRadiusY} `;
 			}
 
-			arcString = arcStrings[`${curr}${steps[index + 1]}`] || '';
+			if (index < steps.length - 1) {
+				const arcStringKey = buildArcStringKey(curr, steps[index + 1]);
+				arcString = arcStrings[arcStringKey] || '';
+			}
+
 			return acc + stepDistanceString + arcString;
 		}, `M ${sourceAnchorPosX}, ${sourceAnchorPosY}`);
 	}
-
-	function calculatePath() {
-		const steps = [];
+	type XorY = 'x' | 'y';
+	function calculatePath(): { steps: StepDirection[]; distance: number[] } {
+		const steps: StepDirection[] = [];
 		const distance = [];
-		let sourceSide =
+		let sourceSide: StepDirection =
 			sourceAnchorPercentageX === 1
 				? 'right'
 				: sourceAnchorPercentageX === 0
@@ -256,10 +291,10 @@
 				? 'down'
 				: 'up';
 
-		let axis = sourceSide === 'left' || sourceSide === 'right' ? 'x' : 'y';
-		let oppositeAxis = axis === 'x' ? 'y' : 'x';
+		let axis: XorY = sourceSide === 'left' || sourceSide === 'right' ? 'x' : 'y';
+		let oppositeAxis: XorY = axis === 'x' ? 'y' : 'x';
 
-		let oppositeSourceSide =
+		let oppositeSourceSide: StepDirection =
 			sourceSide === 'left'
 				? 'right'
 				: sourceSide === 'right'
@@ -268,7 +303,7 @@
 				? 'down'
 				: 'up';
 
-		let oppositeTargetSide =
+		let oppositeTargetSide: StepDirection =
 			oppositeSourceSide === 'left'
 				? 'right'
 				: oppositeSourceSide === 'right'
@@ -276,7 +311,7 @@
 				: oppositeSourceSide === 'up'
 				? 'down'
 				: 'up';
-		let targetSide =
+		let targetSide: StepDirection =
 			targetAnchorPercentageX === 1
 				? 'right'
 				: targetAnchorPercentageX === 0
@@ -286,7 +321,7 @@
 				: 'up';
 
 		let sourceTargetFacing = targetSide === oppositeSourceSide;
-		let oppositeInitialDirection =
+		let oppositeInitialDirection: StepDirection =
 			sourceSide === 'left' || sourceSide === 'right'
 				? anchorDeltaY > 0
 					? 'down'
@@ -312,26 +347,42 @@
 		}
 		return { steps, distance };
 	}
+	$: CSSwidth = `${boxWidth}px`;
+	$: CSSheight = `${boxHeight}px`;
+	$: CSStop = `${minY - buffer}px`;
+	$: CSSleft = `${minX - buffer}px`;
+
+	$: labelTop = sourceAnchorPosY + anchorDeltaY / 2;
+	$: labelLeft = sourceAnchorPosX + anchorDeltaX / 2;
 </script>
 
 <div
 	class="wrapper"
-	style="width: {boxWidth}px; height: {boxHeight}px; top: {minY - buffer}px;
-left: {minX - buffer}px;"
+	style:width={CSSwidth}
+	style:height={CSSheight}
+	style:top={CSStop}
+	style:left={CSSleft}
 >
 	<svg class:active>
-		<path class:animate d={path} stroke="white" stroke-width={strokeWidth} fill="transparent" />
+		<path
+			class:animate
+			d={path}
+			style:--default-edge-color={EDGE_COLOR}
+			style:--default-edge-stroke-width={`${EDGE_WIDTH}px`}
+			stroke-width={strokeWidth}
+			fill="transparent"
+		/>
 	</svg>
-	<!-- <div
-		style="top: {sourceAnchorPosY + anchorDeltaY / 2}px; left: {sourceAnchorPosX +
-			anchorDeltaX / 2}px"
-		class="label"
-	>
-		HELLO
-	</div> -->
+	{#if label}
+		<EdgeLabel {label} top={labelTop} left={labelLeft} />
+	{/if}
 </div>
 
 <style>
+	path {
+		stroke: var(--edge-color, var(--default-edge-color));
+		stroke-width: var(--edge-stroke-width, var(--default-edge-stroke-width));
+	}
 	svg {
 		width: 100%;
 		height: 100%;
@@ -345,20 +396,6 @@ left: {minX - buffer}px;"
 		pointer-events: none;
 	}
 
-	.label {
-		position: absolute;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: fit-content;
-		height: 2rem;
-		color: white;
-		background-color: blue;
-		border-radius: 5px;
-		padding: 10px;
-		transform: translateX(-50%) translateY(-50%);
-		z-index: 11;
-	}
 	.active {
 		z-index: 10;
 	}

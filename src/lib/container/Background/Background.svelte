@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
 	import type { Graph } from '$lib/types';
-	import type { BackgroundStyles } from '../../types/general';
+	import type { BackgroundStyles } from '$lib/types/general';
+	import { getContext } from 'svelte';
 
 	export let style: BackgroundStyles;
-	export let graph: Graph;
-	export let GRID_SCALE = 22; // Distance between dots when scale = 1
-	export let DOT_WIDTH = 1.4; // Dot size when scale = 1
+	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
+	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
+
+	const graph = getContext<Graph>('graph');
 
 	// Import relevant data from store
 	const { transforms } = graph;
@@ -14,8 +17,8 @@
 	const { x: xCoord, y: yCoord } = cursor;
 
 	// Update dot radius and perceived grid width when scale changes
-	$: gridScale = $scale * GRID_SCALE;
-	$: radius = ($scale * DOT_WIDTH) / 2;
+	$: gridScale = $scale * gridWidth;
+	$: radius = ($scale * dotSize) / 2;
 
 	let backgroundWrapper: HTMLDivElement;
 	let svgWidth;

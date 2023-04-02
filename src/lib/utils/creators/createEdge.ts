@@ -1,6 +1,6 @@
 import type { InputKey, NodeKey, OutputKey, WritableEdge, Edge, CSSColorString } from '$lib/types';
 import { writable } from 'svelte/store';
-import { makeObjectValuesWritable } from './writables';
+import { makeObjectValuesWritable } from '../writables';
 
 export function createNativeEdge(edge: Edge): WritableEdge {
 	const { target, source, type, color, width, label, animated } = edge;

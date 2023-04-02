@@ -1,34 +1,24 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type {
-		GraphKey,
-		BackgroundStyles,
-		Graph,
-		NodeConfig,
-		XYPair,
-		Node,
-		GroupProperty
-	} from '$lib/types';
+	import type { GraphKey, BackgroundStyles, Graph, NodeConfig, XYPair, GroupBox } from '$lib/types';
 	import { get, writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Background from '../Background/Background.svelte';
-	import GraphRenderer from './GraphRenderer.svelte';
-	import { cursorPosition, initialClickPosition, cursorPositionRaw } from '$lib/stores/CursorStore';
-	import { throttle, debounce } from '$lib/utils';
+	import GraphRenderer from '../GraphRenderer/GraphRenderer.svelte';
+	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
-	import { moveNodes } from '$lib/components/Node/moveNodes';
+	import { getContext } from 'svelte';
 	import { activeKeys } from '$lib/stores';
-	import { getRandomColor } from '$lib/utils';
+	import { getRandomColor, debounce, moveNodes } from '$lib/utils';
 
 	export let graph: Graph;
 	export let mermaid = '';
-	export let theme = 'light';
 	export let width: number = 100;
 	export let height: number = 100;
-	export let graphId: GraphKey = '1'; //Math.floor(Math.random() * 100).toString();
+	export let graphId: GraphKey;
 	export let style: BackgroundStyles = 'dots';
 	export let nodes: Array<NodeConfig> = [];
 	export let edges: Array<object> = [];
@@ -46,7 +36,8 @@
 	export let MIN_SCALE = 0.2;
 
 	setContext('snapTo', snapTo);
-	setContext('graphId', graphId);
+	setContext<Graph>('graph', graph);
+	const theme = getContext<Theme>('theme');
 
 	$: minimapComponent = minimap ? Minimap : null;
 	$: controlsComponent = controls ? Controls : null;
@@ -65,10 +56,10 @@
 
 	$: cursor = graph.cursor;
 	$: scale = graph.transforms.scale;
-	$: groupProperties = graph.groupProperties;
+	$: groupBoxes = graph.groupBoxes;
 	$: groups = graph.groups;
 	$: dimensions = $dimensionsStore;
-	$: selected = $groups.selected;
+	$: selected = $groups.selected.nodes;
 	$: translationX = graph.transforms.translation.x;
 	$: translationY = graph.transforms.translation.y;
 	$: connectingFrom = graph.connectingFrom;
@@ -102,15 +93,26 @@
 				y: writable(top)
 			};
 
-			const groupBox = { dimensions, position, color: writable(getRandomColor()) };
+			const groupBox: GroupBox = {
+				id: groupName,
+				dimensions,
+				position,
+				color: writable(getRandomColor())
+			};
 
-			groupProperties.update((groups) => {
-				groups[groupName] = groupBox;
-				return groups;
+			groupBoxes.add(groupBox);
+
+			Array.from($selected).forEach((node) => {
+				node.group.set(groupName);
 			});
 
 			groups.update((groups) => {
-				groups[groupName] = writable(new Set<Node | GroupProperty>([...$selected, groupBox]));
+				const newGroup = {
+					id: groupName,
+					parent: writable(groupBox),
+					nodes: writable(new Set([...$selected, groupBox]))
+				};
+				groups[groupName] = newGroup;
 				return groups;
 			});
 
@@ -132,8 +134,8 @@
 	function onMouseDown(e: MouseEvent) {
 		const { clientX, clientY } = e;
 		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
-
 		if ($activeKeys['Shift'] || $activeKeys['Meta']) {
+			e.preventDefault();
 			selecting = true;
 			const { top, left } = dimensions;
 			anchor.y = clientY - top;
@@ -172,7 +174,7 @@
 		'-': () => zoomGraph(scale, calculateZoom($scale, 10, ZOOM_INCREMENT)),
 		'0': resetTransforms,
 		Arrow: (key) => handleArrowKey(key),
-		Control: () => $groups['selected'].set(new Set())
+		Control: () => $groups['selected'].nodes.set(new Set())
 	};
 
 	function handleScroll(e: WheelEvent) {
@@ -219,15 +221,14 @@
 				if (axis === 'x') {
 					const newX = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 
-					if (get($groups['selected']).size) {
-						console.log('moving nodes');
+					if (get($groups.selected.nodes).size) {
 						moveNodes(graph, -newX / 100, 0, $groups['selected']);
 					} else {
 						translateGraph({ x: newX, y: null });
 					}
 				} else {
 					const newY = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					if (get($groups['selected']).size) {
+					if (get($groups.selected.nodes).size) {
 						moveNodes(graph, 0, -newY / 100, $groups['selected']);
 					} else {
 						translateGraph({ x: null, y: newY });
@@ -253,16 +254,15 @@
 	title="graph"
 	id={graph.id}
 	bind:this={graphDOMElement}
-	on:mousedown|preventDefault={onMouseDown}
+	on:mousedown={onMouseDown}
 	on:wheel|preventDefault={debouncedHandleScroll}
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >
-	<GraphRenderer {theme} {graph} {isMovable} />
-	<Background --background-color="var(--{theme}-background)" {style} {graph} />
-	<slot {graphId} />
-
+	<GraphRenderer {theme} {isMovable} />
+	<Background --background-color="var(--{theme}-background)" {style} />
+	<slot />
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	{#if selecting && !disableSelection}

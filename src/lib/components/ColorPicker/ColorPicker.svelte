@@ -1,40 +1,54 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
 	import type { Parameter } from '$lib/types';
-	import { cursorPosition } from '$lib/stores/CursorStore';
+	import { getContext } from 'svelte';
 
-	// export let options: Array<string>;
 	export let parameterStore: Writable<Parameter>;
+	const label = getContext<string>('label');
 
-	// Local state for radio group selection
-	// let initial = 0;
-	let yteaheya = '#FF0000';
-	// // We want to update the store with the text value, not the index
-	// $: parameterStore.set(options[initial]);
-	function handleChange(event) {
-		$parameterStore = event.target.value;
-	}
-
-	function handleSlide(event) {
-		console.log(event);
+	function handleChange(event: Event) {
+		if (event.target) {
+			$parameterStore = (event.target as HTMLInputElement).value;
+		}
 	}
 </script>
 
-<input
-	on:mousedown={handleSlide}
-	type="color"
-	class="color-picker"
-	bind:value={$parameterStore}
-	on:input={handleChange}
-/>
+<div class="color-picker">
+	<p>{label}</p>
+	<input
+		type="color"
+		id="color-input"
+		class="color-input"
+		bind:value={$parameterStore}
+		on:input={handleChange}
+	/>
+	<label for="color-input" class="color-display" style="background-color: {$parameterStore}" />
+</div>
 
 <style>
-	.color-picker {
-		width: 150px;
-		height: 30px;
+	p {
+		margin-left: 0.5rem;
 	}
-
-	.option {
+	.color-picker {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		gap: 0.5rem;
+		position: relative;
+	}
+	.color-input {
+		width: 80%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		opacity: 0;
 		cursor: pointer;
+	}
+	.color-display {
+		width: 100%;
+		height: 100%;
+		border: 1px solid #ccc;
 	}
 </style>
