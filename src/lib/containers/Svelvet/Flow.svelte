@@ -7,27 +7,27 @@
 		Graph,
 		NodeConfig,
 		XYPair,
-		GroupBox
+		GroupBox,
+		Arrow
 	} from '$lib/types';
 	import { get, writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Background from '../Background/Background.svelte';
-	import GraphRenderer from '../GraphRenderer/GraphRenderer.svelte';
+	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
-	import { calculateTranslation, calculateZoom, zoomGraph } from '$lib/utils';
+	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
 	import { getContext } from 'svelte';
 	import { activeKeys } from '$lib/stores';
 	import { getRandomColor, debounce, moveNodes } from '$lib/utils';
 
 	export let graph: Graph;
 	export let mermaid = '';
-	export let width: number = 100;
-	export let height: number = 100;
-	export let graphId: GraphKey;
+	export let width: number = 0;
+	export let height: number = 0;
 	export let style: BackgroundStyles = 'dots';
 	export let nodes: Array<NodeConfig> = [];
 	export let edges: Array<object> = [];
@@ -87,7 +87,7 @@
 
 	function onMouseUp() {
 		if (creating) {
-			const groupName = Math.random().toString(36).substring(7);
+			const groupName = generateKey();
 
 			let width = $cursor.x - $initialClickPosition.x;
 			let height = $cursor.y - $initialClickPosition.y;
@@ -131,12 +131,19 @@
 			creating = false;
 			selecting = false;
 		}
+		if ($activeGroup)
+			$groups[$activeGroup].nodes.subscribe((nodes) =>
+				Array.from(nodes).forEach((node) => node.moving.set(false))
+			);
+
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
+		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
-		$connectingFrom = null;
+		connectingFrom.set(null);
+		connectingFrom.set(null);
 		anchor.y = 0;
 		anchor.x = 0;
 	}
@@ -162,7 +169,7 @@
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key } = e;
 		$activeKeys[key] = true;
-		actions[isArrow(key) ? 'Arrow' : key]?.(key);
+		triggerActionBasedOn[key]?.(key);
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
@@ -179,11 +186,14 @@
 		interval = undefined;
 	}
 
-	const actions: Record<string, (key: string) => void> = {
+	const triggerActionBasedOn: Record<string, (key: string) => void> = {
 		'=': () => zoomGraph(scale, calculateZoom($scale, -10, ZOOM_INCREMENT)),
 		'-': () => zoomGraph(scale, calculateZoom($scale, 10, ZOOM_INCREMENT)),
 		'0': resetTransforms,
-		Arrow: (key) => handleArrowKey(key),
+		ArrowLeft: (key) => handleArrowKey(key as Arrow),
+		ArrowRight: (key) => handleArrowKey(key as Arrow),
+		ArrowUp: (key) => handleArrowKey(key as Arrow),
+		ArrowDown: (key) => handleArrowKey(key as Arrow),
 		Control: () => $groups['selected'].nodes.set(new Set())
 	};
 
@@ -216,34 +226,20 @@
 		if (translation.x) $translationX = translation.x;
 		if (translation.y) $translationY = translation.y;
 	}
-	function handleArrowKey(key: string) {
+	function handleArrowKey(key: Arrow) {
 		const multiplier = $activeKeys['Shift'] ? 2 : 1;
 		const start = performance.now();
-		const axis = key === 'ArrowLeft' || key === 'ArrowRight' ? 'x' : 'y';
-		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
-		const startOffset = axis === 'x' ? $translationX : $translationY;
+		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 1;
+		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
+		const startOffset = leftRight ? $translationX : $translationY;
 		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
 		if (!activeIntervals[key]) {
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
+				const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 
-				if (axis === 'x') {
-					const newX = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-
-					if (get($groups.selected.nodes).size) {
-						moveNodes(graph, -newX / 100, 0, $groups['selected']);
-					} else {
-						translateGraph({ x: newX, y: null });
-					}
-				} else {
-					const newY = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					if (get($groups.selected.nodes).size) {
-						moveNodes(graph, 0, -newY / 100, $groups['selected']);
-					} else {
-						translateGraph({ x: null, y: newY });
-					}
-				}
+				translateGraph({ x: leftRight ? movement : null, y: leftRight ? null : movement });
 			}, 5);
 			activeIntervals[key] = interval;
 		}
@@ -263,6 +259,8 @@
 <section
 	class="svelvet-wrapper"
 	title="graph"
+	style:width={width ? width + 'px' : '100%'}
+	style:height={width ? width + 'px' : '100%'}
 	id={graph.id}
 	bind:this={graphDOMElement}
 	on:mousedown={onMouseDown}
@@ -274,9 +272,9 @@
 	{#if $editing}
 		<Editor editing={$editing} />
 	{/if}
-	<GraphRenderer {theme} {isMovable} />
+	<GraphRenderer {isMovable}><slot /></GraphRenderer>
 	<Background --background-color="var(--{theme}-background)" {style} />
-	<slot />
+
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	{#if selecting && !disableSelection}

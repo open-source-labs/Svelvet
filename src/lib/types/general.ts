@@ -17,7 +17,7 @@ export interface NodeDOMBounds {
 	width: number;
 	height: number;
 }
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'light2';
 
 export interface Dimensions {
 	width: Writable<number>;
@@ -33,6 +33,23 @@ export type BackgroundStyles = 'lines' | 'dots' | 'none';
 export interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {
 	[key: string]: NodeJS.Timer | undefined;
 }
+export type CSSDimensionString = PixelValue | PercentValue | EmValue | RemValue | VwValue | VhValue;
+
+export type PixelValue = `${number}px`;
+export type PercentValue = `${number}%`;
+export type EmValue = `${number}em`;
+export type RemValue = `${number}rem`;
+export type VwValue = `${number}vw`;
+export type VhValue = `${number}vh`;
+
+export type StrictDimenionValue =
+	| number
+	| PixelValue
+	| RemValue
+	| EmValue
+	| PercentValue
+	| VwValue
+	| VhValue;
 
 export type CSSColorString =
 	| NamedColors

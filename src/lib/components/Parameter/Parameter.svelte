@@ -34,13 +34,13 @@
 </script>
 
 <div class="parameter">
+	{#if connectable}
+		<Input />
+	{/if}
 	{#if !driven}
 		<svelte:component this={components[type]} {...config} {parameterStore} />
 	{:else}
 		<p class="driven-label">{label}</p>
-	{/if}
-	{#if connectable}
-		<Input />
 	{/if}
 </div>
 

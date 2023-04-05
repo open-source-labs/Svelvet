@@ -1,43 +1,73 @@
 <script lang="ts">
 	import Anchor from '../Anchor/Anchor.svelte';
 	import type { Writable } from 'svelte/store';
-	import type { Node, Parameter, Graph, EdgeKey, OutputKey } from '$lib/types';
+	import type {
+		Node,
+		Parameter,
+		Graph,
+		EdgeKey,
+		OutputKey,
+		XYPair,
+		InputKey,
+		Anchor as AnchorType
+	} from '$lib/types';
 	import Visualizer from '../Visualizer/Visualizer.svelte';
-	import { setContext, getContext, onDestroy } from 'svelte';
+	import { setContext, getContext, onDestroy, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { writable } from 'svelte/store';
 
 	export let outputStore: Writable<Parameter>;
-	export let label = 'output';
-	export let connectingFrom: Writable<Node | null>;
+	export let label: OutputKey;
+	export let placed = false;
+	export let anchor: AnchorType;
 
 	const driven = writable(false);
 
-	setContext<string>('label', label);
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
-
+	setContext<string>('label', label);
 	setContext<Writable<boolean>>('driven', driven);
 
-	const outputKey: OutputKey = `O-${label}/${node.id}`;
+	onMount(() => {
+		anchor.position.x.set(initialPercentage.x * get(dimensions.width));
+		anchor.position.y.set(initialPercentage.y * get(dimensions.height));
+	});
 
-	function startConnection() {
-		if (!$connectingFrom) {
-			$connectingFrom = node;
+	$: dimensions = node.dimensions;
+	$: connectingFromNode = graph.connectingFrom.node;
+	$: connectingFromOutput = graph.connectingFrom.output;
+	$: initialPercentage = anchor.initialPercentage;
+	$: outputsRemoved = graph.outputsRemoved;
+	$: position = anchor.position;
+	$: x = position.x;
+	$: y = position.y;
+
+	function startConnection(e) {
+		console.log(e);
+		console.log(label);
+		if (!$connectingFromNode) {
+			$connectingFromNode = node;
+			$connectingFromOutput = label;
 			$driven = true;
 		}
 	}
 
 	onDestroy(() => {
-		graph.outputRemoved.set(outputKey);
+		outputsRemoved.update((outputs) => {
+			return new Set([...outputs, label]);
+		});
 	});
 </script>
 
-<div class="output" on:mousedown|stopPropagation={startConnection}>
+<div
+	class:placed
+	style:top="{$y}px"
+	style:left="{$x}px"
+	class="output"
+	on:mousedown|stopPropagation|preventDefault={startConnection}
+>
 	{#if typeof $outputStore === 'object'}
 		<Visualizer {outputStore} />
-	{:else}
-		<p>{label}</p>
 	{/if}
 
 	<Anchor isOutput />
@@ -48,11 +78,11 @@
 		/* border: solid 1px green; */
 		display: flex;
 		align-items: center;
-		align-self: end;
 		justify-content: center;
+		width: fit-content;
+		height: fit-content;
 	}
-
-	p {
-		margin: 0;
+	.placed {
+		position: absolute;
 	}
 </style>

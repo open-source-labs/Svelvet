@@ -1,6 +1,21 @@
-import type { Node, NodeArray, FlowChart, Edge } from '../types/parser';
+import type { Node, NodeArray, FlowChart, Edge } from '$lib/types/parser';
 
-const shapeRef = {
+type Shape = 'round' | 'stadium' | 'subroutine' | 'cylindrical' | 'circle' | 'rhombus' | 'hexagon';
+type EdgeShape = 'straight' | 'bezier';
+type OpenBracket = '(' | '[' | '{';
+type CloseBracket = ')' | '}' | ']';
+
+type ShapeRef = {
+	[key: string]: Shape;
+};
+
+type EdgeRef = {
+	[key: string]: EdgeShape;
+};
+
+type BracketRef = Record<OpenBracket, CloseBracket>;
+
+const shapeRef: ShapeRef = {
 	'(': 'round',
 	'([': 'stadium',
 	'[[': 'subroutine',
@@ -9,8 +24,9 @@ const shapeRef = {
 	'{': 'rhombus',
 	'{{': 'hexagon'
 };
-const edgeRef = { '-': 'straight', '~': 'bezier' };
-const bracketRef = { '(': ')', '[': ']', '{': '}' };
+
+const edgeRef: EdgeRef = { '-': 'straight', '~': 'bezier' };
+const bracketRef: BracketRef = { '(': ')', '[': ']', '{': '}' };
 const edgeRegex = /[-=~]*>(?:\s*\|(.+?)\|)?/g;
 
 export const flowChartParser = (mermaid: string) => {
@@ -73,10 +89,14 @@ const nodeParser = (node: string) => {
 	let id = '';
 	let shape = '';
 	const data: Node['data'] = { shape: '' };
-	const bracketStack: Array<string> = [];
-	let [label, type, props] = node.split('|');
+	const bracketStack: Array<OpenBracket> = [];
+	const elements = node.split('|');
+	const label = elements[0];
+	let type = elements[1];
+	const props = elements[2];
+
 	for (let i = 0; i < label.length; i++) {
-		if (bracketRef[label[i]]) bracketStack.push(label[i]);
+		if (isOpenBracket(label[i])) bracketStack.push(label[i] as OpenBracket);
 		else if (bracketRef[bracketStack[bracketStack.length - 1]] === label[i]) {
 			shape = shapeRef[bracketStack.join('')];
 			break;
@@ -94,9 +114,14 @@ const edgeParser = (edge: string) => {
 	edge = edge.trim();
 	let shape = '';
 	const [edgeLine, content] = edge.split('|');
-	if (edgeRef[edgeLine[0]]) shape = edgeRef[edgeLine[0]];
+	const key = edgeLine[0];
+	if (key in edgeRef) shape = edgeRef[key];
 	else throw new Error('Not a valid edge type');
 	if (content)
 		return { shape, content: content.trim(), length: Math.floor((edgeLine.trim().length - 1) / 2) };
 	else return { shape, length: Math.floor((edgeLine.trim().length - 1) / 2) };
 };
+
+function isOpenBracket(key: string): key is OpenBracket {
+	return key in bracketRef;
+}

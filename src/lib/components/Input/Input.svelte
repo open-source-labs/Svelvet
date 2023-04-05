@@ -1,45 +1,80 @@
 <script lang="ts">
-	import type { Graph, Node, Connection, EdgeKey, InputKey, OutputKey } from '$lib/types';
+	import type {
+		Anchor as AnchorType,
+		Graph,
+		Node,
+		Connection,
+		EdgeKey,
+		InputKey,
+		OutputKey
+	} from '$lib/types';
 	import Anchor from '../Anchor/Anchor.svelte';
 	import { writable, get } from 'svelte/store';
-	import { getContext, onDestroy } from 'svelte';
+	import { getContext, onDestroy, onMount } from 'svelte';
 	import { createEdge } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
-	const label = getContext<string>('label');
 	const driven = getContext<Writable<boolean>>('driven');
 
-	const inputKey: InputKey = `I-${label}/${node.id}`;
-	const outputKey: Writable<OutputKey> = writable(`O-?/N-?/${graph.id}` as OutputKey);
+	export let label: InputKey;
+	export let placed = false;
+	export let anchor: AnchorType;
 
-	$: outputRemoved = graph.outputRemoved;
-	$: edgeKey = `${$outputKey}+${inputKey}` as EdgeKey;
+	let outputKey: OutputKey | null = null;
+
+	$: outputsRemoved = graph.outputsRemoved;
+	$: edgeKey = `${outputKey}+${label}` as EdgeKey;
+
+	$: dimensions = node.dimensions;
 
 	$: edges = graph.edges;
 	$: connectingFrom = graph.connectingFrom;
 	$: inputs = node.inputs;
+	$: connectingFromOutput = connectingFrom.output;
+	$: connectingFromNode = connectingFrom.node;
 
-	$: if ($outputRemoved === $outputKey) removeConnection();
+	$: dynamic = anchor.dynamic;
+	$: position = anchor.position;
+	$: x = position.x;
+	$: y = position.y;
+	$: initialPercentage = anchor.initialPercentage;
+	$: type = anchor.type;
+	$: direction = anchor.direction;
 
-	function makeConnection() {
-		if (!$connectingFrom) return;
-		$inputs[label] = $connectingFrom.outputs;
+	onMount(() => {
+		anchor.position.x.set(initialPercentage.x * get(dimensions.width));
+		anchor.position.y.set(initialPercentage.y * get(dimensions.height));
+	});
 
-		$outputKey = `O-output/${$connectingFrom.id}`;
+	$: if (outputKey && $outputsRemoved.has(outputKey)) {
+		removeConnection();
+		outputKey = null;
+	}
 
+	function makeConnection(e: MouseEvent) {
+		console.log(e);
+		if (!$connectingFromNode || !$connectingFromOutput || outputKey) {
+			connectingFrom.node.set(null);
+			connectingFrom.output.set(null);
+			return;
+		}
+		console.log('Connecting');
+		// if ($inputs) $inputs[label] = $connectingFrom.outputs;
+		outputKey = $connectingFromOutput;
 		const connection: Connection = {
-			source: $connectingFrom,
+			source: $connectingFromNode,
 			target: node,
-			input: inputKey,
-			output: $outputKey
+			input: label,
+			output: $connectingFromOutput
 		};
 
-		edges.add(createEdge(connection), `${$outputKey}+${inputKey}`);
+		edges.add(createEdge(connection), `${$connectingFromOutput}+${label}`);
 
-		$driven = true;
-		$connectingFrom = null;
+		if (driven) $driven = true;
+		connectingFrom.node.set(null);
+		connectingFrom.output.set(null);
 	}
 
 	onDestroy(() => {
@@ -47,22 +82,25 @@
 	});
 
 	function removeConnection() {
-		$inputs[label] = writable(get($inputs[label]));
+		//$inputs[label] = writable(get($inputs[label]));
 		edges.delete(edgeKey);
-		$driven = false;
+		//$driven = false;
 	}
 
 	function detachEdge() {
-		const test = edges.get(edgeKey);
-		if (test) {
-			const { source } = test;
-			$connectingFrom = get(source.node);
-			removeConnection();
-		}
+		// const test = edges.get(edgeKey);
+		// if (test) {
+		// 	const { source } = test;
+		// 	$connectingFromNode = get(source.node);
+		// 	removeConnection();
+		// }
 	}
 </script>
 
 <div
+	class:placed
+	style:top="{$y}px"
+	style:left="{$x}px"
 	class="input"
 	on:mouseup|stopPropagation={makeConnection}
 	on:mousedown|stopPropagation={detachEdge}
@@ -76,5 +114,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: fit-content;
+		height: fit-content;
+	}
+	.placed {
+		position: absolute;
 	}
 </style>

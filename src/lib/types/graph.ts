@@ -9,7 +9,10 @@ import type {
 	Dimensions,
 	GroupBoxStore,
 	EdgeStore,
-	OutputKey
+	OutputKey,
+	GroupKey,
+	Anchor,
+	Parameter
 } from '.';
 
 export interface Graph {
@@ -23,30 +26,21 @@ export interface Graph {
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
+	connectingStore: Writable<Writable<Parameter> | null>;
+	maxZIndex: Writable<number>;
 	dimensions: Writable<DOMRect>;
 	cursor: Readable<{ x: number; y: number }>;
-	connectingFrom: Writable<Node | null>;
-	outputRemoved: Writable<OutputKey>;
+	connectingFrom: Writable<Anchor<false> | Anchor<true> | null>;
+	outputsRemoved: Writable<Set<OutputKey>>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
 	groupBoxes: GroupBoxStore;
 	editing: Writable<Node | null>;
-	activeGroup: Writable<string | null>;
+	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;
 }
-// export type AnchorKey = `${NodeKey}-${string}`;
-// export type Edges = Map<AnchorKey, Connection>;
 
-// export interface Connection {
-// 	sourceNode: Node;
-// 	targetNode: Node;
-// }
-
-export interface Groups {
-	selected: Group;
-	hidden: Group;
-	[key: string]: Group;
-}
+export type Groups = Record<GroupKey, Group>;
 
 export interface Bounds {
 	top: Writable<number>;
@@ -55,7 +49,7 @@ export interface Bounds {
 	height: Writable<number>;
 }
 
-export type GroupBoxes = Record<string, GroupBox>;
+export type GroupBoxes = Record<GroupKey, GroupBox>;
 
 export interface GroupBox {
 	id: string;

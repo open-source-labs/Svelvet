@@ -1,8 +1,8 @@
 import type { Writable } from 'svelte/store';
-import type { Node, Graph, XYPair, GroupProperty } from '$lib/types';
+import type { Node, Graph, XYPair, GroupBox, GroupKey } from '$lib/types';
 import { get } from 'svelte/store';
 
-export function captureGroup(group: Writable<Set<Node | GroupProperty>>): XYPair[] {
+export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	const groupSet = get(group);
 	const groupArray = Array.from(groupSet);
 	return groupArray.map((node) => {
@@ -19,18 +19,19 @@ export function moveNodes(
 	graph: Graph,
 	initialClickPosition: XYPair,
 	initialNodePositions: XYPair[],
-	groupName: string,
+	groupName: GroupKey,
 	snapTo?: number
 ) {
-	const { bounds, cursor, groupBoxes, groups } = graph;
+	const { bounds, cursor } = graph;
 	const { left, right, top, bottom } = bounds;
 
 	const leftBounds = get(left);
 	const rightBounds = get(right);
 	const topBounds = get(top);
 	const bottomBounds = get(bottom);
+	const groups = get(graph.groups);
 
-	const nodeGroup = get(graph.groups)[groupName].nodes;
+	const nodeGroup = groups[groupName].nodes;
 
 	const cursorPosition = get(cursor);
 	const newX = cursorPosition.x - initialClickPosition.x;
@@ -54,19 +55,21 @@ export function moveNodes(
 		bottom: Infinity
 	};
 	Array.from(get(nodeGroup)).forEach((node, index) => {
-		const { group } = node;
+		const { group, moving } = node;
 		const { position, dimensions } = node;
 		const { x, y } = position;
 		const { width, height } = dimensions;
 		const initialPosition = initialNodePositions[index];
-
+		moving.set(true);
 		const nodeWidth = get(width);
 		const nodeHeight = get(height);
 
-		let groupBox;
+		let groupBox: GroupBox | undefined;
+
 		if (groupName === 'selected') {
 			const localGroupName = get(group);
-			if (localGroupName) groupBox = get(graph.groupBoxes)[localGroupName];
+			const groupBoxes = get(graph.groupBoxes);
+			if (localGroupName) groupBox = groupBoxes[localGroupName];
 		}
 
 		if (groupBox) {

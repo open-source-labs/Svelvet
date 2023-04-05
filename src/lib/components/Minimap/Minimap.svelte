@@ -6,6 +6,10 @@
 	import type { Writable } from 'svelte/store';
 	import type { Node } from '$lib/types';
 
+	export let width = 100;
+	export let height = 100;
+	export let mapColor = 'white';
+
 	let graph: Graph = getContext<Graph>('graph');
 	const { nodes, bounds, groups } = graph;
 
@@ -27,12 +31,16 @@
 	}
 </script>
 
-<div class="minimap-wrapper">
+<div
+	class="minimap-wrapper"
+	style:width="{width}px"
+	style:height="{height ? height : width}px"
+	style:--default-minimap-background-color={mapColor}
+>
 	<div
 		class="node-wrapper"
-		style={`${
-			boundsWidth > boundsHeight ? `width: 75%` : 'height: 75%'
-		}; aspect-ratio: ${aspectRatio}`}
+		style:aspect-ratio={aspectRatio}
+		style="{boundsWidth > boundsHeight ? `width: 80%` : 'height: 80%'};"
 	>
 		{#each Object.values($nodes) as node}
 			<MinimapNode {node} {bounds} hidden={$hidden.has(node)} {toggleHidden} />
@@ -44,11 +52,9 @@
 	.minimap-wrapper {
 		box-sizing: border-box;
 		position: absolute;
-		width: 100px;
-		height: 100px;
 		bottom: 10px;
 		right: 10px;
-		background-color: rgb(146, 141, 141);
+		background-color: var(--minimap-background-color, var(--default-minimap-background-color));
 		border-radius: 10px;
 		overflow: hidden;
 		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);

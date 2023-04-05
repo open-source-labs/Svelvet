@@ -21,6 +21,11 @@
 	const { x, y } = cursor;
 
 	function deleteNode() {
+		console.log(editing.id);
+		const DOMnode = document.querySelector('#' + editing.id);
+		if (DOMnode) {
+			DOMnode.remove();
+		}
 		graph.nodes.delete(editing.id);
 		graph.editing.set(null);
 	}

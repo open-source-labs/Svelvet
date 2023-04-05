@@ -1,41 +1,25 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type {
-		Graph,
-		GraphKey,
-		NodeConfig,
-		XYPair,
-		BackgroundStyles,
-		NodeStore
-	} from '$lib/types';
-	import { populateStore } from './populateStore';
+	import type { Graph, GraphKey, NodeConfig, NodeStore } from '$lib/types';
+	import { populateStore } from '$lib/utils';
 	import { get } from 'svelte/store';
 	import { flowChartParser, createNode, createGraph } from '$lib/utils/';
-	import { populateMermaidNodes } from './flowchartDrawer';
+	import { populateMermaidNodes } from '../../utils/drawers/flowchartDrawer';
 	import { graphStore } from '$lib/stores';
 	import Flow from './Flow.svelte';
 
 	export let mermaid = '';
-	export let dark = false;
-	export let width: number = 100;
-	export let height: number = 100;
-	export let graphId: GraphKey = 'G-1'; //Math.floor(Math.random() * 100).toString();
-	export let style: BackgroundStyles = 'dots';
+	export let theme = 'light';
+	export let graphId: GraphKey = `G-${graphStore.count() + 1}`;
 	export let nodes: Array<NodeConfig> = [];
-	export let edges: Array<object> = [];
 	export let snapTo = 1;
 	export let initialZoom = 1;
-	export let minimap = false;
-	export let controls = false;
-	export let boundary: XYPair = { x: Infinity, y: Infinity };
-	export let fixedZoom = false;
-	export let disableSelection = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
 
 	setContext('snapTo', snapTo);
-	setContext('theme', dark ? 'dark' : 'light');
+	setContext('theme', theme);
 
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);

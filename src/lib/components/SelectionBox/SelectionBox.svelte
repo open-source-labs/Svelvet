@@ -33,12 +33,13 @@
 	onMount(updateNodes);
 
 	function updateNodes() {
-		const DOMnodes = Array.from(document.querySelectorAll('.graph-node'));
+		const DOMnodes = Array.from(document.querySelectorAll('.node-wrapper'));
 		nodes = DOMnodes.map((node) => {
 			const { top, left, width, height } = node.getBoundingClientRect();
 
 			return { id: node.id, top, left, width, height };
 		});
+		console.log(nodes);
 	}
 
 	function selectNodes() {

@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { derived } from 'svelte/store';
+import type { AnchorStore, CSSDimensionString } from '.';
 import type {
 	XYPosition,
 	NodeKey,
@@ -8,46 +8,54 @@ import type {
 	Dimensions,
 	ConfigObject,
 	CSSColorString,
-	OutputKey
+	OutputKey,
+	Anchor,
+	GroupKey
 } from '.';
+import type { createCustomDerivedStore } from '$lib/utils';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
+	label: Writable<string>;
 	dimensions: Dimensions;
 	position: XYPosition;
 	inputs: Writable<Inputs>;
-	anchors: Record<InputKey | OutputKey, XYPair>;
+	anchors: AnchorStore;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
-	outputs: Writable<Parameter>;
-	group: Writable<string | null>;
+	outputs?: ReturnType<typeof createCustomDerivedStore>;
+	header: Writable<boolean>;
+	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
 	visible: Writable<boolean>;
+	resizingWidth: Writable<boolean>;
+	resizingHeight: Writable<boolean>;
+	moving: Writable<boolean>;
 	draggable: Writable<boolean>;
 	selectable: Writable<boolean>;
 	connectable: Writable<boolean>;
-	deletable: Writable<boolean>;
-	zIndex: Writable<number>;
-	ariaLabel: string;
 	collapsible: Writable<boolean>;
-	header: Writable<boolean>;
+	deletable: Writable<boolean>;
+	hideable: Writable<boolean>;
 	focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
 	props: object | null;
-	componentRef: string;
+	zIndex: Writable<number>;
+	ariaLabel: string;
 	component: ConstructorOfATypedSvelteComponent | null;
 	config?: ConfigObject;
-	borderRadius: Writable<string>;
-	label: Writable<string | null>;
+	headerHeight: Writable<number>;
+	borderRadius: Writable<number>;
 	bgColor: Writable<CSSColorString | null>;
-	borderColor?: CSSColorString;
-	textColor?: CSSColorString;
+	borderColor: Writable<CSSColorString | null>;
+	textColor: Writable<CSSColorString | null>;
+	headerColor: Writable<CSSColorString | null>;
 }
 
 export interface DummyNode {
 	id?: never;
-	anchors: Record<string, XYPair>;
+	anchors: { inputs: Writable<Record<InputKey, XYPair>> };
 	position: XYPosition;
 	dimensions: Dimensions;
 }
@@ -55,7 +63,7 @@ export interface DummyNode {
 // This defines an interface for the user-defined node object
 // Passed to the createNode function
 export interface NodeConfig {
-	id: NodeKey;
+	id?: string | number;
 	dimensions?: {
 		width: number;
 		height: number;
@@ -64,10 +72,10 @@ export interface NodeConfig {
 		x: number;
 		y: number;
 	};
-	data?: object;
+	label?: string;
 	group?: string;
-	inputs?: Inputs;
-	outputs?: Outputs;
+	inputs?: Array<AnchorGroup>;
+	outputs?: Array<AnchorGroup>;
 	component?: ConstructorOfATypedSvelteComponent;
 	config?: ConfigObject;
 	width?: number;
@@ -79,10 +87,13 @@ export interface NodeConfig {
 	borderRadius?: number;
 	borderWidth?: number;
 	textColor?: CSSColorString;
+	headerColor?: CSSColorString;
 	sourcePostion?: 'top' | 'bottom' | 'left' | 'right';
 	targetPostion?: 'top' | 'bottom' | 'left' | 'right';
 	clickCallback?: (node: Node) => void;
 }
+
+export type UserDimension = number | CSSDimensionString;
 
 export type Properties = Record<string, Writable<Parameter>>;
 
@@ -97,4 +108,15 @@ export interface Output {
 	label: string;
 	value: Writable<Parameter | null>;
 }
+export interface AnchorGroup {
+	id?: string;
+	label?: string;
+	count?: number;
+	side: 'top' | 'bottom' | 'left' | 'right';
+	align: 'start' | 'end' | 'center';
+	gap?: number;
+	offset?: { x?: number; y?: number };
+	component?: ConstructorOfATypedSvelteComponent;
+}
+
 export type Outputs = Record<string, Output>;

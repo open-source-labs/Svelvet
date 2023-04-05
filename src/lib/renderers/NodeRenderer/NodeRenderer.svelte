@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
-	import type { Graph, Group } from '$lib/types';
+	import type { Graph, Group, GroupKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { get } from 'svelte/store';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
@@ -24,7 +24,7 @@
 		const { node, selected, button } = event.detail;
 		const { group } = node;
 		$initialClickPosition = $cursor;
-		const nodeGroup: string = get(group);
+		const nodeGroup: GroupKey = get(group);
 		let groupData: Group;
 		let parent;
 		let isParent = false;
@@ -74,8 +74,4 @@
 	}
 </script>
 
-{#each Object.entries($nodes) as [id, node] (id)}
-	{#if !$hidden.has(node)}
-		<Node on:nodeClicked={handleNodeClicked} {node} />
-	{/if}
-{/each}
+<slot />

@@ -1,6 +1,6 @@
 import type { Writable } from 'svelte/store';
-import type { Node, NodeKey, InputKey, OutputKey, CSSColorString } from '.';
-
+import type { Anchor, NodeKey, InputKey, OutputKey, CSSColorString, EmValue, EdgeKey } from '.';
+import type { PixelValue, RemValue } from '.';
 export type EdgeStyle = 'straight' | 'smoothstep' | 'step' | 'bezier';
 
 // Object structure for store
@@ -55,51 +55,41 @@ export type CSSDimensions = `${number}px}` | `${number}%`;
 
 // With writable properties
 export type WritableEdge = {
-	target: {
-		node: Writable<Node>;
-		input: Writable<InputKey>;
-	};
-	source: {
-		node: Writable<Node>;
-		output: Writable<OutputKey>;
-	};
+	id: EdgeKey;
+	source: Anchor<false> | null;
+	target: Anchor<true> | null;
 	type: Writable<EdgeStyle>;
 	color: Writable<CSSColorString>;
-	width: Writable<string>;
-	label?: {
-		text: Writable<string>;
-		color: Writable<CSSColorString>;
-		textColor: Writable<CSSColorString>;
-		fontSize: Writable<string>;
-		dimensions: {
-			width: Writable<string>;
-			height: Writable<string>;
-		};
-		borderRadius: Writable<string>;
-	};
+	width: Writable<number>;
+	label?: EdgeLabel;
 	animated: Writable<boolean>;
 };
 
-export interface Connection {
-	source: Node;
-	target: Node;
-	input: InputKey;
-	output: OutputKey;
+export interface EdgeLabel {
+	text: Writable<string>;
+	color: Writable<CSSColorString>;
+	textColor: Writable<CSSColorString>;
+	fontSize: Writable<PixelValue | RemValue | EmValue>;
+	dimensions: {
+		width: Writable<number>;
+		height: Writable<number>;
+	};
+	borderRadius: Writable<number>;
 }
 
 export interface EdgeConfig {
 	type?: EdgeStyle;
 	color?: CSSColorString;
 	width?: number;
-	label?: EdgeLabel;
+	label?: EdgeLabelConfig;
 	animated?: boolean;
 }
 
-export interface EdgeLabel {
+export interface EdgeLabelConfig {
 	text: string;
 	color?: CSSColorString;
 	textColor?: CSSColorString;
-	fontSize?: number;
+	fontSize?: PixelValue | RemValue;
 	dimensions?: {
 		width: number;
 		height: number;

@@ -3,7 +3,7 @@
 	import type { Graph, Node, ResizeDataContext } from '$lib/types';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
-
+	import { get } from 'svelte/store';
 	export let width = false;
 	export let height = false;
 	export let both = false;
@@ -13,8 +13,9 @@
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');
 
-	let resizingWidth = false;
-	let resizingHeight = false;
+	$: resizingWidth = node.resizingWidth;
+
+	$: resizingHeight = node.resizingHeight;
 
 	const { cursor } = graph;
 
@@ -22,12 +23,35 @@
 	$: widthStore = node.dimensions.width;
 	$: x = node.position.x;
 	$: y = node.position.y;
+	$: anchors = node.anchors;
 
 	$: cursorY = $cursor.y;
 	$: cursorX = $cursor.x;
 
-	$: if (resizingHeight) $heightStore = Math.max(minHeight, cursorY - $y);
-	$: if (resizingWidth) $widthStore = Math.max(minWidth, cursorX - $x);
+	$: if ($resizingHeight) {
+		const anchorsToUpdate = Object.values($anchors).filter((anchor) => {
+			const direction = get(anchor.side);
+			const dynamic = get(anchor.dynamic);
+			return direction === 'bottom' || (dynamic && direction !== 'top');
+		});
+		const newHeight = Math.max(minHeight, cursorY - $y);
+		// anchorsToUpdate.forEach((anchor) => {
+		// 	anchor.position.y.update((n) => n + (n / $heightStore) * (newHeight - $heightStore));
+		// });
+		$heightStore = newHeight;
+	}
+	$: if ($resizingWidth) {
+		const anchorsToUpdate = Object.values($anchors).filter((anchor) => {
+			const direction = get(anchor.side);
+			const dynamic = get(anchor.dynamic);
+			return direction === 'right' || (dynamic && direction !== 'left');
+		});
+		const newWidth = Math.max(minWidth, cursorX - $x);
+		// anchorsToUpdate.forEach((anchor) => {
+		// 	anchor.position.x.update((posX) => posX + (posX / $widthStore) * (newWidth - $widthStore));
+		// });
+		$widthStore = newWidth;
+	}
 
 	function resizeHandler(
 		node: HTMLElement,
@@ -36,15 +60,15 @@
 		const setResize = (e: MouseEvent) => {
 			e.stopPropagation();
 			e.preventDefault();
-			dimensions.both ? (resizingWidth = true) : (resizingWidth = false);
-			resizingWidth = dimensions.width || dimensions.both || false;
-			resizingHeight = dimensions.height || dimensions.both || false;
+			dimensions.both ? ($resizingWidth = true) : ($resizingWidth = false);
+			$resizingWidth = dimensions.width || dimensions.both || false;
+			$resizingHeight = dimensions.height || dimensions.both || false;
 			window.addEventListener('mouseup', removeResize);
 		};
 
 		const removeResize = () => {
-			resizingWidth = false;
-			resizingHeight = false;
+			$resizingWidth = false;
+			$resizingHeight = false;
 			window.removeEventListener('mouseup', removeResize);
 		};
 
@@ -65,24 +89,26 @@
 <style>
 	* {
 		position: absolute;
-		width: 6px;
-		height: 6px;
+		width: 9px;
+		height: 9px;
+		z-index: 0;
+		background-color: red;
 	}
 	.width {
 		height: calc(100% - 3px);
-		right: -1px;
-		top: -1px;
+		right: -3px;
+		top: -3px;
 		cursor: col-resize;
 	}
 	.height {
 		width: calc(100% - 3px);
-		left: -1px;
-		bottom: -1px;
+		left: -3px;
+		bottom: -3px;
 		cursor: row-resize;
 	}
 	.both {
-		bottom: -1px;
-		right: -1px;
+		bottom: -3px;
+		right: -3px;
 		cursor: nwse-resize;
 	}
 </style>

@@ -21,7 +21,8 @@
 	on:click={() => toggleHidden(node)}
 	class:hidden
 	class="minimap-node"
-	style="width: {DOMwidth}%;
+	style:width="{DOMwidth}%"
+	style="
     aspect-ratio: {$width}/{$height};
         top: {(($y - $top) / boundsHeight) * 100}%;
         left: {(($x - $left) / boundsWidth) * 100}%"

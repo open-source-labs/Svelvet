@@ -1,18 +1,14 @@
 <script lang="ts">
-	import type { Graph, Group, GroupBox } from '$lib/types';
-	import ZoomPanWrapper from '../ZoomPanWrapper/ZoomPanWrapper.svelte';
-	import { updateTranslation } from '$lib/utils';
+	import NodeRenderer from '$lib/renderers/NodeRenderer/NodeRenderer.svelte';
+	import GroupBoxRenderer from '$lib/renderers/GroupBoxRenderer/GroupBoxRenderer.svelte';
+	import EdgeRenderer from '$lib/renderers/EdgeRenderer/EdgeRenderer.svelte';
+	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
+	import type { Graph } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
-	import { activeKeys } from '$lib/stores';
-	import { captureGroup, moveNodes } from '$lib/utils';
-	import { get } from 'svelte/store';
+	import { captureGroup, moveNodes, updateTranslation } from '$lib/utils';
 	import { getContext } from 'svelte';
-	import NodeRenderer from '../NodeRenderer/NodeRenderer.svelte';
-	import GroupBoxRenderer from '../GroupBoxRenderer/GroupBoxRenderer.svelte';
-	import EdgeRenderer from '../EdgeRenderer/EdgeRenderer.svelte';
 
 	const graph = getContext<Graph>('graph');
-	export let theme: string;
 	export let isMovable: boolean;
 
 	$: activeGroup = graph.activeGroup;
@@ -29,7 +25,7 @@
 	}
 
 	$: if ($activeGroup) {
-		$cursor; // This necessary to trigger the update
+		$cursor; // This is necessary to trigger the update
 		moveNodes(graph, $initialClickPosition, $initialNodePositions, $activeGroup);
 	}
 
@@ -42,7 +38,7 @@
 </script>
 
 <ZoomPanWrapper>
-	<NodeRenderer />
+	<NodeRenderer><slot /></NodeRenderer>
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
 </ZoomPanWrapper>

@@ -29,6 +29,8 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		display: flex;
+		gap: 20px;
 		/* outline: solid 1px red; */
 	}
 </style>

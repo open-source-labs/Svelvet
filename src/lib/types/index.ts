@@ -8,3 +8,4 @@ export * from './keypress';
 export * from './config';
 export * from './context';
 export * from './edge';
+export * from './anchor';

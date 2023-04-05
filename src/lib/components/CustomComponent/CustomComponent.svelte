@@ -12,6 +12,7 @@
 	<h1>{heading}</h1>
 	<p>{paragraph}</p>
 	<button on:click={onClick}>Click Me</button>
+	<div id="anchor-1" />
 </div>
 
 <style>
@@ -24,5 +25,11 @@
 		justify-content: center;
 		align-items: center;
 		font-size: 4rem;
+	}
+
+	#anchor-1 {
+		width: 50px;
+		height: 50px;
+		background-color: rgb(177, 62, 62);
 	}
 </style>

@@ -1,7 +1,7 @@
 import { createNode } from '$lib/utils';
 
-import type { Inputs, Node, NodeConfig } from '$lib/types';
-import type { FlowChart, Node as FlowChartNode } from '../../types/parser';
+import type { Node, NodeConfig } from '$lib/types';
+import type { FlowChart, Node as FlowChartNode } from '$lib/types/parser';
 import { writable } from 'svelte/store';
 
 interface Nodes {
@@ -17,8 +17,8 @@ interface LayerTracker {
 const directionRef: { [key: string]: number } = { td: 0, tb: 0, lr: 1, bt: 2, bu: 2, rl: 3 };
 
 const nodes: Nodes = {};
-const width = 100;
-const height = 100;
+// const width = 100;
+// const height = 100;
 
 export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt' | 'lr' | 'rl') {
 	flowChart.parentNodes.forEach((node) => assignNodeDepthAndNesting(node));
@@ -76,8 +76,8 @@ export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt
 		nodes[nodeId].inputs.update((parentNodes) => {
 			for (const parent of flowChart.nodeList[nodeId].parents) {
 				parentNodes[nodeId + parent] = writable(true);
-				return parentNodes;
 			}
+			return parentNodes;
 		});
 		// nodes[nodeId].outputNodes.update((childrenNodes) => {
 		// 	for (const child of flowChart.nodeList[nodeId].children) {
@@ -342,21 +342,21 @@ function rotateGrid(grid: Array<Array<LayerNode>>, n: number) {
 	}
 }
 
-function makeGridSquare(grid: Array<Array<LayerNode>>) {
-	let largestSubArray = 0;
-	for (const array of grid) {
-		largestSubArray = Math.max(largestSubArray, array.length);
-	}
-	while (grid.length < largestSubArray)
-		grid.push(
-			Array.from({ length: largestSubArray }, () => {
-				return { id: 'NULL_NODE', children: [], parents: [], layer: grid.length };
-			})
-		);
-	for (const [i, array] of grid.entries()) {
-		if (array.length < largestSubArray) {
-			while (array.length < largestSubArray)
-				array.push({ id: 'NULL_NODE', children: [], parents: [], layer: i });
-		}
-	}
-}
+// function makeGridSquare(grid: Array<Array<LayerNode>>) {
+// 	let largestSubArray = 0;
+// 	for (const array of grid) {
+// 		largestSubArray = Math.max(largestSubArray, array.length);
+// 	}
+// 	while (grid.length < largestSubArray)
+// 		grid.push(
+// 			Array.from({ length: largestSubArray }, () => {
+// 				return { id: 'NULL_NODE', children: [], parents: [], layer: grid.length };
+// 			})
+// 		);
+// 	for (const [i, array] of grid.entries()) {
+// 		if (array.length < largestSubArray) {
+// 			while (array.length < largestSubArray)
+// 				array.push({ id: 'NULL_NODE', children: [], parents: [], layer: i });
+// 		}
+// 	}
+// }

@@ -35,12 +35,14 @@ export function createGraph(id: GraphKey, initialZoom: number): Graph {
 				y: writable(0)
 			}
 		},
+		maxZIndex: writable(1),
 		dimensions,
 		bounds,
+		connectingStore: writable(null),
 		editing: writable(null),
 		cursor: createDerivedCursorStore(cursorPositionRaw, dimensions, translation, scale),
 		isLocked: writable(false),
-		outputRemoved: writable(),
+		outputsRemoved: writable(new Set()),
 		connectingFrom: writable(null),
 		groups: writable({
 			selected: { parent: writable(null), nodes: writable(new Set<Node>()) },

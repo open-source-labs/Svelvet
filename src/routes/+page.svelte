@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node, SpecialNode } from '$lib';
+	import CustomAnchor from '$lib/components/CustomAnchor/CustomAnchor.svelte';
 	import CustomComponent from '$lib/components/CustomComponent/CustomComponent.svelte';
 	import MinimapNode from '$lib/components/Minimap/MinimapNode.svelte';
 	import NodeAdder from '$lib/components/NodeAdder/NodeAdder.svelte';
 	import type { ConfigObject, NodeConfig, Inputs, Properties } from '$lib/types';
+	import type { UserConfig } from 'vitest/config';
+	import TestComponent from '../components/TestComponent.svelte';
 	const mermaid = `A & B --> C
 	C--> D
 	D --> E
@@ -355,17 +358,81 @@
 	// 		target: { anchorId: 'bottom-2', nodeId: '5' }
 	// 	}
 	// ];
+
+	const anchorTest: Array<NodeConfig> = [
+		{
+			width: 200,
+			height: 500,
+			bgColor: 'gray',
+			outputs: [
+				{
+					count: 3,
+					side: 'right',
+					align: 'end',
+					gap: 0.1,
+					offset: {
+						x: -0.1,
+						y: -0.1
+					},
+					component: CustomAnchor
+				}
+			]
+		},
+		{
+			width: 200,
+			height: 100,
+			bgColor: 'white',
+			header: true,
+			headerColor: 'skyblue',
+			inputs: [
+				{
+					side: 'left',
+					align: 'start',
+					offset: {
+						y: 0.1
+					}
+				}
+			]
+		},
+		{
+			width: 200,
+			height: 100,
+			bgColor: 'white',
+			header: true,
+			headerColor: 'orange',
+			inputs: [
+				{
+					side: 'left',
+					align: 'start',
+					offset: {
+						y: 0.1
+					}
+				}
+			]
+		},
+		{
+			width: 200,
+			height: 100,
+			bgColor: 'white',
+			header: true,
+			headerColor: 'gold',
+			inputs: [
+				{
+					side: 'left',
+					align: 'start',
+					offset: {
+						y: 0.1
+					}
+				}
+			]
+		}
+	];
 </script>
 
 <div class="wrapper">
-	<Svelvet dark nodes={initialNodes}>
-		<SpecialNode
-			position={{ x: 100, y: 400 }}
-			componentRef={CustomComponent}
-			props={{ heading: 'Hello', paragraph: 'World' }}
-		/>
-
-		<Minimap />
+	<Svelvet theme="light3">
+		<TestComponent />
+		<SpecialNode width={200} height={200} borderRadius={20} label="Hello From Svelvet" />
 	</Svelvet>
 </div>
 

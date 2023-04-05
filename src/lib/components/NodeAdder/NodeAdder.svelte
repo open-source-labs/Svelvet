@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import { graphStore } from '$lib/stores';
 	import { createNode } from '$lib/utils';
-	import { populateStore } from '$lib/container/Svelvet/populateStore';
+	import { populateStore } from '$lib/utils';
 	import { writable } from 'svelte/store';
 	import type { Inputs, Outputs, Graph } from '$lib/types';
 	import { get } from 'svelte/store';

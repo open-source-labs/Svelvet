@@ -1,61 +1,92 @@
 import { writable, derived } from 'svelte/store';
-import type { Writable } from 'svelte/store';
 import type {
 	Node,
 	NodeConfig,
 	Inputs,
 	Properties,
-	Parameter,
 	InputKey,
+	NodeKey,
+	XYPair,
 	OutputKey,
-	ParameterKey
+	Anchor
 } from '$lib/types';
-import { get } from 'svelte/store';
-import { NODE_BORDER_RADIUS, NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
+import { generateOutput } from './generateOutput';
+import {
+	NODE_BORDER_COLOR_LIGHT,
+	NODE_BORDER_RADIUS,
+	NODE_FONT_COLOR_LIGHT,
+	NODE_HEIGHT,
+	NODE_WIDTH,
+	NODE_HEADER_COLOR_LIGHT
+} from '$lib/constants';
+import { createStore } from './createStore';
+import { createAnchor } from './createAnchor';
 
 export function createNode(userNode: NodeConfig): Node {
-	const { id, config, width, height, dimensions, header, position } = userNode;
+	const { id, config, width, height, dimensions, header, position, headerColor, inputs, outputs } =
+		userNode;
 	const { bgColor, borderColor, borderRadius, textColor } = userNode;
+	const idString = id ? id.toString() : Math.random().toString(24).substring(7);
+	const nodeId: NodeKey = `N-${idString}`;
+
+	const anchorStore = createStore<Anchor, OutputKey | InputKey>();
+
+	inputs?.forEach((input) => {
+		const positions = calculateInitialXYPercentage(input);
+		positions.forEach((position, index) => {
+			const inputId: InputKey = `I-${index}/${nodeId}`;
+			anchorStore.add(createAnchor(position, input, 'input'), inputId);
+		});
+	});
+	outputs?.forEach((output) => {
+		const positions = calculateInitialXYPercentage(output);
+		positions.forEach((position, index) => {
+			const outputId: OutputKey = `O-${index}/${nodeId}`;
+			anchorStore.add(createAnchor(position, output, 'output'), outputId);
+		});
+	});
 
 	const newNode: Node = {
-		id,
+		id: `N-${idString}`,
 		position: {
 			x: writable(position?.x || 0),
 			y: writable(position?.y || 0)
 		},
 		dimensions: {
-			width: writable(dimensions?.width || width || NODE_WIDTH),
-			height: writable(dimensions?.height || height || NODE_HEIGHT)
+			width: writable(width || dimensions?.width || NODE_WIDTH),
+			height: writable(height || dimensions?.height || NODE_HEIGHT)
 		},
 		group: writable(null),
 		draggable: writable(true),
 		selectable: writable(true),
 		connectable: writable(true),
 		deletable: writable(true),
-		anchors: {},
-		zIndex: writable(0),
-		ariaLabel: `Node ${id}`,
+		hideable: writable(true),
+		moving: writable(false),
+		resizingWidth: writable(false),
+		resizingHeight: writable(false),
 		focusable: writable(true),
 		resizable: writable(true),
-		header: writable(userNode.header),
+		anchors: anchorStore,
+		zIndex: writable(0),
+		ariaLabel: `Node ${id}`,
+		header: writable(header ? true : false),
 		collapsed: writable(false),
 		visible: writable(true),
 		collapsible: writable(true),
 		inputs: writable({}),
 		props: userNode.props || null,
-		outputs: derived([], () => null),
-		borderRadius: writable(borderRadius?.toString() || NODE_BORDER_RADIUS),
+		borderRadius: writable(borderRadius || NODE_BORDER_RADIUS),
 		properties: writable({}),
+		headerHeight: writable(40),
 		bgColor: writable(bgColor || null),
 		component: userNode.component || null,
 		processor: (inputs, properties) => ({ ...inputs, ...properties }),
-		componentRef: userNode.componentRef || 'default',
-		label: writable(userNode?.data?.label || null)
+		label: writable(userNode.label || ''),
+		borderColor: writable(borderColor || NODE_BORDER_COLOR_LIGHT),
+		textColor: writable(textColor || NODE_FONT_COLOR_LIGHT),
+		headerColor: writable(headerColor || NODE_HEADER_COLOR_LIGHT)
 	};
-
-	if (borderColor) newNode.borderColor = borderColor;
-	if (textColor) newNode.textColor = textColor;
-	if (header) newNode.header = true;
 
 	if (config) {
 		const { properties, processor, inputs } = config;
@@ -82,107 +113,59 @@ export function createNode(userNode: NodeConfig): Node {
 		newNode.properties = writable(propertiesStore);
 		newNode.processor = processor;
 		newNode.inputs = writable(inputsStore);
-		newNode.outputs = createCustomDerivedStore(newNode.inputs, newNode.properties, processor);
+		newNode.outputs = generateOutput(newNode.inputs, newNode.properties, processor);
 	}
 
 	return newNode;
 }
 
-function createCustomDerivedStore(
-	inputs: Writable<Inputs>,
-	properties: Writable<Properties>,
-	processor: (inputs: any, properties: any) => any
-) {
-	const outputStore = writable({});
+const calculateInitialXYPercentage = (input) => {
+	const { side, align, gap, offset, count } = input;
+	let xPercentage = 0;
+	let yPercentage = 0;
 
-	const updateOutputStore = () => {
-		const currentInputs: { [key: string]: Parameter } = {};
-		const currentProperties: { [key: string]: Parameter } = {};
+	const anchors = [];
 
-		for (const key in get(inputs)) {
-			currentInputs[key] = get(get(inputs)[key]);
+	if (side !== 'left' && side !== 'top') {
+		if (side === 'right') {
+			xPercentage = 1;
+		} else {
+			yPercentage = 1;
 		}
+	}
+	console.log(count);
+	const halfCount = ((count || 0) - 1) / 2;
 
-		for (const key in get(properties)) {
-			currentProperties[key] = get(get(properties)[key]);
+	for (let i = 0; i < (count || 1); i++) {
+		let initialY = yPercentage;
+		let initialX = xPercentage;
+		const gapSize = gap || 0;
+		if (align !== 'center') {
+			if (align === 'end') {
+				if (side === 'left' || side === 'right') {
+					console.log('here');
+					initialY = 1 - i * gapSize;
+				} else {
+					initialX = 1 - i * gapSize;
+				}
+			} else {
+				if (side === 'left' || side === 'right') {
+					initialY = i * gapSize;
+				} else {
+					initialX = i * gapSize;
+				}
+			}
+		} else {
+			if (side === 'left' || side === 'right') {
+				initialY = 0.5 - (i - halfCount) * gapSize;
+			} else {
+				initialX = 0.5 - (i - halfCount) * gapSize;
+			}
 		}
-		console.log(currentInputs, currentProperties);
-		outputStore.update(() => processor(currentInputs, currentProperties));
-	};
-
-	const unsubscribeFns: (() => void)[] = [];
-
-	const subscribeToNestedStores = (store: Writable<any>) => {
-		for (const key in get(store)) {
-			get(store)[key].subscribe(() => {
-				updateOutputStore();
-			});
-		}
-	};
-
-	// subscribeToNestedStores(inputs);
-	// subscribeToNestedStores(properties);
-
-	const unsubscribeInputs = inputs.subscribe(() => {
-		unsubscribeFns.forEach((fn) => fn());
-		unsubscribeFns.length = 0;
-		subscribeToNestedStores(inputs);
-	});
-
-	const unsubscribeProperties = properties.subscribe(() => {
-		unsubscribeFns.forEach((fn) => fn());
-		unsubscribeFns.length = 0;
-		subscribeToNestedStores(properties);
-	});
-
-	return {
-		subscribe: outputStore.subscribe,
-		unsubscribe: () => {
-			unsubscribeInputs();
-			unsubscribeProperties();
-			unsubscribeFns.forEach((fn) => fn());
-		}
-	};
-}
-
-// type AutoUpdatingStore<T> = Writable<T> & {
-// 	setNested: (key: string, newStore: Writable<any>) => void;
-// 	triggerUpdate: () => void;
-// };
-
-// function createAutoUpdatingStore<T>(initialValue: T): AutoUpdatingStore<T> {
-// 	const store = writable(initialValue);
-// 	const unsubscribeFns: Map<string, () => void> = new Map();
-
-// 	const customStore: AutoUpdatingStore<T> = {
-// 		subscribe: store.subscribe,
-// 		set: store.set,
-// 		update: store.update,
-// 		setNested: (key: string, newStore: Writable<any>) => {
-// 			if (unsubscribeFns.has(key)) {
-// 				unsubscribeFns.get(key)!();
-// 			}
-
-// 			const unsubscribe = newStore.subscribe((value: any) => {
-// 				customStore.update(($store) => {
-// 					($store as any)[key] = value;
-// 					return $store;
-// 				});
-// 			});
-
-// 			unsubscribeFns.set(key, unsubscribe);
-
-// 			customStore.update(($store) => {
-// 				($store as any)[key] = newStore;
-// 				return $store;
-// 			});
-// 		},
-// 		triggerUpdate: () => {
-// 			store.update(($store) => {
-// 				return { ...$store };
-// 			});
-// 		}
-// 	};
-
-// 	return customStore;
-// }
+		anchors.push({
+			x: initialX + (offset?.x || 0),
+			y: initialY + (offset?.y || 0)
+		});
+	}
+	return anchors;
+};

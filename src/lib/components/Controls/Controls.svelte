@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { graphStore } from '$lib/stores';
-	import type { Graph, Key } from '$lib/types';
+	import type { Graph } from '$lib/types';
 	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
-	import { zoomGraph, calculateTranslation } from '$lib/utils';
 
 	const ZOOM_INCREMENT = 0.1;
 	let graph: Graph = getContext<Graph>('graph');
