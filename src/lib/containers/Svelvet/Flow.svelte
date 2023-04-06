@@ -8,7 +8,8 @@
 		NodeConfig,
 		XYPair,
 		GroupBox,
-		Arrow
+		Arrow,
+		GroupKey
 	} from '$lib/types';
 	import { get, writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
@@ -71,10 +72,12 @@
 	$: selected = $groups.selected.nodes;
 	$: translationX = graph.transforms.translation.x;
 	$: translationY = graph.transforms.translation.y;
-	$: connectingFrom = graph.connectingFrom;
 	$: activeGroup = graph.activeGroup;
 	$: initialNodePositions = graph.initialNodePositions;
 	$: editing = graph.editing;
+	$: linkingAny = graph.linkingAny;
+	$: linkingInput = graph.linkingInput;
+	$: linkingOutput = graph.linkingOutput;
 
 	onMount(() => {
 		updateGraphBounds();
@@ -88,6 +91,7 @@
 	function onMouseUp() {
 		if (creating) {
 			const groupName = generateKey();
+			const groupKey: GroupKey = `${groupName}/${graph.id}`;
 
 			let width = $cursor.x - $initialClickPosition.x;
 			let height = $cursor.y - $initialClickPosition.y;
@@ -110,19 +114,19 @@
 				color: writable(getRandomColor())
 			};
 
-			groupBoxes.add(groupBox, groupName);
+			groupBoxes.add(groupBox, groupKey);
 
 			Array.from($selected).forEach((node) => {
-				node.group.set(groupName);
+				node.group.set(groupKey);
 			});
 
 			groups.update((groups) => {
 				const newGroup = {
-					id: groupName,
+					id: groupKey,
 					parent: writable(groupBox),
 					nodes: writable(new Set([...$selected, groupBox]))
 				};
-				groups[groupName] = newGroup;
+				groups[groupKey] = newGroup;
 				return groups;
 			});
 
@@ -139,16 +143,21 @@
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
+		console.log('Deleting edge');
 		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
-		connectingFrom.set(null);
-		connectingFrom.set(null);
+
+		if ($linkingAny) linkingAny.set(null);
+		if ($linkingInput) linkingInput.set(null);
+		if ($linkingOutput) linkingOutput.set(null);
+
 		anchor.y = 0;
 		anchor.x = 0;
 	}
 
 	function onMouseDown(e: MouseEvent) {
+		graphDOMElement.focus();
 		const { clientX, clientY } = e;
 		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
 		if ($activeKeys['Shift'] || $activeKeys['Meta']) {
@@ -169,6 +178,7 @@
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key } = e;
 		$activeKeys[key] = true;
+		console.log($activeKeys);
 		triggerActionBasedOn[key]?.(key);
 	}
 
@@ -263,9 +273,9 @@
 	style:height={width ? width + 'px' : '100%'}
 	id={graph.id}
 	bind:this={graphDOMElement}
-	on:mousedown={onMouseDown}
+	on:mousedown|preventDefault={onMouseDown}
 	on:wheel|preventDefault={debouncedHandleScroll}
-	on:keydown={handleKeyDown}
+	on:keydown|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >

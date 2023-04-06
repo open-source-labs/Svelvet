@@ -12,8 +12,11 @@ import type {
 	OutputKey,
 	GroupKey,
 	Anchor,
-	Parameter
+	Parameter,
+	Inputs,
+	AnchorKey
 } from '.';
+import type { generateOutput } from '$lib/utils';
 
 export interface Graph {
 	id: GraphKey;
@@ -26,11 +29,14 @@ export interface Graph {
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
-	connectingStore: Writable<Writable<Parameter> | null>;
+	connectingStore: Writable<Writable<Inputs | null> | ReturnType<typeof generateOutput> | null>;
 	maxZIndex: Writable<number>;
 	dimensions: Writable<DOMRect>;
 	cursor: Readable<{ x: number; y: number }>;
-	connectingFrom: Writable<Anchor<false> | Anchor<true> | null>;
+	connectingFrom: Writable<Anchor | null>;
+	linkingInput: Writable<LinkingInput | null>;
+	linkingOutput: Writable<LinkingOutput | null>;
+	linkingAny: Writable<Anchor | null>;
 	outputsRemoved: Writable<Set<OutputKey>>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
@@ -38,6 +44,19 @@ export interface Graph {
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;
+}
+
+export type LinkingAny = Anchor | Anchor;
+
+export interface LinkingInput {
+	anchor: Anchor;
+	store: Writable<Inputs | null> | null;
+	key: string | null;
+}
+
+export interface LinkingOutput {
+	anchor: Anchor;
+	store: ReturnType<typeof generateOutput> | null;
 }
 
 export type Groups = Record<GroupKey, Group>;

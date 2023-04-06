@@ -7,7 +7,7 @@
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { captureGroup, moveNodes, updateTranslation } from '$lib/utils';
 	import { getContext } from 'svelte';
-
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 	const graph = getContext<Graph>('graph');
 	export let isMovable: boolean;
 
@@ -38,7 +38,26 @@
 </script>
 
 <ZoomPanWrapper>
+	<button
+		class="button"
+		on:click={() => {
+			const state = getJSONState(graph);
+			localStorage.setItem('state', state);
+		}}
+	>
+		DOWNLOAD STATE
+	</button>
 	<NodeRenderer><slot /></NodeRenderer>
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
 </ZoomPanWrapper>
+
+<style>
+	.button {
+		position: absolute;
+		width: 100px;
+		height: 50px;
+		top: 0;
+		left: 0;
+	}
+</style>

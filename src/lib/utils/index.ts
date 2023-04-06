@@ -10,4 +10,3 @@ export * from './helpers/clickOutside';
 export * from './adders/populateStore';
 export * from './creators/createAnchor';
 export * from './helpers/generateKey';
-export * from './helpers/createId';

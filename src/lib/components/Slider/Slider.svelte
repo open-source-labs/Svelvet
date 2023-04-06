@@ -106,36 +106,38 @@
 </script>
 
 {#if !input}
-	<button class="button" on:click={() => updateValue(-1)}>−</button>
-	<div class="slider" bind:clientWidth={sliderWidth}>
-		<label for="slider-input" class="input-label">{label}</label>
+	<div class="wrapper">
+		<button class="button" on:click={() => updateValue(-1)}>−</button>
+		<div class="slider" bind:clientWidth={sliderWidth}>
+			<label for="slider-input" class="input-label">{label}</label>
 
-		<input
-			tabindex={0}
-			bind:this={sliderElement}
-			id="slider-input"
-			class="slider-input"
-			style:--percentage={CSSpercentage}
-			type="text"
-			on:wheel|stopPropagation|preventDefault={(event) => {
-				updateValue(Math.sign(event.deltaY), step);
-			}}
-			on:keydown|stopPropagation={(e) => {
-				const { key } = e;
+			<input
+				tabindex={0}
+				bind:this={sliderElement}
+				id="slider-input"
+				class="slider-input"
+				style:--percentage={CSSpercentage}
+				type="text"
+				on:wheel|stopPropagation|preventDefault={(event) => {
+					updateValue(Math.sign(event.deltaY), step);
+				}}
+				on:keydown|stopPropagation={(e) => {
+					const { key } = e;
 
-				if (isArrow(key)) {
-					e.preventDefault(); // Stops cursor from moving
-					updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0);
-				}
+					if (isArrow(key)) {
+						e.preventDefault(); // Stops cursor from moving
+						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0);
+					}
 
-				if (key === 'Enter') validateInput();
-			}}
-			use:slideable
-			value={$parameterStore}
-			aria-label={label}
-		/>
+					if (key === 'Enter') validateInput();
+				}}
+				use:slideable
+				value={$parameterStore}
+				aria-label={label}
+			/>
+		</div>
+		<button class="button" on:click={() => updateValue(1)}>+</button>
 	</div>
-	<button class="button" on:click={() => updateValue(1)}>+</button>
 {:else}
 	<p>{label}</p>
 {/if}

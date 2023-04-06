@@ -1,15 +1,16 @@
-import type { Anchor, InputKey, OutputKey, Node, XYPair, Direction } from '$lib/types';
+import type { Anchor, Node, XYPair, Direction, AnchorKey } from '$lib/types';
 import { writable, derived, get } from 'svelte/store';
 
-export function createAnchor<Input extends boolean>(
+export function createAnchor(
 	node: Node,
-	id: Input extends true ? InputKey : OutputKey,
+	id: AnchorKey,
 	position: XYPair,
 	dimensions: { width: number; height: number },
-	input: Input,
+	store: Anchor['store'],
+	type: 'input' | 'output' | null,
 	direction?: Direction,
 	dynamic?: boolean
-): Anchor<Input> {
+): Anchor {
 	const { width, height } = dimensions;
 	const { x, y } = position;
 	// Create stores for the anchor offset values
@@ -26,6 +27,11 @@ export function createAnchor<Input extends boolean>(
 		[node.position.y, yOffset],
 		([$nodeY, $yOffset]) => $nodeY + $yOffset + height / 2
 	);
+	// Moving is derived from whether or not the parent node is moving or resizing
+	const moving = derived(
+		[node.moving, node.resizingWidth, node.resizingHeight],
+		([$moving, $resizingWidth, $resizingHeight]) => $moving || $resizingWidth || $resizingHeight
+	);
 
 	return {
 		id,
@@ -33,6 +39,9 @@ export function createAnchor<Input extends boolean>(
 		offset,
 		direction: writable(direction),
 		dynamic: writable(dynamic || false),
-		input
+		type,
+		moving,
+		connected: writable(new Set()),
+		store: store || null
 	};
 }

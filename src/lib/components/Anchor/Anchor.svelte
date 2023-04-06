@@ -3,12 +3,11 @@
 		Graph,
 		Node,
 		Anchor,
-		OutputKey,
-		InputKey,
 		Direction,
 		EdgeKey,
-		Parameter,
-		Inputs
+		WrappedWritable,
+		AnchorKey,
+		InputType
 	} from '$lib/types';
 	import { onMount, getContext } from 'svelte';
 	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
@@ -16,60 +15,81 @@
 	import { createEdge, createAnchor, calculateRelativeCursor, generateOutput } from '$lib/utils';
 	import { get } from 'svelte/store';
 	import { generateKey } from '$lib/utils';
+	import { activeKeys } from '$lib/stores';
 
 	const driven = getContext<Writable<boolean>>('driven');
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
+	const graphDirection = getContext<string>('direction');
 
 	export let key: string | null = null;
 	export let input: boolean = false;
-	export let inputs: Writable<Inputs | null> = writable(null);
-	export let output: ReturnType<typeof generateOutput> | null = null;
-
+	export let output: boolean = false;
+	export let inputsStore: Writable<WrappedWritable<unknown>> | null = null;
+	export let outputStore: ReturnType<typeof generateOutput> | null = null;
+	export let multiple = output ? true : input ? false : true;
 	export let label = generateKey();
-	export let direction: Direction = input ? 'west' : 'east';
+	export let direction: Direction =
+		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let dynamic = false;
 
 	let animationFrameId: number;
 	let edgeKey: EdgeKey;
-	let anchorElement: HTMLDivElement;
+	let anchorElement: HTMLButtonElement;
 	let anchorWidth: number;
 	let anchorHeight: number;
-	let anchor: Anchor<true> | Anchor<false>;
+	let anchor: Anchor;
 	let tracking = false;
+	let hovering = false;
 
-	const id: InputKey | OutputKey = `${input ? 'I' : 'O'}-${label}/${node.id}`;
+	let type: InputType = input === output ? null : input ? 'input' : 'output';
+
+	const id: AnchorKey = `A-${input ? 'I' : 'O'}-${label}/${node.id}`;
 
 	$: anchors = node.anchors;
 	$: edges = graph.edges;
 	$: scale = graph.transforms.scale;
 	$: resizingWidth = node.resizingWidth;
 	$: resizingHeight = node.resizingHeight;
-	$: connectingFrom = graph.connectingFrom;
-	$: connectingStore = graph.connectingStore;
-
-	$: anchorDimensions = {
-		width: anchorWidth / $scale,
-		height: anchorHeight / $scale
-	};
+	$: connecting =
+		input === output
+			? $linkingAny === anchor
+			: input
+			? $linkingInput?.anchor === anchor
+			: $linkingOutput?.anchor === anchor;
+	$: connectedAnchors = anchor?.connected;
+	$: connected = $connectedAnchors?.size > 0 || false;
+	$: linkingInput = graph.linkingInput;
+	$: linkingOutput = graph.linkingOutput;
+	$: linkingAny = graph.linkingAny;
 
 	onMount(() => {
 		const { x, y } = anchorElement.getBoundingClientRect();
 
 		const anchorPosition = { x, y };
-
-		anchor = createAnchor<typeof input>(
+		anchor = createAnchor(
 			node,
 			id,
 			anchorPosition,
 			anchorDimensions,
-			input,
+			inputsStore || outputStore || null,
+			type,
 			direction,
 			dynamic
 		);
 		anchors.add(anchor, id);
 	});
 
+	// If an anchor is added to the store, we update all anchor positions
+	$: if (anchorElement) {
+		$anchors;
+		updatePosition();
+	}
+	$: {
+		if (!$activeKeys['Shift']) clearAllLinking();
+	}
+
+	// If the parent node is resizing, we actively track the position of the anchor
 	$: if (!tracking && ($resizingWidth || $resizingHeight)) {
 		tracking = true;
 		trackPosition();
@@ -78,41 +98,159 @@
 		cancelAnimationFrame(animationFrameId);
 	}
 
-	let isOutput = !input;
+	$: anchorDimensions = {
+		width: anchorWidth / $scale,
+		height: anchorHeight / $scale
+	};
+
+	function handleClick() {
+		updatePosition();
+		if (connected && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
+			return disconnect();
+		if (!$linkingInput && !$linkingOutput && !$linkingAny) return startEdge();
+		if (input === output) {
+			connectEdge();
+		} else if (input) {
+			if ($linkingInput) return;
+			if ($linkingOutput || $linkingAny) connectEdge();
+		} else if (output) {
+			if ($linkingOutput) return;
+			if ($linkingInput || $linkingAny) connectEdge();
+		}
+		clearAllLinking();
+	}
 
 	function startEdge() {
-		$connectingFrom = anchor;
-		if (isOutput) {
-			$connectingStore = output;
-		} else {
-			if ($inputs) $connectingStore = inputs;
+		if (input === output) {
+			$linkingAny = anchor;
+			createCursorEdge(anchor, null);
+		} else if (input) {
+			$linkingInput = {
+				anchor,
+				store: inputsStore,
+				key
+			};
+			createCursorEdge(null, anchor);
+		} else if (output) {
+			$linkingOutput = {
+				anchor,
+				store: outputStore
+			};
+			createCursorEdge(anchor, null);
 		}
-		const newEdge = createEdge({
-			source: input ? null : (anchor as Anchor<false>),
-			target: input ? (anchor as Anchor<true>) : null
-		});
-		edgeKey = newEdge.id;
+	}
+
+	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
+		// Create a temporary edge to track the cursor
+		const newEdge = createEdge({ source, target });
+		// Add the edge to the store
 		edges.add(newEdge, 'cursor');
 	}
 
 	function connectEdge() {
+		console.log('Connecting Edge');
+		// Delete the temporary edge
 		edges.delete('cursor');
-		if (input) {
-			console.log('INPUT', $connectingStore);
-			if ($inputs && key && $connectingStore) $inputs[key] = $connectingStore;
-		} else {
-			$connectingStore = $inputs;
+
+		// If the anchor is already connected and multiple connections are not allowed
+		// We don't want to create a new edge
+		if (connected && !multiple) return;
+		if (
+			$linkingAny === anchor ||
+			$linkingOutput?.anchor === anchor ||
+			$linkingInput?.anchor === anchor
+		)
+			return;
+
+		updatePosition();
+
+		let newEdge;
+		// Creat edge
+		let source: Anchor | null = null;
+		let target: Anchor | null = null;
+
+		if (input === output) {
+			if ($linkingAny) {
+				source = $linkingAny;
+				target = anchor;
+			} else if ($linkingInput) {
+				source = anchor;
+				target = $linkingInput.anchor;
+			} else if ($linkingOutput) {
+				source = $linkingOutput.anchor;
+				target = anchor;
+			}
+		} else if (input) {
+			if ($linkingOutput) {
+				source = $linkingOutput.anchor;
+				target = anchor;
+			} else if ($linkingAny) {
+				source = $linkingAny;
+				target = anchor;
+			}
+		} else if (output) {
+			if ($linkingInput) {
+				source = anchor;
+				target = $linkingInput.anchor;
+			} else if ($linkingAny) {
+				source = anchor;
+				target = $linkingAny;
+			}
 		}
-		const newEdge = createEdge({
-			source: input ? ($connectingFrom as Anchor<false>) : (anchor as Anchor<false>),
-			target: input ? (anchor as Anchor<true>) : ($connectingFrom as Anchor<true>)
-		});
-		edgeKey = newEdge.id;
-		edges.add(newEdge, edgeKey);
+
+		if (source && target) {
+			newEdge = createEdge({ source, target });
+			source!.connected.update((anchors) => anchors.add(target!));
+			target!.connected.update((anchors) => anchors.add(source!));
+			edgeKey = newEdge.id;
+			edges.add(newEdge, edgeKey);
+		}
+
+		connectStores();
+
+		if (!$activeKeys['Shift']) {
+			clearAllLinking();
+		} else {
+			if ($linkingInput) {
+				$linkingOutput = null;
+				$linkingAny = null;
+			} else if ($linkingOutput) {
+				$linkingInput = null;
+				$linkingAny = null;
+			} else if ($linkingAny) {
+				$linkingInput = null;
+				$linkingOutput = null;
+			}
+		}
 	}
 
-	const trackPosition = () => {
+	function connectStores() {
+		if (input && $linkingOutput && $linkingOutput.store) {
+			if ($inputsStore && key) $inputsStore[key] = $linkingOutput.store;
+		} else if (output && $linkingInput && $linkingInput.store) {
+			const { store, key } = $linkingInput;
+			if (store && key) store.update((s) => ({ ...s, [key]: outputStore }));
+		}
+	}
+
+	function disconnectStore() {
+		if ($inputsStore && key && $inputsStore[key])
+			$inputsStore[key] = writable(get($inputsStore[key]));
+	}
+
+	function clearAllLinking() {
+		$linkingInput = null;
+		$linkingOutput = null;
+		$linkingAny = null;
+	}
+
+	function trackPosition() {
 		if (!tracking) return;
+		updatePosition();
+		animationFrameId = requestAnimationFrame(trackPosition);
+	}
+
+	const updatePosition = () => {
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 
 		const oldOffsetX = get(anchor.offset.x);
@@ -143,34 +281,86 @@
 
 		if (deltaX !== 0) anchor.offset.x.set(oldOffsetX + deltaX + width / scale / 2);
 		if (deltaY !== 0) anchor.offset.y.set(oldOffsetY + deltaY + height / scale / 2);
-		// Call trackPosition again on the next frame
-		animationFrameId = requestAnimationFrame(trackPosition);
 	};
+
+	function destroy() {
+		edges.delete(edgeKey);
+		edges.delete('cursor');
+		anchor.connected.update((connectedAnchors) => {
+			Array.from(connectedAnchors).forEach((connectedAnchor) => {
+				connectedAnchor.connected.update((connectedAnchorConnections) => {
+					connectedAnchorConnections.delete(anchor);
+					return connectedAnchorConnections;
+				});
+			});
+			return new Set();
+		});
+		clearAllLinking();
+		disconnectStore();
+	}
+
+	function disconnect() {
+		if (get(anchor.connected).size > 1) return;
+
+		const source = Array.from(get(anchor.connected))[0];
+		if (source.type === 'input') return;
+		destroy();
+		if (source.type === 'output') {
+			createCursorEdge(source, null);
+			disconnectStore();
+			$linkingOutput = { anchor: source, store: source.store };
+		} else {
+			createCursorEdge(source, null);
+			$linkingAny = source;
+		}
+	}
+
+	function handleMouseUp() {
+		if (isSelf()) return;
+		if ($linkingAny || $linkingInput || $linkingOutput) connectEdge();
+	}
+
+	function isSelf() {
+		return (
+			$linkingAny === anchor ||
+			$linkingInput?.anchor === anchor ||
+			$linkingOutput?.anchor === anchor
+		);
+	}
 </script>
 
-<div
-	on:mousedown|stopPropagation|preventDefault={startEdge}
-	on:mouseup|stopPropagation={connectEdge}
+<button
+	class="wrapper"
 	bind:this={anchorElement}
 	bind:clientWidth={anchorWidth}
 	bind:clientHeight={anchorHeight}
-	class="z-index"
+	on:mousedown|stopPropagation|preventDefault={handleClick}
+	on:mouseup|stopPropagation={handleMouseUp}
 >
-	<slot>
+	<slot {hovering} {connected}>
 		<div
 			class="anchor"
+			class:output
+			class:input
+			class:connected
+			class:connecting
+			class:hovering
 			style:--default-width={`${ANCHOR_SIZE}px`}
 			style:--default-color={'black' || ANCHOR_COLOR}
 			style:--default-radius={ANCHOR_RADIUS}
-			class:driven={$driven}
 		/>
 	</slot>
-</div>
+</button>
 
 <style>
-	.z-index {
+	.wrapper {
 		z-index: 100;
+		/* border: solid 1px black; */
+		width: fit-content;
+		height: fit-content;
+		pointer-events: auto;
 	}
+
 	.anchor {
 		width: var(--anchor-size, var(--default-width));
 		height: var(--anchor-size, var(--default-width));
@@ -181,10 +371,26 @@
 		border: solid 1px black;
 		pointer-events: auto;
 	}
-	.anchor:hover {
+	.connected.input {
+		background-color: red;
+	}
+	.connected.output {
+		background-color: rgb(255, 251, 0);
+	}
+
+	.connecting {
 		background-color: white;
 	}
 
+	.hovering {
+		background-color: rgb(221, 214, 206);
+	}
+	.output {
+		border-color: yellow;
+	}
+	.input {
+		border-color: rgb(255, 0, 0);
+	}
 	div {
 		background: none;
 		border: none;
@@ -193,7 +399,13 @@
 		cursor: pointer;
 		outline: inherit;
 	}
-	.driven {
-		background-color: white;
+	/* reset button styles */
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
+		cursor: pointer;
+		outline: inherit;
 	}
 </style>

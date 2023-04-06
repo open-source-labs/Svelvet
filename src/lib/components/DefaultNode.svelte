@@ -5,12 +5,14 @@
 
 	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;
-	const node = getContext<Node>('node');
 
-	let top = false;
-	let left = true;
-	let right = true;
-	let bottom = false;
+	const node = getContext<Node>('node');
+	const direction = getContext<string>('direction');
+
+	let top = direction === 'TD' ? true : false;
+	let left = direction === 'TD' ? false : true;
+	let right = direction === 'TD' ? false : true;
+	let bottom = direction === 'TD' ? true : false;
 
 	$: label = node.label;
 	$: bgColor = node.bgColor;
@@ -19,6 +21,8 @@
 	$: textColor = node.textColor;
 	$: inputCount = node.inputCount;
 	$: outputCount = node.outputCount;
+
+	let inputAnchors = 5;
 </script>
 
 <div
@@ -29,19 +33,22 @@
 	class:selected
 	class="default-node"
 >
+	<button
+		on:click={() => {
+			inputAnchors++;
+			//node.resizingWidth.set(true);
+		}}>MORE ANCHORS</button
+	>
 	<div class="input-anchors" class:top class:left>
-		<Anchor />
-		<Anchor />
-		<Anchor />
-		<Anchor />
-		<Anchor />
-		<Anchor />
+		{#each { length: inputAnchors } as _, i}
+			<Anchor input />
+		{/each}
 	</div>
 	<div class="output-anchors" class:bottom class:right>
-		<Anchor />
-		<Anchor />
-		<Anchor />
-		<Anchor />
+		<Anchor output />
+		<Anchor output />
+		<Anchor output />
+		<Anchor output />
 		<Anchor />
 		<Anchor />
 	</div>
@@ -76,7 +83,11 @@
 		border: solid 1px black;
 		box-shadow: var(--shadow-elevation-medium);
 	}
-
+	p {
+		font-size: 20px;
+		line-height: 20px;
+		text-align: center;
+	}
 	.selected {
 		border: solid 1px red !important;
 	}

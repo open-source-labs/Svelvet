@@ -11,7 +11,7 @@
 	$: CSSleft = `${left}px`;
 </script>
 
-<p
+<div
 	role="note"
 	aria-label={label}
 	style:background-color={color}
@@ -20,20 +20,24 @@
 	style:color={textColor}
 	class="edge-label"
 >
-	{label}
-</p>
+	<p>
+		{label}
+	</p>
+</div>
 
 <style>
-	.label {
+	.edge-label {
 		position: absolute;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		width: fit-content;
-		height: 2rem;
+		font-size: 1rem;
+		height: 1.5rem;
 		border-radius: 5px;
 		padding: 10px;
 		transform: translateX(-50%) translateY(-50%);
-		z-index: 11;
+		z-index: -3;
+		cursor: pointer !important;
 	}
 </style>

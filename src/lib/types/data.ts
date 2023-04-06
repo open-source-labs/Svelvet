@@ -1,6 +1,6 @@
 import type { Parameter, Properties } from './node';
 import type { ParameterConfig } from './config';
-
+import type { Writable } from 'svelte/store';
 export interface ConfigObject {
 	[key: string]: unknown;
 	properties?: Record<string, ParameterConfig>;
@@ -14,3 +14,11 @@ export interface ConfigObject {
 		};
 	};
 }
+
+export type UnwrapWritable<T> = {
+	[K in keyof T]: T[K] extends Writable<infer U> ? U : never;
+};
+
+export type WrappedWritable<T> = {
+	[K in keyof T]: Writable<T[K]>;
+};

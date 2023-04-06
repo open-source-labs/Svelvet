@@ -60,7 +60,7 @@ export function moveNodes(
 		const { x, y } = position;
 		const { width, height } = dimensions;
 		const initialPosition = initialNodePositions[index];
-		moving.set(true);
+		if (moving) moving.set(true);
 		const nodeWidth = get(width);
 		const nodeHeight = get(height);
 

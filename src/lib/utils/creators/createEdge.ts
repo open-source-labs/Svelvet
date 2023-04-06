@@ -1,16 +1,20 @@
-import type { WritableEdge, EdgeConfig, Anchor, OutputKey, InputKey } from '$lib/types';
+import type { WritableEdge, EdgeConfig, Anchor } from '$lib/types';
 import { writable } from 'svelte/store';
 import * as s from '$lib/constants/styles';
-import type { EdgeLabel } from '$lib/types';
+import type { EdgeLabel, EdgeKey, OutputKey, InputKey } from '$lib/types';
 
 export function createEdge(
-	connection: { source: Anchor<false> | null; target: Anchor<true> | null },
+	connection: { source: Anchor | null; target: Anchor | null },
 	config?: EdgeConfig
 ): WritableEdge {
 	const { source, target } = connection;
+	const edgeId: EdgeKey =
+		source?.id && target?.id
+			? (`${source.id as OutputKey | InputKey}+${target.id as OutputKey | InputKey}` as EdgeKey)
+			: 'cursor';
 
 	const writableEdge: WritableEdge = {
-		id: source && target ? `${source.id}+${target.id}` : 'cursor',
+		id: edgeId,
 		target: connection.target,
 		source: connection.source,
 		type: writable(config?.type || s.EDGE_TYPE),

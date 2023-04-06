@@ -20,6 +20,6 @@ export function calculateTranslation(
 	// Update the offsets based on the cursor position and the scale value
 	newTranslation.x = pointerXRelativeToWrapper - pointerXRelativeToContent * newScale;
 	newTranslation.y = pointerYRelativeToWrapper - pointerYRelativeToContent * newScale;
-	console.log({ newTranslation });
+
 	return newTranslation;
 }

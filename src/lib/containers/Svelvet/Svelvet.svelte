@@ -7,6 +7,7 @@
 	import { populateMermaidNodes } from '../../utils/drawers/flowchartDrawer';
 	import { graphStore } from '$lib/stores';
 	import Flow from './Flow.svelte';
+	import { reloadStore } from '$lib/utils/savers/reloadStore';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -14,12 +15,14 @@
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
 	export let initialZoom = 1;
+	export let LR = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
 
 	setContext('snapTo', snapTo);
 	setContext('theme', theme);
+	setContext('direction', LR ? 'LR' : 'TD');
 
 	onMount(() => {
 		graph = createGraph(graphId, initialZoom);

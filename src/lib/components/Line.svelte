@@ -1,25 +1,27 @@
 <!-- Line.svelte -->
 <script lang="ts">
-	import type { Anchor, Direction, Graph, XYPair, Theme } from '$lib/types';
+	import type { Anchor, Direction, Graph, XYPair, Theme, EdgeKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
 	import { THEMES } from '$lib/constants/themes';
+	import EdgeLabel from './EdgeLabel/EdgeLabel.svelte';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
 
 	const { cursor } = graph;
 
-	export let source: Anchor<false> | null = null;
-	export let target: Anchor<true> | null = null;
-	export let strokeWidth = 3;
+	export let source: Anchor | null = null;
+	export let target: Anchor | null = null;
+	export let strokeWidth = 1;
 	export let strokeColor = THEMES[theme].edge;
 	export let type = 'bezier';
+	export let edgeKey: EdgeKey = 'cursor';
 
 	const buffer = 200;
 	let active = false;
-	let animate = true;
+	let animate = false;
 
 	const directionVectors: Record<Direction, XYPair> = {
 		north: { x: 0, y: -1 },
@@ -58,10 +60,13 @@
 	$: CSStop = top - buffer + 'px';
 	$: CSSleft = left - buffer + 'px';
 
-	$: sourceControlX = sourcePointX + sourceControlVector.x * (width / 2);
-	$: sourceControlY = sourcePointY + sourceControlVector.y * (height / 2);
-	$: targetControlX = targetPointX + targetControlVector.x * (width / 2);
-	$: targetControlY = targetPointY + targetControlVector.y * (height / 2);
+	$: maxCurveDisplaceX = Math.max(30, Math.min(600, width / 2));
+	$: maxCurveDisplaceY = Math.max(30, Math.min(600, height / 2));
+
+	$: sourceControlX = sourcePointX + sourceControlVector.x * maxCurveDisplaceX;
+	$: sourceControlY = sourcePointY + sourceControlVector.y * maxCurveDisplaceY;
+	$: targetControlX = targetPointX + targetControlVector.x * maxCurveDisplaceX;
+	$: targetControlY = targetPointY + targetControlVector.y * maxCurveDisplaceY;
 
 	$: sourcePointX = flipX ? buffer + width : buffer;
 	$: sourcePointY = flipY ? buffer + height : buffer;
@@ -80,6 +85,50 @@
 
 	$: flipX = deltaX < 0;
 	$: flipY = deltaY < 0;
+
+	let DOMPath: SVGPathElement;
+	let animationFrameId: number;
+	let pathMidPointX = 0;
+	let pathMidPointY = 0;
+	let tracking = false;
+
+	$: sourceMoving = source?.moving || readable(false);
+	$: targetMoving = target?.moving || readable(false);
+
+	$: if (!tracking && ($sourceMoving || $targetMoving || edgeKey === 'cursor')) {
+		tracking = true;
+		trackPath();
+	} else if (tracking && !$sourceMoving && !$targetMoving && edgeKey !== 'cursor') {
+		tracking = false;
+		cancelAnimationFrame(animationFrameId);
+	}
+
+	function trackPath() {
+		if (!tracking) return;
+		if (DOMPath) {
+			calculatePath();
+		}
+
+		animationFrameId = requestAnimationFrame(trackPath);
+	}
+
+	function calculatePath() {
+		console.log('Calculating');
+		const pathLength = DOMPath.getTotalLength();
+		const halfLength = pathLength / 2;
+		const pathMidPoint = DOMPath.getPointAtLength(halfLength);
+		pathMidPointX = pathMidPoint.x;
+		pathMidPointY = pathMidPoint.y;
+	}
+
+	import { onMount, onDestroy } from 'svelte';
+	onMount(() => {
+		calculatePath();
+	});
+
+	onDestroy(() => {
+		cancelAnimationFrame(animationFrameId);
+	});
 </script>
 
 <div
@@ -91,37 +140,39 @@
 >
 	<svg class:active>
 		<path
+			bind:this={DOMPath}
 			class:animate
 			d={path}
 			style:stroke={strokeColor}
-			style:--default-edge-stroke-width={EDGE_WIDTH}
+			style:--default-edge-stroke-width={strokeWidth + 'px'}
 			stroke={strokeColor}
 			stroke-width={strokeWidth}
 			fill="transparent"
 		/>
 	</svg>
+	<EdgeLabel label="Hello" top={pathMidPointY} left={pathMidPointX} />
 </div>
 
 <style>
 	path {
 		pointer-events: auto;
-		cursor: pointer;
 		stroke: var(--edge-color, var(--default-edge-color));
 		stroke-width: var(--edge-stroke-width, var(--default-edge-stroke-width));
-	}
-	svg {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		z-index: -4;
-		pointer-events: none;
-	}
-	.active:hover {
-		stroke: red;
 	}
 	.wrapper {
 		position: absolute;
 		pointer-events: none;
+		/* border: solid 1px red; */
+	}
+
+	svg {
+		width: 100%;
+		height: 100%;
+		z-index: -4;
+	}
+
+	.active:hover {
+		stroke: red;
 	}
 
 	.animate {

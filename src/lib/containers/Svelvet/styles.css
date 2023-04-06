@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
 .svelvet-wrapper {
-	position: absolute;
+	position: relative;
 	overflow: hidden;
 	cursor: move;
-	border-radius: 20px;
-	background-color: white;
 }
 .svelvet-wrapper:focus {
 	outline: none;

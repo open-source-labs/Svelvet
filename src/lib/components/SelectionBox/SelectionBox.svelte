@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { cursorPositionRaw } from '$lib/stores/CursorStore';
-	import type { Graph, Node, NodeDOMBounds } from '$lib/types';
+	import type { Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
 	import { activeKeys } from '$lib/stores';
-
+	import { get } from 'svelte/store';
 	export let graph: Graph;
 	export let anchor = { x: 0, y: 0 };
 	export let adding = false;
@@ -34,12 +34,12 @@
 
 	function updateNodes() {
 		const DOMnodes = Array.from(document.querySelectorAll('.node-wrapper'));
+
 		nodes = DOMnodes.map((node) => {
 			const { top, left, width, height } = node.getBoundingClientRect();
 
 			return { id: node.id, top, left, width, height };
 		});
-		console.log(nodes);
 	}
 
 	function selectNodes() {
@@ -52,7 +52,9 @@
 				left + Math.abs(width) >= node.left + node.width &&
 				top + Math.abs(height) >= node.top + node.height
 			) {
-				accumulator.push(graph.nodes.get(node.id));
+				const id = node.id as NodeKey;
+				const selectedNode = graph.nodes.get(id);
+				accumulator.push(selectedNode);
 			}
 			return accumulator;
 		}, [] as Array<Node>);

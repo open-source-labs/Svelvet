@@ -56,8 +56,8 @@ export type CSSDimensions = `${number}px}` | `${number}%`;
 // With writable properties
 export type WritableEdge = {
 	id: EdgeKey;
-	source: Anchor<false> | null;
-	target: Anchor<true> | null;
+	source: Anchor | null;
+	target: Anchor | null;
 	type: Writable<EdgeStyle>;
 	color: Writable<CSSColorString>;
 	width: Writable<number>;

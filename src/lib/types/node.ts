@@ -8,11 +8,9 @@ import type {
 	Dimensions,
 	ConfigObject,
 	CSSColorString,
-	OutputKey,
-	Anchor,
 	GroupKey
 } from '.';
-import type { createCustomDerivedStore } from '$lib/utils';
+import type { generateOutput } from '$lib/utils';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
@@ -24,7 +22,7 @@ export interface Node {
 	anchors: AnchorStore;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
-	outputs?: ReturnType<typeof createCustomDerivedStore>;
+	outputs?: ReturnType<typeof generateOutput>;
 	header: Writable<boolean>;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
@@ -32,6 +30,7 @@ export interface Node {
 	resizingWidth: Writable<boolean>;
 	resizingHeight: Writable<boolean>;
 	moving: Writable<boolean>;
+	editable: Writable<boolean>;
 	draggable: Writable<boolean>;
 	selectable: Writable<boolean>;
 	connectable: Writable<boolean>;
@@ -74,6 +73,7 @@ export interface NodeConfig {
 	};
 	label?: string;
 	group?: string;
+	resizable?: boolean;
 	inputs?: Array<AnchorGroup>;
 	outputs?: Array<AnchorGroup>;
 	component?: ConstructorOfATypedSvelteComponent;

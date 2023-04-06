@@ -11,5 +11,5 @@
 </script>
 
 {#each Object.entries($edges) as [edgeKey, { source, target }] (edgeKey)}
-	<Line {source} {target} />
+	<Line {source} {target} {edgeKey} />
 {/each}

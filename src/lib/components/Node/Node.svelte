@@ -7,6 +7,7 @@
 	import { calculateFitContentWidth, captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
+	import DefaultNode from '../DefaultNode.svelte';
 
 	export let node: Node;
 
@@ -38,6 +39,8 @@
 	$: headerColor = node.headerColor;
 	$: anchors = node.anchors;
 
+	$: console.log($widthStore);
+
 	let zIndex = 0;
 
 	const graph: Graph = getContext<Graph>('graph');
@@ -64,18 +67,18 @@
 	$: hiddenNodes = hiddenNodesGroup.nodes;
 
 	// Dynamically import the component for the node
-	onMount(async () => {
+	onMount(() => {
 		// Not every browser handles fit-content well, so this is a workaround
 		// We assign fit-content, calculate those dimensions
 		// And reassign the width store the max value of
 		// The initial dom dimensions, the min dimenions calculated, or the initial store value
 		// Spend more time looking into this and see if there is a more obvious fix
-		const nodeRect = DOMnode.getBoundingClientRect();
-		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
-		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
-		$x = nodeRect.x;
-		$y = nodeRect.y;
+		// const nodeRect = DOMnode.getBoundingClientRect();
+		// [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		// // $widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
+		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		// $x = nodeRect.x;
+		// $y = nodeRect.y;
 		absolute = true;
 	});
 

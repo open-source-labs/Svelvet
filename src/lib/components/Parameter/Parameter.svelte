@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Input from '../Input/Input.svelte';
 	import Slider from '../Slider/Slider.svelte';
 	import RadioGroup from '../RadioGroup/RadioGroup.svelte';
 	import type { Parameter, Node, Graph, ParameterConfig } from '$lib/types';
@@ -34,9 +33,6 @@
 </script>
 
 <div class="parameter">
-	{#if connectable}
-		<Input />
-	{/if}
 	{#if !driven}
 		<svelte:component this={components[type]} {...config} {parameterStore} />
 	{:else}

@@ -2,23 +2,24 @@
 	import SpecialNode from '$lib/components/SpecialNode/SpecialNode.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import Node from '$lib/components/Node/Node.svelte';
-	import Tracker from '$lib/components/Tracker.svelte';
 	import Slider from '$lib/components/Slider/Slider.svelte';
 	import CustomAnchor from './CustomAnchor.svelte';
 	import { get, writable } from 'svelte/store';
-	import { generateOutput } from '$lib/utils';
-
+	import { generateOutput, generateInput } from '$lib/utils';
+	import type { Writable } from 'svelte/store';
+	import type { WrappedWritable } from '$lib/types';
 	let handle = true;
 
 	type InputStructure = {
 		value1: number;
 		value2: number;
 	};
+	const initialData = {
+		value1: 10,
+		value2: 30
+	};
 
-	const inputs = writable({
-		value1: writable(10),
-		value2: writable(30)
-	});
+	const inputs = generateInput(initialData);
 
 	const processor = (inputs: InputStructure) => {
 		return inputs.value1 + inputs.value2;
@@ -28,8 +29,8 @@
 		return inputs.value1 * inputs.value2;
 	};
 
-	let outputTest = generateOutput<InputStructure, number>(inputs, processor);
-	let output2 = generateOutput<InputStructure, number>(inputs, processor2);
+	const outputTest = generateOutput<InputStructure, number>(inputs, processor);
+	const output2 = generateOutput<InputStructure, number>(inputs, processor2);
 </script>
 
 <SpecialNode let:grabHandle let:selected>
@@ -37,23 +38,24 @@
 	<div class="node">
 		<div class="input-anchors">
 			{#each Object.entries($inputs) as [key, value]}
-				<Anchor {key} {inputs} input />
+				<Anchor {key} inputsStore={inputs} input />
 			{/each}
 		</div>
-		<p>Hello</p>
-		{#each Object.entries($inputs) as [key, value]}
-			<p>{key}: {get(value)}</p>
-			<Slider parameterStore={value} />
-		{/each}
+		<div class="sliders">
+			{#each Object.entries($inputs) as [key, value]}
+				<Slider parameterStore={value} />
+			{/each}
+		</div>
 		<div class="output-anchors">
-			<Anchor output={outputTest}>
+			<Anchor outputStore={outputTest} output direction="east">
 				<CustomAnchor />
 			</Anchor>
-			<Anchor output={output2}>
+			<Anchor outputStore={output2} output>
 				<CustomAnchor />
 			</Anchor>
 		</div>
-		<p>{$outputTest}</p>
+		<p class="output">{$outputTest}</p>
+		<p class="output">{$output2}</p>
 	</div>
 </SpecialNode>
 
@@ -82,6 +84,9 @@
 		top: -80px;
 		background-color: red;
 	}
+	.output {
+		color: black;
+	}
 	.selected {
 		background-color: blue;
 	}
@@ -91,6 +96,12 @@
 		display: flex;
 		gap: 10px;
 		margin-right: 10x;
+	}
+
+	.sliders {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 
 	.output-anchors {

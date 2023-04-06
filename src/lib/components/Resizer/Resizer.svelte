@@ -1,9 +1,7 @@
 <!-- ParentComponent.svelte -->
 <script lang="ts">
-	import type { Graph, Node, ResizeDataContext } from '$lib/types';
+	import type { Graph, Node } from '$lib/types';
 	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
-	import { get } from 'svelte/store';
 	export let width = false;
 	export let height = false;
 	export let both = false;
@@ -29,27 +27,11 @@
 	$: cursorX = $cursor.x;
 
 	$: if ($resizingHeight) {
-		const anchorsToUpdate = Object.values($anchors).filter((anchor) => {
-			const direction = get(anchor.side);
-			const dynamic = get(anchor.dynamic);
-			return direction === 'bottom' || (dynamic && direction !== 'top');
-		});
 		const newHeight = Math.max(minHeight, cursorY - $y);
-		// anchorsToUpdate.forEach((anchor) => {
-		// 	anchor.position.y.update((n) => n + (n / $heightStore) * (newHeight - $heightStore));
-		// });
 		$heightStore = newHeight;
 	}
 	$: if ($resizingWidth) {
-		const anchorsToUpdate = Object.values($anchors).filter((anchor) => {
-			const direction = get(anchor.side);
-			const dynamic = get(anchor.dynamic);
-			return direction === 'right' || (dynamic && direction !== 'left');
-		});
 		const newWidth = Math.max(minWidth, cursorX - $x);
-		// anchorsToUpdate.forEach((anchor) => {
-		// 	anchor.position.x.update((posX) => posX + (posX / $widthStore) * (newWidth - $widthStore));
-		// });
 		$widthStore = newWidth;
 	}
 

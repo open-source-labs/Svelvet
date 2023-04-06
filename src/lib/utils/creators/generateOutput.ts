@@ -1,17 +1,9 @@
-import { writable } from 'svelte/store';
-import type { Writable, Readable } from 'svelte/store';
-import type { Inputs, Parameter } from '$lib/types';
-import { get } from 'svelte/store';
-export type UnwrapWritable<T> = {
-	[K in keyof T]: T[K] extends Writable<infer U> ? U : never;
-};
-
-export type WrappedWritable<T> = {
-	[K in keyof T]: Writable<T[K]>;
-};
+import { writable, get } from 'svelte/store';
+import type { Readable, Writable } from 'svelte/store';
+import type { WrappedWritable } from '$lib/types';
 
 export function generateOutput<T, R>(
-	inputs: Readable<WrappedWritable<T>>,
+	inputs: Writable<WrappedWritable<T>>,
 	processor: (inputs: T) => R
 ) {
 	const outputStore = writable<R>();

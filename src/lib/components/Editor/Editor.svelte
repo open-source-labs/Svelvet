@@ -8,7 +8,6 @@
 	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
 	import Slider from '../Slider/Slider.svelte';
 	import TextField from '../TextField/TextField.svelte';
-	import { graphStore } from '$lib/stores';
 	import type { CSSColorString, Node } from '$lib/types';
 
 	export let editing: Node;

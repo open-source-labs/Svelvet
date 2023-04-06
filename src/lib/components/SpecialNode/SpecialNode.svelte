@@ -1,12 +1,8 @@
 <script lang="ts">
-	import { getContext, onMount, setContext, SvelteComponent } from 'svelte';
-	import type { ComponentType } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { Graph, Node as NodeType, NodeConfig, Theme } from '$lib/types';
-	import Parameter from '../Parameter/Parameter.svelte';
-	import Output from '../Output/Output.svelte';
-	import Resizer from '../Resizer/Resizer.svelte';
-	import { calculateFitContentWidth, generateKey } from '$lib/utils';
-	import { createEventDispatcher } from 'svelte';
+	import { generateKey } from '$lib/utils';
+
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import Node from '../Node/Node.svelte';
@@ -15,6 +11,8 @@
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
+
+	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
 
 	export let position = { x: 0, y: 0 };
 	export let dimensions = { width: 200, height: 100 };
@@ -27,16 +25,19 @@
 	export let textColor = THEMES[theme].text;
 	export let resizable = false;
 	export let label = '';
-	export let props = {};
 
 	const config: NodeConfig = {
+		id,
 		width,
+		position,
+		dimensions,
 		height,
 		bgColor,
 		borderRadius,
 		textColor,
 		borderColor,
-		label
+		label,
+		resizable
 	};
 
 	const node: NodeType = createNode(config);
