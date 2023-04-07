@@ -26,12 +26,13 @@ export function createNode(userNode: NodeConfig): Node {
 		headerColor
 	} = userNode;
 	const { bgColor, borderColor, borderRadius, textColor } = userNode;
-	const idString: NodeKey =
-		id && (typeof id === 'number' || id[0] === 'N') ? `N-${id}` : `N-${generateKey()}`;
+
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
+	const nodeKey: NodeKey = `N-${id}`;
+
 	const newNode: Node = {
-		id: idString,
+		id: nodeKey,
 		position: {
 			x: writable(position?.x || 0),
 			y: writable(position?.y || 0)

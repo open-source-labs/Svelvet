@@ -1,0 +1,11 @@
+import type { AnchorKey, EdgeKey, InputKey, OutputKey } from '$lib/types';
+
+export function sortEdgeKey(keyOne: AnchorKey, keyTwo: AnchorKey): EdgeKey {
+	// Sort the strings alphabetically
+	const sortedStrings: [InputKey, OutputKey] = [keyOne, keyTwo].sort();
+
+	// Concatenate the sorted strings
+	const combinedString: EdgeKey = `${sortedStrings[0]}+${sortedStrings[1]};`;
+
+	return combinedString;
+}

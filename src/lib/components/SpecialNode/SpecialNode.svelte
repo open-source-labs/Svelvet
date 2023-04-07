@@ -2,7 +2,7 @@
 	import { getContext, onMount } from 'svelte';
 	import type { Graph, Node as NodeType, NodeConfig, Theme } from '$lib/types';
 	import { generateKey } from '$lib/utils';
-
+	import { get } from 'svelte/store';
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import Node from '../Node/Node.svelte';
@@ -13,10 +13,11 @@
 	const theme = getContext<Theme>('theme');
 
 	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
+	const { nodes } = graph;
 
 	export let position = { x: 0, y: 0 };
 	export let dimensions = { width: 200, height: 100 };
-	export let id = generateKey();
+	export let id = 0;
 	export let width = s.NODE_WIDTH;
 	export let height = s.NODE_HEIGHT;
 	export let bgColor = THEMES[theme].node;
@@ -29,33 +30,31 @@
 	export let outputs = 1;
 	export let LR = false;
 
-	const config: NodeConfig = {
-		id,
-		width,
-		position,
-		dimensions,
-		height,
-		bgColor,
-		borderRadius,
-		textColor,
-		borderColor,
-		label,
-		resizable,
-		inputs,
-		outputs,
-		direction: LR ? 'horizontal' : 'vertical'
-	};
-	let node: NodeType = createNode(config);
-	const { nodes } = graph;
+	let node: NodeType;
 
 	onMount(() => {
+		const config: NodeConfig = {
+			id: id || graph.nodes.count() + 1,
+			width,
+			position,
+			dimensions,
+			height,
+			bgColor,
+			borderRadius,
+			textColor,
+			borderColor,
+			label,
+			resizable,
+			inputs,
+			outputs,
+			direction: LR ? 'horizontal' : 'vertical'
+		};
+		node = createNode(config);
 		graph.nodes.add(node, node.id);
 	});
-
-	$: console.log(node?.id);
 </script>
 
-{#if $nodes[node.id]}
+{#if node && $nodes[node.id]}
 	<Node let:selected let:grabHandle {node}>
 		<slot {selected} {grabHandle}>
 			<DefaultNode {selected} {grabHandle} />

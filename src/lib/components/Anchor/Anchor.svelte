@@ -16,6 +16,7 @@
 	import { get } from 'svelte/store';
 	import { generateKey } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
+	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 
 	const driven = getContext<Writable<boolean>>('driven');
 	const node = getContext<Node>('node');
@@ -23,12 +24,13 @@
 	const graphDirection = getContext<string>('direction');
 
 	export let key: string | null = null;
+	export let id: string | number = 0;
 	export let input: boolean = false;
 	export let output: boolean = false;
 	export let inputsStore: Writable<WrappedWritable<unknown>> | null = null;
 	export let outputStore: ReturnType<typeof generateOutput> | null = null;
 	export let multiple = output ? true : input ? false : true;
-	export let label = generateKey();
+	export let label = 1;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let dynamic = false;
@@ -43,8 +45,6 @@
 	let hovering = false;
 
 	let type: InputType = input === output ? null : input ? 'input' : 'output';
-
-	const id: AnchorKey = `A-${input ? 'I' : 'O'}-${label}/${node.id}`;
 
 	$: anchors = node.anchors;
 	$: edges = graph.edges;
@@ -65,11 +65,12 @@
 
 	onMount(() => {
 		const { x, y } = anchorElement.getBoundingClientRect();
+		const key: AnchorKey = `A-${input ? 'I' : 'O'}-${id || anchors.count() + 1}/${node.id}`;
 
 		const anchorPosition = { x, y };
 		anchor = createAnchor(
 			node,
-			id,
+			key,
 			anchorPosition,
 			anchorDimensions,
 			inputsStore || outputStore || null,
@@ -77,8 +78,14 @@
 			direction,
 			dynamic
 		);
-		anchors.add(anchor, id);
+		anchors.add(anchor, anchor.id);
 	});
+
+	$: {
+		$connectedAnchors;
+		console.log($connectedAnchors);
+		//edgeKeys.add(sortEdgeKey(anchor.id, $connectedAnchors));
+	}
 
 	// If an anchor is added to the store, we update all anchor positions
 	$: if (anchorElement) {
@@ -203,7 +210,6 @@
 			source!.connected.update((anchors) => anchors.add(target!));
 			target!.connected.update((anchors) => anchors.add(source!));
 			const id = newEdge.id;
-			edgeKeys.add(id);
 			edges.add(newEdge, id);
 		}
 
@@ -285,10 +291,11 @@
 	};
 
 	function destroy() {
-		Array.from(edgeKeys).forEach((key) => edges.delete(key));
+		//Array.from(edgeKeys).forEach((key) => edges.delete(key));
 		edges.delete('cursor');
 		anchor.connected.update((connectedAnchors) => {
 			Array.from(connectedAnchors).forEach((connectedAnchor) => {
+				edges.delete(sortEdgeKey(anchor.id, connectedAnchor.id));
 				connectedAnchor.connected.update((connectedAnchorConnections) => {
 					connectedAnchorConnections.delete(anchor);
 					return connectedAnchorConnections;

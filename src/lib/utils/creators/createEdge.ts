@@ -2,16 +2,14 @@ import type { WritableEdge, EdgeConfig, Anchor } from '$lib/types';
 import { writable } from 'svelte/store';
 import * as s from '$lib/constants/styles';
 import type { EdgeLabel, EdgeKey, OutputKey, InputKey } from '$lib/types';
+import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 
 export function createEdge(
 	connection: { source: Anchor | null; target: Anchor | null },
 	config?: EdgeConfig
 ): WritableEdge {
 	const { source, target } = connection;
-	const edgeId: EdgeKey =
-		source?.id && target?.id
-			? (`${source.id as OutputKey | InputKey}+${target.id as OutputKey | InputKey}` as EdgeKey)
-			: 'cursor';
+	const edgeId: EdgeKey = source?.id && target?.id ? sortEdgeKey(source.id, target.id) : 'cursor';
 
 	const writableEdge: WritableEdge = {
 		id: edgeId,

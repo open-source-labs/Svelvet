@@ -11,7 +11,7 @@
 
 	export let mermaid = '';
 	export let theme = 'light';
-	export let graphId: GraphKey = `G-${graphStore.count() + 1}`;
+	export let graphId: number | string = 0;
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
 	export let initialZoom = 1;
@@ -25,7 +25,8 @@
 	setContext('direction', LR ? 'LR' : 'TD');
 
 	onMount(() => {
-		graph = createGraph(graphId, initialZoom);
+		let graphKey: GraphKey = `G-${graphStore.count() + 1}`;
+		graph = createGraph(graphKey, initialZoom);
 		if (nodes.length && !mermaid) {
 			const nodeObjects = generateNodes(nodes);
 			populateStore(nodeObjects, graph);

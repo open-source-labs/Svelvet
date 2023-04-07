@@ -26,8 +26,8 @@
 			<SpecialNode
 				width={600}
 				height={300}
-				inputs={10}
-				outputs={10}
+				inputs={5}
+				outputs={5}
 				LR
 				borderRadius={30}
 				label="Hello"
