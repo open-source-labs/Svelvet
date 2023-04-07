@@ -34,7 +34,7 @@
 	export let dynamic = false;
 
 	let animationFrameId: number;
-	let edgeKey: EdgeKey;
+	let edgeKeys: Set<EdgeKey> = new Set();
 	let anchorElement: HTMLButtonElement;
 	let anchorWidth: number;
 	let anchorHeight: number;
@@ -202,8 +202,9 @@
 			newEdge = createEdge({ source, target });
 			source!.connected.update((anchors) => anchors.add(target!));
 			target!.connected.update((anchors) => anchors.add(source!));
-			edgeKey = newEdge.id;
-			edges.add(newEdge, edgeKey);
+			const id = newEdge.id;
+			edgeKeys.add(id);
+			edges.add(newEdge, id);
 		}
 
 		connectStores();
@@ -284,7 +285,7 @@
 	};
 
 	function destroy() {
-		edges.delete(edgeKey);
+		Array.from(edgeKeys).forEach((key) => edges.delete(key));
 		edges.delete('cursor');
 		anchor.connected.update((connectedAnchors) => {
 			Array.from(connectedAnchors).forEach((connectedAnchor) => {
@@ -329,7 +330,6 @@
 	}
 
 	onDestroy(() => {
-		console.log('Destroying');
 		destroy();
 		cancelAnimationFrame(animationFrameId);
 	});

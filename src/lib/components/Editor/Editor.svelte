@@ -21,11 +21,16 @@
 
 	function deleteNode() {
 		console.log(editing.id);
-		const DOMnode = document.querySelector('#' + editing.id);
-		if (DOMnode) {
-			DOMnode.remove();
-		}
-		graph.nodes.delete(editing.id);
+		// const DOMnode = document.querySelector('#' + editing.id);
+		// if (DOMnode) {
+		// 	DOMnode.remove();
+		// }
+		console.log('Deleting node: ', editing.id);
+		const node = graph.nodes.get(editing.id);
+		console.log(node);
+		console.log(get(graph.nodes));
+		const deleted = graph.nodes.delete(editing.id);
+		console.log({ deleted });
 		graph.editing.set(null);
 	}
 </script>

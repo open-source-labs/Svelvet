@@ -45,16 +45,20 @@
 		outputs,
 		direction: LR ? 'horizontal' : 'vertical'
 	};
-
-	const node: NodeType = createNode(config);
+	let node: NodeType = createNode(config);
+	const { nodes } = graph;
 
 	onMount(() => {
-		graph.nodes.add(node, `N-${id}`);
+		graph.nodes.add(node, node.id);
 	});
+
+	$: console.log(node?.id);
 </script>
 
-<Node let:selected let:grabHandle {node}>
-	<slot {selected} {grabHandle}>
-		<DefaultNode {selected} {grabHandle} />
-	</slot>
-</Node>
+{#if $nodes[node.id]}
+	<Node let:selected let:grabHandle {node}>
+		<slot {selected} {grabHandle}>
+			<DefaultNode {selected} {grabHandle} />
+		</slot>
+	</Node>
+{/if}

@@ -38,26 +38,10 @@
 </script>
 
 <ZoomPanWrapper>
-	<button
-		class="button"
-		on:click={() => {
-			const state = getJSONState(graph);
-			localStorage.setItem('state', state);
-		}}
-	>
-		DOWNLOAD STATE
-	</button>
 	<NodeRenderer><slot /></NodeRenderer>
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
 </ZoomPanWrapper>
 
 <style>
-	.button {
-		position: absolute;
-		width: 100px;
-		height: 50px;
-		top: 0;
-		left: 0;
-	}
 </style>
