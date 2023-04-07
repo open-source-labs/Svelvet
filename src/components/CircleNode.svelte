@@ -14,7 +14,7 @@
 		<Anchor />
 	</div>
 
-	<Resizer width height both minWidth={200} minHeight={200} />
+	<Resizer width height minWidth={200} minHeight={200} />
 </SpecialNode>
 
 <style>

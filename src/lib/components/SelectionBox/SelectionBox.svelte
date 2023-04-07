@@ -1,22 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { cursorPositionRaw } from '$lib/stores/CursorStore';
-	import type { Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
+	import { cursorPositionRaw, initialClickPosition } from '$lib/stores/CursorStore';
+	import type { Graph, Node, NodeDOMBounds, NodeKey, XYPair } from '$lib/types';
 	import { activeKeys } from '$lib/stores';
 	import { get } from 'svelte/store';
 	export let graph: Graph;
-	export let anchor = { x: 0, y: 0 };
+	export let anchor: XYPair;
 	export let adding = false;
 
 	export let creating = false;
 
-	const { groups, nodes: nodeStore } = graph;
-
+	const { groups, nodes: nodeStore, cursor, bounds } = graph;
+	//const { x, y } = $initialClickPosition;
+	const { x, y } = $cursorPositionRaw;
+	$: console.log($boundsTop);
 	let nodes: Array<NodeDOMBounds>;
 	let box: HTMLDivElement;
-
+	const { top: boundsTop, left: boundsLeft } = bounds;
 	$: selectedNodes = $groups.selected.nodes;
-	$: height = $cursorPositionRaw.y - anchor.y;
+	$: height = $cursorPositionRaw.y - anchor.y + $boundsTop;
 	$: width = $cursorPositionRaw.x - anchor.x;
 	$: top = Math.min(anchor.y, anchor.y + height);
 	$: left = Math.min(anchor.x, anchor.x + width);

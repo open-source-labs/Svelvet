@@ -4,24 +4,23 @@
 	import { getContext } from 'svelte';
 	export let width = false;
 	export let height = false;
-	export let both = false;
-	export let minHeight: number;
-	export let minWidth: number;
+	export let minHeight: number = 200;
+	export let minWidth: number = 200;
 
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');
 
-	$: resizingWidth = node.resizingWidth;
-
-	$: resizingHeight = node.resizingHeight;
-
 	const { cursor } = graph;
+
+	let both = width && height;
+
+	$: resizingWidth = node.resizingWidth;
+	$: resizingHeight = node.resizingHeight;
 
 	$: heightStore = node.dimensions.height;
 	$: widthStore = node.dimensions.width;
 	$: x = node.position.x;
 	$: y = node.position.y;
-	$: anchors = node.anchors;
 
 	$: cursorY = $cursor.y;
 	$: cursorX = $cursor.x;
@@ -74,7 +73,8 @@
 		width: 9px;
 		height: 9px;
 		z-index: 0;
-		background-color: red;
+		/* background-color: red; */
+		pointer-events: auto;
 	}
 	.width {
 		height: calc(100% - 3px);

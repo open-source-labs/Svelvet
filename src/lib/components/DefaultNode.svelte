@@ -14,13 +14,15 @@
 	let right = direction === 'TD' ? false : true;
 	let bottom = direction === 'TD' ? true : false;
 
+	const { direction: nodeDirection } = node;
+
 	$: label = node.label;
 	$: bgColor = node.bgColor;
 	$: borderRadius = node.borderRadius;
 	$: borderColor = node.borderColor;
 	$: textColor = node.textColor;
-	$: inputCount = node.inputCount;
-	$: outputCount = node.outputCount;
+	$: inputs = node.inputs;
+	$: outputs = node.outputs;
 
 	let inputAnchors = 5;
 </script>
@@ -33,31 +35,22 @@
 	class:selected
 	class="default-node"
 >
-	<button
-		on:click={() => {
-			inputAnchors++;
-			//node.resizingWidth.set(true);
-		}}>MORE ANCHORS</button
-	>
 	<div class="input-anchors" class:top class:left>
-		{#each { length: inputAnchors } as _, i}
+		{#each { length: $inputs } as _, i}
 			<Anchor input />
 		{/each}
 	</div>
 	<div class="output-anchors" class:bottom class:right>
-		<Anchor output />
-		<Anchor output />
-		<Anchor output />
-		<Anchor output />
-		<Anchor />
-		<Anchor />
+		{#each { length: $outputs } as _, i}
+			<Anchor output />
+		{/each}
 	</div>
 	<p style:color={$textColor}>{$label}</p>
 </div>
 
 <style>
 	:root {
-		--shadow-color: 0deg 0% 63%;
+		--shadow-color: 0deg 0% 10%;
 		--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
 			0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
 			1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
@@ -89,20 +82,24 @@
 		text-align: center;
 	}
 	.selected {
-		border: solid 1px red !important;
+		border: solid 1px white !important;
 	}
 
 	.input-anchors,
 	.output-anchors {
 		display: flex;
 		position: absolute;
+		justify-content: center;
+		align-items: center;
+		z-index: 1;
+		pointer-events: none;
 	}
 
 	.top,
 	.bottom {
 		padding: 0px 20px;
 		width: 100%;
-		justify-content: space-between;
+		justify-content: space-around;
 	}
 
 	.top {
@@ -120,7 +117,7 @@
 		padding: 20px 0px;
 		height: 100%;
 		flex-direction: column;
-		justify-content: space-between;
+		justify-content: space-around;
 	}
 
 	.left {

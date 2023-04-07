@@ -9,7 +9,7 @@
 		AnchorKey,
 		InputType
 	} from '$lib/types';
-	import { onMount, getContext } from 'svelte';
+	import { onMount, getContext, onDestroy } from 'svelte';
 	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable, type Writable } from 'svelte/store';
 	import { createEdge, createAnchor, calculateRelativeCursor, generateOutput } from '$lib/utils';
@@ -327,6 +327,12 @@
 			$linkingOutput?.anchor === anchor
 		);
 	}
+
+	onDestroy(() => {
+		console.log('Destroying');
+		destroy();
+		cancelAnimationFrame(animationFrameId);
+	});
 </script>
 
 <button
@@ -354,11 +360,11 @@
 
 <style>
 	.wrapper {
-		z-index: 100;
+		z-index: 10;
 		/* border: solid 1px black; */
 		width: fit-content;
 		height: fit-content;
-		pointer-events: auto;
+		pointer-events: all;
 	}
 
 	.anchor {

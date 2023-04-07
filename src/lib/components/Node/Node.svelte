@@ -7,39 +7,20 @@
 	import { calculateFitContentWidth, captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
-	import DefaultNode from '../DefaultNode.svelte';
 
 	export let node: Node;
 
 	let absolute = false;
 
 	$: maxZIndex = graph.maxZIndex;
-	$: collapsible = node.collapsible;
 	$: header = node.header;
 	$: widthStore = node.dimensions.width;
 	$: heightStore = node.dimensions.height;
-	$: inputs = node.inputs;
-	$: outputs = node.outputs;
-	$: properties = node.properties;
 	$: x = node.position.x;
 	$: y = node.position.y;
-	$: draggable = node.draggable;
 	$: id = node.id;
-	$: group = node.group;
-	$: config = node.config;
-	$: borderRadius = node.borderRadius;
 	$: editable = node.editable;
-	$: bgColor = node.bgColor;
-	$: borderColor = node.borderColor;
-	$: textColor = node.textColor;
-	$: label = node.label;
 	$: resizable = node.resizable;
-	$: Component = node.component;
-	$: hideable = node.hideable;
-	$: headerColor = node.headerColor;
-	$: anchors = node.anchors;
-
-	$: console.log($widthStore);
 
 	let zIndex = 0;
 
@@ -50,12 +31,12 @@
 	let isMovable = false;
 	let collapsed = false;
 	let isResizing = { width: false, height: false };
-	let minWidth = 0;
-	let minHeight = 0;
+	let minWidth = 200;
+	let minHeight = 200;
 
 	let DOMnode: HTMLElement;
 
-	const { isLocked, connectingFrom, transforms, bounds, nodes: nodeStore, groups } = graph;
+	const { isLocked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
 	const snapTo: number = getContext('snapTo');
@@ -89,7 +70,6 @@
 			$selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		}
-		graph.outputsRemoved.set(node.id);
 	});
 
 	function onMouseUp() {
@@ -215,11 +195,11 @@
 		<Header />
 	{/if}
 	{#if !collapsed}
-		{#if resizable}
-			<Resizer width height both {minWidth} {minHeight} />
-		{/if}
 		<!-- This is the actual "node"-->
 		<slot {grabHandle} {selected} />
+		{#if resizable}
+			<Resizer width height {minWidth} {minHeight} />
+		{/if}
 	{/if}
 </div>
 

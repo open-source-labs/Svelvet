@@ -14,7 +14,7 @@
 }
 
 .allow-pointer-events * {
-	pointer-events: all;
+	pointer-events: auto;
 }
 
 .default-node {

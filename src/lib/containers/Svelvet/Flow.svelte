@@ -9,7 +9,8 @@
 		XYPair,
 		GroupBox,
 		Arrow,
-		GroupKey
+		GroupKey,
+		Group
 	} from '$lib/types';
 	import { get, writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
@@ -121,7 +122,7 @@
 			});
 
 			groups.update((groups) => {
-				const newGroup = {
+				const newGroup: Group = {
 					id: groupKey,
 					parent: writable(groupBox),
 					nodes: writable(new Set([...$selected, groupBox]))
@@ -143,7 +144,6 @@
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
-		console.log('Deleting edge');
 		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
@@ -284,7 +284,6 @@
 	{/if}
 	<GraphRenderer {isMovable}><slot /></GraphRenderer>
 	<Background --background-color="var(--{theme}-background)" {style} />
-
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	{#if selecting && !disableSelection}

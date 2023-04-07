@@ -25,6 +25,9 @@
 	export let textColor = THEMES[theme].text;
 	export let resizable = false;
 	export let label = '';
+	export let inputs = 1;
+	export let outputs = 1;
+	export let LR = false;
 
 	const config: NodeConfig = {
 		id,
@@ -37,7 +40,10 @@
 		textColor,
 		borderColor,
 		label,
-		resizable
+		resizable,
+		inputs,
+		outputs,
+		direction: LR ? 'horizontal' : 'vertical'
 	};
 
 	const node: NodeType = createNode(config);

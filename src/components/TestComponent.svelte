@@ -8,6 +8,7 @@
 	import { generateOutput, generateInput } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { WrappedWritable } from '$lib/types';
+	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 	let handle = true;
 
 	type InputStructure = {
@@ -57,6 +58,7 @@
 		<p class="output">{$outputTest}</p>
 		<p class="output">{$output2}</p>
 	</div>
+	<Resizer width height minHeight={200} minWidth={400} />
 </SpecialNode>
 
 <style>
@@ -76,7 +78,7 @@
 	}
 	.handle {
 		width: 100%;
-		position: relative;
+		position: absolute;
 		left: -40px;
 		height: 40px;
 		border-radius: 10px;

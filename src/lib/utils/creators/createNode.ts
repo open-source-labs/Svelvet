@@ -12,7 +12,19 @@ import {
 import { createStore } from './createStore';
 
 export function createNode(userNode: NodeConfig): Node {
-	const { id, width, height, resizable, dimensions, header, position, headerColor } = userNode;
+	const {
+		id,
+		width,
+		height,
+		inputs,
+		outputs,
+		resizable,
+		dimensions,
+		direction,
+		header,
+		position,
+		headerColor
+	} = userNode;
 	const { bgColor, borderColor, borderRadius, textColor } = userNode;
 	const idString: NodeKey =
 		id && (typeof id === 'number' || id[0] === 'N') ? `N-${id}` : `N-${generateKey()}`;
@@ -31,6 +43,8 @@ export function createNode(userNode: NodeConfig): Node {
 		group: writable(null),
 		draggable: writable(true),
 		selectable: writable(true),
+		inputs: writable(inputs),
+		outputs: writable(outputs),
 		connectable: writable(true),
 		deletable: writable(true),
 		hideable: writable(true),
@@ -47,12 +61,12 @@ export function createNode(userNode: NodeConfig): Node {
 		collapsed: writable(false),
 		visible: writable(true),
 		collapsible: writable(true),
-		inputs: writable({}),
 		props: userNode.props || null,
 		borderRadius: writable(borderRadius || NODE_BORDER_RADIUS),
 		properties: writable({}),
 		headerHeight: writable(40),
 		bgColor: writable(bgColor || null),
+		direction,
 		component: userNode.component || null,
 		processor: (inputs, properties) => ({ ...inputs, ...properties }),
 		label: writable(userNode.label || ''),

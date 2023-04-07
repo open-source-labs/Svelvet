@@ -79,7 +79,7 @@ export interface GroupBox {
 
 export interface Group {
 	parent: Writable<Node | GroupBox | null>;
-	nodes: Writable<Set<Node>>;
+	nodes: Writable<Set<Node | GroupBox>>;
 }
 
 export interface GraphTransforms {

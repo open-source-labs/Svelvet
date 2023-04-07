@@ -1,28 +1,18 @@
 import type { Writable } from 'svelte/store';
 import type { AnchorStore, CSSDimensionString } from '.';
-import type {
-	XYPosition,
-	NodeKey,
-	InputKey,
-	XYPair,
-	Dimensions,
-	ConfigObject,
-	CSSColorString,
-	GroupKey
-} from '.';
-import type { generateOutput } from '$lib/utils';
+import type { XYPosition, NodeKey, Dimensions, ConfigObject, CSSColorString, GroupKey } from '.';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
-	label: Writable<string>;
+	label: Writable<string>; // Primary label for default node
 	dimensions: Dimensions;
 	position: XYPosition;
-	inputs: Writable<Inputs>;
+	inputs: Writable<number>; //Number of default input anchors to render
 	anchors: AnchorStore;
 	properties: Writable<Properties>;
 	processor: (inputs: Inputs, properties: Properties) => void;
-	outputs?: ReturnType<typeof generateOutput>;
+	outputs: Writable<number>; // Number of default output anchors to render
 	header: Writable<boolean>;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
@@ -44,19 +34,13 @@ export interface Node {
 	ariaLabel: string;
 	component: ConstructorOfATypedSvelteComponent | null;
 	config?: ConfigObject;
+	direction: 'horizontal' | 'vertical';
 	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
 	bgColor: Writable<CSSColorString | null>;
 	borderColor: Writable<CSSColorString | null>;
 	textColor: Writable<CSSColorString | null>;
 	headerColor: Writable<CSSColorString | null>;
-}
-
-export interface DummyNode {
-	id?: never;
-	anchors: { inputs: Writable<Record<InputKey, XYPair>> };
-	position: XYPosition;
-	dimensions: Dimensions;
 }
 
 // This defines an interface for the user-defined node object
@@ -71,11 +55,12 @@ export interface NodeConfig {
 		x: number;
 		y: number;
 	};
+	direction?: 'horizontal' | 'vertical';
 	label?: string;
 	group?: string;
 	resizable?: boolean;
-	inputs?: Array<AnchorGroup>;
-	outputs?: Array<AnchorGroup>;
+	inputs?: number;
+	outputs?: number;
 	component?: ConstructorOfATypedSvelteComponent;
 	config?: ConfigObject;
 	width?: number;
