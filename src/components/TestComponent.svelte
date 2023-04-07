@@ -7,7 +7,7 @@
 	import { get, writable } from 'svelte/store';
 	import { generateOutput, generateInput } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
-	import type { WrappedWritable } from '$lib/types';
+	import CustomEdge from './CustomEdge.svelte';
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 	let handle = true;
 
@@ -35,28 +35,28 @@
 </script>
 
 <SpecialNode let:grabHandle let:selected>
-	<div use:grabHandle class:selected class:handle>Grab Me!</div>
+	<div use:grabHandle class:selected class:handle>Custom Grab Element</div>
 	<div class="node">
 		<div class="input-anchors">
 			{#each Object.entries($inputs) as [key, value]}
 				<Anchor {key} inputsStore={inputs} input />
 			{/each}
 		</div>
-		<div class="sliders">
+		<!-- <div class="sliders">
 			{#each Object.entries($inputs) as [key, value]}
 				<Slider parameterStore={value} />
 			{/each}
-		</div>
+		</div> -->
 		<div class="output-anchors">
-			<Anchor outputStore={outputTest} output direction="east">
+			<Anchor outputStore={outputTest} output edge={CustomEdge}>
 				<CustomAnchor />
 			</Anchor>
 			<Anchor outputStore={output2} output>
 				<CustomAnchor />
 			</Anchor>
 		</div>
-		<p class="output">{$outputTest}</p>
-		<p class="output">{$output2}</p>
+		<!-- <p class="output">{$outputTest}</p>
+		<p class="output">{$output2}</p> -->
 	</div>
 	<Resizer width height minHeight={200} minWidth={400} />
 </SpecialNode>
@@ -75,22 +75,27 @@
 		display: flex;
 		flex-direction: column;
 		padding: 10px;
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 	}
 	.handle {
-		width: 100%;
+		width: fit-content;
 		position: absolute;
 		left: -40px;
 		height: 40px;
 		border-radius: 10px;
-		width: 50px;
 		top: -80px;
-		background-color: red;
+		padding: 10px;
+		background-color: rgb(247, 241, 241);
+		color: rgb(9, 9, 9);
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.output {
 		color: black;
 	}
 	.selected {
-		background-color: blue;
+		background-color: rgb(255, 230, 0);
 	}
 	.input-anchors {
 		position: absolute;

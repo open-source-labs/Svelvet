@@ -86,7 +86,7 @@
 	$: flipX = deltaX < 0;
 	$: flipY = deltaY < 0;
 
-	let DOMPath: SVGPathElement;
+	export let DOMPath: SVGPathElement;
 	let animationFrameId: number;
 	let pathMidPointX = 0;
 	let pathMidPointY = 0;
@@ -145,12 +145,20 @@
 			d={path}
 			style:stroke={strokeColor}
 			style:--default-edge-stroke-width={strokeWidth + 'px'}
-			stroke={strokeColor}
-			stroke-width={strokeWidth}
-			fill="transparent"
 		/>
+		<slot {path} {DOMPath} />
 	</svg>
-	<EdgeLabel label="Hello" top={pathMidPointY} left={pathMidPointX} />
+
+	<div
+		role="note"
+		style:top={pathMidPointY + 'px'}
+		style:left={pathMidPointX + 'px'}
+		class="edge-label"
+	>
+		<slot name="label">
+			<div class="default-label">Default Edge</div>
+		</slot>
+	</div>
 </div>
 
 <style>
@@ -169,6 +177,7 @@
 		width: 100%;
 		height: 100%;
 		z-index: -4;
+		fill: transparent;
 	}
 
 	.active:hover {
@@ -179,6 +188,24 @@
 		stroke-dasharray: 5;
 		animation: dash 1s linear infinite;
 		will-change: stroke-dashoffset;
+	}
+
+	.edge-label {
+		position: absolute;
+		width: fit-content;
+		z-index: -3;
+		cursor: pointer !important;
+		transform: translate(-50%, -50%);
+	}
+	.default-label {
+		background: white;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 1rem;
+		height: 1.5rem;
+		border-radius: 5px;
+		padding: 10px;
 	}
 
 	@keyframes dash {

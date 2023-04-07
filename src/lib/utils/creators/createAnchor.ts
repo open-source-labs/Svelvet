@@ -7,6 +7,7 @@ export function createAnchor(
 	position: XYPair,
 	dimensions: { width: number; height: number },
 	store: Anchor['store'],
+	edge: ConstructorOfATypedSvelteComponent | null,
 	type: 'input' | 'output' | null,
 	direction?: Direction,
 	dynamic?: boolean
@@ -40,6 +41,7 @@ export function createAnchor(
 		direction: writable(direction),
 		dynamic: writable(dynamic || false),
 		type,
+		edge,
 		moving,
 		connected: writable(new Set()),
 		store: store || null

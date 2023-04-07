@@ -17,22 +17,7 @@
 		<Svelvet theme="dark" width={600} height={600} LR>
 			<TestComponent />
 			<TestComponent />
-			<SpecialNode
-				width={200}
-				height={200}
-				borderRadius={20}
-				label="I DON'T HAVE TIME FOR THIS MIKE"
-			/>
-			<SpecialNode
-				width={600}
-				height={300}
-				inputs={5}
-				outputs={5}
-				LR
-				borderRadius={30}
-				label="Hello"
-			/>
-			<SpecialNode bgColor="white" label="Thanks For Using Svelvet" />
+			<TestComponent />
 		</Svelvet>
 	</div>
 </body>

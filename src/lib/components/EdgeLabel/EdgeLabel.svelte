@@ -20,9 +20,7 @@
 	style:color={textColor}
 	class="edge-label"
 >
-	<p>
-		{label}
-	</p>
+	<slot />
 </div>
 
 <style>

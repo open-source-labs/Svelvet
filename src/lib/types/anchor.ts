@@ -14,6 +14,7 @@ export interface Anchor {
 	};
 	connected: Writable<Set<Anchor>>;
 	dynamic: Writable<boolean>;
+	edge: ConstructorOfATypedSvelteComponent | null;
 	direction: Writable<Direction>;
 	id: AnchorKey;
 	type: InputType;

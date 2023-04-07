@@ -16,7 +16,7 @@ const dark: Theme = {
 	text: '#C76738',
 	selection: '#38C7C7',
 	header: '#C76738',
-	edge: '#C76738',
+	edge: 'white',
 	anchor: '#38C7C7'
 };
 

@@ -63,6 +63,7 @@ export type WritableEdge = {
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
+	component: ConstructorOfATypedSvelteComponent | null;
 };
 
 export interface EdgeLabel {

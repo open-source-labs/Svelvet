@@ -6,6 +6,7 @@ import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 
 export function createEdge(
 	connection: { source: Anchor | null; target: Anchor | null },
+	component: ConstructorOfATypedSvelteComponent | null,
 	config?: EdgeConfig
 ): WritableEdge {
 	const { source, target } = connection;
@@ -15,6 +16,7 @@ export function createEdge(
 		id: edgeId,
 		target: connection.target,
 		source: connection.source,
+		component,
 		type: writable(config?.type || s.EDGE_TYPE),
 		color: writable(config?.color || s.EDGE_COLOR),
 		width: writable(config?.width || s.EDGE_WIDTH),

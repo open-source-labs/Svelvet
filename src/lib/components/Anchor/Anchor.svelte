@@ -34,6 +34,7 @@
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let dynamic = false;
+	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 
 	let animationFrameId: number;
 	let edgeKeys: Set<EdgeKey> = new Set();
@@ -74,6 +75,7 @@
 			anchorPosition,
 			anchorDimensions,
 			inputsStore || outputStore || null,
+			edge,
 			type,
 			direction,
 			dynamic
@@ -148,8 +150,10 @@
 	}
 
 	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
+		console.log({ edge });
+
 		// Create a temporary edge to track the cursor
-		const newEdge = createEdge({ source, target });
+		const newEdge = createEdge({ source, target }, source?.edge || null);
 		// Add the edge to the store
 		edges.add(newEdge, 'cursor');
 	}
@@ -206,7 +210,7 @@
 		}
 
 		if (source && target) {
-			newEdge = createEdge({ source, target });
+			newEdge = createEdge({ source, target }, source?.edge || null);
 			source!.connected.update((anchors) => anchors.add(target!));
 			target!.connected.update((anchors) => anchors.add(source!));
 			const id = newEdge.id;
@@ -350,7 +354,7 @@
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
 >
-	<slot {hovering} {connected}>
+	<slot {hovering} {connected} {connecting}>
 		<div
 			class="anchor"
 			class:output
