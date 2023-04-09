@@ -31,7 +31,10 @@ export function createAnchor(
 	// Moving is derived from whether or not the parent node is moving or resizing
 	const moving = derived(
 		[node.moving, node.resizingWidth, node.resizingHeight],
-		([$moving, $resizingWidth, $resizingHeight]) => $moving || $resizingWidth || $resizingHeight
+		([$moving, $resizingWidth, $resizingHeight]) => {
+			console.log('moving', $moving, $resizingWidth, $resizingHeight);
+			return $moving || $resizingWidth || $resizingHeight;
+		}
 	);
 
 	return {

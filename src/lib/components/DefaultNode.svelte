@@ -10,12 +10,12 @@
 	const direction = getContext<string>('direction');
 
 	let top = direction === 'TD' ? true : false;
-	let left = direction === 'TD' ? false : true;
-	let right = direction === 'TD' ? false : true;
 	let bottom = direction === 'TD' ? true : false;
 
-	const { direction: nodeDirection } = node;
+	let left = direction === 'TD' ? false : true;
+	let right = direction === 'TD' ? false : true;
 
+	$: nodeDirection = node.direction;
 	$: label = node.label;
 	$: bgColor = node.bgColor;
 	$: borderRadius = node.borderRadius;
@@ -23,8 +23,6 @@
 	$: textColor = node.textColor;
 	$: inputs = node.inputs;
 	$: outputs = node.outputs;
-
-	let inputAnchors = 5;
 </script>
 
 <div
@@ -50,7 +48,7 @@
 
 <style>
 	:root {
-		--shadow-color: 0deg 0% 10%;
+		--shadow-color: 0deg 0% 15%;
 		--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
 			0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
 			1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);

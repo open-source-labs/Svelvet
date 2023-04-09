@@ -18,7 +18,7 @@ export const NODE_FONT_FAMILY = 'sans-serif';
 export const NODE_FONT_WEIGHT = 'normal';
 export const NODE_FONT_STYLE = 'normal';
 
-export const EDGE_WIDTH = 4;
+export const EDGE_WIDTH = 2;
 export const EDGE_LABEL_BORDER_RADIUS = 10;
 export const EDGE_LABEL_WIDTH = 100;
 export const EDGE_LABEL_HEIGHT = 50;

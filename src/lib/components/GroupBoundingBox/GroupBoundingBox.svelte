@@ -34,9 +34,7 @@
 	style:height={`${$height}px`}
 	style="border: solid 4px {$color};"
 >
-	<div class="bounding-box" style:background-color={$color}>
-		<h4>{groupName}</h4>
-	</div>
+	<div class="bounding-box" style:background-color={$color} />
 </div>
 
 <style>

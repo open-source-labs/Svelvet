@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey } from '$lib/types';
-import { generateKey } from '$lib/utils/helpers/generateKey';
 import {
 	NODE_BORDER_COLOR_LIGHT,
 	NODE_BORDER_RADIUS,
@@ -20,8 +19,10 @@ export function createNode(userNode: NodeConfig): Node {
 		outputs,
 		resizable,
 		dimensions,
+		editable,
 		direction,
 		header,
+		zIndex,
 		position,
 		headerColor
 	} = userNode;
@@ -53,10 +54,10 @@ export function createNode(userNode: NodeConfig): Node {
 		resizingWidth: writable(false),
 		resizingHeight: writable(false),
 		focusable: writable(true),
-		editable: writable(false),
+		editable: writable(editable || false),
 		resizable: writable(resizable),
 		anchors: anchorStore,
-		zIndex: writable(0),
+		zIndex: writable(zIndex || 0),
 		ariaLabel: `Node ${id}`,
 		header: writable(header ? true : false),
 		collapsed: writable(false),
@@ -69,7 +70,6 @@ export function createNode(userNode: NodeConfig): Node {
 		bgColor: writable(bgColor || null),
 		direction,
 		component: userNode.component || null,
-		processor: (inputs, properties) => ({ ...inputs, ...properties }),
 		label: writable(userNode.label || ''),
 		borderColor: writable(borderColor || NODE_BORDER_COLOR_LIGHT),
 		textColor: writable(textColor || NODE_FONT_COLOR_LIGHT),

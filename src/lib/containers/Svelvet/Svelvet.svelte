@@ -16,6 +16,7 @@
 	export let snapTo = 1;
 	export let initialZoom = 1;
 	export let LR = false;
+	export let editable = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
@@ -26,7 +27,9 @@
 
 	onMount(() => {
 		let graphKey: GraphKey = `G-${graphStore.count() + 1}`;
-		graph = createGraph(graphKey, initialZoom);
+
+		graph = createGraph(graphKey, { initialZoom, editable });
+
 		if (nodes.length && !mermaid) {
 			const nodeObjects = generateNodes(nodes);
 			populateStore(nodeObjects, graph);
@@ -67,7 +70,7 @@
 		// 	}
 		// });
 
-		graphStore.add(graph, graphId);
+		graphStore.add(graph, graphKey);
 
 		// const { transforms } = graph;
 		// const { scale } = transforms;

@@ -5,6 +5,7 @@
 	background-color: var(--node-background-color, var(--node-default-background));
 	color: var(--node-text-color, --node-default-text-color);
 	cursor: grab;
+	position: absolute;
 }
 .absolute {
 	position: absolute;

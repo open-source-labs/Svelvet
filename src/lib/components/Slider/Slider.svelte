@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { writable, type Writable } from 'svelte/store';
-	import { type Parameter, type Graph, isArrow } from '$lib/types';
+	import type { Writable } from 'svelte/store';
+	import { type Parameter, type Graph, isArrow, type OutputStore } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
 
-	export let parameterStore: Writable<Parameter> = writable(0.5);
+	export let parameterStore: Writable<unknown>;
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
@@ -97,7 +97,7 @@
 		}
 		// For some reason, this line is necessary
 		// Absurdly large or small numbers do not get reset without it
-		sliderElement.value = $parameterStore.toString();
+		sliderElement.value = JSON.stringify($parameterStore);
 		sliderElement.blur();
 	}
 

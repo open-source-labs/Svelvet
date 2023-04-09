@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Node from '$lib/components/Node/Node.svelte';
+	import InternalNode from '$lib/components/Node/InternalNode.svelte';
 	import type { Graph, Group, GroupKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { get } from 'svelte/store';

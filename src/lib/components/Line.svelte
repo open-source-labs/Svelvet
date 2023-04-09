@@ -1,6 +1,6 @@
 <!-- Line.svelte -->
 <script lang="ts">
-	import type { Anchor, Direction, Graph, XYPair, Theme, EdgeKey } from '$lib/types';
+	import type { Anchor, Direction, Graph, XYPair, Theme, EdgeKey, WritableEdge } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
@@ -12,12 +12,19 @@
 
 	const { cursor } = graph;
 
-	export let source: Anchor | null = null;
-	export let target: Anchor | null = null;
-	export let strokeWidth = 1;
+	// export let source: Anchor | null = null;
+	// export let target: Anchor | null = null;
+	export let strokeWidth = EDGE_WIDTH;
 	export let strokeColor = THEMES[theme].edge;
-	export let type = 'bezier';
-	export let edgeKey: EdgeKey = 'cursor';
+	export let straight = false;
+
+	export let edge: WritableEdge;
+
+	$: edgeKey = edge.id;
+	$: label = edge.label;
+	$: source = edge.source;
+	$: target = edge.target;
+	$: Component = edge.component;
 
 	const buffer = 200;
 	let active = false;
@@ -76,7 +83,7 @@
 
 	$: path = `M ${sourcePointX}, ${sourcePointY}
 	${
-		type === 'bezier'
+		!straight
 			? `C ${sourceControlX}, ${sourceControlY}
 	${targetControlX}, ${targetControlY}`
 			: ''
@@ -86,7 +93,7 @@
 	$: flipX = deltaX < 0;
 	$: flipY = deltaY < 0;
 
-	export let DOMPath: SVGPathElement;
+	let DOMPath: SVGPathElement;
 	let animationFrameId: number;
 	let pathMidPointX = 0;
 	let pathMidPointY = 0;
@@ -97,9 +104,11 @@
 
 	$: if (!tracking && ($sourceMoving || $targetMoving || edgeKey === 'cursor')) {
 		tracking = true;
+		console.log(tracking, $sourceMoving, $targetMoving, edgeKey);
 		trackPath();
 	} else if (tracking && !$sourceMoving && !$targetMoving && edgeKey !== 'cursor') {
 		tracking = false;
+		console.log('false');
 		cancelAnimationFrame(animationFrameId);
 	}
 
@@ -129,37 +138,55 @@
 	onDestroy(() => {
 		cancelAnimationFrame(animationFrameId);
 	});
+
+	function destroy() {
+		graph.edges.delete(edgeKey);
+		source?.connected.update((connected) => {
+			if (target) connected.delete(target);
+			return connected;
+		});
+		target?.connected.update((connected) => {
+			if (source) connected.delete(source);
+			return connected;
+		});
+	}
 </script>
 
-<div
-	class="wrapper"
-	style:width={CSSwidth}
-	style:height={CSSheight}
-	style:top={CSStop}
-	style:left={CSSleft}
->
-	<svg class:active>
-		<path
-			bind:this={DOMPath}
-			class:animate
-			d={path}
-			style:stroke={strokeColor}
-			style:--default-edge-stroke-width={strokeWidth + 'px'}
-		/>
-		<slot {path} {DOMPath} />
-	</svg>
-
+{#if source || target}
 	<div
-		role="note"
-		style:top={pathMidPointY + 'px'}
-		style:left={pathMidPointX + 'px'}
-		class="edge-label"
+		class="wrapper"
+		style:width={CSSwidth}
+		style:height={CSSheight}
+		style:top={CSStop}
+		style:left={CSSleft}
 	>
-		<slot name="label">
-			<div class="default-label">Default Edge</div>
-		</slot>
+		<svg class:active>
+			<path
+				bind:this={DOMPath}
+				class:animate
+				d={path}
+				style:stroke={strokeColor}
+				style:--default-edge-stroke-width={strokeWidth + 'px'}
+			/>
+			{#if Component}
+				<Component {path} />
+			{/if}
+		</svg>
+
+		<div
+			role="note"
+			style:top={pathMidPointY + 'px'}
+			style:left={pathMidPointX + 'px'}
+			class="edge-label"
+		>
+			{#if Component}
+				<Component name="label" />
+			{:else if label}
+				<div class="default-label">{label}</div>
+			{/if}
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	path {
@@ -196,6 +223,7 @@
 		z-index: -3;
 		cursor: pointer !important;
 		transform: translate(-50%, -50%);
+		pointer-events: auto;
 	}
 	.default-label {
 		background: white;

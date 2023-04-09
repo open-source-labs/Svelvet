@@ -1,7 +1,7 @@
 import type { Writable, Readable } from 'svelte/store';
 import type { AnchorKey } from '$lib/types';
 import type { WrappedWritable } from '$lib/types';
-import type { generateOutput } from '$lib/utils';
+import type { generateOutput, generateInput } from '$lib/utils';
 
 export interface Anchor {
 	position: {
@@ -19,7 +19,10 @@ export interface Anchor {
 	id: AnchorKey;
 	type: InputType;
 	moving: Readable<boolean>;
-	store: Writable<WrappedWritable<unknown>> | ReturnType<typeof generateOutput> | null;
+	store:
+		| Writable<Record<string, Writable<unknown> | Readable<unknown>>>
+		| ReturnType<typeof generateOutput>
+		| null;
 }
 
 export type Direction = 'north' | 'south' | 'east' | 'west' | 'self';

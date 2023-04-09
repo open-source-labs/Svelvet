@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SpecialNode from '$lib/components/SpecialNode/SpecialNode.svelte';
+	import SpecialNode from '$lib/components/Node/Node.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 </script>

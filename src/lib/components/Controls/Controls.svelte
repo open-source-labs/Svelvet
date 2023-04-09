@@ -25,11 +25,6 @@
 		// Zoom out by 10%
 
 		$scale *= 1 - ZOOM_INCREMENT;
-		// console.log($scale);
-		// const translateX = 1600 * ZOOM_INCREMENT * $scale;
-		// console.log(translateX);
-		// $translationX += translateX / 10;
-		// $translationY += translateX / 10;
 	}
 
 	function resetTransforms() {

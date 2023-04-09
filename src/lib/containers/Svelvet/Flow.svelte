@@ -12,7 +12,7 @@
 		GroupKey,
 		Group
 	} from '$lib/types';
-	import { get, writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
@@ -57,7 +57,7 @@
 	interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {}
 	const activeIntervals: ActiveIntervals = {};
 
-	let anchor = { x: 0, y: 0 };
+	let anchor = { x: 0, y: 0, top: 0, left: 0 };
 	let selecting: boolean = false;
 	let graphBounds: DOMRect;
 	let graphDOMElement: HTMLElement;
@@ -109,10 +109,11 @@
 			};
 
 			const groupBox: GroupBox = {
-				id: groupName,
+				group: writable(groupKey),
 				dimensions,
 				position,
-				color: writable(getRandomColor())
+				color: writable(getRandomColor()),
+				moving: writable(false)
 			};
 
 			groupBoxes.add(groupBox, groupKey);
@@ -123,7 +124,6 @@
 
 			groups.update((groups) => {
 				const newGroup: Group = {
-					id: groupKey,
 					parent: writable(groupBox),
 					nodes: writable(new Set([...$selected, groupBox]))
 				};
@@ -166,6 +166,8 @@
 			const { top, left } = dimensions;
 			anchor.y = clientY - top;
 			anchor.x = clientX - left;
+			anchor.top = top;
+			anchor.left = left;
 		} else {
 			isMovable = true;
 			$selected = new Set();
@@ -279,10 +281,11 @@
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >
-	{#if $editing}
-		<Editor editing={$editing} />
-	{/if}
-	<GraphRenderer {isMovable}><slot /></GraphRenderer>
+	<GraphRenderer {isMovable}>
+		{#if $editing}
+			<Editor editing={$editing} />
+		{/if}<slot /></GraphRenderer
+	>
 	<Background --background-color="var(--{theme}-background)" {style} />
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />

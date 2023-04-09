@@ -5,7 +5,7 @@
 	import { activeKeys } from '$lib/stores';
 	import { get } from 'svelte/store';
 	export let graph: Graph;
-	export let anchor: XYPair;
+	export let anchor: { x: number; y: number; top: number; left: number };
 	export let adding = false;
 
 	export let creating = false;
@@ -13,13 +13,13 @@
 	const { groups, nodes: nodeStore, cursor, bounds } = graph;
 	//const { x, y } = $initialClickPosition;
 	const { x, y } = $cursorPositionRaw;
-	$: console.log($boundsTop);
+
 	let nodes: Array<NodeDOMBounds>;
 	let box: HTMLDivElement;
-	const { top: boundsTop, left: boundsLeft } = bounds;
+
 	$: selectedNodes = $groups.selected.nodes;
-	$: height = $cursorPositionRaw.y - anchor.y + $boundsTop;
-	$: width = $cursorPositionRaw.x - anchor.x;
+	$: height = $cursorPositionRaw.y - anchor.y - anchor.top;
+	$: width = $cursorPositionRaw.x - anchor.x - anchor.left;
 	$: top = Math.min(anchor.y, anchor.y + height);
 	$: left = Math.min(anchor.x, anchor.x + width);
 
@@ -49,10 +49,10 @@
 
 		const nodesUnderSelection = nodes.reduce((accumulator, node) => {
 			if (
-				left <= node.left &&
-				top <= node.top &&
-				left + Math.abs(width) >= node.left + node.width &&
-				top + Math.abs(height) >= node.top + node.height
+				left + anchor.left <= node.left &&
+				top + anchor.top <= node.top &&
+				left + anchor.left + Math.abs(width) >= node.left + node.width &&
+				top + anchor.top + Math.abs(height) >= node.top + node.height
 			) {
 				const id = node.id as NodeKey;
 				const selectedNode = graph.nodes.get(id);

@@ -12,11 +12,11 @@ import type {
 	OutputKey,
 	GroupKey,
 	Anchor,
-	Parameter,
 	Inputs,
-	AnchorKey
+	InputStore,
+	OutputStore
 } from '.';
-import type { generateOutput } from '$lib/utils';
+import type { generateInput, generateOutput } from '$lib/utils';
 
 export interface Graph {
 	id: GraphKey;
@@ -32,6 +32,8 @@ export interface Graph {
 	connectingStore: Writable<Writable<Inputs | null> | ReturnType<typeof generateOutput> | null>;
 	maxZIndex: Writable<number>;
 	dimensions: Writable<DOMRect>;
+	editable: boolean;
+	direction: 'TD' | 'LR';
 	cursor: Readable<{ x: number; y: number }>;
 	connectingFrom: Writable<Anchor | null>;
 	linkingInput: Writable<LinkingInput | null>;
@@ -50,13 +52,13 @@ export type LinkingAny = Anchor | Anchor;
 
 export interface LinkingInput {
 	anchor: Anchor;
-	store: Writable<Inputs | null> | null;
+	store: InputStore | null;
 	key: string | null;
 }
 
 export interface LinkingOutput {
 	anchor: Anchor;
-	store: ReturnType<typeof generateOutput> | null;
+	store: OutputStore | null;
 }
 
 export type Groups = Record<GroupKey, Group>;
@@ -71,10 +73,11 @@ export interface Bounds {
 export type GroupBoxes = Record<GroupKey, GroupBox>;
 
 export interface GroupBox {
-	id: string;
+	group: Writable<GroupKey>;
 	dimensions: Dimensions;
 	position: XYPosition;
 	color: Writable<CSSColorString>;
+	moving: Writable<boolean>;
 }
 
 export interface Group {
@@ -88,8 +91,4 @@ export interface GraphTransforms {
 		y: Writable<number>;
 	};
 	scale: Writable<number>;
-	cursor: {
-		x: Writable<number>;
-		y: Writable<number>;
-	};
 }

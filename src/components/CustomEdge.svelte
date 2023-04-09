@@ -2,11 +2,15 @@
 	import UserEdge from '$lib/components/UserEdge/UserEdge.svelte';
 
 	export let path: string;
+	function handleClick() {
+		console.log('clicked');
+	}
+	export let destroy;
 </script>
 
 <UserEdge>
 	<path d={path} />
-	<div slot="label"><p>Custom Edge</p></div>
+	<!-- <div slot="label"><p on:click={destroy}>Custom Edge</p></div> -->
 </UserEdge>
 
 <style>

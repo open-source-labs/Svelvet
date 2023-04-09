@@ -7,17 +7,19 @@
 		EdgeKey,
 		WrappedWritable,
 		AnchorKey,
-		InputType
+		InputType,
+		NodeKey,
+		OutputStore
 	} from '$lib/types';
+	import type { Readable } from 'svelte/store';
 	import { onMount, getContext, onDestroy } from 'svelte';
 	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable, type Writable } from 'svelte/store';
 	import { createEdge, createAnchor, calculateRelativeCursor, generateOutput } from '$lib/utils';
 	import { get } from 'svelte/store';
-	import { generateKey } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
-
+	import type { InputStore } from '$lib/utils';
 	const driven = getContext<Writable<boolean>>('driven');
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
@@ -27,14 +29,16 @@
 	export let id: string | number = 0;
 	export let input: boolean = false;
 	export let output: boolean = false;
-	export let inputsStore: Writable<WrappedWritable<unknown>> | null = null;
-	export let outputStore: ReturnType<typeof generateOutput> | null = null;
+	export let inputsStore: InputStore | null = null;
+	export let outputStore: OutputStore | null = null;
 	export let multiple = output ? true : input ? false : true;
 	export let label = 1;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
+
 	export let dynamic = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let connections: [string, string][] = [];
 
 	let animationFrameId: number;
 	let edgeKeys: Set<EdgeKey> = new Set();
@@ -64,11 +68,13 @@
 	$: linkingOutput = graph.linkingOutput;
 	$: linkingAny = graph.linkingAny;
 
-	onMount(() => {
-		const { x, y } = anchorElement.getBoundingClientRect();
-		const key: AnchorKey = `A-${input ? 'I' : 'O'}-${id || anchors.count() + 1}/${node.id}`;
+	$: isWaitingForConnection = connections.length > 0;
 
-		const anchorPosition = { x, y };
+	onMount(async () => {
+		const { top, left } = anchorElement.getBoundingClientRect();
+		const key: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
+
+		const anchorPosition = { y: top, x: left };
 		anchor = createAnchor(
 			node,
 			key,
@@ -80,13 +86,31 @@
 			direction,
 			dynamic
 		);
+
 		anchors.add(anchor, anchor.id);
+
+		checkConnections();
 	});
 
-	$: {
-		$connectedAnchors;
-		console.log($connectedAnchors);
-		//edgeKeys.add(sortEdgeKey(anchor.id, $connectedAnchors));
+	function checkConnections() {
+		connections.forEach((connection) => {
+			const [node, nodeAnchor] = connection;
+			const nodekey: NodeKey = `N-${node}`;
+			const connectedNode = graph.nodes.get(nodekey);
+			console.log({ connectedNode });
+			if (!connectedNode) return;
+			const anchorKey: AnchorKey = `A-${nodeAnchor}/${nodekey}`;
+			const connectedAnchor = connectedNode.anchors.get(anchorKey);
+			console.log({ connectedAnchor });
+			if (!connectedAnchor) return;
+			connectAnchors(anchor, connectedAnchor);
+			connections.filter((c) => c !== connection);
+		});
+	}
+
+	$: if (isWaitingForConnection) {
+		$anchors;
+		checkConnections();
 	}
 
 	// If an anchor is added to the store, we update all anchor positions
@@ -94,9 +118,8 @@
 		$anchors;
 		updatePosition();
 	}
-	$: {
-		if (!$activeKeys['Shift']) clearAllLinking();
-	}
+
+	$: if (!$activeKeys['Shift']) clearAllLinking();
 
 	// If the parent node is resizing, we actively track the position of the anchor
 	$: if (!tracking && ($resizingWidth || $resizingHeight)) {
@@ -159,7 +182,6 @@
 	}
 
 	function connectEdge() {
-		console.log('Connecting Edge');
 		// Delete the temporary edge
 		edges.delete('cursor');
 
@@ -175,7 +197,6 @@
 
 		updatePosition();
 
-		let newEdge;
 		// Creat edge
 		let source: Anchor | null = null;
 		let target: Anchor | null = null;
@@ -209,13 +230,7 @@
 			}
 		}
 
-		if (source && target) {
-			newEdge = createEdge({ source, target }, source?.edge || null);
-			source!.connected.update((anchors) => anchors.add(target!));
-			target!.connected.update((anchors) => anchors.add(source!));
-			const id = newEdge.id;
-			edges.add(newEdge, id);
-		}
+		if (source && target) connectAnchors(source, target);
 
 		connectStores();
 
@@ -235,12 +250,26 @@
 		}
 	}
 
+	function connectAnchors(source: Anchor, target: Anchor) {
+		updatePosition();
+		const newEdge = createEdge({ source, target }, source?.edge || null);
+		source.connected.update((anchors) => anchors.add(target));
+		target.connected.update((anchors) => anchors.add(source));
+		const id = newEdge.id;
+		edges.add(newEdge, id);
+	}
+
 	function connectStores() {
 		if (input && $linkingOutput && $linkingOutput.store) {
 			if ($inputsStore && key) $inputsStore[key] = $linkingOutput.store;
 		} else if (output && $linkingInput && $linkingInput.store) {
 			const { store, key } = $linkingInput;
-			if (store && key) store.update((s) => ({ ...s, [key]: outputStore }));
+			if (store && key)
+				store.update((store) => {
+					if (!outputStore) return store;
+					store[key] = outputStore;
+					return store;
+				});
 		}
 	}
 
@@ -262,6 +291,7 @@
 	}
 
 	const updatePosition = () => {
+		if (!anchorElement) return;
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 
 		const oldOffsetX = get(anchor.offset.x);
@@ -316,11 +346,16 @@
 
 		const source = Array.from(get(anchor.connected))[0];
 		if (source.type === 'input') return;
+
 		destroy();
+
 		if (source.type === 'output') {
 			createCursorEdge(source, null);
 			disconnectStore();
-			$linkingOutput = { anchor: source, store: source.store };
+			const store: ReturnType<typeof generateOutput> = source.store as ReturnType<
+				typeof generateOutput
+			>;
+			$linkingOutput = { anchor: source, store };
 		} else {
 			createCursorEdge(source, null);
 			$linkingAny = source;

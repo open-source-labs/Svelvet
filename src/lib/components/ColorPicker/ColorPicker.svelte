@@ -24,6 +24,7 @@
 		class="color-input"
 		bind:value={$parameterStore}
 		on:input={handleChange}
+		on:click|stopPropagation
 	/>
 	<label
 		for="color-input"

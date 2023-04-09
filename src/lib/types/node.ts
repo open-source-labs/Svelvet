@@ -9,10 +9,9 @@ export interface Node {
 	dimensions: Dimensions;
 	position: XYPosition;
 	inputs: Writable<number>; //Number of default input anchors to render
+	outputs: Writable<number>; // Number of default output anchors to render
 	anchors: AnchorStore;
 	properties: Writable<Properties>;
-	processor: (inputs: Inputs, properties: Properties) => void;
-	outputs: Writable<number>; // Number of default output anchors to render
 	header: Writable<boolean>;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
@@ -34,7 +33,7 @@ export interface Node {
 	ariaLabel: string;
 	component: ConstructorOfATypedSvelteComponent | null;
 	config?: ConfigObject;
-	direction: 'horizontal' | 'vertical';
+	direction: 'TD' | 'LR';
 	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
 	bgColor: Writable<CSSColorString | null>;
@@ -55,9 +54,11 @@ export interface NodeConfig {
 		x: number;
 		y: number;
 	};
-	direction?: 'horizontal' | 'vertical';
+	direction: 'TD' | 'LR';
+	zIndex?: number;
 	label?: string;
 	group?: string;
+	editable?: boolean;
 	resizable?: boolean;
 	inputs?: number;
 	outputs?: number;

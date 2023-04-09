@@ -5,4 +5,11 @@
 	const textStore = getContext<Writable<string>>('textStore');
 </script>
 
-<input {placeholder} type="text" bind:value={$textStore} />
+<input
+	on:keydown|stopPropagation
+	on:click|stopPropagation
+	on:mousedown|stopPropagation
+	{placeholder}
+	type="text"
+	bind:value={$textStore}
+/>

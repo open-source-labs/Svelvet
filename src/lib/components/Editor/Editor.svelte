@@ -1,52 +1,45 @@
 <script lang="ts">
-	import { cursorPositionRaw } from '$lib/stores/CursorStore';
-	import { get } from 'svelte/store';
-	import { getContext, setContext } from 'svelte';
-	import type { Graph } from '$lib/types';
-	import { clickOutside } from '$lib/utils';
-	import type { Writable } from 'svelte/store';
 	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
 	import Slider from '../Slider/Slider.svelte';
 	import TextField from '../TextField/TextField.svelte';
-	import type { CSSColorString, Node } from '$lib/types';
+	import type { Graph } from '$lib/types';
+	import type { Writable } from 'svelte/store';
 
-	export let editing: Node;
+	import { getContext, onMount, setContext } from 'svelte';
+
+	import type { CSSColorString, Node as SvelvetNode } from '$lib/types';
+	import Node from '../Node/Node.svelte';
+
+	export let editing: SvelvetNode;
 	const graph = getContext<Graph>('graph');
-
+	setContext<Graph>('graph', graph);
 	setContext<Writable<string | null>>('textStore', editing.label);
 	setContext<Writable<CSSColorString | null>>('colorStore', editing.bgColor);
-	const cursor = get(cursorPositionRaw);
 
-	const { x, y } = cursor;
+	$: dimenions = graph.dimensions;
+	$: cursor = graph.cursor;
 
 	function deleteNode() {
-		console.log(editing.id);
-		// const DOMnode = document.querySelector('#' + editing.id);
-		// if (DOMnode) {
-		// 	DOMnode.remove();
-		// }
-		console.log('Deleting node: ', editing.id);
-		const node = graph.nodes.get(editing.id);
-		console.log(node);
-		console.log(get(graph.nodes));
-		const deleted = graph.nodes.delete(editing.id);
-		console.log({ deleted });
+		graph.nodes.delete(editing.id);
 		graph.editing.set(null);
 	}
 </script>
 
-<div
-	use:clickOutside
-	on:outclick={() => graph.editing.set(null)}
-	on:contextmenu|preventDefault
-	style:top={`${y}px`}
-	style:left={`${x}px`}
+<Node
+	let:grabHandle
+	zIndex={Infinity}
+	position={{ x: $cursor.x, y: $cursor.y }}
+	bgColor="white"
+	id="editor"
 >
-	<Slider parameterStore={editing.dimensions.width} max={1000} />
-	<TextField placeholder={'Node Label'} />
-	<ColorPicker />
-	<button on:click={deleteNode}>Delete Node</button>
-</div>
+	<div use:grabHandle class="editor">
+		<button on:click={() => graph.editing.set(null)}>X</button>
+		<Slider parameterStore={editing.dimensions.width} max={1000} />
+		<TextField placeholder={'Node Label'} />
+		<ColorPicker />
+		<button on:click={deleteNode}>Delete Node</button>
+	</div>
+</Node>
 
 <style>
 	div {
@@ -73,5 +66,12 @@
 		justify-content: center;
 		align-items: center;
 		font-size: 4rem;
+		gap: 10px;
+	}
+
+	.editor {
+		background-color: rgb(31, 30, 30);
+		width: 200px;
+		height: 300px;
 	}
 </style>

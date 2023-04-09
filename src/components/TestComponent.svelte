@@ -1,12 +1,9 @@
 <script lang="ts">
-	import SpecialNode from '$lib/components/SpecialNode/SpecialNode.svelte';
-	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import Node from '$lib/components/Node/Node.svelte';
+	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import Slider from '$lib/components/Slider/Slider.svelte';
 	import CustomAnchor from './CustomAnchor.svelte';
-	import { get, writable } from 'svelte/store';
 	import { generateOutput, generateInput } from '$lib/utils';
-	import type { Writable } from 'svelte/store';
 	import CustomEdge from './CustomEdge.svelte';
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 	let handle = true;
@@ -30,11 +27,11 @@
 		return inputs.value1 * inputs.value2;
 	};
 
-	const outputTest = generateOutput<InputStructure, number>(inputs, processor);
-	const output2 = generateOutput<InputStructure, number>(inputs, processor2);
+	const outputTest = generateOutput(inputs, processor);
+	const output2 = generateOutput(inputs, processor2);
 </script>
 
-<SpecialNode let:grabHandle let:selected>
+<Node let:grabHandle let:selected>
 	<div use:grabHandle class:selected class:handle>Custom Grab Element</div>
 	<div class="node">
 		<div class="input-anchors">
@@ -42,11 +39,11 @@
 				<Anchor {key} inputsStore={inputs} input />
 			{/each}
 		</div>
-		<!-- <div class="sliders">
+		<div class="sliders">
 			{#each Object.entries($inputs) as [key, value]}
 				<Slider parameterStore={value} />
 			{/each}
-		</div> -->
+		</div>
 		<div class="output-anchors">
 			<Anchor outputStore={outputTest} output edge={CustomEdge}>
 				<CustomAnchor />
@@ -55,11 +52,11 @@
 				<CustomAnchor />
 			</Anchor>
 		</div>
-		<!-- <p class="output">{$outputTest}</p>
-		<p class="output">{$output2}</p> -->
+		<p class="output">{$outputTest}</p>
+		<p class="output">{$output2}</p>
 	</div>
 	<Resizer width height minHeight={200} minWidth={400} />
-</SpecialNode>
+</Node>
 
 <style>
 	p {

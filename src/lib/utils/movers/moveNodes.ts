@@ -32,6 +32,7 @@ export function moveNodes(
 	const groups = get(graph.groups);
 
 	const nodeGroup = groups[groupName].nodes;
+	const parent = get(groups[groupName].parent);
 
 	const cursorPosition = get(cursor);
 	const newX = cursorPosition.x - initialClickPosition.x;
@@ -54,6 +55,12 @@ export function moveNodes(
 		top: -Infinity,
 		bottom: Infinity
 	};
+
+	// if (parent) {
+	// 	const { x, y } = parent.position;
+	// 	moveElement(initialNodePositions[0], delta, x, y, groupBounds);
+	// }
+
 	Array.from(get(nodeGroup)).forEach((node, index) => {
 		const { group, moving } = node;
 		const { position, dimensions } = node;
@@ -86,31 +93,31 @@ export function moveNodes(
 
 		moveElement(initialPosition, delta, x, y, groupBounds);
 
-		if (delta.x < 0) {
-			if (newX < leftBounds) {
-				left.set(newX);
-			}
-		} else {
-			if (newX + nodeWidth > rightBounds) {
-				right.set(newX + nodeWidth);
-			}
-		}
+		// if (delta.x < 0) {
+		// 	if (newX < leftBounds) {
+		// 		left.set(newX);
+		// 	}
+		// } else {
+		// 	if (newX + nodeWidth > rightBounds) {
+		// 		right.set(newX + nodeWidth);
+		// 	}
+		// }
 
-		if (delta.y < 0) {
-			if (newY < topBounds) {
-				top.set(newY);
-			}
-			if (newY + nodeHeight === bottomBounds) {
-				bottom.set(newY + nodeHeight);
-			}
-		} else {
-			if (newY + nodeHeight > bottomBounds) {
-				bottom.set(newY + nodeWidth);
-			}
-			if (y === top) {
-				top.set(newY);
-			}
-		}
+		// if (delta.y < 0) {
+		// 	if (newY < topBounds) {
+		// 		top.set(newY);
+		// 	}
+		// 	if (newY + nodeHeight === bottomBounds) {
+		// 		bottom.set(newY + nodeHeight);
+		// 	}
+		// } else {
+		// 	if (newY + nodeHeight > bottomBounds) {
+		// 		bottom.set(newY + nodeWidth);
+		// 	}
+		// 	if (y === top) {
+		// 		top.set(newY);
+		// 	}
+		// }
 	});
 }
 export function moveElement(
