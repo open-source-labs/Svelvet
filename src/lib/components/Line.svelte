@@ -242,11 +242,11 @@
 		}
 	}
 
-	.retract {
+	/* .retract {
 		stroke-dasharray: 1000;
 		stroke-dashoffset: 0;
 		animation: retract 1s linear infinite forwards;
-	}
+	} */
 	@keyframes retract {
 		to {
 			stroke-dashoffset: 1000;

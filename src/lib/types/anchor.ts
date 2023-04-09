@@ -1,7 +1,6 @@
 import type { Writable, Readable } from 'svelte/store';
 import type { AnchorKey } from '$lib/types';
-import type { WrappedWritable } from '$lib/types';
-import type { generateOutput, generateInput } from '$lib/utils';
+import type { generateOutput } from '$lib/utils';
 
 export interface Anchor {
 	position: {

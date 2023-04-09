@@ -51,10 +51,6 @@
 		padding: 0 10px;
 	}
 
-	.node-name {
-		font-size: 1.2rem;
-	}
-
 	.collapse-button {
 		font-size: 1.5rem;
 	}

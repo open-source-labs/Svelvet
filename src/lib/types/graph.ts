@@ -16,7 +16,7 @@ import type {
 	InputStore,
 	OutputStore
 } from '.';
-import type { generateInput, generateOutput } from '$lib/utils';
+import type { generateOutput } from '$lib/utils';
 
 export interface Graph {
 	id: GraphKey;

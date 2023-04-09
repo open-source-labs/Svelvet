@@ -32,7 +32,6 @@
 	export let inputsStore: InputStore | null = null;
 	export let outputStore: OutputStore | null = null;
 	export let multiple = output ? true : input ? false : true;
-	export let label = 1;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 
@@ -41,7 +40,6 @@
 	export let connections: [string, string][] = [];
 
 	let animationFrameId: number;
-	let edgeKeys: Set<EdgeKey> = new Set();
 	let anchorElement: HTMLButtonElement;
 	let anchorWidth: number;
 	let anchorHeight: number;

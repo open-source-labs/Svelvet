@@ -1,4 +1,4 @@
-import type { Parameter, Properties } from './node';
+import type { Parameter } from './node';
 import type { ParameterConfig } from './config';
 import type { Writable } from 'svelte/store';
 export interface ConfigObject {

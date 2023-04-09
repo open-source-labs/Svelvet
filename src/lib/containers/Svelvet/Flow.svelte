@@ -2,7 +2,6 @@
 	import { onMount, setContext } from 'svelte';
 	import type {
 		Theme,
-		GraphKey,
 		BackgroundStyles,
 		Graph,
 		NodeConfig,
@@ -27,17 +26,11 @@
 	import { getRandomColor, debounce, moveNodes } from '$lib/utils';
 
 	export let graph: Graph;
-	export let mermaid = '';
 	export let width: number = 0;
-	export let height: number = 0;
 	export let style: BackgroundStyles = 'dots';
-	export let nodes: Array<NodeConfig> = [];
-	export let edges: Array<object> = [];
 	export let snapTo = 1;
-	export let initialZoom = 1;
 	export let minimap = false;
 	export let controls = false;
-	export let boundary: XYPair = { x: Infinity, y: Infinity };
 	export let fixedZoom = false;
 	export let disableSelection = false;
 	export let ZOOM_INCREMENT = 0.01;

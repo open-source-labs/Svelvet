@@ -1,4 +1,4 @@
-import type { AnchorKey, EdgeKey, InputKey, OutputKey } from '$lib/types';
+import type { AnchorKey, EdgeKey } from '$lib/types';
 
 export function sortEdgeKey(keyOne: AnchorKey, keyTwo: AnchorKey): EdgeKey {
 	// Sort the strings alphabetically

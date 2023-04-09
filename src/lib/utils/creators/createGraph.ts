@@ -1,4 +1,4 @@
-import { writable, readable, derived } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import type { Readable } from 'svelte/store';
 import type { Graph, Node, GroupBox, EdgeKey, GraphKey, GroupKey, NodeStore } from '$lib/types';
 import { createStore } from './createStore';

@@ -26,7 +26,7 @@
 	setContext('direction', LR ? 'LR' : 'TD');
 
 	onMount(() => {
-		let graphKey: GraphKey = `G-${graphStore.count() + 1}`;
+		let graphKey: GraphKey = `G-${graphId || graphStore.count() + 1}`;
 
 		graph = createGraph(graphKey, { initialZoom, editable });
 

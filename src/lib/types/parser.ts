@@ -1,6 +1,6 @@
 export interface Node {
 	id: string;
-	data: { content?: string; shape: string; props?: any };
+	data: { content?: string; shape: string };
 	type: string;
 	children: Array<{ node: Node; shape: string; length: number; content?: string }>;
 	parents: Array<{ node: Node }>;

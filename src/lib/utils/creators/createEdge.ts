@@ -1,7 +1,7 @@
 import type { WritableEdge, EdgeConfig, Anchor } from '$lib/types';
 import { writable } from 'svelte/store';
 import * as s from '$lib/constants/styles';
-import type { EdgeLabel, EdgeKey, OutputKey, InputKey } from '$lib/types';
+import type { EdgeLabel, EdgeKey } from '$lib/types';
 import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 
 export function createEdge(
