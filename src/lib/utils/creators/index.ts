@@ -4,3 +4,4 @@ export * from './createEdge';
 export * from './createGraph';
 export * from './generateOutput';
 export * from './generateInput';
+export * from './createAnchor';

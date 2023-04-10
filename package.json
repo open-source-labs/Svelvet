@@ -1,6 +1,20 @@
 {
 	"name": "svelvet-test",
-	"version": "7.0.0",
+	"version": "7.1.4",
+	"description": "A lightweight Svelte component library for building dynamic node-based user interfaces",
+	"keywords": [
+		"svelte",
+		"svelvet",
+		"typescript"
+	],
+	"authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Horacio, Ian, Jeffrey, Jen, Johnny, Justin, Mauricio, Michael, Rachel, Ryan, Samee, Taylor, Thomas, Timmy, Tony, Von, Walter",
+	"license": "MIT",
+	"bugs": "https://github.com/open-source-labs/Svelvet/issues",
+	"homepage": "https://github.com/open-source-labs/Svelvet",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/open-source-labs/Svelvet"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",

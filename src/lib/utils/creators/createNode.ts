@@ -36,7 +36,7 @@ export function createNode(userNode: NodeConfig): Node {
 			height: writable(height || dimensions?.height || NODE_HEIGHT)
 		},
 		group: writable(null),
-		locked: writable(false),
+		locked: writable(locked || false),
 		selectable: writable(true),
 		inputs: writable(inputs),
 		outputs: writable(outputs),
@@ -50,7 +50,7 @@ export function createNode(userNode: NodeConfig): Node {
 		editable: writable(editable || false),
 		resizable: writable(resizable),
 		anchors: anchorStore,
-		zIndex: writable(zIndex || 0),
+		zIndex: writable(zIndex || 1),
 		ariaLabel: `Node ${id}`,
 		header: writable(header ? true : false),
 		collapsed: writable(false),

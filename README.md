@@ -39,6 +39,7 @@ Shout out to our contributors! Here's what's new:
     <li>Added selection box functionality on Shift + Click</li>
     <li>Added node grouping functionality on Shift + CMD + Click</li>
     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
+    <li>All new Minimap component that accepts props for styling the background and nodes (defaults to node color) and features improved tracking funcitonality plus the ability to hide nodes</li>
     <li>Added mapColor and dotColor props to Svelvet component, though we plan on exposing the full Background component for greater customization</li>
     <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when developing custom nodes</li>
     <li>Added theme prop to Svelvet component. Defaults to light. Accepts things like "dark", "purple", "parchment"</li>

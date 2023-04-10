@@ -80,6 +80,7 @@
 		font-size: 20px;
 		line-height: 20px;
 		text-align: center;
+		user-select: none;
 	}
 	.selected {
 		border: solid 1px var(--selection-color) !important;

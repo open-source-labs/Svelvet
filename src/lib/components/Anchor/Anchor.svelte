@@ -12,9 +12,10 @@
 		Theme
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
-	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
-	import { writable, type Writable } from 'svelte/store';
-	import { createEdge, createAnchor, calculateRelativeCursor, generateOutput } from '$lib/utils';
+	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
+	import { writable } from 'svelte/store';
+	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
+	import { calculateRelativeCursor } from '$lib/utils/calculators';
 	import { get } from 'svelte/store';
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';

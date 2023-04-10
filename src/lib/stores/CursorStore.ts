@@ -1,5 +1,5 @@
 import { writable, readable } from 'svelte/store';
-import { getTouchDistance, getTouchMidpoint } from '$lib/utils';
+import { getTouchDistance, getTouchMidpoint } from '$lib/utils/helpers';
 
 // This gets updated on user click
 // Value is relative to the scale/translation of the particular graph

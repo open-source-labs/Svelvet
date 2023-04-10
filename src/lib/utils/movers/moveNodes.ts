@@ -28,7 +28,6 @@ export function moveNodes(
 	const nodeGroup = groups[groupName].nodes;
 
 	const cursorPosition = get(cursor);
-	console.log('MOVE NODES', { cursorPosition }, { initialClickPosition });
 	const newX = cursorPosition.x - initialClickPosition.x;
 	const newY = cursorPosition.y - initialClickPosition.y;
 

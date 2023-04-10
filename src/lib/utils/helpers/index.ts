@@ -1,5 +1,5 @@
 export * from './getTouchDistance';
-export * from './getTouchMidPoint';
+export * from './getTouchMidpoint';
 export * from './getRandomColor';
 export * from './parser';
 export * from './throttle';

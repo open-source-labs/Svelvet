@@ -42,11 +42,13 @@
 		width: 100%;
 		height: 100%;
 		opacity: 25%;
-		z-index: -2;
+		z-index: -4;
+		pointer-events: none;
 	}
 	.bounding-box-border {
 		position: absolute;
 		overflow: hidden;
 		border-radius: 10px;
+		pointer-events: auto;
 	}
 </style>

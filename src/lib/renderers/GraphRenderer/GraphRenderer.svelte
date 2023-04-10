@@ -4,10 +4,10 @@
 	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
 	import type { Graph } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
-	import { captureGroup, moveNodes, updateTranslation } from '$lib/utils';
+	import { captureGroup, moveNodes } from '$lib/utils/movers';
 	import { getContext } from 'svelte';
-	import { getJSONState } from '$lib/utils/savers/saveStore';
 	import { get } from 'svelte/store';
+
 	const graph = getContext<Graph>('graph');
 
 	export let isMovable: boolean;
@@ -17,8 +17,6 @@
 	$: initialNodePositions = graph.initialNodePositions;
 	$: cursor = graph.cursor;
 	$: transforms = graph.transforms;
-	$: x = transforms.translation.x;
-	$: y = transforms.translation.y;
 
 	$: if ($activeGroup) {
 		$cursor; // This is necessary to trigger the update
@@ -26,6 +24,7 @@
 	}
 
 	function handleGroupClicked(event: CustomEvent) {
+		console.log('handleGroupClicked', event.detail);
 		const { groupName } = event.detail;
 		$activeGroup = groupName;
 		$initialClickPosition = $cursor;

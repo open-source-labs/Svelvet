@@ -7,6 +7,7 @@ import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import { calculateRelativeCursor } from '$lib/utils/calculators/calculateRelativeCursor';
 import type { WritableEdge, NodeKey } from '$lib/types';
 import { get } from 'svelte/store';
+
 export interface GraphConfig {
 	editable?: boolean;
 	initialZoom?: number;
@@ -25,7 +26,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	const scale = writable(initialZoom);
 
 	const nodes = createStore<Node, NodeKey>();
-	const bounds = createBoundsStore(nodes);
+	const bounds = createBoundsStore(nodes, dimensions, scale, translation.x, translation.y);
 
 	const graph: Graph = {
 		id,
@@ -58,7 +59,13 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	return graph;
 }
 
-function createBoundsStore(nodes: NodeStore) {
+function createBoundsStore(
+	nodes: NodeStore,
+	dimensions: Readable<DOMRect>,
+	scale: Writable<number>,
+	translationX: Writable<number>,
+	translationY: Writable<number>
+) {
 	const top = writable(Infinity);
 	const left = writable(Infinity);
 	const right = writable(-Infinity);
@@ -69,6 +76,10 @@ function createBoundsStore(nodes: NodeStore) {
 		let newLeft = Infinity;
 		let newRight = -Infinity;
 		let newBottom = -Infinity;
+		const graphDimensions = get(dimensions);
+		const graphScale = get(scale);
+		const xTranslation = get(translationX);
+		const yTranslation = get(translationY);
 
 		for (const node of Object.values(get(nodes))) {
 			const x = get(node.position.x);
@@ -81,11 +92,29 @@ function createBoundsStore(nodes: NodeStore) {
 			newRight = Math.max(newRight, x + width);
 			newBottom = Math.max(newBottom, y + height);
 		}
+		const DOMcorner = { clientX: graphDimensions.left, clientY: graphDimensions.top };
 
-		top.set(newTop);
-		left.set(newLeft);
-		right.set(newRight);
-		bottom.set(newBottom);
+		// This calculates the top left corner of the graph element
+		// As if the "window" is being project on the graph itself
+		// We are using a function that is not tailored for this and it should be refactored
+		const { x: graphLeft, y: graphTop } = calculateRelativeCursor(
+			DOMcorner,
+			graphDimensions.top,
+			graphDimensions.left,
+			graphDimensions.width,
+			graphDimensions.height,
+			graphScale,
+			xTranslation,
+			yTranslation
+		);
+
+		const graphWidth = graphDimensions.width / graphScale;
+		const graphHeight = graphDimensions.height / graphScale;
+
+		top.set(Math.min(newTop, graphTop));
+		left.set(Math.min(newLeft, graphLeft));
+		right.set(Math.max(newRight, graphLeft + graphWidth));
+		bottom.set(Math.max(newBottom, graphHeight + graphTop));
 	}
 
 	nodes.subscribe(($nodes) => {
@@ -97,34 +126,30 @@ function createBoundsStore(nodes: NodeStore) {
 			node.position.y.subscribe(() => {
 				recalculateBounds();
 			});
+
+			node.dimensions.width.subscribe(() => {
+				recalculateBounds();
+			});
+			node.dimensions.height.subscribe(() => {
+				recalculateBounds();
+			});
 		}
 	});
 
+	dimensions.subscribe(() => {
+		recalculateBounds();
+	});
+	scale.subscribe(() => {
+		recalculateBounds();
+	});
+	translationX.subscribe(() => {
+		recalculateBounds();
+	});
+	translationY.subscribe(() => {
+		recalculateBounds();
+	});
+
 	return { top, left, right, bottom };
-}
-
-export function calculateBounds(nodes: Node[]) {
-	const leftValues = nodes.map((n) => get(n.position.x));
-	const topValues = nodes.map((n) => get(n.position.y));
-	const rightValues = nodes.map((n) => get(n.position.x) + get(n.dimensions.width));
-	const bottomValues = nodes.map((n) => get(n.position.y) + get(n.dimensions.height));
-
-	const minX = Math.min(...leftValues);
-	const maxX = Math.max(...rightValues);
-	const minY = Math.min(...topValues);
-	const maxY = Math.max(...bottomValues);
-
-	const width = maxX - minX;
-	const height = maxY - minY;
-
-	return {
-		minX,
-		maxX,
-		minY,
-		maxY,
-		width,
-		height
-	};
 }
 
 function createDerivedCursorStore(
