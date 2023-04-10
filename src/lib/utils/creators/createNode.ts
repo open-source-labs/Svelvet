@@ -1,13 +1,6 @@
 import { writable } from 'svelte/store';
 import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey } from '$lib/types';
-import {
-	NODE_BORDER_COLOR_LIGHT,
-	NODE_BORDER_RADIUS,
-	NODE_FONT_COLOR_LIGHT,
-	NODE_HEIGHT,
-	NODE_WIDTH,
-	NODE_HEADER_COLOR_LIGHT
-} from '$lib/constants';
+import { NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
 import { createStore } from './createStore';
 
 export function createNode(userNode: NodeConfig): Node {
@@ -24,10 +17,10 @@ export function createNode(userNode: NodeConfig): Node {
 		header,
 		zIndex,
 		position,
+		selectionColor,
 		headerColor
 	} = userNode;
-	const { bgColor, borderColor, borderRadius, textColor } = userNode;
-
+	const { bgColor, borderColor, borderRadius, textColor, locked } = userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
 	const nodeKey: NodeKey = `N-${id}`;
@@ -43,7 +36,7 @@ export function createNode(userNode: NodeConfig): Node {
 			height: writable(height || dimensions?.height || NODE_HEIGHT)
 		},
 		group: writable(null),
-		draggable: writable(true),
+		locked: writable(false),
 		selectable: writable(true),
 		inputs: writable(inputs),
 		outputs: writable(outputs),
@@ -63,17 +56,15 @@ export function createNode(userNode: NodeConfig): Node {
 		collapsed: writable(false),
 		visible: writable(true),
 		collapsible: writable(true),
-		props: userNode.props || null,
-		borderRadius: writable(borderRadius || NODE_BORDER_RADIUS),
-		properties: writable({}),
+		borderRadius: writable(borderRadius),
 		headerHeight: writable(40),
 		bgColor: writable(bgColor || null),
-		direction,
-		component: userNode.component || null,
+		direction: writable(direction),
 		label: writable(userNode.label || ''),
-		borderColor: writable(borderColor || NODE_BORDER_COLOR_LIGHT),
-		textColor: writable(textColor || NODE_FONT_COLOR_LIGHT),
-		headerColor: writable(headerColor || NODE_HEADER_COLOR_LIGHT)
+		borderColor: writable(borderColor),
+		selectionColor: writable(selectionColor),
+		textColor: writable(textColor),
+		headerColor: writable(headerColor)
 	};
 
 	return newNode;

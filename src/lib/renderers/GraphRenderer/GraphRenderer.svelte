@@ -1,5 +1,4 @@
 <script lang="ts">
-	import NodeRenderer from '$lib/renderers/NodeRenderer/NodeRenderer.svelte';
 	import GroupBoxRenderer from '$lib/renderers/GroupBoxRenderer/GroupBoxRenderer.svelte';
 	import EdgeRenderer from '$lib/renderers/EdgeRenderer/EdgeRenderer.svelte';
 	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
@@ -8,12 +7,13 @@
 	import { captureGroup, moveNodes, updateTranslation } from '$lib/utils';
 	import { getContext } from 'svelte';
 	import { getJSONState } from '$lib/utils/savers/saveStore';
+
 	const graph = getContext<Graph>('graph');
+
 	export let isMovable: boolean;
 
 	$: activeGroup = graph.activeGroup;
 	$: groups = graph.groups;
-
 	$: initialNodePositions = graph.initialNodePositions;
 	$: cursor = graph.cursor;
 	$: transforms = graph.transforms;
@@ -39,10 +39,7 @@
 </script>
 
 <ZoomPanWrapper>
-	<NodeRenderer><slot /></NodeRenderer>
+	<slot />
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
 </ZoomPanWrapper>
-
-<style>
-</style>

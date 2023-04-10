@@ -4,8 +4,6 @@
 		Theme,
 		BackgroundStyles,
 		Graph,
-		NodeConfig,
-		XYPair,
 		GroupBox,
 		Arrow,
 		GroupKey,
@@ -277,8 +275,9 @@
 	<GraphRenderer {isMovable}>
 		{#if $editing}
 			<Editor editing={$editing} />
-		{/if}<slot /></GraphRenderer
-	>
+		{/if}
+		<slot />
+	</GraphRenderer>
 	<Background --background-color="var(--{theme}-background)" {style} />
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />

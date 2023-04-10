@@ -15,20 +15,22 @@
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
 	export let initialZoom = 1;
-	export let LR = false;
+	export let TD = false;
 	export let editable = false;
+	export let locked = false;
 
 	let graph: Graph;
 	let nodeStore: NodeStore;
 
+	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
+
 	setContext('snapTo', snapTo);
 	setContext('theme', theme);
-	setContext('direction', LR ? 'LR' : 'TD');
 
 	onMount(() => {
 		let graphKey: GraphKey = `G-${graphId || graphStore.count() + 1}`;
 
-		graph = createGraph(graphKey, { initialZoom, editable });
+		graph = createGraph(graphKey, { initialZoom, direction, editable, locked });
 
 		if (nodes.length && !mermaid) {
 			const nodeObjects = generateNodes(nodes);

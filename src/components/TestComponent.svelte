@@ -35,25 +35,23 @@
 	<div use:grabHandle class:selected class:handle>Custom Grab Element</div>
 	<div class="node">
 		<div class="input-anchors">
-			{#each Object.entries($inputs) as [key, value]}
+			{#each Object.entries($inputs) as [key, value] (key)}
 				<Anchor {key} inputsStore={inputs} input />
 			{/each}
 		</div>
 		<div class="sliders">
-			{#each Object.entries($inputs) as [key, value]}
+			{#each Object.entries($inputs) as [key, value] (key)}
 				<Slider parameterStore={value} />
 			{/each}
 		</div>
 		<div class="output-anchors">
-			<Anchor outputStore={outputTest} output edge={CustomEdge}>
-				<CustomAnchor />
+			<Anchor let:connected outputStore={outputTest} direction="east" output edge={CustomEdge}>
+				<CustomAnchor {connected} />
 			</Anchor>
-			<Anchor outputStore={output2} output>
+			<Anchor outputStore={output2} direction="east" output>
 				<CustomAnchor />
 			</Anchor>
 		</div>
-		<p class="output">{$outputTest}</p>
-		<p class="output">{$output2}</p>
 	</div>
 	<Resizer width height minHeight={200} minWidth={400} />
 </Node>
@@ -87,9 +85,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-	}
-	.output {
-		color: black;
 	}
 	.selected {
 		background-color: rgb(255, 230, 0);

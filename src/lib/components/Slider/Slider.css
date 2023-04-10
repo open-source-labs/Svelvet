@@ -11,6 +11,7 @@
 	height: 100%;
 	cursor: ew-resize;
 	color: white;
+	padding: 0.25rem;
 }
 
 .wrapper {
@@ -44,4 +45,10 @@
 	align-items: center;
 	justify-content: space-between;
 	height: 100%;
+}
+
+.connected {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.25rem 0.5rem;
 }

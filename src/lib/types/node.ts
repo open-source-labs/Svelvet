@@ -11,7 +11,6 @@ export interface Node {
 	inputs: Writable<number>; //Number of default input anchors to render
 	outputs: Writable<number>; // Number of default output anchors to render
 	anchors: AnchorStore;
-	properties: Writable<Properties>;
 	header: Writable<boolean>;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
@@ -20,7 +19,7 @@ export interface Node {
 	resizingHeight: Writable<boolean>;
 	moving: Writable<boolean>;
 	editable: Writable<boolean>;
-	draggable: Writable<boolean>;
+	locked: Writable<boolean>;
 	selectable: Writable<boolean>;
 	connectable: Writable<boolean>;
 	collapsible: Writable<boolean>;
@@ -28,21 +27,19 @@ export interface Node {
 	hideable: Writable<boolean>;
 	focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
-	props: object | null;
 	zIndex: Writable<number>;
 	ariaLabel: string;
-	component: ConstructorOfATypedSvelteComponent | null;
-	config?: ConfigObject;
-	direction: 'TD' | 'LR';
+	direction: Writable<'TD' | 'LR'>;
 	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
 	bgColor: Writable<CSSColorString | null>;
 	borderColor: Writable<CSSColorString | null>;
+	selectionColor: Writable<CSSColorString | null>;
 	textColor: Writable<CSSColorString | null>;
 	headerColor: Writable<CSSColorString | null>;
 }
 
-// This defines an interface for the user-defined node object
+// This defines an interface for the node object
 // Passed to the createNode function
 export interface NodeConfig {
 	id?: string | number;
@@ -62,6 +59,8 @@ export interface NodeConfig {
 	resizable?: boolean;
 	inputs?: number;
 	outputs?: number;
+	locked?: boolean;
+	selectionColor?: CSSColorString;
 	component?: ConstructorOfATypedSvelteComponent;
 	config?: ConfigObject;
 	width?: number;
@@ -74,9 +73,6 @@ export interface NodeConfig {
 	borderWidth?: number;
 	textColor?: CSSColorString;
 	headerColor?: CSSColorString;
-	sourcePostion?: 'top' | 'bottom' | 'left' | 'right';
-	targetPostion?: 'top' | 'bottom' | 'left' | 'right';
-	clickCallback?: (node: Node) => void;
 }
 
 export type UserDimension = number | CSSDimensionString;
@@ -86,23 +82,3 @@ export type Properties = Record<string, Writable<Parameter>>;
 export type WritableNode = Writable<Node>;
 
 export type Parameter = number | string | object | boolean;
-
-export type Inputs = Record<string, Writable<Parameter>>;
-
-export interface Output {
-	id: string;
-	label: string;
-	value: Writable<Parameter | null>;
-}
-export interface AnchorGroup {
-	id?: string;
-	label?: string;
-	count?: number;
-	side: 'top' | 'bottom' | 'left' | 'right';
-	align: 'start' | 'end' | 'center';
-	gap?: number;
-	offset?: { x?: number; y?: number };
-	component?: ConstructorOfATypedSvelteComponent;
-}
-
-export type Outputs = Record<string, Output>;

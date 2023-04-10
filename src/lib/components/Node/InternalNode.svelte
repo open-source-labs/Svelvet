@@ -28,7 +28,6 @@
 	const theme = getContext<Theme>('theme');
 	setContext<Node>('node', node);
 
-	let isMovable = false;
 	let collapsed = false;
 	let isResizing = { width: false, height: false };
 	let minWidth = 200;
@@ -36,7 +35,7 @@
 
 	let DOMnode: HTMLElement;
 
-	const { isLocked, nodes: nodeStore, groups } = graph;
+	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
 	const snapTo: number = getContext('snapTo');
@@ -61,7 +60,7 @@
 		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
 		// $x = nodeRect.x;
 		// $y = nodeRect.y;
-		//absolute = true;
+		absolute = true;
 	});
 
 	onDestroy(() => {
@@ -111,7 +110,6 @@
 	$: cursor = graph.cursor;
 	$: moving = node.moving;
 
-	$: console.log('MOVING', $moving);
 	$: initialNodePositions = graph.initialNodePositions;
 
 	function grabHandle(node: HTMLElement) {
@@ -124,12 +122,18 @@
 		};
 	}
 
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
 	function handleNodeClicked(e: MouseEvent) {
 		e.preventDefault();
 		e.stopPropagation();
 
+		dispatch('nodeClicked', { node, e });
+
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($isLocked) return;
+		if ($locked) return;
 
 		const { button } = e;
 		const { group } = node;

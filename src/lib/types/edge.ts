@@ -1,57 +1,8 @@
 import type { Writable } from 'svelte/store';
-import type { Anchor, NodeKey, InputKey, OutputKey, CSSColorString, EmValue, EdgeKey } from '.';
+import type { Anchor, CSSColorString, EmValue, EdgeKey } from '.';
 import type { PixelValue, RemValue } from '.';
-export type EdgeStyle = 'straight' | 'smoothstep' | 'step' | 'bezier';
 
-// Object structure for store
-export interface Edge {
-	target:
-		| {
-				node: NodeKey;
-				input?: InputKey;
-		  }
-		| string
-		| number;
-	source:
-		| string
-		| number
-		| {
-				node: NodeKey;
-				output?: OutputKey;
-		  };
-	type?: EdgeStyle;
-	color?: CSSColorString;
-	width?: number;
-	label?:
-		| string
-		| {
-				text: string;
-				color?: CSSColorString;
-				textColor?: CSSColorString;
-				fontSize?: number;
-				dimensions?: {
-					width: number;
-					height: number;
-				};
-				borderRadius?: number;
-		  };
-
-	animated?: boolean;
-
-	// Old version for compatibility
-	id?: string | number;
-	sourceAnchorCb?: () => void;
-	targetAnchorCb?: () => void;
-	labelBgColor?: CSSColorString;
-	labelTextColor?: CSSColorString;
-	edgeColor?: CSSColorString;
-	animate?: boolean;
-	noHandle?: boolean;
-	arrow?: boolean;
-	clickCallback?: () => void;
-	className?: string;
-}
-export type CSSDimensions = `${number}px}` | `${number}%`;
+export type EdgeStyle = 'straight' | 'step' | 'bezier';
 
 // With writable properties
 export type WritableEdge = {

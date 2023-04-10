@@ -2,27 +2,28 @@
 	import { getContext } from 'svelte';
 	import type { Node } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
+	import { get } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
 
 	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;
 
 	const node = getContext<Node>('node');
-	const direction = getContext<string>('direction');
 
-	let top = direction === 'TD' ? true : false;
-	let bottom = direction === 'TD' ? true : false;
-
-	let left = direction === 'TD' ? false : true;
-	let right = direction === 'TD' ? false : true;
-
-	$: nodeDirection = node.direction;
 	$: label = node.label;
 	$: bgColor = node.bgColor;
 	$: borderRadius = node.borderRadius;
 	$: borderColor = node.borderColor;
+	$: selectionColor = node.selectionColor;
 	$: textColor = node.textColor;
 	$: inputs = node.inputs;
 	$: outputs = node.outputs;
+
+	let top = get(node.direction) === 'TD' ? true : false;
+	let bottom = get(node.direction) === 'TD' ? true : false;
+
+	let left = get(node.direction) === 'TD' ? false : true;
+	let right = get(node.direction) === 'TD' ? false : true;
 </script>
 
 <div
@@ -31,16 +32,17 @@
 	style:border-radius={$borderRadius + 'px'}
 	style:border-color={$borderColor}
 	class:selected
+	style:--selection-color={$selectionColor}
 	class="default-node"
 >
 	<div class="input-anchors" class:top class:left>
 		{#each { length: $inputs } as _, i}
-			<Anchor input />
+			<Anchor on:connection on:disconnection input direction={top ? 'north' : 'west'} />
 		{/each}
 	</div>
 	<div class="output-anchors" class:bottom class:right>
 		{#each { length: $outputs } as _, i}
-			<Anchor output />
+			<Anchor on:connection on:disconnection output direction={top ? 'south' : 'east'} />
 		{/each}
 	</div>
 	<p style:color={$textColor}>{$label}</p>
@@ -80,7 +82,7 @@
 		text-align: center;
 	}
 	.selected {
-		border: solid 1px white !important;
+		border: solid 1px var(--selection-color) !important;
 	}
 
 	.input-anchors,

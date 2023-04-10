@@ -41,7 +41,7 @@ export function generateOutput<
 			unsubscribeInputs();
 			unsubscribeFns.forEach((fn) => fn());
 		},
-		set: outputStore.set,
-		update: outputStore.update
+		set: null,
+		update: null
 	};
 }

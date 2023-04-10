@@ -1,22 +1,20 @@
 <!-- Line.svelte -->
 <script lang="ts">
-	import type { Anchor, Direction, Graph, XYPair, Theme, EdgeKey, WritableEdge } from '$lib/types';
+	import type { Direction, Graph, XYPair, Theme, WritableEdge } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
 	import { THEMES } from '$lib/constants/themes';
-	import EdgeLabel from './EdgeLabel/EdgeLabel.svelte';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
 
 	const { cursor } = graph;
 
-	// export let source: Anchor | null = null;
-	// export let target: Anchor | null = null;
 	export let strokeWidth = EDGE_WIDTH;
 	export let strokeColor = THEMES[theme].edge;
 	export let straight = false;
+	export let step = false;
 
 	export let edge: WritableEdge;
 
@@ -149,6 +147,196 @@
 			if (source) connected.delete(source);
 			return connected;
 		});
+	}
+
+	let cornerRadiusX = 0;
+	let cornerRadiusY = 0;
+	let cornerRadiusString = '0 0';
+	let cornerRadiusFlipped = '0 0';
+	let rightDownArc = '0 0 0 0 0 0';
+	let downRightArc = '0 0 0 0 0 0';
+	let rightUpArc = '0 0 0 0 0 0';
+	let upRightArc = '0 0 0 0 0 0';
+	let leftDownArc = '0 0 0 0 0 0';
+	let downLeftArc = '0 0 0 0 0 0';
+	let leftUpArc = '0 0 0 0 0 0';
+	let upLeftArc = '0 0 0 0 0 0';
+	let cornerRadiusConstant = 8;
+	let stepBuffer = 20;
+	type StepDirection = 'left' | 'right' | 'up' | 'down';
+	type ArcStringKey =
+		| 'leftup'
+		| 'leftdown'
+		| 'rightup'
+		| 'rightdown'
+		| 'upleft'
+		| 'upright'
+		| 'downleft'
+		| 'downright';
+
+	$: if (!step) {
+		cornerRadiusX =
+			Math.abs(deltaX) > cornerRadiusConstant * 2
+				? cornerRadiusConstant
+				: Math.floor(Math.abs(deltaX) / 2 + 1);
+		cornerRadiusY =
+			Math.abs(deltaY) > cornerRadiusConstant * 2
+				? cornerRadiusConstant
+				: Math.floor(Math.abs(deltaY) / 2 + 1);
+		cornerRadiusString = `${cornerRadiusX} ${cornerRadiusY}`;
+		cornerRadiusFlipped = `${cornerRadiusX} -${cornerRadiusY}`;
+
+		rightDownArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusString} `;
+		downRightArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusString} `;
+		rightUpArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusFlipped} `;
+		upRightArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusFlipped} `;
+		leftDownArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusString} `;
+		downLeftArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusString} `;
+		leftUpArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusFlipped} `;
+		upLeftArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusFlipped} `;
+
+		const arcStrings = {
+			rightdown: rightDownArc,
+			downright: downRightArc,
+			rightup: rightUpArc,
+			upright: upRightArc,
+			leftdown: leftDownArc,
+			downleft: downLeftArc,
+			leftup: leftUpArc,
+			upleft: upLeftArc
+		};
+
+		function buildArcStringKey(a: StepDirection, b: StepDirection): ArcStringKey {
+			return `${a}${b}` as ArcStringKey;
+		}
+
+		const { steps, distance } = calculateStepPath();
+
+		path = steps.reduce((acc, curr, index) => {
+			let stepDistanceString = '';
+			let arcString = '';
+			let multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
+
+			if (curr === 'left') {
+				stepDistanceString += ` l ${-distance[index] + multiplier * cornerRadiusX} 0 `;
+			} else if (curr === 'right') {
+				stepDistanceString += ` l ${distance[index] - multiplier * cornerRadiusX} 0 `;
+			} else if (curr === 'up') {
+				stepDistanceString += ` l 0 ${-distance[index] + multiplier * cornerRadiusY} `;
+			} else if (curr === 'down') {
+				stepDistanceString += ` l 0 ${distance[index] - multiplier * cornerRadiusY} `;
+			}
+
+			if (index < steps.length - 1) {
+				const arcStringKey = buildArcStringKey(curr, steps[index + 1]);
+				arcString = arcStrings[arcStringKey] || '';
+			}
+
+			return acc + stepDistanceString + arcString;
+		}, `M ${sourcePointX}, ${sourcePointY}`);
+	}
+	type XorY = 'x' | 'y';
+
+	function calculateStepPath(): { steps: StepDirection[]; distance: number[] } {
+		const steps: StepDirection[] = [];
+		const distance = [];
+		const directionMap = {
+			north: 'up',
+			south: 'down',
+			east: 'right',
+			west: 'left'
+		};
+		let sourceSide: StepDirection = directionMap[$sourceDirection];
+
+		let axis: XorY = sourceSide === 'left' || sourceSide === 'right' ? 'x' : 'y';
+
+		let oppositeAxis: XorY = axis === 'x' ? 'y' : 'x';
+
+		let oppositeSourceSide: StepDirection =
+			sourceSide === 'left'
+				? 'right'
+				: sourceSide === 'right'
+				? 'left'
+				: sourceSide === 'up'
+				? 'down'
+				: 'up';
+
+		let targetSide: StepDirection = directionMap[$targetDirection];
+		const oppositeTargetSide =
+			targetSide === 'left'
+				? 'right'
+				: targetSide === 'right'
+				? 'left'
+				: targetSide === 'up'
+				? 'down'
+				: 'up';
+		const targetAxis = targetSide === 'left' || targetSide === 'right' ? 'x' : 'y';
+		const targetSign = targetSide === 'left' || targetSide === 'up' ? -1 : 1;
+		const sourceSign = sourceSide === 'left' || sourceSide === 'up' ? -1 : 1;
+		const parallel = axis === targetAxis;
+
+		let sourceTargetFacing = targetSide === oppositeSourceSide;
+		let oppositeInitialDirection: StepDirection =
+			sourceSide === 'left' || sourceSide === 'right'
+				? deltaY > 0
+					? 'down'
+					: 'up'
+				: deltaX > 0
+				? 'right'
+				: 'left';
+
+		let direction = {
+			x: deltaX,
+			y: deltaY
+		};
+		const farSide = parallel ? direction[axis] < 0 : direction[oppositeAxis] < 0;
+		const oppositeSource = Math.sign(sourceSign) !== Math.sign(direction[axis]);
+		const oppositeTarget = Math.sign(targetSign) !== Math.sign(direction[targetAxis]);
+
+		steps.push(sourceSide);
+
+		if (!farSide) {
+			distance.push(oppositeSource ? stepBuffer : Math.abs(direction[axis]) / (parallel ? 2 : 1));
+			steps.push(oppositeInitialDirection);
+			distance.push(
+				Math.abs(direction[oppositeAxis]) / (parallel ? 1 : oppositeSource ? 2 : 1) +
+					stepBuffer * (farSide ? 1 : 0)
+			);
+			if (parallel) {
+				steps.push(sourceSide);
+				distance.push(Math.abs(direction[axis]) / 2);
+			} else if (oppositeSource) {
+				steps.push(oppositeSourceSide);
+				distance.push(Math.abs(direction[axis]) + stepBuffer);
+				steps.push(oppositeTargetSide);
+				distance.push(Math.abs(direction[oppositeAxis]) / 2);
+			}
+		} else {
+			distance.push(
+				parallel ? stepBuffer : oppositeSource ? stepBuffer : Math.abs(direction[axis]) / 2
+			);
+			steps.push(oppositeInitialDirection);
+			distance.push(
+				Math.abs(direction[oppositeAxis]) / (parallel ? 2 : 1) + (parallel ? 0 : stepBuffer)
+			);
+			steps.push(oppositeSource ? oppositeSourceSide : sourceSide);
+			distance.push(
+				Math.abs(direction[axis]) / (oppositeSource ? 1 : 2) +
+					stepBuffer * (oppositeSource && parallel ? 2 : oppositeSource ? 1 : 0)
+			);
+
+			if (parallel) {
+				steps.push(oppositeInitialDirection);
+				distance.push(Math.abs(direction[oppositeAxis]) / 2);
+				steps.push(sourceSide);
+				distance.push(stepBuffer);
+			} else {
+				steps.push(oppositeTargetSide);
+				distance.push(stepBuffer);
+			}
+		}
+
+		return { steps, distance };
 	}
 </script>
 

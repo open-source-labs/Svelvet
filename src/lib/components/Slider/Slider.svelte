@@ -1,15 +1,23 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
-	import { type Parameter, type Graph, isArrow, type OutputStore } from '$lib/types';
+	import {
+		type Parameter,
+		type Graph,
+		isArrow,
+		type OutputStore,
+		type CustomWritable
+	} from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
 
-	export let parameterStore: Writable<unknown>;
+	export let parameterStore: CustomWritable<number>;
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
 	export let label = 'Value';
 	export let input: null | unknown = null;
+
+	$: connected = typeof parameterStore.set !== 'function';
 
 	let graph = getContext<Graph>('graph');
 
@@ -105,7 +113,7 @@
 	$: CSSpercentage = `${percentageSlid}%`;
 </script>
 
-{#if !input}
+{#if !connected}
 	<div class="wrapper">
 		<button class="button" on:click={() => updateValue(-1)}>−</button>
 		<div class="slider" bind:clientWidth={sliderWidth}>
@@ -139,7 +147,12 @@
 		<button class="button" on:click={() => updateValue(1)}>+</button>
 	</div>
 {:else}
-	<p>{label}</p>
+	<div class="wrapper connected">
+		<div class="slider-input connected" style:--percentage="100%" aria-label={label}>
+			<p>{label}</p>
+			<p>{$parameterStore}</p>
+		</div>
+	</div>
 {/if}
 
 <style>

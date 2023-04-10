@@ -5,10 +5,9 @@
 	const ZOOM_INCREMENT = 0.1;
 	let graph: Graph = getContext<Graph>('graph');
 
-	const { transforms, isLocked, groups } = graph;
+	const { transforms, locked, groups } = graph;
 	const { scale, translation } = transforms;
 	const { x: xOffset, y: yOffset } = translation;
-	const { x: translationX, y: translationY } = translation;
 
 	$: hidden = $groups.hidden.nodes;
 
@@ -27,7 +26,7 @@
 		$scale *= 1 - ZOOM_INCREMENT;
 	}
 
-	function resetTransforms() {
+	function reset() {
 		// Reset scale
 		$scale = 1;
 
@@ -36,20 +35,22 @@
 		$yOffset = 0;
 	}
 
-	function toogleNodeLock() {
+	function lock() {
 		// Toggle lock boolean
-		$isLocked = !$isLocked;
+		$locked = !$locked;
 	}
 </script>
 
 <nav class="controls-wrapper">
-	{#if $hidden.size > 0}
-		<button on:click={unhideAll}>Unhide</button>
-	{/if}
-	<button on:click={zoomIn}>+</button>
-	<button on:click={zoomOut}>-</button>
-	<button on:click={resetTransforms}>Reset</button>
-	<button on:click={toogleNodeLock}>{$isLocked ? 'Unlock' : 'Lock'}</button>
+	<slot {zoomIn} {zoomOut} {reset} {lock} {unhideAll}>
+		{#if $hidden.size > 0}
+			<button on:click={unhideAll}>Unhide</button>
+		{/if}
+		<button on:click={zoomIn}>+</button>
+		<button on:click={zoomOut}>-</button>
+		<button on:click={reset}>Reset</button>
+		<button on:click={lock}>{$locked ? 'Unlock' : 'Lock'}</button>
+	</slot>
 </nav>
 
 <style>

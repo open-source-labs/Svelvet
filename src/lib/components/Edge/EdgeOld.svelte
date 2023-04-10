@@ -353,6 +353,7 @@
 		}
 		return { steps, distance };
 	}
+
 	$: CSSwidth = `${boxWidth}px`;
 	$: CSSheight = `${boxHeight}px`;
 	$: CSStop = `${minY - buffer}px`;

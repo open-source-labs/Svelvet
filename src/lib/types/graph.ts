@@ -9,37 +9,31 @@ import type {
 	Dimensions,
 	GroupBoxStore,
 	EdgeStore,
-	OutputKey,
 	GroupKey,
 	Anchor,
-	Inputs,
 	InputStore,
 	OutputStore
 } from '.';
-import type { generateOutput } from '$lib/utils';
 
 export interface Graph {
 	id: GraphKey;
 	nodes: NodeStore;
 	transforms: GraphTransforms;
-	isLocked: Writable<boolean>;
+	locked: Writable<boolean>;
 	bounds: {
 		top: Writable<number>;
 		left: Writable<number>;
 		right: Writable<number>;
 		bottom: Writable<number>;
 	};
-	connectingStore: Writable<Writable<Inputs | null> | ReturnType<typeof generateOutput> | null>;
 	maxZIndex: Writable<number>;
 	dimensions: Writable<DOMRect>;
 	editable: boolean;
 	direction: 'TD' | 'LR';
 	cursor: Readable<{ x: number; y: number }>;
-	connectingFrom: Writable<Anchor | null>;
 	linkingInput: Writable<LinkingInput | null>;
 	linkingOutput: Writable<LinkingOutput | null>;
 	linkingAny: Writable<Anchor | null>;
-	outputsRemoved: Writable<Set<OutputKey>>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
 	groupBoxes: GroupBoxStore;
@@ -53,7 +47,7 @@ export type LinkingAny = Anchor | Anchor;
 export interface LinkingInput {
 	anchor: Anchor;
 	store: InputStore | null;
-	key: string | null;
+	key: string | number | null;
 }
 
 export interface LinkingOutput {

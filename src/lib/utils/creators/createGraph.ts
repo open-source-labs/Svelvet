@@ -11,9 +11,10 @@ export interface GraphConfig {
 	editable?: boolean;
 	initialZoom?: number;
 	direction?: 'TD' | 'LR';
+	locked?: boolean;
 }
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const { initialZoom, editable, direction } = config;
+	const { initialZoom, editable, direction, locked } = config;
 
 	const translation = {
 		x: writable(0),
@@ -39,15 +40,12 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		bounds,
 		direction: direction || 'LR',
 		editable: editable || false,
-		connectingStore: writable(null),
 		linkingInput: writable(null),
 		linkingOutput: writable(null),
 		linkingAny: writable(null),
 		editing: writable(null),
 		cursor: createDerivedCursorStore(cursorPositionRaw, dimensions, translation, scale),
-		isLocked: writable(false),
-		outputsRemoved: writable(new Set()),
-		connectingFrom: writable(null),
+		locked: writable(locked || false),
 		groups: writable({
 			selected: { parent: writable(null), nodes: writable(new Set<Node>()) },
 			hidden: { parent: writable(null), nodes: writable(new Set<Node>()) }

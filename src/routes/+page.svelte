@@ -1,40 +1,102 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node } from '$lib';
-	import MinimapNode from '$lib/components/Minimap/MinimapNode.svelte';
-	import type { ConfigObject, NodeConfig, Inputs, Properties } from '$lib/types';
-	import type { UserConfig } from 'vitest/config';
-	import CircleNode from '../components/CircleNode.svelte';
-	import TestComponent from '../components/TestComponent.svelte';
-	import MyNode from '../components/MyNode.svelte';
-	const mermaid = `A & B --> C
-	C--> D
-	D --> E
-	E --> F`;
+
+	function randomColor() {
+		return Math.floor(Math.random() * 255);
+	}
+
+	function updateConnected(e) {
+		const { node } = e.detail;
+		node.label.set('Connected');
+	}
+
+	function updateDisconnected(e) {
+		const { node } = e.detail;
+		console.log('disconnected');
+		node.label.set('Disconnected');
+	}
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="dark" width={600} height={600} LR minimap>
-			<TestComponent />
-			<TestComponent />
-			<TestComponent />
-
-			<MyNode id="sam" />
-			<MyNode />
-			<MyNode />
-			<MyNode />
-			<MyNode />
-			<MyNode />
-			<MyNode />
+		<Svelvet theme="dark" width={600} height={600} TD>
 			<Node
-				position={{ x: 100, y: 100 }}
-				TD
-				id="special"
-				inputs={5}
-				width={400}
-				height={200}
-				label="Thanks For Coming"
-				editable
+				label="Custom Event"
+				on:connection={updateConnected}
+				on:disconnection={updateDisconnected}
+				on:nodeClicked={(e) => {
+					// Destructure the node from the event
+					const { node } = e.detail;
+
+					node.label.set('Clicked');
+
+					node.bgColor.set(`rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`);
+
+					// Reset the node after 500ms
+					setTimeout(() => {
+						node.label.set('Custom Event');
+						node.bgColor.set('gray');
+					}, 500);
+				}}
+			/>
+			<Node
+				label="Custom Event"
+				on:connection={updateConnected}
+				on:disconnection={updateDisconnected}
+				on:nodeClicked={(e) => {
+					// Destructure the node from the event
+					const { node } = e.detail;
+
+					node.label.set('Clicked');
+
+					node.bgColor.set(`rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`);
+
+					// Reset the node after 500ms
+					setTimeout(() => {
+						node.label.set('Custom Event');
+						node.bgColor.set('gray');
+					}, 500);
+				}}
+				LR
+			/>
+			<Node
+				label="Custom Event"
+				on:connection={updateConnected}
+				on:disconnection={updateDisconnected}
+				on:nodeClicked={(e) => {
+					// Destructure the node from the event
+					const { node } = e.detail;
+
+					node.label.set('Clicked');
+
+					node.bgColor.set(`rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`);
+
+					// Reset the node after 500ms
+					setTimeout(() => {
+						node.label.set('Custom Event');
+						node.bgColor.set('gray');
+					}, 500);
+				}}
+			/>
+			<Node
+				label="Custom Event"
+				on:connection={updateConnected}
+				on:disconnection={updateDisconnected}
+				on:nodeClicked={(e) => {
+					// Destructure the node from the event
+					const { node } = e.detail;
+
+					node.label.set('Clicked');
+
+					node.bgColor.set(`rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`);
+
+					// Reset the node after 500ms
+					setTimeout(() => {
+						node.label.set('Custom Event');
+						node.bgColor.set('gray');
+					}, 500);
+				}}
+				LR
 			/>
 		</Svelvet>
 	</div>

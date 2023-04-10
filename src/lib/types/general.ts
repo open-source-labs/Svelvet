@@ -42,6 +42,8 @@ export type RemValue = `${number}rem`;
 export type VwValue = `${number}vw`;
 export type VhValue = `${number}vh`;
 
+export type CSSDimensions = `${number}px}` | `${number}%`;
+
 export type StrictDimenionValue =
 	| number
 	| PixelValue

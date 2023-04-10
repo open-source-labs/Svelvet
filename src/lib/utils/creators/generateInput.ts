@@ -2,7 +2,7 @@ import type { Writable } from 'svelte/store';
 import type { WrappedWritable } from '$lib/types';
 import { writable } from 'svelte/store';
 
-export function generateInput<T extends Record<string, unknown>>(
+export function generateInput<T extends Record<string, number | string | boolean | object>>(
 	initialData: T
 ): Writable<WrappedWritable<T>> {
 	const newStore: Partial<WrappedWritable<T>> = {};
@@ -11,5 +11,3 @@ export function generateInput<T extends Record<string, unknown>>(
 	}
 	return writable(newStore as WrappedWritable<T>);
 }
-
-export type InputStore = ReturnType<typeof generateInput>;
