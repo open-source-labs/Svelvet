@@ -5,18 +5,18 @@
 
 	export let id: number | string = Math.random();
 
-	const connections: [string, string][] = [['sam', 'son']];
+	const connections: [string, string][] = [['1', '1']];
 </script>
 
 <SpecialNode let:grabHandle let:selected {id}>
 	<div class="node" use:grabHandle class:selected>
 		<div class="input-anchors">
-			<Anchor input id="son" />
-			<Anchor input id="grandpa" />
+			<Anchor input id="1" />
+			<Anchor input id="2" />
 		</div>
 		<div class="output-anchors">
-			<Anchor output id="dad" {connections} edge={CustomEdge} />
-			<Anchor output id="mom" {connections} />
+			<Anchor output id="3" {connections} edge={CustomEdge} />
+			<Anchor output id="4" {connections} />
 		</div>
 	</div>
 </SpecialNode>
