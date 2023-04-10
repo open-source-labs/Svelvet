@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Node } from '$lib/types';
+	import type { CSSColorString, Node } from '$lib/types';
 
 	export let node: Node;
 	export let hidden = false;
@@ -8,20 +8,23 @@
 	export let boundsHeight: number;
 	export let top: number;
 	export let left: number;
+	export let nodeColor: CSSColorString | null = null;
 
-	const { position, dimensions, bgColor } = node;
+	const { position, dimensions, bgColor, borderRadius } = node;
 	const { width, height } = dimensions;
 	const { x, y } = position;
 
 	$: DOMwidth = ($width / boundsWidth) * 100;
 	$: DOMheight = ($height / boundsHeight) * 100;
+	$: DOMradius = ($borderRadius / boundsWidth) * 100;
 </script>
 
 <button
 	on:click={() => toggleHidden(node)}
 	class:hidden
 	class="minimap-node"
-	style:background-color={$bgColor}
+	style:border-radius={DOMradius + 'px'}
+	style:background-color={nodeColor || $bgColor}
 	style:width="{DOMwidth}%"
 	style:height="{DOMheight}%"
 	style:top="{(($y - top) / boundsHeight) * 100}%"

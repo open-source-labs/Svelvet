@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, setContext } from 'svelte';
+	import { onMount, setContext, getContext } from 'svelte';
 	import type {
 		Theme,
 		BackgroundStyles,
@@ -9,19 +9,19 @@
 		GroupKey,
 		Group
 	} from '$lib/types';
-	import { writable } from 'svelte/store';
+	import { writable, get } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { initialClickPosition } from '$lib/stores/CursorStore';
+	import { touchDistance, initialClickPosition } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
-	import { getContext } from 'svelte';
 	import { activeKeys } from '$lib/stores';
-	import { getRandomColor, debounce, moveNodes } from '$lib/utils';
+	import { getRandomColor, calculateRelativeCursor, translateGraph } from '$lib/utils';
+	import { getTouchDistance, getTouchMidpoint } from '$lib/utils/helpers';
 
 	export let graph: Graph;
 	export let width: number;
@@ -54,6 +54,7 @@
 	let graphBounds: DOMRect;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
+	let initialDistance: number = 0;
 
 	const { dimensions: dimensionsStore } = graph;
 
@@ -63,14 +64,17 @@
 	$: groups = graph.groups;
 	$: dimensions = $dimensionsStore;
 	$: selected = $groups.selected.nodes;
-	$: translationX = graph.transforms.translation.x;
-	$: translationY = graph.transforms.translation.y;
+	$: translation = graph.transforms.translation;
+	$: translationX = translation.x;
+	$: translationY = translation.y;
 	$: activeGroup = graph.activeGroup;
 	$: initialNodePositions = graph.initialNodePositions;
 	$: editing = graph.editing;
 	$: linkingAny = graph.linkingAny;
 	$: linkingInput = graph.linkingInput;
 	$: linkingOutput = graph.linkingOutput;
+	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
+	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 
 	onMount(() => {
 		updateGraphBounds();
@@ -150,8 +154,11 @@
 
 	function onMouseDown(e: MouseEvent) {
 		graphDOMElement.focus();
+
 		const { clientX, clientY } = e;
-		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
+
+		$initialClickPosition = $cursor;
+
 		if ($activeKeys['Shift'] || $activeKeys['Meta']) {
 			e.preventDefault();
 			selecting = true;
@@ -167,7 +174,69 @@
 		}
 	}
 
-	const debouncedHandleScroll = debounce(handleScroll, 10);
+	// This can be refined
+	function onTouchStart(e: TouchEvent) {
+		$selected = new Set();
+		$selected = $selected;
+
+		const dimensions = graph.dimensions;
+		const { scale, translation } = graph.transforms;
+		const { x: translateX, y: translateY } = translation;
+		const { top, left, width, height } = get(dimensions);
+
+		let unadjustedTouch: { clientX: number; clientY: number };
+		isMovable = true;
+		if (e.touches.length === 2) {
+			initialDistance = getTouchDistance(e.touches[0], e.touches[1]);
+			unadjustedTouch = getTouchMidpoint(e.touches[0], e.touches[1]);
+		} else {
+			unadjustedTouch = e.touches[0];
+		}
+
+		// This function needs to be updated to accept the graph directly
+		const touchPoint = calculateRelativeCursor(
+			unadjustedTouch,
+			top,
+			left,
+			width,
+			height,
+			get(scale),
+			get(translateX),
+			get(translateY)
+		);
+
+		initialClickPosition.set(touchPoint);
+	}
+
+	function onTouchEnd(e: TouchEvent) {
+		isMovable = false;
+	}
+
+	// There shouldn't have to be a listener on the element
+	function onTouchMove(e: TouchEvent) {
+		if (e.touches.length === 2) {
+			const newDistance = $touchDistance;
+			const scaleFactor = newDistance / initialDistance;
+
+			const newScale = calculateZoom($scale, 90 * (1 - scaleFactor), ZOOM_INCREMENT);
+			const currentTranslation = { x: $translationX, y: $translationY };
+			// Calculate the translation adjustment
+			const newTranslation = calculateTranslation(
+				$scale,
+				newScale,
+				currentTranslation,
+				$cursor,
+				graphBounds
+			);
+
+			// Apply transforms
+			translateGraph(translation, newTranslation);
+			zoomGraph(scale, newScale);
+
+			// Update the initial distance
+			initialDistance = newDistance;
+		}
+	}
 
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key } = e;
@@ -223,13 +292,9 @@
 
 		// Apply transforms
 		zoomGraph(scale, newScale);
-		translateGraph(newTranslation);
+		translateGraph(translation, newTranslation);
 	}
 
-	function translateGraph(translation: { x: number | null; y: number | null }) {
-		if (translation.x) $translationX = translation.x;
-		if (translation.y) $translationY = translation.y;
-	}
 	function handleArrowKey(key: Arrow) {
 		const multiplier = $activeKeys['Shift'] ? 2 : 1;
 		const start = performance.now();
@@ -243,7 +308,10 @@
 				const time = performance.now() - start;
 				const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 
-				translateGraph({ x: leftRight ? movement : null, y: leftRight ? null : movement });
+				translateGraph(translation, {
+					x: leftRight ? movement : null,
+					y: leftRight ? null : movement
+				});
 			}, 5);
 			activeIntervals[key] = interval;
 		}
@@ -254,9 +322,6 @@
 		$translationY = 0;
 		$translationX = 0;
 	}
-
-	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
-	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -268,7 +333,10 @@
 	id={graph.id}
 	bind:this={graphDOMElement}
 	on:mousedown|preventDefault={onMouseDown}
-	on:wheel|preventDefault={debouncedHandleScroll}
+	on:touchend|preventDefault={onTouchEnd}
+	on:touchstart|self|preventDefault={onTouchStart}
+	on:touchmove|self|preventDefault={onTouchMove}
+	on:wheel|preventDefault={handleScroll}
 	on:keydown|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
@@ -280,8 +348,8 @@
 		<slot />
 	</GraphRenderer>
 	<Background --background-color="var(--{theme}-background)" {style} />
-	<svelte:component this={minimapComponent} />
-	<svelte:component this={controlsComponent} />
+	<slot name="minimap"><svelte:component this={minimapComponent} /></slot>
+	<slot name="controls"><svelte:component this={controlsComponent} /></slot>
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} />
 	{/if}

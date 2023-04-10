@@ -14,6 +14,7 @@
 	export let strokeColor = THEMES[theme].edge;
 	export let straight = false;
 	export let step = false;
+	export let animate = false;
 
 	export let edge: WritableEdge;
 
@@ -25,7 +26,6 @@
 
 	const buffer = 200;
 	let active = false;
-	let animate = false;
 
 	const directionVectors: Record<Direction, XYPair> = {
 		north: { x: 0, y: -1 },
@@ -78,7 +78,10 @@
 	$: targetPointX = flipX ? buffer : buffer + width;
 	$: targetPointY = flipY ? buffer : buffer + height;
 
-	$: path = `M ${sourcePointX}, ${sourcePointY}
+	let path: string;
+
+	$: if (!step) {
+		path = `M ${sourcePointX}, ${sourcePointY}
 	${
 		!straight
 			? `C ${sourceControlX}, ${sourceControlY}
@@ -86,6 +89,7 @@
 			: ''
 	}
 	${targetPointX}, ${targetPointY}`;
+	}
 
 	$: flipX = deltaX < 0;
 	$: flipY = deltaY < 0;
@@ -162,8 +166,14 @@
 		| 'downright';
 
 	$: if (step && edgeKey !== 'cursor') {
-		cornerRadiusX = Math.min(Math.abs(Math.min(deltaY, deltaX)) / 2, cornerRadiusConstant);
-		cornerRadiusY = Math.min(Math.abs(Math.min(deltaY, deltaX)) / 2, cornerRadiusConstant);
+		cornerRadiusX = Math.min(
+			Math.min(Math.abs(deltaY), Math.abs(deltaY)) / 2,
+			cornerRadiusConstant
+		);
+		cornerRadiusY = Math.min(
+			Math.min(Math.abs(deltaY), Math.abs(deltaY)) / 2,
+			cornerRadiusConstant
+		);
 		const arcStrings = {
 			rightdown: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 ${cornerRadiusX} ${cornerRadiusY}`,
 			downright: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 ${cornerRadiusX} ${cornerRadiusY}`,

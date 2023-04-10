@@ -50,14 +50,14 @@
 
 <style>
 	:root {
-		--shadow-color: 0deg 0% 15%;
-		--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+		--shadow-color: 0deg 0% 10%;
+		--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.4),
 			0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
 			1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
-		--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.36),
-			0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.36),
-			2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.36),
-			5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
+		--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.42),
+			0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.1),
+			2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.1),
+			5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.1);
 		--shadow-elevation-high: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
 			1.5px 2.9px 3.7px -0.4px hsl(var(--shadow-color) / 0.34),
 			2.7px 5.4px 6.8px -0.7px hsl(var(--shadow-color) / 0.34),

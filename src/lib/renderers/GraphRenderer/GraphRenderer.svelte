@@ -7,7 +7,7 @@
 	import { captureGroup, moveNodes, updateTranslation } from '$lib/utils';
 	import { getContext } from 'svelte';
 	import { getJSONState } from '$lib/utils/savers/saveStore';
-
+	import { get } from 'svelte/store';
 	const graph = getContext<Graph>('graph');
 
 	export let isMovable: boolean;
@@ -20,13 +20,9 @@
 	$: x = transforms.translation.x;
 	$: y = transforms.translation.y;
 
-	$: if (isMovable) {
-		[$x, $y] = updateTranslation($initialClickPosition, $cursor, transforms);
-	}
-
 	$: if ($activeGroup) {
 		$cursor; // This is necessary to trigger the update
-		moveNodes(graph, $initialClickPosition, $initialNodePositions, $activeGroup);
+		moveNodes(graph, get(initialClickPosition), get(initialNodePositions), $activeGroup);
 	}
 
 	function handleGroupClicked(event: CustomEvent) {
@@ -37,7 +33,7 @@
 	}
 </script>
 
-<ZoomPanWrapper>
+<ZoomPanWrapper {isMovable}>
 	<slot />
 	<EdgeRenderer />
 	<GroupBoxRenderer on:groupClick={handleGroupClicked} />

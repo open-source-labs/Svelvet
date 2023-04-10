@@ -4,7 +4,7 @@
 	import type { Graph, Node, Theme } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateFitContentWidth, captureGroup } from '$lib/utils';
+	import { calculateFitContentWidth, calculateRelativeCursor, captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -72,11 +72,6 @@
 		}
 	});
 
-	function onMouseUp() {
-		isResizing.width = false;
-		isResizing.height = false;
-	}
-
 	function toggleSelected() {
 		if (selected) {
 			if (node) $selectedNodes.delete(node);
@@ -113,10 +108,11 @@
 
 	function grabHandle(node: HTMLElement) {
 		node.addEventListener('mousedown', handleNodeClicked);
-
+		node.addEventListener('touchstart', handleNodeTouch);
 		return {
 			destroy() {
 				node.removeEventListener('mousedown', handleNodeClicked);
+				node.removeEventListener('touchstart', handleNodeTouch);
 			}
 		};
 	}
@@ -124,6 +120,30 @@
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
+
+	function handleNodeTouch(e: TouchEvent) {
+		if (e.touches.length > 1) return;
+		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+		if ($locked) return;
+		//e.stopPropagation();
+		e.preventDefault();
+		const dimensions = graph.dimensions;
+		const { scale, translation } = graph.transforms;
+		const { x: translateX, y: translateY } = translation;
+		const { top, left, width, height } = get(dimensions);
+		const touchPoint = calculateRelativeCursor(
+			e.touches[0],
+			top,
+			left,
+			width,
+			height,
+			get(scale),
+			get(translateX),
+			get(translateY)
+		);
+		initialClickPosition.set(touchPoint);
+		nodeSelectLogic();
+	}
 
 	function handleNodeClicked(e: MouseEvent) {
 		e.preventDefault();
@@ -135,13 +155,6 @@
 		if ($locked) return;
 
 		const { button } = e;
-		const { group } = node;
-
-		const nodeGroup: GroupKey | null = get(group);
-
-		let groupData: Group;
-		let parent;
-		let isParent = false;
 
 		$initialClickPosition = $cursor;
 
@@ -149,6 +162,17 @@
 		if (button === 2 && $editable) {
 			$editing = node;
 		}
+		nodeSelectLogic();
+	}
+
+	function nodeSelectLogic() {
+		const { group } = node;
+
+		const nodeGroup: GroupKey | null = get(group);
+
+		let groupData: Group;
+		let parent;
+		let isParent = false;
 
 		if (nodeGroup) {
 			groupData = $groups[nodeGroup];
@@ -177,11 +201,10 @@
 		}
 
 		// Capture the initial positions of the nodes in the group
+
 		$initialNodePositions = captureGroup($groups['selected'].nodes);
 	}
 </script>
-
-<svelte:window on:mouseup|stopPropagation={onMouseUp} />
 
 <!-- svelte-ignore a11y-non-interactive-element -->
 {#if !hidden}
@@ -194,7 +217,6 @@
 		style:width={nodeWidth}
 		style:height={nodeHeight}
 		style:z-index={$zIndex}
-		on:mouseup={onMouseUp}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}

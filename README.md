@@ -1,6 +1,6 @@
 <div align="center">
 
-![banner](./src/assets/banner.png)
+![banner](https://github.com/open-source-labs/Svelvet/raw/main/src/assets/banner.png)
 
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
@@ -32,14 +32,16 @@ Shout out to our contributors! Here's what's new:
     <li>Exposed Edge component for developer customization</li>
     <li>Exposed Node component for developer customization</li>
     <li>Exposed Resizer component that can be added to custom nodes</li>
+    <li>Improved consistency of touch events on mobile devices. Added touch support for controls component. We will continue to make improvements here!</li>
     <li>Nodes and edges no longer have to have IDs specificed. Defaults to incrementing value</li>
     <li>Added Controls component with zoom, reset, lock and unhide functionality</li>
     <li>Added keyboard navigation to graph when focused</li>
     <li>Added selection box functionality on Shift + Click</li>
     <li>Added node grouping functionality on Shift + CMD + Click</li>
     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
-    <li>Exposed custom events for on:nodeClicked, on:connection and on:disconnection that developers can listen for on custom components</li>
-    <li>Added additional themes</li>
+    <li>Added mapColor and dotColor props to Svelvet component, though we plan on exposing the full Background component for greater customization</li>
+    <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when developing custom nodes</li>
+    <li>Added theme prop to Svelvet component. Defaults to light. Accepts things like "dark", "purple", "parchment"</li>
     <li>Removed frontend website code from library repo</li>
     <li>Simplified bezier curve logic and added the ability to specify anchor "direction"</li>
     <li>Added ability to parse Mermaid strings into node graphs + edges</li>

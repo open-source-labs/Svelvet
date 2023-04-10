@@ -1,15 +1,19 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
-	import type { Graph } from '$lib/types';
+	import type { Theme, CSSColorString, Graph } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
+	import { THEMES } from '$lib/constants/themes';
+
+	let graph: Graph = getContext<Graph>('graph');
+	const theme = getContext<Theme>('theme');
 
 	export let width = 100;
 	export let height = 100;
-	export let mapColor = 'white';
-
-	let graph: Graph = getContext<Graph>('graph');
+	export let mapColor = THEMES[theme].map;
+	export let nodeColor: CSSColorString | null = null;
+	export let borderColor: CSSColorString = THEMES[theme].border;
 
 	$: bounds = graph.bounds;
 	$: top = bounds.top;
@@ -75,11 +79,10 @@
 
 <div
 	class="minimap-wrapper"
-	style="width: {width}px; height: {height
-		? height
-		: width}px; --default-minimap-background-color: {mapColor};"
+	style:background-color={mapColor}
+	style="width: {width}px; height: {height ? height : width}px;"
 >
-	<div class="node-wrapper" style={nodeWrapperStyle}>
+	<div class="node-wrapper" style={nodeWrapperStyle} style:border-color={borderColor}>
 		{#each Object.values($nodes) as node}
 			{#if node.id !== 'N-editor'}
 				<MinimapNode
@@ -88,6 +91,7 @@
 					left={$left}
 					{boundsWidth}
 					{boundsHeight}
+					{nodeColor}
 					hidden={$hidden.has(node)}
 					{toggleHidden}
 				/>
@@ -116,7 +120,9 @@
 	}
 	.overlay {
 		position: absolute;
-		background-color: rgba(148, 234, 233, 0.322);
+		background-color: transparent;
+		border: solid 1px rgb(209, 209, 209);
+		border-radius: 2px;
 		pointer-events: none;
 	}
 </style>

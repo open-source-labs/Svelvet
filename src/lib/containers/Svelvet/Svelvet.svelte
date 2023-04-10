@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type { Graph as GraphType, GraphKey, NodeConfig, NodeStore } from '$lib/types';
+	import type { Graph as GraphType, GraphKey, NodeConfig, NodeStore, Theme } from '$lib/types';
 	import { populateStore } from '$lib/utils';
 	import { createNode, createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
 
 	export let mermaid = '';
-	export let theme = 'light';
+	export let theme: Theme = 'light';
 	export let graphId: number | string = 0;
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
@@ -55,5 +55,9 @@
 </script>
 
 {#if graph}
-	<Graph {width} {height} {minimap} {graph}><slot /></Graph>
+	<Graph {width} {height} {minimap} {graph}
+		><slot /><span slot="minimap"><slot name="minimap" /></span><span slot="controls"
+			><slot name="controls" /></span
+		></Graph
+	>
 {/if}

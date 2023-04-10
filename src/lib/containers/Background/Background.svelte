@@ -1,15 +1,19 @@
 <script lang="ts">
 	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
+	import { THEMES } from '$lib/constants/themes';
 	import type { Graph } from '$lib/types';
-	import type { BackgroundStyles } from '$lib/types/general';
+	import type { BackgroundStyles, Theme } from '$lib/types/general';
 	import { getContext } from 'svelte';
+
+	const graph = getContext<Graph>('graph');
+	const theme = getContext<Theme>('theme');
 
 	export let style: BackgroundStyles;
 	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
 	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
 
-	const graph = getContext<Graph>('graph');
-
+	export let bgColor = THEMES[theme].map;
+	export let dotColor = THEMES[theme].dots;
 	// Import relevant data from store
 	const { transforms } = graph;
 	const { scale, translation } = transforms;
@@ -38,7 +42,7 @@
 </script>
 
 <!-- BACKGROUND COMPONENT START -->
-<div id="background-wrapper" bind:this={backgroundWrapper}>
+<div id="background-wrapper" bind:this={backgroundWrapper} style:background-color={bgColor}>
 	<svg>
 		<defs>
 			<pattern
@@ -50,7 +54,12 @@
 				patternUnits="userSpaceOnUse"
 			>
 				{#if style === 'dots'}
-					<circle r={radius} cx={dotCenterCoordinate} cy={dotCenterCoordinate} />
+					<circle
+						style:fill={dotColor}
+						r={radius}
+						cx={dotCenterCoordinate}
+						cy={dotCenterCoordinate}
+					/>
 				{:else if style === 'lines'}
 					<line
 						x1={dotCenterCoordinate}
@@ -79,7 +88,7 @@
 	#background-wrapper {
 		width: 100%;
 		height: 100%;
-		background-color: var(--background-color);
+		pointer-events: none;
 	}
 
 	svg {

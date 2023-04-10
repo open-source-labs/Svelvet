@@ -17,7 +17,7 @@ export interface NodeDOMBounds {
 	width: number;
 	height: number;
 }
-export type Theme = 'light' | 'dark' | 'light2';
+export type Theme = 'light' | 'dark' | 'purple';
 
 export interface Dimensions {
 	width: Writable<number>;

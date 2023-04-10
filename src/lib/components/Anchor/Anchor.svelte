@@ -8,7 +8,8 @@
 		InputType,
 		NodeKey,
 		OutputStore,
-		InputStore
+		InputStore,
+		Theme
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
 	import { ANCHOR_COLOR, ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
@@ -18,12 +19,15 @@
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
-
+	import { THEMES } from '$lib/constants/themes';
 	const dispatch = createEventDispatcher();
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
+	const theme = getContext<Theme>('theme');
+
+	export let bgColor = THEMES[theme].anchor;
 
 	export let key: string | number | null = null;
 	export let id: string | number = 0;
@@ -431,7 +435,7 @@
 			class:connecting
 			class:hovering
 			style:--default-width={`${ANCHOR_SIZE}px`}
-			style:--default-color={'black' || ANCHOR_COLOR}
+			style:background-color={bgColor}
 			style:--default-radius={ANCHOR_RADIUS}
 		/>
 	</slot>
