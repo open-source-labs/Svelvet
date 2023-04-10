@@ -32,7 +32,6 @@ export function createAnchor(
 	const moving = derived(
 		[node.moving, node.resizingWidth, node.resizingHeight],
 		([$moving, $resizingWidth, $resizingHeight]) => {
-			console.log('moving', $moving, $resizingWidth, $resizingHeight);
 			return $moving || $resizingWidth || $resizingHeight;
 		}
 	);

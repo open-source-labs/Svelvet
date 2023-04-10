@@ -2,7 +2,6 @@
 	export let outputStore;
 
 	const { value1, value2, radio, color1, color2, color3 } = $outputStore;
-	console.log($outputStore);
 </script>
 
 <div

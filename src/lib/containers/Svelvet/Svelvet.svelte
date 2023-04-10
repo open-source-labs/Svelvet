@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type { Graph, GraphKey, NodeConfig, NodeStore } from '$lib/types';
+	import type { Graph as GraphType, GraphKey, NodeConfig, NodeStore } from '$lib/types';
 	import { populateStore } from '$lib/utils';
-	import { get } from 'svelte/store';
-	import { flowChartParser, createNode, createGraph } from '$lib/utils/';
-	import { populateMermaidNodes } from '../../utils/drawers/flowchartDrawer';
+	import { createNode, createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
-	import Flow from './Flow.svelte';
-	import { reloadStore } from '$lib/utils/savers/reloadStore';
+	import Graph from '../Graph/Graph.svelte';
 
 	export let mermaid = '';
 	export let theme = 'light';
@@ -18,8 +15,11 @@
 	export let TD = false;
 	export let editable = false;
 	export let locked = false;
+	export let width = 0;
+	export let height = 0;
+	export let minimap = false;
 
-	let graph: Graph;
+	let graph: GraphType;
 	let nodeStore: NodeStore;
 
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
@@ -39,44 +39,13 @@
 		}
 
 		// if (mermaid.length) {
-		// 	const createdNodes = populateNodes(mermaid);
+		// 	const mermaidNodes = flowChartParser(mermaid);
+		// 	const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
 		// 	populateStore(Object.values(createdNodes), graph);
 		// 	nodeStore = graph.nodes;
 		// }
 
-		if (mermaid.length) {
-			const mermaidNodes = flowChartParser(mermaid);
-			console.log({ mermaidNodes });
-			const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
-			console.log({ createdNodes });
-			populateStore(Object.values(createdNodes), graph);
-			nodeStore = graph.nodes;
-		}
-		const { edges: edgeStore } = graph;
-
-		console.log(get(nodeStore));
-
-		// edges.forEach((edge) => {
-		// 	const { source, target } = edge;
-
-		// 	const sourceNode = nodeStore.get(source);
-		// 	const targetNode = nodeStore.get(target.nodeId);
-		// 	const currentConnections = get(edgeStore).get(sourceNode);
-		// 	console.log(sourceNode, targetNode, currentConnections);
-		// 	const newConnection = { targetNode: targetNode, anchorId: target.anchorId };
-
-		// 	if (currentConnections) {
-		// 		currentConnections.push(newConnection);
-		// 	} else {
-		// 		get(edgeStore).set(sourceNode, [newConnection]);
-		// 	}
-		// });
-
 		graphStore.add(graph, graphKey);
-
-		// const { transforms } = graph;
-		// const { scale } = transforms;
-		// scale.set(initialZooom);
 	});
 
 	function generateNodes(nodes: Array<NodeConfig>) {
@@ -86,19 +55,5 @@
 </script>
 
 {#if graph}
-	<Flow {...$$props} {graph}><slot /></Flow>
+	<Graph {width} {height} {minimap} {graph}><slot /></Graph>
 {/if}
-
-<style>
-	:global(*) {
-		font-family: 'Rubik';
-		box-sizing: border-box;
-		user-select: none;
-		margin: 0;
-		line-height: 1rem;
-		font-size: 0.85rem;
-	}
-	:global(html, body) {
-		height: 100%;
-	}
-</style>

@@ -104,7 +104,6 @@ function createBoundsStore(nodes: NodeStore) {
 }
 
 export function calculateBounds(nodes: Node[]) {
-	console.log('BOUNDS BOUNDS BOUNDS');
 	const leftValues = nodes.map((n) => get(n.position.x));
 	const topValues = nodes.map((n) => get(n.position.y));
 	const rightValues = nodes.map((n) => get(n.position.x) + get(n.dimensions.width));

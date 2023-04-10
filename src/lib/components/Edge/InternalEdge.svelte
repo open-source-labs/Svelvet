@@ -1,8 +1,7 @@
-<!-- Line.svelte -->
 <script lang="ts">
 	import type { Direction, Graph, XYPair, Theme, WritableEdge } from '$lib/types';
 	import { getContext } from 'svelte';
-	import { readable } from 'svelte/store';
+	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
 	import { THEMES } from '$lib/constants/themes';
 
@@ -36,11 +35,11 @@
 		self: { x: 0, y: 0 }
 	};
 
-	$: sourceDirection = source?.direction;
-	$: targetDirection = target?.direction;
+	$: sourceDirection = source?.direction || writable('self' as Direction);
+	$: targetDirection = target?.direction || writable('self' as Direction);
 
-	$: sourceControlVector = directionVectors[$sourceDirection || 'self'];
-	$: targetControlVector = directionVectors[$targetDirection || 'self'];
+	$: sourceControlVector = directionVectors[$sourceDirection];
+	$: targetControlVector = directionVectors[$targetDirection];
 
 	$: sourceX = (source && source.position.x) || readable($cursor.x);
 	$: sourceY = (source && source.position.y) || readable($cursor.y);
@@ -102,11 +101,9 @@
 
 	$: if (!tracking && ($sourceMoving || $targetMoving || edgeKey === 'cursor')) {
 		tracking = true;
-		console.log(tracking, $sourceMoving, $targetMoving, edgeKey);
 		trackPath();
 	} else if (tracking && !$sourceMoving && !$targetMoving && edgeKey !== 'cursor') {
 		tracking = false;
-		console.log('false');
 		cancelAnimationFrame(animationFrameId);
 	}
 
@@ -120,7 +117,6 @@
 	}
 
 	function calculatePath() {
-		console.log('Calculating');
 		const pathLength = DOMPath.getTotalLength();
 		const halfLength = pathLength / 2;
 		const pathMidPoint = DOMPath.getPointAtLength(halfLength);
@@ -151,16 +147,7 @@
 
 	let cornerRadiusX = 0;
 	let cornerRadiusY = 0;
-	let cornerRadiusString = '0 0';
-	let cornerRadiusFlipped = '0 0';
-	let rightDownArc = '0 0 0 0 0 0';
-	let downRightArc = '0 0 0 0 0 0';
-	let rightUpArc = '0 0 0 0 0 0';
-	let upRightArc = '0 0 0 0 0 0';
-	let leftDownArc = '0 0 0 0 0 0';
-	let downLeftArc = '0 0 0 0 0 0';
-	let leftUpArc = '0 0 0 0 0 0';
-	let upLeftArc = '0 0 0 0 0 0';
+
 	let cornerRadiusConstant = 8;
 	let stepBuffer = 20;
 	type StepDirection = 'left' | 'right' | 'up' | 'down';
@@ -174,36 +161,18 @@
 		| 'downleft'
 		| 'downright';
 
-	$: if (!step) {
-		cornerRadiusX =
-			Math.abs(deltaX) > cornerRadiusConstant * 2
-				? cornerRadiusConstant
-				: Math.floor(Math.abs(deltaX) / 2 + 1);
-		cornerRadiusY =
-			Math.abs(deltaY) > cornerRadiusConstant * 2
-				? cornerRadiusConstant
-				: Math.floor(Math.abs(deltaY) / 2 + 1);
-		cornerRadiusString = `${cornerRadiusX} ${cornerRadiusY}`;
-		cornerRadiusFlipped = `${cornerRadiusX} -${cornerRadiusY}`;
-
-		rightDownArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusString} `;
-		downRightArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusString} `;
-		rightUpArc = `a ${cornerRadiusString} 0 0 0 ${cornerRadiusFlipped} `;
-		upRightArc = `a ${cornerRadiusString} 0 0 1 ${cornerRadiusFlipped} `;
-		leftDownArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusString} `;
-		downLeftArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusString} `;
-		leftUpArc = `a ${cornerRadiusFlipped} 0 0 1 -${cornerRadiusFlipped} `;
-		upLeftArc = `a ${cornerRadiusFlipped} 0 0 0 -${cornerRadiusFlipped} `;
-
+	$: if (step && edgeKey !== 'cursor') {
+		cornerRadiusX = Math.min(Math.abs(Math.min(deltaY, deltaX)) / 2, cornerRadiusConstant);
+		cornerRadiusY = Math.min(Math.abs(Math.min(deltaY, deltaX)) / 2, cornerRadiusConstant);
 		const arcStrings = {
-			rightdown: rightDownArc,
-			downright: downRightArc,
-			rightup: rightUpArc,
-			upright: upRightArc,
-			leftdown: leftDownArc,
-			downleft: downLeftArc,
-			leftup: leftUpArc,
-			upleft: upLeftArc
+			rightdown: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 ${cornerRadiusX} ${cornerRadiusY}`,
+			downright: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 ${cornerRadiusX} ${cornerRadiusY}`,
+			rightup: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 ${cornerRadiusX} -${cornerRadiusY}`,
+			upright: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 ${cornerRadiusX} -${cornerRadiusY}`,
+			leftdown: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 -${cornerRadiusX} ${cornerRadiusY}`,
+			downleft: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 -${cornerRadiusX} ${cornerRadiusY}`,
+			leftup: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 -${cornerRadiusX} -${cornerRadiusY}`,
+			upleft: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 -${cornerRadiusX} -${cornerRadiusY}`
 		};
 
 		function buildArcStringKey(a: StepDirection, b: StepDirection): ArcStringKey {
@@ -240,68 +209,47 @@
 	function calculateStepPath(): { steps: StepDirection[]; distance: number[] } {
 		const steps: StepDirection[] = [];
 		const distance = [];
-		const directionMap = {
+		const directionMap: Record<Direction, StepDirection> = {
 			north: 'up',
 			south: 'down',
 			east: 'right',
-			west: 'left'
+			west: 'left',
+			self: 'right'
 		};
-		let sourceSide: StepDirection = directionMap[$sourceDirection];
 
-		let axis: XorY = sourceSide === 'left' || sourceSide === 'right' ? 'x' : 'y';
+		const sourceSide: StepDirection = directionMap[$sourceDirection];
+		const targetSide: StepDirection = directionMap[$targetDirection];
+		const axis = ['left', 'right'].includes(sourceSide) ? 'x' : 'y';
+		const oppositeAxis = axis === 'x' ? 'y' : 'x';
 
-		let oppositeAxis: XorY = axis === 'x' ? 'y' : 'x';
+		const oppositeSide = (side: StepDirection): StepDirection =>
+			({ left: 'right', right: 'left', up: 'down', down: 'up' }[side] as StepDirection);
+		const getSign = (side: StepDirection) => (['left', 'up'].includes(side) ? -1 : 1);
 
-		let oppositeSourceSide: StepDirection =
-			sourceSide === 'left'
-				? 'right'
-				: sourceSide === 'right'
-				? 'left'
-				: sourceSide === 'up'
-				? 'down'
-				: 'up';
+		const oppositeSourceSide = oppositeSide(sourceSide);
+		const oppositeTargetSide = oppositeSide(targetSide);
+		const targetAxis = ['left', 'right'].includes(targetSide) ? 'x' : 'y';
+		const targetSign = getSign(targetSide);
+		const sourceSign = getSign(sourceSide);
+		const direction = { x: deltaX, y: deltaY };
 
-		let targetSide: StepDirection = directionMap[$targetDirection];
-		const oppositeTargetSide =
-			targetSide === 'left'
-				? 'right'
-				: targetSide === 'right'
-				? 'left'
-				: targetSide === 'up'
-				? 'down'
-				: 'up';
-		const targetAxis = targetSide === 'left' || targetSide === 'right' ? 'x' : 'y';
-		const targetSign = targetSide === 'left' || targetSide === 'up' ? -1 : 1;
-		const sourceSign = sourceSide === 'left' || sourceSide === 'up' ? -1 : 1;
 		const parallel = axis === targetAxis;
 
-		let sourceTargetFacing = targetSide === oppositeSourceSide;
-		let oppositeInitialDirection: StepDirection =
-			sourceSide === 'left' || sourceSide === 'right'
-				? deltaY > 0
-					? 'down'
-					: 'up'
-				: deltaX > 0
-				? 'right'
-				: 'left';
+		const oppositeSource = direction[axis] * sourceSign < 0;
+		const oppositeTarget = direction[targetAxis] * targetSign > 0;
 
-		let direction = {
-			x: deltaX,
-			y: deltaY
-		};
-		const farSide = parallel ? direction[axis] < 0 : direction[oppositeAxis] < 0;
-		const oppositeSource = Math.sign(sourceSign) !== Math.sign(direction[axis]);
-		const oppositeTarget = Math.sign(targetSign) !== Math.sign(direction[targetAxis]);
+		const initialDirection =
+			axis === 'x' ? (deltaY > 0 ? 'down' : 'up') : deltaX > 0 ? 'right' : 'left';
 
 		steps.push(sourceSide);
-
-		if (!farSide) {
+		if (!oppositeTarget) {
 			distance.push(oppositeSource ? stepBuffer : Math.abs(direction[axis]) / (parallel ? 2 : 1));
-			steps.push(oppositeInitialDirection);
+			steps.push(initialDirection);
 			distance.push(
 				Math.abs(direction[oppositeAxis]) / (parallel ? 1 : oppositeSource ? 2 : 1) +
-					stepBuffer * (farSide ? 1 : 0)
+					stepBuffer * (parallel ? 0 : 1)
 			);
+
 			if (parallel) {
 				steps.push(sourceSide);
 				distance.push(Math.abs(direction[axis]) / 2);
@@ -315,10 +263,11 @@
 			distance.push(
 				parallel ? stepBuffer : oppositeSource ? stepBuffer : Math.abs(direction[axis]) / 2
 			);
-			steps.push(oppositeInitialDirection);
+			steps.push(initialDirection);
 			distance.push(
 				Math.abs(direction[oppositeAxis]) / (parallel ? 2 : 1) + (parallel ? 0 : stepBuffer)
 			);
+
 			steps.push(oppositeSource ? oppositeSourceSide : sourceSide);
 			distance.push(
 				Math.abs(direction[axis]) / (oppositeSource ? 1 : 2) +
@@ -326,7 +275,7 @@
 			);
 
 			if (parallel) {
-				steps.push(oppositeInitialDirection);
+				steps.push(initialDirection);
 				distance.push(Math.abs(direction[oppositeAxis]) / 2);
 				steps.push(sourceSide);
 				distance.push(stepBuffer);

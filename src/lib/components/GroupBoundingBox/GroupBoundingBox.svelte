@@ -24,7 +24,7 @@
 </script>
 
 <div
-	on:contextmenu|stopPropagation|preventDefault={() => console.log('clickeddd')}
+	on:contextmenu|stopPropagation|preventDefault
 	on:mousedown|stopPropagation|preventDefault={dispatchClick}
 	class="bounding-box-border"
 	{id}

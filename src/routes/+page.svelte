@@ -5,21 +5,20 @@
 		return Math.floor(Math.random() * 255);
 	}
 
-	function updateConnected(e) {
+	function updateConnected(e: CustomEvent) {
 		const { node } = e.detail;
 		node.label.set('Connected');
 	}
 
-	function updateDisconnected(e) {
+	function updateDisconnected(e: CustomEvent) {
 		const { node } = e.detail;
-		console.log('disconnected');
 		node.label.set('Disconnected');
 	}
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="dark" width={600} height={600} TD>
+		<Svelvet theme="dark" width={300} height={300} TD minimap>
 			<Node
 				label="Custom Event"
 				on:connection={updateConnected}
@@ -115,5 +114,7 @@
 		justify-content: center;
 		align-items: center;
 		background-color: gray;
+		width: 100vw;
+		height: 100vh;
 	}
 </style>

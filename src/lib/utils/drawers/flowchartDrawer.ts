@@ -46,17 +46,16 @@ export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt
 		if (!nodeWasSwapped) break;
 	}
 	//console.log(layerTracker);
-	console.log({ maxLayer });
+
 	const grid: Array<Array<LayerNode>> = [];
 	for (let i = 0; i <= maxLayer; i++) {
 		grid.push(layerTracker[i]);
 	}
 	let x = 0;
 	let y = 0;
-	console.log('grid', grid);
+
 	rotateGrid(grid, directionRef[direction]);
 	for (const layer of grid) {
-		console.log('layer');
 		for (const node of layer) {
 			if (flowChart.nodeList[node.id]) {
 				const nodeConfig: NodeConfig = {
@@ -65,7 +64,6 @@ export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt
 					position: { x, y }
 				};
 				nodes[node.id] = createNode(nodeConfig);
-				console.log('node', nodes[node.id]);
 			}
 			x += 200;
 		}

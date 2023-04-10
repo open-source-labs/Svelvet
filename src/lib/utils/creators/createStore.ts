@@ -24,7 +24,6 @@ export function createStore<T, K extends GenericKey>() {
 		set,
 		update,
 		add: (item: T, key: K) => {
-			console.log(item, key);
 			update((currentData) => {
 				currentData[key] = item;
 				count++;

@@ -4,6 +4,12 @@
 	position: relative;
 	overflow: hidden;
 	cursor: move;
+	font-family: 'Rubik';
+	box-sizing: border-box;
+	user-select: none;
+	margin: 0;
+	line-height: 1rem;
+	font-size: 0.85rem;
 }
 .svelvet-wrapper:focus {
 	outline: none;

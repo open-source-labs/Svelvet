@@ -70,7 +70,6 @@
 			$selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		}
-		console.log('Destroying node');
 	});
 
 	function onMouseUp() {

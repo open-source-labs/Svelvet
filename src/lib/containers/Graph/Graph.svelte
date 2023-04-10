@@ -24,7 +24,8 @@
 	import { getRandomColor, debounce, moveNodes } from '$lib/utils';
 
 	export let graph: Graph;
-	export let width: number = 0;
+	export let width: number;
+	export let height: number;
 	export let style: BackgroundStyles = 'dots';
 	export let snapTo = 1;
 	export let minimap = false;
@@ -171,7 +172,7 @@
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key } = e;
 		$activeKeys[key] = true;
-		console.log($activeKeys);
+
 		triggerActionBasedOn[key]?.(key);
 	}
 
@@ -263,7 +264,7 @@
 	class="svelvet-wrapper"
 	title="graph"
 	style:width={width ? width + 'px' : '100%'}
-	style:height={width ? width + 'px' : '100%'}
+	style:height={height ? height + 'px' : '100%'}
 	id={graph.id}
 	bind:this={graphDOMElement}
 	on:mousedown|preventDefault={onMouseDown}

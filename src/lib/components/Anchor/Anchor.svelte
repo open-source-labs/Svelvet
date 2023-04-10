@@ -180,8 +180,6 @@
 	}
 
 	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
-		console.log({ edge });
-
 		// Create a temporary edge to track the cursor
 		const newEdge = createEdge({ source, target }, source?.edge || null);
 		// Add the edge to the store

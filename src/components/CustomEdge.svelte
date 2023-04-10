@@ -1,17 +1,15 @@
 <script lang="ts">
-	import UserEdge from '$lib/components/UserEdge/UserEdge.svelte';
+	import Edge from '$lib/components/Edge/Edge.svelte';
 
 	export let path: string;
-	function handleClick() {
-		console.log('clicked');
-	}
+	function handleClick() {}
 	export let destroy;
 </script>
 
-<UserEdge>
+<Edge>
 	<path d={path} />
 	<!-- <div slot="label"><p on:click={destroy}>Custom Edge</p></div> -->
-</UserEdge>
+</Edge>
 
 <style>
 	path {
