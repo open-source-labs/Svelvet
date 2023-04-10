@@ -21,7 +21,7 @@
 	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
 	import { getRandomColor, calculateRelativeCursor, translateGraph } from '$lib/utils';
-	import { getTouchDistance, getTouchMidpoint } from '$lib/utils/helpers';
+	import { getTouchDistance, getTouchMidpoint } from '$lib/utils/helpers/';
 
 	export let graph: Graph;
 	export let width: number;
