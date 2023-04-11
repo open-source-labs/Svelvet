@@ -1,12 +1,5 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import {
-		type Parameter,
-		type Graph,
-		isArrow,
-		type OutputStore,
-		type CustomWritable
-	} from '$lib/types';
+	import { type Graph, isArrow, type CustomWritable } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
 
@@ -15,7 +8,6 @@
 	export let max = 100;
 	export let step = 1;
 	export let label = 'Value';
-	export let input: null | unknown = null;
 
 	$: connected = typeof parameterStore.set !== 'function';
 

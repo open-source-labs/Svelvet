@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let connected: boolean = false;
+	export let linked: boolean = false;
 </script>
 
-<div class:connected class="my-anchor" />
+<div class:linked class="my-anchor" />
 
 <style>
 	.my-anchor {
@@ -10,7 +10,7 @@
 		height: 12px;
 		background-color: orange;
 	}
-	.connected {
+	.linked {
 		width: 12px;
 		height: 12px;
 		background-color: green;

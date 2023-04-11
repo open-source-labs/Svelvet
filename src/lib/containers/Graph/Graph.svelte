@@ -358,5 +358,30 @@
 <svelte:window on:mouseup={onMouseUp} on:resize={updateGraphBounds} />
 
 <style>
-	@import url('./styles.css');
+	@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+	.svelvet-wrapper {
+		position: relative;
+		overflow: hidden;
+		cursor: move;
+		font-family: 'Rubik';
+		box-sizing: border-box;
+		user-select: none;
+		margin: 0;
+		line-height: 1rem;
+		font-size: 0.85rem;
+	}
+	.svelvet-wrapper:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px blue;
+	}
+
+	:root {
+		--dark-background: hsl(0, 1%, 21%);
+		--light-background: hsl(0, 0%, 93%);
+		--node-background-light: hsl(0, 0%, 93%);
+		--node-background-dark: hsl(0, 0%, 11%);
+		--text-color-dark: hsl(0, 0%, 93%);
+		--text-color-light: hsl(0, 0%, 21%);
+	}
 </style>

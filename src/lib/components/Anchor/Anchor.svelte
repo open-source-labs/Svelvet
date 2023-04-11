@@ -263,7 +263,6 @@
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
-		console.log('connecting');
 		updatePosition(); // Just in case
 		const newEdge = createEdge({ source, target }, source?.edge || null);
 		source.connected.update((anchors) => anchors.add(target));
@@ -397,7 +396,7 @@
 			if (!connectedNode) return;
 			const anchorKey: AnchorKey = `A-${nodeAnchor}/${nodekey}`;
 			const connectedAnchor = connectedNode.anchors.get(anchorKey);
-			console.log(nodekey, anchorKey, connectedAnchor);
+
 			if (!connectedAnchor) return;
 			connectAnchors(anchor, connectedAnchor);
 			connections.filter((c) => c !== connection);

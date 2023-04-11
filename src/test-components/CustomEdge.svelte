@@ -3,12 +3,11 @@
 
 	export let path: string;
 	function handleClick() {}
-	export let destroy;
 </script>
 
 <Edge>
 	<path d={path} />
-	<!-- <div slot="label"><p on:click={destroy}>Custom Edge</p></div> -->
+	<button slot="label"><p>Custom Edge</p></button>
 </Edge>
 
 <style>
@@ -17,7 +16,7 @@
 		stroke-width: 4px;
 	}
 
-	div {
+	button {
 		background-color: rgb(172, 2, 2);
 		width: 150px;
 		height: 100px;

@@ -316,7 +316,7 @@
 				style:--default-edge-stroke-width={strokeWidth + 'px'}
 			/>
 			{#if Component}
-				<Component {path} />
+				<svelte:component this={Component} {path} />
 			{/if}
 		</svg>
 
@@ -327,7 +327,7 @@
 			class="edge-label"
 		>
 			{#if Component}
-				<Component name="label" />
+				<svelte:component this={Component} name="label" />
 			{:else if label}
 				<div class="default-label">{label}</div>
 			{/if}

@@ -45,8 +45,8 @@
 			{/each}
 		</div>
 		<div class="output-anchors">
-			<Anchor let:connected outputStore={outputTest} direction="east" output edge={CustomEdge}>
-				<CustomAnchor {connected} />
+			<Anchor let:linked outputStore={outputTest} direction="east" output edge={CustomEdge}>
+				<CustomAnchor {linked} />
 			</Anchor>
 			<Anchor outputStore={output2} direction="east" output>
 				<CustomAnchor />
@@ -60,9 +60,7 @@
 	* {
 		box-sizing: border-box;
 	}
-	p {
-		color: white;
-	}
+
 	.node {
 		width: 100%;
 		height: 100%;

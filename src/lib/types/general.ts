@@ -19,6 +19,9 @@ export interface NodeDOMBounds {
 }
 export type Theme = 'light' | 'dark' | 'purple';
 
+// Used in the context of position the controls and minimap elements
+export type Corner = 'SE' | 'SW' | 'NE' | 'NW';
+
 export interface Dimensions {
 	width: Writable<number>;
 	height: Writable<number>;

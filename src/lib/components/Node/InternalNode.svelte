@@ -4,7 +4,7 @@
 	import type { Graph, Node, Theme } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateFitContentWidth, calculateRelativeCursor, captureGroup } from '$lib/utils';
+	import { calculateRelativeCursor, captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -60,7 +60,7 @@
 		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
 		// $x = nodeRect.x;
 		// $y = nodeRect.y;
-		absolute = true;
+		//absolute = true;
 	});
 
 	onDestroy(() => {
@@ -210,8 +210,8 @@
 {#if !hidden}
 	<div
 		{id}
-		class="node-wrapper allow-pointer-events"
-		class:absolute
+		class="svelvet-node"
+		style:position="absolute"
 		style:top={nodeTop}
 		style:left={nodeLeft}
 		style:width={nodeWidth}
@@ -235,5 +235,14 @@
 {/if}
 
 <style>
-	@import url('./Node.css');
+	.svelvet-node {
+		border: var(--node-border-width, var(--node-default-border-width)) solid
+			var(--node-border-color, var(--node-default-border-color));
+		border-radius: var(--border-radius, var(--node-default-border-radius));
+		background-color: var(--node-background-color, var(--node-default-background));
+		color: var(--node-text-color, --node-default-text-color);
+		cursor: grab;
+		position: absolute;
+		pointer-events: all;
+	}
 </style>

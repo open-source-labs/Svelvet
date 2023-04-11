@@ -3,6 +3,7 @@
 	import type { Graph, Theme } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { calculateTranslation, zoomGraph, translateGraph, calculateZoom } from '$lib/utils';
+
 	export let increment = 0.1;
 
 	const graph: Graph = getContext<Graph>('graph');
@@ -60,9 +61,17 @@
 
 	export let bgColor = THEMES[theme].controls;
 	export let iconColor = THEMES[theme].text;
+	export let corner = 'SW';
 </script>
 
-<nav>
+<nav
+	class="graph-controls"
+	class:SW={corner === 'SW'}
+	class:NE={corner === 'NE'}
+	class:SE={corner === 'SE'}
+	class:NW={corner === 'NW'}
+	aria-label="navigation"
+>
 	<slot {zoomIn} {zoomOut} {reset} {lock} {unhideAll}>
 		<div class="controls-wrapper" style:background-color={bgColor}>
 			{#if $hidden.size > 0}
@@ -90,8 +99,30 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
-	.controls-wrapper {
+	.graph-controls {
 		position: absolute;
+	}
+
+	.NW {
+		left: 10px;
+		top: 10px;
+	}
+
+	.NE {
+		right: 10px;
+		top: 10px;
+	}
+
+	.SE {
+		right: 10px;
+		bottom: 10px;
+	}
+
+	.SW {
+		left: 10px;
+		bottom: 10px;
+	}
+	.controls-wrapper {
 		left: 10px;
 		bottom: 10px;
 		display: flex;

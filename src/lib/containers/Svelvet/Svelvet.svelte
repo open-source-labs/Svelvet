@@ -18,6 +18,7 @@
 	export let width = 0;
 	export let height = 0;
 	export let minimap = false;
+	export let controls = false;
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -55,9 +56,10 @@
 </script>
 
 {#if graph}
-	<Graph {width} {height} {minimap} {graph}
-		><slot /><span slot="minimap"><slot name="minimap" /></span><span slot="controls"
-			><slot name="controls" /></span
-		></Graph
-	>
+	<Graph {width} {height} {minimap} {graph} {controls}>
+		<slot />
+		<slot name="minimap" slot="minimap" />
+
+		<slot name="controls" slot="controls" zoomIn={'hello'} />
+	</Graph>
 {/if}

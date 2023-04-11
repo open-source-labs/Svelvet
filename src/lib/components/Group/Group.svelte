@@ -4,6 +4,7 @@
 	import { writable } from 'svelte/store';
 	import { getRandomColor } from '$lib/utils';
 	import { get } from 'svelte/store';
+
 	export let width: number;
 	export let height: number;
 	export let position: XYPair;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
-	import type { Theme, CSSColorString, Graph } from '$lib/types';
+	import type { Theme, CSSColorString, Graph, Corner } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
 	import { THEMES } from '$lib/constants/themes';
@@ -14,6 +14,7 @@
 	export let mapColor = THEMES[theme].map;
 	export let nodeColor: CSSColorString | null = null;
 	export let borderColor: CSSColorString = THEMES[theme].border;
+	export let corner: Corner = 'SE';
 
 	$: bounds = graph.bounds;
 	$: top = bounds.top;
@@ -82,6 +83,10 @@
 	style:background-color={mapColor}
 	style:width="{width}px"
 	style:height="{height ? height : width}px"
+	class:SW={corner === 'SW'}
+	class:NE={corner === 'NE'}
+	class:SE={corner === 'SE'}
+	class:NW={corner === 'NW'}
 >
 	<div class="node-wrapper" style={nodeWrapperStyle} style:border-color={borderColor}>
 		{#each Object.values($nodes) as node}
@@ -105,19 +110,35 @@
 <style>
 	.minimap-wrapper {
 		position: absolute;
-		bottom: 10px;
-		right: 10px;
 		background-color: rgb(255, 255, 255);
 		border-radius: 6px;
 		overflow: hidden;
-		width: 100%;
-		height: 100%;
 		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
 		border: solid 1px black;
 		z-index: 10;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	.NW {
+		left: 10px;
+		top: 10px;
+	}
+
+	.NE {
+		right: 10px;
+		top: 10px;
+	}
+
+	.SE {
+		right: 10px;
+		bottom: 10px;
+	}
+
+	.SW {
+		left: 10px;
+		bottom: 10px;
 	}
 	.overlay {
 		position: absolute;
@@ -126,5 +147,9 @@
 		border-radius: 4px;
 		pointer-events: none;
 		z-index: 2;
+		box-sizing: border-box;
+	}
+	.node-wrapper {
+		position: absolute;
 	}
 </style>

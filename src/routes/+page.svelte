@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node, Group, Anchor } from '$lib';
 	import TestComponent from '../test-components/TestComponent.svelte';
+	import CustomControls from '../test-components/CustomControls.svelte';
 	import MyNode from '../test-components/MyNode.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
@@ -19,36 +20,18 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={500} height={500} theme="dark" initialZoom={0.6} minimap>
+		<Svelvet width={500} height={500} theme="dark" initialZoom={0.6} controls>
 			<Node />
 			<Node label="Demo Node" TD />
 			<Node id="node-id" inputs={2} />
 			<Node bgColor="red" inputs={10} outputs={5} height={200} position={{ x: 100, y: 100 }} />
-			<Controls slot="controls" />
+			<Minimap slot="minimap" corner="NE" />
+			<CustomControls slot="controls" />
 		</Svelvet>
 	</div>
 </body>
 
 <style>
-	.my-node {
-		width: 100%;
-		height: 100%;
-		background-color: black;
-		border-radius: 20px;
-	}
-	.my-anchor {
-		display: block;
-		width: 10px;
-		height: 10px;
-		background-color: red;
-		border-radius: 50%;
-	}
-	.trade {
-		background-color: green;
-	}
-	.selected {
-		background-color: white;
-	}
 	.wrapper {
 		display: flex;
 		border: solid 1px black;

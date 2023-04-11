@@ -22,9 +22,6 @@
 </SpecialNode>
 
 <style>
-	p {
-		color: white;
-	}
 	.node {
 		box-sizing: border-box;
 		width: 100%;

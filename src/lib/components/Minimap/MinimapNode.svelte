@@ -15,7 +15,7 @@
 	const { x, y } = position;
 
 	$: DOMwidth = ($width / boundsWidth) * 100;
-	$: DOMheight = ($height / boundsHeight) * 100;
+	//$: DOMheight = ($height / boundsHeight) * 100;
 	$: DOMradius = ($borderRadius / boundsWidth) * 100;
 </script>
 
@@ -26,7 +26,7 @@
 	style:border-radius={DOMradius + 'px'}
 	style:background-color={nodeColor || $bgColor}
 	style:width="{DOMwidth}%"
-	style:height="{DOMheight}%"
+	style:aspect-ratio={$width / $height}
 	style:top="{(($y - top) / boundsHeight) * 100}%"
 	style:left="{(($x - left) / boundsWidth) * 100}%"
 />
