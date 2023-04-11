@@ -99,7 +99,6 @@
 			} else if (number >= max) {
 				$parameterStore = max;
 			} else {
-				console.log('Fine');
 				$parameterStore = number;
 			}
 		}
@@ -118,14 +117,14 @@
 		<button class="button" on:click={() => updateValue(-1)}>−</button>
 		<div class="slider" bind:clientWidth={sliderWidth}>
 			<label for="slider-input" class="input-label">{label}</label>
-
 			<input
 				tabindex={0}
-				bind:this={sliderElement}
 				id="slider-input"
 				class="slider-input"
 				style:--percentage={CSSpercentage}
 				type="text"
+				value={$parameterStore}
+				aria-label={label}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY), step);
 				}}
@@ -140,8 +139,7 @@
 					if (key === 'Enter') validateInput();
 				}}
 				use:slideable
-				value={$parameterStore}
-				aria-label={label}
+				bind:this={sliderElement}
 			/>
 		</div>
 		<button class="button" on:click={() => updateValue(1)}>+</button>

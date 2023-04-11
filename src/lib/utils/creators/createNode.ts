@@ -20,7 +20,7 @@ export function createNode(userNode: NodeConfig): Node {
 		selectionColor,
 		headerColor
 	} = userNode;
-	const { bgColor, borderColor, borderRadius, textColor, locked } = userNode;
+	const { bgColor, borderColor, borderRadius, textColor, locked, group } = userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
 	const nodeKey: NodeKey = `N-${id}`;
@@ -35,7 +35,7 @@ export function createNode(userNode: NodeConfig): Node {
 			width: writable(width || dimensions?.width || NODE_WIDTH),
 			height: writable(height || dimensions?.height || NODE_HEIGHT)
 		},
-		group: writable(null),
+		group: writable(group || null),
 		locked: writable(locked || false),
 		selectable: writable(true),
 		inputs: writable(inputs),

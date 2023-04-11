@@ -45,7 +45,6 @@ export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt
 		const nodeWasSwapped = siftNodes(layerTracker, nodesByDegree);
 		if (!nodeWasSwapped) break;
 	}
-	//console.log(layerTracker);
 
 	const grid: Array<Array<LayerNode>> = [];
 	for (let i = 0; i <= maxLayer; i++) {

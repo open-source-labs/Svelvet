@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CSSColorString, Dimensions, XYPosition } from '$lib/types';
 	import type { Writable } from 'svelte/store';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, setContext } from 'svelte';
 
 	export let dimensions: Dimensions;
 	export let position: XYPosition;

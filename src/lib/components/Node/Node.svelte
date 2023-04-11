@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
-	import type { Graph, Node as NodeType, NodeConfig, Theme } from '$lib/types';
+	import type { Graph, Node as NodeType, NodeConfig, Theme, GroupKey } from '$lib/types';
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
 	import { THEMES } from '$lib/constants/themes';
-
+	import { get } from 'svelte/store';
+	import { group_outros } from 'svelte/internal';
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
 
@@ -34,14 +35,17 @@
 	export let locked = false;
 
 	let node: NodeType;
+	const group: GroupKey = getContext('group');
 
 	onMount(() => {
 		const direction = TD ? 'TD' : LR ? 'LR' : graph.direction;
 
+		const groupBox = graph.groupBoxes.get(group);
+
 		const config: NodeConfig = {
 			id: id || graph.nodes.count() + 1,
 			width,
-			position,
+			position: groupBox ? { x: get(groupBox.position.x), y: get(groupBox.position.y) } : position,
 			dimensions,
 			height,
 			bgColor,
@@ -50,6 +54,7 @@
 			textColor,
 			borderColor,
 			label,
+			group,
 			selectionColor,
 			resizable,
 			inputs,
@@ -59,6 +64,15 @@
 			locked
 		};
 		node = createNode(config);
+
+		if (groupBox) {
+			graph.groups.update((groups) => {
+				const nodes = get(groups[group].nodes);
+				groups[group].nodes.set(new Set([...nodes, node]));
+				return groups;
+			});
+		}
+
 		graph.nodes.add(node, node.id);
 	});
 </script>

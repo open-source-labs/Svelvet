@@ -184,14 +184,28 @@ yarn add svelvet
 
 Start by importing Svelvet, Node, Anchor and Edge into your application:
 
-```bash
-import { Svelvet, Node, Anchor, Edge} from 'svelvet';
+```js
+import { Svelvet, Node, Anchor, Edge } from 'svelvet';
 ```
 
-A Svelvet component consists of nodes and edges (or just nodes). You can pass nodes and edges as props to the Svelvet component. By default, Svelvet components allow for the ability to move nodes and edges as well as pan and zoom. However, if you would like to render a fixed diagram, simply pass in the movement attribute and set it's value to false! You can add a dot-grid background like the example below. With the information that you provide for your nodes and edges, Svelvet will do all of the work behind-the-scenes to render your flowchart!
+A Svelvet component primarily consists of Nodes. You can pass any number of our default Node components as children to the Svelvet wrapper. Basic parameters like color, input and output count, label and more can be specified. For greater customization, wrap your own custom component in our Node component and pass the whole thing to Svelvet! Within your own Node component, you can place our anchor component anywhere and we'll handle tracking and connections! You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These can be created dynamically by Shift + Click and dragging. Finally, you can pass our Controls and Minimap component as props (just the name) or as components in a named slot. In the latter use case, you can pass props to both to further customize them. The controls component can wrap your own set of buttons and we expose the zoom/reset functions using a let directive.
 
-```bash
-<Svelvet nodes={nodes} edges={edges} movement background />
+If you'd like to specify edges ahead of time, you can pass an array of connections to any anchor in a custom component. This array takes the following form: [[nodeId, anchorId], [nodeId, anchorId]].
+
+```js
+<Svelvet width={500} height={500} theme="dark" locked minimap>
+    <Node bgColor="red" inputs={20} outputs={5}/>
+    <Node id="4" inputs={1} />
+    <Node/>
+    <Node>
+        <div class="my-node">
+            <Anchor input connections={["4", "1"]}>
+            <Anchor output connections={["4", "1"]} edge={CustomEdge}>
+        </div>
+    </Node>
+    <CustomNode/>
+    <Controls slot="controls"/>
+</Svelvet>
 ```
 
 Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking!

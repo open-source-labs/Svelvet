@@ -24,7 +24,6 @@
 	}
 
 	function handleGroupClicked(event: CustomEvent) {
-		console.log('handleGroupClicked', event.detail);
 		const { groupName } = event.detail;
 		$activeGroup = groupName;
 		$initialClickPosition = $cursor;

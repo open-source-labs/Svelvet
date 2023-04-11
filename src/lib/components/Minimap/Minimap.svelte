@@ -77,7 +77,12 @@
 		${boundsWidth > boundsHeight ? 'width: 90%' : 'height: 90%'};`;
 </script>
 
-<div class="minimap-wrapper" style="width: {width}px; height: {height ? height : width}px;">
+<div
+	class="minimap-wrapper"
+	style:background-color={mapColor}
+	style:width="{width}px"
+	style:height="{height ? height : width}px"
+>
 	<div class="node-wrapper" style={nodeWrapperStyle} style:border-color={borderColor}>
 		{#each Object.values($nodes) as node}
 			{#if node.id !== 'N-editor'}
@@ -93,7 +98,6 @@
 				/>
 			{/if}
 		{/each}
-
 		<div class="overlay" style={windowStyle} />
 	</div>
 </div>

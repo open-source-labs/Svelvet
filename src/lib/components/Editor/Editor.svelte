@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ColorPicker from '../ColorPicker/ColorPicker.svelte';
-	import Slider from '../Slider/Slider.svelte';
-	import TextField from '../TextField/TextField.svelte';
+	import ColorPicker from '../data/ColorPicker/ColorPicker.svelte';
+	import Slider from '../data/Slider/Slider.svelte';
+	import TextField from '../data/TextField/TextField.svelte';
 	import type { Graph } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 

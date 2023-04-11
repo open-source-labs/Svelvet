@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
-	import Slider from '$lib/components/Slider/Slider.svelte';
+	import Slider from '$lib/components/data/Slider/Slider.svelte';
 	import CustomAnchor from './CustomAnchor.svelte';
 	import { generateOutput, generateInput } from '$lib/utils';
 	import CustomEdge from './CustomEdge.svelte';
@@ -57,6 +57,9 @@
 </Node>
 
 <style>
+	* {
+		box-sizing: border-box;
+	}
 	p {
 		color: white;
 	}

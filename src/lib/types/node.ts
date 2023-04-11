@@ -54,7 +54,7 @@ export interface NodeConfig {
 	direction: 'TD' | 'LR';
 	zIndex?: number;
 	label?: string;
-	group?: string;
+	group?: GroupKey;
 	editable?: boolean;
 	resizable?: boolean;
 	inputs?: number;

@@ -12,6 +12,7 @@
 	cursor: ew-resize;
 	color: white;
 	padding: 0.25rem;
+	pointer-events: auto;
 }
 
 .wrapper {
@@ -34,21 +35,22 @@
 	cursor: none;
 }
 
-.input-label {
-	margin-left: 0.5rem;
-	position: absolute;
-	pointer-events: none;
-}
 .slider {
 	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	height: 100%;
+	pointer-events: auto;
 }
 
 .connected {
 	display: flex;
 	justify-content: space-between;
 	padding: 0.25rem 0.5rem;
+}
+.input-label {
+	margin-left: 0.5rem;
+	position: absolute;
+	pointer-events: none;
 }

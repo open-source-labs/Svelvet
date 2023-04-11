@@ -45,7 +45,7 @@
 	export let connections: [string, string][] = [];
 
 	let animationFrameId: number;
-	let anchorElement: HTMLButtonElement;
+	let anchorElement: HTMLDivElement;
 	let anchorWidth: number;
 	let anchorHeight: number;
 	let anchor: Anchor;
@@ -75,7 +75,7 @@
 	// On mount, we query the dom to capture the position of the anchor
 	// We then create the anchor object and add it to the store
 	onMount(async () => {
-		const { top, left } = anchorElement.getBoundingClientRect();
+		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 		const key: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
 
 		const anchorPosition = { y: top, x: left };
@@ -83,7 +83,7 @@
 			node,
 			key,
 			anchorPosition,
-			anchorDimensions,
+			{ width, height },
 			inputsStore || outputStore || null,
 			edge,
 			type,
@@ -263,6 +263,7 @@
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
+		console.log('connecting');
 		updatePosition(); // Just in case
 		const newEdge = createEdge({ source, target }, source?.edge || null);
 		source.connected.update((anchors) => anchors.add(target));
@@ -396,7 +397,7 @@
 			if (!connectedNode) return;
 			const anchorKey: AnchorKey = `A-${nodeAnchor}/${nodekey}`;
 			const connectedAnchor = connectedNode.anchors.get(anchorKey);
-
+			console.log(nodekey, anchorKey, connectedAnchor);
 			if (!connectedAnchor) return;
 			connectAnchors(anchor, connectedAnchor);
 			connections.filter((c) => c !== connection);
@@ -417,19 +418,18 @@
 	}
 </script>
 
-<button
-	class="wrapper"
+<div
+	class="anchor-wrapper"
+	id={anchor?.id}
 	bind:this={anchorElement}
-	bind:clientWidth={anchorWidth}
-	bind:clientHeight={anchorHeight}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
 >
-	<slot {hovering} {connected} {connecting}>
+	<slot linked={connected} {hovering} {connecting}>
 		<div
-			class="anchor"
+			class="svelvet-anchor"
 			class:output
 			class:input
 			class:connected
@@ -440,10 +440,10 @@
 			style:--default-radius={ANCHOR_RADIUS}
 		/>
 	</slot>
-</button>
+</div>
 
 <style>
-	.wrapper {
+	.anchor-wrapper {
 		z-index: 10;
 		/* border: solid 1px black; */
 		width: fit-content;
@@ -451,7 +451,7 @@
 		pointer-events: all;
 	}
 
-	.anchor {
+	.svelvet-anchor {
 		width: var(--anchor-size, var(--default-width));
 		height: var(--anchor-size, var(--default-width));
 		z-index: 12;
@@ -461,12 +461,12 @@
 		border: solid 1px black;
 		pointer-events: auto;
 	}
-	.connected.input {
+	/* .connected.input {
 		background-color: white;
 	}
 	.connected.output {
 		background-color: white;
-	}
+	} */
 
 	.connecting {
 		background-color: white;
@@ -490,12 +490,4 @@
 		outline: inherit;
 	}
 	/* reset button styles */
-	button {
-		background: none;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
 </style>

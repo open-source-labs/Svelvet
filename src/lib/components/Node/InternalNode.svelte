@@ -150,7 +150,7 @@
 		e.stopPropagation();
 
 		dispatch('nodeClicked', { node, e });
-
+		console.log($zIndex, $maxZIndex);
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 		if ($locked) return;
 

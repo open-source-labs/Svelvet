@@ -3,7 +3,6 @@
 	import type { Node } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
-	import { createEventDispatcher } from 'svelte';
 
 	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;

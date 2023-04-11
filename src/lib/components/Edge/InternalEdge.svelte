@@ -81,14 +81,14 @@
 	let path: string;
 
 	$: if (!step) {
-		path = `M ${sourcePointX}, ${sourcePointY}
+		path = `M ${sourcePointX.toPrecision(6)}, ${sourcePointY.toPrecision(6)}
 	${
 		!straight
 			? `C ${sourceControlX}, ${sourceControlY}
 	${targetControlX}, ${targetControlY}`
 			: ''
 	}
-	${targetPointX}, ${targetPointY}`;
+	${targetPointX.toPrecision(6)}, ${targetPointY.toPrecision(6)}`;
 	}
 
 	$: flipX = deltaX < 0;

@@ -5,7 +5,7 @@
 	export let width = false;
 	export let height = false;
 	export let minHeight: number = 200;
-	export let minWidth: number = 200;
+	export let minWidth: number = 100;
 
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');
