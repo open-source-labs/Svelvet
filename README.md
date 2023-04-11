@@ -8,7 +8,7 @@
 ![GitHub Forks](https://img.shields.io/github/forks/open-source-labs/Svelvet?color=%23fb7182)
 ![NPM Version](https://img.shields.io/npm/v/svelvet?color=%23fb7182&label=version)
 
-# Simplify Diagramming with Svelvet!
+# Infinitely Customizable Node-Based User Interfaces with Svelvet!
 
 Svelvet is a lightweight Svelte component library for building interactive node-based diagrams.
 
@@ -24,33 +24,33 @@ Shout out to our contributors! Here's what's new:
 
 <details><summary>v7.0.0</summary>
 <ul>
-    <li>In progress...</li>
     <li>Changed primary API. Users now pass Node components directly as children to Svelvet</li>
     <li>Exposed Anchor component that developers can add anywhere in their own custom nodes</li>
-    <li>Added the ability to specify anchors as inputs, outputs or any</li>
-    <li>Edges can be specified at the anchor level by passing in an array of connections: [nodeId, anchorId].</li>
+    <li>Added the ability to specify anchors as inputs, outputs or any. This controls connection logic and "directionality" of edge curvature</li>
+    <li>Edges can be specified at the anchor level by passing in an array of connections: [[nodeId, anchorId]].</li>
     <li>Exposed Edge component for developer customization</li>
     <li>Exposed Node component for developer customization</li>
     <li>Exposed Resizer component that can be added to custom nodes</li>
-    <li>Improved consistency of touch events on mobile devices. Added touch support for controls component. We will continue to make improvements here!</li>
-    <li>Nodes and edges no longer have to have IDs specificed. Defaults to incrementing value</li>
+    <li>Improved consistency of touch events on mobile devices. Added touch support for controls component.</li>
+    <li>Nodes and Edges no longer require specified IDs. Defaults to incrementing value</li>
     <li>Added Controls component with zoom, reset, lock and unhide functionality</li>
     <li>Added keyboard navigation to graph when focused</li>
-    <li>Added selection box functionality on Shift + Click</li>
-    <li>Added node grouping functionality on Shift + CMD + Click</li>
+    <li>Added selection box functionality via Shift + Click</li>
+    <li>Added node grouping functionality via Shift + CMD + Click</li>
     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
-    <li>All new Minimap component that accepts props for styling the background and nodes (defaults to node color) and features improved tracking funcitonality plus the ability to hide nodes</li>
+    <li>All new Minimap component that accepts props for styling the background and nodes (defaults to node color) and features improved tracking/visualization plus the ability to hide nodes</li>
     <li>Added mapColor and dotColor props to Svelvet component, though we plan on exposing the full Background component for greater customization</li>
-    <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when developing custom nodes</li>
-    <li>Added theme prop to Svelvet component. Defaults to light. Accepts things like "dark", "purple", "parchment"</li>
+    <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when implementing custom nodes</li>
+    <li>Added theme prop to Svelvet component. Defaults to light. Accepts parameters like "dark", "purple", "parchment"</li>
     <li>Removed frontend website code from library repo</li>
     <li>Simplified bezier curve logic and added the ability to specify anchor "direction"</li>
     <li>Added ability to parse Mermaid strings into node graphs + edges</li>
     <li>Added the ability to specify graph direction as TD or LR</li>
+    <li>Added a series of accessible input components (Slider, RadioGroup, TextField) that can be composed in custom nodes and are linked with our data flow system</li>
     <li>Removed D3-zoom dependency</li>
     <li>Removed unnecessary window and event listeners</li>
     <li>Added dynamic data flow/state management system that tracks anchor connections</li>
-  <li>Updated home page to include newest collaborators</li>
+    <li>Updated home page to include newest collaborators</li>
 </ul>
 </details>
 
@@ -188,23 +188,19 @@ Start by importing Svelvet, Node, Anchor and Edge into your application:
 import { Svelvet, Node, Anchor, Edge } from 'svelvet';
 ```
 
-A Svelvet component primarily consists of Nodes. You can pass any number of our default Node components as children to the Svelvet wrapper. Basic parameters like color, input and output count, label and more can be specified. For greater customization, wrap your own custom component in our Node component and pass the whole thing to Svelvet! Within your own Node component, you can place our anchor component anywhere and we'll handle tracking and connections! You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These can be created dynamically by Shift + Click and dragging. Finally, you can pass our Controls and Minimap component as props (just the name) or as components in a named slot. In the latter use case, you can pass props to both to further customize them. The controls component can wrap your own set of buttons and we expose the zoom/reset functions using a let directive.
+A Svelvet component primarily consists of Nodes. You can pass any number of our Node components as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified. For greater customization, wrap your own custom component in our Node component and pass the whole thing to Svelvet! Within your own Node component, you can position our Anchor component anywhere and we'll handle tracking and connections! You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can also be created dynamically by Shift + Click and dragging. Finally, you can render our Controls and Minimap components as props by passing "minimap" or "controls" as props or by including the components in a named slot. In the latter use case, you can pass props to both to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
 
-If you'd like to specify edges ahead of time, you can pass an array of connections to any anchor in a custom component. This array takes the following form: [[nodeId, anchorId], [nodeId, anchorId]].
+Svelvet is focused on dynamic edge connections, but if you'd like to specify edges ahead of time, you can pass an array of connections to any Anchor component taking the the following form: [[nodeId, anchorId], [nodeId, anchorId]]. You can also pass a custom Edge component!
+
+For more detailed use cases and examples, please visit svelvet.io.
 
 ```js
-<Svelvet width={500} height={500} theme="dark" locked minimap>
-    <Node bgColor="red" inputs={20} outputs={5}/>
-    <Node id="4" inputs={1} />
-    <Node/>
-    <Node>
-        <div class="my-node">
-            <Anchor input connections={["4", "1"]}>
-            <Anchor output connections={["4", "1"]} edge={CustomEdge}>
-        </div>
-    </Node>
-    <CustomNode/>
-    <Controls slot="controls"/>
+<Svelvet width={500} height={500} theme="dark" initialZoom={0.6} minimap>
+	<Node />
+	<Node label="Demo Node" TD />
+	<Node id="node-id" inputs={2} />
+	<Node bgColor="red" inputs={10} outputs={5} height={200} position={{ x: 100, y: 100 }} />
+	<Controls slot="controls" />
 </Svelvet>
 ```
 
@@ -228,10 +224,14 @@ npm run cypress:open
 
 ## The Svelvet Team
 
-- Brian Holmes
-- Britta Ager
-- Thomas Kady
-- Jen Lee
+- Brian Holmes • [LinkedIn](https://www.linkedin.com/in/briangregoryholmes/) • [Github](https://github.com/briangregoryholmes)
+- Britta Ager • [LinkedIn](https://www.linkedin.com/in/britta-ager-84394a129) • [Github](https://github.com/bkager)
+- Thomas Kady • [LinkedIn](https://www.linkedin.com/in/thomas-kady-45725b149) • [Github](https://github.com/thomaskady)
+- Jen Lee • [LinkedIn](https://www.linkedin.com/in/jenleesj) • [Github](https://github.com/sjjen)
+- Ernesto Gonzalez • [LinkedIn](https://www.linkedin.com/in/ernesto-gonzalez123) • [Github](https://github.com/ErnestoGonza)
+- Michael Chiang • [LinkedIn](https://www.linkedin.com/in/michael-chiang-84509025b/) • [Github](https://github.com/michael-chiang-dev5)
+- Rachel He • [LinkedIn](https://www.linkedin.com/in/rachel-he-8200563b/) • [Github](https://github.com/rachelheplus)
+- Horacio Vallejo • [LinkedIn](https://www.linkedin.com/in/horacio-vallejo-100643187/) • [Github](https://github.com/horaciovallejo)
 - Aaron Willett • [LinkedIn](https://www.linkedin.com/in/awillettnyc/) • [Github](https://github.com/awillettnyc)
 - Alexander Zambrano • [LinkedIn](https://www.linkedin.com/in/alexander-z-8b7716b0/) • [Github](https://github.com/azambran21)
 - Andrew Widjaja • [LinkedIn](https://www.linkedin.com/in/andrew-widjaja/) • [Github](https://github.com/andrew-widjaja)
@@ -255,20 +255,6 @@ npm run cypress:open
 - Taylor Alan • [LinkedIn](https://www.linkedin.com/in/taylor-alan-026a49226/) • [Github](https://github.com/taylien96)
 - Timmy Lem • [LinkedIn](https://www.linkedin.com/in/timmy-lem/) • [Github](https://github.com/timmylem01)
 - Tony Lim • [LinkedIn](https://www.linkedin.com/in/tonylim467/) • [Github](https://github.com/tonyy467)
-- Ernesto Gonzalez • [LinkedIn](https://www.linkedin.com/in/ernesto-gonzalez123) • [Github](https://github.com/ErnestoGonza)
-- Michael Chiang • [LinkedIn](https://www.linkedin.com/in/michael-chiang-84509025b/) • [Github](https://github.com/michael-chiang-dev5)
-- Rachel He • [LinkedIn](https://www.linkedin.com/in/rachel-he-8200563b/) • [Github](https://github.com/rachelheplus)
-- Horacio Vallejo • [LinkedIn](https://www.linkedin.com/in/horacio-vallejo-100643187/) • [Github](https://github.com/horaciovallejo)
-
-## Forking the Repository
-
-If you'd like to fork the repository and run it locally, you'll need to perform a couple of steps to in order to get everything working properly:
-
-- Create an account on [Supabase](https://supabase.com/)
-- Create a new project in Supabase (you can name this whatever you want)
-- Rename the 'supabase_env' file to '.env' and paste in the API keys from your newly created supabase project into the .env file
-
-Once that is done you should be able to render the website locally on localhost:3000, although you will be missing some minor functionality tied to the production database (e.g. OAuth login).
 
 ## How to Contribute
 
@@ -281,8 +267,6 @@ The following is a list of features and improvements by ourselves and the larger
 - Add documentation/video tutorial on how to set up a Svelvet demo
 - Custom error handling
 - Increase test coverage for scalability
-- More styling and customization of edges for complex Svelvet flow diagrams
-- Community Forum
 - GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
 
 ## Credits

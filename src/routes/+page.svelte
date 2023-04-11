@@ -24,21 +24,6 @@
 			<Node label="Demo Node" TD />
 			<Node id="node-id" inputs={2} />
 			<Node bgColor="red" inputs={10} outputs={5} height={200} position={{ x: 100, y: 100 }} />
-			<Node let:grabHandle let:selected width={200} height={100}>
-				<div use:grabHandle class:selected class="my-node">
-					<Anchor
-						let:linked
-						output
-						connections={[
-							['4', '12'],
-							['node-id', '1']
-						]}
-					>
-						<div class="my-anchor" class:linked />
-					</Anchor>
-					<Anchor input />
-				</div>
-			</Node>
 			<Controls slot="controls" />
 		</Svelvet>
 	</div>
