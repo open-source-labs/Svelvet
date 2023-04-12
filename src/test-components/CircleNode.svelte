@@ -7,8 +7,8 @@
 <SpecialNode let:grabHandle let:selected width={400} height={600}>
 	<div class="node" use:grabHandle class:selected>
 		Hello
-		<Anchor let:hovering let:connected multiple>
-			<div class="custom" class:hovering class:connected />
+		<Anchor let:hovering let:linked multiple>
+			<div class="custom" class:hovering class:linked />
 		</Anchor>
 		<Anchor />
 		<Anchor />
@@ -29,7 +29,7 @@
 	.hovering {
 		background-color: green;
 	}
-	.connected {
+	.linked {
 		background-color: blue;
 	}
 	.node {

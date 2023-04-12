@@ -5,7 +5,22 @@ import Anchor from './components/Anchor/Anchor.svelte';
 import Node from './components/Node/Node.svelte';
 import Edge from './components/Edge/Edge.svelte';
 import Group from './components/Group/Group.svelte';
+import Slider from './components/data/Slider/Slider.svelte';
+import RadioGroup from './components/data/RadioGroup/RadioGroup.svelte';
 import { generateInput, generateOutput } from './utils/creators';
-export { Svelvet, Controls, Minimap, Node, Anchor, Edge, Group, generateInput, generateOutput };
+
+export {
+	Svelvet,
+	Controls,
+	Minimap,
+	Node,
+	Anchor,
+	Edge,
+	Group,
+	Slider,
+	RadioGroup,
+	generateInput,
+	generateOutput
+};
 
 export * from './types';

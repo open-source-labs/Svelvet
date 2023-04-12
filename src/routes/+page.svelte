@@ -60,6 +60,9 @@
 			{#each nodes as node}
 				<Node {...node} />
 			{/each}
+			<Node>
+				<div>Helo</div>
+			</Node>
 			<Controls slot="controls" corner="NW" />
 			<Minimap mapColor="purple" nodeColor="white" slot="minimap" />
 		</Svelvet>

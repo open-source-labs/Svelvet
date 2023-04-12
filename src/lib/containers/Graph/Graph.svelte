@@ -12,6 +12,7 @@
 		CSSColorString
 	} from '$lib/types';
 	import { writable, get } from 'svelte/store';
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Minimap from '$lib/components/Minimap/Minimap.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
@@ -229,7 +230,7 @@
 			const newDistance = $touchDistance;
 			const scaleFactor = newDistance / initialDistance;
 
-			const newScale = calculateZoom($scale, 90 * (1 - scaleFactor), ZOOM_INCREMENT);
+			const newScale = calculateZoom($scale, 12 * (1 - scaleFactor), ZOOM_INCREMENT);
 			const currentTranslation = { x: $translationX, y: $translationY };
 			// Calculate the translation adjustment
 			const newTranslation = calculateTranslation(
@@ -333,7 +334,6 @@
 		$translationY = 0;
 		$translationX = 0;
 	}
-	import { getJSONState } from '$lib/utils/savers/saveStore';
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->

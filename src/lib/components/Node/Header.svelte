@@ -1,4 +1,8 @@
 <script lang="ts">
+	// This is currently not being used.
+	// The idea is to render out a header component on default nodes
+	// That would hold a label/etc
+
 	import { NODE_HEADER_COLOR_LIGHT } from '$lib/constants';
 	import { getContext } from 'svelte';
 	import type { Graph, Node } from '$lib/types';

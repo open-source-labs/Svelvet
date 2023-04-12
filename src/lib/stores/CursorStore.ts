@@ -8,6 +8,7 @@ export const initialClickPosition = writable({ x: 0, y: 0 });
 export const touchDistance = writable(0);
 
 // This is a global store/event listener for the raw cursor position
+// This can be refined
 export const cursorPositionRaw = readable({ x: 0, y: 0 }, (set) => {
 	const updateCursorPosition = (e: MouseEvent) => {
 		const x = e.clientX;
