@@ -8,7 +8,8 @@
 		Arrow,
 		GroupKey,
 		Group,
-		GraphDimensions
+		GraphDimensions,
+		CSSColorString
 	} from '$lib/types';
 	import { writable, get } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
@@ -38,6 +39,7 @@
 	export let PAN_TIME = 250;
 	export let MAX_SCALE = 3;
 	export let MIN_SCALE = 0.2;
+	export let selectionColor: CSSColorString;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -364,7 +366,7 @@
 	<slot name="minimap" />
 	<slot name="controls" />
 	{#if selecting && !disableSelection}
-		<SelectionBox {creating} {anchor} {graph} {adding} />
+		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
 </section>
 

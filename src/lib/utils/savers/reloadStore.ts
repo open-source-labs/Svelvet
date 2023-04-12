@@ -1,5 +1,5 @@
 import { createGraph, createNode } from '../creators';
-import type { GraphKey, NodeConfig } from '$lib/types';
+import type { AnchorKey, GraphKey, NodeConfig } from '$lib/types';
 import { createAnchor } from '../creators/createAnchor';
 import type { Anchor } from '$lib';
 
@@ -20,7 +20,7 @@ export function reloadStore(store: string) {
 			console.log(anchor);
 			const newAnchor = createAnchor(
 				newNode,
-				id as any,
+				id as AnchorKey,
 				anchor.position,
 				{ width: 0, height: 0 },
 				anchor.input,

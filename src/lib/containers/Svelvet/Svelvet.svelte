@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
-	import type { Graph as GraphType, GraphKey, NodeConfig, NodeStore, Theme } from '$lib/types';
+	import type {
+		Graph as GraphType,
+		GraphKey,
+		NodeConfig,
+		NodeStore,
+		Theme,
+		CSSColorString
+	} from '$lib/types';
 	import { populateStore } from '$lib/utils';
 	import { createNode, createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
@@ -19,6 +26,7 @@
 	export let height = 0;
 	export let minimap = false;
 	export let controls = false;
+	export let selectionColor: CSSColorString = 'lightblue';
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -64,7 +72,7 @@
 </script>
 
 {#if graph}
-	<Graph {width} {height} {minimap} {graph} {controls}>
+	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor}>
 		<slot />
 		<slot name="minimap" slot="minimap" />
 

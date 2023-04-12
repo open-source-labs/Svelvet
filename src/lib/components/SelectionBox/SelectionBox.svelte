@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { cursorPositionRaw } from '$lib/stores/CursorStore';
-	import type { Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
+	import type { CSSColorString, Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
 	export let graph: Graph;
 	export let anchor: { x: number; y: number; top: number; left: number };
 	export let adding = false;
 
 	export let creating = false;
+	export let color: CSSColorString = 'lightblue';
 
 	const { groups, nodes: nodeStore, cursor, bounds } = graph;
 	const { x, y } = $cursorPositionRaw;
@@ -57,7 +58,6 @@
 			}
 			return accumulator;
 		}, [] as Array<Node>);
-		console.log(nodes);
 		if (adding) {
 			nodesUnderSelection.forEach((node) => {
 				$selectedNodes.add(node);
@@ -70,28 +70,42 @@
 </script>
 
 <div
-	class:creating
-	bind:this={box}
-	class="selection-box"
+	class="selection-border"
+	style:border-color={color}
 	style:height={CSSheight}
 	style:width={CSSwidth}
 	style:top={CSStop}
 	style:left={CSSleft}
-/>
+	class:creating
+>
+	<div class:creating bind:this={box} class="selection-box" style:background-color={color} />
+</div>
 
 <style>
+	.selection-box,
+	.selection-border {
+		border-radius: 5px;
+	}
 	.selection-box {
+		width: 100%;
+		height: 100%;
+		opacity: 20%;
+	}
+
+	.selection-border {
 		position: absolute;
-		background-color: rgba(84, 220, 239, 0.135);
-		border: 1px dashed rgb(84, 148, 252);
 		border-radius: 5px;
 		pointer-events: none;
 		z-index: 100;
 		cursor: crosshair;
+		border: 1px dashed;
 	}
 
-	.creating {
+	.selection-box.creating {
 		background-color: rgba(220, 189, 13, 0.438);
+	}
+
+	.selection-border.creating {
 		border: 1px solid goldenrod;
 	}
 </style>
