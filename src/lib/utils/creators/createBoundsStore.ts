@@ -1,11 +1,11 @@
-import type { NodeStore } from '$lib/types';
+import type { GraphDimensions, NodeStore } from '$lib/types';
 import type { Writable, Readable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
 import { calculateRelativeCursor } from '../calculators';
 
 export function createBoundsStore(
 	nodes: NodeStore,
-	dimensions: Readable<DOMRect>,
+	dimensions: Readable<GraphDimensions>,
 	scale: Writable<number>,
 	translationX: Writable<number>,
 	translationY: Writable<number>

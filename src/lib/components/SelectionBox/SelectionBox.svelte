@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { cursorPositionRaw, initialClickPosition } from '$lib/stores/CursorStore';
-	import type { Graph, Node, NodeDOMBounds, NodeKey, XYPair } from '$lib/types';
-	import { activeKeys } from '$lib/stores';
-	import { get } from 'svelte/store';
+	import { cursorPositionRaw } from '$lib/stores/CursorStore';
+	import type { Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
 	export let graph: Graph;
 	export let anchor: { x: number; y: number; top: number; left: number };
 	export let adding = false;
@@ -11,7 +9,6 @@
 	export let creating = false;
 
 	const { groups, nodes: nodeStore, cursor, bounds } = graph;
-	//const { x, y } = $initialClickPosition;
 	const { x, y } = $cursorPositionRaw;
 
 	let nodes: Array<NodeDOMBounds>;
@@ -35,7 +32,7 @@
 	onMount(updateNodes);
 
 	function updateNodes() {
-		const DOMnodes = Array.from(document.querySelectorAll('.node-wrapper'));
+		const DOMnodes = Array.from(document.querySelectorAll('.svelvet-node'));
 
 		nodes = DOMnodes.map((node) => {
 			const { top, left, width, height } = node.getBoundingClientRect();
@@ -60,7 +57,7 @@
 			}
 			return accumulator;
 		}, [] as Array<Node>);
-
+		console.log(nodes);
 		if (adding) {
 			nodesUnderSelection.forEach((node) => {
 				$selectedNodes.add(node);

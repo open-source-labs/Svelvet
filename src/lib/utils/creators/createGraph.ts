@@ -1,5 +1,13 @@
 import { writable } from 'svelte/store';
-import type { Graph, Node, GroupBox, EdgeKey, GraphKey, GroupKey } from '$lib/types';
+import type {
+	Graph,
+	Node,
+	GroupBox,
+	EdgeKey,
+	GraphKey,
+	GroupKey,
+	GraphDimensions
+} from '$lib/types';
 import { createStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import type { WritableEdge, NodeKey } from '$lib/types';
@@ -20,7 +28,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		x: writable(0),
 		y: writable(0)
 	};
-	const dimensions = writable({} as DOMRect);
+	const dimensions = writable({} as GraphDimensions);
 
 	const scale = writable(initialZoom);
 

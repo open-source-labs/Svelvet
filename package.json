@@ -1,6 +1,6 @@
 {
 	"name": "svelvet-test",
-	"version": "7.1.6",
+	"version": "7.1.9",
 	"description": "A lightweight Svelte component library for building dynamic node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -32,7 +32,8 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
-		}
+		},
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist"

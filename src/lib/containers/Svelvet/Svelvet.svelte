@@ -27,26 +27,34 @@
 
 	setContext('snapTo', snapTo);
 	setContext('theme', theme);
-
+	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	onMount(() => {
-		let graphKey: GraphKey = `G-${graphId || graphStore.count() + 1}`;
+		const stateObject = localStorage.getItem('state');
+		if (stateObject) {
+			console.log('i found something');
 
-		graph = createGraph(graphKey, { initialZoom, direction, editable, locked });
+			graph = reloadStore(stateObject);
+			console.log(graph);
+			graphStore.add(graph, graph.id);
+		} else {
+			let graphKey: GraphKey = `G-${graphId || graphStore.count() + 1}`;
 
-		if (nodes.length && !mermaid) {
-			const nodeObjects = generateNodes(nodes);
-			populateStore(nodeObjects, graph);
-			nodeStore = graph.nodes;
+			graph = createGraph(graphKey, { initialZoom, direction, editable, locked });
+
+			if (nodes.length && !mermaid) {
+				const nodeObjects = generateNodes(nodes);
+				populateStore(nodeObjects, graph);
+				nodeStore = graph.nodes;
+			}
+
+			// if (mermaid.length) {
+			// 	const mermaidNodes = flowChartParser(mermaid);
+			// 	const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
+			// 	populateStore(Object.values(createdNodes), graph);
+			// 	nodeStore = graph.nodes;
+			// }
+			graphStore.add(graph, graphKey);
 		}
-
-		// if (mermaid.length) {
-		// 	const mermaidNodes = flowChartParser(mermaid);
-		// 	const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
-		// 	populateStore(Object.values(createdNodes), graph);
-		// 	nodeStore = graph.nodes;
-		// }
-
-		graphStore.add(graph, graphKey);
 	});
 
 	function generateNodes(nodes: Array<NodeConfig>) {

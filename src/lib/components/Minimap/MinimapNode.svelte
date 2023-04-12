@@ -4,8 +4,6 @@
 	export let node: Node;
 	export let hidden = false;
 	export let toggleHidden: (node: Node) => void;
-	export let boundsWidth: number;
-	export let boundsHeight: number;
 	export let top: number;
 	export let left: number;
 	export let nodeColor: CSSColorString | null = null;
@@ -14,27 +12,25 @@
 	const { width, height } = dimensions;
 	const { x, y } = position;
 
-	$: DOMwidth = ($width / boundsWidth) * 100;
-	//$: DOMheight = ($height / boundsHeight) * 100;
-	$: DOMradius = ($borderRadius / boundsWidth) * 100;
+	$: zIndex = node.zIndex;
 </script>
 
 <button
 	on:click={() => toggleHidden(node)}
 	class:hidden
 	class="minimap-node"
-	style:border-radius={DOMradius + 'px'}
+	style:z-index={$zIndex}
+	style:border-radius="{$borderRadius}px"
 	style:background-color={nodeColor || $bgColor}
-	style:width="{DOMwidth}%"
-	style:aspect-ratio={$width / $height}
-	style:top="{(($y - top) / boundsHeight) * 100}%"
-	style:left="{(($x - left) / boundsWidth) * 100}%"
+	style:width="{$width}px"
+	style:height="{$height}px"
+	style:top="{$y - top}px"
+	style:left="{$x - left}px"
 />
 
 <style>
 	.minimap-node {
 		position: absolute;
-		border-radius: 1px;
 		cursor: pointer;
 		border: none;
 	}

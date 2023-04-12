@@ -1,17 +1,16 @@
-import type { XYPair } from '$lib/types';
+import type { GraphDimensions, XYPair } from '$lib/types';
 
 export function calculateTranslation(
 	oldScale: number,
 	newScale: number,
 	currentTranslation: XYPair,
 	pointerPosition: XYPair,
-	bounds: DOMRect
+	dimensions: GraphDimensions
 ) {
 	const newTranslation = { x: 0, y: 0 };
-
 	// Calculate the cursor position relative to the wrapper
-	const pointerXRelativeToWrapper = pointerPosition.x - bounds.left - bounds.width / 2;
-	const pointerYRelativeToWrapper = pointerPosition.y - bounds.top - bounds.height / 2;
+	const pointerXRelativeToWrapper = pointerPosition.x - dimensions.left - dimensions.width / 2;
+	const pointerYRelativeToWrapper = pointerPosition.y - dimensions.top - dimensions.height / 2;
 
 	// Calculate the cursor position relative to the scaled content
 	const pointerXRelativeToContent = (pointerXRelativeToWrapper - currentTranslation.x) / oldScale;

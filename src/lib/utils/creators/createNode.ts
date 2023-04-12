@@ -23,7 +23,8 @@ export function createNode(userNode: NodeConfig): Node {
 	const { bgColor, borderColor, borderRadius, textColor, locked, group } = userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
-	const nodeKey: NodeKey = `N-${id}`;
+	const nodeKey: NodeKey =
+		typeof id === 'string' && id.slice(0, 2) === 'N-' ? (id as NodeKey) : `N-${id}`;
 
 	const newNode: Node = {
 		id: nodeKey,
@@ -50,7 +51,7 @@ export function createNode(userNode: NodeConfig): Node {
 		editable: writable(editable || false),
 		resizable: writable(resizable),
 		anchors: anchorStore,
-		zIndex: writable(zIndex || 1),
+		zIndex: writable(zIndex || 2),
 		ariaLabel: `Node ${id}`,
 		header: writable(header ? true : false),
 		collapsed: writable(false),

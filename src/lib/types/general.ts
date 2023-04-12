@@ -10,6 +10,15 @@ export interface XYPair {
 	y: number;
 }
 
+export interface GraphDimensions {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+	bottom: number;
+	right: number;
+}
+
 export interface NodeDOMBounds {
 	id: string;
 	top: number;
@@ -60,6 +69,7 @@ export type CSSColorString =
 	| NamedColors
 	| `#${string}`
 	| `rgb(${number},${number},${number})`
+	| `rgb(${number}, ${number}, ${number})`
 	| `rgba(${number},${number},${number},${number | string})`
 	| `hsl(${number},${number}%,${number}%)`
 	| `hsla(${number},${number}%,${number}%,${number | string})`;

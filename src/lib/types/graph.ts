@@ -12,7 +12,8 @@ import type {
 	GroupKey,
 	Anchor,
 	InputStore,
-	OutputStore
+	OutputStore,
+	GraphDimensions
 } from '.';
 
 export interface Graph {
@@ -27,7 +28,7 @@ export interface Graph {
 		bottom: Writable<number>;
 	};
 	maxZIndex: Writable<number>;
-	dimensions: Writable<DOMRect>;
+	dimensions: Writable<GraphDimensions>;
 	editable: boolean;
 	direction: 'TD' | 'LR';
 	cursor: Readable<{ x: number; y: number }>;

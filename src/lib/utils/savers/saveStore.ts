@@ -1,3 +1,6 @@
+import type { Graph, Node } from '$lib/types';
+import { createNode } from '../creators';
+
 // Function to check if a value is a Svelte store
 function isStore(value) {
 	return value && typeof value.subscribe === 'function';
@@ -9,7 +12,6 @@ function traverse(obj) {
 
 	for (const key in obj) {
 		const value = obj[key];
-		if (key === 'dimensions') continue;
 		if (isStore(value)) {
 			let storeValue;
 			value.subscribe(($value) => {
@@ -41,7 +43,16 @@ function domRectReplacer(key, value) {
 }
 
 // Function to get JSON stringified data from nested Svelte store
-export function getJSONState(store) {
+export function getJSONState(store: Graph) {
 	const data = traverse(store);
-	return JSON.stringify(data, domRectReplacer, 2);
+	const raw = JSON.stringify(data, domRectReplacer);
+
+	// const object = JSON.parse(raw);
+	// console.log(object.nodes['N-1']);
+	// const node: Node = createNode(object.nodes['N-1']);
+	// console.log(node);
+	// store.nodes.add(node, 'N-TEST');
+	// //console.log(raw);
+	localStorage.setItem('state', raw);
+	return raw;
 }

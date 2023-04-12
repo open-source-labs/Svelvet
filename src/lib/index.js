@@ -7,3 +7,5 @@ import Edge from './components/Edge/Edge.svelte';
 import Group from './components/Group/Group.svelte';
 import { generateInput, generateOutput } from './utils/creators';
 export { Svelvet, Controls, Minimap, Node, Anchor, Edge, Group, generateInput, generateOutput };
+
+export * from './types';

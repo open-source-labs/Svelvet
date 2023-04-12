@@ -7,7 +7,7 @@
 	import DefaultNode from './DefaultNode.svelte';
 	import { THEMES } from '$lib/constants/themes';
 	import { get } from 'svelte/store';
-	import { group_outros } from 'svelte/internal';
+
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
 
@@ -30,7 +30,7 @@
 	export let outputs = 1;
 	export let TD = false;
 	export let LR = false;
-	export let zIndex = 0;
+	export let zIndex = 1;
 	export let editable = false;
 	export let locked = false;
 
@@ -42,28 +42,40 @@
 
 		const groupBox = graph.groupBoxes.get(group);
 
-		const config: NodeConfig = {
-			id: id || graph.nodes.count() + 1,
-			width,
-			position: groupBox ? { x: get(groupBox.position.x), y: get(groupBox.position.y) } : position,
-			dimensions,
-			height,
-			bgColor,
-			editable: editable || graph.editable,
-			borderRadius,
-			textColor,
-			borderColor,
-			label,
-			group,
-			selectionColor,
-			resizable,
-			inputs,
-			outputs,
-			zIndex,
-			direction,
-			locked
-		};
-		node = createNode(config);
+		const nodeCount = graph.nodes.count() + 1;
+		console.log({ nodeCount });
+		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
+
+		console.log({ foundNode });
+
+		if (!foundNode) {
+			const config: NodeConfig = {
+				id: id || nodeCount,
+				width,
+				position: groupBox
+					? { x: get(groupBox.position.x), y: get(groupBox.position.y) }
+					: position,
+				dimensions,
+				height,
+				bgColor,
+				editable: editable || graph.editable,
+				borderRadius,
+				textColor,
+				borderColor,
+				label,
+				group,
+				selectionColor,
+				resizable,
+				inputs,
+				outputs,
+				zIndex,
+				direction,
+				locked
+			};
+			node = createNode(config);
+		} else {
+			node = foundNode;
+		}
 
 		if (groupBox) {
 			graph.groups.update((groups) => {
@@ -75,6 +87,52 @@
 
 		graph.nodes.add(node, node.id);
 	});
+
+	// All these functions below essentially enable data binding to the props
+	// We should not recommend developers utilize this, but it is a nice feature
+	$: if (node) {
+		node.bgColor.set(bgColor);
+	}
+	$: if (node) {
+		node.label.set(label);
+	}
+	$: if (node) {
+		node.textColor.set(textColor);
+	}
+	$: if (node) {
+		node.borderColor.set(borderColor);
+	}
+	$: if (node) {
+		node.selectionColor.set(selectionColor);
+	}
+	$: if (node) {
+		node.resizable.set(resizable);
+	}
+	$: if (node) {
+		node.editable.set(editable);
+	}
+	$: if (node) {
+		node.locked.set(locked);
+	}
+	$: if (node) {
+		node.inputs.set(inputs);
+	}
+	$: if (node) {
+		node.outputs.set(outputs);
+	}
+	$: if (node) {
+		node.zIndex.set(zIndex);
+	}
+	$: if (node) {
+		node.position.x.set(position.x);
+		node.position.y.set(position.y);
+	}
+	$: if (node) {
+		node.inputs.set(inputs);
+	}
+	$: if (node) {
+		node.outputs.set(outputs);
+	}
 </script>
 
 {#if node && $nodes[node.id]}

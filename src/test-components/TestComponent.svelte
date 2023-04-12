@@ -31,7 +31,7 @@
 	const output2 = generateOutput(inputs, processor2);
 </script>
 
-<Node let:grabHandle let:selected>
+<Node id="55" let:grabHandle let:selected>
 	<div use:grabHandle class:selected class:handle>Custom Grab Element</div>
 	<div class="node">
 		<div class="input-anchors">

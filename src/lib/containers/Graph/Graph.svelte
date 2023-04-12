@@ -7,7 +7,8 @@
 		GroupBox,
 		Arrow,
 		GroupKey,
-		Group
+		Group,
+		GraphDimensions
 	} from '$lib/types';
 	import { writable, get } from 'svelte/store';
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
@@ -32,7 +33,7 @@
 	export let controls = false;
 	export let fixedZoom = false;
 	export let disableSelection = false;
-	export let ZOOM_INCREMENT = 0.01;
+	export let ZOOM_INCREMENT = 0.1;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
 	export let MAX_SCALE = 3;
@@ -51,7 +52,7 @@
 
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
 	let selecting: boolean = false;
-	let graphBounds: DOMRect;
+	let graphBounds: GraphDimensions;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
 	let initialDistance: number = 0;
@@ -81,7 +82,15 @@
 	});
 
 	function updateGraphBounds() {
-		graphBounds = graphDOMElement.getBoundingClientRect();
+		const DOMRect = graphDOMElement.getBoundingClientRect();
+		graphBounds = {
+			top: DOMRect.top,
+			left: DOMRect.left,
+			bottom: DOMRect.bottom,
+			right: DOMRect.right,
+			width: DOMRect.width,
+			height: DOMRect.height
+		};
 		graph.dimensions.set(graphBounds);
 	}
 
@@ -279,8 +288,8 @@
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const newScale = calculateZoom($scale, deltaY, ZOOM_INCREMENT);
-
+		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
+		console.log({ graphBounds });
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
 			$scale,
@@ -322,8 +331,10 @@
 		$translationY = 0;
 		$translationX = 0;
 	}
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 </script>
 
+<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
 	class="svelvet-wrapper"
@@ -348,8 +359,10 @@
 		<slot />
 	</GraphRenderer>
 	<Background --background-color="var(--{theme}-background)" {style} />
-	<slot name="minimap"><svelte:component this={minimapComponent} /></slot>
-	<slot name="controls"><svelte:component this={controlsComponent} /></slot>
+	<svelte:component this={minimapComponent} />
+	<svelte:component this={controlsComponent} />
+	<slot name="minimap" />
+	<slot name="controls" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} />
 	{/if}

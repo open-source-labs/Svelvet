@@ -2,6 +2,7 @@
 <script lang="ts">
 	import type { Graph, Node } from '$lib/types';
 	import { getContext } from 'svelte';
+
 	export let width = false;
 	export let height = false;
 	export let minHeight: number = 200;
