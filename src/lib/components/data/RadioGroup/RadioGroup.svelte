@@ -48,16 +48,6 @@
 {/each}
 
 <style>
-	.group-container {
-		width: 100%;
-		display: flex;
-		align-items: center;
-	}
-
-	p {
-		margin-left: 0.5rem;
-	}
-
 	.option {
 		cursor: pointer;
 		width: 100%;

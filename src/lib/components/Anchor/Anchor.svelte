@@ -31,6 +31,8 @@
 	const theme = getContext<Theme>('theme');
 	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
+	const childNodes = getContext<Array<string>>('childNodes');
+
 	export let bgColor = THEMES[theme].anchor;
 
 	export let id: string | number = 0;
@@ -41,8 +43,11 @@
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let dynamic = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
-	export let edgeStyle: EdgeStyle = 'bezier';
-	export let connections: [string, string][] = [];
+	export let connections: [string, string][] = output
+		? childNodes.length
+			? childNodes.map((id) => [id, '1'])
+			: []
+		: [];
 
 	export let inputsStore: InputStore | null = null;
 	export let key: string | number | null = null;

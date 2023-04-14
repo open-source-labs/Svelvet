@@ -31,6 +31,7 @@
 	export let selectionColor: CSSColorString = 'lightblue';
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let disableSelection = false;
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -75,7 +76,7 @@
 </script>
 
 {#if graph}
-	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor}>
+	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor} {disableSelection}>
 		<slot />
 		<slot name="minimap" slot="minimap" />
 		<slot name="controls" slot="controls" zoomIn={'hello'} />

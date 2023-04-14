@@ -179,10 +179,6 @@
 		color: rgb(91, 169, 190);
 	}
 
-	.input:active {
-		cursor: none;
-	}
-
 	.slider {
 		width: 100%;
 		display: flex;

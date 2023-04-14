@@ -3,6 +3,7 @@
 	import type { Node } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
+	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 
 	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;
@@ -17,6 +18,9 @@
 	$: textColor = node.textColor;
 	$: inputs = node.inputs;
 	$: outputs = node.outputs;
+	$: width = node.dimensions.width;
+	$: height = node.dimensions.height;
+	$: resizable = node.resizable;
 
 	let top = get(node.direction) === 'TD' ? true : false;
 	let bottom = get(node.direction) === 'TD' ? true : false;
@@ -26,7 +30,8 @@
 </script>
 
 <div
-	use:grabHandle
+	style:width="{$width}px"
+	style:height="{$height}px"
 	style:background-color={$bgColor}
 	style:border-radius={$borderRadius + 'px'}
 	style:border-color={$borderColor}
@@ -45,6 +50,8 @@
 		{/each}
 	</div>
 	<p style:color={$textColor}>{$label}</p>
+
+	<Resizer width height />
 </div>
 
 <style>
@@ -67,13 +74,13 @@
 			25px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
 	}
 	.default-node {
-		width: 100%;
-		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		border: solid 1px black;
 		box-shadow: var(--shadow-elevation-medium);
+		position: relative;
+		box-sizing: border-box;
 	}
 	p {
 		font-size: 20px;

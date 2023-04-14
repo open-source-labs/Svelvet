@@ -19,6 +19,7 @@ export function createNode(userNode: NodeConfig): Node {
 		position,
 		selectionColor,
 		headerColor,
+		borderWidth,
 		edge
 	} = userNode;
 	const { bgColor, borderColor, borderRadius, textColor, locked, group } = userNode;
@@ -65,6 +66,7 @@ export function createNode(userNode: NodeConfig): Node {
 		direction: writable(direction),
 		label: writable(userNode.label || ''),
 		borderColor: writable(borderColor),
+		borderWidth: writable(borderWidth),
 		selectionColor: writable(selectionColor),
 		textColor: writable(textColor),
 		headerColor: writable(headerColor)

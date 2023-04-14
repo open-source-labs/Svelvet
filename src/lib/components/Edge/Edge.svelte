@@ -24,7 +24,7 @@
 
 	const { cursor } = graph;
 
-	export let width: number = 2;
+	export let width: number = EDGE_WIDTH;
 	export let color: CSSColorString = THEMES[theme].edge;
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
@@ -245,9 +245,6 @@
 		height: 1.5rem;
 		border-radius: 5px;
 		padding: 10px;
-	}
-
-	foreignObject {
 	}
 
 	@keyframes dash {

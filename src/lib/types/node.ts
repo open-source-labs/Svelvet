@@ -33,6 +33,7 @@ export interface Node {
 	direction: Writable<'TD' | 'LR'>;
 	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
+	borderWidth: Writable<number>;
 	bgColor: Writable<CSSColorString | null>;
 	borderColor: Writable<CSSColorString | null>;
 	selectionColor: Writable<CSSColorString | null>;

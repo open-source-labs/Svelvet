@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContext, onMount } from 'svelte';
+	import { getContext, onMount, setContext } from 'svelte';
 	import type { Graph, Node as NodeType, NodeConfig, Theme, GroupKey } from '$lib/types';
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
@@ -7,6 +7,7 @@
 	import DefaultNode from './DefaultNode.svelte';
 	import { THEMES } from '$lib/constants/themes';
 	import { get } from 'svelte/store';
+	import Background from '$lib/containers/Background/Background.svelte';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
@@ -22,6 +23,7 @@
 	export let bgColor = THEMES[theme].node;
 	export let borderRadius = s.NODE_BORDER_RADIUS;
 	export let borderColor = THEMES[theme].border;
+	export let borderWidth = s.NODE_BORDER_WIDTH;
 	export let selectionColor = THEMES[theme].selection;
 	export let textColor = THEMES[theme].text;
 	export let resizable = false;
@@ -34,6 +36,9 @@
 	export let editable = false;
 	export let locked = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let childNodes: Array<string> = [];
+
+	setContext('childNodes', childNodes);
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
@@ -62,6 +67,7 @@
 				borderColor,
 				label,
 				group,
+				borderWidth,
 				selectionColor,
 				resizable,
 				inputs,

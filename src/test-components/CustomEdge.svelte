@@ -9,11 +9,6 @@
 </Edge>
 
 <style>
-	path {
-		stroke: rgb(246, 231, 20);
-		stroke-width: 6px;
-	}
-
 	button {
 		background-color: rgb(172, 2, 2);
 		width: 150px;

@@ -38,6 +38,7 @@ Shout out to our contributors! Here's what's new:
     <li>Added keyboard navigation to graph when focused</li>
     <li>Added selection box functionality via Shift + Click. Color can be controlled via the selectionColor prop on the Svelvet component.</li>
     <li>Added node grouping functionality via Shift + CMD + Click</li>
+    <li>Added the ability to pass custom edges at the Graph, Node and Anchor level</li>
     <li>No longer required to pass width/height to Svelvet component. Will fill wrapping component by default</li>
     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
     <li>Added the abilty to specify graph/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
@@ -48,6 +49,7 @@ Shout out to our contributors! Here's what's new:
     <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when implementing custom nodes</li>
     <li>Added theme prop to Svelvet component. Defaults to light. Accepts parameters like "dark", "purple", "parchment"</li>
     <li>Removed frontend website code from library repository</li>
+    <li>Added E2E tests using Playwright</li>
     <li>Simplified bezier curve logic and added the ability to specify anchor "direction"</li>
     <li>Added ability to parse Mermaid strings into node graphs + edges</li>
     <li>Added the ability to specify graph direction as TD or LR</li>

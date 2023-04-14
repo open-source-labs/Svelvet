@@ -5,6 +5,7 @@
 	import { calculateTranslation, zoomGraph, translateGraph, calculateZoom } from '$lib/utils';
 
 	export let increment = 0.1;
+	export let horizontal = false;
 
 	const graph: Graph = getContext<Graph>('graph');
 	const theme: Theme = getContext<Theme>('theme');
@@ -73,7 +74,7 @@
 	aria-label="navigation"
 >
 	<slot {zoomIn} {zoomOut} {reset} {lock} {unhideAll}>
-		<div class="controls-wrapper" style:background-color={bgColor}>
+		<div class="controls-wrapper" class:horizontal style:background-color={bgColor}>
 			{#if $hidden.size > 0}
 				<button on:mousedown|stopPropagation={unhideAll}>
 					<span style:color={iconColor} class="material-symbols-outlined"> visibility_off </span>
@@ -133,23 +134,26 @@
 		box-shadow: var(--shadow-elevation-low);
 		padding: 4px;
 	}
+
 	/* reset button */
 	button {
-		font-family: 'Rubik';
 		margin: 0;
 		padding: 0;
 		border: none;
 		background: none;
 		display: flex;
-
 		align-items: center;
 		justify-content: center;
 		padding: 0.2rem 0;
 		border-bottom: solid 1px rgb(190, 188, 188);
 	}
+
+	.horizontal > button {
+		border-bottom: none;
+	}
+
 	span {
 		font-family: 'Material Symbols Outlined';
-
 		font-size: 1.2rem;
 	}
 	button:last-child {
@@ -158,5 +162,12 @@
 	button:hover {
 		color: black;
 		cursor: pointer;
+	}
+
+	.horizontal {
+		flex-direction: row-reverse !important;
+		height: 1.5rem;
+		gap: 6px;
+		width: fit-content;
 	}
 </style>

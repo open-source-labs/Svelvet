@@ -7,6 +7,7 @@
 	import { calculateRelativeCursor, captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
+	import { calculateFitContentWidth } from '$lib/utils';
 
 	export let node: Node;
 
@@ -23,6 +24,11 @@
 	$: resizable = node.resizable;
 	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
+	$: bgColor = node.bgColor;
+	$: borderColor = node.borderColor;
+	$: borderRadius = node.borderRadius;
+	$: selectionColor = node.selectionColor;
+	$: borderWidth = node.borderWidth;
 
 	const graph: Graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
@@ -54,13 +60,12 @@
 		// And reassign the width store the max value of
 		// The initial dom dimensions, the min dimenions calculated, or the initial store value
 		// Spend more time looking into this and see if there is a more obvious fix
-		// const nodeRect = DOMnode.getBoundingClientRect();
-		// [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		// // $widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
-		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
-		// $x = nodeRect.x;
-		// $y = nodeRect.y;
-		//absolute = true;
+		const nodeRect = DOMnode.getBoundingClientRect();
+		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
+		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		DOMnode.style.width = `${$widthStore}px`;
+		DOMnode.style.height = `${$heightStore}px`;
 	});
 
 	onDestroy(() => {
@@ -93,11 +98,6 @@
 	}
 
 	const headerSize = 40;
-	// Dynamic CSS styles based on store values
-	$: nodeWidth = `${$widthStore}px`;
-	$: nodeHeight = `${$heightStore}px`;
-	$: nodeLeft = `${$x}px`;
-	$: nodeTop = `${$y}px`;
 
 	$: editing = graph.editing;
 	$: activeGroup = graph.activeGroup;
@@ -118,6 +118,7 @@
 	}
 
 	import { createEventDispatcher } from 'svelte';
+	import { NODE_BORDER_WIDTH } from '$lib/constants';
 
 	const dispatch = createEventDispatcher();
 
@@ -211,15 +212,16 @@
 	<div
 		{id}
 		class="svelvet-node"
-		style:position="absolute"
-		style:top={nodeTop}
-		style:left={nodeLeft}
-		style:width={nodeWidth}
-		style:height={nodeHeight}
+		class:selected
+		style:top="{$y}px"
+		style:left="{$x}px"
+		style:width="{$widthStore}px"
+		style:height="{$heightStore}px"
 		style:z-index={$zIndex}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
+		use:grabHandle
 	>
 		{#if $header}
 			<Header />
@@ -227,22 +229,17 @@
 		{#if !collapsed}
 			<!-- This is the actual "node"-->
 			<slot {grabHandle} {selected} />
-			{#if resizable}
-				<Resizer width height {minWidth} {minHeight} />
-			{/if}
 		{/if}
 	</div>
 {/if}
 
 <style>
 	.svelvet-node {
-		border: var(--node-border-width, var(--node-default-border-width)) solid
-			var(--node-border-color, var(--node-default-border-color));
-		border-radius: var(--border-radius, var(--node-default-border-radius));
-		background-color: var(--node-background-color, var(--node-default-background));
-		color: var(--node-text-color, --node-default-text-color);
 		cursor: grab;
 		position: absolute;
 		pointer-events: all;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

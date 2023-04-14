@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte';
 	import InternalEdge from '$lib/components/Edge/Edge.svelte';
 	import EdgeContext from '$lib/components/Edge/EdgeContext.svelte';
+
 	const graph = getContext<Graph>('graph');
 
 	$: edges = graph.edges;
