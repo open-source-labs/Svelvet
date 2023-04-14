@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { WritableEdge } from '$lib';
 	import Edge from '$lib/components/Edge/Edge.svelte';
 </script>
 
-<Edge let:path let:destroy strokeColor="red" strokeWidth={4} animate={false}>
+<Edge let:path let:destroy color="red" width={4}>
 	<button slot="label" on:click={destroy}>
 		<p>ANCHOREDGE</p>
 	</button>

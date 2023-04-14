@@ -15,10 +15,10 @@
 	const { nodes } = graph;
 
 	export let position = { x: 0, y: 0 };
-	export let dimensions = { width: 200, height: 100 };
+	export let dimensions = { width: s.NODE_WIDTH, height: s.NODE_HEIGHT };
 	export let id: string | number = 0;
-	export let width = s.NODE_WIDTH;
-	export let height = s.NODE_HEIGHT;
+	// export let width = s.NODE_WIDTH;
+	// export let height = s.NODE_HEIGHT;
 	export let bgColor = THEMES[theme].node;
 	export let borderRadius = s.NODE_BORDER_RADIUS;
 	export let borderColor = THEMES[theme].border;
@@ -50,12 +50,12 @@
 		if (!foundNode) {
 			const config: NodeConfig = {
 				id: id || nodeCount,
-				width,
+				// width,
 				position: groupBox
 					? { x: get(groupBox.position.x), y: get(groupBox.position.y) }
 					: position,
 				dimensions,
-				height,
+				// height,
 				bgColor,
 				editable: editable || graph.editable,
 				borderRadius,

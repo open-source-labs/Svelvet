@@ -3,7 +3,7 @@
 	import Edge from '$lib/components/Edge/Edge.svelte';
 </script>
 
-<Edge let:path strokeColor="green">
+<Edge let:path color="green">
 	<div class="my-label" slot="label">
 		<p>NODE EDGE</p>
 	</div>

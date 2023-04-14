@@ -16,8 +16,8 @@
 
 	const { cursor } = graph;
 
-	export let strokeWidth: number = EDGE_WIDTH;
-	export let strokeColor: CSSColorString = THEMES[theme].edge;
+	export let width: number = 2;
+	export let color: CSSColorString = THEMES[theme].edge;
 	export let straight = false;
 	export let step = false;
 	export let animate = false;
@@ -53,12 +53,12 @@
 	// The distances between the points
 	$: deltaX = roundNum($targetX - $sourceX);
 	$: deltaY = roundNum($targetY - $sourceY);
-	$: width = Math.abs(deltaX);
-	$: height = Math.abs(deltaY);
+	$: anchorWidth = Math.abs(deltaX);
+	$: anchorHeight = Math.abs(deltaY);
 
 	// Strength of curvature
-	$: maxCurveDisplaceX = Math.max(30, Math.min(600, width / 2));
-	$: maxCurveDisplaceY = Math.max(30, Math.min(600, height / 2));
+	$: maxCurveDisplaceX = Math.max(30, Math.min(600, anchorWidth / 2));
+	$: maxCurveDisplaceY = Math.max(30, Math.min(600, anchorHeight / 2));
 
 	// The directionality of the source and target anchors
 	$: sourceDirection = source?.direction || writable('self' as Direction);
@@ -192,11 +192,12 @@
 
 {#if source || target}
 	<path
+		id={edgeKey}
 		bind:this={DOMPath}
 		class:animate
 		d={path}
-		style:stroke={strokeColor}
-		style:stroke-width={strokeWidth + 'px'}
+		style:stroke={color}
+		style:stroke-width={width + 'px'}
 	/>
 	<slot {path} {destroy} />
 	{#if $$slots.label || label}
