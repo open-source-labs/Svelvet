@@ -14,6 +14,7 @@
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
+	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 
 	export let mermaid = '';
 	export let theme: Theme = 'light';
@@ -32,6 +33,7 @@
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let disableSelection = false;
+	export let mermaidConfig: {[key: string]: {[key: string]: any}};
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -77,6 +79,9 @@
 
 {#if graph}
 	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor} {disableSelection}>
+		{#if mermaid.length}
+			<FlowChart {mermaid} {mermaidConfig} ></FlowChart>
+		{/if}
 		<slot />
 		<slot name="minimap" slot="minimap" />
 		<slot name="controls" slot="controls" zoomIn={'hello'} />

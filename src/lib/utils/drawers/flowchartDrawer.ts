@@ -8,7 +8,7 @@ interface Nodes {
 	[key: string]: Node;
 }
 
-type LayerNode = { id: string; children: Array<string>; parents: Array<string>; layer: number };
+type LayerNode = { id: string, children: Array<string>, parents: Array<string>, layer: number, type?: string, propsId?: string, ignore?: boolean};
 
 interface LayerTracker {
 	[key: number]: Array<LayerNode>;
@@ -17,73 +17,52 @@ interface LayerTracker {
 const directionRef: { [key: string]: number } = { td: 0, tb: 0, lr: 1, bt: 2, bu: 2, rl: 3 };
 
 const nodes: Nodes = {};
-// const width = 100;
-// const height = 100;
 
-export function populateMermaidNodes(flowChart: FlowChart, direction: 'td' | 'bt' | 'lr' | 'rl') {
-	flowChart.parentNodes.forEach((node) => assignNodeDepthAndNesting(node));
-	const [layerTracker, maxLayer] = layerAssignment(flowChart);
-	populateGhostNodes(layerTracker, flowChart);
-	balanceLayers(layerTracker);
-	for (let i = 0; i < 10; i++) {
-		let nodeWasSwapped = false;
-		for (let j = 0; j < maxLayer; j++) {
-			if (!layerTracker[j]) continue;
-			for (let k = 0; k < layerTracker[j].length; k++) {
-				const node = layerTracker[j][k];
-				const bestSwapIndex = findBestSwapIndex(layerTracker, node, k);
-				if (bestSwapIndex) {
-					swapNodes(layerTracker[j], k, bestSwapIndex);
-					nodeWasSwapped = true;
-				}
-			}
-		}
-		if (!nodeWasSwapped) break;
-	}
-	const nodesByDegree = sortNodesByDegree(layerTracker);
-	for (let i = 0; i < 10; i++) {
-		const nodeWasSwapped = siftNodes(layerTracker, nodesByDegree);
-		if (!nodeWasSwapped) break;
-	}
+export function flowChartDrawer(flowChart: FlowChart, direction: 'td' | 'bt' | 'lr' | 'rl') {
+  flowChart.parentNodes.forEach((node) => assignNodeDepthAndNesting(node));
+  const [layerTracker, maxLayer] = layerAssignment(flowChart);
+  populateGhostNodes(layerTracker, flowChart);
+  balanceLayers(layerTracker);
+  for (let i = 0; i < 10; i++) {
+    let nodeWasSwapped = false;
+    for (let j = 0; j <= maxLayer; j++) {
+      if (!layerTracker[j]) continue;
+      for (let k = 0; k < layerTracker[j].length; k++) {
+        const node = layerTracker[j][k];
+        const bestSwapIndex = findBestSwapIndex(layerTracker, node, k);
+        if (bestSwapIndex) {
+          swapNodes(layerTracker[j], k, bestSwapIndex);
+          nodeWasSwapped = true;
+        } 
+      }
+    }
+    if (!nodeWasSwapped) break;
+  }
+  const nodesByDegree = sortNodesByDegree(layerTracker);
+  for (let i = 0; i < 10; i++) {
+    const nodeWasSwapped = siftNodes(layerTracker, nodesByDegree);
+    if (!nodeWasSwapped) break;
+  }
 
-	const grid: Array<Array<LayerNode>> = [];
-	for (let i = 0; i <= maxLayer; i++) {
-		grid.push(layerTracker[i]);
-	}
-	let x = 0;
-	let y = 0;
-
-	rotateGrid(grid, directionRef[direction]);
-	for (const layer of grid) {
-		for (const node of layer) {
-			if (flowChart.nodeList[node.id]) {
-				const nodeConfig: NodeConfig = {
-					id: node.id,
-					dimensions: { width: 100, height: 100 },
-					position: { x, y }
-				};
-				nodes[node.id] = createNode(nodeConfig);
-			}
-			x += 200;
-		}
-		x = 0;
-		y += 300;
-	}
-	for (const nodeId in flowChart.nodeList) {
-		nodes[nodeId].inputs.update((parentNodes) => {
-			for (const parent of flowChart.nodeList[nodeId].parents) {
-				parentNodes[nodeId + parent] = writable(true);
-			}
-			return parentNodes;
-		});
-		// nodes[nodeId].outputNodes.update((childrenNodes) => {
-		// 	for (const child of flowChart.nodeList[nodeId].children) {
-		// 		childrenNodes.add(nodes[child.node.id]);
-		// 	}
-		// 	return childrenNodes;
-		// });
-	}
-	return nodes;
+  for (let i = 0; i < 2; i++) {
+    let nodeWasSwapped = false;
+    for (let j = 0; j <= maxLayer; j++) {
+      for (let k = 0; k < layerTracker[j].length; k++) {
+        const node = layerTracker[j][k];
+        const bestNullSwapIndex = findBestNullSwap(layerTracker, node, k);
+        if (bestNullSwapIndex) {
+          swapNodes(layerTracker[j], k, bestNullSwapIndex);
+          nodeWasSwapped = true;
+        }
+      }
+    }
+    if (!nodeWasSwapped) break;
+  }
+  const grid: Array<Array<LayerNode>> = [];
+  for (let i = 0; i <= maxLayer; i++) {
+    grid.push(layerTracker[i]);
+  }
+	return grid;
 }
 
 function assignNodeDepthAndNesting(node: FlowChartNode, len = 0, nest = 0): void {
@@ -114,10 +93,12 @@ function layerAssignment(flowChart: FlowChart): [LayerTracker, number] {
 	let maxLayer = 0;
 	const layerTracker: LayerTracker = {};
 	for (const nodeId in flowChart.nodeList) {
-		const { depth, parents, children } = flowChart.nodeList[nodeId];
+		console.log(nodeId, flowChart.nodeList[nodeId]);
+		const { depth, parents, children, type, data } = flowChart.nodeList[nodeId];
 		maxLayer = Math.max(maxLayer, depth);
 		if (!layerTracker[depth]) layerTracker[depth] = [];
-		const newNode: LayerNode = { id: nodeId, children: [], parents: [], layer: depth };
+		const newNode: LayerNode = { id: nodeId, children: [], parents: [], layer: depth, type: type.trim()};
+		if (data.props) newNode.propsId = data.props.trim();
 		for (const parent of parents) newNode.parents.push(parent.node.id);
 		for (const child of children) newNode.children.push(child.node.id);
 		layerTracker[depth].push(newNode);
@@ -138,7 +119,8 @@ function populateGhostNodes(layerTracker: LayerTracker, flowChart: FlowChart) {
 						id: `GHOST_${child.node.id}_${ghostNodeIncrement}`,
 						children: [],
 						parents: [],
-						layer: i
+						layer: i,
+						ignore: true
 					};
 					ghostNodeCollection.push(ghostNode);
 					ghostNodeIncrement++;
@@ -172,7 +154,7 @@ function balanceLayers(layerTracker: LayerTracker) {
 			const balanceArray: Array<LayerNode> = Array.from(
 				{ length: longestLayer - layerTracker[layer].length },
 				() => {
-					return { id: 'NULL_NODE', children: [], parents: [], layer: parseInt(layer) };
+					return { id: 'NULL_NODE', children: [], parents: [], layer: parseInt(layer), ignore: true };
 				}
 			);
 			layerTracker[layer] = layerTracker[layer].concat(balanceArray);
@@ -203,6 +185,64 @@ function getAdjacencyMatrix(layerTracker: LayerTracker, node: LayerNode, index: 
 	}
 	if (isNaN(adjacencySum / nodeCount)) return 0;
 	return adjacencySum / nodeCount;
+}
+
+function getAdjacencyWithParents(layerTracker: LayerTracker, node: LayerNode, index: number): number {
+  let adjacencySum = 0;
+  let nodeCount = 0;
+  for (const parentId of node.parents) {
+    for (let i = 0; i < layerTracker[node.layer - 1].length; i++) {
+      if (parentId === layerTracker[node.layer - 1][i].id) {
+        adjacencySum += Math.abs(index - i);
+        break;
+      }
+    }
+    nodeCount++;
+  }
+  if (isNaN(adjacencySum / nodeCount)) return 0;
+  return adjacencySum / nodeCount;
+}
+
+function getAdjacencyWithChildren(layerTracker: LayerTracker, node: LayerNode, index: number): number {
+  let adjacencySum = 0;
+  let nodeCount = 0;
+  for (const childId of node.children) {
+    for (let i = 0; i < layerTracker[node.layer + 1].length; i++) {
+      if (childId === layerTracker[node.layer + 1][i].id) {
+        adjacencySum += Math.abs(index - i);
+        break;
+      }
+    }
+    nodeCount++;
+  }
+  if (isNaN(adjacencySum / nodeCount)) return 0;
+  return adjacencySum / nodeCount;
+}
+
+function findBestNullSwap(layerTracker: LayerTracker, node: LayerNode, initialIndex: number): number | null {
+  const initialCrossings = countCrossings(layerTracker, node.layer);
+  let initialAdjacency = 0
+  if (node.layer === 0) initialAdjacency = getAdjacencyWithChildren(layerTracker, node, initialIndex);
+  else initialAdjacency = getAdjacencyWithParents(layerTracker, node, initialIndex);
+  let minimumAdjacency = initialAdjacency;
+  let indexToSwap = initialIndex;
+  for (let i = 0; i < layerTracker[node.layer].length; i++) {
+    const currentNode = layerTracker[node.layer][i];
+    if (currentNode.id === 'NULL_NODE') {
+      swapNodes(layerTracker[node.layer], initialIndex, i);
+      const crossings = countCrossings(layerTracker, node.layer);
+      let adjacency = 0
+      if (node.layer === 0) adjacency = getAdjacencyWithChildren(layerTracker, node, i);
+      else adjacency = getAdjacencyWithParents(layerTracker, node, i);
+      if (crossings <= initialCrossings && adjacency < minimumAdjacency) {
+        minimumAdjacency = adjacency;
+        indexToSwap = i;
+      }
+      swapNodes(layerTracker[node.layer], i ,initialIndex);
+    }
+  }
+  if (indexToSwap === initialIndex) return null;
+  return indexToSwap;
 }
 
 function findBestSwapIndex(
@@ -282,7 +322,7 @@ function countCrossings(layerTracker: LayerTracker, layer: number) {
 			}
 			if (childrenAheadIndices.length) {
 				for (let k = 0; k < layerTracker[layer + 1].length; k++) {
-					if (siblingNode.parents.includes(layerTracker[layer + 1][k].id)) {
+					if (siblingNode.children.includes(layerTracker[layer + 1][k].id)) {
 						childrenAheadIndices.forEach((index) => {
 							if (k < index) crossings++;
 						});

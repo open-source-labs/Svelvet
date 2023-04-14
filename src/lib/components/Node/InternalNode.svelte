@@ -4,10 +4,9 @@
 	import type { Graph, Node, Theme } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateRelativeCursor, captureGroup } from '$lib/utils';
+	import { calculateRelativeCursor, captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
-	import { calculateFitContentWidth } from '$lib/utils';
 
 	export let node: Node;
 
@@ -24,11 +23,6 @@
 	$: resizable = node.resizable;
 	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
-	$: bgColor = node.bgColor;
-	$: borderColor = node.borderColor;
-	$: borderRadius = node.borderRadius;
-	$: selectionColor = node.selectionColor;
-	$: borderWidth = node.borderWidth;
 
 	const graph: Graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');

@@ -1,68 +1,38 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor, Edge } from '$lib';
+	import { Svelvet, Controls, Minimap, Node, Group, Anchor } from '$lib';
 	import TestComponent from '../test-components/TestComponent.svelte';
 	import CustomControls from '../test-components/CustomControls.svelte';
 	import MyNode from '../test-components/MyNode.svelte';
-	import { getRandomColor } from '$lib/utils';
-	import type { CSSColorString, NodeConfig } from '$lib/types';
-	import CustomEdge from '../test-components/CustomEdge.svelte';
-	import CustomEdge2 from '../test-components/CustomEdge2.svelte';
-	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
-	import NodeTest from '../test-components/NodeTest.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
 
-	let nodes: NodeConfig[] = [
-		{
-			bgColor: 'red',
-			label: 'Color Will Change',
-			position: { x: 100, y: 100 }
-		},
-		{
-			bgColor: 'green',
-			label: 'Node 2',
-			position: { x: 200, y: 200 }
-		},
-		{
-			bgColor: 'blue',
-			label: 'Node 3',
-			position: { x: 300, y: 300 }
-		}
-	];
-
-	function addNode() {
-		const random: CSSColorString = `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
-
-		nodes.push({
-			bgColor: random,
-			label: `Node ${nodes.length + 1}`,
-			position: { x: Math.random() * 400, y: Math.random() * 600 }
-		});
-
-		// Change existing node
-		nodes[0].bgColor = getRandomColor();
-		nodes[1].label = 'Changed Label';
-		nodes = nodes;
+	function updateConnected(e: CustomEvent) {
+		const { node } = e.detail;
+		node.label.set('Connected');
 	}
+
+	function updateDisconnected(e: CustomEvent) {
+		const { node } = e.detail;
+		node.label.set('Disconnected');
+	}
+
+	const mermaidConfig = {Aprops: {bgColor: 'blue'}, Bprops: {width: 600}}
+
+	const mermaid = `A|Default|Aprops --> B|Default|Bprops
+	A --> K
+	B --> C & D
+	D --> F
+	C --> L & X`;
+
+
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="dark" edgeStyle="step" TD>
-			<Node id="node1" label="test" childNodes={['node2', 'node3']} />
-			<Node
-				position={{ x: 300, y: 300 }}
-				dimensions={{ width: 400, height: 100 }}
-				id="node2"
-				borderColor="yellow"
-				label="test"
-			/>
-			<Node id="node3" position={{ x: 10, y: 200 }} inputs={3} LR />
-			<NodeTest />
-
-			<Minimap slot="minimap" />
-			<Controls slot="controls" />
+		<Svelvet {mermaid} {mermaidConfig} width={500} height={500} theme="dark" initialZoom={0.6} controls>
+			<Minimap slot="minimap" corner="NE" />
+			<CustomControls slot="controls" />
 		</Svelvet>
 	</div>
 </body>
@@ -70,8 +40,8 @@
 <style>
 	.wrapper {
 		display: flex;
-		width: 100%;
-		height: 100%;
+		border: solid 1px black;
+		border-radius: 20px;
 		overflow: hidden;
 		box-shadow: 0 0 40px 0 rgba(37, 37, 37, 0.5);
 	}
@@ -82,7 +52,5 @@
 		background-color: gray;
 		width: 100vw;
 		height: 100vh;
-		padding: 0;
-		margin: 0;
 	}
 </style>
