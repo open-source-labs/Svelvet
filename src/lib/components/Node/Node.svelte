@@ -46,7 +46,6 @@
 		const nodeCount = graph.nodes.count() + 1;
 
 		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
-
 		if (!foundNode) {
 			const config: NodeConfig = {
 				id: id || nodeCount,

@@ -1,25 +1,32 @@
 import { expect, test } from '@playwright/test';
-import { Svelvet } from '$lib/index';
+
+const testRoute = '/tests';
 
 test('nodes exist and are draggable', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
+
 	const node1 = page.locator('#N-node1');
 	const node2 = page.locator('#N-node2');
+
 	const sourceAnchor = page.locator('[id="A-2/N-node2"]');
 	const targetAnchor = page.locator('[id="A-1/N-node1"]');
+
 	await expect(node1).toBeVisible();
 	await expect(node1).toHaveClass(/^svelvet-node/);
 
+	// Check node dimensions and position
 	await expect(node1).toHaveCSS('left', '0px');
 	await expect(node1).toHaveCSS('top', '0px');
 	await expect(node1).toHaveCSS('width', '200px');
 	await expect(node1).toHaveCSS('height', '100px');
 
+	// Check node dimensions and position
 	await expect(node2).toHaveCSS('left', '300px');
 	await expect(node2).toHaveCSS('top', '300px');
 	await expect(node2).toHaveCSS('width', '400px');
 	await expect(node2).toHaveCSS('height', '100px');
 
+	// Check that the node has the correct text
 	await expect(node1).toHaveText('test');
 
 	await expect(sourceAnchor).toBeVisible();
@@ -32,7 +39,7 @@ test('nodes exist and are draggable', async ({ page }) => {
 });
 
 test('graph is pannable', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 	const graph = page.locator('#G-1');
 	const wrapper = graph.locator('.svelvet-graph-wrapper');
 
@@ -55,7 +62,7 @@ test('graph is pannable', async ({ page }) => {
 });
 
 test('anchors can be connected', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 	const sourceAnchor = page.locator('[id="A-2/N-node1"]');
 	const targetAnchor = page.locator('[id="A-1/N-node2"]');
 
@@ -68,7 +75,7 @@ test('anchors can be connected', async ({ page }) => {
 });
 
 test('outputs cannot be connected to outputs', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 	const sourceAnchor = page.locator('[id="A-2/N-node1"]');
 	const targetAnchor = page.locator('[id="A-2/N-node2"]');
 
@@ -80,7 +87,7 @@ test('outputs cannot be connected to outputs', async ({ page }) => {
 });
 
 test('there are the correct number of minimap nodes', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	const minimapNodes = await page.$$('.minimap-node');
 
@@ -88,7 +95,7 @@ test('there are the correct number of minimap nodes', async ({ page }) => {
 });
 
 test('default node is created with correct id and inputs', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	const node = await page.$('#N-3');
 	if (!node) throw new Error('Node not found');
@@ -111,7 +118,7 @@ test('default node is created with correct id and inputs', async ({ page }) => {
 });
 
 test('graph is zoomable by scrolling', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	const graphWrapper = page.locator('.svelvet-graph-wrapper');
 
@@ -136,7 +143,7 @@ test('graph is zoomable by scrolling', async ({ page }) => {
 });
 
 test('shift-click and drag selects nodes', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	// Locate the nodes you want to test
 	const testNode = page.locator('#N-node2');
@@ -166,7 +173,7 @@ test('shift-click and drag selects nodes', async ({ page }) => {
 });
 
 test('selecting one node deselects others', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	const node1 = page.locator('#N-node1');
 	const node2 = page.locator('#N-node2');
@@ -185,7 +192,7 @@ test('selecting one node deselects others', async ({ page }) => {
 });
 
 test('node zIndexes are incremented correctly', async ({ page }) => {
-	await page.goto('/');
+	await page.goto(testRoute);
 
 	const node1 = page.locator('#N-node1');
 	const node2 = page.locator('#N-node2');
@@ -203,4 +210,16 @@ test('node zIndexes are incremented correctly', async ({ page }) => {
 		'style',
 		'position: absolute; top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4;'
 	);
+});
+
+test('TD prop places inputs on the top', async ({ page }) => {
+	await page.goto(testRoute);
+
+	const node = page.locator('#N-3');
+	const inputs = node.locator('.input-anchors');
+
+	await expect(inputs).toHaveClass(/top/);
+	await expect(inputs).toHaveCSS('top', '0px');
+	await expect(inputs).toHaveCSS('display', 'flex');
+	await expect(inputs).toHaveCSS('position', 'absolute');
 });

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Svelvet, Controls, Minimap, Node, Group, Anchor, Edge } from '$lib';
-	import TestComponent from '../test-components/TestComponent.svelte';
-	import CustomControls from '../test-components/CustomControls.svelte';
-	import MyNode from '../test-components/MyNode.svelte';
+	import TestComponent from '../../test-components/TestComponent.svelte';
+	import CustomControls from '../../test-components/CustomControls.svelte';
+	import MyNode from '../../test-components/MyNode.svelte';
 	import { getRandomColor } from '$lib/utils';
 	import type { CSSColorString, NodeConfig } from '$lib/types';
-	import CustomEdge from '../test-components/CustomEdge.svelte';
-	import CustomEdge2 from '../test-components/CustomEdge2.svelte';
+	import CustomEdge from '../../test-components/CustomEdge.svelte';
+	import CustomEdge2 from '../../test-components/CustomEdge2.svelte';
 	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
@@ -58,7 +58,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark" edgeStyle="step">
+		<Svelvet width={800} height={500} theme="dark">
 			<Node id="node1" label="test" />
 			<Node
 				position={{ x: 300, y: 300 }}
@@ -66,7 +66,7 @@
 				id="node2"
 				label="test"
 			/>
-			<Node position={{ x: 10, y: 200 }} inputs={3} />
+			<Node position={{ x: 10, y: 200 }} inputs={3} TD />
 			<Minimap slot="minimap" />
 		</Svelvet>
 	</div>

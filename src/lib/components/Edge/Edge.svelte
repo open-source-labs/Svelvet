@@ -1,5 +1,12 @@
 <script lang="ts">
-	import type { CSSColorString, Direction, Graph, Theme, WritableEdge } from '$lib/types';
+	import type {
+		CSSColorString,
+		Direction,
+		EdgeStyle,
+		Graph,
+		Theme,
+		WritableEdge
+	} from '$lib/types';
 	import type { StepDirection, ArcStringKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
@@ -13,13 +20,14 @@
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
+	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
 
 	const { cursor } = graph;
 
 	export let width: number = 2;
 	export let color: CSSColorString = THEMES[theme].edge;
-	export let straight = false;
-	export let step = false;
+	export let straight = edgeStyle === 'straight';
+	export let step = edgeStyle === 'step';
 	export let animate = false;
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let label: string = '';
@@ -78,7 +86,7 @@
 	$: controlPointString = `C ${sourceControlX}, ${sourceControlY} ${targetControlX}, ${targetControlY}`;
 
 	// The full SVG path string
-	$: if (!step) {
+	$: if (!step || edgeKey === 'cursor') {
 		path = `M ${$sourceX}, ${$sourceY} ${!straight && controlPointString} ${$targetX}, ${$targetY}`;
 	}
 
