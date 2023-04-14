@@ -19,10 +19,11 @@ export interface GraphConfig {
 	initialZoom?: number;
 	direction?: 'TD' | 'LR';
 	locked?: boolean;
+	edge?: ConstructorOfATypedSvelteComponent;
 }
 
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const { initialZoom, editable, direction, locked } = config;
+	const { initialZoom, editable, direction, locked, edge } = config;
 
 	const translation = {
 		x: writable(0),
@@ -50,6 +51,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		editable: editable || false,
 		linkingInput: writable(null),
 		linkingOutput: writable(null),
+		edge: edge || null,
 		linkingAny: writable(null),
 		editing: writable(null),
 		cursor: createDerivedCursorStore(cursorPositionRaw, dimensions, translation, scale),

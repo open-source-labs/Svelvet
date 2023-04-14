@@ -28,6 +28,7 @@ export interface Node {
 	focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
 	zIndex: Writable<number>;
+	edge: ConstructorOfATypedSvelteComponent | null;
 	ariaLabel: string;
 	direction: Writable<'TD' | 'LR'>;
 	headerHeight: Writable<number>;
@@ -73,6 +74,7 @@ export interface NodeConfig {
 	borderWidth?: number;
 	textColor?: CSSColorString;
 	headerColor?: CSSColorString;
+	edge?: ConstructorOfATypedSvelteComponent;
 }
 
 export type UserDimension = number | CSSDimensionString;

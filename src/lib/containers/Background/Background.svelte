@@ -7,7 +7,6 @@
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
-	console.log(graph, 'TEST');
 
 	export let style: BackgroundStyles;
 	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1

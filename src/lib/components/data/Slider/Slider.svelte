@@ -146,5 +146,60 @@
 {/if}
 
 <style>
-	@import url('./Slider.css');
+	.slider-input {
+		background: linear-gradient(
+			90deg,
+			rgb(32, 128, 143) var(--percentage),
+			rgb(0, 0, 0) var(--percentage)
+		);
+		border: solid 1px rgb(57, 57, 57);
+		border-radius: 6px;
+		text-align: right;
+		width: 100%;
+		height: 100%;
+		cursor: ew-resize;
+		color: white;
+		padding: 0.25rem;
+		pointer-events: auto;
+	}
+
+	.wrapper {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.button {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		color: white;
+		cursor: pointer;
+	}
+	.button:hover {
+		color: rgb(91, 169, 190);
+	}
+
+	.input:active {
+		cursor: none;
+	}
+
+	.slider {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 100%;
+		pointer-events: auto;
+	}
+
+	.connected {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.25rem 0.5rem;
+	}
+	.input-label {
+		margin-left: 0.5rem;
+		position: absolute;
+		pointer-events: none;
+	}
 </style>

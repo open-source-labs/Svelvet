@@ -3,15 +3,13 @@
 	import Edge from '$lib/components/Edge/Edge.svelte';
 </script>
 
-<Edge let:path let:destroy strokeColor="red" strokeWidth={4} animate={false}>
-	<button slot="label" on:click={destroy}>
-		<p>ANCHOREDGE</p>
-	</button>
+<Edge let:path label="GraphEdge" labelColor="white" textColor="black">
+	<path d={path} />
 </Edge>
 
 <style>
 	path {
-		stroke: rgb(246, 231, 20);
+		stroke: rgb(76, 20, 246);
 		stroke-width: 6px;
 	}
 

@@ -292,7 +292,7 @@
 
 		// Calculate the scale adjustment
 		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
-		console.log({ graphBounds });
+
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
 			$scale,

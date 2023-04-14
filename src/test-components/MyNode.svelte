@@ -1,25 +1,33 @@
 <script lang="ts">
-	import SpecialNode from '$lib/components/Node/Node.svelte';
+	import Node from '$lib/components/Node/Node.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import CustomEdge from './CustomEdge.svelte';
-
+	import CustomEdge2 from './CustomEdge2.svelte';
+	import type { Node as NodeType } from '$lib/types';
 	export let id: number | string = Math.random();
 
 	const connections: [string, string][] = [['1', '1']];
+
+	function handleClick(node: NodeType) {
+		node.dimensions.width.set(800);
+		node.locked.set(true);
+	}
 </script>
 
-<SpecialNode let:grabHandle let:selected {id}>
+<Node let:grabHandle let:selected let:node {id}>
 	<div class="node" use:grabHandle class:selected>
+		<button on:click={() => handleClick(node)}>Click Me</button>
 		<div class="input-anchors">
 			<Anchor input id="1" />
 			<Anchor input id="2" />
 		</div>
 		<div class="output-anchors">
-			<Anchor output id="3" {connections} edge={CustomEdge} />
+			<Anchor output id="3" {connections} />
 			<Anchor output id="4" {connections} />
+			<Anchor output id="5" />
 		</div>
 	</div>
-</SpecialNode>
+</Node>
 
 <style>
 	.node {

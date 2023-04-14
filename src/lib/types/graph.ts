@@ -37,6 +37,7 @@ export interface Graph {
 	linkingAny: Writable<Anchor | null>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
+	edge: ConstructorOfATypedSvelteComponent | null;
 	groupBoxes: GroupBoxStore;
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;

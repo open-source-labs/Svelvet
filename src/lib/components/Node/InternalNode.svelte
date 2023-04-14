@@ -21,7 +21,7 @@
 	$: id = node.id;
 	$: editable = node.editable;
 	$: resizable = node.resizable;
-
+	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
 
 	const graph: Graph = getContext<Graph>('graph');
@@ -124,7 +124,7 @@
 	function handleNodeTouch(e: TouchEvent) {
 		if (e.touches.length > 1) return;
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($locked) return;
+		if ($locked || $nodeLock) return;
 		//e.stopPropagation();
 		e.preventDefault();
 		const dimensions = graph.dimensions;
@@ -152,7 +152,7 @@
 		dispatch('nodeClicked', { node, e });
 
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($locked) return;
+		if ($locked || $nodeLock) return;
 
 		const { button } = e;
 

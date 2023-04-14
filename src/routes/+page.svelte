@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor } from '$lib';
+	import { Svelvet, Controls, Minimap, Node, Group, Anchor, Edge } from '$lib';
 	import TestComponent from '../test-components/TestComponent.svelte';
 	import CustomControls from '../test-components/CustomControls.svelte';
 	import MyNode from '../test-components/MyNode.svelte';
 	import { getRandomColor } from '$lib/utils';
 	import type { CSSColorString, NodeConfig } from '$lib/types';
+	import CustomEdge from '../test-components/CustomEdge.svelte';
+	import CustomEdge2 from '../test-components/CustomEdge2.svelte';
+	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
@@ -54,17 +57,14 @@
 </script>
 
 <body>
-	<button on:click={addNode}>ADD NODE</button>
 	<div class="wrapper">
-		<Svelvet width={500} height={500} theme="dark" initialZoom={0.6}>
+		<Svelvet width={800} height={500} theme="dark">
 			{#each nodes as node}
 				<Node {...node} />
 			{/each}
-			<Node>
-				<div>Helo</div>
-			</Node>
-			<Controls slot="controls" corner="NW" />
-			<Minimap mapColor="purple" nodeColor="white" slot="minimap" />
+			<MyNode />
+			<TestComponent />
+			<Minimap slot="minimap" />
 		</Svelvet>
 	</div>
 </body>

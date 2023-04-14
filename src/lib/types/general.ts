@@ -65,6 +65,8 @@ export type StrictDimenionValue =
 	| VwValue
 	| VhValue;
 
+export type XorY = 'x' | 'y';
+
 export type CSSColorString =
 	| NamedColors
 	| `#${string}`

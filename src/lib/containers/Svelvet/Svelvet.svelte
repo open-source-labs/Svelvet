@@ -6,16 +6,18 @@
 		NodeConfig,
 		NodeStore,
 		Theme,
-		CSSColorString
+		CSSColorString,
+		EdgeStyle
 	} from '$lib/types';
 	import { populateStore } from '$lib/utils';
 	import { createNode, createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
+	import { reloadStore } from '$lib/utils/savers/reloadStore';
 
 	export let mermaid = '';
 	export let theme: Theme = 'light';
-	export let graphId: number | string = 0;
+	export let id: number | string = 0;
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
 	export let initialZoom = 1;
@@ -27,6 +29,8 @@
 	export let minimap = false;
 	export let controls = false;
 	export let selectionColor: CSSColorString = 'lightblue';
+	export let edgeStyle: EdgeStyle = 'bezier';
+	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -35,17 +39,16 @@
 
 	setContext('snapTo', snapTo);
 	setContext('theme', theme);
-	import { reloadStore } from '$lib/utils/savers/reloadStore';
+	setContext('edgeStyle', edgeStyle);
+	setContext('graphEdge', edge);
+
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
 		if (stateObject) {
-			console.log('i found something');
-
 			graph = reloadStore(stateObject);
-			console.log(graph);
 			graphStore.add(graph, graph.id);
 		} else {
-			let graphKey: GraphKey = `G-${graphId || graphStore.count() + 1}`;
+			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
 			graph = createGraph(graphKey, { initialZoom, direction, editable, locked });
 
@@ -75,7 +78,6 @@
 	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor}>
 		<slot />
 		<slot name="minimap" slot="minimap" />
-
 		<slot name="controls" slot="controls" zoomIn={'hello'} />
 	</Graph>
 {/if}

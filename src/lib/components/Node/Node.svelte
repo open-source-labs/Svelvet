@@ -33,6 +33,7 @@
 	export let zIndex = 1;
 	export let editable = false;
 	export let locked = false;
+	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
@@ -43,10 +44,8 @@
 		const groupBox = graph.groupBoxes.get(group);
 
 		const nodeCount = graph.nodes.count() + 1;
-		console.log({ nodeCount });
-		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
 
-		console.log({ foundNode });
+		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
 
 		if (!foundNode) {
 			const config: NodeConfig = {
@@ -72,6 +71,7 @@
 				direction,
 				locked
 			};
+			if (edge) config.edge = edge;
 			node = createNode(config);
 		} else {
 			node = foundNode;
@@ -123,10 +123,10 @@
 	$: if (node) {
 		node.zIndex.set(zIndex);
 	}
-	$: if (node) {
-		node.position.x.set(position.x);
-		node.position.y.set(position.y);
-	}
+	// $: if (node) {
+	// 	node.position.x.set(position.x);
+	// 	node.position.y.set(position.y);
+	// }
 	$: if (node) {
 		node.inputs.set(inputs);
 	}
@@ -137,7 +137,7 @@
 
 {#if node && $nodes[node.id]}
 	<InternalNode let:selected let:grabHandle on:nodeClicked {node}>
-		<slot {selected} {grabHandle}>
+		<slot {selected} {grabHandle} {node}>
 			<DefaultNode {selected} {grabHandle} on:connection on:disconnection />
 		</slot>
 	</InternalNode>

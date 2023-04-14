@@ -3,16 +3,27 @@
 	import Edge from '$lib/components/Edge/Edge.svelte';
 </script>
 
-<Edge let:path let:destroy strokeColor="red" strokeWidth={4} animate={false}>
-	<button slot="label" on:click={destroy}>
-		<p>ANCHOREDGE</p>
-	</button>
+<Edge let:path strokeColor="green">
+	<div class="my-label" slot="label">
+		<p>NODE EDGE</p>
+	</div>
 </Edge>
 
 <style>
 	path {
-		stroke: rgb(246, 231, 20);
+		stroke: rgb(20, 246, 80);
 		stroke-width: 6px;
+	}
+
+	.my-label {
+		background-color: rgb(172, 2, 2);
+		width: 150px;
+		height: 100px;
+		border-radius: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		/* pointer-events: auto; */
 	}
 
 	button {

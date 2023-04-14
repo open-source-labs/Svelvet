@@ -10,11 +10,12 @@
 	const theme = getContext<Theme>('theme');
 
 	export let width = 100;
-	export let height = 100;
+	export let height = width;
 	export let mapColor = THEMES[theme].map;
 	export let nodeColor: CSSColorString | null = null;
 	export let borderColor: CSSColorString = THEMES[theme].border;
 	export let corner: Corner = 'SE';
+	export let hideable = false;
 
 	const buffer = 0.9;
 	const maxWidth = width * buffer;
@@ -70,8 +71,9 @@
 		width: ${windowWidth * scaledBoundsWidth}px;
 		height: ${windowHeight * scaledBoundsHeight}px;`;
 
-	$: landscape = boundsRatio > minimapRatio;
+	$: landscape = boundsRatio >= minimapRatio;
 	$: boundsScale = landscape ? maxWidth / boundsWidth : maxHeight / boundsHeight;
+
 	$: windowLeftPx = (width - scaledBoundsWidth) / 2;
 	$: windowTopPx = (height - scaledBoundsHeight) / 2;
 
@@ -114,6 +116,7 @@
 					{nodeColor}
 					hidden={$hidden.has(node)}
 					{toggleHidden}
+					{hideable}
 				/>
 			{/if}
 		{/each}

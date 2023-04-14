@@ -7,6 +7,7 @@
 	export let top: number;
 	export let left: number;
 	export let nodeColor: CSSColorString | null = null;
+	export let hideable: boolean;
 
 	const { position, dimensions, bgColor, borderRadius } = node;
 	const { width, height } = dimensions;
@@ -16,7 +17,10 @@
 </script>
 
 <button
-	on:click={() => toggleHidden(node)}
+	on:click={() => {
+		if (!hideable) return;
+		toggleHidden(node);
+	}}
 	class:hidden
 	class="minimap-node"
 	style:z-index={$zIndex}
@@ -26,15 +30,19 @@
 	style:height="{$height}px"
 	style:top="{$y - top}px"
 	style:left="{$x - left}px"
+	class:hideable
 />
 
 <style>
 	.minimap-node {
 		position: absolute;
-		cursor: pointer;
 		border: none;
 	}
 	.hidden {
 		opacity: 25%;
+	}
+
+	.hideable {
+		cursor: pointer;
 	}
 </style>

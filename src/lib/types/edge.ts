@@ -48,3 +48,15 @@ export interface EdgeLabelConfig {
 	};
 	borderRadius?: number;
 }
+
+export type StepDirection = 'left' | 'right' | 'up' | 'down';
+
+export type ArcStringKey =
+	| 'leftup'
+	| 'leftdown'
+	| 'rightup'
+	| 'rightdown'
+	| 'upleft'
+	| 'upright'
+	| 'downleft'
+	| 'downright';

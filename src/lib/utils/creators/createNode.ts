@@ -18,7 +18,8 @@ export function createNode(userNode: NodeConfig): Node {
 		zIndex,
 		position,
 		selectionColor,
-		headerColor
+		headerColor,
+		edge
 	} = userNode;
 	const { bgColor, borderColor, borderRadius, textColor, locked, group } = userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
@@ -55,6 +56,7 @@ export function createNode(userNode: NodeConfig): Node {
 		ariaLabel: `Node ${id}`,
 		header: writable(header ? true : false),
 		collapsed: writable(false),
+		edge: edge || null,
 		visible: writable(true),
 		collapsible: writable(true),
 		borderRadius: writable(borderRadius),

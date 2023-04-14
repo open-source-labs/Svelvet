@@ -9,7 +9,8 @@
 		NodeKey,
 		OutputStore,
 		InputStore,
-		Theme
+		Theme,
+		EdgeStyle
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
@@ -21,28 +22,31 @@
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
 	import { THEMES } from '$lib/constants/themes';
+
 	const dispatch = createEventDispatcher();
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
 	const theme = getContext<Theme>('theme');
+	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
 	export let bgColor = THEMES[theme].anchor;
 
-	export let key: string | number | null = null;
 	export let id: string | number = 0;
 	export let input: boolean = false;
 	export let output: boolean = false;
-	export let inputsStore: InputStore | null = null;
-	export let outputStore: OutputStore | null = null;
 	export let multiple = output ? true : input ? false : true;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
-
 	export let dynamic = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let edgeStyle: EdgeStyle = 'bezier';
 	export let connections: [string, string][] = [];
+
+	export let inputsStore: InputStore | null = null;
+	export let key: string | number | null = null;
+	export let outputStore: OutputStore | null = null;
 
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
@@ -54,6 +58,7 @@
 	let previousConnectionCount = 0;
 	let type: InputType = input === output ? null : input ? 'input' : 'output';
 
+	$: nodeEdge = node.edge;
 	$: anchors = node.anchors;
 	$: edges = graph.edges;
 	$: scale = graph.transforms.scale;
@@ -85,7 +90,7 @@
 			anchorPosition,
 			{ width, height },
 			inputsStore || outputStore || null,
-			edge,
+			edge || nodeEdge || graphEdge || null,
 			type,
 			direction,
 			dynamic
@@ -472,7 +477,7 @@
 	}
 
 	.hovering {
-		background-color: rgb(123, 123, 123);
+		background-color: rgb(213, 22, 22);
 	}
 	.output {
 		border-color: white;
