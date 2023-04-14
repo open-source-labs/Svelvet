@@ -16,15 +16,21 @@
 		const { node } = e.detail;
 		node.label.set('Disconnected');
 	}
+
+	const flowConfig = {Aprops: {bgColor: 'blue'}, Bprops: {width: 600}}
+
+	const mermaid = `A|Default|Aprops --> B|Default|Bprops
+	A --> K
+	B --> C & D
+	D --> F
+	C --> L & X`;
+
+
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={500} height={500} theme="dark" initialZoom={0.6} controls>
-			<Node />
-			<Node label="Demo Node" TD />
-			<Node id="node-id" inputs={2} />
-			<Node bgColor="red" inputs={10} outputs={5} height={200} position={{ x: 100, y: 100 }} />
+		<Svelvet {mermaid} {flowConfig} width={500} height={500} theme="dark" initialZoom={0.6} controls>
 			<Minimap slot="minimap" corner="NE" />
 			<CustomControls slot="controls" />
 		</Svelvet>

@@ -4,7 +4,7 @@
 	import type { Graph, Node, Theme } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateRelativeCursor, captureGroup } from '$lib/utils';
+	import { calculateRelativeCursor, captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -54,13 +54,15 @@
 		// And reassign the width store the max value of
 		// The initial dom dimensions, the min dimenions calculated, or the initial store value
 		// Spend more time looking into this and see if there is a more obvious fix
-		// const nodeRect = DOMnode.getBoundingClientRect();
-		// [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		// // $widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
-		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		const nodeRect = DOMnode.getBoundingClientRect();
+		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
+		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		DOMnode.style.width = $widthStore.toString() + 'px';
+		DOMnode.style.height = $heightStore.toString() + 'px';
 		// $x = nodeRect.x;
 		// $y = nodeRect.y;
-		//absolute = true;
+		// absolute = true;
 	});
 
 	onDestroy(() => {

@@ -32,6 +32,8 @@ const edgeRegex = /[-=~]*>(?:\s*\|(.+?)\|)?/g;
 export const flowChartParser = (mermaid: string) => {
 	const lines = mermaid.split('\n');
 
+	console.log('lines', lines);
+
 	const flowChart: FlowChart = { parentNodes: [], nodeList: {} };
 	// parse mermaid string line by line
 	for (const line of lines) {

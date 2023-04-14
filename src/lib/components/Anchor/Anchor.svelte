@@ -27,6 +27,7 @@
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
 	const theme = getContext<Theme>('theme');
+	const childNodes = getContext<Array<[string, string]>>('childNodes');
 
 	export let bgColor = THEMES[theme].anchor;
 
@@ -42,7 +43,8 @@
 
 	export let dynamic = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
-	export let connections: [string, string][] = [];
+	export let connections: [string, string][] = input || !childNodes?.length ? [] : childNodes;
+	console.log('connect', childNodes);
 
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;

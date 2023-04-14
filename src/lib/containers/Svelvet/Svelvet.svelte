@@ -5,6 +5,7 @@
 	import { createNode, createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
+	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 
 	export let mermaid = '';
 	export let theme: Theme = 'light';
@@ -19,6 +20,7 @@
 	export let height = 0;
 	export let minimap = false;
 	export let controls = false;
+	export let mermaidConfig: {[key: string]: {[key: string]: any}};
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -39,12 +41,7 @@
 			nodeStore = graph.nodes;
 		}
 
-		// if (mermaid.length) {
-		// 	const mermaidNodes = flowChartParser(mermaid);
-		// 	const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
-		// 	populateStore(Object.values(createdNodes), graph);
-		// 	nodeStore = graph.nodes;
-		// }
+
 
 		graphStore.add(graph, graphKey);
 	});
@@ -57,6 +54,9 @@
 
 {#if graph}
 	<Graph {width} {height} {minimap} {graph} {controls}>
+		{#if mermaid.length}
+			<FlowChart {mermaid} {flowConfig} ></FlowChart>
+		{/if}
 		<slot />
 		<slot name="minimap" slot="minimap" />
 

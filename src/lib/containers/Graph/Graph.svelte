@@ -32,7 +32,7 @@
 	export let controls = false;
 	export let fixedZoom = false;
 	export let disableSelection = false;
-	export let ZOOM_INCREMENT = 0.01;
+	export let ZOOM_INCREMENT = 0.1;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
 	export let MAX_SCALE = 3;
@@ -279,7 +279,7 @@
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const newScale = calculateZoom($scale, deltaY, ZOOM_INCREMENT);
+		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
 
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
