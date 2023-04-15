@@ -33,7 +33,7 @@
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let disableSelection = false;
-	export let mermaidConfig: {[key: string]: {[key: string]: any}};
+	export let mermaidConfig: Record<string, NodeConfig> = {};
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -80,10 +80,11 @@
 {#if graph}
 	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor} {disableSelection}>
 		{#if mermaid.length}
-			<FlowChart {mermaid} {mermaidConfig} ></FlowChart>
+			<FlowChart {mermaid} {mermaidConfig} />
 		{/if}
 		<slot />
 		<slot name="minimap" slot="minimap" />
-		<slot name="controls" slot="controls" zoomIn={'hello'} />
+		<slot name="controls" slot="controls" />
+		<slot name="background" slot="background" />
 	</Graph>
 {/if}

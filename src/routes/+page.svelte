@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor } from '$lib';
+	import { Svelvet, Controls, Minimap, Node, Group, Anchor, type NodeConfig } from '$lib';
 	import TestComponent from '../test-components/TestComponent.svelte';
 	import CustomControls from '../test-components/CustomControls.svelte';
 	import MyNode from '../test-components/MyNode.svelte';
+	import Background from '$lib/containers/Background/Background.svelte';
+	import CustomEdge from '../test-components/CustomEdge.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
@@ -17,22 +19,26 @@
 		node.label.set('Disconnected');
 	}
 
-	const mermaidConfig = {Aprops: {bgColor: 'blue'}, Bprops: {width: 600}}
+	const mermaidConfig: Record<string, NodeConfig> = {
+		A: { bgColor: 'blue' },
+		B: { dimensions: { width: 600, height: 100 } },
+		C: { dimensions: { width: 100, height: 600 } }
+	};
 
-	const mermaid = `A|Default|Aprops --> B|Default|Bprops
-	A --> K
-	B --> C & D
-	D --> F
-	C --> L & X`;
-
-
+	const mermaid = `Dad & Mom --> Child
+	Child --> Frank`;
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet {mermaid} {mermaidConfig} width={500} height={500} theme="dark" initialZoom={0.6} controls>
-			<Minimap slot="minimap" corner="NE" />
-			<CustomControls slot="controls" />
+		<Svelvet width={800} theme="dark" height={500} initialZoom={0.6} edge={CustomEdge}>
+			<Group width={500} height={600} groupName="us" position={{ x: 0, y: 0 }}>
+				<Node />
+				<MyNode />
+			</Group>
+			<Minimap width={300} height={100} slot="minimap" corner="NE" />
+			<Controls slot="controls" horizontal />
+			<Background slot="background" />
 		</Svelvet>
 	</div>
 </body>

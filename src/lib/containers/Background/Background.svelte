@@ -8,12 +8,13 @@
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
 
-	export let style: BackgroundStyles;
+	export let style: BackgroundStyles = 'dots';
 	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
 	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
 
 	export let bgColor = THEMES[theme].map;
 	export let dotColor = THEMES[theme].dots;
+
 	// Import relevant data from store
 	const { transforms } = graph;
 	const { scale, translation } = transforms;

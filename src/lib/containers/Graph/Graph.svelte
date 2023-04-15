@@ -360,11 +360,12 @@
 		{/if}
 		<slot />
 	</GraphRenderer>
-	<Background --background-color="var(--{theme}-background)" {style} />
+
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	<slot name="minimap" />
 	<slot name="controls" />
+	<slot name="background" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
