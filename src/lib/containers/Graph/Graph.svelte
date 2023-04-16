@@ -29,7 +29,6 @@
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
-	export let style: BackgroundStyles = 'dots';
 	export let snapTo = 1;
 	export let minimap = false;
 	export let controls = false;
@@ -41,6 +40,7 @@
 	export let MAX_SCALE = 3;
 	export let MIN_SCALE = 0.2;
 	export let selectionColor: CSSColorString;
+	export let backgroundExists: boolean;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -360,12 +360,15 @@
 		{/if}
 		<slot />
 	</GraphRenderer>
-
+	{#if backgroundExists}
+		<slot name="background" />
+	{:else}
+		<Background />
+	{/if}
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
 	<slot name="minimap" />
 	<slot name="controls" />
-	<slot name="background" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
@@ -389,7 +392,7 @@
 	}
 	.svelvet-wrapper:focus {
 		outline: none;
-		box-shadow: 0 0 0 2px blue;
+		box-shadow: 0 0 0 2px rgb(59, 102, 232);
 	}
 
 	:root {

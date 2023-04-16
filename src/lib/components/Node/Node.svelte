@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { getContext, setContext, onMount } from 'svelte';
-	import type { Graph, Node as NodeType, NodeConfig, Theme, GroupKey } from '$lib/types';
+	import type {
+		Graph,
+		Node as NodeType,
+		NodeConfig,
+		Theme,
+		GroupKey,
+		Connections
+	} from '$lib/types';
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
@@ -36,10 +43,10 @@
 	export let editable = false;
 	export let locked = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
-	export let childNodes: Array<[string, string]> = [];
+	export let connections: Connections = [];
 
-	setContext('childNodes', childNodes);
-	setContext<Array<[string, string]>>('childNodes', childNodes);
+	setContext('childNodes', connections);
+	setContext<Connections>('childNodes', connections);
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');

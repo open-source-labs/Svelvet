@@ -51,12 +51,4 @@ export interface EdgeLabelConfig {
 
 export type StepDirection = 'left' | 'right' | 'up' | 'down';
 
-export type ArcStringKey =
-	| 'leftup'
-	| 'leftdown'
-	| 'rightup'
-	| 'rightdown'
-	| 'upleft'
-	| 'upright'
-	| 'downleft'
-	| 'downright';
+export type ArcKey = '1001' | '0110' | '100-1' | '0-110' | '-1001' | '0110' | '-100-1' | '0-110';

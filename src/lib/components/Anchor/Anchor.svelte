@@ -10,7 +10,8 @@
 		OutputStore,
 		InputStore,
 		Theme,
-		EdgeStyle
+		EdgeStyle,
+		Connections
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
@@ -32,7 +33,6 @@
 	const childNodes = getContext<Array<[string, string]>>('childNodes');
 	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
-
 	export let bgColor = THEMES[theme].anchor;
 
 	export let id: string | number = 0;
@@ -46,9 +46,19 @@
 	export let inputsStore: InputStore | null = null;
 	export let key: string | number | null = null;
 	export let outputStore: OutputStore | null = null;
-	export let connections: [string, string][] = input || !childNodes?.length ? [] : childNodes;
+	export let connections: Connections = input || !childNodes?.length ? [] : childNodes;
 
-
+	function convertConnections(array: Connections): Array<[string, string]> {
+		return array.map((connection) => {
+			if (typeof connection === 'string' || typeof connection === 'number') {
+				return [connection.toString(), '1'];
+			} else if (Array.isArray(connection)) {
+				return [connection[0].toString(), connection[1].toString()];
+			} else {
+				throw new Error('Invalid connection type');
+			}
+		});
+	}
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
 	let anchorWidth: number;
@@ -394,7 +404,8 @@
 	}
 
 	function checkConnections() {
-		connections.forEach((connection) => {
+		const converted = convertConnections(connections);
+		converted.forEach((connection) => {
 			const [node, nodeAnchor] = connection;
 			const nodekey: NodeKey = `N-${node}`;
 			const connectedNode = graph.nodes.get(nodekey);

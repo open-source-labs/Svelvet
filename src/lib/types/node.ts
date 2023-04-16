@@ -85,3 +85,5 @@ export type Properties = Record<string, Writable<Parameter>>;
 export type WritableNode = Writable<Node>;
 
 export type Parameter = number | string | object | boolean;
+
+export type Connections = Array<[string | number, string | number] | string | number>;

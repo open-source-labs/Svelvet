@@ -75,10 +75,20 @@
 		const nodeObjects = nodes.map((node) => createNode(node));
 		return nodeObjects;
 	}
+	$: backgroundExists = $$slots.background;
 </script>
 
 {#if graph}
-	<Graph {width} {height} {minimap} {graph} {controls} {selectionColor} {disableSelection}>
+	<Graph
+		{width}
+		{height}
+		{backgroundExists}
+		{minimap}
+		{graph}
+		{controls}
+		{selectionColor}
+		{disableSelection}
+	>
 		{#if mermaid.length}
 			<FlowChart {mermaid} {mermaidConfig} />
 		{/if}

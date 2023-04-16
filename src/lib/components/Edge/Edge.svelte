@@ -5,9 +5,10 @@
 		EdgeStyle,
 		Graph,
 		Theme,
-		WritableEdge
+		WritableEdge,
+		XYPair
 	} from '$lib/types';
-	import type { StepDirection, ArcStringKey } from '$lib/types';
+	import type { ArcKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
@@ -16,7 +17,6 @@
 	import { calculateStepPath } from '$lib/utils/calculators';
 	import { onMount, onDestroy } from 'svelte';
 	import { directionVectors } from '$lib/constants/math';
-	import { createEdge } from '$lib/utils';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
@@ -48,8 +48,8 @@
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
 	let renderLabel = $$slots.label || label !== ''; // Boolean that determines whether or not to render the label
 
-	const cornerRadiusConstant = 8;
-	const stepBuffer = 20; // This is the buffer around the nodes that a step path should take
+	const cornerRadius = 0;
+	const stepBuffer = 40; // This is the buffer around the nodes that a step path should take
 
 	// The coordinates of the source and target anchors
 	// If there is no source or target, use the cursor position
@@ -142,59 +142,81 @@
 
 	$: if (step && edgeKey !== 'cursor') {
 		cornerRadiusX = Math.min(
-			Math.min(Math.abs(deltaY), Math.abs(deltaY)) / 2,
-			cornerRadiusConstant
+			Math.min(Math.abs(deltaX - 80), Math.abs(deltaX - 80)) / 2,
+			cornerRadius
 		);
-		cornerRadiusY = Math.min(
-			Math.min(Math.abs(deltaY), Math.abs(deltaY)) / 2,
-			cornerRadiusConstant
-		);
+		cornerRadiusY = Math.min(Math.min(Math.abs(deltaY)) / 2, cornerRadius);
 
 		const arcStrings = {
-			rightdown: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 ${cornerRadiusX} ${cornerRadiusY}`,
-			downright: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 ${cornerRadiusX} ${cornerRadiusY}`,
-			rightup: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 ${cornerRadiusX} -${cornerRadiusY}`,
-			upright: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 ${cornerRadiusX} -${cornerRadiusY}`,
-			leftdown: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 -${cornerRadiusX} ${cornerRadiusY}`,
-			downleft: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 -${cornerRadiusX} ${cornerRadiusY}`,
-			leftup: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 1 -${cornerRadiusX} -${cornerRadiusY}`,
-			upleft: `a ${cornerRadiusX} ${cornerRadiusY} 0 0 0 -${cornerRadiusX} -${cornerRadiusY}`
+			'1001': `a ${cornerRadius} ${cornerRadius} 0 0 1 ${cornerRadius} ${cornerRadius}`,
+			'0110': `a ${cornerRadius} ${cornerRadius} 0 0 0 ${cornerRadius} ${cornerRadius}`,
+			'100-1': `a ${cornerRadius} ${cornerRadius} 0 0 0 ${cornerRadius} -${cornerRadius}`,
+			'0-110': `a ${cornerRadius} ${cornerRadius} 0 0 1 ${cornerRadius} -${cornerRadius}`,
+			'-1001': `a ${cornerRadius} ${cornerRadius} 0 0 0 -${cornerRadius} ${cornerRadius}`,
+			'01-10': `a ${cornerRadius} ${cornerRadius} 0 0 1 -${cornerRadius} ${cornerRadius}`,
+			'-100-1': `a ${cornerRadius} ${cornerRadius} 0 0 1 -${cornerRadius} -${cornerRadius}`,
+			'0-1-10': `a ${cornerRadius} ${cornerRadius} 0 0 0 -${cornerRadius} -${cornerRadius}`
 		};
 
-		function buildArcStringKey(a: StepDirection, b: StepDirection): ArcStringKey {
-			return `${a}${b}` as ArcStringKey;
-		}
+		const vectorMap = {
+			north: { x: 0, y: -1 },
+			south: { x: 0, y: 1 },
+			east: { x: 1, y: 0 },
+			west: { x: -1, y: 0 },
+			self: { x: 0, y: 0 }
+		};
 
-		const { steps, distance } = calculateStepPath(
-			$sourceDirection,
-			$targetDirection,
-			deltaX,
-			deltaY,
-			stepBuffer
-		);
+		const sourceObject = { x: $sourceX, y: $sourceY, direction: vectorMap[$sourceDirection] };
+		const targetObject = { x: $targetX, y: $targetY, direction: vectorMap[$targetDirection] };
 
-		path = steps.reduce((acc, curr, index) => {
-			let stepDistanceString = '';
+		const steps = calculateStepPath(sourceObject, targetObject, stepBuffer);
+
+		path = steps.reduce((string, step, index) => {
 			let arcString = '';
-			let multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
+			const multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
+			const directionX = Math.sign(step.x);
+			const directionY = Math.sign(step.y);
 
-			if (curr === 'left') {
-				stepDistanceString += ` l ${-distance[index] + multiplier * cornerRadiusX} 0 `;
-			} else if (curr === 'right') {
-				stepDistanceString += ` l ${distance[index] - multiplier * cornerRadiusX} 0 `;
-			} else if (curr === 'up') {
-				stepDistanceString += ` l 0 ${-distance[index] + multiplier * cornerRadiusY} `;
-			} else if (curr === 'down') {
-				stepDistanceString += ` l 0 ${distance[index] - multiplier * cornerRadiusY} `;
+			let xStep: number;
+			let yStep: number;
+
+			const customRadiusX = Math.min(cornerRadius, Math.abs(step.x));
+			const customRadiusY = Math.min(cornerRadius, Math.abs(step.y));
+			if (cornerRadius) {
+				if (step.x !== 0) {
+					xStep = step.x - 0 * multiplier * directionX;
+				} else {
+					xStep = step.x;
+				}
+
+				if (step.y !== 0) {
+					yStep = step.y - 0 * multiplier * directionY;
+				} else {
+					yStep = step.y;
+				}
+			} else {
+				xStep = step.x;
+				yStep = step.y;
 			}
 
+			const stepDistanceString = ` l ${xStep} ${yStep} `;
+
 			if (index < steps.length - 1) {
-				const arcStringKey = buildArcStringKey(curr, steps[index + 1]);
+				const arcStringKey = buildArcStringKey(step, steps[index + 1]);
 				arcString = arcStrings[arcStringKey] || '';
 			}
 
-			return acc + stepDistanceString + arcString;
+			return string + stepDistanceString + arcString;
 		}, `M ${$sourceX}, ${$sourceY}`);
+
+		function buildArcStringKey(a: XYPair, b: XYPair): ArcKey {
+			const aX = Math.sign(a.x).toString();
+			const aY = Math.sign(a.y).toString();
+			const bX = Math.sign(b.x).toString();
+			const bY = Math.sign(b.y).toString();
+
+			return `${aX}${aY}${bX}${bY}` as ArcKey;
+		}
 	}
 </script>
 
@@ -209,24 +231,31 @@
 	/>
 	<slot {path} {destroy} />
 	{#if $$slots.label || label}
-		<foreignObject x={pathMidPointX} y={pathMidPointY} width="300" height="300">
-			<div role="note" class="label-wrapper">
+		<foreignObject x={pathMidPointX} y={pathMidPointY}>
+			<span class="label-wrapper">
 				<slot name="label">
 					<div class="default-label" style:background-color={labelColor} style:color={textColor}>
 						{label}
 					</div>
 				</slot>
-			</div>
+			</span>
 		</foreignObject>
 	{/if}
 {/if}
 
 <style>
 	.label-wrapper {
-		transform: translate(-50%, -50%);
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width: 100%;
+		height: 100%;
+	}
+
+	foreignObject {
+		width: 100%;
+		height: 100%;
+		transform: translate(-50%, -50%);
 	}
 
 	.animate {

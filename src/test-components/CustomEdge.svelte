@@ -3,9 +3,9 @@
 </script>
 
 <Edge let:path let:destroy color="red" width={4}>
-	<button slot="label" on:click={destroy}>
+	<!-- <button slot="label" on:click={destroy}>
 		<p>ANCHOREDGE</p>
-	</button>
+	</button> -->
 </Edge>
 
 <style>

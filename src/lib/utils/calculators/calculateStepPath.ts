@@ -1,88 +1,194 @@
-import type { Direction, StepDirection } from '$lib/types';
+import type { XYPair } from '$lib/types';
+
+function calculateDotProduct(vector1: XYPair, vector2: XYPair) {
+	console.log(vector1, vector2);
+	const product = vector1.x * vector2.x + vector1.y * vector2.y;
+	console.log(product);
+	return product;
+}
+
+export interface VectorPlusPosition extends XYPair {
+	direction: XYPair;
+}
 export function calculateStepPath(
-	sourceDirection: Direction,
-	targetDirection: Direction,
-	deltaX: number,
-	deltaY: number,
-	stepBuffer: number
-): { steps: StepDirection[]; distance: number[] } {
-	const steps: StepDirection[] = [];
-	const distance = [];
-	const directionMap: Record<Direction, StepDirection> = {
-		north: 'up',
-		south: 'down',
-		east: 'right',
-		west: 'left',
-		self: 'right'
-	};
+	source: VectorPlusPosition,
+	target: VectorPlusPosition,
+	buffer: number
+) {
+	const steps = [];
 
-	const sourceSide: StepDirection = directionMap[sourceDirection];
-	const targetSide: StepDirection = directionMap[targetDirection];
-	const axis = ['left', 'right'].includes(sourceSide) ? 'x' : 'y';
-	const oppositeAxis = axis === 'x' ? 'y' : 'x';
+	const deltaX = target.x - source.x;
+	const deltaY = target.y - source.y;
 
-	const oppositeSide = (side: StepDirection): StepDirection =>
-		({ left: 'right', right: 'left', up: 'down', down: 'up' }[side] as StepDirection);
-	const getSign = (side: StepDirection) => (['left', 'up'].includes(side) ? -1 : 1);
+	const sameDirection = areVectorsEqual(source.direction, target.direction);
+	const orthogonal = calculateDotProduct(source.direction, target.direction) === 0;
+	const crossing = areCrossing(source, target);
 
-	const oppositeSourceSide = oppositeSide(sourceSide);
-	const oppositeTargetSide = oppositeSide(targetSide);
-	const targetAxis = ['left', 'right'].includes(targetSide) ? 'x' : 'y';
-	const targetSign = getSign(targetSide);
-	const sourceSign = getSign(sourceSide);
-	const direction = { x: deltaX, y: deltaY };
+	const oppositeSource = multiply(source.direction, -1, -1);
+	const oppositeTarget = multiply(target.direction, -1, -1);
+	const perpendicularSource = { x: source.direction.y, y: source.direction.x };
 
-	const parallel = axis === targetAxis;
+	const sourceDirectionDelta = multiply(
+		source.direction,
+		deltaX - buffer * source.direction.x * (orthogonal ? 1 : sameDirection ? 0 : 2),
+		deltaY - buffer * source.direction.y * (orthogonal ? 1 : sameDirection ? 0 : 2)
+	);
+	const targetDirectionDelta = multiply(
+		target.direction,
+		deltaX + buffer * target.direction.x * (orthogonal ? 1 : sameDirection ? 0 : 2),
+		deltaY + buffer * target.direction.y * (orthogonal ? 1 : sameDirection ? 0 : 2)
+	);
 
-	const oppositeSource = direction[axis] * sourceSign < 0;
-	const oppositeTarget = direction[targetAxis] * targetSign > 0;
+	const sourceReaching =
+		Math.sign(sourceDirectionDelta.x) === -1 || Math.sign(sourceDirectionDelta.y) === -1;
+	const targetReaching =
+		Math.sign(targetDirectionDelta.x) === 1 || Math.sign(targetDirectionDelta.y) === 1;
 
-	const initialDirection =
-		axis === 'x' ? (deltaY > 0 ? 'down' : 'up') : deltaX > 0 ? 'right' : 'left';
+	const sourceBuffer = multiply(source.direction, buffer, buffer);
+	const targetBuffer = multiply(oppositeTarget, buffer, buffer);
 
-	steps.push(sourceSide);
-	if (!oppositeTarget) {
-		distance.push(oppositeSource ? stepBuffer : Math.abs(direction[axis]) / (parallel ? 2 : 1));
-		steps.push(initialDirection);
-		distance.push(
-			Math.abs(direction[oppositeAxis]) / (parallel ? 1 : oppositeSource ? 2 : 1) +
-				stepBuffer * (parallel ? 0 : 1)
-		);
+	const fullSource = multiply(source.direction, deltaX, deltaY);
+	const fullTarget = multiply(oppositeTarget, Math.abs(deltaX), Math.abs(deltaY));
 
-		if (parallel) {
-			steps.push(sourceSide);
-			distance.push(Math.abs(direction[axis]) / 2);
-		} else if (oppositeSource) {
-			steps.push(oppositeSourceSide);
-			distance.push(Math.abs(direction[axis]) + stepBuffer);
-			steps.push(oppositeTargetSide);
-			distance.push(Math.abs(direction[oppositeAxis]) / 2);
+	const halfSource = multiply(source.direction, deltaX / 2, deltaY / 2);
+	const halfTarget = multiply(oppositeTarget, Math.abs(deltaX) / 2, Math.abs(deltaY) / 2);
+
+	const fullDelta = multiply(perpendicularSource, deltaX, deltaY);
+
+	const sourceFacingTarget = !crossing && !targetReaching && !sourceReaching;
+
+	if (sourceReaching) steps.push(sourceBuffer);
+
+	if (crossing && !targetReaching && !sourceReaching) {
+		steps.push(fullSource);
+		steps.push(fullTarget);
+	} else if (sameDirection) {
+		if (!sourceReaching) {
+			steps.push(
+				multiply(
+					source.direction,
+					buffer + (deltaX > 0 ? deltaX : 0),
+					buffer + (deltaY > 0 ? deltaY : 0)
+				)
+			);
 		}
-	} else {
-		distance.push(
-			parallel ? stepBuffer : oppositeSource ? stepBuffer : Math.abs(direction[axis]) / 2
-		);
-		steps.push(initialDirection);
-		distance.push(
-			Math.abs(direction[oppositeAxis]) / (parallel ? 2 : 1) + (parallel ? 0 : stepBuffer)
-		);
-
-		steps.push(oppositeSource ? oppositeSourceSide : sourceSide);
-		distance.push(
-			Math.abs(direction[axis]) / (oppositeSource ? 1 : 2) +
-				stepBuffer * (oppositeSource && parallel ? 2 : oppositeSource ? 1 : 0)
-		);
-
-		if (parallel) {
-			steps.push(initialDirection);
-			distance.push(Math.abs(direction[oppositeAxis]) / 2);
-			steps.push(sourceSide);
-			distance.push(stepBuffer);
+		steps.push(fullDelta);
+		if (!targetReaching) {
+			steps.push(
+				multiply(
+					oppositeTarget,
+					buffer + (deltaX > 0 ? 0 : Math.abs(deltaX)),
+					buffer + (deltaY > 0 ? 0 : Math.abs(deltaY))
+				)
+			);
+		}
+	} else if (sourceFacingTarget) {
+		steps.push(halfSource);
+		steps.push(fullDelta);
+		steps.push(halfTarget);
+	} else if (sourceReaching && targetReaching) {
+		if (orthogonal) {
+			steps.push(
+				multiply(
+					target.direction,
+					Math.abs(deltaX) < buffer * 2
+						? target.direction.x * (deltaX + target.direction.x * buffer)
+						: Math.abs(deltaX) + buffer,
+					Math.abs(deltaY) < buffer * 2
+						? target.direction.y * (deltaY + target.direction.y * buffer)
+						: Math.abs(deltaY) + buffer
+				)
+			);
+			steps.push(
+				multiply(
+					oppositeSource,
+					deltaX < 0 ? Math.abs(deltaX) + buffer : buffer - deltaX,
+					deltaY < 0 ? Math.abs(deltaY) + buffer : buffer - deltaY
+				)
+			);
 		} else {
-			steps.push(oppositeTargetSide);
-			distance.push(stepBuffer);
+			steps.push(multiply(perpendicularSource, deltaX / 2, deltaY / 2));
+			steps.push(
+				multiply(
+					target.direction,
+					deltaX > 0 ? -(deltaX - buffer * 2) : Math.abs(deltaX) + buffer * 2,
+					deltaY > 0 ? -(deltaY - buffer * 2) : Math.abs(deltaY) + buffer * 2
+				)
+			);
+			steps.push(multiply(perpendicularSource, deltaX / 2, deltaY / 2));
 		}
+	} else if (sourceReaching) {
+		steps.push(
+			multiply(
+				oppositeTarget,
+				Math.abs(deltaX) < buffer * 2 ? Math.abs(deltaX) - buffer : Math.abs(deltaX) / 2,
+				Math.abs(deltaY) < buffer * 2 ? Math.abs(deltaY) - buffer : Math.abs(deltaY) / 2
+			)
+		);
+		steps.push(
+			multiply(
+				source.direction,
+				Math.abs(deltaX) < buffer * 2 ? deltaX - buffer : deltaX - buffer,
+				Math.abs(deltaY) < buffer * 2 ? deltaY - buffer : deltaY - buffer
+			)
+		);
+		steps.push(
+			multiply(
+				oppositeTarget,
+				Math.max(buffer, Math.abs(deltaX) / 2),
+				Math.max(buffer, Math.abs(deltaY) / 2)
+			)
+		);
+	} else if (targetReaching) {
+		steps.push(
+			multiply(
+				source.direction,
+				Math.max(buffer, Math.abs(deltaX) / 2),
+				Math.max(buffer, Math.abs(deltaY) / 2)
+			)
+		);
+		steps.push(
+			multiply(
+				target.direction,
+				Math.abs(deltaX) < buffer && Math.sign(deltaX) !== target.direction.x
+					? buffer - Math.abs(deltaX)
+					: Math.abs(deltaX) + buffer,
+				Math.abs(deltaY) < buffer && Math.sign(deltaY) !== target.direction.y
+					? buffer - Math.abs(deltaY)
+					: Math.abs(deltaY) + buffer
+			)
+		);
+		steps.push(
+			multiply(
+				source.direction,
+				Math.abs(deltaX) < buffer * 2 ? deltaX - buffer : Math.abs(deltaX) / 2,
+				Math.abs(deltaY) < buffer * 2 ? deltaY - buffer : Math.abs(deltaY) / 2
+			)
+		);
 	}
 
-	return { steps, distance };
+	if (targetReaching) {
+		steps.push(targetBuffer);
+	}
+
+	return steps;
+}
+
+export function areCrossing(vec1: VectorPlusPosition, vec2: VectorPlusPosition) {
+	const { x: dx1, y: dy1 } = vec1.direction;
+	const { x: dx2, y: dy2 } = vec2.direction;
+	const deltaX = vec2.x - vec1.x;
+	const deltaY = vec2.y - vec1.y;
+
+	if (dx1 * dy2 === dx2 * dy1) return false;
+	return (
+		(Math.sign(deltaY) === Math.sign(dy1 + dy2)) !== (Math.sign(deltaX) === Math.sign(dx1 + dx2))
+	);
+}
+
+function multiply(vector: XYPair, deltaX: number, deltaY: number) {
+	return { x: vector.x * deltaX, y: vector.y * deltaY };
+}
+function areVectorsEqual(vector1: XYPair, vector2: XYPair): boolean {
+	return vector1.x === vector2.x && vector1.y === vector2.y;
 }

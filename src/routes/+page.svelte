@@ -31,14 +31,20 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} theme="dark" height={500} initialZoom={0.6} edge={CustomEdge}>
-			<Group width={500} height={600} groupName="us" position={{ x: 0, y: 0 }}>
-				<Node />
-				<MyNode />
-			</Group>
-			<Minimap width={300} height={100} slot="minimap" corner="NE" />
-			<Controls slot="controls" horizontal />
-			<Background slot="background" />
+		<Svelvet
+			edgeStyle="step"
+			width={800}
+			theme="dark"
+			height={500}
+			initialZoom={0.6}
+			edge={CustomEdge}
+		>
+			<Node position={{ x: 200, y: 300 }} />
+
+			<Node position={{ x: 100, y: 20 }} TD />
+			<Node />
+			<Node connections={[['3', '2'], 3, 1]} />
+			<Node TD />
 		</Svelvet>
 	</div>
 </body>
