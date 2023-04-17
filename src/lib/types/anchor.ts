@@ -22,6 +22,7 @@ export interface Anchor {
 	direction: Writable<Direction>;
 	id: AnchorKey;
 	type: InputType;
+	inputKey: string | number | null;
 	moving: Readable<boolean>;
 	// An associated data store if provided
 	store:

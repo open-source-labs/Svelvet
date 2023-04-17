@@ -31,20 +31,11 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet
-			edgeStyle="step"
-			width={800}
-			theme="dark"
-			height={500}
-			initialZoom={0.6}
-			edge={CustomEdge}
-		>
-			<Node position={{ x: 200, y: 300 }} />
-
-			<Node position={{ x: 100, y: 20 }} TD />
+		<Svelvet edgeStyle="step" TD width={800} theme="dark" height={500} initialZoom={0.6} minimap>
 			<Node />
-			<Node connections={[['3', '2'], 3, 1]} />
-			<Node TD />
+			<Node />
+			<Node LR />
+			<Node LR />
 		</Svelvet>
 	</div>
 </body>

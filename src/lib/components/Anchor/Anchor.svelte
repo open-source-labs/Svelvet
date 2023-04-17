@@ -23,6 +23,7 @@
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
 	import { THEMES } from '$lib/constants/themes';
+	import { makeObjectValuesWritable } from '$lib/utils/helpers/writables';
 
 	const dispatch = createEventDispatcher();
 
@@ -30,7 +31,6 @@
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
 	const theme = getContext<Theme>('theme');
-	const childNodes = getContext<Array<[string, string]>>('childNodes');
 	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
 	export let bgColor = THEMES[theme].anchor;
@@ -46,19 +46,8 @@
 	export let inputsStore: InputStore | null = null;
 	export let key: string | number | null = null;
 	export let outputStore: OutputStore | null = null;
-	export let connections: Connections = input || !childNodes?.length ? [] : childNodes;
+	export let connections: Connections = [];
 
-	function convertConnections(array: Connections): Array<[string, string]> {
-		return array.map((connection) => {
-			if (typeof connection === 'string' || typeof connection === 'number') {
-				return [connection.toString(), '1'];
-			} else if (Array.isArray(connection)) {
-				return [connection[0].toString(), connection[1].toString()];
-			} else {
-				throw new Error('Invalid connection type');
-			}
-		});
-	}
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
 	let anchorWidth: number;
@@ -86,30 +75,33 @@
 	$: linkingInput = graph.linkingInput;
 	$: linkingOutput = graph.linkingOutput;
 	$: linkingAny = graph.linkingAny;
-	$: isWaitingForConnection = connections.length > 0;
+	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections.length > 0;
+	$: nodeLevelConnections = node.nodeLevelConnections;
 
 	// On mount, we query the dom to capture the position of the anchor
 	// We then create the anchor object and add it to the store
 	onMount(async () => {
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
-		const key: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
+		const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
 
 		const anchorPosition = { y: top, x: left };
 		anchor = createAnchor(
 			node,
-			key,
+			anchorKey,
 			anchorPosition,
 			{ width, height },
 			inputsStore || outputStore || null,
 			edge || nodeEdge || graphEdge || null,
 			type,
 			direction,
-			dynamic
+			dynamic,
+			key
 		);
 
 		anchors.add(anchor, anchor.id);
 
 		checkConnections();
+		updatePosition();
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -381,6 +373,7 @@
 		disconnectStore();
 	}
 
+	// Disconnect edge and create a new cursor edge
 	function disconnect() {
 		if (get(anchor.connected).size > 1) return;
 
@@ -404,21 +397,83 @@
 	}
 
 	function checkConnections() {
-		const converted = convertConnections(connections);
-		converted.forEach((connection) => {
-			const [node, nodeAnchor] = connection;
-			const nodekey: NodeKey = `N-${node}`;
-			const connectedNode = graph.nodes.get(nodekey);
-
-			if (!connectedNode) return;
-			const anchorKey: AnchorKey = `A-${nodeAnchor}/${nodekey}`;
-			const connectedAnchor = connectedNode.anchors.get(anchorKey);
-
-			if (!connectedAnchor) return;
-			connectAnchors(anchor, connectedAnchor);
-			connections.filter((c) => c !== connection);
+		connections.forEach((connection, index) => {
+			const connected = processConnection(connection);
+			if (connected) connections.splice(index, 1);
 		});
+		if (!input) {
+			$nodeLevelConnections.forEach((connection, index) => {
+				const connected = processConnection(connection);
+				if (connected) $nodeLevelConnections.splice(index, 1);
+			});
+		}
 	}
+
+	const processConnection = (connection: [string | number, string | number] | string | number) => {
+		let nodeId: string;
+		let anchorId: string | null;
+		let anchorToConnect: Anchor | null = null;
+
+		if (Array.isArray(connection)) {
+			nodeId = connection[0].toString();
+			anchorId = connection[1].toString();
+		} else {
+			nodeId = connection.toString();
+			anchorId = null;
+		}
+
+		//Convert to node key used in store/DOM
+		const nodekey: NodeKey = `N-${nodeId}`;
+		// Look up node in store
+		const nodeToConnect = graph.nodes.get(nodekey);
+		if (!nodeToConnect) return false;
+
+		if (!anchorId) {
+			// Connect to the anchor with the fewest connections
+			const anchorStore = get(nodeToConnect.anchors);
+			const anchors = Object.values(anchorStore);
+
+			if (!anchors.length) return false;
+			anchorToConnect = anchors.reduce<Anchor | null>((a, b) => {
+				if (!a && b.type === 'output') return null;
+				if (b.type === 'output') return a;
+				if (!a) return b;
+				if (get(b.connected).size < get(a.connected).size) return b;
+				return a;
+			}, null);
+		} else {
+			// Create anchor key
+			const anchorKey: AnchorKey = `A-${anchorId}/${nodekey}`;
+			// Look up anchor in store
+			anchorToConnect = nodeToConnect.anchors.get(anchorKey);
+		}
+
+		if (!anchorToConnect) return false;
+		connectAnchors(anchor, anchorToConnect);
+
+		if (anchorToConnect.store && (inputsStore || outputStore)) {
+			if (input && anchorToConnect.type === 'output') {
+				if (
+					$inputsStore &&
+					key &&
+					inputsStore &&
+					typeof inputsStore.set === 'function' &&
+					typeof inputsStore.update === 'function'
+				)
+					$inputsStore[key] = anchorToConnect.store;
+			} else if (output && anchorToConnect.type === 'input') {
+				const { store, inputKey } = anchorToConnect;
+				if (store && inputKey && typeof store.update === 'function')
+					store.update((store) => {
+						if (!outputStore) return store;
+						store[inputKey] = outputStore;
+						return store;
+					});
+			}
+		}
+
+		return true;
+	};
 
 	function handleMouseUp() {
 		if (isSelf()) return;

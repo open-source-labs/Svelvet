@@ -7,3 +7,5 @@ export * from './debounce';
 export * from './getRandomColor';
 export * from './generateKey';
 export * from './roundNum';
+export * from './buildArcStringKey';
+export * from './constructArcString';

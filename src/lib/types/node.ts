@@ -34,6 +34,7 @@ export interface Node {
 	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
 	borderWidth: Writable<number>;
+	nodeLevelConnections: Writable<Connections>;
 	bgColor: Writable<CSSColorString | null>;
 	borderColor: Writable<CSSColorString | null>;
 	selectionColor: Writable<CSSColorString | null>;
@@ -75,6 +76,7 @@ export interface NodeConfig {
 	borderWidth?: number;
 	textColor?: CSSColorString;
 	headerColor?: CSSColorString;
+	nodeLevelConnections?: Connections;
 	edge?: ConstructorOfATypedSvelteComponent;
 }
 

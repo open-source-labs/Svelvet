@@ -22,7 +22,8 @@ export function createNode(userNode: NodeConfig): Node {
 		borderWidth,
 		edge
 	} = userNode;
-	const { bgColor, borderColor, borderRadius, textColor, locked, group } = userNode;
+	const { bgColor, borderColor, borderRadius, nodeLevelConnections, textColor, locked, group } =
+		userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
 	const nodeKey: NodeKey =
@@ -69,7 +70,8 @@ export function createNode(userNode: NodeConfig): Node {
 		borderWidth: writable(borderWidth),
 		selectionColor: writable(selectionColor),
 		textColor: writable(textColor),
-		headerColor: writable(headerColor)
+		headerColor: writable(headerColor),
+		nodeLevelConnections: writable(nodeLevelConnections)
 	};
 
 	return newNode;

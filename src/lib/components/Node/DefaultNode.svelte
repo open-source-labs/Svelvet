@@ -51,7 +51,9 @@
 	</div>
 	<p style:color={$textColor}>{$label}</p>
 
-	<Resizer width height />
+	{#if resizable}
+		<Resizer width height />
+	{/if}
 </div>
 
 <style>

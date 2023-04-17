@@ -5,10 +5,8 @@
 		EdgeStyle,
 		Graph,
 		Theme,
-		WritableEdge,
-		XYPair
+		WritableEdge
 	} from '$lib/types';
-	import type { ArcKey } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
@@ -17,6 +15,7 @@
 	import { calculateStepPath } from '$lib/utils/calculators';
 	import { onMount, onDestroy } from 'svelte';
 	import { directionVectors } from '$lib/constants/math';
+	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
@@ -33,14 +32,13 @@
 	export let label: string = '';
 	export let labelColor: CSSColorString = THEMES[theme].node;
 	export let textColor: CSSColorString = THEMES[theme].text;
+	export let cornerRadius = 8;
 
 	$: edgeKey = edge && edge.id;
 	$: source = edge && edge.source;
 	$: target = edge && edge.target;
 
 	let path: string;
-	let cornerRadiusX = 0;
-	let cornerRadiusY = 0;
 	let animationFrameId: number;
 	let DOMPath: SVGPathElement; // The SVG path element used for calculating the midpoint of the curve for labels
 	let pathMidPointX = 0;
@@ -48,7 +46,6 @@
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
 	let renderLabel = $$slots.label || label !== ''; // Boolean that determines whether or not to render the label
 
-	const cornerRadius = 0;
 	const stepBuffer = 40; // This is the buffer around the nodes that a step path should take
 
 	// The coordinates of the source and target anchors
@@ -139,85 +136,67 @@
 			return connected;
 		});
 	}
+	const vectorMap = {
+		north: { x: 0, y: -1 },
+		south: { x: 0, y: 1 },
+		east: { x: 1, y: 0 },
+		west: { x: -1, y: 0 },
+		self: { x: 0, y: 0 }
+	};
 
 	$: if (step && edgeKey !== 'cursor') {
-		cornerRadiusX = Math.min(
-			Math.min(Math.abs(deltaX - 80), Math.abs(deltaX - 80)) / 2,
-			cornerRadius
-		);
-		cornerRadiusY = Math.min(Math.min(Math.abs(deltaY)) / 2, cornerRadius);
-
-		const arcStrings = {
-			'1001': `a ${cornerRadius} ${cornerRadius} 0 0 1 ${cornerRadius} ${cornerRadius}`,
-			'0110': `a ${cornerRadius} ${cornerRadius} 0 0 0 ${cornerRadius} ${cornerRadius}`,
-			'100-1': `a ${cornerRadius} ${cornerRadius} 0 0 0 ${cornerRadius} -${cornerRadius}`,
-			'0-110': `a ${cornerRadius} ${cornerRadius} 0 0 1 ${cornerRadius} -${cornerRadius}`,
-			'-1001': `a ${cornerRadius} ${cornerRadius} 0 0 0 -${cornerRadius} ${cornerRadius}`,
-			'01-10': `a ${cornerRadius} ${cornerRadius} 0 0 1 -${cornerRadius} ${cornerRadius}`,
-			'-100-1': `a ${cornerRadius} ${cornerRadius} 0 0 1 -${cornerRadius} -${cornerRadius}`,
-			'0-1-10': `a ${cornerRadius} ${cornerRadius} 0 0 0 -${cornerRadius} -${cornerRadius}`
-		};
-
-		const vectorMap = {
-			north: { x: 0, y: -1 },
-			south: { x: 0, y: 1 },
-			east: { x: 1, y: 0 },
-			west: { x: -1, y: 0 },
-			self: { x: 0, y: 0 }
-		};
-
 		const sourceObject = { x: $sourceX, y: $sourceY, direction: vectorMap[$sourceDirection] };
 		const targetObject = { x: $targetX, y: $targetY, direction: vectorMap[$targetDirection] };
-
 		const steps = calculateStepPath(sourceObject, targetObject, stepBuffer);
 
-		path = steps.reduce((string, step, index) => {
-			let arcString = '';
-			const multiplier = index === 0 || index === steps.length - 1 ? 1 : 2;
-			const directionX = Math.sign(step.x);
-			const directionY = Math.sign(step.y);
-
-			let xStep: number;
-			let yStep: number;
-
-			const customRadiusX = Math.min(cornerRadius, Math.abs(step.x));
-			const customRadiusY = Math.min(cornerRadius, Math.abs(step.y));
-			if (cornerRadius) {
-				if (step.x !== 0) {
-					xStep = step.x - 0 * multiplier * directionX;
-				} else {
-					xStep = step.x;
-				}
-
-				if (step.y !== 0) {
-					yStep = step.y - 0 * multiplier * directionY;
-				} else {
-					yStep = step.y;
-				}
-			} else {
-				xStep = step.x;
-				yStep = step.y;
-			}
-
-			const stepDistanceString = ` l ${xStep} ${yStep} `;
-
+		const buildArcStringIfNeeded = (
+			step: { x: number; y: number },
+			index: number,
+			radius: number
+		) => {
 			if (index < steps.length - 1) {
 				const arcStringKey = buildArcStringKey(step, steps[index + 1]);
-				arcString = arcStrings[arcStringKey] || '';
+				return constructArcString(radius, arcStringKey);
+			}
+			return '';
+		};
+
+		path = steps.reduce((string, step, index) => {
+			const directionX = Math.sign(step.x);
+			const directionY = Math.sign(step.y);
+			let xStep = step.x;
+			let yStep = step.y;
+			let arcString = '';
+
+			if (cornerRadius) {
+				const nextStep = steps[index + 1] || { x: 0, y: 0 };
+				const previousStep = steps[index - 1] || { x: 0, y: 0 };
+
+				const radiusX = calculateRadius(step.x, nextStep.x);
+				const radiusY = calculateRadius(nextStep.y, step.y);
+				const previousRadiusX = calculateRadius(previousStep.x, step.x);
+				const previousRadiusY = calculateRadius(previousStep.y, step.y);
+				const previousRadius = Math.min(previousRadiusX, previousRadiusY);
+				const radius = Math.min(radiusX, radiusY);
+
+				if (step.x) {
+					xStep = step.x - (radius + previousRadius) * directionX;
+				} else {
+					yStep = step.y - (radius + previousRadius) * directionY;
+				}
+
+				arcString = buildArcStringIfNeeded(step, index, radius);
 			}
 
-			return string + stepDistanceString + arcString;
+			return buildPath(string, xStep, yStep, arcString);
 		}, `M ${$sourceX}, ${$sourceY}`);
-
-		function buildArcStringKey(a: XYPair, b: XYPair): ArcKey {
-			const aX = Math.sign(a.x).toString();
-			const aY = Math.sign(a.y).toString();
-			const bX = Math.sign(b.x).toString();
-			const bY = Math.sign(b.y).toString();
-
-			return `${aX}${aY}${bX}${bY}` as ArcKey;
-		}
 	}
+
+	const buildPath = (string: string, xStep: number, yStep: number, arcString: string) =>
+		string + ` l ${xStep} ${yStep} ` + arcString;
+
+	const calculateRadius = (value1: number, value2: number) =>
+		Math.min(Math.abs(value1 || value2) / 2, cornerRadius);
 </script>
 
 {#if source || target}

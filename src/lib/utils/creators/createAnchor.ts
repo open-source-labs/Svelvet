@@ -10,7 +10,8 @@ export function createAnchor(
 	edge: ConstructorOfATypedSvelteComponent | null,
 	type: 'input' | 'output' | null,
 	direction?: Direction,
-	dynamic?: boolean
+	dynamic?: boolean,
+	key?: string | number | null
 ): Anchor {
 	const { width, height } = dimensions;
 	const { x, y } = position;
@@ -46,6 +47,7 @@ export function createAnchor(
 		edge,
 		moving,
 		connected: writable(new Set()),
-		store: store || null
+		store: store || null,
+		inputKey: key || null
 	};
 }

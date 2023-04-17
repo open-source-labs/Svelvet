@@ -14,7 +14,6 @@
 	import DefaultNode from './DefaultNode.svelte';
 	import { THEMES } from '$lib/constants/themes';
 	import { get } from 'svelte/store';
-	import Background from '$lib/containers/Background/Background.svelte';
 
 	const graph = getContext<Graph>('graph');
 	const theme = getContext<Theme>('theme');
@@ -25,8 +24,6 @@
 	export let position = { x: 0, y: 0 };
 	export let dimensions = { width: s.NODE_WIDTH, height: s.NODE_HEIGHT };
 	export let id: string | number = 0;
-	// export let width = s.NODE_WIDTH;
-	// export let height = s.NODE_HEIGHT;
 	export let bgColor = THEMES[theme].node;
 	export let borderRadius = s.NODE_BORDER_RADIUS;
 	export let borderColor = THEMES[theme].border;
@@ -45,9 +42,6 @@
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let connections: Connections = [];
 
-	setContext('childNodes', connections);
-	setContext<Connections>('childNodes', connections);
-
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
 
@@ -62,12 +56,10 @@
 		if (!foundNode) {
 			const config: NodeConfig = {
 				id: id || nodeCount,
-				// width,
 				position: groupBox
 					? { x: get(groupBox.position.x), y: get(groupBox.position.y) }
 					: position,
 				dimensions,
-				// height,
 				bgColor,
 				editable: editable || graph.editable,
 				borderRadius,
@@ -82,7 +74,8 @@
 				outputs,
 				zIndex,
 				direction,
-				locked
+				locked,
+				nodeLevelConnections: connections
 			};
 			if (edge) config.edge = edge;
 			node = createNode(config);
