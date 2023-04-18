@@ -14,10 +14,10 @@
 
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
-	const { position, dimensions, bgColor, borderRadius } = node;
+	const { position, dimensions, bgColor, borderRadius, rotation } = node;
 	const { width, height } = dimensions;
-	const { x, y } = $position;
-
+	$: nodePosition = $position;
+	$: nodeRotation = $rotation;
 	$: zIndex = node.zIndex;
 </script>
 
@@ -33,8 +33,9 @@
 	style:background-color={nodeColor || $bgColor || $themeStore.node}
 	style:width="{$width}px"
 	style:height="{$height}px"
-	style:top="{y - top}px"
-	style:left="{x - left}px"
+	style:transform="rotate({nodeRotation}deg)"
+	style:top="{nodePosition.y - top}px"
+	style:left="{nodePosition.x - left}px"
 	class:hideable
 />
 

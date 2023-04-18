@@ -328,6 +328,7 @@
 
 	// This just repeatedly calls updatePosition until cancelled
 	function trackPosition() {
+		// console.log('tracking anchor');
 		if (!tracking) return;
 		updatePosition();
 		animationFrameId = requestAnimationFrame(trackPosition);
