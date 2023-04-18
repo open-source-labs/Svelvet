@@ -173,7 +173,8 @@
 		class:wheel
 		bind:this={picker}
 		use:downUp
-		style="width: {size}px; height: {size}px; "
+		style:width={size ? `${size}px` : '100%'}
+		style:aspect-ratio={1 / 1}
 	>
 		<div class="cursor" style:top="{pickerY}px" style:left="{pickerX}px" />
 	</div>

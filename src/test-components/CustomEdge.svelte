@@ -1,17 +1,29 @@
 <script lang="ts">
 	import Edge from '$lib/components/Edge/Edge.svelte';
 	import { getRandomColor } from '$lib/utils';
-	const color = 'green';
+	import type { CSSColorString } from '$lib/types';
+
+	let color: CSSColorString = 'yellow';
+
+	function randomColor() {
+		color = getRandomColor();
+	}
 </script>
 
-<Edge let:path let:destroy {color} width={4}>
-	<div slot="label">Custom Edges and Labels</div>
+<Edge let:path width={4}>
+	<div slot="label">Custom Label</div>
 </Edge>
 
 <style>
 	div {
-		width: 50px;
-		height: 10px;
-		background-color: white;
+		width: fit-content;
+		height: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: rgb(229, 10, 10);
+	}
+	path {
+		stroke-width: 4px;
 	}
 </style>

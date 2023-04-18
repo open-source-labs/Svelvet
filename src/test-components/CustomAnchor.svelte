@@ -2,7 +2,6 @@
 	export let linked: boolean;
 	export let connecting: boolean;
 	export let hovering: boolean;
-	$: console.log({ linked, connecting, hovering });
 </script>
 
 <div class:linked class:hovering class:connecting class="my-anchor" />

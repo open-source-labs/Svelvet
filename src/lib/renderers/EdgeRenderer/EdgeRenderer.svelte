@@ -31,6 +31,5 @@
 		height: 100%;
 		fill: transparent;
 		overflow: visible;
-		pointer-events: auto;
 	}
 </style>

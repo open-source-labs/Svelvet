@@ -31,7 +31,16 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet edgeStyle="step" TD width={800} theme="dark" height={500} zoom={0.6} minimap>
+		<Svelvet
+			edgeStyle="step"
+			edge={CustomEdge}
+			TD
+			width={800}
+			theme="dark"
+			height={500}
+			zoom={0.6}
+			minimap
+		>
 			<Node connections={[4, [2, 1]]} />
 			<Node inputs={4} outputs={2} connections={[4, 3, [1, 1]]} />
 			<Node connections={[5, [6, 2]]} LR />

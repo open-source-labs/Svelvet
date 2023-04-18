@@ -10,10 +10,10 @@
 	let theme: Theme = 'dark';
 	let zoom = 0.6;
 	let width: number;
-	$: zoom = width / 1200;
+	// $: zoom = width / 1200;
 </script>
 
-<svelte:window bind:innerWidth={width} />
+<!-- <svelte:window bind:innerWidth={width} /> -->
 <body>
 	<div class="wrapper">
 		<Svelvet edgeStyle="step" TD width={800} {theme} height={500} {zoom} minimap controls>

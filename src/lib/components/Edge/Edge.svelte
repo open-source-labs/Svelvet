@@ -33,6 +33,8 @@
 	export let labelColor: CSSColorString | null = null;
 	export let textColor: CSSColorString | null = null;
 	export let cornerRadius = 8;
+	export let edgeClick: null | (() => void) = null;
+	export let targetColor: CSSColorString | null = null;
 
 	let path: string;
 	let animationFrameId: number;
@@ -48,7 +50,7 @@
 	$: target = edge && edge.target;
 	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
 	$: edgeLabel = edge && edge.label?.text;
-	$: finalColor = $edgeColor || color || $themeStore.edge;
+	$: finalColor = color || $edgeColor || $themeStore.edge;
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
 
@@ -206,14 +208,26 @@
 
 {#if source || target}
 	<path
-		id={edgeKey}
 		bind:this={DOMPath}
-		class:animate
+		class:cursor={edgeKey === 'cursor'}
+		on:mousedown={edgeClick}
+		style:cursor={edgeClick ? 'pointer' : 'move'}
+		class="target"
+		id={edgeKey + '-target'}
+		style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
 		d={path}
-		style:stroke={finalColor}
-		style:stroke-width={width + 'px'}
+		style:stroke-width={width + 8 + 'px'}
 	/>
-	<slot {path} {destroy} />
+	<slot {path} {destroy}>
+		<path
+			id={edgeKey}
+			class:animate
+			d={path}
+			style:stroke={finalColor}
+			style:stroke-width={width + 'px'}
+		/>
+	</slot>
+
 	{#if renderLabel}
 		<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
 			<span class="label-wrapper">
@@ -241,8 +255,25 @@
 		transform: translate(-50%, -50%);
 	}
 
+	.target {
+		pointer-events: stroke;
+		stroke: none;
+	}
+
+	.target:hover {
+		stroke: var(--hover-color);
+		opacity: 50%;
+	}
+
+	.cursor {
+		pointer-events: none;
+	}
+
 	foreignObject {
 		overflow: visible;
+	}
+	path {
+		cursor: pointer;
 	}
 
 	.animate {
