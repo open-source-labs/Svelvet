@@ -20,6 +20,7 @@
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
+	import { get } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 
@@ -152,10 +153,12 @@
 			creating = false;
 			selecting = false;
 		}
-		if ($activeGroup)
-			$groups[$activeGroup].nodes.subscribe((nodes) =>
-				Array.from(nodes).forEach((node) => node.moving.set(false))
-			);
+
+		// Set moving boolean on active group to false
+		if ($activeGroup) {
+			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
+			nodeGroupArray.forEach((node) => node.moving.set(false));
+		}
 
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };

@@ -33,6 +33,8 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 	const nodeGroupArray = Array.from(get(nodeGroup));
 	const groupBoxes = get(graph.groupBoxes);
 
+	nodeGroupArray.forEach((node) => node.moving.set(true));
+
 	moveGroup();
 
 	function moveGroup() {
@@ -49,10 +51,9 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 		const delta = { x: newX, y: newY };
 
 		nodeGroupArray.forEach((node, index) => {
-			const { group, moving, position } = node;
+			const { group, position } = node;
 
 			const initialPosition = initialPositions[index];
-			if (moving) moving.set(true);
 
 			let groupBox: GroupBox | undefined;
 
