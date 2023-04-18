@@ -1,13 +1,22 @@
 <script lang="ts">
 	import { type Graph, isArrow, type CustomWritable } from '$lib/types';
+	import type { ThemeGroup, CSSColorString } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
+	import { roundNum } from '$lib/utils';
+	import type { Writable } from 'svelte/store';
+
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let parameterStore: CustomWritable<number>;
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
 	export let label = 'Value';
+	export let fixed = 2;
+	export let fontColor: CSSColorString | null = null;
+	export let barColor: CSSColorString | null = null;
+	export let bgColor: CSSColorString | null = null;
 
 	$: connected = typeof parameterStore.set !== 'function';
 
@@ -60,7 +69,10 @@
 	// Update the value based on the direction and increment
 	function updateValue(delta: number, increment = step) {
 		if (typeof $parameterStore !== 'number') return;
-		$parameterStore = Math.max(min, Math.min($parameterStore + delta * increment, max));
+		$parameterStore = roundNum(
+			Math.max(min, Math.min($parameterStore + delta * increment, max)),
+			3
+		);
 	}
 
 	function calculateSlide(cursorChange: number, increment = step) {
@@ -91,7 +103,7 @@
 			} else if (number >= max) {
 				$parameterStore = max;
 			} else {
-				$parameterStore = number;
+				$parameterStore = roundNum(number, 2);
 			}
 		}
 		// For some reason, this line is necessary
@@ -102,10 +114,16 @@
 
 	$: percentageSlid = ((($parameterStore as number) - min) / max) * 100;
 	$: CSSpercentage = `${percentageSlid}%`;
+
+	$: sliderStyle = `linear-gradient(
+			90deg,
+			${barColor || $themeStore.primary} ${CSSpercentage},
+			${bgColor || $themeStore.alt} ${CSSpercentage}
+		)`;
 </script>
 
 {#if !connected}
-	<div class="wrapper">
+	<div class="wrapper" style:color={fontColor || $themeStore.text}>
 		<button class="button" on:click={() => updateValue(-1)}>−</button>
 		<div class="slider" bind:clientWidth={sliderWidth}>
 			<label for="slider-input" class="input-label">{label}</label>
@@ -113,9 +131,10 @@
 				tabindex={0}
 				id="slider-input"
 				class="slider-input"
+				style:background={sliderStyle}
 				style:--percentage={CSSpercentage}
 				type="text"
-				value={$parameterStore}
+				value={$parameterStore.toFixed(fixed)}
 				aria-label={label}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY), step);
@@ -146,37 +165,38 @@
 {/if}
 
 <style>
-	.slider-input {
-		background: linear-gradient(
-			90deg,
-			rgb(32, 128, 143) var(--percentage),
-			rgb(0, 0, 0) var(--percentage)
-		);
-		border: solid 1px rgb(57, 57, 57);
-		border-radius: 6px;
-		text-align: right;
-		width: 100%;
-		height: 100%;
-		cursor: ew-resize;
-		color: white;
-		padding: 0.25rem;
-		pointer-events: auto;
-	}
-
 	.wrapper {
 		display: flex;
 		gap: 0.5rem;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.slider-input {
+		border: none;
+		border-radius: 6px;
+		color: inherit;
+		text-align: right;
+		width: 100%;
+		height: 1rem;
+		cursor: ew-resize;
+		padding: 0.25rem;
+		pointer-events: auto;
 	}
 
 	.button {
 		background: none;
 		border: none;
 		font-size: 1.5rem;
-		color: white;
+		color: inherit;
+		line-height: 1rem;
 		cursor: pointer;
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
 	}
 	.button:hover {
-		color: rgb(91, 169, 190);
+		opacity: 50%;
 	}
 
 	.slider {
@@ -197,5 +217,6 @@
 		margin-left: 0.5rem;
 		position: absolute;
 		pointer-events: none;
+		color: inherit;
 	}
 </style>

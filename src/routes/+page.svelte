@@ -31,11 +31,12 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet edgeStyle="step" TD width={800} theme="dark" height={500} initialZoom={0.6} minimap>
+		<Svelvet edgeStyle="step" TD width={800} theme="dark" height={500} zoom={0.6} minimap>
+			<Node connections={[4, [2, 1]]} />
+			<Node inputs={4} outputs={2} connections={[4, 3, [1, 1]]} />
+			<Node connections={[5, [6, 2]]} LR />
+			<Node inputs={2} connections={[5, 2, [1, 2]]} LR />
 			<Node />
-			<Node />
-			<Node LR />
-			<Node LR />
 		</Svelvet>
 	</div>
 </body>

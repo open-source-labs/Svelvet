@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
-	import type { Theme, CSSColorString, Graph, Corner } from '$lib/types';
+	import type { CSSColorString, Graph, Corner, ThemeGroup } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
-	import { THEMES } from '$lib/constants/themes';
+	import type { Writable } from 'svelte/store';
 
 	let graph: Graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let width = 100;
 	export let height = width;
-	export let mapColor = THEMES[theme].map;
+	export let mapColor: CSSColorString | null = null;
 	export let nodeColor: CSSColorString | null = null;
-	export let borderColor: CSSColorString = THEMES[theme].border;
+	export let borderColor: CSSColorString | null = null;
 	export let corner: Corner = 'SE';
 	export let hideable = false;
 
@@ -21,30 +21,29 @@
 	const maxWidth = width * buffer;
 	const maxHeight = height * buffer;
 
-	$: bounds = graph.bounds;
-	$: top = bounds.top;
-	$: left = bounds.left;
-	$: bottom = bounds.bottom;
-	$: right = bounds.right;
+	const bounds = graph.bounds;
+	const top = bounds.top;
+	const left = bounds.left;
+	const bottom = bounds.bottom;
+	const right = bounds.right;
 
-	$: nodes = graph.nodes;
-	$: groups = graph.groups;
-	$: transforms = graph.transforms;
+	const nodes = graph.nodes;
+	const groups = graph.groups;
+	const transforms = graph.transforms;
+	const dimensions = graph.dimensions;
+	const hidden = $groups.hidden.nodes;
+	const scale = transforms.scale;
+	const xTranslation = transforms.translation.x;
+	const yTranslation = transforms.translation.y;
 
-	$: dimensions = graph.dimensions;
 	$: graphWidth = $dimensions.width;
 	$: graphHeight = $dimensions.height;
 
-	$: hidden = $groups.hidden.nodes;
 	$: boundsWidth = $right - $left;
 	$: boundsHeight = $bottom - $top;
 	$: boundsRatio = boundsWidth / boundsHeight;
 
 	$: minimapRatio = width / height;
-
-	$: scale = transforms.scale;
-	$: xTranslation = transforms.translation.x;
-	$: yTranslation = transforms.translation.y;
 
 	$: window = calculateRelativeCursor(
 		e,
@@ -92,10 +91,10 @@
 
 <div
 	class="minimap-wrapper"
-	style:background-color={mapColor}
+	style:background-color={mapColor || $themeStore.map}
 	style:width="{width}px"
 	style:height="{height ? height : width}px"
-	style:border-color={borderColor}
+	style:border-color={borderColor || $themeStore.border}
 	class:SW={corner === 'SW'}
 	class:NE={corner === 'NE'}
 	class:SE={corner === 'SE'}

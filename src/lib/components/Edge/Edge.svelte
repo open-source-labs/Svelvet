@@ -4,39 +4,35 @@
 		Direction,
 		EdgeStyle,
 		Graph,
-		Theme,
+		ThemeGroup,
 		WritableEdge
 	} from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
-	import { THEMES } from '$lib/constants/themes';
 	import { roundNum } from '$lib/utils/helpers';
 	import { calculateStepPath } from '$lib/utils/calculators';
 	import { onMount, onDestroy } from 'svelte';
 	import { directionVectors } from '$lib/constants/math';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
+	import type { Writable } from 'svelte/store';
 
 	const graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
 
 	const { cursor } = graph;
 
+	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let width: number = EDGE_WIDTH;
-	export let color: CSSColorString = THEMES[theme].edge;
+	export let color: CSSColorString | null = null;
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
 	export let animate = false;
-	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let label: string = '';
-	export let labelColor: CSSColorString = THEMES[theme].node;
-	export let textColor: CSSColorString = THEMES[theme].text;
+	export let labelColor: CSSColorString | null = null;
+	export let textColor: CSSColorString | null = null;
 	export let cornerRadius = 8;
-
-	$: edgeKey = edge && edge.id;
-	$: source = edge && edge.source;
-	$: target = edge && edge.target;
 
 	let path: string;
 	let animationFrameId: number;
@@ -44,9 +40,17 @@
 	let pathMidPointX = 0;
 	let pathMidPointY = 0;
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
-	let renderLabel = $$slots.label || label !== ''; // Boolean that determines whether or not to render the label
 
 	const stepBuffer = 40; // This is the buffer around the nodes that a step path should take
+
+	$: edgeKey = edge && edge.id;
+	$: source = edge && edge.source;
+	$: target = edge && edge.target;
+	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
+	$: edgeLabel = edge && edge.label?.text;
+	$: finalColor = $edgeColor || color || $themeStore.edge;
+	$: labelText = label || $edgeLabel || '';
+	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
 
 	// The coordinates of the source and target anchors
 	// If there is no source or target, use the cursor position
@@ -136,17 +140,18 @@
 			return connected;
 		});
 	}
-	const vectorMap = {
-		north: { x: 0, y: -1 },
-		south: { x: 0, y: 1 },
-		east: { x: 1, y: 0 },
-		west: { x: -1, y: 0 },
-		self: { x: 0, y: 0 }
-	};
 
 	$: if (step && edgeKey !== 'cursor') {
-		const sourceObject = { x: $sourceX, y: $sourceY, direction: vectorMap[$sourceDirection] };
-		const targetObject = { x: $targetX, y: $targetY, direction: vectorMap[$targetDirection] };
+		const sourceObject = {
+			x: $sourceX,
+			y: $sourceY,
+			direction: directionVectors[$sourceDirection]
+		};
+		const targetObject = {
+			x: $targetX,
+			y: $targetY,
+			direction: directionVectors[$targetDirection]
+		};
 		const steps = calculateStepPath(sourceObject, targetObject, stepBuffer);
 
 		const buildArcStringIfNeeded = (
@@ -205,16 +210,20 @@
 		bind:this={DOMPath}
 		class:animate
 		d={path}
-		style:stroke={color}
+		style:stroke={finalColor}
 		style:stroke-width={width + 'px'}
 	/>
 	<slot {path} {destroy} />
-	{#if $$slots.label || label}
-		<foreignObject x={pathMidPointX} y={pathMidPointY}>
+	{#if renderLabel}
+		<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
 			<span class="label-wrapper">
 				<slot name="label">
-					<div class="default-label" style:background-color={labelColor} style:color={textColor}>
-						{label}
+					<div
+						class="default-label"
+						style:background-color={labelColor || $themeStore.node}
+						style:color={textColor || $themeStore.text}
+					>
+						{labelText}
 					</div>
 				</slot>
 			</span>
@@ -229,12 +238,11 @@
 		align-items: center;
 		width: 100%;
 		height: 100%;
+		transform: translate(-50%, -50%);
 	}
 
 	foreignObject {
-		width: 100%;
-		height: 100%;
-		transform: translate(-50%, -50%);
+		overflow: visible;
 	}
 
 	.animate {
@@ -247,7 +255,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100px;
+		width: fit-content;
 		height: 100px;
 		font-size: 1rem;
 		height: 1.5rem;

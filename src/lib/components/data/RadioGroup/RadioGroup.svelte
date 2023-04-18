@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import type { Parameter } from '$lib/types';
 	import type { CustomWritable } from '$lib/types';
-	import { writable } from 'svelte/store';
 
 	export let options: Array<string>;
 	export let parameterStore: CustomWritable<string>;
@@ -15,7 +12,7 @@
 
 	const slugify = (str = '') => str.toLowerCase().replace(/ /g, '-').replace(/./g, '');
 
-	function cycleThrougGroup(event: KeyboardEvent) {
+	function cycleThroughGroup(event: KeyboardEvent) {
 		const key = event.key;
 
 		// Allows us to use tab to navigate to the next element

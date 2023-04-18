@@ -70,7 +70,7 @@ test('anchors can be connected', async ({ page }) => {
 
 	const newEdge = page.locator('[id="A-1/N-node2+A-2/N-node1;"]');
 
-	await expect(newEdge).toHaveAttribute('d', 'M 199, 50 C 250, 50 250, 350 301, 350');
+	await expect(newEdge).toHaveAttribute('d', 'M 200, 50 C 250, 50 250, 350 300, 350');
 	await expect(newEdge).toHaveAttribute('style', 'stroke: white; stroke-width: 2px;');
 });
 
@@ -201,14 +201,14 @@ test('node zIndexes are incremented correctly', async ({ page }) => {
 
 	await expect(node1).toHaveAttribute(
 		'style',
-		'top: 0px; left: 0px; width: 200px; height: 100px; z-index: 3;'
+		'top: 0px; left: 0px; width: 200px; height: 100px; z-index: 3; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD;'
 	);
 
 	await node2.click();
 
 	await expect(node2).toHaveAttribute(
 		'style',
-		'top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4;'
+		'top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD;'
 	);
 });
 

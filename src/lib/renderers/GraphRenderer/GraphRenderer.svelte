@@ -2,25 +2,25 @@
 	import GroupBoxRenderer from '$lib/renderers/GroupBoxRenderer/GroupBoxRenderer.svelte';
 	import EdgeRenderer from '$lib/renderers/EdgeRenderer/EdgeRenderer.svelte';
 	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
-	import type { Graph } from '$lib/types';
-	import { initialClickPosition } from '$lib/stores/CursorStore';
+	import { initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { captureGroup, moveNodes } from '$lib/utils/movers/';
 	import { getContext } from 'svelte';
-	import { get } from 'svelte/store';
+	import type { Graph } from '$lib/types';
 
 	const graph = getContext<Graph>('graph');
 
 	export let isMovable: boolean;
 
-	$: activeGroup = graph.activeGroup;
-	$: groups = graph.groups;
-	$: initialNodePositions = graph.initialNodePositions;
-	$: cursor = graph.cursor;
-	$: transforms = graph.transforms;
+	const activeGroup = graph.activeGroup;
+	const groups = graph.groups;
+	const initialNodePositions = graph.initialNodePositions;
+	const cursor = graph.cursor;
+	let animationFrameId: number;
 
-	$: if ($activeGroup) {
-		$cursor; // This is necessary to trigger the update
-		moveNodes(graph, get(initialClickPosition), get(initialNodePositions), $activeGroup);
+	$: if ($activeGroup && $tracking && $cursor) {
+		animationFrameId = requestAnimationFrame(() => moveNodes(graph));
+	} else {
+		cancelAnimationFrame(animationFrameId);
 	}
 
 	function handleGroupClicked(event: CustomEvent) {

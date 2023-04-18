@@ -6,8 +6,6 @@ import { createStore } from './createStore';
 export function createNode(userNode: NodeConfig): Node {
 	const {
 		id,
-		width,
-		height,
 		inputs,
 		outputs,
 		resizable,
@@ -36,8 +34,8 @@ export function createNode(userNode: NodeConfig): Node {
 			y: writable(position?.y || 0)
 		},
 		dimensions: {
-			width: writable(width || dimensions?.width || NODE_WIDTH),
-			height: writable(height || dimensions?.height || NODE_HEIGHT)
+			width: writable(dimensions?.width || 0),
+			height: writable(dimensions?.height || 0)
 		},
 		group: writable(group || null),
 		locked: writable(locked || false),
@@ -66,10 +64,10 @@ export function createNode(userNode: NodeConfig): Node {
 		bgColor: writable(bgColor || null),
 		direction: writable(direction),
 		label: writable(userNode.label || ''),
-		borderColor: writable(borderColor),
+		borderColor: writable(borderColor || null),
 		borderWidth: writable(borderWidth),
 		selectionColor: writable(selectionColor),
-		textColor: writable(textColor),
+		textColor: writable(textColor || null),
 		headerColor: writable(headerColor),
 		nodeLevelConnections: writable(nodeLevelConnections)
 	};

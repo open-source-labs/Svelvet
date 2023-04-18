@@ -25,26 +25,27 @@ Shout out to our contributors! Here's what's new:
 <details><summary>v7.0.0</summary>
 <ul>
     <li>Changed primary API. Users now pass Node components directly as children to Svelvet</li>
-    <li>Exposed Anchor component that developers can add anywhere within their own custom nodes. Use it to wrap your own custom anchor elements or customize the default via props</li>
     <li>Added the ability to specify anchors as inputs, outputs or any. This controls connection logic and "directionality" of edge curvature</li>
-    <li>Edges can be specified at the anchor level by passing in an array of connections: [[nodeId, anchorId]].</li>
     <li>Added the ability to dynamically attach/reattach edges</li>
-    <li>Exposed Edge component for developer customization. Passed to anchor as prop.</li>
-    <li>Exposed Node component for developer customization</li>
-    <li>Exposed Resizer component that can be added to custom nodes</li>
+     <li>All new Anchor component that developers can add anywhere within their own custom nodes. Use it to wrap your own custom anchor elements or customize via props</li>
+    <li>All new Edge component for developer customization.</li>
+    <li>All new Node component for developer customization</li>
+    <li>All new Resizer component used when composing custom nodes</li>
+    <li>Node connections can be specified at the Node or Anchor level. Improve flexibility of input options</li>
     <li>Improved consistency of touch events on mobile devices. Added touch support for controls component.</li>
     <li>Nodes and Edges no longer require specified IDs. Defaults to incrementing value</li>
     <li>Added Controls component with zoom, reset, lock and unhide functionality plus the ability to pass custom control buttons as children</li>
+     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
+      <li>Added stacking logic when interacting with nodes</li>
+    <li>Improved step path algorithm now connects anchors regardless of their position. Exposed corner radius as prop</li>
     <li>Added keyboard navigation to graph when focused</li>
     <li>Added selection box functionality via Shift + Click. Color can be controlled via the selectionColor prop on the Svelvet component.</li>
     <li>Added node grouping functionality via Shift + CMD + Click</li>
     <li>Added the ability to pass custom edges at the Graph, Node and Anchor level</li>
     <li>No longer required to pass width/height to Svelvet component. Will fill wrapping component by default</li>
-    <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
     <li>Added the abilty to specify graph/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
     <li>All new Minimap component that accepts props for placement, dimensions and styling the background and nodes (defaults to node color) and features dramatically improved tracking/visualization plus the ability to hide nodes</li>
-    <li>Two way data binding for some parameters when creating default nodes via an array of Nodes a la Svelvet 6</li>
-    <li>Added stacking logic when interacting with nodes</li>
+    <li>Enabled two way data binding for some parameters when creating default nodes</li>
     <li>Added mapColor and dotColor props to Svelvet component, though we plan on exposing the full Background component for greater customization</li>
     <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when implementing custom nodes</li>
     <li>Added theme prop to Svelvet component. Defaults to light. Accepts parameters like "dark", "purple", "parchment"</li>
@@ -54,13 +55,13 @@ Shout out to our contributors! Here's what's new:
     <li>Added ability to parse Mermaid strings into node graphs + edges</li>
     <li>Added the ability to specify graph direction as TD or LR</li>
     <li>Added a series of accessible input components (Slider, RadioGroup, TextField) that can be composed in custom nodes and are linked with our data flow system</li>
-    <li>Library now features 100% TypeScript coverage and 0 any's</li>
+    <li>Library now features 100% TypeScript coverage and fully exported types</li>
     <li>Removed D3-zoom dependency</li>
     <li>Removed redundant window and event listeners</li>
     <li>Added dynamic data flow/state management system that tracks anchor connections</li>
     <li>Updated home page to include newest collaborators</li>
-    <li>Temporarily removed dynamic anchor logic due to library re-write. Will re-add<li>
-    <li>Made progress on restoring graph state from local storage. Coming very soon!</li>
+    <li>Temporarily removed dynamic anchor logic due to library re-write. May re-add<li>
+    <li>Made progress on restoring graph state from local storage. Coming soon!</li>
 </ul>
 </details>
 

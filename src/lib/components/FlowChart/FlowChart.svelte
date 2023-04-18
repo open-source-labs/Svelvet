@@ -26,7 +26,6 @@
 			let maxHeight = -Infinity;
 			for (const node of row) {
 				if (!node.ignore) {
-					console.log('id', node.id);
 					nodeList[`N-${node.id}`].position.x.update(() => x);
 					nodeList[`N-${node.id}`].position.y.update(() => y);
 					nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
@@ -49,7 +48,7 @@
 				id={node.id}
 				TD={true}
 				{...mermaidConfig[node.id]}
-				childNodes={node.children.map((id) => [id, '1'])}
+				connections={node.children.map((id) => [id, '0'])}
 			/>
 		{/if}
 	{/each}

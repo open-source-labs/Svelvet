@@ -1,19 +1,21 @@
-import type { CSSColorString } from '$lib/types';
+import type { CSSColorString, ThemeGroup } from '$lib/types';
 
-const light: Theme = {
+const light: ThemeGroup = {
 	node: '#F3F3F3',
 	map: '#FFF',
 	border: '#DDD',
 	text: '#333',
 	selection: '#222',
 	header: '#666',
-	edge: '#AAA',
+	edge: '#444',
 	anchor: '#AAA',
 	controls: '#EEE',
-	dots: '#888'
+	dots: '#888',
+	alt: '#FFF',
+	primary: 'lightgray'
 };
 
-const dark: Theme = {
+const dark: ThemeGroup = {
 	node: '#333',
 	map: '#444',
 	border: '#111',
@@ -23,10 +25,12 @@ const dark: Theme = {
 	edge: 'white',
 	anchor: '#777',
 	controls: '#555',
-	dots: '#777'
+	dots: '#999',
+	alt: '#111',
+	primary: 'darkgray'
 };
 
-const purple: Theme = {
+const purple: ThemeGroup = {
 	node: '#6C567B',
 	map: '#34274E',
 	border: '#3A2E58',
@@ -36,10 +40,11 @@ const purple: Theme = {
 	edge: 'white',
 	anchor: '#B39BC8',
 	controls: '#7E6191',
-	dots: '#685A87'
+	dots: '#685A87',
+	alt: '#34274E'
 };
 
-const sunset: Theme = {
+const sunset: ThemeGroup = {
 	node: '#f18f01',
 	map: '#F0B27A',
 	border: '#D98880',
@@ -49,10 +54,11 @@ const sunset: Theme = {
 	edge: '#c73e1d',
 	anchor: '#F5B7B1',
 	controls: '#C39BD3',
-	dots: '#2D9743'
+	dots: '#2D9743',
+	alt: '#F0B27A'
 };
 
-const ocean: Theme = {
+const ocean: ThemeGroup = {
 	node: '#AED6F1',
 	map: '#5DADE2',
 	border: '#2874A6',
@@ -62,7 +68,8 @@ const ocean: Theme = {
 	edge: 'white',
 	anchor: '#85C1E9',
 	controls: '#1B4F72',
-	dots: '#2D9743'
+	dots: '#2D9743',
+	alt: '#5DADE2'
 };
 const parchment = {
 	map: '#E0DFD5',
@@ -74,7 +81,8 @@ const parchment = {
 	header: '#96705B',
 	border: '#E0DFD5',
 	text: '#313638',
-	selection: '#313638'
+	selection: '#313638',
+	alt: '#E0DFD5'
 };
 
 export const THEMES = {
@@ -85,16 +93,3 @@ export const THEMES = {
 	sunset,
 	parchment
 };
-
-export interface Theme {
-	node: CSSColorString;
-	border: CSSColorString;
-	text: CSSColorString;
-	selection: CSSColorString;
-	header: CSSColorString;
-	edge: CSSColorString;
-	anchor: CSSColorString;
-	map: CSSColorString;
-	controls: CSSColorString;
-	dots: CSSColorString;
-}

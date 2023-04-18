@@ -13,7 +13,8 @@ import type {
 	Anchor,
 	InputStore,
 	OutputStore,
-	GraphDimensions
+	GraphDimensions,
+	Theme
 } from '.';
 
 export interface Graph {
@@ -39,6 +40,7 @@ export interface Graph {
 	edges: EdgeStore;
 	edge: ConstructorOfATypedSvelteComponent | null;
 	groupBoxes: GroupBoxStore;
+	theme: Writable<Theme>;
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;

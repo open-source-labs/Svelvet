@@ -1,5 +1,8 @@
 <script lang="ts">
 	import type { CSSColorString, Node } from '$lib/types';
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import type { ThemeGroup } from '$lib/types';
 
 	export let node: Node;
 	export let hidden = false;
@@ -8,6 +11,8 @@
 	export let left: number;
 	export let nodeColor: CSSColorString | null = null;
 	export let hideable: boolean;
+
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	const { position, dimensions, bgColor, borderRadius } = node;
 	const { width, height } = dimensions;
@@ -25,7 +30,7 @@
 	class="minimap-node"
 	style:z-index={$zIndex}
 	style:border-radius="{$borderRadius}px"
-	style:background-color={nodeColor || $bgColor}
+	style:background-color={nodeColor || $bgColor || $themeStore.node}
 	style:width="{$width}px"
 	style:height="{$height}px"
 	style:top="{$y - top}px"

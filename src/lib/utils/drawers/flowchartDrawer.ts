@@ -101,7 +101,6 @@ function layerAssignment(flowChart: FlowChart): [LayerTracker, number] {
 	let maxLayer = 0;
 	const layerTracker: LayerTracker = {};
 	for (const nodeId in flowChart.nodeList) {
-		console.log(nodeId, flowChart.nodeList[nodeId]);
 		const { depth, parents, children, type, data } = flowChart.nodeList[nodeId];
 		maxLayer = Math.max(maxLayer, depth);
 		if (!layerTracker[depth]) layerTracker[depth] = [];

@@ -1,26 +1,27 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import type { Node } from '$lib/types';
+	import type { Node, ThemeGroup } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
+	import type { Writable } from 'svelte/store';
 
-	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;
 
 	const node = getContext<Node>('node');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
-	$: label = node.label;
-	$: bgColor = node.bgColor;
-	$: borderRadius = node.borderRadius;
-	$: borderColor = node.borderColor;
-	$: selectionColor = node.selectionColor;
-	$: textColor = node.textColor;
-	$: inputs = node.inputs;
-	$: outputs = node.outputs;
-	$: width = node.dimensions.width;
-	$: height = node.dimensions.height;
-	$: resizable = node.resizable;
+	const label = node.label;
+	const bgColor = node.bgColor;
+	const borderRadius = node.borderRadius;
+	const borderColor = node.borderColor;
+	const selectionColor = node.selectionColor;
+	const textColor = node.textColor;
+	const inputs = node.inputs;
+	const outputs = node.outputs;
+	const width = node.dimensions.width;
+	const height = node.dimensions.height;
+	const resizable = node.resizable;
 
 	let top = get(node.direction) === 'TD' ? true : false;
 	let bottom = get(node.direction) === 'TD' ? true : false;
@@ -33,10 +34,8 @@
 	style:width="{$width}px"
 	style:height="{$height}px"
 	style:background-color={$bgColor}
-	style:border-radius={$borderRadius + 'px'}
-	style:border-color={$borderColor}
+	style:border-radius={$borderRadius}
 	class:selected
-	style:--selection-color={$selectionColor}
 	class="default-node"
 >
 	<div class="input-anchors" class:top class:left>
@@ -79,8 +78,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border: solid 1px black;
-		box-shadow: var(--shadow-elevation-medium);
+
 		position: relative;
 		box-sizing: border-box;
 	}
@@ -89,9 +87,6 @@
 		line-height: 20px;
 		text-align: center;
 		user-select: none;
-	}
-	.selected {
-		border: solid 1px var(--selection-color) !important;
 	}
 
 	.input-anchors,

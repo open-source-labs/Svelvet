@@ -6,7 +6,8 @@ import type {
 	EdgeKey,
 	GraphKey,
 	GroupKey,
-	GraphDimensions
+	GraphDimensions,
+	Theme
 } from '$lib/types';
 import { createStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
@@ -16,14 +17,15 @@ import { createBoundsStore } from './createBoundsStore';
 
 export interface GraphConfig {
 	editable?: boolean;
-	initialZoom?: number;
+	zoom?: number;
 	direction?: 'TD' | 'LR';
 	locked?: boolean;
+	theme?: Theme;
 	edge?: ConstructorOfATypedSvelteComponent;
 }
 
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const { initialZoom, editable, direction, locked, edge } = config;
+	const { zoom, editable, theme, direction, locked, edge } = config;
 
 	const translation = {
 		x: writable(0),
@@ -31,7 +33,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	};
 	const dimensions = writable({} as GraphDimensions);
 
-	const scale = writable(initialZoom);
+	const scale = writable(zoom);
 
 	const nodes = createStore<Node, NodeKey>();
 	const bounds = createBoundsStore(nodes, dimensions, scale, translation.x, translation.y);
@@ -62,7 +64,8 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		}),
 		groupBoxes: createStore<GroupBox, GroupKey>(),
 		activeGroup: writable(null),
-		initialNodePositions: writable([])
+		initialNodePositions: writable([]),
+		theme: writable(theme || 'light')
 	};
 
 	return graph;

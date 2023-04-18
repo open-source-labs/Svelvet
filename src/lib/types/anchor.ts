@@ -1,5 +1,5 @@
 import type { Writable, Readable } from 'svelte/store';
-import type { AnchorKey } from '$lib/types';
+import type { AnchorKey, CSSColorString, CustomWritable } from '$lib/types';
 import type { generateOutput } from '$lib/utils';
 
 export interface Anchor {
@@ -24,6 +24,10 @@ export interface Anchor {
 	type: InputType;
 	inputKey: string | number | null;
 	moving: Readable<boolean>;
+	edgeColor:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>;
 	// An associated data store if provided
 	store:
 		| Writable<Record<string, Writable<unknown> | Readable<unknown>>>

@@ -1,6 +1,7 @@
 import type { Writable } from 'svelte/store';
-import type { Node, Graph, XYPair, GroupBox, GroupKey } from '$lib/types';
+import type { Node, Graph, XYPair, GroupBox } from '$lib/types';
 import { get } from 'svelte/store';
+import { initialClickPosition } from '$lib/stores';
 
 export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	const groupSet = get(group);
@@ -15,33 +16,28 @@ export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	});
 }
 
-export function moveNodes(
-	graph: Graph,
-	initialClickPosition: XYPair,
-	initialNodePositions: XYPair[],
-	groupName: GroupKey,
-	snapTo?: number
-) {
-	const { cursor } = graph;
+export function moveNodes(graph: Graph, snapTo?: number) {
 	const groups = get(graph.groups);
+	const groupName = get(graph.activeGroup);
+
+	if (!groupName) return;
 
 	const nodeGroup = groups[groupName].nodes;
 
-	const cursorPosition = get(cursor);
-	const newX = cursorPosition.x - initialClickPosition.x;
-	const newY = cursorPosition.y - initialClickPosition.y;
+	if (!nodeGroup) return;
 
-	let snapX = 0;
-	let snapY = 0;
+	const initialPositions = get(graph.initialNodePositions);
+	const { x: initialClickX, y: initialClickY } = get(initialClickPosition);
+	const cursorPosition = get(graph.cursor);
 
-	if (snapTo) {
-		snapX = newX % snapTo;
-		snapY = newY % snapTo;
-	}
+	const newX = cursorPosition.x - initialClickX;
+	const newY = cursorPosition.y - initialClickY;
+
+	const snapX = snapTo ? newX % snapTo : 0;
+	const snapY = snapTo ? newY % snapTo : 0;
 
 	const delta = { x: newX + snapX, y: newY + snapY };
 
-	if (!nodeGroup) return;
 	const groupBounds = {
 		left: -Infinity,
 		right: Infinity,
@@ -49,12 +45,14 @@ export function moveNodes(
 		bottom: Infinity
 	};
 
-	Array.from(get(nodeGroup)).forEach((node, index) => {
-		const { group, moving } = node;
-		const { position, dimensions } = node;
+	const nodeGroupArray = Array.from(get(nodeGroup));
+	const groupBoxes = get(graph.groupBoxes);
+
+	nodeGroupArray.forEach((node, index) => {
+		const { group, moving, position, dimensions } = node;
 		const { x, y } = position;
 		const { width, height } = dimensions;
-		const initialPosition = initialNodePositions[index];
+		const initialPosition = initialPositions[index];
 		if (moving) moving.set(true);
 		const nodeWidth = get(width);
 		const nodeHeight = get(height);
@@ -63,12 +61,12 @@ export function moveNodes(
 
 		if (groupName === 'selected') {
 			const localGroupName = get(group);
-			const groupBoxes = get(graph.groupBoxes);
 			if (localGroupName) groupBox = groupBoxes[localGroupName];
 		}
 
-		if (groupBox) {
-			//alert('group box exists');
+		if (!groupBox) {
+			moveElement(initialPosition, delta, x, y);
+		} else {
 			const { dimensions, position } = groupBox;
 			const { width, height } = dimensions;
 			const { x, y } = position;
@@ -77,12 +75,22 @@ export function moveNodes(
 			groupBounds.right = get(x) + get(width) - nodeWidth - buffer;
 			groupBounds.top = get(y) + buffer;
 			groupBounds.bottom = get(y) + get(height) - nodeHeight - buffer;
+			moveElementWithBounds(initialPosition, delta, x, y, groupBounds);
 		}
-
-		moveElement(initialPosition, delta, x, y, groupBounds);
 	});
 }
+
 export function moveElement(
+	initialPosition: XYPair,
+	delta: XYPair,
+	xStore: Writable<number>,
+	yStore: Writable<number>
+) {
+	xStore.set(initialPosition.x + delta.x);
+	yStore.set(initialPosition.y + delta.y);
+}
+
+export function moveElementWithBounds(
 	initialPosition: XYPair,
 	delta: XYPair,
 	xStore: Writable<number>,

@@ -9,11 +9,13 @@
 		NodeKey,
 		OutputStore,
 		InputStore,
-		Theme,
-		EdgeStyle,
-		Connections
+		ThemeGroup,
+		Connections,
+		CSSColorString,
+		CustomWritable
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
+	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
@@ -22,18 +24,16 @@
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
-	import { THEMES } from '$lib/constants/themes';
-	import { makeObjectValuesWritable } from '$lib/utils/helpers/writables';
 
 	const dispatch = createEventDispatcher();
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
-	export let bgColor = THEMES[theme].anchor;
+	export let bgColor: CSSColorString | null = null;
 
 	export let id: string | number = 0;
 	export let input: boolean = false;
@@ -47,40 +47,43 @@
 	export let key: string | number | null = null;
 	export let outputStore: OutputStore | null = null;
 	export let connections: Connections = [];
+	export let edgeColor:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString> = writable(null);
+	export let edgeLabel = '';
+	export let locked = false;
 
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
-	let anchorWidth: number;
-	let anchorHeight: number;
 	let anchor: Anchor;
 	let tracking = false;
 	let hovering = false;
 	let previousConnectionCount = 0;
 	let type: InputType = input === output ? null : input ? 'input' : 'output';
 
-	$: nodeEdge = node.edge;
-	$: anchors = node.anchors;
-	$: edges = graph.edges;
-	$: scale = graph.transforms.scale;
-	$: resizingWidth = node.resizingWidth;
-	$: resizingHeight = node.resizingHeight;
+	const nodeEdge = node.edge;
+	const anchors = node.anchors;
+	const edges = graph.edges;
+	const resizingWidth = node.resizingWidth;
+	const resizingHeight = node.resizingHeight;
+	const nodeLevelConnections = node.nodeLevelConnections;
+	const linkingInput = graph.linkingInput;
+	const linkingOutput = graph.linkingOutput;
+	const linkingAny = graph.linkingAny;
+
+	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections.length > 0;
 	$: connecting =
 		input === output
 			? $linkingAny === anchor
 			: input
 			? $linkingInput?.anchor === anchor
 			: $linkingOutput?.anchor === anchor;
-	$: connectedAnchors = anchor?.connected;
-	$: connected = $connectedAnchors?.size > 0 || false;
-	$: linkingInput = graph.linkingInput;
-	$: linkingOutput = graph.linkingOutput;
-	$: linkingAny = graph.linkingAny;
-	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections.length > 0;
-	$: nodeLevelConnections = node.nodeLevelConnections;
+	$: connectedAnchors = anchor && anchor.connected;
 
 	// On mount, we query the dom to capture the position of the anchor
 	// We then create the anchor object and add it to the store
-	onMount(async () => {
+	onMount(() => {
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 		const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
 
@@ -95,7 +98,8 @@
 			type,
 			direction,
 			dynamic,
-			key
+			key,
+			edgeColor
 		);
 
 		anchors.add(anchor, anchor.id);
@@ -133,11 +137,6 @@
 		cancelAnimationFrame(animationFrameId);
 	}
 
-	$: anchorDimensions = {
-		width: anchorWidth / $scale,
-		height: anchorHeight / $scale
-	};
-
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
 	$: {
@@ -148,13 +147,13 @@
 		} else if ($connectedAnchors?.size > previousConnectionCount) {
 			dispatch('connection', { node, anchor });
 		}
-		previousConnectionCount = $connectedAnchors?.size;
+		if ($connectedAnchors?.size) previousConnectionCount = $connectedAnchors.size;
 	}
 
 	function handleClick() {
 		updatePosition(); // Just in case the anchor has moved
-
-		if (connected && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
+		if (locked) return;
+		if ($connectedAnchors?.size && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
 			return disconnect();
 
 		if (!$linkingInput && !$linkingOutput && !$linkingAny) return startEdge();
@@ -194,7 +193,10 @@
 
 	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
 		// Create a temporary edge to track the cursor
-		const newEdge = createEdge({ source, target }, source?.edge || null);
+		const newEdge = createEdge({ source, target }, source?.edge || null, {
+			color: edgeColor,
+			label: { text: edgeLabel }
+		});
 		// Add the edge to the store
 		edges.add(newEdge, 'cursor');
 	}
@@ -205,7 +207,7 @@
 
 		// If the anchor is already connected and multiple connections are not allowed
 		// We don't want to create a new edge
-		if (connected && !multiple) return;
+		if ($connectedAnchors?.size && !multiple) return;
 		if (
 			$linkingAny === anchor ||
 			$linkingOutput?.anchor === anchor ||
@@ -271,10 +273,15 @@
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
+		console.log('connectAnchors', source.id, target.id);
 		updatePosition(); // Just in case
-		const newEdge = createEdge({ source, target }, source?.edge || null);
-		source.connected.update((anchors) => anchors.add(target));
+		const newEdge = createEdge({ source, target }, source?.edge || null, {
+			color: edgeColor,
+			label: { text: edgeLabel }
+		});
+
 		target.connected.update((anchors) => anchors.add(source));
+		source.connected.update((anchors) => anchors.add(target));
 		const id = newEdge.id;
 		edges.add(newEdge, id);
 	}
@@ -471,7 +478,6 @@
 					});
 			}
 		}
-
 		return true;
 	};
 
@@ -492,22 +498,23 @@
 <div
 	class="anchor-wrapper"
 	id={anchor?.id}
+	class:locked
 	bind:this={anchorElement}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
 >
-	<slot linked={connected} {hovering} {connecting}>
+	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
 		<div
 			class="svelvet-anchor"
 			class:output
 			class:input
-			class:connected
+			class:connected={$connectedAnchors?.size >= 1}
 			class:connecting
 			class:hovering
 			style:--default-width={`${ANCHOR_SIZE}px`}
-			style:background-color={bgColor}
+			style:background-color={bgColor || $themeStore.anchor}
 			style:--default-radius={ANCHOR_RADIUS}
 		/>
 	</slot>
@@ -532,12 +539,9 @@
 		border: solid 1px black;
 		pointer-events: auto;
 	}
-	/* .connected.input {
+	.connected {
 		background-color: white;
 	}
-	.connected.output {
-		background-color: white;
-	} */
 
 	.connecting {
 		background-color: white;
@@ -551,6 +555,9 @@
 	}
 	.input {
 		border-color: rgb(255, 255, 255);
+	}
+	.locked {
+		cursor: not-allowed !important;
 	}
 	div {
 		background: none;

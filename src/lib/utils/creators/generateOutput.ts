@@ -1,10 +1,11 @@
 import { writable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { WrappedWritable } from '$lib/types';
+import type { CSSColorString } from '$lib/types';
 
 export function generateOutput<
-	T extends Record<string, number | string | object | boolean>,
-	R extends number | string | object | boolean
+	T extends Record<string, number | string | object | boolean | CSSColorString>,
+	R extends number | string | object | boolean | CSSColorString
 >(inputs: Writable<WrappedWritable<T>>, processor: (inputs: T) => R) {
 	const outputStore = writable<R>();
 

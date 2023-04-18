@@ -15,13 +15,15 @@
 	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
+	import { writable } from 'svelte/store';
+	import { THEMES } from '$lib/constants/themes';
 
 	export let mermaid = '';
 	export let theme: Theme = 'light';
 	export let id: number | string = 0;
 	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
-	export let initialZoom = 1;
+	export let zoom = 1;
 	export let TD = false;
 	export let editable = false;
 	export let locked = false;
@@ -41,7 +43,7 @@
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
 	setContext('snapTo', snapTo);
-	setContext('theme', theme);
+
 	setContext('edgeStyle', edgeStyle);
 	setContext('graphEdge', edge);
 
@@ -53,7 +55,7 @@
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { initialZoom, direction, editable, locked });
+			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked });
 
 			if (nodes.length && !mermaid) {
 				const nodeObjects = generateNodes(nodes);
@@ -71,11 +73,20 @@
 		}
 	});
 
+	let currentTheme = writable(THEMES[theme]);
+	setContext('themeStore', currentTheme);
+
+	$: if (graph) {
+		$currentTheme = THEMES[theme];
+	}
+
 	function generateNodes(nodes: Array<NodeConfig>) {
 		const nodeObjects = nodes.map((node) => createNode(node));
 		return nodeObjects;
 	}
 	$: backgroundExists = $$slots.background;
+
+	$: if (graph) graph.transforms.scale.set(zoom);
 </script>
 
 {#if graph}
@@ -96,5 +107,12 @@
 		<slot name="minimap" slot="minimap" />
 		<slot name="controls" slot="controls" />
 		<slot name="background" slot="background" />
+		<slot name="toggle" slot="toggle" />
 	</Graph>
+{:else}
+	<div
+		style:width={width ? width + 'px' : '100%'}
+		style:height={height ? height + 'px' : '100%'}
+		style:background-color={THEMES[theme].map}
+	/>
 {/if}

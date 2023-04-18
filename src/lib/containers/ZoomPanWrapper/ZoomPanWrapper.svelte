@@ -43,9 +43,8 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		display: flex;
-		gap: 20px;
-		pointer-events: none;
+		pointer-events: none !important;
+		touch-action: none;
 		/* outline: solid 1px red; */
 	}
 </style>

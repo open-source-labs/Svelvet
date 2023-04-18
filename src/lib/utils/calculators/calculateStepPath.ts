@@ -1,9 +1,7 @@
 import type { XYPair } from '$lib/types';
 
 function calculateDotProduct(vector1: XYPair, vector2: XYPair) {
-	console.log(vector1, vector2);
 	const product = vector1.x * vector2.x + vector1.y * vector2.y;
-	console.log(product);
 	return product;
 }
 

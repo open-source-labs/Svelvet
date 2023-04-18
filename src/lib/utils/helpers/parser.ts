@@ -32,8 +32,6 @@ const edgeRegex = /[-=~]*>(?:\s*\|(.+?)\|)?/g;
 export const flowChartParser = (mermaid: string) => {
 	const lines = mermaid.split('\n');
 
-	console.log('lines', lines);
-
 	const flowChart: FlowChart = { parentNodes: [], nodeList: {} };
 	// parse mermaid string line by line
 	for (const line of lines) {
@@ -42,9 +40,6 @@ export const flowChartParser = (mermaid: string) => {
 			// if a parent or child exists in our flow chart, then we add to their respective parent and child node arrays, otherwise we add their relational nodes then add to the flow chart
 			if (!flowChart.nodeList[parentNode.id]) flowChart.parentNodes.push(parentNode);
 			for (const childNode of childNodes) {
-				console.log(childNode.id);
-				console.log(flowChart.nodeList[childNode.id]);
-
 				if (flowChart.nodeList[parentNode.id]) {
 					if (
 						flowChart.nodeList[childNode.id] &&

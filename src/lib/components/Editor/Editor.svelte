@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ColorPicker from '../data/ColorPicker/ColorPicker.svelte';
 	import Slider from '../data/Slider/Slider.svelte';
 	import TextField from '../data/TextField/TextField.svelte';
 	import type { Graph } from '$lib/types';
@@ -36,7 +35,6 @@
 		<button on:click={() => graph.editing.set(null)}>X</button>
 		<Slider parameterStore={editing.dimensions.width} max={1000} />
 		<TextField placeholder={'Node Label'} />
-		<ColorPicker />
 		<button on:click={deleteNode}>Delete Node</button>
 	</div>
 </Node>

@@ -1,44 +1,52 @@
 <script lang="ts">
 	import Header from './Header.svelte';
-	import Resizer from '../Resizer/Resizer.svelte';
-	import type { Graph, Node, Theme } from '$lib/types';
+	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
-	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateRelativeCursor, captureGroup, calculateFitContentWidth } from '$lib/utils';
+	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
+	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
 	export let node: Node;
 
-	let absolute = false;
+	const x = node.position.x;
+	const y = node.position.y;
+	const widthStore = node.dimensions.width;
+	const heightStore = node.dimensions.height;
 
 	$: maxZIndex = graph.maxZIndex;
 	$: header = node.header;
-	$: widthStore = node.dimensions.width;
-	$: heightStore = node.dimensions.height;
-	$: x = node.position.x;
-	$: y = node.position.y;
 	$: id = node.id;
 	$: editable = node.editable;
 	$: resizable = node.resizable;
 	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
+	$: bgColor = node.bgColor;
+	$: borderRadius = node.borderRadius;
+	$: textColor = node.textColor;
+	$: borderColor = node.borderColor;
+	$: selectionColor = node.selectionColor;
+	$: borderWidth = node.borderWidth;
 
 	const graph: Graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
+	const snapTo: number = getContext('snapTo');
 	setContext<Node>('node', node);
 
 	let collapsed = false;
 	let isResizing = { width: false, height: false };
 	let minWidth = 200;
-	let minHeight = 200;
+	let minHeight = 100;
 
 	let DOMnode: HTMLElement;
 
 	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
-	const snapTo: number = getContext('snapTo');
+	const headerSize = 40;
+	const dispatch = createEventDispatcher();
 
 	// Creates reactive variable for whether the node is selected
 	// We use this as a class directive in the component
@@ -46,6 +54,11 @@
 	$: selected = $selectedNodes.has(node);
 	$: hiddenNodes = hiddenNodesGroup.nodes;
 	$: hidden = $hiddenNodes.has(node);
+
+	$: editing = graph.editing;
+	$: activeGroup = graph.activeGroup;
+	$: cursor = graph.cursor;
+	$: initialNodePositions = graph.initialNodePositions;
 
 	// Dynamically import the component for the node
 	onMount(() => {
@@ -91,15 +104,6 @@
 		}
 	}
 
-	const headerSize = 40;
-
-	$: editing = graph.editing;
-	$: activeGroup = graph.activeGroup;
-	$: cursor = graph.cursor;
-	$: moving = node.moving;
-
-	$: initialNodePositions = graph.initialNodePositions;
-
 	function grabHandle(node: HTMLElement) {
 		node.addEventListener('mousedown', handleNodeClicked);
 		node.addEventListener('touchstart', handleNodeTouch);
@@ -111,32 +115,15 @@
 		};
 	}
 
-	import { createEventDispatcher } from 'svelte';
-	import { NODE_BORDER_WIDTH } from '$lib/constants';
-
-	const dispatch = createEventDispatcher();
-
 	function handleNodeTouch(e: TouchEvent) {
-		if (e.touches.length > 1) return;
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($locked || $nodeLock) return;
-		//e.stopPropagation();
+		e.stopPropagation();
 		e.preventDefault();
-		const dimensions = graph.dimensions;
-		const { scale, translation } = graph.transforms;
-		const { x: translateX, y: translateY } = translation;
-		const { top, left, width, height } = get(dimensions);
-		const touchPoint = calculateRelativeCursor(
-			e.touches[0],
-			top,
-			left,
-			width,
-			height,
-			get(scale),
-			get(translateX),
-			get(translateY)
-		);
-		initialClickPosition.set(touchPoint);
+		if (e.touches.length > 1) return;
+		if ($locked || $nodeLock) return;
+		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+		dispatch('nodeClicked', { node, e });
+
+		$initialClickPosition = $cursor;
 		nodeSelectLogic();
 	}
 
@@ -144,11 +131,10 @@
 		e.preventDefault();
 		e.stopPropagation();
 
-		dispatch('nodeClicked', { node, e });
-
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 		if ($locked || $nodeLock) return;
-
+		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+		dispatch('nodeClicked', { node, e });
+		$tracking = true;
 		const { button } = e;
 
 		$initialClickPosition = $cursor;
@@ -161,20 +147,21 @@
 	}
 
 	function nodeSelectLogic() {
-		const { group } = node;
-
-		const nodeGroup: GroupKey | null = get(group);
-
 		let groupData: Group;
 		let parent;
 		let isParent = false;
 
+		// Check if the node is in a group
+		const nodeGroup: GroupKey | null = get(node.group);
+
+		// If it is in a group, check if it's the parent
 		if (nodeGroup) {
 			groupData = $groups[nodeGroup];
 			parent = get(groupData.parent);
 			isParent = parent === node;
 		}
-
+		// If it is the parent, set the active group to the group
+		// If it isn't the parent, set the active group to "selected"
 		if (isParent) {
 			$activeGroup = nodeGroup;
 		} else {
@@ -196,7 +183,6 @@
 		}
 
 		// Capture the initial positions of the nodes in the group
-
 		$initialNodePositions = captureGroup($groups['selected'].nodes);
 	}
 </script>
@@ -207,11 +193,18 @@
 		{id}
 		class="svelvet-node"
 		class:selected
+		class:locked={$locked || $nodeLock}
 		style:top="{$y}px"
 		style:left="{$x}px"
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
 		style:z-index={$zIndex}
+		style:background-color={$bgColor || $themeStore.node}
+		style:border-radius="{$borderRadius}px"
+		style:color={$textColor || $themeStore.text}
+		style:--border-color={$borderColor || $themeStore.border}
+		style:--border-width="{$borderWidth}px"
+		style:--selection-color={$selectionColor || $themeStore.selection}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
@@ -221,7 +214,6 @@
 			<Header />
 		{/if}
 		{#if !collapsed}
-			<!-- This is the actual "node"-->
 			<slot {grabHandle} {selected} />
 		{/if}
 	</div>
@@ -235,5 +227,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		will-change: top, left, width, height, z-index;
+		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
+	}
+	.locked {
+		cursor: not-allowed;
+	}
+	.selected {
+		box-shadow: 0 0 0 var(--border-width) var(--selection-color);
 	}
 </style>

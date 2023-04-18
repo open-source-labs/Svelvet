@@ -1,35 +1,33 @@
 <script lang="ts">
-	import { getContext, setContext, onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type {
 		Graph,
 		Node as NodeType,
 		NodeConfig,
-		Theme,
 		GroupKey,
-		Connections
+		Connections,
+		CSSColorString
 	} from '$lib/types';
 	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
-	import { THEMES } from '$lib/constants/themes';
 	import { get } from 'svelte/store';
 
 	const graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
 
 	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
 	const { nodes } = graph;
 
 	export let position = { x: 0, y: 0 };
-	export let dimensions = { width: s.NODE_WIDTH, height: s.NODE_HEIGHT };
+	export let dimensions = { width: 0, height: 0 };
 	export let id: string | number = 0;
-	export let bgColor = THEMES[theme].node;
+	export let bgColor: CSSColorString | null = null;
 	export let borderRadius = s.NODE_BORDER_RADIUS;
-	export let borderColor = THEMES[theme].border;
+	export let borderColor: CSSColorString | null = null;
 	export let borderWidth = s.NODE_BORDER_WIDTH;
-	export let selectionColor = THEMES[theme].selection;
-	export let textColor = THEMES[theme].text;
+	export let selectionColor: CSSColorString | null = null;
+	export let textColor: CSSColorString | null = null;
 	export let resizable = false;
 	export let label = '';
 	export let inputs = 1;
@@ -52,6 +50,13 @@
 
 		const nodeCount = graph.nodes.count() + 1;
 
+		const isDefault = !$$slots.default;
+
+		if (isDefault) {
+			if (!dimensions.width) dimensions.width = s.NODE_WIDTH;
+			if (!dimensions.height) dimensions.height = s.NODE_HEIGHT;
+		}
+
 		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
 		if (!foundNode) {
 			const config: NodeConfig = {
@@ -60,15 +65,11 @@
 					? { x: get(groupBox.position.x), y: get(groupBox.position.y) }
 					: position,
 				dimensions,
-				bgColor,
 				editable: editable || graph.editable,
 				borderRadius,
-				textColor,
-				borderColor,
 				label,
 				group,
 				borderWidth,
-				selectionColor,
 				resizable,
 				inputs,
 				outputs,
@@ -77,6 +78,10 @@
 				locked,
 				nodeLevelConnections: connections
 			};
+			if (borderColor) config.borderColor = borderColor;
+			if (selectionColor) config.selectionColor = selectionColor;
+			if (textColor) config.textColor = textColor;
+			if (bgColor) config.bgColor = bgColor;
 			if (edge) config.edge = edge;
 			node = createNode(config);
 		} else {
@@ -144,7 +149,7 @@
 {#if node && $nodes[node.id]}
 	<InternalNode let:selected let:grabHandle on:nodeClicked {node}>
 		<slot {selected} {grabHandle} {node}>
-			<DefaultNode {selected} {grabHandle} on:connection on:disconnection />
+			<DefaultNode {selected} on:connection on:disconnection />
 		</slot>
 	</InternalNode>
 {/if}

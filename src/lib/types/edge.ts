@@ -1,7 +1,7 @@
-import type { Writable } from 'svelte/store';
-import type { Anchor, CSSColorString, EmValue, EdgeKey } from '.';
+import type { Writable, Readable } from 'svelte/store';
+import type { Anchor, CSSColorString, EmValue, EdgeKey, CustomWritable } from '.';
 import type { PixelValue, RemValue } from '.';
-
+import type { generateOutput } from '$lib/utils/creators/generateOutput';
 export type EdgeStyle = 'straight' | 'step' | 'bezier';
 
 // With writable properties
@@ -10,7 +10,10 @@ export type WritableEdge = {
 	source: Anchor | null;
 	target: Anchor | null;
 	type: Writable<EdgeStyle>;
-	color: Writable<CSSColorString>;
+	color:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>;
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
@@ -31,7 +34,10 @@ export interface EdgeLabel {
 
 export interface EdgeConfig {
 	type?: EdgeStyle;
-	color?: CSSColorString;
+	color?:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>;
 	width?: number;
 	label?: EdgeLabelConfig;
 	animated?: boolean;

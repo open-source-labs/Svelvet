@@ -1,6 +1,7 @@
-import type { Anchor, Node, XYPair, Direction, AnchorKey } from '$lib/types';
+import type { Anchor, Node, XYPair, Direction, AnchorKey, CSSColorString } from '$lib/types';
 import { writable, derived, get } from 'svelte/store';
-
+import type { Writable, Readable } from 'svelte/store';
+import type { CustomWritable } from '$lib/types';
 export function createAnchor(
 	node: Node,
 	id: AnchorKey,
@@ -11,7 +12,11 @@ export function createAnchor(
 	type: 'input' | 'output' | null,
 	direction?: Direction,
 	dynamic?: boolean,
-	key?: string | number | null
+	key?: string | number | null,
+	edgeColor?:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>
 ): Anchor {
 	const { width, height } = dimensions;
 	const { x, y } = position;
@@ -48,6 +53,7 @@ export function createAnchor(
 		moving,
 		connected: writable(new Set()),
 		store: store || null,
-		inputKey: key || null
+		inputKey: key || null,
+		edgeColor: edgeColor || writable(null)
 	};
 }
