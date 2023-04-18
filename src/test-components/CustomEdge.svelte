@@ -23,7 +23,4 @@
 		align-items: center;
 		background-color: rgb(229, 10, 10);
 	}
-	path {
-		stroke-width: 4px;
-	}
 </style>

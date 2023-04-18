@@ -5,7 +5,6 @@ import type {
 	Node,
 	CSSColorString,
 	XYPair,
-	XYPosition,
 	Dimensions,
 	GroupBoxStore,
 	EdgeStore,

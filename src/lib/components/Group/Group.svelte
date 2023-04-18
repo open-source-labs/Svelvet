@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onMount, setContext, getContext } from 'svelte';
+	import { setContext, getContext } from 'svelte';
 	import type { Group, Graph, GroupBox, XYPair, CSSColorString, GroupKey } from '$lib/types';
 	import { writable } from 'svelte/store';
 	import { getRandomColor } from '$lib/utils';
-	import { get } from 'svelte/store';
 
 	export let width: number;
 	export let height: number;
@@ -15,13 +14,8 @@
 	const groupKey: GroupKey = `${groupName}/${graph.id}`;
 
 	setContext('group', groupKey);
-	$: groupBoxes = graph.groupBoxes;
-	$: groups = graph.groups;
 
-	const writablePosition = {
-		x: writable(position.x),
-		y: writable(position.y)
-	};
+	const writablePosition = writable(position);
 
 	const groupBox: GroupBox = {
 		group: writable(groupKey),

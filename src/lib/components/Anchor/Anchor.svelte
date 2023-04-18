@@ -12,9 +12,11 @@
 		ThemeGroup,
 		Connections,
 		CSSColorString,
-		CustomWritable
+		CustomWritable,
+		EdgeStyle,
+		EdgeConfig
 	} from '$lib/types';
-	import { onMount, getContext, onDestroy } from 'svelte';
+	import { onMount, getContext, onDestroy, setContext } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
@@ -53,6 +55,7 @@
 		| Readable<CSSColorString> = writable(null);
 	export let edgeLabel = '';
 	export let locked = false;
+	export let edgeStyle: EdgeStyle | null = null;
 
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
@@ -192,11 +195,13 @@
 	}
 
 	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
-		// Create a temporary edge to track the cursor
-		const newEdge = createEdge({ source, target }, source?.edge || null, {
+		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
-		});
+		};
+		if (edgeStyle) edgeConfig.type = edgeStyle;
+		// Create a temporary edge to track the cursor
+		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		// Add the edge to the store
 		edges.add(newEdge, 'cursor');
 	}
@@ -274,10 +279,12 @@
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
 		updatePosition(); // Just in case
-		const newEdge = createEdge({ source, target }, source?.edge || null, {
+		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
-		});
+		};
+		if (edgeStyle) edgeConfig.type = edgeStyle;
+		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 
 		target.connected.update((anchors) => anchors.add(source));
 		source.connected.update((anchors) => anchors.add(target));

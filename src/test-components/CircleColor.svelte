@@ -18,7 +18,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: -50, y: 350 }} let:selected>
+<Node position={{ x: 50, y: 400 }} let:selected>
 	<p class="note" id="custom">
 		Built In
 		<br />
@@ -35,6 +35,7 @@
 				let:connecting
 				outputStore={output}
 				output
+				edgeStyle="bezier"
 				edgeColor={output}
 				edgeLabel="Dynamic Edges"
 			>
@@ -63,12 +64,13 @@
 	.note {
 		font-family: 'Reenie Beanie', sans-serif;
 		position: absolute;
-		top: 40%;
-		left: -120px;
+		top: 10%;
+		left: 240px;
 		width: 400px;
-		transform: rotate(3deg);
+		transform: rotate(-6deg);
 		color: inerhit;
 		font-weight: 200px;
 		font-size: 30px;
+		pointer-events: none;
 	}
 </style>

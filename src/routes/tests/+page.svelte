@@ -1,13 +1,8 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor, Edge } from '$lib';
-	import TestComponent from '../../test-components/TestComponent.svelte';
-	import CustomControls from '../../test-components/CustomControls.svelte';
-	import MyNode from '../../test-components/MyNode.svelte';
+	import { Svelvet, Minimap, Node } from '$lib';
 	import { getRandomColor } from '$lib/utils';
 	import type { CSSColorString, NodeConfig } from '$lib/types';
-	import CustomEdge from '../../test-components/CustomEdge.svelte';
-	import CustomEdge2 from '../../test-components/CustomEdge2.svelte';
-	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
+
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}

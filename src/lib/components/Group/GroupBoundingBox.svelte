@@ -1,18 +1,14 @@
 <script lang="ts">
-	import type { CSSColorString, Dimensions, XYPosition } from '$lib/types';
+	import type { CSSColorString, Dimensions, XYPair, XYPosition } from '$lib/types';
 	import type { Writable } from 'svelte/store';
-	import { createEventDispatcher, setContext } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let dimensions: Dimensions;
-	export let position: XYPosition;
+	export let position: Writable<XYPair>;
 	export let color: Writable<CSSColorString>;
 	export let groupName: string;
 
 	const { width, height } = dimensions;
-	const { x, y } = position;
-
-	$: top = $y;
-	$: left = $x;
 
 	$: id = `${groupName}-bounding-box`;
 
@@ -28,8 +24,8 @@
 	on:mousedown|stopPropagation|preventDefault={dispatchClick}
 	class="bounding-box-border"
 	{id}
-	style:top={`${top}px`}
-	style:left={`${left}px`}
+	style:top={`${$position.y}px`}
+	style:left={`${$position.x}px`}
 	style:width={`${$width}px`}
 	style:height={`${$height}px`}
 	style="border: solid 4px {$color};"
@@ -50,5 +46,6 @@
 		overflow: hidden;
 		border-radius: 10px;
 		pointer-events: auto;
+		z-index: -4;
 	}
 </style>

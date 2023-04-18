@@ -1,14 +1,6 @@
 import type { Writable } from 'svelte/store';
 import type { AnchorStore, CSSDimensionString } from '.';
-import type {
-	XYPosition,
-	XYPair,
-	NodeKey,
-	Dimensions,
-	ConfigObject,
-	CSSColorString,
-	GroupKey
-} from '.';
+import type { XYPair, NodeKey, Dimensions, CSSColorString, GroupKey } from '.';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
@@ -73,7 +65,6 @@ export interface NodeConfig {
 	locked?: boolean;
 	selectionColor?: CSSColorString;
 	component?: ConstructorOfATypedSvelteComponent;
-	config?: ConfigObject;
 	width?: number;
 	height?: number;
 	header?: true;

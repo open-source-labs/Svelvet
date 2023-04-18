@@ -17,7 +17,7 @@ export function createEdge(
 		target: connection.target,
 		source: connection.source,
 		component,
-		type: writable(config?.type || s.EDGE_TYPE),
+		type: writable(config?.type || null),
 		color: config?.color || writable(s.EDGE_COLOR),
 		width: writable(config?.width || s.EDGE_WIDTH),
 		animated: writable(config?.animated || false)

@@ -62,7 +62,7 @@
 			const config: NodeConfig = {
 				id: id || nodeCount,
 				position: groupBox
-					? { x: get(groupBox.position).x, y: get(groupBox.position).y }
+					? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
 					: position,
 				dimensions,
 				editable: editable || graph.editable,

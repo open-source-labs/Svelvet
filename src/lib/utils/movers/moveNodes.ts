@@ -7,7 +7,6 @@ export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	const groupSet = get(group);
 	const groupArray = Array.from(groupSet);
 	return groupArray.map((node) => {
-		const { position } = node;
 		return get(node.position);
 	});
 }
@@ -67,14 +66,12 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 			} else {
 				const nodeWidth = get(node.dimensions.width);
 				const nodeHeight = get(node.dimensions.height);
-				const { dimensions, position } = groupBox;
-				const { width, height } = dimensions;
-				const { x: groupBoxX, y: groupBoxY } = get(position);
+				const { x: groupBoxX, y: groupBoxY } = get(groupBox.position);
 				const buffer = 10;
 				groupBounds.left = groupBoxX + buffer;
-				groupBounds.right = groupBoxX + get(width) - nodeWidth - buffer;
-				groupBounds.top = groupBoxX + buffer;
-				groupBounds.bottom = groupBoxX + get(height) - nodeHeight - buffer;
+				groupBounds.right = groupBoxX + get(groupBox.dimensions.width) - nodeWidth - buffer;
+				groupBounds.top = groupBoxY + buffer;
+				groupBounds.bottom = groupBoxY + get(groupBox.dimensions.height) - nodeHeight - buffer;
 				moveElementWithBounds(initialPosition, delta, position, groupBounds);
 			}
 		});

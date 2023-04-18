@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
-	import CustomEdge from './CustomEdge.svelte';
-	import CustomEdge2 from './CustomEdge2.svelte';
 	import type { Node as NodeType } from '$lib/types';
 	export let id: number | string = Math.random();
 

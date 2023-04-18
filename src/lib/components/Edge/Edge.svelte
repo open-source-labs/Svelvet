@@ -20,7 +20,6 @@
 	const graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
-
 	const { cursor } = graph;
 
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
@@ -50,6 +49,7 @@
 	$: target = edge && edge.target;
 	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
 	$: edgeLabel = edge && edge.label?.text;
+	$: edgeType = edge && edge?.type;
 	$: finalColor = color || $edgeColor || $themeStore.edge;
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
@@ -89,7 +89,7 @@
 	$: controlPointString = `C ${sourceControlX}, ${sourceControlY} ${targetControlX}, ${targetControlY}`;
 
 	// The full SVG path string
-	$: if (!step || edgeKey === 'cursor') {
+	$: if (!step || edgeKey === 'cursor' || $edgeType === 'bezier') {
 		path = `M ${$sourceX}, ${$sourceY} ${!straight && controlPointString} ${$targetX}, ${$targetY}`;
 	}
 
@@ -143,7 +143,7 @@
 		});
 	}
 
-	$: if (step && edgeKey !== 'cursor') {
+	$: if (step && edgeKey !== 'cursor' && !($edgeType && $edgeType === 'bezier')) {
 		const sourceObject = {
 			x: $sourceX,
 			y: $sourceY,

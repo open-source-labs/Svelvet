@@ -1,21 +1,17 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import type { Node, ThemeGroup } from '$lib/types';
+	import type { Node } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
-	import type { Writable } from 'svelte/store';
 
 	export let selected: boolean;
 
 	const node = getContext<Node>('node');
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	const label = node.label;
 	const bgColor = node.bgColor;
 	const borderRadius = node.borderRadius;
-	const borderColor = node.borderColor;
-	const selectionColor = node.selectionColor;
 	const textColor = node.textColor;
 	const inputs = node.inputs;
 	const outputs = node.outputs;
@@ -65,14 +61,6 @@
 			0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.1),
 			2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.1),
 			5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.1);
-		--shadow-elevation-high: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
-			1.5px 2.9px 3.7px -0.4px hsl(var(--shadow-color) / 0.34),
-			2.7px 5.4px 6.8px -0.7px hsl(var(--shadow-color) / 0.34),
-			4.5px 8.9px 11.2px -1.1px hsl(var(--shadow-color) / 0.34),
-			7.1px 14.3px 18px -1.4px hsl(var(--shadow-color) / 0.34),
-			11.2px 22.3px 28.1px -1.8px hsl(var(--shadow-color) / 0.34),
-			17px 33.9px 42.7px -2.1px hsl(var(--shadow-color) / 0.34),
-			25px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
 	}
 	.default-node {
 		display: flex;

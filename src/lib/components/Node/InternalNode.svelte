@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from './Header.svelte';
 	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
@@ -17,10 +16,8 @@
 
 	$: actualPosition = $position;
 	$: maxZIndex = graph.maxZIndex;
-	$: header = node.header;
 	$: id = node.id;
 	$: editable = node.editable;
-	$: resizable = node.resizable;
 	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
 	$: bgColor = node.bgColor;
@@ -32,11 +29,10 @@
 
 	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
-	const snapTo: number = getContext('snapTo');
+
 	setContext<Node>('node', node);
 
 	let collapsed = false;
-	let isResizing = { width: false, height: false };
 	let minWidth = 200;
 	let minHeight = 100;
 
@@ -45,7 +41,6 @@
 	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
-	const headerSize = 40;
 	const dispatch = createEventDispatcher();
 
 	// Creates reactive variable for whether the node is selected
@@ -210,9 +205,6 @@
 		bind:this={DOMnode}
 		use:grabHandle
 	>
-		{#if $header}
-			<Header />
-		{/if}
 		{#if !collapsed}
 			<slot {grabHandle} {selected} />
 		{/if}

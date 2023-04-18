@@ -16,7 +16,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: 0, y: -80 }} let:selected>
+<Node position={{ x: 40, y: 50 }} let:selected>
 	<span class="note" id="custom">Custom Nodes</span>
 	<NodeWrapper title="Line Thickness" outputStore={output} key="strokeWidth">
 		<div class="node-body">
@@ -36,12 +36,13 @@
 	.note {
 		font-family: 'Reenie Beanie', sans-serif;
 		position: absolute;
-		top: -30px;
+		top: -20px;
 		left: 40px;
 		width: 400px;
 		transform: rotate(3deg);
 		color: inerhit;
 		font-weight: 200px;
 		font-size: 30px;
+		pointer-events: none;
 	}
 </style>

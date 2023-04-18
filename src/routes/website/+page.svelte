@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Svelvet, type Theme } from '$lib';
-	import { ThemeToggle, Background } from '$lib';
+	import { ThemeToggle, Group } from '$lib';
 	import Thickness from '../../test-components/Thickness.svelte';
 	import Output from '../../test-components/Output.svelte';
 	import NumCircles from '../../test-components/NumCircles.svelte';
@@ -17,13 +17,22 @@
 <body>
 	<div class="wrapper">
 		<Svelvet edgeStyle="step" TD width={800} {theme} height={500} {zoom} minimap controls>
-			<Thickness />
-			<Noise />
-			<NumCircles />
-			<CircleColor />
-			<DashLength />
+			<Group
+				position={{ x: -150, y: -100 }}
+				width={600}
+				height={700}
+				color="goldenrod"
+				groupName="parameters"
+			>
+				<Thickness />
+				<Noise />
+				<NumCircles />
+				<CircleColor />
+				<DashLength />
+			</Group>
 			<Output />
-			<span id="state" class="note"> Stateful Anchors </span>
+			<span id="state" class="note"> Stateful Anchors</span>
+			<span id="groups" class="note">Group Boxes</span>
 			<ThemeToggle main="dark" alt="light" slot="toggle" />
 		</Svelvet>
 	</div>
@@ -55,12 +64,12 @@
 		font-weight: 200px;
 		font-size: 40px;
 	}
-	#locked {
-		top: 480px;
-		left: 630px;
-	}
 	#state {
-		top: -40px;
+		top: -30px;
+		left: 620px;
+	}
+	#groups {
+		top: 530px;
 		left: 490px;
 	}
 </style>

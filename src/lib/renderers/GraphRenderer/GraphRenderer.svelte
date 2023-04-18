@@ -15,13 +15,13 @@
 	const groups = graph.groups;
 	const initialNodePositions = graph.initialNodePositions;
 	const cursor = graph.cursor;
-	let animationFrameId: number;
 
 	$: if ($activeGroup && $tracking) {
 		moveNodes(graph);
 	}
 
 	function handleGroupClicked(event: CustomEvent) {
+		$tracking = true;
 		const { groupName } = event.detail;
 		$activeGroup = groupName;
 		$initialClickPosition = $cursor;

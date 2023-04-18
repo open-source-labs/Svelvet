@@ -202,11 +202,11 @@
 		position: relative;
 	}
 
-	.line {
+	/* .line {
 		position: relative;
 		width: 200px;
 		height: 30px;
 		border-radius: 6px;
 		background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
-	}
+	} */
 </style>
