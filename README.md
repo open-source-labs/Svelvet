@@ -31,7 +31,7 @@ Shout out to our contributors! Here's what's new:
     <li>All new Edge component for developer customization</li>
     <li>All new Node component for developer customization</li>
         <li>All new Resizer component used when composing custom nodes</li>
-     <li>Improved realiability and DX around Edge click events</li>
+     <li>Improved reliability and DX around Edge click events</li>
     <li>Node connections can be specified at the Node or Anchor level. Improved flexibility of input options</li>
     <li>Improved consistency of touch events on mobile devices. Added touch support for controls component</li>
     <li>Nodes and Edges no longer require specified IDs. Defaults to incrementing value</li>
@@ -44,7 +44,7 @@ Shout out to our contributors! Here's what's new:
     <li>Added node grouping functionality via Shift + CMD + Click</li>
     <li>Added the ability to pass custom edges at the Graph, Node and Anchor level</li>
     <li>No longer required to pass width/height to Svelvet component. Will fill wrapping container by default</li>
-    <li>Added the abilty to specify canvas/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
+    <li>Added the ability to specify canvas/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
     <li>All new Minimap component that accepts props for placement, dimensions and styling the background and nodes (defaults to node color) and features dramatically improved tracking/visualization plus the ability to hide nodes</li>
     <li>All new Theme Toggle component that can toggle between a main and alt theme</li>
     <li>Enabled two way data binding for some parameters when creating default Nodes</li>
@@ -61,7 +61,7 @@ Shout out to our contributors! Here's what's new:
     <li>Removed redundant window and event listeners</li>
     <li>Added dynamic data flow/state management system that tracks Anchor connections</li>
     <li>Updated home page to include newest collaborators</li>
-    <li>Temporarily removed dynamic anchor logic due to library re-write. May re-add<li>
+    <li>Temporarily removed dynamic anchor logic due to library re-write. May re-add</li>
     <li>Made progress on restoring graph state from local storage. Coming soon!</li>
 </ul>
 </details>
@@ -199,15 +199,15 @@ Start by importing the Svelvet and Node components into your application:
 import { Svelvet, Node, Anchor, Edge } from 'svelvet';
 ```
 
-A Svelvet canvas primarily consists of Nodes. You can pass any number Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
+A Svelvet canvas primarily consists of Nodes. You can pass any number of Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
 
-Nodes, Edges and Anchors all feature click events, stateful booleans and more to allow developers to fully customize the state of their graphs.
+Nodes, Edges and Anchors all feature click events, properties and functions to allow developers to fully customize the state of their graphs.
 
-When creating custom Ndoes, you can position any number of our Anchor components to enable dynamic connections. You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can be created dynamically by Shift + Click and dragging.
+When creating custom Nodes, you can position any number of our Anchor components to enable dynamic connections. You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can be created dynamically by Shift + Click and dragging.
 
 Finally, you can render our Controls, Minimap, Background and Theme Toggle components via props or named slots. In the latter use case, you can pass props to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
 
-Svelvet is focused on dynamic edge connections, but if you'd like to specify edges ahead of time, you can pass an array of connections to any Anchor component taking the the following form: [[nodeId, anchorId], [nodeId, anchorId]]. You can also pass a custom Edge component!
+Svelvet is focused on dynamic edge connections, but if you'd like to specify edges ahead of time, you can pass an array of connections to any Anchor component. You can also pass a custom Edge component!
 
 For more detailed use cases and examples, please visit svelvet.io.
 
