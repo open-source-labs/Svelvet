@@ -1,7 +1,5 @@
 <script lang="ts">
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
-	import Minimap from '$lib/components/Minimap/Minimap.svelte';
-	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
@@ -31,6 +29,7 @@
 	export let snapTo = 1;
 	export let minimap = false;
 	export let controls = false;
+	export let toggle = false;
 	export let fixedZoom = false;
 	export let disableSelection = false;
 	export let ZOOM_INCREMENT = 0.1;
@@ -76,11 +75,21 @@
 	$: dimensions = $dimensionsStore;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
 	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
-	$: minimapComponent = minimap ? Minimap : null;
-	$: controlsComponent = controls ? Controls : null;
 
-	onMount(() => {
+	let toggleComponent: ConstructorOfATypedSvelteComponent | null = null;
+	let minimapComponent: ConstructorOfATypedSvelteComponent | null = null;
+	let controlsComponent: ConstructorOfATypedSvelteComponent | null = null;
+
+	onMount(async () => {
 		updateGraphBounds();
+
+		// Conditionally load components
+		if (toggle)
+			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		if (minimap)
+			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		if (controls)
+			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	});
 
 	function updateGraphBounds() {
@@ -343,6 +352,7 @@
 	{/if}
 	<svelte:component this={minimapComponent} />
 	<svelte:component this={controlsComponent} />
+	<svelte:component this={toggleComponent} />
 	<slot name="minimap" />
 	<slot name="controls" />
 	<slot name="toggle" />

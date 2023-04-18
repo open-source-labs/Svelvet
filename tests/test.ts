@@ -74,6 +74,18 @@ test('anchors can be connected', async ({ page }) => {
 	await expect(newEdge).toHaveAttribute('style', 'stroke: white; stroke-width: 2px;');
 });
 
+test('anchors can be disconnected', async ({ page }) => {
+	await page.goto(testRoute);
+	const targetAnchor = page.locator('[id="A-1/N-node2"]');
+	const node = await page.locator('#N-3');
+	await targetAnchor.dragTo(node);
+
+	const newEdge = page.locator('[id="A-1/N-node2+A-2/N-node1;"]');
+
+	const elementCount = await newEdge.count();
+	expect(elementCount).toBe(0);
+});
+
 test('outputs cannot be connected to outputs', async ({ page }) => {
 	await page.goto(testRoute);
 	const sourceAnchor = page.locator('[id="A-2/N-node1"]');
@@ -86,18 +98,34 @@ test('outputs cannot be connected to outputs', async ({ page }) => {
 	await expect(newEdge.count()).resolves.toBe(0);
 });
 
-test('there are the correct number of minimap nodes', async ({ page }) => {
+test('the minimap is rendered with the correct number of nodes', async ({ page }) => {
 	await page.goto(testRoute);
-
+	const minimap = await page.locator('.minimap-wrapper');
+	await expect(minimap).toBeVisible();
 	const minimapNodes = await page.$$('.minimap-node');
 
 	expect(minimapNodes.length).toBe(3);
 });
 
-test('default node is created with correct id and inputs', async ({ page }) => {
+test('the canvas is the correct size', async ({ page }) => {
 	await page.goto(testRoute);
 
-	const node = await page.$('#N-3');
+	const canvas = await page.waitForSelector('#G-1');
+	if (!canvas) throw new Error('Canvas not found');
+
+	const canvasBox = await canvas.boundingBox();
+
+	if (!canvasBox) throw new Error('Canvas bounding box not found');
+
+	expect(canvasBox.width).toBe(800);
+	expect(canvasBox.height).toBe(500);
+});
+
+test('default node is created with correct id and inputs', async ({ page }) => {
+	await page.goto(testRoute);
+	const wrapper = page.locator('.svelvet-graph-wrapper');
+	if (!wrapper) throw new Error('Wrapper not found');
+	const node = await page.waitForSelector('#N-3');
 	if (!node) throw new Error('Node not found');
 
 	const inputs = await node.$('.input-anchors');
@@ -134,6 +162,27 @@ test('graph is zoomable by scrolling', async ({ page }) => {
 	// Dispatch a wheel event on the graph wrapper to zoom in
 	await page.mouse.move(startX, startY);
 	await page.mouse.wheel(0, -100);
+
+	// Check if the scale value has increased
+	await expect(graphWrapper).toHaveAttribute(
+		'style',
+		/^transform: translate\(0px, 0px\) scale\((\d+\.\d+)\);$/
+	);
+});
+
+test('graph is zoomable via controls', async ({ page }) => {
+	await page.goto(testRoute);
+
+	const graphWrapper = page.locator('.svelvet-graph-wrapper');
+
+	await expect(graphWrapper).toHaveAttribute('style', 'transform: translate(0px, 0px) scale(1);');
+
+	const controls = page.locator('.graph-controls');
+	if (!controls) throw new Error('Controls not found');
+	const zoomIn = await page.waitForSelector('.zoom-in');
+
+	if (!zoomIn) throw new Error('Zoom in not found');
+	await zoomIn.click();
 
 	// Check if the scale value has increased
 	await expect(graphWrapper).toHaveAttribute(

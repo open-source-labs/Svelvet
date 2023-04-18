@@ -82,20 +82,20 @@
 			style:color={iconColor || $themeStore.text}
 		>
 			{#if $hidden.size > 0}
-				<button on:mousedown|stopPropagation={unhideAll}>
+				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
 					<span class="material-symbols-outlined">visibility_off</span>
 				</button>
 			{/if}
-			<button on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
+			<button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
 				<span class="material-symbols-outlined"> zoom_in </span>
 			</button>
-			<button on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
+			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
 				<span class="material-symbols-outlined"> zoom_out </span>
 			</button>
-			<button on:mousedown|stopPropagation={reset} on:touchstart={reset}>
+			<button class="reset" on:mousedown|stopPropagation={reset} on:touchstart={reset}>
 				<span class="material-symbols-outlined"> restart_alt </span>
 			</button>
-			<button on:mousedown|stopPropagation={lock} on:touchstart={lock}>
+			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
 				<span class="material-symbols-outlined">
 					{$locked ? 'lock_open' : 'lock'}
 				</span>

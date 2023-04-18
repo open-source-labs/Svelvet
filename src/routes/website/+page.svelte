@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Svelvet, type Theme } from '$lib';
-	import { ThemeToggle } from '$lib';
+	import { ThemeToggle, Background } from '$lib';
 	import Thickness from '../../test-components/Thickness.svelte';
 	import Output from '../../test-components/Output.svelte';
 	import NumCircles from '../../test-components/NumCircles.svelte';
@@ -24,7 +24,7 @@
 			<DashLength />
 			<Output />
 			<span id="state" class="note"> Stateful Anchors </span>
-			<ThemeToggle slot="toggle" />
+			<ThemeToggle main="dark" alt="light" slot="toggle" />
 		</Svelvet>
 	</div>
 </body>

@@ -58,7 +58,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark">
+		<Svelvet width={800} height={500} theme="dark" controls>
 			<Node id="node1" label="test" />
 			<Node
 				position={{ x: 300, y: 300 }}

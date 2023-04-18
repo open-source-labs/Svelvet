@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey } from '$lib/types';
-import { NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
 import { createStore } from './createStore';
 
 export function createNode(userNode: NodeConfig): Node {

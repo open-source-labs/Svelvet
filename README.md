@@ -24,41 +24,42 @@ Shout out to our contributors! Here's what's new:
 
 <details><summary>v7.0.0</summary>
 <ul>
-    <li>Changed primary API. Users now pass Node components directly as children to Svelvet</li>
-    <li>Added the ability to specify anchors as inputs, outputs or any. This controls connection logic and "directionality" of edge curvature</li>
-    <li>Added the ability to dynamically attach/reattach edges</li>
-     <li>All new Anchor component that developers can add anywhere within their own custom nodes. Use it to wrap your own custom anchor elements or customize via props</li>
-    <li>All new Edge component for developer customization.</li>
+    <li>Changed primary API. Developers now pass Node and other exposed components directly as children to Svelvet</li>
+    <li>Added the ability to specify Anchors as inputs, outputs or any, enabling connection logic and "directionality" of Edge curvature</li>
+    <li>Added the ability to dynamically attach/reattach Edges</li>
+     <li>All new Anchor component that developers can add anywhere within custom nodes. Can be wrapped around custom anchor elements or customized via props</li>
+    <li>All new Edge component for developer customization</li>
     <li>All new Node component for developer customization</li>
-    <li>All new Resizer component used when composing custom nodes</li>
-    <li>Node connections can be specified at the Node or Anchor level. Improve flexibility of input options</li>
-    <li>Improved consistency of touch events on mobile devices. Added touch support for controls component.</li>
+        <li>All new Resizer component used when composing custom nodes</li>
+     <li>Improved realiability and DX around Edge click events</li>
+    <li>Node connections can be specified at the Node or Anchor level. Improved flexibility of input options</li>
+    <li>Improved consistency of touch events on mobile devices. Added touch support for controls component</li>
     <li>Nodes and Edges no longer require specified IDs. Defaults to incrementing value</li>
     <li>Added Controls component with zoom, reset, lock and unhide functionality plus the ability to pass custom control buttons as children</li>
-     <li>Added the ability to specify an arbitrary number of anchors on default nodes</li>
-      <li>Added stacking logic when interacting with nodes</li>
-    <li>Improved step path algorithm now connects anchors regardless of their position. Exposed corner radius as prop</li>
-    <li>Added keyboard navigation to graph when focused</li>
+     <li>Added the ability to specify an arbitrary number of Anchors on default nodes</li>
+      <li>Added z-index stacking logic when interacting with Nodes</li>
+    <li>Improved step path algorithm, which now connects Anchors regardless of their position. Exposed corner radius as prop</li>
+    <li>Added keyboard navigation to canvas when focused</li>
     <li>Added selection box functionality via Shift + Click. Color can be controlled via the selectionColor prop on the Svelvet component.</li>
     <li>Added node grouping functionality via Shift + CMD + Click</li>
     <li>Added the ability to pass custom edges at the Graph, Node and Anchor level</li>
-    <li>No longer required to pass width/height to Svelvet component. Will fill wrapping component by default</li>
-    <li>Added the abilty to specify graph/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
+    <li>No longer required to pass width/height to Svelvet component. Will fill wrapping container by default</li>
+    <li>Added the abilty to specify canvas/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes</li>
     <li>All new Minimap component that accepts props for placement, dimensions and styling the background and nodes (defaults to node color) and features dramatically improved tracking/visualization plus the ability to hide nodes</li>
-    <li>Enabled two way data binding for some parameters when creating default nodes</li>
-    <li>Added mapColor and dotColor props to Svelvet component, though we plan on exposing the full Background component for greater customization</li>
+    <li>All new Theme Toggle component that can toggle between a main and alt theme</li>
+    <li>Enabled two way data binding for some parameters when creating default Nodes</li>
+    <li>All new Background component allowing customization of grid size and color</li>
     <li>Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when implementing custom nodes</li>
     <li>Added theme prop to Svelvet component. Defaults to light. Accepts parameters like "dark", "purple", "parchment"</li>
     <li>Removed frontend website code from library repository</li>
     <li>Added E2E tests using Playwright</li>
     <li>Simplified bezier curve logic and added the ability to specify anchor "direction"</li>
     <li>Added ability to parse Mermaid strings into node graphs + edges</li>
-    <li>Added the ability to specify graph direction as TD or LR</li>
-    <li>Added a series of accessible input components (Slider, RadioGroup, TextField) that can be composed in custom nodes and are linked with our data flow system</li>
+    <li>Added a series of accessible input components (Slider, RadioGroup, TextField, ColorWheel) that can be composed in custom nodes and are linked with our data flow system</li>
     <li>Library now features 100% TypeScript coverage and fully exported types</li>
     <li>Removed D3-zoom dependency</li>
     <li>Removed redundant window and event listeners</li>
-    <li>Added dynamic data flow/state management system that tracks anchor connections</li>
+    <li>Added dynamic data flow/state management system that tracks Anchor connections</li>
     <li>Updated home page to include newest collaborators</li>
     <li>Temporarily removed dynamic anchor logic due to library re-write. May re-add<li>
     <li>Made progress on restoring graph state from local storage. Coming soon!</li>
@@ -170,11 +171,10 @@ Shout out to our contributors! Here's what's new:
 
 ## Key Features
 
-- **Easy to use:** To get [started](https://svelvet.io/docs/basic-usage/) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.io/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet flowchart!
+- **Easy to use:** To get [started](https://svelvet.mintlify.app/getting-started/installation) with Svelvet, all you need is data for nodes and edges. Visit our [documentation website](https://svelvet.mintlify.app/) for streamlined, user-friendly tutorials and examples on how to get the most out of your Svelvet interfaces!
 - **Interactive:** Elegant and smooth interface when selecting a node to drag it across the graph.
-- **Customizable:** Ability to customize your nodes and edges (node size, color, border and edge type, label, anchor). More coming soon!
-- **Fast rendering:** Re-rendering is based on changes to initial values for nodes, edges and optional background and _movement_ (collaborator credit to [dvisockas](https://github.com/dvisockas)).
-- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Cypress](https://www.cypress.io/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
+- **Customizable:** Fully customizable Edges, Nodes, Backgrounds and components
+- **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://www.playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
 ![screenshot](./src/assets/readme-gif.gif)
@@ -193,44 +193,44 @@ yarn add svelvet
 
 ## Quick Start
 
-Start by importing Svelvet, Node, Anchor and Edge into your application:
+Start by importing the Svelvet and Node components into your application:
 
 ```js
 import { Svelvet, Node, Anchor, Edge } from 'svelvet';
 ```
 
-A Svelvet component primarily consists of Nodes. You can pass any number of our Node components as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified. For greater customization, wrap your own custom component in our Node component and pass the whole thing to Svelvet! Within your own Node component, you can position our Anchor component anywhere and we'll handle tracking and connections! You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can also be created dynamically by Shift + Click and dragging. Finally, you can render our Controls and Minimap components as props by passing "minimap" or "controls" as props or by including the components in a named slot. In the latter use case, you can pass props to both to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
+A Svelvet canvas primarily consists of Nodes. You can pass any number Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
+
+Nodes, Edges and Anchors all feature click events, stateful booleans and more to allow developers to fully customize the state of their graphs.
+
+When creating custom Ndoes, you can position any number of our Anchor components to enable dynamic connections. You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can be created dynamically by Shift + Click and dragging.
+
+Finally, you can render our Controls, Minimap, Background and Theme Toggle components via props or named slots. In the latter use case, you can pass props to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
 
 Svelvet is focused on dynamic edge connections, but if you'd like to specify edges ahead of time, you can pass an array of connections to any Anchor component taking the the following form: [[nodeId, anchorId], [nodeId, anchorId]]. You can also pass a custom Edge component!
 
 For more detailed use cases and examples, please visit svelvet.io.
 
-```js
+```jsx
 <Svelvet width={500} height={500} theme="dark" initialZoom={0.6} minimap>
 	<Node />
 	<Node label="Demo Node" TD />
 	<Node id="node-id" inputs={2} />
 	<Node bgColor="red" inputs={10} outputs={5} height={200} position={{ x: 100, y: 100 }} />
-	<Controls slot="controls" />
+	<Controls slot="controls" horizontal />
 </Svelvet>
 ```
 
-Visit our [website](https://svelvet.io) to learn more on how to customize your nodes and edges to your liking!
+Visit our [website](https://svelvet.io) to learn more!
 
 ## Testing
 
-Testing is done with Vitest and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/tests) folder. In order to run the tests use the command:
-
-For Unit testing
-
-```bash
-npm run test:unit
-```
+Testing is done with Playwright and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/test) folder. We plan on dramatically expanding test coverage very soon. In order to run the tests use the command:
 
 For End-to-End testing
 
 ```bash
-npm run cypress:open
+npx playwright test
 ```
 
 ## The Svelvet Team

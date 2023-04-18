@@ -31,6 +31,7 @@
 	export let height = 0;
 	export let minimap = false;
 	export let controls = false;
+	export let toggle = false;
 	export let selectionColor: CSSColorString = 'lightblue';
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
@@ -93,6 +94,7 @@
 	<Graph
 		{width}
 		{height}
+		{toggle}
 		{backgroundExists}
 		{minimap}
 		{graph}

@@ -50,7 +50,7 @@
 	</div>
 	<p style:color={$textColor}>{$label}</p>
 
-	{#if resizable}
+	{#if $resizable}
 		<Resizer width height />
 	{/if}
 </div>

@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor, type NodeConfig } from '$lib';
-	import TestComponent from '../test-components/TestComponent.svelte';
-	import CustomControls from '../test-components/CustomControls.svelte';
-	import MyNode from '../test-components/MyNode.svelte';
-	import Background from '$lib/containers/Background/Background.svelte';
+	import { Svelvet, Node } from '$lib';
+	import type { NodeConfig } from '$lib';
 	import CustomEdge from '../test-components/CustomEdge.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
