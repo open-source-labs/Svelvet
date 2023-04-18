@@ -250,14 +250,14 @@ test('node zIndexes are incremented correctly', async ({ page }) => {
 
 	await expect(node1).toHaveAttribute(
 		'style',
-		'top: 0px; left: 0px; width: 200px; height: 100px; z-index: 3; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD;'
+		'top: 0px; left: 0px; width: 200px; height: 100px; z-index: 3; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD; transform: rotate(0deg);'
 	);
 
 	await node2.click();
 
 	await expect(node2).toHaveAttribute(
 		'style',
-		'top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD;'
+		'top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD; transform: rotate(0deg);'
 	);
 });
 

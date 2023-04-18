@@ -75,6 +75,7 @@ export interface NodeConfig {
 	bgColor?: CSSColorString;
 	borderRadius?: number;
 	borderWidth?: number;
+	rotation?: number;
 	textColor?: CSSColorString;
 	headerColor?: CSSColorString;
 	nodeLevelConnections?: Connections;

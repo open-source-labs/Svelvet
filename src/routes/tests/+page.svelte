@@ -53,7 +53,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet edgeStyle="step" width={800} height={500} theme="dark" controls>
+		<Svelvet width={800} height={500} theme="dark" controls>
 			<Node id="node1" label="test" resizable />
 			<Node
 				position={{ x: 300, y: 300 }}

@@ -10,6 +10,7 @@ import RadioGroup from './components/data/RadioGroup/RadioGroup.svelte';
 import Background from './containers/Background/Background.svelte';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle.svelte';
 import ColorWheel from './components/data/ColorPicker/ColorWheel.svelte';
+import Resizer from './components/Resizer/Resizer.svelte';
 import { generateInput, generateOutput } from './utils/creators';
 
 export {
@@ -21,6 +22,7 @@ export {
 	Edge,
 	Background,
 	Group,
+	Resizer,
 	Slider,
 	RadioGroup,
 	ThemeToggle,

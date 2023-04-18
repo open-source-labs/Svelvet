@@ -37,6 +37,7 @@
 	export let zIndex = 1;
 	export let editable = false;
 	export let locked = false;
+	export let rotation = 0;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let connections: Connections = [];
 
@@ -76,7 +77,8 @@
 				zIndex,
 				direction,
 				locked,
-				nodeLevelConnections: connections
+				nodeLevelConnections: connections,
+				rotation
 			};
 			if (borderColor) config.borderColor = borderColor;
 			if (selectionColor) config.selectionColor = selectionColor;

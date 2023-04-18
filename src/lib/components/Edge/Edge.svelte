@@ -81,8 +81,8 @@
 	$: targetDirection = target?.direction || writable('self' as Direction);
 
 	// Helper XY pair to offset the control points
-	$: sourceControlVector = rotateVector(directionVectors[$sourceDirection], $sourceRotation || 1);
-	$: targetControlVector = rotateVector(directionVectors[$targetDirection], $targetRotation || 1);
+	$: sourceControlVector = rotateVector(directionVectors[$sourceDirection], $sourceRotation || 0);
+	$: targetControlVector = rotateVector(directionVectors[$targetDirection], $targetRotation || 0);
 
 	// Calculating the control points for the bezier curve
 	$: sourceControlX = roundNum($sourceX + sourceControlVector.x * maxCurveDisplaceX);

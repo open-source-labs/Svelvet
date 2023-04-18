@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
-	import { generateInput, generateOutput, Slider } from '$lib';
+	import { generateInput, generateOutput, Resizer } from '$lib';
 	import NodeWrapper from './NodeWrapper.svelte';
 	import { ColorWheel } from '$lib';
 	import type { CSSColorString } from '$lib/types';
@@ -18,7 +18,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: 50, y: 400 }} let:selected>
+<Node rotation={-5} position={{ x: 50, y: 400 }} let:selected>
 	<p class="note" id="custom">
 		Built In
 		<br />
@@ -43,6 +43,7 @@
 			</Anchor>
 		</div>
 	</NodeWrapper>
+	<Resizer rotation />
 </Node>
 
 <style>
