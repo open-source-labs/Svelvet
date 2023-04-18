@@ -47,7 +47,7 @@
 	<p style:color={$textColor}>{$label}</p>
 
 	{#if $resizable}
-		<Resizer width height />
+		<Resizer width height rotation />
 	{/if}
 </div>
 

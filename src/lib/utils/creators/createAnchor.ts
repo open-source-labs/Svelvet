@@ -38,12 +38,12 @@ export function createAnchor(
 	);
 	// Moving is derived from whether or not the parent node is moving or resizing
 	const moving = derived(
-		[node.moving, node.resizingWidth, node.resizingHeight],
-		([$moving, $resizingWidth, $resizingHeight]) => {
-			return $moving || $resizingWidth || $resizingHeight;
+		[node.moving, node.resizingWidth, node.resizingHeight, node.rotating],
+		([$moving, $resizingWidth, $resizingHeight, $rotating]) => {
+			return $moving || $resizingWidth || $resizingHeight || $rotating;
 		}
 	);
-
+	const rotation = derived([node.rotation], ([$rotation]) => $rotation);
 	return {
 		id,
 		position: { x: anchorX, y: anchorY },
@@ -56,6 +56,7 @@ export function createAnchor(
 		connected: writable(new Set()),
 		store: store || null,
 		inputKey: key || null,
-		edgeColor: edgeColor || writable(null)
+		edgeColor: edgeColor || writable(null),
+		rotation
 	};
 }

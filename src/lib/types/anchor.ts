@@ -21,6 +21,7 @@ export interface Anchor {
 	// "Direction" of the anchor. Controls the curvature of the edge
 	direction: Writable<Direction>;
 	id: AnchorKey;
+	rotation: Readable<number>;
 	type: InputType;
 	inputKey: string | number | null;
 	moving: Readable<boolean>;

@@ -26,6 +26,7 @@
 	$: borderColor = node.borderColor;
 	$: selectionColor = node.selectionColor;
 	$: borderWidth = node.borderWidth;
+	$: rotation = node.rotation;
 
 	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
@@ -200,6 +201,7 @@
 		style:--border-color={$borderColor || $themeStore.border}
 		style:--border-width="{$borderWidth}px"
 		style:--selection-color={$selectionColor || $themeStore.selection}
+		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
@@ -219,7 +221,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		will-change: top, left, width, height, z-index;
+		will-change: top, left;
 		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
 	}
 	.locked {

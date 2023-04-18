@@ -16,7 +16,7 @@
 		EdgeStyle,
 		EdgeConfig
 	} from '$lib/types';
-	import { onMount, getContext, onDestroy, setContext } from 'svelte';
+	import { onMount, getContext, onDestroy } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
@@ -70,6 +70,7 @@
 	const edges = graph.edges;
 	const resizingWidth = node.resizingWidth;
 	const resizingHeight = node.resizingHeight;
+	const rotating = node.rotating;
 	const nodeLevelConnections = node.nodeLevelConnections;
 	const linkingInput = graph.linkingInput;
 	const linkingOutput = graph.linkingOutput;
@@ -132,10 +133,10 @@
 	$: if (!$activeKeys['Shift']) clearAllLinking();
 
 	// If the parent node is resizing, we actively track the position of the anchor
-	$: if (!tracking && ($resizingWidth || $resizingHeight)) {
+	$: if (!tracking && ($resizingWidth || $resizingHeight || $rotating)) {
 		tracking = true;
 		trackPosition();
-	} else if (!$resizingWidth && !$resizingHeight && tracking) {
+	} else if (!$resizingWidth && !$resizingHeight && tracking && !$rotating) {
 		tracking = false;
 		cancelAnimationFrame(animationFrameId);
 	}
@@ -545,17 +546,6 @@
 		border: solid 1px black;
 		pointer-events: auto;
 	}
-	.connected {
-		background-color: white;
-	}
-
-	.connecting {
-		background-color: white;
-	}
-
-	.hovering {
-		background-color: rgb(213, 22, 22);
-	}
 	.output {
 		border-color: white;
 	}
@@ -573,5 +563,4 @@
 		cursor: pointer;
 		outline: inherit;
 	}
-	/* reset button styles */
 </style>

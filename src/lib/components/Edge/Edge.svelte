@@ -5,12 +5,14 @@
 		EdgeStyle,
 		Graph,
 		ThemeGroup,
-		WritableEdge
+		WritableEdge,
+		Node,
+		XYPair
 	} from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
-	import { roundNum } from '$lib/utils/helpers';
+	import { roundNum, rotateVector } from '$lib/utils/helpers';
 	import { calculateStepPath } from '$lib/utils/calculators';
 	import { onMount, onDestroy } from 'svelte';
 	import { directionVectors } from '$lib/constants/math';
@@ -54,6 +56,9 @@
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
 
+	$: sourceRotation = source?.rotation;
+	$: targetRotation = target?.rotation;
+
 	// The coordinates of the source and target anchors
 	// If there is no source or target, use the cursor position
 	$: sourceX = (source && source.position.x) || readable($cursor.x);
@@ -76,8 +81,8 @@
 	$: targetDirection = target?.direction || writable('self' as Direction);
 
 	// Helper XY pair to offset the control points
-	$: sourceControlVector = directionVectors[$sourceDirection];
-	$: targetControlVector = directionVectors[$targetDirection];
+	$: sourceControlVector = rotateVector(directionVectors[$sourceDirection], $sourceRotation || 1);
+	$: targetControlVector = rotateVector(directionVectors[$targetDirection], $targetRotation || 1);
 
 	// Calculating the control points for the bezier curve
 	$: sourceControlX = roundNum($sourceX + sourceControlVector.x * maxCurveDisplaceX);

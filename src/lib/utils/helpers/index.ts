@@ -9,3 +9,4 @@ export * from './generateKey';
 export * from './roundNum';
 export * from './buildArcStringKey';
 export * from './constructArcString';
+export * from './rotateVector';

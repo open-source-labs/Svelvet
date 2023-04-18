@@ -12,7 +12,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Getting Started](https://svelvet.io/docs/installation/) | [📚 Documentation](https://svelvet.io/docs/core-concepts/) | [⌨️ Blog](https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Getting Started](https://svelvet.io/docs/installation/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 
@@ -30,6 +30,7 @@ Shout out to our contributors! Here's what's new:
      <li>All new Anchor component that developers can add anywhere within custom nodes. Can be wrapped around custom anchor elements or customized via props</li>
     <li>All new Edge component for developer customization</li>
     <li>All new Node component for developer customization</li>
+    <li>Added ability to rotate nodes via the top left corner</li>
         <li>All new Resizer component used when composing custom nodes</li>
      <li>Improved reliability and DX around Edge click events</li>
     <li>Node connections can be specified at the Node or Anchor level. Improved flexibility of input options</li>
