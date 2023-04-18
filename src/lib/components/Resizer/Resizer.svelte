@@ -20,18 +20,17 @@
 
 	$: heightStore = node.dimensions.height;
 	$: widthStore = node.dimensions.width;
-	$: x = node.position.x;
-	$: y = node.position.y;
+	const position = node.position;
 
 	$: cursorY = $cursor.y;
 	$: cursorX = $cursor.x;
 
 	$: if ($resizingHeight) {
-		const newHeight = Math.max(minHeight, cursorY - $y);
+		const newHeight = Math.max(minHeight, cursorY - $position.y);
 		$heightStore = newHeight;
 	}
 	$: if ($resizingWidth) {
-		const newWidth = Math.max(minWidth, cursorX - $x);
+		const newWidth = Math.max(minWidth, cursorX - $position.x);
 		$widthStore = newWidth;
 	}
 

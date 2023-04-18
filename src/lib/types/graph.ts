@@ -73,7 +73,7 @@ export type GroupBoxes = Record<GroupKey, GroupBox>;
 export interface GroupBox {
 	group: Writable<GroupKey>;
 	dimensions: Dimensions;
-	position: XYPosition;
+	position: Writable<XYPair>;
 	color: Writable<CSSColorString>;
 	moving: Writable<boolean>;
 }

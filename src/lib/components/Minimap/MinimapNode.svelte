@@ -16,7 +16,7 @@
 
 	const { position, dimensions, bgColor, borderRadius } = node;
 	const { width, height } = dimensions;
-	const { x, y } = position;
+	const { x, y } = $position;
 
 	$: zIndex = node.zIndex;
 </script>
@@ -33,8 +33,8 @@
 	style:background-color={nodeColor || $bgColor || $themeStore.node}
 	style:width="{$width}px"
 	style:height="{$height}px"
-	style:top="{$y - top}px"
-	style:left="{$x - left}px"
+	style:top="{y - top}px"
+	style:left="{x - left}px"
 	class:hideable
 />
 

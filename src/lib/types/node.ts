@@ -1,13 +1,21 @@
 import type { Writable } from 'svelte/store';
 import type { AnchorStore, CSSDimensionString } from '.';
-import type { XYPosition, NodeKey, Dimensions, ConfigObject, CSSColorString, GroupKey } from '.';
+import type {
+	XYPosition,
+	XYPair,
+	NodeKey,
+	Dimensions,
+	ConfigObject,
+	CSSColorString,
+	GroupKey
+} from '.';
 
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
 	label: Writable<string>; // Primary label for default node
 	dimensions: Dimensions;
-	position: XYPosition;
+	position: Writable<XYPair>;
 	inputs: Writable<number>; //Number of default input anchors to render
 	outputs: Writable<number>; // Number of default output anchors to render
 	anchors: AnchorStore;

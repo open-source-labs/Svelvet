@@ -273,7 +273,6 @@
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
-		console.log('connectAnchors', source.id, target.id);
 		updatePosition(); // Just in case
 		const newEdge = createEdge({ source, target }, source?.edge || null, {
 			color: edgeColor,

@@ -26,8 +26,10 @@
 			let maxHeight = -Infinity;
 			for (const node of row) {
 				if (!node.ignore) {
-					nodeList[`N-${node.id}`].position.x.update(() => x);
-					nodeList[`N-${node.id}`].position.y.update(() => y);
+					nodeList[`N-${node.id}`].position.update(() => {
+						return { x, y };
+					});
+
 					nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
 					nodeList[`N-${node.id}`].dimensions.height.subscribe(
 						(height: number) => (maxHeight = Math.max(maxHeight, height))

@@ -110,10 +110,10 @@
 				width: writable(Math.abs(width)),
 				height: writable(Math.abs(height))
 			};
-			const position = {
-				x: writable(left),
-				y: writable(top)
-			};
+			const position = writable({
+				x: left,
+				y: top
+			});
 
 			const groupBox: GroupBox = {
 				group: writable(groupKey),

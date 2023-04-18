@@ -5,13 +5,10 @@
 <body>
 	<div class="wrapper">
 		<Svelvet width={800} height={500} theme="dark">
-			{#each { length: 100 } as _, i}
+			{#each { length: 50 } as _, i}
 				<Node
-					connections={Array(1)
-						.fill(0)
-						.map(() => Math.floor(Math.random() * 100))}
-					inputs={Math.floor(Math.random() * 10)}
-					outputs={Math.floor(Math.random() * 10)}
+					inputs={0}
+					outputs={0}
 					label={`Node ${i}`}
 					position={{ x: Math.random() * 2000, y: Math.random() * 1000 }}
 				/>

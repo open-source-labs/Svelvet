@@ -29,10 +29,10 @@ export function createNode(userNode: NodeConfig): Node {
 
 	const newNode: Node = {
 		id: nodeKey,
-		position: {
-			x: writable(position?.x || 0),
-			y: writable(position?.y || 0)
-		},
+		position: writable({
+			x: position?.x || 0,
+			y: position?.y || 0
+		}),
 		dimensions: {
 			width: writable(dimensions?.width || 0),
 			height: writable(dimensions?.height || 0)

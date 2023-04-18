@@ -26,8 +26,9 @@ export function createBoundsStore(
 		const yTranslation = get(translationY);
 
 		for (const node of Object.values(get(nodes))) {
-			const x = get(node.position.x);
-			const y = get(node.position.y);
+			// const x = get(node.position.x);
+			// const y = get(node.position.y);
+			const { x, y } = get(node.position);
 			const width = get(node.dimensions.width);
 			const height = get(node.dimensions.height);
 
@@ -63,11 +64,7 @@ export function createBoundsStore(
 
 	nodes.subscribe(($nodes) => {
 		for (const node of Object.values($nodes)) {
-			node.position.x.subscribe(() => {
-				recalculateBounds();
-			});
-
-			node.position.y.subscribe(() => {
+			node.position.subscribe(() => {
 				recalculateBounds();
 			});
 

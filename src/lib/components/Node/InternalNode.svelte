@@ -11,11 +11,11 @@
 
 	export let node: Node;
 
-	const x = node.position.x;
-	const y = node.position.y;
+	const position = node.position;
 	const widthStore = node.dimensions.width;
 	const heightStore = node.dimensions.height;
 
+	$: actualPosition = $position;
 	$: maxZIndex = graph.maxZIndex;
 	$: header = node.header;
 	$: id = node.id;
@@ -194,8 +194,8 @@
 		class="svelvet-node"
 		class:selected
 		class:locked={$locked || $nodeLock}
-		style:top="{$y}px"
-		style:left="{$x}px"
+		style:top="{actualPosition.y}px"
+		style:left="{actualPosition.x}px"
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
 		style:z-index={$zIndex}

@@ -17,10 +17,8 @@
 	const cursor = graph.cursor;
 	let animationFrameId: number;
 
-	$: if ($activeGroup && $tracking && $cursor) {
-		animationFrameId = requestAnimationFrame(() => moveNodes(graph));
-	} else {
-		cancelAnimationFrame(animationFrameId);
+	$: if ($activeGroup && $tracking) {
+		moveNodes(graph);
 	}
 
 	function handleGroupClicked(event: CustomEvent) {
