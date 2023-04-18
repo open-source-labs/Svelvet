@@ -1,42 +1,49 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import MinimapNode from './MinimapNode.svelte';
-	import type { Theme, CSSColorString, Graph } from '$lib/types';
+	import type { CSSColorString, Graph, Corner, ThemeGroup } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
-	import { THEMES } from '$lib/constants/themes';
+	import type { Writable } from 'svelte/store';
 
 	let graph: Graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let width = 100;
-	export let height = 100;
-	export let mapColor = THEMES[theme].map;
+	export let height = width;
+	export let mapColor: CSSColorString | null = null;
 	export let nodeColor: CSSColorString | null = null;
-	export let borderColor: CSSColorString = THEMES[theme].border;
+	export let borderColor: CSSColorString | null = null;
+	export let corner: Corner = 'SE';
+	export let hideable = false;
 
-	$: bounds = graph.bounds;
-	$: top = bounds.top;
-	$: left = bounds.left;
-	$: bottom = bounds.bottom;
-	$: right = bounds.right;
+	const buffer = 0.9;
+	const maxWidth = width * buffer;
+	const maxHeight = height * buffer;
 
-	$: nodes = graph.nodes;
-	$: groups = graph.groups;
-	$: transforms = graph.transforms;
+	const bounds = graph.bounds;
+	const top = bounds.top;
+	const left = bounds.left;
+	const bottom = bounds.bottom;
+	const right = bounds.right;
 
-	$: dimensions = graph.dimensions;
+	const nodes = graph.nodes;
+	const groups = graph.groups;
+	const transforms = graph.transforms;
+	const dimensions = graph.dimensions;
+	const hidden = $groups.hidden.nodes;
+	const scale = transforms.scale;
+	const xTranslation = transforms.translation.x;
+	const yTranslation = transforms.translation.y;
+
 	$: graphWidth = $dimensions.width;
 	$: graphHeight = $dimensions.height;
 
-	$: hidden = $groups.hidden.nodes;
 	$: boundsWidth = $right - $left;
 	$: boundsHeight = $bottom - $top;
-	$: aspectRatio = boundsWidth / boundsHeight;
+	$: boundsRatio = boundsWidth / boundsHeight;
 
-	$: scale = transforms.scale;
-	$: xTranslation = transforms.translation.x;
-	$: yTranslation = transforms.translation.y;
+	$: minimapRatio = width / height;
 
 	$: window = calculateRelativeCursor(
 		e,
@@ -49,13 +56,28 @@
 		$yTranslation
 	);
 
-	$: windowWidth = (graphWidth / boundsWidth / $scale) * 100;
-	$: windowHeight = (graphHeight / boundsHeight / $scale) * 100;
+	$: windowWidth = graphWidth / boundsWidth / $scale;
+	$: windowHeight = graphHeight / boundsHeight / $scale;
 
-	$: windowTop = ((window.y - $top) / boundsHeight) * 100;
-	$: windowLeft = ((window.x - $left) / boundsWidth) * 100;
+	$: windowTop = (window.y - $top) / boundsHeight;
+	$: windowLeft = (window.x - $left) / boundsWidth;
 
 	const e = { clientX: 0, clientY: 0 };
+
+	$: windowStyle = `
+		top: ${windowTopPx + windowTop * scaledBoundsHeight}px;
+		left: ${windowLeftPx + windowLeft * scaledBoundsWidth}px;
+		width: ${windowWidth * scaledBoundsWidth}px;
+		height: ${windowHeight * scaledBoundsHeight}px;`;
+
+	$: landscape = boundsRatio >= minimapRatio;
+	$: boundsScale = landscape ? maxWidth / boundsWidth : maxHeight / boundsHeight;
+
+	$: windowLeftPx = (width - scaledBoundsWidth) / 2;
+	$: windowTopPx = (height - scaledBoundsHeight) / 2;
+
+	$: scaledBoundsWidth = boundsWidth * boundsScale;
+	$: scaledBoundsHeight = boundsHeight * boundsScale;
 
 	function toggleHidden(node: Node) {
 		if ($hidden.has(node)) {
@@ -65,62 +87,83 @@
 		}
 		$hidden = $hidden;
 	}
-
-	$: windowStyle = `
-		top: ${windowTop}%;
-		left: ${windowLeft}%;
-		width: ${windowWidth}%;
-		height: ${windowHeight}%;`;
-
-	$: nodeWrapperStyle = `
-		aspect-ratio: ${aspectRatio};
-		${boundsWidth > boundsHeight ? 'width: 90%' : 'height: 90%'};`;
 </script>
 
-<div class="minimap-wrapper" style="width: {width}px; height: {height ? height : width}px;">
-	<div class="node-wrapper" style={nodeWrapperStyle} style:border-color={borderColor}>
+<div
+	class="minimap-wrapper"
+	style:background-color={mapColor || $themeStore.map}
+	style:width="{width}px"
+	style:height="{height ? height : width}px"
+	style:border-color={borderColor || $themeStore.border}
+	class:SW={corner === 'SW'}
+	class:NE={corner === 'NE'}
+	class:SE={corner === 'SE'}
+	class:NW={corner === 'NW'}
+>
+	<div
+		class="node-wrapper"
+		style:width="{boundsWidth}px"
+		style:height="{boundsHeight}px"
+		style:transform="scale({boundsScale})"
+	>
 		{#each Object.values($nodes) as node}
 			{#if node.id !== 'N-editor'}
 				<MinimapNode
 					{node}
 					top={$top}
 					left={$left}
-					{boundsWidth}
-					{boundsHeight}
 					{nodeColor}
 					hidden={$hidden.has(node)}
 					{toggleHidden}
+					{hideable}
 				/>
 			{/if}
 		{/each}
-
-		<div class="overlay" style={windowStyle} />
 	</div>
+
+	<div class="overlay" style={windowStyle} />
 </div>
 
 <style>
 	.minimap-wrapper {
 		position: absolute;
-		bottom: 10px;
-		right: 10px;
-		background-color: rgb(255, 255, 255);
 		border-radius: 6px;
 		overflow: hidden;
-		width: 100%;
-		height: 100%;
 		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
-		border: solid 1px black;
+		border: solid 1px;
 		z-index: 10;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
+
+	.NW {
+		left: 10px;
+		top: 10px;
+	}
+
+	.NE {
+		right: 10px;
+		top: 10px;
+	}
+
+	.SE {
+		right: 10px;
+		bottom: 10px;
+	}
+
+	.SW {
+		left: 10px;
+		bottom: 10px;
+	}
 	.overlay {
 		position: absolute;
 		background-color: transparent;
-		border: solid 1px rgb(129, 129, 129);
-		border-radius: 4px;
+		outline: 400px rgba(0, 0, 0, 0.25) solid;
+		box-sizing: border-box;
 		pointer-events: none;
-		z-index: 2;
+	}
+	.node-wrapper {
+		position: absolute;
 	}
 </style>

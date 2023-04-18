@@ -10,6 +10,15 @@ export interface XYPair {
 	y: number;
 }
 
+export interface GraphDimensions {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+	bottom: number;
+	right: number;
+}
+
 export interface NodeDOMBounds {
 	id: string;
 	top: number;
@@ -18,6 +27,24 @@ export interface NodeDOMBounds {
 	height: number;
 }
 export type Theme = 'light' | 'dark' | 'purple';
+
+export interface ThemeGroup {
+	node: CSSColorString;
+	border: CSSColorString;
+	text: CSSColorString;
+	selection: CSSColorString;
+	header: CSSColorString;
+	edge: CSSColorString;
+	anchor: CSSColorString;
+	map: CSSColorString;
+	controls: CSSColorString;
+	dots: CSSColorString;
+	alt: CSSColorString;
+	primary?: CSSColorString;
+}
+
+// Used in the context of position the controls and minimap elements
+export type Corner = 'SE' | 'SW' | 'NE' | 'NW';
 
 export interface Dimensions {
 	width: Writable<number>;
@@ -53,13 +80,25 @@ export type StrictDimenionValue =
 	| VwValue
 	| VhValue;
 
+export type XorY = 'x' | 'y';
+
+type OptionalSpace = ' ' | '';
 export type CSSColorString =
 	| NamedColors
 	| `#${string}`
-	| `rgb(${number},${number},${number})`
-	| `rgba(${number},${number},${number},${number | string})`
-	| `hsl(${number},${number}%,${number}%)`
-	| `hsla(${number},${number}%,${number}%,${number | string})`;
+	| RGBString
+	| `rgba(${OptionalSpace}${number},${OptionalSpace}${number},${OptionalSpace}${number},${OptionalSpace}${
+			| number
+			| string}${OptionalSpace})`
+	| HSLString
+	| `hsla(${OptionalSpace}${number},${OptionalSpace}${number}%,${OptionalSpace}${number}%,${OptionalSpace}${
+			| number
+			| string}${OptionalSpace})`;
+
+export type RGBString =
+	`rgb(${OptionalSpace}${number},${OptionalSpace}${number},${OptionalSpace}${number}${OptionalSpace})`;
+export type HSLString =
+	`hsl(${OptionalSpace}${number},${OptionalSpace}${number}%,${OptionalSpace}${number}%${OptionalSpace})`;
 
 type NamedColors =
 	| 'aliceblue'

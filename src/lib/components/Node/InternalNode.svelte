@@ -1,44 +1,48 @@
 <script lang="ts">
-	import Header from './Header.svelte';
-	import Resizer from '../Resizer/Resizer.svelte';
-	import type { Graph, Node, Theme } from '$lib/types';
+	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
-	import { initialClickPosition, activeKeys } from '$lib/stores';
-	import { calculateFitContentWidth, calculateRelativeCursor, captureGroup } from '$lib/utils';
+	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
+	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
 	export let node: Node;
 
-	let absolute = false;
+	const position = node.position;
+	const widthStore = node.dimensions.width;
+	const heightStore = node.dimensions.height;
 
+	$: actualPosition = $position;
 	$: maxZIndex = graph.maxZIndex;
-	$: header = node.header;
-	$: widthStore = node.dimensions.width;
-	$: heightStore = node.dimensions.height;
-	$: x = node.position.x;
-	$: y = node.position.y;
 	$: id = node.id;
 	$: editable = node.editable;
-	$: resizable = node.resizable;
-
+	$: nodeLock = node.locked;
 	$: zIndex = node.zIndex;
+	$: bgColor = node.bgColor;
+	$: borderRadius = node.borderRadius;
+	$: textColor = node.textColor;
+	$: borderColor = node.borderColor;
+	$: selectionColor = node.selectionColor;
+	$: borderWidth = node.borderWidth;
+	$: rotation = node.rotation;
 
 	const graph: Graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
+
 	setContext<Node>('node', node);
 
 	let collapsed = false;
-	let isResizing = { width: false, height: false };
 	let minWidth = 200;
-	let minHeight = 200;
+	let minHeight = 100;
 
 	let DOMnode: HTMLElement;
 
 	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 
-	const snapTo: number = getContext('snapTo');
+	const dispatch = createEventDispatcher();
 
 	// Creates reactive variable for whether the node is selected
 	// We use this as a class directive in the component
@@ -47,6 +51,11 @@
 	$: hiddenNodes = hiddenNodesGroup.nodes;
 	$: hidden = $hiddenNodes.has(node);
 
+	$: editing = graph.editing;
+	$: activeGroup = graph.activeGroup;
+	$: cursor = graph.cursor;
+	$: initialNodePositions = graph.initialNodePositions;
+
 	// Dynamically import the component for the node
 	onMount(() => {
 		// Not every browser handles fit-content well, so this is a workaround
@@ -54,13 +63,12 @@
 		// And reassign the width store the max value of
 		// The initial dom dimensions, the min dimenions calculated, or the initial store value
 		// Spend more time looking into this and see if there is a more obvious fix
-		// const nodeRect = DOMnode.getBoundingClientRect();
-		// [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		// // $widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
-		// // $heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
-		// $x = nodeRect.x;
-		// $y = nodeRect.y;
-		absolute = true;
+		const nodeRect = DOMnode.getBoundingClientRect();
+		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
+		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		DOMnode.style.width = `${$widthStore}px`;
+		DOMnode.style.height = `${$heightStore}px`;
 	});
 
 	onDestroy(() => {
@@ -92,20 +100,6 @@
 		}
 	}
 
-	const headerSize = 40;
-	// Dynamic CSS styles based on store values
-	$: nodeWidth = `${$widthStore}px`;
-	$: nodeHeight = `${$heightStore}px`;
-	$: nodeLeft = `${$x}px`;
-	$: nodeTop = `${$y}px`;
-
-	$: editing = graph.editing;
-	$: activeGroup = graph.activeGroup;
-	$: cursor = graph.cursor;
-	$: moving = node.moving;
-
-	$: initialNodePositions = graph.initialNodePositions;
-
 	function grabHandle(node: HTMLElement) {
 		node.addEventListener('mousedown', handleNodeClicked);
 		node.addEventListener('touchstart', handleNodeTouch);
@@ -117,31 +111,15 @@
 		};
 	}
 
-	import { createEventDispatcher } from 'svelte';
-
-	const dispatch = createEventDispatcher();
-
 	function handleNodeTouch(e: TouchEvent) {
-		if (e.touches.length > 1) return;
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($locked) return;
-		//e.stopPropagation();
+		e.stopPropagation();
 		e.preventDefault();
-		const dimensions = graph.dimensions;
-		const { scale, translation } = graph.transforms;
-		const { x: translateX, y: translateY } = translation;
-		const { top, left, width, height } = get(dimensions);
-		const touchPoint = calculateRelativeCursor(
-			e.touches[0],
-			top,
-			left,
-			width,
-			height,
-			get(scale),
-			get(translateX),
-			get(translateY)
-		);
-		initialClickPosition.set(touchPoint);
+		if (e.touches.length > 1) return;
+		if ($locked || $nodeLock) return;
+		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+		dispatch('nodeClicked', { node, e });
+
+		$initialClickPosition = $cursor;
 		nodeSelectLogic();
 	}
 
@@ -149,11 +127,10 @@
 		e.preventDefault();
 		e.stopPropagation();
 
-		dispatch('nodeClicked', { node, e });
-
+		if ($locked || $nodeLock) return;
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		if ($locked) return;
-
+		dispatch('nodeClicked', { node, e });
+		$tracking = true;
 		const { button } = e;
 
 		$initialClickPosition = $cursor;
@@ -166,20 +143,21 @@
 	}
 
 	function nodeSelectLogic() {
-		const { group } = node;
-
-		const nodeGroup: GroupKey | null = get(group);
-
 		let groupData: Group;
 		let parent;
 		let isParent = false;
 
+		// Check if the node is in a group
+		const nodeGroup: GroupKey | null = get(node.group);
+
+		// If it is in a group, check if it's the parent
 		if (nodeGroup) {
 			groupData = $groups[nodeGroup];
 			parent = get(groupData.parent);
 			isParent = parent === node;
 		}
-
+		// If it is the parent, set the active group to the group
+		// If it isn't the parent, set the active group to "selected"
 		if (isParent) {
 			$activeGroup = nodeGroup;
 		} else {
@@ -201,7 +179,6 @@
 		}
 
 		// Capture the initial positions of the nodes in the group
-
 		$initialNodePositions = captureGroup($groups['selected'].nodes);
 	}
 </script>
@@ -210,30 +187,47 @@
 {#if !hidden}
 	<div
 		{id}
-		class="node-wrapper allow-pointer-events"
-		class:absolute
-		style:top={nodeTop}
-		style:left={nodeLeft}
-		style:width={nodeWidth}
-		style:height={nodeHeight}
+		class="svelvet-node"
+		class:selected
+		class:locked={$locked || $nodeLock}
+		style:top="{actualPosition.y}px"
+		style:left="{actualPosition.x}px"
+		style:width="{$widthStore}px"
+		style:height="{$heightStore}px"
 		style:z-index={$zIndex}
+		style:background-color={$bgColor || $themeStore.node}
+		style:border-radius="{$borderRadius}px"
+		style:color={$textColor || $themeStore.text}
+		style:--border-color={$borderColor || $themeStore.border}
+		style:--border-width="{$borderWidth}px"
+		style:--selection-color={$selectionColor || $themeStore.selection}
+		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
+		use:grabHandle
 	>
-		{#if $header}
-			<Header />
-		{/if}
 		{#if !collapsed}
-			<!-- This is the actual "node"-->
 			<slot {grabHandle} {selected} />
-			{#if resizable}
-				<Resizer width height {minWidth} {minHeight} />
-			{/if}
 		{/if}
 	</div>
 {/if}
 
 <style>
-	@import url('./Node.css');
+	.svelvet-node {
+		cursor: grab;
+		position: absolute;
+		pointer-events: all;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		will-change: top, left;
+		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
+	}
+	.locked {
+		cursor: not-allowed;
+	}
+	.selected {
+		box-shadow: 0 0 0 var(--border-width) var(--selection-color);
+	}
 </style>

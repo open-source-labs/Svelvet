@@ -1,7 +1,7 @@
 import type { WritableEdge, EdgeConfig, Anchor } from '$lib/types';
 import { writable } from 'svelte/store';
 import * as s from '$lib/constants/styles';
-import type { EdgeLabel, EdgeKey } from '$lib/types';
+import type { EdgeLabel, EdgeKey, EdgeStyle } from '$lib/types';
 import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 
 export function createEdge(
@@ -17,11 +17,12 @@ export function createEdge(
 		target: connection.target,
 		source: connection.source,
 		component,
-		type: writable(config?.type || s.EDGE_TYPE),
-		color: writable(config?.color || s.EDGE_COLOR),
+		type: writable(config?.type || null),
+		color: config?.color || writable(s.EDGE_COLOR),
 		width: writable(config?.width || s.EDGE_WIDTH),
 		animated: writable(config?.animated || false)
 	};
+
 	if (config?.label) {
 		const baseLabel: EdgeLabel = {
 			text: writable(config?.label.text),

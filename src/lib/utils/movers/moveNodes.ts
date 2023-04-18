@@ -1,94 +1,100 @@
 import type { Writable } from 'svelte/store';
-import type { Node, Graph, XYPair, GroupBox, GroupKey } from '$lib/types';
+import type { Node, Graph, XYPair, GroupBox } from '$lib/types';
 import { get } from 'svelte/store';
+import { initialClickPosition, tracking } from '$lib/stores';
 
 export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	const groupSet = get(group);
 	const groupArray = Array.from(groupSet);
 	return groupArray.map((node) => {
-		const { position } = node;
-		const { x, y } = position;
-		return {
-			x: get(x),
-			y: get(y)
-		};
+		return get(node.position);
 	});
 }
 
-export function moveNodes(
-	graph: Graph,
-	initialClickPosition: XYPair,
-	initialNodePositions: XYPair[],
-	groupName: GroupKey,
-	snapTo?: number
-) {
-	const { cursor } = graph;
+export function moveNodes(graph: Graph, snapTo?: number) {
+	let animationFrame;
 	const groups = get(graph.groups);
+	const groupName = get(graph.activeGroup);
+
+	if (!groupName) return;
 
 	const nodeGroup = groups[groupName].nodes;
 
-	const cursorPosition = get(cursor);
-	const newX = cursorPosition.x - initialClickPosition.x;
-	const newY = cursorPosition.y - initialClickPosition.y;
-
-	let snapX = 0;
-	let snapY = 0;
-
-	if (snapTo) {
-		snapX = newX % snapTo;
-		snapY = newY % snapTo;
-	}
-
-	const delta = { x: newX + snapX, y: newY + snapY };
-
 	if (!nodeGroup) return;
+
+	const initialPositions = get(graph.initialNodePositions);
+	const { x: initialClickX, y: initialClickY } = get(initialClickPosition);
 	const groupBounds = {
 		left: -Infinity,
 		right: Infinity,
 		top: -Infinity,
 		bottom: Infinity
 	};
+	const nodeGroupArray = Array.from(get(nodeGroup));
+	const groupBoxes = get(graph.groupBoxes);
 
-	Array.from(get(nodeGroup)).forEach((node, index) => {
-		const { group, moving } = node;
-		const { position, dimensions } = node;
-		const { x, y } = position;
-		const { width, height } = dimensions;
-		const initialPosition = initialNodePositions[index];
-		if (moving) moving.set(true);
-		const nodeWidth = get(width);
-		const nodeHeight = get(height);
+	moveGroup();
 
-		let groupBox: GroupBox | undefined;
+	function moveGroup() {
+		const cursorPosition = get(graph.cursor);
 
-		if (groupName === 'selected') {
-			const localGroupName = get(group);
-			const groupBoxes = get(graph.groupBoxes);
-			if (localGroupName) groupBox = groupBoxes[localGroupName];
+		let newX = cursorPosition.x - initialClickX;
+		let newY = cursorPosition.y - initialClickY;
+
+		if (snapTo) {
+			newX -= newX % snapTo;
+			newY -= newY % snapTo;
 		}
 
-		if (groupBox) {
-			//alert('group box exists');
-			const { dimensions, position } = groupBox;
-			const { width, height } = dimensions;
-			const { x, y } = position;
-			const buffer = 10;
-			groupBounds.left = get(x) + buffer;
-			groupBounds.right = get(x) + get(width) - nodeWidth - buffer;
-			groupBounds.top = get(y) + buffer;
-			groupBounds.bottom = get(y) + get(height) - nodeHeight - buffer;
-		}
+		const delta = { x: newX, y: newY };
 
-		moveElement(initialPosition, delta, x, y, groupBounds);
+		nodeGroupArray.forEach((node, index) => {
+			const { group, moving, position } = node;
+
+			const initialPosition = initialPositions[index];
+			if (moving) moving.set(true);
+
+			let groupBox: GroupBox | undefined;
+
+			if (groupName === 'selected') {
+				const localGroupName = get(group);
+				if (localGroupName) groupBox = groupBoxes[localGroupName];
+			}
+
+			if (!groupBox) {
+				moveElement(initialPosition, delta, position);
+			} else {
+				const nodeWidth = get(node.dimensions.width);
+				const nodeHeight = get(node.dimensions.height);
+				const { x: groupBoxX, y: groupBoxY } = get(groupBox.position);
+				const buffer = 10;
+				groupBounds.left = groupBoxX + buffer;
+				groupBounds.right = groupBoxX + get(groupBox.dimensions.width) - nodeWidth - buffer;
+				groupBounds.top = groupBoxY + buffer;
+				groupBounds.bottom = groupBoxY + get(groupBox.dimensions.height) - nodeHeight - buffer;
+				moveElementWithBounds(initialPosition, delta, position, groupBounds);
+			}
+		});
+
+		if (get(tracking)) animationFrame = requestAnimationFrame(moveGroup);
+	}
+}
+
+export function moveElement(initialPosition: XYPair, delta: XYPair, position: Writable<XYPair>) {
+	position.set({
+		x: initialPosition.x + delta.x,
+		y: initialPosition.y + delta.y
 	});
 }
-export function moveElement(
+
+export function moveElementWithBounds(
 	initialPosition: XYPair,
 	delta: XYPair,
-	xStore: Writable<number>,
-	yStore: Writable<number>,
+	position: Writable<XYPair>,
 	bounds: { left: number; right: number; top: number; bottom: number }
 ) {
-	xStore.set(Math.min(Math.max(bounds.left, initialPosition.x + delta.x), bounds.right));
-	yStore.set(Math.min(Math.max(bounds.top, initialPosition.y + delta.y), bounds.bottom));
+	position.set({
+		x: Math.min(Math.max(bounds.left, initialPosition.x + delta.x), bounds.right),
+		y: Math.min(Math.max(bounds.top, initialPosition.y + delta.y), bounds.bottom)
+	});
 }

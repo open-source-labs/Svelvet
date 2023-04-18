@@ -40,12 +40,18 @@ export const flowChartParser = (mermaid: string) => {
 			// if a parent or child exists in our flow chart, then we add to their respective parent and child node arrays, otherwise we add their relational nodes then add to the flow chart
 			if (!flowChart.nodeList[parentNode.id]) flowChart.parentNodes.push(parentNode);
 			for (const childNode of childNodes) {
-				if (flowChart.nodeList[parentNode.id])
+				if (flowChart.nodeList[parentNode.id]) {
+					if (
+						flowChart.nodeList[childNode.id] &&
+						flowChart.nodeList[childNode.id].children.some(({ node }) => node.id === parentNode.id)
+					) {
+						throw new Error('Circular reference detected');
+					}
 					flowChart.nodeList[parentNode.id].children.push({
 						node: flowChart.nodeList[childNode.id] || childNode,
 						...edge
 					});
-				else {
+				} else {
 					parentNode.children.push({
 						node: flowChart.nodeList[childNode.id] || childNode,
 						...edge

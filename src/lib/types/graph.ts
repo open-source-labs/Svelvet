@@ -5,14 +5,15 @@ import type {
 	Node,
 	CSSColorString,
 	XYPair,
-	XYPosition,
 	Dimensions,
 	GroupBoxStore,
 	EdgeStore,
 	GroupKey,
 	Anchor,
 	InputStore,
-	OutputStore
+	OutputStore,
+	GraphDimensions,
+	Theme
 } from '.';
 
 export interface Graph {
@@ -27,7 +28,7 @@ export interface Graph {
 		bottom: Writable<number>;
 	};
 	maxZIndex: Writable<number>;
-	dimensions: Writable<DOMRect>;
+	dimensions: Writable<GraphDimensions>;
 	editable: boolean;
 	direction: 'TD' | 'LR';
 	cursor: Readable<{ x: number; y: number }>;
@@ -36,7 +37,9 @@ export interface Graph {
 	linkingAny: Writable<Anchor | null>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
+	edge: ConstructorOfATypedSvelteComponent | null;
 	groupBoxes: GroupBoxStore;
+	theme: Writable<Theme>;
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;
@@ -69,7 +72,7 @@ export type GroupBoxes = Record<GroupKey, GroupBox>;
 export interface GroupBox {
 	group: Writable<GroupKey>;
 	dimensions: Dimensions;
-	position: XYPosition;
+	position: Writable<XYPair>;
 	color: Writable<CSSColorString>;
 	moving: Writable<boolean>;
 }

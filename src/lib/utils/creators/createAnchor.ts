@@ -1,6 +1,7 @@
-import type { Anchor, Node, XYPair, Direction, AnchorKey } from '$lib/types';
+import type { Anchor, Node, XYPair, Direction, AnchorKey, CSSColorString } from '$lib/types';
 import { writable, derived, get } from 'svelte/store';
-
+import type { Writable, Readable } from 'svelte/store';
+import type { CustomWritable } from '$lib/types';
 export function createAnchor(
 	node: Node,
 	id: AnchorKey,
@@ -10,32 +11,39 @@ export function createAnchor(
 	edge: ConstructorOfATypedSvelteComponent | null,
 	type: 'input' | 'output' | null,
 	direction?: Direction,
-	dynamic?: boolean
+	dynamic?: boolean,
+	key?: string | number | null,
+	edgeColor?:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>
 ): Anchor {
 	const { width, height } = dimensions;
 	const { x, y } = position;
 	// Create stores for the anchor offset values
-	const xOffset = writable(x - get(node.position.x));
-	const yOffset = writable(y - get(node.position.y));
+	const nodePosition = get(node.position);
+	const xOffset = writable(x - nodePosition.x);
+	const yOffset = writable(y - nodePosition.y);
+
 	const offset = { x: xOffset, y: yOffset };
 
 	// Create derived stores for the anchor X and Y positions based on the node position and the offset
 	const anchorX = derived(
-		[node.position.x, xOffset],
-		([$nodeX, $xOffset]) => $nodeX + $xOffset + width / 2
+		[node.position, xOffset],
+		([$position, $xOffset]) => $position.x + $xOffset + width / 2
 	);
 	const anchorY = derived(
-		[node.position.y, yOffset],
-		([$nodeY, $yOffset]) => $nodeY + $yOffset + height / 2
+		[node.position, yOffset],
+		([$position, $yOffset]) => $position.y + $yOffset + height / 2
 	);
 	// Moving is derived from whether or not the parent node is moving or resizing
 	const moving = derived(
-		[node.moving, node.resizingWidth, node.resizingHeight],
-		([$moving, $resizingWidth, $resizingHeight]) => {
-			return $moving || $resizingWidth || $resizingHeight;
+		[node.moving, node.resizingWidth, node.resizingHeight, node.rotating],
+		([$moving, $resizingWidth, $resizingHeight, $rotating]) => {
+			return $moving || $resizingWidth || $resizingHeight || $rotating;
 		}
 	);
-
+	const rotation = derived([node.rotation], ([$rotation]) => $rotation);
 	return {
 		id,
 		position: { x: anchorX, y: anchorY },
@@ -46,6 +54,9 @@ export function createAnchor(
 		edge,
 		moving,
 		connected: writable(new Set()),
-		store: store || null
+		store: store || null,
+		inputKey: key || null,
+		edgeColor: edgeColor || writable(null),
+		rotation
 	};
 }

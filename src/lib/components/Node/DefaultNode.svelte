@@ -3,21 +3,21 @@
 	import type { Node } from '$lib/types';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
-	import { createEventDispatcher } from 'svelte';
+	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 
-	export let grabHandle: (node: HTMLElement) => void;
 	export let selected: boolean;
 
 	const node = getContext<Node>('node');
 
-	$: label = node.label;
-	$: bgColor = node.bgColor;
-	$: borderRadius = node.borderRadius;
-	$: borderColor = node.borderColor;
-	$: selectionColor = node.selectionColor;
-	$: textColor = node.textColor;
-	$: inputs = node.inputs;
-	$: outputs = node.outputs;
+	const label = node.label;
+	const bgColor = node.bgColor;
+	const borderRadius = node.borderRadius;
+	const textColor = node.textColor;
+	const inputs = node.inputs;
+	const outputs = node.outputs;
+	const width = node.dimensions.width;
+	const height = node.dimensions.height;
+	const resizable = node.resizable;
 
 	let top = get(node.direction) === 'TD' ? true : false;
 	let bottom = get(node.direction) === 'TD' ? true : false;
@@ -27,12 +27,11 @@
 </script>
 
 <div
-	use:grabHandle
+	style:width="{$width}px"
+	style:height="{$height}px"
 	style:background-color={$bgColor}
-	style:border-radius={$borderRadius + 'px'}
-	style:border-color={$borderColor}
+	style:border-radius={$borderRadius}
 	class:selected
-	style:--selection-color={$selectionColor}
 	class="default-node"
 >
 	<div class="input-anchors" class:top class:left>
@@ -46,6 +45,10 @@
 		{/each}
 	</div>
 	<p style:color={$textColor}>{$label}</p>
+
+	{#if $resizable}
+		<Resizer width height rotation />
+	{/if}
 </div>
 
 <style>
@@ -58,32 +61,20 @@
 			0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.1),
 			2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.1),
 			5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.1);
-		--shadow-elevation-high: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
-			1.5px 2.9px 3.7px -0.4px hsl(var(--shadow-color) / 0.34),
-			2.7px 5.4px 6.8px -0.7px hsl(var(--shadow-color) / 0.34),
-			4.5px 8.9px 11.2px -1.1px hsl(var(--shadow-color) / 0.34),
-			7.1px 14.3px 18px -1.4px hsl(var(--shadow-color) / 0.34),
-			11.2px 22.3px 28.1px -1.8px hsl(var(--shadow-color) / 0.34),
-			17px 33.9px 42.7px -2.1px hsl(var(--shadow-color) / 0.34),
-			25px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
 	}
 	.default-node {
-		width: 100%;
-		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border: solid 1px black;
-		box-shadow: var(--shadow-elevation-medium);
+
+		position: relative;
+		box-sizing: border-box;
 	}
 	p {
 		font-size: 20px;
 		line-height: 20px;
 		text-align: center;
 		user-select: none;
-	}
-	.selected {
-		border: solid 1px var(--selection-color) !important;
 	}
 
 	.input-anchors,

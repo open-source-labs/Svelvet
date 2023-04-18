@@ -1,44 +1,53 @@
 <script lang="ts">
 	import type { CSSColorString, Node } from '$lib/types';
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import type { ThemeGroup } from '$lib/types';
 
 	export let node: Node;
 	export let hidden = false;
 	export let toggleHidden: (node: Node) => void;
-	export let boundsWidth: number;
-	export let boundsHeight: number;
 	export let top: number;
 	export let left: number;
 	export let nodeColor: CSSColorString | null = null;
+	export let hideable: boolean;
+
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	const { position, dimensions, bgColor, borderRadius } = node;
 	const { width, height } = dimensions;
-	const { x, y } = position;
+	const { x, y } = $position;
 
-	$: DOMwidth = ($width / boundsWidth) * 100;
-	$: DOMheight = ($height / boundsHeight) * 100;
-	$: DOMradius = ($borderRadius / boundsWidth) * 100;
+	$: zIndex = node.zIndex;
 </script>
 
 <button
-	on:click={() => toggleHidden(node)}
+	on:click={() => {
+		if (!hideable) return;
+		toggleHidden(node);
+	}}
 	class:hidden
 	class="minimap-node"
-	style:border-radius={DOMradius + 'px'}
-	style:background-color={nodeColor || $bgColor}
-	style:width="{DOMwidth}%"
-	style:height="{DOMheight}%"
-	style:top="{(($y - top) / boundsHeight) * 100}%"
-	style:left="{(($x - left) / boundsWidth) * 100}%"
+	style:z-index={$zIndex}
+	style:border-radius="{$borderRadius}px"
+	style:background-color={nodeColor || $bgColor || $themeStore.node}
+	style:width="{$width}px"
+	style:height="{$height}px"
+	style:top="{y - top}px"
+	style:left="{x - left}px"
+	class:hideable
 />
 
 <style>
 	.minimap-node {
 		position: absolute;
-		border-radius: 1px;
-		cursor: pointer;
 		border: none;
 	}
 	.hidden {
 		opacity: 25%;
+	}
+
+	.hideable {
+		cursor: pointer;
 	}
 </style>

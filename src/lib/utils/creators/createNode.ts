@@ -1,13 +1,10 @@
 import { writable } from 'svelte/store';
 import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey } from '$lib/types';
-import { NODE_HEIGHT, NODE_WIDTH } from '$lib/constants';
 import { createStore } from './createStore';
 
 export function createNode(userNode: NodeConfig): Node {
 	const {
 		id,
-		width,
-		height,
 		inputs,
 		outputs,
 		resizable,
@@ -18,42 +15,57 @@ export function createNode(userNode: NodeConfig): Node {
 		zIndex,
 		position,
 		selectionColor,
-		headerColor
+		headerColor,
+		borderWidth,
+		edge
 	} = userNode;
-	const { bgColor, borderColor, borderRadius, textColor, locked } = userNode;
+	const {
+		bgColor,
+		borderColor,
+		rotation,
+		borderRadius,
+		nodeLevelConnections,
+		textColor,
+		locked,
+		group
+	} = userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
-	const nodeKey: NodeKey = `N-${id}`;
+	const nodeKey: NodeKey =
+		typeof id === 'string' && id.slice(0, 2) === 'N-' ? (id as NodeKey) : `N-${id}`;
 
 	const newNode: Node = {
 		id: nodeKey,
-		position: {
-			x: writable(position?.x || 0),
-			y: writable(position?.y || 0)
-		},
+		position: writable({
+			x: position?.x || 0,
+			y: position?.y || 0
+		}),
 		dimensions: {
-			width: writable(width || dimensions?.width || NODE_WIDTH),
-			height: writable(height || dimensions?.height || NODE_HEIGHT)
+			width: writable(dimensions?.width || 0),
+			height: writable(dimensions?.height || 0)
 		},
-		group: writable(null),
+		group: writable(group || null),
 		locked: writable(locked || false),
 		selectable: writable(true),
 		inputs: writable(inputs),
 		outputs: writable(outputs),
 		connectable: writable(true),
 		deletable: writable(true),
+		rotation: writable(rotation || 0),
 		hideable: writable(true),
 		moving: writable(false),
 		resizingWidth: writable(false),
 		resizingHeight: writable(false),
+		rotating: writable(false),
 		focusable: writable(true),
 		editable: writable(editable || false),
 		resizable: writable(resizable),
 		anchors: anchorStore,
-		zIndex: writable(zIndex || 1),
+		zIndex: writable(zIndex || 2),
 		ariaLabel: `Node ${id}`,
 		header: writable(header ? true : false),
 		collapsed: writable(false),
+		edge: edge || null,
 		visible: writable(true),
 		collapsible: writable(true),
 		borderRadius: writable(borderRadius),
@@ -61,10 +73,12 @@ export function createNode(userNode: NodeConfig): Node {
 		bgColor: writable(bgColor || null),
 		direction: writable(direction),
 		label: writable(userNode.label || ''),
-		borderColor: writable(borderColor),
+		borderColor: writable(borderColor || null),
+		borderWidth: writable(borderWidth),
 		selectionColor: writable(selectionColor),
-		textColor: writable(textColor),
-		headerColor: writable(headerColor)
+		textColor: writable(textColor || null),
+		headerColor: writable(headerColor),
+		nodeLevelConnections: writable(nodeLevelConnections)
 	};
 
 	return newNode;

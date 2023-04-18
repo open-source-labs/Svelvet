@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node } from '$lib';
-
+	import { Svelvet, Node } from '$lib';
+	import type { NodeConfig } from '$lib';
+	import CustomEdge from '../test-components/CustomEdge.svelte';
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
@@ -14,25 +15,34 @@
 		const { node } = e.detail;
 		node.label.set('Disconnected');
 	}
+
+	const mermaidConfig: Record<string, NodeConfig> = {
+		A: { bgColor: 'blue' },
+		B: { dimensions: { width: 600, height: 100 } },
+		C: { dimensions: { width: 100, height: 600 } }
+	};
+
+	const mermaid = `Dad & Mom --> Child
+	Child --> Frank`;
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="light" width={600} height={600} TD>
-			<Node
-				label="Custom Event"
-				on:connection={updateConnected}
-				on:disconnection={updateDisconnected}
-			/>
-			<Node
-				label="Custom Event"
-				on:connection={updateConnected}
-				on:disconnection={updateDisconnected}
-				LR
-			/>
-
-			<Minimap slot="minimap" />
-			<Controls slot="controls" />
+		<Svelvet
+			edgeStyle="step"
+			edge={CustomEdge}
+			TD
+			width={800}
+			theme="dark"
+			height={500}
+			zoom={0.6}
+			minimap
+		>
+			<Node connections={[4, [2, 1]]} />
+			<Node inputs={4} outputs={2} connections={[4, 3, [1, 1]]} />
+			<Node connections={[5, [6, 2]]} LR />
+			<Node inputs={2} connections={[5, 2, [1, 2]]} LR />
+			<Node />
 		</Svelvet>
 	</div>
 </body>

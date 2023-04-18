@@ -1,5 +1,5 @@
-import type { Writable } from 'svelte/store';
-import type { Anchor, CSSColorString, EmValue, EdgeKey } from '.';
+import type { Writable, Readable } from 'svelte/store';
+import type { Anchor, CSSColorString, EmValue, EdgeKey, CustomWritable } from '.';
 import type { PixelValue, RemValue } from '.';
 
 export type EdgeStyle = 'straight' | 'step' | 'bezier';
@@ -9,8 +9,11 @@ export type WritableEdge = {
 	id: EdgeKey;
 	source: Anchor | null;
 	target: Anchor | null;
-	type: Writable<EdgeStyle>;
-	color: Writable<CSSColorString>;
+	type: Writable<EdgeStyle | null>;
+	color:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>;
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
@@ -31,7 +34,10 @@ export interface EdgeLabel {
 
 export interface EdgeConfig {
 	type?: EdgeStyle;
-	color?: CSSColorString;
+	color?:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString>;
 	width?: number;
 	label?: EdgeLabelConfig;
 	animated?: boolean;
@@ -48,3 +54,7 @@ export interface EdgeLabelConfig {
 	};
 	borderRadius?: number;
 }
+
+export type StepDirection = 'left' | 'right' | 'up' | 'down';
+
+export type ArcKey = '1001' | '0110' | '100-1' | '0-110' | '-1001' | '0110' | '-100-1' | '0-110';

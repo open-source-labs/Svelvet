@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Graph } from '$lib/types';
-	import GroupBoundingBox from '$lib/components/GroupBoundingBox/GroupBoundingBox.svelte';
+	import GroupBoundingBox from '$lib/components/Group/GroupBoundingBox.svelte';
 	import { getContext } from 'svelte';
 
 	const graph = getContext<Graph>('graph');

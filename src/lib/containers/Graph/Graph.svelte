@@ -1,49 +1,49 @@
 <script lang="ts">
+	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
+	import Background from '../Background/Background.svelte';
+	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
+	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { onMount, setContext, getContext } from 'svelte';
 	import type {
-		Theme,
-		BackgroundStyles,
+		ThemeGroup,
 		Graph,
 		GroupBox,
 		Arrow,
 		GroupKey,
-		Group
+		Group,
+		GraphDimensions,
+		CSSColorString
 	} from '$lib/types';
-	import { writable, get } from 'svelte/store';
-	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
-	import Minimap from '$lib/components/Minimap/Minimap.svelte';
-	import Controls from '$lib/components/Controls/Controls.svelte';
-	import Background from '../Background/Background.svelte';
-	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
-	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { touchDistance, initialClickPosition } from '$lib/stores/CursorStore';
+	import { writable } from 'svelte/store';
+	import { getJSONState } from '$lib/utils/savers/saveStore';
+	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
 	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
-	import { getRandomColor, calculateRelativeCursor, translateGraph } from '$lib/utils';
-	import { getTouchDistance, getTouchMidpoint } from '$lib/utils/helpers/';
+	import { getRandomColor, translateGraph } from '$lib/utils';
+	import type { Writable } from 'svelte/store';
 
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
-	export let style: BackgroundStyles = 'dots';
 	export let snapTo = 1;
 	export let minimap = false;
 	export let controls = false;
+	export let toggle = false;
 	export let fixedZoom = false;
 	export let disableSelection = false;
-	export let ZOOM_INCREMENT = 0.01;
+	export let ZOOM_INCREMENT = 0.1;
 	export let PAN_INCREMENT = 50;
 	export let PAN_TIME = 250;
 	export let MAX_SCALE = 3;
 	export let MIN_SCALE = 0.2;
+	export let selectionColor: CSSColorString;
+	export let backgroundExists: boolean;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
-	const theme = getContext<Theme>('theme');
-
-	$: minimapComponent = minimap ? Minimap : null;
-	$: controlsComponent = controls ? Controls : null;
+	setContext('theme', graph.theme);
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	let interval: number | undefined = undefined;
 	interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {}
@@ -51,37 +51,57 @@
 
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
 	let selecting: boolean = false;
-	let graphBounds: DOMRect;
+	let graphBounds: GraphDimensions;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
 	let initialDistance: number = 0;
 
-	const { dimensions: dimensionsStore } = graph;
+	const cursor = graph.cursor;
+	const scale = graph.transforms.scale;
+	const groupBoxes = graph.groupBoxes;
+	const dimensionsStore = graph.dimensions;
+	const groups = graph.groups;
+	const selected = $groups.selected.nodes;
+	const translation = graph.transforms.translation;
+	const translationX = translation.x;
+	const translationY = translation.y;
+	const activeGroup = graph.activeGroup;
+	const initialNodePositions = graph.initialNodePositions;
+	const editing = graph.editing;
+	const linkingAny = graph.linkingAny;
+	const linkingInput = graph.linkingInput;
+	const linkingOutput = graph.linkingOutput;
 
-	$: cursor = graph.cursor;
-	$: scale = graph.transforms.scale;
-	$: groupBoxes = graph.groupBoxes;
-	$: groups = graph.groups;
 	$: dimensions = $dimensionsStore;
-	$: selected = $groups.selected.nodes;
-	$: translation = graph.transforms.translation;
-	$: translationX = translation.x;
-	$: translationY = translation.y;
-	$: activeGroup = graph.activeGroup;
-	$: initialNodePositions = graph.initialNodePositions;
-	$: editing = graph.editing;
-	$: linkingAny = graph.linkingAny;
-	$: linkingInput = graph.linkingInput;
-	$: linkingOutput = graph.linkingOutput;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
 	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 
-	onMount(() => {
+	let toggleComponent: ConstructorOfATypedSvelteComponent | null = null;
+	let minimapComponent: ConstructorOfATypedSvelteComponent | null = null;
+	let controlsComponent: ConstructorOfATypedSvelteComponent | null = null;
+
+	onMount(async () => {
 		updateGraphBounds();
+
+		// Conditionally load components
+		if (toggle)
+			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		if (minimap)
+			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		if (controls)
+			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	});
 
 	function updateGraphBounds() {
-		graphBounds = graphDOMElement.getBoundingClientRect();
+		const DOMRect = graphDOMElement.getBoundingClientRect();
+		graphBounds = {
+			top: DOMRect.top,
+			left: DOMRect.left,
+			bottom: DOMRect.bottom,
+			right: DOMRect.right,
+			width: DOMRect.width,
+			height: DOMRect.height
+		};
 		graph.dimensions.set(graphBounds);
 	}
 
@@ -90,19 +110,19 @@
 			const groupName = generateKey();
 			const groupKey: GroupKey = `${groupName}/${graph.id}`;
 
-			let width = $cursor.x - $initialClickPosition.x;
-			let height = $cursor.y - $initialClickPosition.y;
-			let top = Math.min($initialClickPosition.y, $initialClickPosition.y + height);
-			let left = Math.min($initialClickPosition.x, $initialClickPosition.x + width);
+			const width = $cursor.x - $initialClickPosition.x;
+			const height = $cursor.y - $initialClickPosition.y;
+			const top = Math.min($initialClickPosition.y, $initialClickPosition.y + height);
+			const left = Math.min($initialClickPosition.x, $initialClickPosition.x + width);
 
-			let dimensions = {
+			const dimensions = {
 				width: writable(Math.abs(width)),
 				height: writable(Math.abs(height))
 			};
-			let position = {
-				x: writable(left),
-				y: writable(top)
-			};
+			const position = writable({
+				x: left,
+				y: top
+			});
 
 			const groupBox: GroupBox = {
 				group: writable(groupKey),
@@ -143,7 +163,7 @@
 		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
-
+		$tracking = false;
 		if ($linkingAny) linkingAny.set(null);
 		if ($linkingInput) linkingInput.set(null);
 		if ($linkingOutput) linkingOutput.set(null);
@@ -179,33 +199,9 @@
 		$selected = new Set();
 		$selected = $selected;
 
-		const dimensions = graph.dimensions;
-		const { scale, translation } = graph.transforms;
-		const { x: translateX, y: translateY } = translation;
-		const { top, left, width, height } = get(dimensions);
+		$initialClickPosition = $cursor;
 
-		let unadjustedTouch: { clientX: number; clientY: number };
 		isMovable = true;
-		if (e.touches.length === 2) {
-			initialDistance = getTouchDistance(e.touches[0], e.touches[1]);
-			unadjustedTouch = getTouchMidpoint(e.touches[0], e.touches[1]);
-		} else {
-			unadjustedTouch = e.touches[0];
-		}
-
-		// This function needs to be updated to accept the graph directly
-		const touchPoint = calculateRelativeCursor(
-			unadjustedTouch,
-			top,
-			left,
-			width,
-			height,
-			get(scale),
-			get(translateX),
-			get(translateY)
-		);
-
-		initialClickPosition.set(touchPoint);
 	}
 
 	function onTouchEnd(e: TouchEvent) {
@@ -218,7 +214,7 @@
 			const newDistance = $touchDistance;
 			const scaleFactor = newDistance / initialDistance;
 
-			const newScale = calculateZoom($scale, 90 * (1 - scaleFactor), ZOOM_INCREMENT);
+			const newScale = calculateZoom($scale, 12 * (1 - scaleFactor), ZOOM_INCREMENT);
 			const currentTranslation = { x: $translationX, y: $translationY };
 			// Calculate the translation adjustment
 			const newTranslation = calculateTranslation(
@@ -279,7 +275,7 @@
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const newScale = calculateZoom($scale, deltaY, ZOOM_INCREMENT);
+		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
 
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
@@ -324,17 +320,19 @@
 	}
 </script>
 
+<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
 	class="svelvet-wrapper"
 	title="graph"
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
+	style:color={$themeStore.text || 'black'}
 	id={graph.id}
 	bind:this={graphDOMElement}
 	on:mousedown|preventDefault={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
-	on:touchstart|self|preventDefault={onTouchStart}
+	on:touchstart|preventDefault={onTouchStart}
 	on:touchmove|self|preventDefault={onTouchMove}
 	on:wheel|preventDefault={handleScroll}
 	on:keydown|preventDefault={handleKeyDown}
@@ -347,16 +345,50 @@
 		{/if}
 		<slot />
 	</GraphRenderer>
-	<Background --background-color="var(--{theme}-background)" {style} />
-	<slot name="minimap"><svelte:component this={minimapComponent} /></slot>
-	<slot name="controls"><svelte:component this={controlsComponent} /></slot>
+	{#if backgroundExists}
+		<slot name="background" />
+	{:else}
+		<Background />
+	{/if}
+	<svelte:component this={minimapComponent} />
+	<svelte:component this={controlsComponent} />
+	<svelte:component this={toggleComponent} />
+	<slot name="minimap" />
+	<slot name="controls" />
+	<slot name="toggle" />
 	{#if selecting && !disableSelection}
-		<SelectionBox {creating} {anchor} {graph} {adding} />
+		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
 </section>
 
 <svelte:window on:mouseup={onMouseUp} on:resize={updateGraphBounds} />
 
 <style>
-	@import url('./styles.css');
+	@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+	.svelvet-wrapper {
+		position: relative;
+		overflow: hidden;
+		cursor: move;
+		font-family: 'Rubik';
+		box-sizing: border-box !important;
+		user-select: none;
+		margin: 0;
+		line-height: 1rem;
+		font-size: 0.85rem;
+		pointer-events: auto;
+	}
+	.svelvet-wrapper:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px rgb(59, 102, 232);
+	}
+
+	:root {
+		--dark-background: hsl(0, 1%, 21%);
+		--light-background: hsl(0, 0%, 93%);
+		--node-background-light: hsl(0, 0%, 93%);
+		--node-background-dark: hsl(0, 0%, 11%);
+		--text-color-dark: hsl(0, 0%, 93%);
+		--text-color-light: hsl(0, 0%, 21%);
+	}
 </style>

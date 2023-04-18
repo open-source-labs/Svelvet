@@ -3,7 +3,7 @@ import type { CSSColorString, CSSDimensionString, EdgeStyle, PixelValue } from '
 export const NODE_WIDTH = 200;
 export const NODE_HEIGHT = 100;
 export const NODE_BORDER_RADIUS = 10;
-export const NODE_BORDER_WIDTH = 1;
+export const NODE_BORDER_WIDTH = 1.5;
 export const NODE_FONT_SIZE: CSSDimensionString = '12px';
 export const NODE_COLOR_DARK: CSSColorString = 'hsl(0, 0%, 11%)';
 export const NODE_COLOR_LIGHT: CSSColorString = '#FFF';

@@ -9,9 +9,15 @@
 		NodeKey,
 		OutputStore,
 		InputStore,
-		Theme
+		ThemeGroup,
+		Connections,
+		CSSColorString,
+		CustomWritable,
+		EdgeStyle,
+		EdgeConfig
 	} from '$lib/types';
 	import { onMount, getContext, onDestroy } from 'svelte';
+	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
@@ -20,80 +26,90 @@
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
-	import { THEMES } from '$lib/constants/themes';
+
 	const dispatch = createEventDispatcher();
 
 	const node = getContext<Node>('node');
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
-	const theme = getContext<Theme>('theme');
+	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
+	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
 
-	export let bgColor = THEMES[theme].anchor;
+	export let bgColor: CSSColorString | null = null;
 
-	export let key: string | number | null = null;
 	export let id: string | number = 0;
 	export let input: boolean = false;
 	export let output: boolean = false;
-	export let inputsStore: InputStore | null = null;
-	export let outputStore: OutputStore | null = null;
 	export let multiple = output ? true : input ? false : true;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
-
 	export let dynamic = false;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
-	export let connections: [string, string][] = [];
+	export let inputsStore: InputStore | null = null;
+	export let key: string | number | null = null;
+	export let outputStore: OutputStore | null = null;
+	export let connections: Connections = [];
+	export let edgeColor:
+		| Writable<CSSColorString | null>
+		| CustomWritable<CSSColorString>
+		| Readable<CSSColorString> = writable(null);
+	export let edgeLabel = '';
+	export let locked = false;
+	export let edgeStyle: EdgeStyle | null = null;
 
 	let animationFrameId: number;
-	let anchorElement: HTMLButtonElement;
-	let anchorWidth: number;
-	let anchorHeight: number;
+	let anchorElement: HTMLDivElement;
 	let anchor: Anchor;
 	let tracking = false;
 	let hovering = false;
 	let previousConnectionCount = 0;
 	let type: InputType = input === output ? null : input ? 'input' : 'output';
 
-	$: anchors = node.anchors;
-	$: edges = graph.edges;
-	$: scale = graph.transforms.scale;
-	$: resizingWidth = node.resizingWidth;
-	$: resizingHeight = node.resizingHeight;
+	const nodeEdge = node.edge;
+	const anchors = node.anchors;
+	const edges = graph.edges;
+	const resizingWidth = node.resizingWidth;
+	const resizingHeight = node.resizingHeight;
+	const rotating = node.rotating;
+	const nodeLevelConnections = node.nodeLevelConnections;
+	const linkingInput = graph.linkingInput;
+	const linkingOutput = graph.linkingOutput;
+	const linkingAny = graph.linkingAny;
+
+	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections.length > 0;
 	$: connecting =
 		input === output
 			? $linkingAny === anchor
 			: input
 			? $linkingInput?.anchor === anchor
 			: $linkingOutput?.anchor === anchor;
-	$: connectedAnchors = anchor?.connected;
-	$: connected = $connectedAnchors?.size > 0 || false;
-	$: linkingInput = graph.linkingInput;
-	$: linkingOutput = graph.linkingOutput;
-	$: linkingAny = graph.linkingAny;
-	$: isWaitingForConnection = connections.length > 0;
+	$: connectedAnchors = anchor && anchor.connected;
 
 	// On mount, we query the dom to capture the position of the anchor
 	// We then create the anchor object and add it to the store
-	onMount(async () => {
-		const { top, left } = anchorElement.getBoundingClientRect();
-		const key: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
+	onMount(() => {
+		const { top, left, width, height } = anchorElement.getBoundingClientRect();
+		const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
 
 		const anchorPosition = { y: top, x: left };
 		anchor = createAnchor(
 			node,
-			key,
+			anchorKey,
 			anchorPosition,
-			anchorDimensions,
+			{ width, height },
 			inputsStore || outputStore || null,
-			edge,
+			edge || nodeEdge || graphEdge || null,
 			type,
 			direction,
-			dynamic
+			dynamic,
+			key,
+			edgeColor
 		);
 
 		anchors.add(anchor, anchor.id);
 
 		checkConnections();
+		updatePosition();
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -117,18 +133,13 @@
 	$: if (!$activeKeys['Shift']) clearAllLinking();
 
 	// If the parent node is resizing, we actively track the position of the anchor
-	$: if (!tracking && ($resizingWidth || $resizingHeight)) {
+	$: if (!tracking && ($resizingWidth || $resizingHeight || $rotating)) {
 		tracking = true;
 		trackPosition();
-	} else if (!$resizingWidth && !$resizingHeight && tracking) {
+	} else if (!$resizingWidth && !$resizingHeight && tracking && !$rotating) {
 		tracking = false;
 		cancelAnimationFrame(animationFrameId);
 	}
-
-	$: anchorDimensions = {
-		width: anchorWidth / $scale,
-		height: anchorHeight / $scale
-	};
 
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
@@ -140,13 +151,13 @@
 		} else if ($connectedAnchors?.size > previousConnectionCount) {
 			dispatch('connection', { node, anchor });
 		}
-		previousConnectionCount = $connectedAnchors?.size;
+		if ($connectedAnchors?.size) previousConnectionCount = $connectedAnchors.size;
 	}
 
 	function handleClick() {
 		updatePosition(); // Just in case the anchor has moved
-
-		if (connected && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
+		if (locked) return;
+		if ($connectedAnchors?.size && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
 			return disconnect();
 
 		if (!$linkingInput && !$linkingOutput && !$linkingAny) return startEdge();
@@ -185,8 +196,13 @@
 	}
 
 	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
+		const edgeConfig: EdgeConfig = {
+			color: edgeColor,
+			label: { text: edgeLabel }
+		};
+		if (edgeStyle) edgeConfig.type = edgeStyle;
 		// Create a temporary edge to track the cursor
-		const newEdge = createEdge({ source, target }, source?.edge || null);
+		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		// Add the edge to the store
 		edges.add(newEdge, 'cursor');
 	}
@@ -197,7 +213,7 @@
 
 		// If the anchor is already connected and multiple connections are not allowed
 		// We don't want to create a new edge
-		if (connected && !multiple) return;
+		if ($connectedAnchors?.size && !multiple) return;
 		if (
 			$linkingAny === anchor ||
 			$linkingOutput?.anchor === anchor ||
@@ -264,9 +280,15 @@
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
 		updatePosition(); // Just in case
-		const newEdge = createEdge({ source, target }, source?.edge || null);
-		source.connected.update((anchors) => anchors.add(target));
+		const edgeConfig: EdgeConfig = {
+			color: edgeColor,
+			label: { text: edgeLabel }
+		};
+		if (edgeStyle) edgeConfig.type = edgeStyle;
+		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
+
 		target.connected.update((anchors) => anchors.add(source));
+		source.connected.update((anchors) => anchors.add(target));
 		const id = newEdge.id;
 		edges.add(newEdge, id);
 	}
@@ -365,6 +387,7 @@
 		disconnectStore();
 	}
 
+	// Disconnect edge and create a new cursor edge
 	function disconnect() {
 		if (get(anchor.connected).size > 1) return;
 
@@ -388,20 +411,82 @@
 	}
 
 	function checkConnections() {
-		connections.forEach((connection) => {
-			const [node, nodeAnchor] = connection;
-			const nodekey: NodeKey = `N-${node}`;
-			const connectedNode = graph.nodes.get(nodekey);
-
-			if (!connectedNode) return;
-			const anchorKey: AnchorKey = `A-${nodeAnchor}/${nodekey}`;
-			const connectedAnchor = connectedNode.anchors.get(anchorKey);
-
-			if (!connectedAnchor) return;
-			connectAnchors(anchor, connectedAnchor);
-			connections.filter((c) => c !== connection);
+		connections.forEach((connection, index) => {
+			const connected = processConnection(connection);
+			if (connected) connections.splice(index, 1);
 		});
+		if (!input) {
+			$nodeLevelConnections.forEach((connection, index) => {
+				const connected = processConnection(connection);
+				if (connected) $nodeLevelConnections.splice(index, 1);
+			});
+		}
 	}
+
+	const processConnection = (connection: [string | number, string | number] | string | number) => {
+		let nodeId: string;
+		let anchorId: string | null;
+		let anchorToConnect: Anchor | null = null;
+
+		if (Array.isArray(connection)) {
+			nodeId = connection[0].toString();
+			anchorId = connection[1].toString();
+		} else {
+			nodeId = connection.toString();
+			anchorId = null;
+		}
+
+		//Convert to node key used in store/DOM
+		const nodekey: NodeKey = `N-${nodeId}`;
+		// Look up node in store
+		const nodeToConnect = graph.nodes.get(nodekey);
+		if (!nodeToConnect) return false;
+
+		if (!anchorId) {
+			// Connect to the anchor with the fewest connections
+			const anchorStore = get(nodeToConnect.anchors);
+			const anchors = Object.values(anchorStore);
+
+			if (!anchors.length) return false;
+			anchorToConnect = anchors.reduce<Anchor | null>((a, b) => {
+				if (!a && b.type === 'output') return null;
+				if (b.type === 'output') return a;
+				if (!a) return b;
+				if (get(b.connected).size < get(a.connected).size) return b;
+				return a;
+			}, null);
+		} else {
+			// Create anchor key
+			const anchorKey: AnchorKey = `A-${anchorId}/${nodekey}`;
+			// Look up anchor in store
+			anchorToConnect = nodeToConnect.anchors.get(anchorKey);
+		}
+
+		if (!anchorToConnect) return false;
+		connectAnchors(anchor, anchorToConnect);
+
+		if (anchorToConnect.store && (inputsStore || outputStore)) {
+			if (input && anchorToConnect.type === 'output') {
+				if (
+					$inputsStore &&
+					key &&
+					inputsStore &&
+					typeof inputsStore.set === 'function' &&
+					typeof inputsStore.update === 'function'
+				)
+					$inputsStore[key] = anchorToConnect.store;
+			} else if (output && anchorToConnect.type === 'input') {
+				const { store, inputKey } = anchorToConnect;
+				if (store && inputKey && typeof store.update === 'function')
+					store.update((store) => {
+						if (!outputStore) return store;
+						store[inputKey] = outputStore;
+						return store;
+					});
+			}
+		}
+		return true;
+	};
 
 	function handleMouseUp() {
 		if (isSelf()) return;
@@ -417,33 +502,33 @@
 	}
 </script>
 
-<button
-	class="wrapper"
+<div
+	class="anchor-wrapper"
+	id={anchor?.id}
+	class:locked
 	bind:this={anchorElement}
-	bind:clientWidth={anchorWidth}
-	bind:clientHeight={anchorHeight}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
 >
-	<slot {hovering} {connected} {connecting}>
+	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
 		<div
-			class="anchor"
+			class="svelvet-anchor"
 			class:output
 			class:input
-			class:connected
+			class:connected={$connectedAnchors?.size >= 1}
 			class:connecting
 			class:hovering
 			style:--default-width={`${ANCHOR_SIZE}px`}
-			style:background-color={bgColor}
+			style:background-color={bgColor || $themeStore.anchor}
 			style:--default-radius={ANCHOR_RADIUS}
 		/>
 	</slot>
-</button>
+</div>
 
 <style>
-	.wrapper {
+	.anchor-wrapper {
 		z-index: 10;
 		/* border: solid 1px black; */
 		width: fit-content;
@@ -451,7 +536,7 @@
 		pointer-events: all;
 	}
 
-	.anchor {
+	.svelvet-anchor {
 		width: var(--anchor-size, var(--default-width));
 		height: var(--anchor-size, var(--default-width));
 		z-index: 12;
@@ -461,36 +546,16 @@
 		border: solid 1px black;
 		pointer-events: auto;
 	}
-	.connected.input {
-		background-color: white;
-	}
-	.connected.output {
-		background-color: white;
-	}
-
-	.connecting {
-		background-color: white;
-	}
-
-	.hovering {
-		background-color: rgb(123, 123, 123);
-	}
 	.output {
 		border-color: white;
 	}
 	.input {
 		border-color: rgb(255, 255, 255);
 	}
-	div {
-		background: none;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
+	.locked {
+		cursor: not-allowed !important;
 	}
-	/* reset button styles */
-	button {
+	div {
 		background: none;
 		border: none;
 		padding: 0;

@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
 	import { THEMES } from '$lib/constants/themes';
-	import type { Graph } from '$lib/types';
-	import type { BackgroundStyles, Theme } from '$lib/types/general';
+	import type { Graph, CSSColorString } from '$lib/types';
+	import type { BackgroundStyles, Theme, ThemeGroup } from '$lib/types/general';
 	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
 	const graph = getContext<Graph>('graph');
-	const theme = getContext<Theme>('theme');
+	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
 
-	export let style: BackgroundStyles;
+	export let style: BackgroundStyles = 'dots';
 	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
 	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
 
-	export let bgColor = THEMES[theme].map;
-	export let dotColor = THEMES[theme].dots;
+	export let bgColor: CSSColorString | null = null;
+	export let dotColor: CSSColorString | null = null;
+
 	// Import relevant data from store
 	const { transforms } = graph;
 	const { scale, translation } = transforms;
@@ -42,7 +44,11 @@
 </script>
 
 <!-- BACKGROUND COMPONENT START -->
-<div id="background-wrapper" bind:this={backgroundWrapper} style:background-color={bgColor}>
+<div
+	id="background-wrapper"
+	bind:this={backgroundWrapper}
+	style:background-color={bgColor || $themeStore.map}
+>
 	<svg>
 		<defs>
 			<pattern
@@ -55,7 +61,7 @@
 			>
 				{#if style === 'dots'}
 					<circle
-						style:fill={dotColor}
+						style:fill={dotColor || $themeStore.dots}
 						r={radius}
 						cx={dotCenterCoordinate}
 						cy={dotCenterCoordinate}
@@ -89,17 +95,11 @@
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
+		z-index: -10;
 	}
 
 	svg {
 		width: 100%;
 		height: 100%;
-	}
-	circle {
-		fill: hsl(0, 0%, 49%);
-	}
-
-	line {
-		stroke: hsl(0, 0%, 49%);
 	}
 </style>

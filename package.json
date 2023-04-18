@@ -1,7 +1,7 @@
 {
 	"name": "svelvet-test",
-	"version": "7.1.4",
-	"description": "A lightweight Svelte component library for building dynamic node-based user interfaces",
+	"version": "7.1.16",
+	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
 		"svelvet",
@@ -9,11 +9,13 @@
 	],
 	"authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Horacio, Ian, Jeffrey, Jen, Johnny, Justin, Mauricio, Michael, Rachel, Ryan, Samee, Taylor, Thomas, Timmy, Tony, Von, Walter",
 	"license": "MIT",
-	"bugs": "https://github.com/open-source-labs/Svelvet/issues",
+	"bugs": {
+		"url": "https://github.com/open-source-labs/Svelvet/issues"
+	},
 	"homepage": "https://github.com/open-source-labs/Svelvet",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/open-source-labs/Svelvet"
+		"url": "git+https://github.com/open-source-labs/Svelvet.git"
 	},
 	"scripts": {
 		"dev": "vite dev",
@@ -32,7 +34,8 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
-		}
+		},
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist"
@@ -62,5 +65,9 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module"
+	"type": "module",
+	"main": "svelte.config.js",
+	"directories": {
+		"test": "tests"
+	}
 }
