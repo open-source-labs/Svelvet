@@ -7,16 +7,6 @@
 		return Math.floor(Math.random() * 255);
 	}
 
-	function updateConnected(e: CustomEvent) {
-		const { node } = e.detail;
-		node.label.set('Connected');
-	}
-
-	function updateDisconnected(e: CustomEvent) {
-		const { node } = e.detail;
-		node.label.set('Disconnected');
-	}
-
 	let nodes: NodeConfig[] = [
 		{
 			bgColor: 'red',
@@ -34,21 +24,6 @@
 			position: { x: 300, y: 300 }
 		}
 	];
-
-	function addNode() {
-		const random: CSSColorString = `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
-
-		nodes.push({
-			bgColor: random,
-			label: `Node ${nodes.length + 1}`,
-			position: { x: Math.random() * 400, y: Math.random() * 600 }
-		});
-
-		// Change existing node
-		nodes[0].bgColor = getRandomColor();
-		nodes[1].label = 'Changed Label';
-		nodes = nodes;
-	}
 </script>
 
 <body>

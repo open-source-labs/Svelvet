@@ -28,7 +28,7 @@
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
-<div class="radio-group" aria-label="radio-group" on:keydown={cycleThroughGroup} tabindex={0}>
+<div class="radio-group" aria-label="radio-group" on:keydown={cycleThroughGroup} tabIndex={0}>
 	{#each options as label, index}
 		<label
 			class="option-wrapper"

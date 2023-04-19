@@ -105,18 +105,15 @@
 	// We only want to recalculate the path midpoints if the source or target is moving
 	// And we only want to recalculate the path midpoints if there is a label
 	$: if (renderLabel && !tracking && ($sourceMoving || $targetMoving || edgeKey === 'cursor')) {
-		console.log($sourceMoving, $targetMoving);
 		tracking = true;
 		trackPath();
 	} else if (tracking && !$sourceMoving && !$targetMoving && edgeKey !== 'cursor') {
-		console.log('canceling');
 		tracking = false;
 		cancelAnimationFrame(animationFrameId);
 	}
 
 	// Track the path in sync with browser animation frames
 	function trackPath() {
-		console.log('tracking');
 		if (!tracking) return;
 		if (DOMPath) calculatePath();
 		animationFrameId = requestAnimationFrame(trackPath);
