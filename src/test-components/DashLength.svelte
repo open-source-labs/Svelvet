@@ -1,14 +1,16 @@
 <script lang="ts">
 	import Node from '$lib/components/Node/Node.svelte';
-	import { generateInput, generateOutput, Slider } from '$lib';
+	import { generateInput, generateOutput, Slider, RadioGroup } from '$lib';
 	import NodeWrapper from './NodeWrapper.svelte';
 
 	type Inputs = {
 		length: number;
+		type: string;
 	};
 
 	const initialData = {
-		length: 162
+		length: 162,
+		type: 'medium'
 	};
 	const inputs = generateInput(initialData);
 	const procesor = (inputs: Inputs) => inputs.length;
@@ -29,5 +31,6 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		gap: 5px;
 	}
 </style>

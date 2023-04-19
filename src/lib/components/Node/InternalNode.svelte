@@ -221,6 +221,7 @@
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
 		use:grabHandle
+		tabIndex={0}
 	>
 		{#if !collapsed}
 			<slot {grabHandle} {selected} />
@@ -239,6 +240,7 @@
 		will-change: top, left;
 		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
 	}
+
 	.locked {
 		cursor: not-allowed;
 	}
