@@ -2,7 +2,13 @@
 	import { THEMES } from '$lib/constants/themes';
 	import type { Graph, Theme } from '$lib/types';
 	import { getContext } from 'svelte';
-	import { calculateTranslation, zoomGraph, translateGraph, calculateZoom } from '$lib/utils';
+	import {
+		calculateTranslation,
+		zoomGraph,
+		translateGraph,
+		calculateZoom,
+		calculateFitView
+	} from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ThemeGroup, CSSColorString } from '$lib/types';
 
@@ -17,11 +23,12 @@
 
 	const { transforms, locked, groups, dimensions } = graph;
 	const { scale, translation } = transforms;
-	const { x: xOffset, y: yOffset } = translation;
 
 	const hidden = $groups.hidden.nodes;
 	const translationX = translation.x;
 	const translationY = translation.y;
+	const bounds = graph.bounds;
+	const nodeBounds = bounds.nodeBounds;
 
 	function unhideAll() {
 		hidden.set(new Set());
@@ -51,13 +58,11 @@
 		zoom(1);
 	}
 
-	function reset() {
-		// Reset scale
-		$scale = 1;
-
-		// Reset offset
-		$xOffset = 0;
-		$yOffset = 0;
+	function fitView() {
+		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
+		translationX.set(x || 0);
+		translationY.set(y || 0);
+		transforms.scale.set(scale || 1);
 	}
 
 	function lock() {
@@ -74,7 +79,7 @@
 	class:NW={corner === 'NW'}
 	aria-label="navigation"
 >
-	<slot {zoomIn} {zoomOut} {reset} {lock} {unhideAll}>
+	<slot {zoomIn} {zoomOut} {fitView} {lock} {unhideAll}>
 		<div
 			class="controls-wrapper"
 			class:horizontal
@@ -92,8 +97,8 @@
 			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
 				<span class="material-symbols-outlined"> zoom_out </span>
 			</button>
-			<button class="reset" on:mousedown|stopPropagation={reset} on:touchstart={reset}>
-				<span class="material-symbols-outlined"> restart_alt </span>
+			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={fitView}>
+				<span class="material-symbols-outlined"> filter_center_focus</span>
 			</button>
 			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
 				<span class="material-symbols-outlined">
@@ -106,6 +111,10 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
+	* {
+		box-sizing: border-box;
+	}
+
 	.graph-controls {
 		position: absolute;
 	}
@@ -133,7 +142,7 @@
 		left: 10px;
 		bottom: 10px;
 		display: flex;
-		width: 1.5rem;
+		width: 1.8rem;
 		flex-direction: column;
 		border-radius: 6px;
 		overflow: hidden;

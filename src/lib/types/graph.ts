@@ -26,6 +26,12 @@ export interface Graph {
 		left: Writable<number>;
 		right: Writable<number>;
 		bottom: Writable<number>;
+		nodeBounds: Writable<{
+			top: number;
+			left: number;
+			right: number;
+			bottom: number;
+		}>;
 	};
 	maxZIndex: Writable<number>;
 	dimensions: Writable<GraphDimensions>;

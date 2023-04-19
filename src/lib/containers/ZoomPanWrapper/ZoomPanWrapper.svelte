@@ -40,6 +40,7 @@
 
 <style>
 	.svelvet-graph-wrapper {
+		box-sizing: border-box;
 		position: absolute;
 		width: 100%;
 		height: 100%;

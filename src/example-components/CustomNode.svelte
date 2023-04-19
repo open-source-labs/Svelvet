@@ -1,25 +1,24 @@
 <script lang="ts">
-	import { Node, Anchor } from '$lib';
+	import { Node, Anchor, Slider } from '$lib';
 	import type { Node as NodeType } from '$lib/types';
-	export let id: number | string = Math.random();
+	import { writable } from 'svelte/store';
 
 	const connections: [string, string][] = [['1', '1']];
 
 	function handleClick(node: NodeType) {
 		node.locked.set(true);
 	}
+	const parameter = writable(10);
 </script>
 
-<Node let:grabHandle let:selected let:node {id}>
+<Node let:grabHandle let:selected let:node>
 	<div class="node" use:grabHandle class:selected>
-		<button on:click={() => handleClick(node)}>Click Me</button>
+		<Slider parameterStore={parameter} />
+
 		<div class="input-anchors">
 			<Anchor input id="1" />
-			<Anchor input id="2" />
 		</div>
 		<div class="output-anchors">
-			<Anchor output id="3" {connections} />
-			<Anchor output id="4" {connections} />
 			<Anchor output id="5" />
 		</div>
 	</div>
@@ -33,6 +32,7 @@
 		background-color: rgba(128, 128, 128, 0.673);
 		border-radius: 20px;
 		position: relative;
+		height: fit-content;
 		pointer-events: auto;
 		display: flex;
 		flex-direction: column;
@@ -48,6 +48,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		top: -20px;
 	}
 
 	.output-anchors {

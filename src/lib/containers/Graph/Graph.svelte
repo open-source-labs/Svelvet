@@ -18,7 +18,13 @@
 	import { getJSONState } from '$lib/utils/savers/saveStore';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
-	import { calculateTranslation, calculateZoom, generateKey, zoomGraph } from '$lib/utils';
+	import {
+		calculateFitView,
+		calculateTranslation,
+		calculateZoom,
+		generateKey,
+		zoomGraph
+	} from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
 	import { get } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
@@ -40,6 +46,7 @@
 	export let MIN_SCALE = 0.2;
 	export let selectionColor: CSSColorString;
 	export let backgroundExists: boolean;
+	export let fitView = false;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -52,7 +59,7 @@
 
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
 	let selecting: boolean = false;
-	let graphBounds: GraphDimensions;
+	let graphDimensions: GraphDimensions;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
 	let initialDistance: number = 0;
@@ -72,6 +79,8 @@
 	const linkingAny = graph.linkingAny;
 	const linkingInput = graph.linkingInput;
 	const linkingOutput = graph.linkingOutput;
+	const bounds = graph.bounds;
+	const nodes = graph.nodes;
 
 	$: dimensions = $dimensionsStore;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
@@ -82,20 +91,42 @@
 	let controlsComponent: ConstructorOfATypedSvelteComponent | null = null;
 
 	onMount(async () => {
-		updateGraphBounds();
-
-		// Conditionally load components
-		if (toggle)
-			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
-		if (minimap)
-			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
-		if (controls)
-			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+		updateGraphDimensions();
 	});
+	const nodeBounds = bounds.nodeBounds;
 
-	function updateGraphBounds() {
+	$: if (graphDimensions && fitView) {
+		$nodes;
+		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
+
+		if (x && y && scale) {
+			translationX.set(x);
+			translationY.set(y);
+			graph.transforms.scale.set(scale);
+		}
+	}
+	$: if (toggle && !toggleComponent) {
+		async function loadToggle() {
+			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		}
+		loadToggle();
+	}
+	$: if (minimap && !minimapComponent) {
+		async function loadMinimap() {
+			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		}
+		loadMinimap();
+	}
+	$: if (controls && !controlsComponent) {
+		async function loadControls() {
+			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+		}
+		loadControls();
+	}
+
+	function updateGraphDimensions() {
 		const DOMRect = graphDOMElement.getBoundingClientRect();
-		graphBounds = {
+		graphDimensions = {
 			top: DOMRect.top,
 			left: DOMRect.left,
 			bottom: DOMRect.bottom,
@@ -103,7 +134,7 @@
 			width: DOMRect.width,
 			height: DOMRect.height
 		};
-		graph.dimensions.set(graphBounds);
+		graph.dimensions.set(graphDimensions);
 	}
 
 	function onMouseUp() {
@@ -225,7 +256,7 @@
 				newScale,
 				currentTranslation,
 				$cursor,
-				graphBounds
+				graphDimensions
 			);
 
 			// Apply transforms
@@ -286,7 +317,7 @@
 			newScale,
 			currentTranslation,
 			pointerPosition,
-			graphBounds
+			graphDimensions
 		);
 
 		// Apply transforms
@@ -353,10 +384,17 @@
 	{:else}
 		<Background />
 	{/if}
-	<svelte:component this={minimapComponent} />
-	<svelte:component this={controlsComponent} />
-	<svelte:component this={toggleComponent} />
+	{#if minimap}
+		<svelte:component this={minimapComponent} />
+	{/if}
+	{#if controls}
+		<svelte:component this={controlsComponent} />
+	{/if}
+	{#if toggle}
+		<svelte:component this={toggleComponent} />
+	{/if}
 	<slot name="minimap" />
+
 	<slot name="controls" />
 	<slot name="toggle" />
 	{#if selecting && !disableSelection}
@@ -364,7 +402,7 @@
 	{/if}
 </section>
 
-<svelte:window on:mouseup={onMouseUp} on:resize={updateGraphBounds} />
+<svelte:window on:mouseup={onMouseUp} on:resize={updateGraphDimensions} />
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');

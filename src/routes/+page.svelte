@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
 	import type { NodeConfig } from '$lib';
-
+	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
 
 	function randomColor() {
@@ -28,6 +28,7 @@
 <body>
 	<div class="wrapper">
 		<Svelvet
+			controls
 			edgeStyle="step"
 			edge={CustomEdge}
 			TD
@@ -36,7 +37,9 @@
 			height={500}
 			zoom={0.6}
 			minimap
+			fitView
 		>
+			<CustomNode />
 			<Node resizable />
 		</Svelvet>
 	</div>

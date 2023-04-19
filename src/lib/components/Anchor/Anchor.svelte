@@ -529,6 +529,9 @@
 </div>
 
 <style>
+	* {
+		box-sizing: border-box;
+	}
 	.anchor-wrapper {
 		z-index: 10;
 		/* border: solid 1px black; */
