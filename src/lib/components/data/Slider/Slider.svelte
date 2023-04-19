@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Graph, isArrow, type CustomWritable } from '$lib/types';
+	import { type Graph, type Node, isArrow, type CustomWritable } from '$lib/types';
 	import type { ThemeGroup, CSSColorString } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
@@ -21,6 +21,9 @@
 	$: connected = typeof parameterStore.set !== 'function';
 
 	let graph = getContext<Graph>('graph');
+	let node = getContext<Node>('node');
+
+	$: width = node.dimensions.width;
 
 	let sliderWidth: number; // Width of slider on DOM (relative to scale)
 	let sliderElement: HTMLInputElement;
@@ -77,7 +80,7 @@
 
 	function calculateSlide(cursorChange: number, increment = step) {
 		if (typeof $parameterStore !== 'number') return;
-		const pixelsToMove = sliderWidth / ((max - min) / increment);
+		const pixelsToMove = ($width * 0.7) / ((max - min) / increment);
 		pixelsMoved += cursorChange;
 
 		if (Math.abs(pixelsMoved) >= pixelsToMove) {
@@ -112,7 +115,7 @@
 		sliderElement.blur();
 	}
 
-	$: percentageSlid = ((($parameterStore as number) - min) / max) * 100;
+	$: percentageSlid = ((($parameterStore as number) - min) / (max - min)) * 100;
 	$: CSSpercentage = `${percentageSlid}%`;
 
 	$: sliderStyle = `linear-gradient(
@@ -124,8 +127,8 @@
 
 {#if !connected}
 	<div class="wrapper" style:color={fontColor || $themeStore.text}>
-		<button class="button" on:click={() => updateValue(-1)}>−</button>
-		<div class="slider" bind:clientWidth={sliderWidth}>
+		<button class="button" on:mousedown|stopPropagation={() => updateValue(-1)}>−</button>
+		<div class="slider" bind:offsetWidth={sliderWidth}>
 			<label for="slider-input" class="input-label">{label}</label>
 			<input
 				tabindex={0}
@@ -153,7 +156,7 @@
 				bind:this={sliderElement}
 			/>
 		</div>
-		<button class="button" on:click={() => updateValue(1)}>+</button>
+		<button class="button" on:mousedown|stopPropagation={() => updateValue(1)}>+</button>
 	</div>
 {:else}
 	<div class="wrapper connected">

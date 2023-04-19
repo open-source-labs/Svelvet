@@ -2,7 +2,7 @@
 	import { Svelvet, Node } from '$lib';
 	import type { NodeConfig } from '$lib';
 
-	import CustomEdge from '../test-components/CustomEdge.svelte';
+	import CustomEdge from '../example-components/CustomEdge.svelte';
 
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
@@ -23,9 +23,6 @@
 		B: { dimensions: { width: 600, height: 100 } },
 		C: { dimensions: { width: 100, height: 600 } }
 	};
-
-	const mermaid = `Dad & Mom --> Child
-	Child --> Frank`;
 </script>
 
 <body>

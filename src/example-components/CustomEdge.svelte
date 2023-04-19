@@ -10,7 +10,7 @@
 	}
 </script>
 
-<Edge let:path width={4}>
+<Edge {color} let:path width={4}>
 	<div slot="label">Custom Label</div>
 </Edge>
 

@@ -1,13 +1,11 @@
 <script lang="ts">
-	import Node from '$lib/components/Node/Node.svelte';
-	import Anchor from '$lib/components/Anchor/Anchor.svelte';
+	import { Node, Anchor } from '$lib';
 	import type { Node as NodeType } from '$lib/types';
 	export let id: number | string = Math.random();
 
 	const connections: [string, string][] = [['1', '1']];
 
 	function handleClick(node: NodeType) {
-		node.dimensions.width.set(800);
 		node.locked.set(true);
 	}
 </script>

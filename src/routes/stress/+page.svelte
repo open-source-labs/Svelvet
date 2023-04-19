@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Svelvet, Controls, Minimap, Node, Group, Anchor, Edge } from '$lib';
+	import { Svelvet, Node } from '$lib';
 </script>
 
 <body>
