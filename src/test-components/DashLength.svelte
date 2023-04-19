@@ -15,7 +15,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: 40, y: 158 }} let:selected>
+<Node useDefaults position={{ x: 40, y: 158 }} let:selected>
 	<NodeWrapper title="Dash Length" outputStore={output} key="dashFactor">
 		<div class="node-body">
 			<Slider min={0} max={200} step={0.05} parameterStore={$inputs.length} />

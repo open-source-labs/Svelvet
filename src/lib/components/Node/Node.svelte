@@ -8,7 +8,6 @@
 		Connections,
 		CSSColorString
 	} from '$lib/types';
-	import * as s from '$lib/constants/styles';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
@@ -23,9 +22,9 @@
 	export let dimensions = { width: 0, height: 0 };
 	export let id: string | number = 0;
 	export let bgColor: CSSColorString | null = null;
-	export let borderRadius = s.NODE_BORDER_RADIUS;
+	export let borderRadius: number | null = null;
 	export let borderColor: CSSColorString | null = null;
-	export let borderWidth = s.NODE_BORDER_WIDTH;
+	export let borderWidth: number | null = null;
 	export let selectionColor: CSSColorString | null = null;
 	export let textColor: CSSColorString | null = null;
 	export let resizable = false;
@@ -40,9 +39,11 @@
 	export let rotation = 0;
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let connections: Connections = [];
+	export let useDefaults = false;
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
+	let isDefault = true;
 
 	onMount(() => {
 		const direction = TD ? 'TD' : LR ? 'LR' : graph.direction;
@@ -51,12 +52,7 @@
 
 		const nodeCount = graph.nodes.count() + 1;
 
-		const isDefault = !$$slots.default;
-
-		if (isDefault) {
-			if (!dimensions.width) dimensions.width = s.NODE_WIDTH;
-			if (!dimensions.height) dimensions.height = s.NODE_HEIGHT;
-		}
+		isDefault = !$$slots.default || useDefaults;
 
 		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
 		if (!foundNode) {
@@ -67,10 +63,8 @@
 					: position,
 				dimensions,
 				editable: editable || graph.editable,
-				borderRadius,
 				label,
 				group,
-				borderWidth,
 				resizable,
 				inputs,
 				outputs,
@@ -80,6 +74,8 @@
 				nodeLevelConnections: connections,
 				rotation
 			};
+			if (borderWidth) config.borderWidth = borderWidth;
+			if (borderRadius) config.borderRadius = borderRadius;
 			if (borderColor) config.borderColor = borderColor;
 			if (selectionColor) config.selectionColor = selectionColor;
 			if (textColor) config.textColor = textColor;
@@ -149,7 +145,7 @@
 </script>
 
 {#if node && $nodes[node.id]}
-	<InternalNode let:selected let:grabHandle on:nodeClicked {node}>
+	<InternalNode {isDefault} let:selected let:grabHandle on:nodeClicked {node}>
 		<slot {selected} {grabHandle} {node}>
 			<DefaultNode {selected} on:connection on:disconnection />
 		</slot>

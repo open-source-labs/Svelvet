@@ -15,7 +15,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: 320, y: 550 }} let:selected>
+<Node useDefaults position={{ x: 320, y: 550 }} let:selected>
 	<NodeWrapper title="Noise" outputStore={output} key="noise">
 		<div class="node-body">
 			<Slider min={0} max={10} step={0.5} parameterStore={$inputs.num} />

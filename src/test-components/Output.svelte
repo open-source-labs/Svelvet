@@ -28,7 +28,7 @@
 	const output = generateOutput(inputs, processor);
 </script>
 
-<Node id="output" position={{ x: 560, y: 30 }} let:selected locked>
+<Node useDefaults id="output" position={{ x: 560, y: 30 }} let:selected locked>
 	<div class="node" class:selected>
 		<Visualizer {...$output} />
 		<div class="input-anchors">

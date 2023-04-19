@@ -16,7 +16,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node position={{ x: 40, y: 50 }} let:selected>
+<Node useDefaults position={{ x: 40, y: 50 }} let:selected>
 	<span class="note" id="custom">Custom Nodes</span>
 	<NodeWrapper title="Line Thickness" outputStore={output} key="strokeWidth">
 		<div class="node-body">

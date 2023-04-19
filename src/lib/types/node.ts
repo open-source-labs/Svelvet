@@ -12,7 +12,6 @@ export interface Node {
 	inputs: Writable<number>; //Number of default input anchors to render
 	outputs: Writable<number>; // Number of default output anchors to render
 	anchors: AnchorStore;
-	header: Writable<boolean>;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
 	visible: Writable<boolean>;
@@ -33,7 +32,6 @@ export interface Node {
 	edge: ConstructorOfATypedSvelteComponent | null;
 	ariaLabel: string;
 	direction: Writable<'TD' | 'LR'>;
-	headerHeight: Writable<number>;
 	borderRadius: Writable<number>;
 	borderWidth: Writable<number>;
 	nodeLevelConnections: Writable<Connections>;
@@ -41,7 +39,6 @@ export interface Node {
 	borderColor: Writable<CSSColorString | null>;
 	selectionColor: Writable<CSSColorString | null>;
 	textColor: Writable<CSSColorString | null>;
-	headerColor: Writable<CSSColorString | null>;
 }
 
 // This defines an interface for the node object
