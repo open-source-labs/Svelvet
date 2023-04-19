@@ -4,14 +4,9 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark">
-			{#each { length: 50 } as _, i}
-				<Node
-					inputs={0}
-					outputs={0}
-					label={`Node ${i}`}
-					position={{ x: Math.random() * 2000, y: Math.random() * 1000 }}
-				/>
+		<Svelvet width={800} height={500} theme="dark" minimap controls>
+			{#each { length: 100 } as _, i}
+				<Node inputs={1} outputs={1} />
 			{/each}
 		</Svelvet>
 	</div>

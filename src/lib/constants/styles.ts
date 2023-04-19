@@ -34,6 +34,6 @@ export const THEME = 'light';
 export const GRID_SCALE = 22;
 export const DOT_WIDTH = 1.4;
 
-export const ANCHOR_SIZE = 12;
+export const ANCHOR_SIZE = 14;
 export const ANCHOR_COLOR: CSSColorString = 'gray';
 export const ANCHOR_RADIUS = '50%';

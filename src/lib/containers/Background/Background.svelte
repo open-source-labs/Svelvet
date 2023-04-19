@@ -96,6 +96,7 @@
 		height: 100%;
 		pointer-events: none;
 		z-index: -10;
+		box-sizing: border-box;
 	}
 
 	svg {

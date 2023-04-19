@@ -168,6 +168,9 @@
 {/if}
 
 <style>
+	* {
+		box-sizing: border-box;
+	}
 	.wrapper {
 		display: flex;
 		gap: 0.5rem;
@@ -181,7 +184,7 @@
 		color: inherit;
 		text-align: right;
 		width: 100%;
-		height: 1rem;
+		height: 1.5rem;
 		cursor: ew-resize;
 		padding: 0.25rem;
 		pointer-events: auto;

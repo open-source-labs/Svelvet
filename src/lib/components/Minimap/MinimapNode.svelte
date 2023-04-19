@@ -51,6 +51,9 @@
 />
 
 <style>
+	* {
+		box-sizing: border-box;
+	}
 	.minimap-node {
 		position: absolute;
 		border: none;

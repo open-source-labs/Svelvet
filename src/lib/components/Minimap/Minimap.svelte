@@ -125,6 +125,9 @@
 </div>
 
 <style>
+	* {
+		box-sizing: border-box;
+	}
 	.minimap-wrapper {
 		position: absolute;
 		border-radius: 6px;
