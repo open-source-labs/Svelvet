@@ -11,11 +11,9 @@ export function createNode(userNode: NodeConfig): Node {
 		dimensions,
 		editable,
 		direction,
-		header,
 		zIndex,
 		position,
 		selectionColor,
-		headerColor,
 		borderWidth,
 		edge
 	} = userNode;
@@ -63,13 +61,11 @@ export function createNode(userNode: NodeConfig): Node {
 		anchors: anchorStore,
 		zIndex: writable(zIndex || 2),
 		ariaLabel: `Node ${id}`,
-		header: writable(header ? true : false),
 		collapsed: writable(false),
 		edge: edge || null,
 		visible: writable(true),
 		collapsible: writable(true),
 		borderRadius: writable(borderRadius),
-		headerHeight: writable(40),
 		bgColor: writable(bgColor || null),
 		direction: writable(direction),
 		label: writable(userNode.label || ''),
@@ -77,7 +73,6 @@ export function createNode(userNode: NodeConfig): Node {
 		borderWidth: writable(borderWidth),
 		selectionColor: writable(selectionColor),
 		textColor: writable(textColor || null),
-		headerColor: writable(headerColor),
 		nodeLevelConnections: writable(nodeLevelConnections)
 	};
 

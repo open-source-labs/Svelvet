@@ -7,8 +7,10 @@
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import * as s from '$lib/constants/styles';
 
 	export let node: Node;
+	export let isDefault: boolean;
 
 	const position = node.position;
 	const widthStore = node.dimensions.width;
@@ -65,8 +67,21 @@
 		// Spend more time looking into this and see if there is a more obvious fix
 		const nodeRect = DOMnode.getBoundingClientRect();
 		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		$widthStore = Math.max(nodeRect.width, minWidth, $widthStore);
-		$heightStore = Math.max(nodeRect.height, minHeight, $heightStore);
+		const calcWidth = Math.max(nodeRect.width, minWidth);
+		const calcHeight = Math.max(nodeRect.height, minHeight);
+
+		if (calcWidth === 0) {
+			$widthStore = s.NODE_WIDTH;
+		} else {
+			$widthStore = calcWidth;
+		}
+
+		if (calcHeight === 0) {
+			$heightStore = s.NODE_HEIGHT;
+		} else {
+			$heightStore = calcHeight;
+		}
+
 		DOMnode.style.width = `${$widthStore}px`;
 		DOMnode.style.height = `${$heightStore}px`;
 	});
@@ -195,17 +210,18 @@
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
 		style:z-index={$zIndex}
-		style:background-color={$bgColor || $themeStore.node}
-		style:border-radius="{$borderRadius}px"
+		style:background-color={$bgColor || (isDefault ? $themeStore.node : 'transparent')}
+		style:border-radius="{$borderRadius || (isDefault && s.NODE_BORDER_RADIUS)}px"
 		style:color={$textColor || $themeStore.text}
 		style:--border-color={$borderColor || $themeStore.border}
-		style:--border-width="{$borderWidth}px"
+		style:--border-width="{$borderWidth || (isDefault && s.NODE_BORDER_WIDTH)}px"
 		style:--selection-color={$selectionColor || $themeStore.selection}
 		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown={handleKeydown}
 		bind:this={DOMnode}
 		use:grabHandle
+		tabIndex={0}
 	>
 		{#if !collapsed}
 			<slot {grabHandle} {selected} />
@@ -224,6 +240,7 @@
 		will-change: top, left;
 		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
 	}
+
 	.locked {
 		cursor: not-allowed;
 	}

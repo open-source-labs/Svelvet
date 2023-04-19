@@ -18,7 +18,7 @@
 		// Allows us to use tab to navigate to the next element
 		// But stops the page from scrolling due to the arrow keys
 		if (key !== 'Tab') event.preventDefault();
-
+		event.stopPropagation();
 		if (key === 'ArrowRight' || key === 'ArrowDown') {
 			initial = (initial + 1) % options.length;
 		} else if (key === 'ArrowLeft' || key === 'ArrowUp') {
@@ -27,26 +27,39 @@
 	}
 </script>
 
-{#each options as label, index}
-	<label>
-		<input
-			on:click|stopPropagation={() => {
+<!-- svelte-ignore a11y-non-interactive-element -->
+<div class="radio-group" aria-label="radio-group" on:keydown={cycleThroughGroup} tabindex={0}>
+	{#each options as label, index}
+		<label
+			class="option-wrapper"
+			on:mousedown|stopPropagation={() => {
 				initial = index;
 			}}
-			class="option"
-			type="radio"
-			id={slugify(label)}
-			bind:group={initial}
-			value={index}
-			tabindex={index === 0 ? 0 : -1}
-		/>
-		{label}
-	</label>
-{/each}
+		>
+			<input class="option" type="radio" id={slugify(label)} bind:group={initial} value={index} />
+			<p>{label}</p>
+		</label>
+	{/each}
+</div>
 
 <style>
-	.option {
+	p {
+		line-height: 1rem;
+		padding: 0;
+		margin: 0;
+	}
+	.option-wrapper {
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.radio-group {
+		display: flex;
 		width: 100%;
+		justify-content: space-evenly;
+		height: 1.5rem;
 	}
 </style>

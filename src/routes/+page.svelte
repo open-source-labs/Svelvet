@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
 	import type { NodeConfig } from '$lib';
+
 	import CustomEdge from '../test-components/CustomEdge.svelte';
+
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
@@ -38,11 +40,7 @@
 			zoom={0.6}
 			minimap
 		>
-			<Node connections={[4, [2, 1]]} />
-			<Node inputs={4} outputs={2} connections={[4, 3, [1, 1]]} />
-			<Node connections={[5, [6, 2]]} LR />
-			<Node inputs={2} connections={[5, 2, [1, 2]]} LR />
-			<Node />
+			<Node resizable />
 		</Svelvet>
 	</div>
 </body>
