@@ -1,6 +1,6 @@
 <div align="center">
 
-![banner](https://i.imgur.com/pBFsJxa.png)
+![banner](https://i.imgur.com/pNIYDWO.png)
 
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
