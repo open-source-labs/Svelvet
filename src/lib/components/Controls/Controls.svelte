@@ -97,7 +97,7 @@
 			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
 				<span class="material-symbols-outlined"> zoom_out </span>
 			</button>
-			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={reset}>
+			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={fitView}>
 				<span class="material-symbols-outlined"> filter_center_focus</span>
 			</button>
 			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
