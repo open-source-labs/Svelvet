@@ -1,6 +1,6 @@
 <div align="center">
 
-![banner](https://github.com/open-source-labs/Svelvet/raw/main/src/assets/banner.png)
+![banner](https://i.imgur.com/pBFsJxa.png)
 
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 ![NPM Downloads](https://img.shields.io/npm/dt/svelvet?color=%23fb7182&label=downloads)
@@ -12,7 +12,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Getting Started](https://svelvet.io/docs/installation/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Getting Started](https://svelvet.mintlify.app/getting-started/installation) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 
@@ -178,8 +178,6 @@ Shout out to our contributors! Here's what's new:
 - **Reliable:** Svelvet is written in TypeScript and tested with [Vitest](https://vitest.dev/), [Playwright](https://www.playwright.dev/) and [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/). Svelvet is maintained by motivated engineers seeking to contribute to the larger Svelte developer community and library ecosystem.
 - **Room to Grow:** There is so much we can do to improve, add features and make Svelvet the best version of itself - we welcome feedback and contributions! Scroll below for suggestions on what to contribute.
 
-![screenshot](./src/assets/readme-gif.gif)
-
 ## Installation
 
 Svelvet is available as both an npm and a yarn package. You can install it by running one of the two commands:
@@ -275,10 +273,10 @@ Read `src/lib/doc/README.md` for suggestions on how to get started!
 The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
 
 - Premade node menu with drag & drop abilities
-- Rotating of nodes
 - Add documentation/video tutorial on how to set up a Svelvet demo
 - Custom error handling
 - Increase test coverage for scalability
+- Checkout the [Roadmap](https://svelvet.mintlify.app/roadmap) for a current list of active projects
 - GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
 
 ## Credits

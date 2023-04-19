@@ -83,15 +83,26 @@
 
 	onMount(async () => {
 		updateGraphBounds();
-
-		// Conditionally load components
-		if (toggle)
-			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
-		if (minimap)
-			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
-		if (controls)
-			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	});
+
+	$: if (toggle && !toggleComponent) {
+		async function loadToggle() {
+			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		}
+		loadToggle();
+	}
+	$: if (minimap && !minimapComponent) {
+		async function loadMinimap() {
+			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		}
+		loadMinimap();
+	}
+	$: if (controls && !controlsComponent) {
+		async function loadControls() {
+			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+		}
+		loadControls();
+	}
 
 	function updateGraphBounds() {
 		const DOMRect = graphDOMElement.getBoundingClientRect();
@@ -353,10 +364,17 @@
 	{:else}
 		<Background />
 	{/if}
-	<svelte:component this={minimapComponent} />
-	<svelte:component this={controlsComponent} />
-	<svelte:component this={toggleComponent} />
+	{#if minimap}
+		<svelte:component this={minimapComponent} />
+	{/if}
+	{#if controls}
+		<svelte:component this={controlsComponent} />
+	{/if}
+	{#if toggle}
+		<svelte:component this={toggleComponent} />
+	{/if}
 	<slot name="minimap" />
+
 	<slot name="controls" />
 	<slot name="toggle" />
 	{#if selecting && !disableSelection}
