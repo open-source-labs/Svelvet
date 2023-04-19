@@ -24,9 +24,7 @@
 	onMount(() => {
 		const DOMnode = document.querySelector(`#${node.id}`)?.firstChild;
 		if (DOMnode) {
-			console.log('getting');
 			color = window.getComputedStyle(DOMnode as Element).backgroundColor as CSSColorString;
-			console.log(color);
 		}
 	});
 </script>

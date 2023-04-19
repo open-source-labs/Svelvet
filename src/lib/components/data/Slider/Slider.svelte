@@ -5,7 +5,7 @@
 	import { getContext } from 'svelte';
 	import { roundNum } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
-
+	import { cursorPositionRaw } from '$lib/stores/CursorStore';
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let parameterStore: CustomWritable<number>;

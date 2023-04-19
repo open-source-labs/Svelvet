@@ -20,7 +20,7 @@
 	<span class="note" id="custom">Custom Nodes</span>
 	<NodeWrapper title="Line Thickness" outputStore={output} key="strokeWidth">
 		<div class="node-body">
-			<Slider min={1.35} max={6} step={0.05} parameterStore={$inputs.width} />
+			<Slider min={1.35} max={10} step={0.05} parameterStore={$inputs.width} />
 		</div>
 	</NodeWrapper>
 </Node>
