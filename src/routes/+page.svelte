@@ -29,7 +29,7 @@
 	<div class="wrapper">
 		<Svelvet controls edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
 			<CustomNode />
-			<Node position={{ x: -200, y: 200 }} connections={[1]} id="NODE" label="NODE" resizable />
+			<Node position={{ x: -200, y: 200 }} id="NODE" label="NODE" resizable />
 		</Svelvet>
 	</div>
 </body>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node } from '$lib';
 	import { getRandomColor } from '$lib/utils';
+	import CustomNode from '../../example-components/CustomNode.svelte';
 	import type { CSSColorString, NodeConfig } from '$lib/types';
 
 	function randomColor() {
@@ -28,9 +29,11 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark" controls fitView>
+		<Svelvet width={800} height={500} theme="dark" controls>
 			<Node id="node1" label="test" connections={[3]} resizable />
 			<Node
+				on:connection={() => console.log('node2 connected')}
+				on:disconnection={() => console.log('node2 disconnected')}
 				position={{ x: 300, y: 300 }}
 				dimensions={{ width: 400, height: 100 }}
 				id="node2"
