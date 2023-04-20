@@ -154,7 +154,7 @@
 		} else if ($connectedAnchors?.size > previousConnectionCount) {
 			dispatch('connection', { node, anchor });
 		}
-		if ($connectedAnchors?.size) previousConnectionCount = $connectedAnchors.size;
+		if ($connectedAnchors?.size !== undefined) previousConnectionCount = $connectedAnchors.size;
 	}
 
 	function handleClick() {
