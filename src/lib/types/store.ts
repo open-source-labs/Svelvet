@@ -7,18 +7,28 @@ import type {
 	EdgeKey,
 	NodeKey,
 	GraphKey,
-	AnchorKey
+	AnchorKey,
+	GenericKey
 } from '$lib/types';
-import type { createStore } from '$lib/utils/';
 import type { WritableEdge } from './edge';
 import type { generateOutput } from '$lib/utils/creators/';
 import type { Writable, Readable } from 'svelte/store';
 
-export type GraphStore = ReturnType<typeof createStore<Graph, GraphKey>>;
-export type NodeStore = ReturnType<typeof createStore<Node, NodeKey>>;
-export type GroupBoxStore = ReturnType<typeof createStore<GroupBox, GroupKey>>;
-export type EdgeStore = ReturnType<typeof createStore<WritableEdge, EdgeKey>>;
-export type AnchorStore = ReturnType<typeof createStore<Anchor, AnchorKey>>;
+export interface Store<T, K extends GenericKey> {
+	subscribe: Writable<Record<K, T>>['subscribe'];
+	set: Writable<Record<K, T>>['set'];
+	update: Writable<Record<K, T>>['update'];
+	add: (item: T, key: K) => Record<K, T>;
+	get: (key: K) => T | null;
+	delete: (key: K) => boolean;
+	count: () => number;
+}
+
+export type GraphStore = Store<Graph, GraphKey>;
+export type NodeStore = Store<Node, NodeKey>;
+export type GroupBoxStore = Store<GroupBox, GroupKey>;
+export type EdgeStore = Store<WritableEdge, EdgeKey>;
+export type AnchorStore = Store<Anchor, AnchorKey>;
 
 export type OutputStore = ReturnType<typeof generateOutput>;
 export type InputStore = Writable<Record<string, Writable<unknown> | Readable<unknown>>>;
