@@ -1,7 +1,15 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import type { GenericKey } from '$lib/types';
 
-export function createStore<T, K extends GenericKey>() {
+export function createStore<T, K extends GenericKey>(): {
+	subscribe: Writable<Record<K, T>>['subscribe'];
+	set: Writable<Record<K, T>>['set'];
+	update: Writable<Record<K, T>>['update'];
+	add: (item: T, key: K) => Record<K, T>;
+	get: (key: K) => T;
+	delete: (key: K) => boolean;
+	count: () => number;
+} {
 	type TData = Record<K, T>;
 
 	const data = {} as TData;
