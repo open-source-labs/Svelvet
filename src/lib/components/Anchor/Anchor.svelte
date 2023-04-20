@@ -146,15 +146,13 @@
 
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
-	$: {
-		$connectedAnchors; // This just forces the code block to run every time it changes
-
-		if ($connectedAnchors?.size < previousConnectionCount) {
+$: if ($connectedAnchors) {
+		if ($connectedAnchors.size < previousConnectionCount) {
 			dispatch('disconnection', { node, anchor });
-		} else if ($connectedAnchors?.size > previousConnectionCount) {
+		} else if ($connectedAnchors.size > previousConnectionCount) {
 			dispatch('connection', { node, anchor });
 		}
-		if ($connectedAnchors?.size !== undefined) previousConnectionCount = $connectedAnchors.size;
+		previousConnectionCount = $connectedAnchors.size;
 	}
 
 	function handleClick() {
