@@ -146,7 +146,8 @@
 
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
-	$: if ($connectedAnchors) {
+
+  $: if ($connectedAnchors) {
 		if ($connectedAnchors.size < previousConnectionCount) {
 			dispatch('disconnection', { node, anchor });
 		} else if ($connectedAnchors.size > previousConnectionCount) {
