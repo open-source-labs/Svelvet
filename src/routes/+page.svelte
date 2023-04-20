@@ -27,26 +27,17 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet
-			controls
-			edgeStyle="step"
-			edge={CustomEdge}
-			TD
-			width={800}
-			theme="dark"
-			height={500}
-			zoom={0.6}
-			minimap
-			fitView
-		>
+		<Svelvet controls edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
 			<CustomNode />
-			<Node resizable />
+			<Node position={{ x: -200, y: 200 }} connections={[1]} id="NODE" label="NODE" resizable />
 		</Svelvet>
 	</div>
 </body>
 
 <style>
 	.wrapper {
+		width: 100%;
+		height: 100%;
 		display: flex;
 		border: solid 1px black;
 		border-radius: 20px;
@@ -60,5 +51,7 @@
 		background-color: gray;
 		width: 100vw;
 		height: 100vh;
+		margin: 0;
+		padding: 0;
 	}
 </style>

@@ -30,7 +30,7 @@
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 >
-	<button on:mousedown|stopPropagation={toggleTheme}>
+	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
 		<span class="material-symbols-outlined">{current === main ? 'light_mode' : 'dark_mode'}</span>
 	</button>
 </div>

@@ -28,8 +28,8 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark" controls>
-			<Node id="node1" label="test" resizable />
+		<Svelvet width={800} height={500} theme="dark" controls fitView>
+			<Node id="node1" label="test" connections={[3]} resizable />
 			<Node
 				position={{ x: 300, y: 300 }}
 				dimensions={{ width: 400, height: 100 }}

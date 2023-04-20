@@ -46,7 +46,7 @@
 	export let MIN_SCALE = 0.2;
 	export let selectionColor: CSSColorString;
 	export let backgroundExists: boolean;
-	export let fitView = false;
+	export let fitView: boolean | 'resize' = false;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -63,6 +63,9 @@
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
 	let initialDistance: number = 0;
+	let initialScale = 1;
+	let pinching = false;
+	let animationFrameId: number;
 
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
@@ -79,8 +82,7 @@
 	const linkingAny = graph.linkingAny;
 	const linkingInput = graph.linkingInput;
 	const linkingOutput = graph.linkingOutput;
-	const bounds = graph.bounds;
-	const nodes = graph.nodes;
+	const nodeBounds = graph.bounds.nodeBounds;
 
 	$: dimensions = $dimensionsStore;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
@@ -90,21 +92,24 @@
 	let minimapComponent: ConstructorOfATypedSvelteComponent | null = null;
 	let controlsComponent: ConstructorOfATypedSvelteComponent | null = null;
 
-	onMount(async () => {
+	onMount(() => {
 		updateGraphDimensions();
 	});
-	const nodeBounds = bounds.nodeBounds;
 
-	$: if (graphDimensions && fitView) {
-		$nodes;
-		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
+	setContext('fitView', fitView);
 
+	$: if (fitView && graphDimensions) {
+		if (fitView !== 'resize') {
+			fitView = false;
+		}
+		const { x, y, scale } = calculateFitView(graphDimensions, get(nodeBounds));
 		if (x && y && scale) {
 			translationX.set(x);
 			translationY.set(y);
 			graph.transforms.scale.set(scale);
 		}
 	}
+
 	$: if (toggle && !toggleComponent) {
 		async function loadToggle() {
 			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
@@ -228,7 +233,6 @@
 		}
 	}
 
-	// This can be refined
 	function onTouchStart(e: TouchEvent) {
 		$selected = new Set();
 		$selected = $selected;
@@ -236,36 +240,35 @@
 		$initialClickPosition = $cursor;
 
 		isMovable = true;
+		if (e.touches.length === 2) {
+			startPinching();
+			initialDistance = $touchDistance;
+			initialScale = $scale;
+		}
 	}
 
 	function onTouchEnd(e: TouchEvent) {
 		isMovable = false;
+		pinching = false;
 	}
 
-	// There shouldn't have to be a listener on the element
-	function onTouchMove(e: TouchEvent) {
-		if (e.touches.length === 2) {
-			const newDistance = $touchDistance;
-			const scaleFactor = newDistance / initialDistance;
-
-			const newScale = calculateZoom($scale, 12 * (1 - scaleFactor), ZOOM_INCREMENT);
-			const currentTranslation = { x: $translationX, y: $translationY };
-			// Calculate the translation adjustment
-			const newTranslation = calculateTranslation(
-				$scale,
-				newScale,
-				currentTranslation,
-				$cursor,
-				graphDimensions
-			);
-
-			// Apply transforms
-			translateGraph(translation, newTranslation);
-			zoomGraph(scale, newScale);
-
-			// Update the initial distance
-			initialDistance = newDistance;
+	function startPinching() {
+		if (!pinching) {
+			pinching = true;
+			animationFrameId = requestAnimationFrame(handlePinch);
 		}
+	}
+
+	function handlePinch() {
+		if (!pinching) {
+			cancelAnimationFrame(animationFrameId);
+			return;
+		}
+
+		const newDistance = $touchDistance;
+		const scaleFactor = newDistance / initialDistance;
+		$scale = initialScale * scaleFactor;
+		animationFrameId = requestAnimationFrame(handlePinch);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -367,7 +370,6 @@
 	on:mousedown|preventDefault={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault={onTouchStart}
-	on:touchmove|self|preventDefault={onTouchMove}
 	on:wheel|preventDefault={handleScroll}
 	on:keydown|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
@@ -402,7 +404,7 @@
 	{/if}
 </section>
 
-<svelte:window on:mouseup={onMouseUp} on:resize={updateGraphDimensions} />
+<svelte:window on:touchend={onMouseUp} on:mouseup={onMouseUp} on:resize={updateGraphDimensions} />
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');

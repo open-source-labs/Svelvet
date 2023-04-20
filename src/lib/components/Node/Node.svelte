@@ -19,7 +19,7 @@
 	const { nodes } = graph;
 
 	export let position = { x: 0, y: 0 };
-	export let dimensions = { width: 0, height: 0 };
+	export let dimensions = { width: 200, height: 100 };
 	export let id: string | number = 0;
 	export let bgColor: CSSColorString | null = null;
 	export let borderRadius: number | null = null;

@@ -2,7 +2,7 @@
 	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
-	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
+	import { captureGroup, calculateFitContentWidth, calculateFitView } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
@@ -32,6 +32,7 @@
 
 	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
+	const fitView = getContext('fitView');
 
 	setContext<Node>('node', node);
 
@@ -65,6 +66,7 @@
 		// And reassign the width store the max value of
 		// The initial dom dimensions, the min dimenions calculated, or the initial store value
 		// Spend more time looking into this and see if there is a more obvious fix
+
 		const nodeRect = DOMnode.getBoundingClientRect();
 		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
 		const calcWidth = Math.max(nodeRect.width, minWidth);
