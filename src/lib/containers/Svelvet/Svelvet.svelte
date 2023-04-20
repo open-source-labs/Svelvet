@@ -32,7 +32,7 @@
 	export let minimap = false;
 	export let controls = false;
 	export let toggle = false;
-	export let fitView = false;
+	export let fitView: boolean | 'resize' = false;
 	export let selectionColor: CSSColorString = 'lightblue';
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;

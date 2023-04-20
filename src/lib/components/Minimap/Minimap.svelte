@@ -132,7 +132,7 @@
 		position: absolute;
 		border-radius: 6px;
 		overflow: hidden;
-		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 		border: solid 1px;
 		z-index: 10;
 		display: flex;

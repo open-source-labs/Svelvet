@@ -110,6 +110,9 @@
 
 		checkConnections();
 		updatePosition();
+		setTimeout(() => {
+			updatePosition();
+		}, 0);
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -173,6 +176,10 @@
 		}
 
 		clearAllLinking();
+	}
+	import { tracking as nodeTracking } from '$lib/stores/CursorStore';
+	function handleTouch() {
+		nodeTracking.set(false);
 	}
 
 	function startEdge() {

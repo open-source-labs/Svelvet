@@ -37,7 +37,6 @@ export function createBoundsStore(
 			const { x, y } = get(node.position);
 			const width = get(node.dimensions.width);
 			const height = get(node.dimensions.height);
-
 			newLeft = Math.min(newLeft, x);
 			newTop = Math.min(newTop, y);
 			newRight = Math.max(newRight, x + width);

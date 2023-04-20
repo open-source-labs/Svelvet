@@ -5,7 +5,7 @@
 	import { getContext } from 'svelte';
 	import { roundNum } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
-	import { cursorPositionRaw } from '$lib/stores/CursorStore';
+	import { tracking } from '$lib/stores/CursorStore';
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let parameterStore: CustomWritable<number>;
@@ -22,6 +22,10 @@
 
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');
+
+	const groups = graph.groups;
+	const selected = $groups.selected;
+	const activeGroup = graph.activeGroup;
 
 	$: width = node.dimensions.width;
 
@@ -49,12 +53,26 @@
 		window.addEventListener('mouseup', stopSlide, { once: true });
 		sliding = true;
 	}
+	let previousValue = $parameterStore;
+	function startTouchSlide(e: TouchEvent) {
+		$activeGroup = null;
+		selected.nodes.set(new Set());
+		tracking.set(false);
+		e.stopPropagation();
+		e.preventDefault();
+		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
+		previousX = $cursor.x;
+		window.addEventListener('touchend', stopSlide, { once: true });
+		sliding = true;
+	}
 
 	// Stop sliding on mouseup
 	function stopSlide() {
-		if (Math.abs(previousX - $cursor.x) <= 1.5) {
+		if (previousValue === $parameterStore) {
 			sliderElement.focus();
 			sliderElement.select();
+		} else {
+			previousValue = $parameterStore;
 		}
 		sliding = false;
 		window.removeEventListener('mouseup', stopSlide);
@@ -62,6 +80,7 @@
 
 	function slideable(node: HTMLElement) {
 		node.addEventListener('mousedown', startSlide);
+		node.addEventListener('touchstart', startTouchSlide);
 		return {
 			destroy() {
 				node.removeEventListener('mousedown', startSlide);
@@ -127,7 +146,11 @@
 
 {#if !connected}
 	<div class="wrapper" style:color={fontColor || $themeStore.text}>
-		<button class="button" on:mousedown|stopPropagation={() => updateValue(-1)}>−</button>
+		<button
+			class="button"
+			on:touchstart|stopPropagation={() => updateValue(-1)}
+			on:mousedown|stopPropagation={() => updateValue(-1)}>−</button
+		>
 		<div class="slider" bind:offsetWidth={sliderWidth}>
 			<label for="slider-input" class="input-label">{label}</label>
 			<input
@@ -156,7 +179,11 @@
 				bind:this={sliderElement}
 			/>
 		</div>
-		<button class="button" on:mousedown|stopPropagation={() => updateValue(1)}>+</button>
+		<button
+			class="button"
+			on:touchstart|stopPropagation={() => updateValue(1)}
+			on:mousedown|stopPropagation={() => updateValue(1)}>+</button
+		>
 	</div>
 {:else}
 	<div class="wrapper connected">

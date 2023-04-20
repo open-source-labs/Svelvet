@@ -4,8 +4,8 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark" minimap controls>
-			{#each { length: 100 } as _, i}
+		<Svelvet width={800} height={500} theme="dark" minimap controls fitView>
+			{#each { length: 20 } as _, i}
 				<Node inputs={1} outputs={1} />
 			{/each}
 		</Svelvet>
