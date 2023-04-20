@@ -147,7 +147,6 @@
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
 	$: if ($connectedAnchors) {
-		$connectedAnchors; // This just forces the code block to run every time it changes
 		if ($connectedAnchors.size < previousConnectionCount) {
 			dispatch('disconnection', { node, anchor });
 		} else if ($connectedAnchors.size > previousConnectionCount) {
@@ -466,7 +465,7 @@
 			// Create anchor key
 			const anchorKey: AnchorKey = `A-${anchorId}/${nodekey}`;
 			// Look up anchor in store
-			anchorToConnect = nodeToConnect.anchors.get(anchorKey);
+			anchorToConnect = nodeToConnect.anchors.get(anchorKey) || null;
 		}
 
 		if (!anchorToConnect) return false;

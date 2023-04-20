@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
-import type { GenericKey } from '$lib/types';
+import type { GenericKey, Store } from '$lib/types';
 
-export function createStore<T, K extends GenericKey>() {
+export function createStore<T, K extends GenericKey>(): Store<T, K> {
 	type TData = Record<K, T>;
 
 	const data = {} as TData;
@@ -9,17 +9,7 @@ export function createStore<T, K extends GenericKey>() {
 	const { subscribe, set, update } = writable(data);
 	let count = 0;
 
-	interface Store {
-		subscribe: typeof subscribe;
-		set: typeof set;
-		update: typeof update;
-		add: (item: T, key: K) => TData;
-		get: (key: K) => T;
-		delete: (key: K) => boolean;
-		count: () => number;
-	}
-
-	const store: Store = {
+	const store: Store<T, K> = {
 		subscribe,
 		set,
 		update,
@@ -32,7 +22,8 @@ export function createStore<T, K extends GenericKey>() {
 			return data;
 		},
 		get: (key: K) => {
-			return data[key];
+			if (data[key]) return data[key];
+			return null;
 		},
 		delete: (key: K) => {
 			let deleted = false;
@@ -46,9 +37,7 @@ export function createStore<T, K extends GenericKey>() {
 			});
 			return deleted;
 		},
-		count: () => {
-			return count;
-		}
+		count: () => count
 	};
 
 	return store;

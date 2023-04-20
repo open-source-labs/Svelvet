@@ -2,6 +2,9 @@
 	import { Node, Anchor, Slider } from '$lib';
 	import type { Node as NodeType } from '$lib/types';
 	import { writable } from 'svelte/store';
+	import { getContext } from 'svelte';
+	import type { Graph } from '$lib/types';
+	const graph = getContext<Graph>('graph');
 
 	const connections: [string, string][] = [['1', '1']];
 
