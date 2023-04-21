@@ -29,7 +29,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet initialLocation={{ x: 0, y: 0 }} width={800} height={500} theme="dark" controls>
+		<Svelvet translation={{ x: 0, y: 0 }} width={800} height={500} theme="dark" controls>
 			<Node id="node1" label="test" connections={[3]} resizable />
 			<Node
 				on:connection={() => console.log('node2 connected')}

@@ -57,7 +57,7 @@ export interface GraphProps {
 	direction?: 'TD' | 'LR';
 	locked?: boolean;
 	theme?: Theme;
-	initialLocation?: { x: number; y: number };
+	translation?: { x: number; y: number };
 	edge?: ConstructorOfATypedSvelteComponent;
 }
 

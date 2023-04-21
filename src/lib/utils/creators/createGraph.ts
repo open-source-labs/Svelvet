@@ -6,8 +6,7 @@ import type {
 	EdgeKey,
 	GraphKey,
 	GroupKey,
-	GraphDimensions,
-	Theme
+	GraphDimensions
 } from '$lib/types';
 import { createStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
@@ -17,11 +16,19 @@ import { createBoundsStore } from './createBoundsStore';
 import type { GraphProps } from '$lib/types';
 
 export function createGraph(id: GraphKey, config: GraphProps): Graph {
-	const { zoom, editable, initialLocation, theme, direction, locked, edge } = config;
+	const {
+		zoom,
+		editable,
+		translation: initialTranslation,
+		theme,
+		direction,
+		locked,
+		edge
+	} = config;
 
 	const translation = {
-		x: writable(initialLocation?.x || 0),
-		y: writable(initialLocation?.y || 0)
+		x: writable(initialTranslation?.x || 0),
+		y: writable(initialTranslation?.y || 0)
 	};
 	const dimensions = writable({} as GraphDimensions);
 

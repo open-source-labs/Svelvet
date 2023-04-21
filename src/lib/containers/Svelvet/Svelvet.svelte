@@ -38,7 +38,7 @@
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let disableSelection = false;
 	export let mermaidConfig: Record<string, NodeProps> = {};
-	export let initialLocation: XYPair = { x: 0, y: 0 };
+	export let translation: XYPair = { x: 0, y: 0 };
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -58,7 +58,7 @@
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked, initialLocation });
+			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked, translation });
 
 			graphStore.add(graph, graphKey);
 		}
