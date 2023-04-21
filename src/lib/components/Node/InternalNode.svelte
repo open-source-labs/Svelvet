@@ -198,6 +198,10 @@
 		// Capture the initial positions of the nodes in the group
 		$initialNodePositions = captureGroup($groups['selected'].nodes);
 	}
+
+	function destroy() {
+		nodeStore.delete(id);
+	}
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
@@ -226,7 +230,7 @@
 		tabIndex={0}
 	>
 		{#if !collapsed}
-			<slot {grabHandle} {selected} />
+			<slot {grabHandle} {selected} {destroy} />
 		{/if}
 	</div>
 {/if}

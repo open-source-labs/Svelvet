@@ -14,10 +14,9 @@
 	const parameter = writable(10);
 </script>
 
-<Node let:grabHandle let:selected let:node>
+<Node let:grabHandle let:selected let:destroy let:node>
 	<div class="node" use:grabHandle class:selected>
 		<Slider parameterStore={parameter} />
-
 		<div class="input-anchors">
 			<Anchor
 				on:disconnection={() => console.log('disconnection')}

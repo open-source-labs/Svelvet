@@ -29,8 +29,7 @@
 <div
 	style:width="{$width}px"
 	style:height="{$height}px"
-	style:background-color={$bgColor}
-	style:border-radius={$borderRadius}
+	style:border-radius="{$borderRadius}px"
 	class:selected
 	class="default-node"
 >
