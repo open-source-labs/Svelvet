@@ -51,6 +51,16 @@ export interface Graph {
 	initialNodePositions: Writable<XYPair[]>;
 }
 
+export interface GraphProps {
+	editable?: boolean;
+	zoom?: number;
+	direction?: 'TD' | 'LR';
+	locked?: boolean;
+	theme?: Theme;
+	initialLocation?: { x: number; y: number };
+	edge?: ConstructorOfATypedSvelteComponent;
+}
+
 export type LinkingAny = Anchor | Anchor;
 
 export interface LinkingInput {

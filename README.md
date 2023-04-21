@@ -12,7 +12,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Getting Started](https://svelvet.mintlify.app/getting-started/installation) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@MauricioACastro/svelvet-4-0-the-power-of-html-is-now-inside-your-nodes-3d96823096e3) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Getting Started](https://svelvet.mintlify.app/getting-started/installation) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@jenlee_35516/svelvet-7-0-build-intuitive-interactive-node-diagrams-in-svelte-cb4e78872ff6) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 

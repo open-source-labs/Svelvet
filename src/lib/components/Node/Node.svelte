@@ -3,7 +3,7 @@
 	import type {
 		Graph,
 		Node as NodeType,
-		NodeConfig,
+		NodeProps,
 		GroupKey,
 		Connections,
 		CSSColorString
@@ -56,7 +56,7 @@
 
 		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
 		if (!foundNode) {
-			const config: NodeConfig = {
+			const config: NodeProps = {
 				id: id || nodeCount,
 				position: groupBox
 					? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }

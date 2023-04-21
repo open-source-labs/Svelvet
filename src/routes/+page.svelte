@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
-	import type { NodeConfig } from '$lib';
+	import type { NodeProps } from '$lib';
 	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
 
@@ -18,7 +18,7 @@
 		node.label.set('Disconnected');
 	}
 
-	const mermaidConfig: Record<string, NodeConfig> = {
+	const mermaidConfig: Record<string, NodeProps> = {
 		A: { bgColor: 'blue' },
 		B: { dimensions: { width: 600, height: 100 } },
 		C: { dimensions: { width: 100, height: 600 } }

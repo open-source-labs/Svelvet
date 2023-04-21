@@ -14,22 +14,14 @@ import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import type { WritableEdge, NodeKey } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
+import type { GraphProps } from '$lib/types';
 
-export interface GraphConfig {
-	editable?: boolean;
-	zoom?: number;
-	direction?: 'TD' | 'LR';
-	locked?: boolean;
-	theme?: Theme;
-	edge?: ConstructorOfATypedSvelteComponent;
-}
-
-export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const { zoom, editable, theme, direction, locked, edge } = config;
+export function createGraph(id: GraphKey, config: GraphProps): Graph {
+	const { zoom, editable, initialLocation, theme, direction, locked, edge } = config;
 
 	const translation = {
-		x: writable(0),
-		y: writable(0)
+		x: writable(initialLocation?.x || 0),
+		y: writable(initialLocation?.y || 0)
 	};
 	const dimensions = writable({} as GraphDimensions);
 

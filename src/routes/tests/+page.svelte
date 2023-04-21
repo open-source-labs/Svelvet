@@ -2,13 +2,13 @@
 	import { Svelvet, Minimap, Node } from '$lib';
 	import { getRandomColor } from '$lib/utils';
 	import CustomNode from '../../example-components/CustomNode.svelte';
-	import type { CSSColorString, NodeConfig } from '$lib/types';
+	import type { CSSColorString, NodeProps } from '$lib/types';
 
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
 	}
 
-	let nodes: NodeConfig[] = [
+	let nodes: NodeProps[] = [
 		{
 			bgColor: 'red',
 			label: 'Color Will Change',
@@ -29,7 +29,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={800} height={500} theme="dark" controls>
+		<Svelvet initialLocation={{ x: 0, y: 0 }} width={800} height={500} theme="dark" controls>
 			<Node id="node1" label="test" connections={[3]} resizable />
 			<Node
 				on:connection={() => console.log('node2 connected')}

@@ -1,6 +1,6 @@
 import { createNode } from '$lib/utils';
 
-import type { Node, NodeConfig } from '$lib/types';
+import type { Node, NodeProps } from '$lib/types';
 import type { FlowChart, Node as FlowChartNode } from '$lib/types/parser';
 import { writable } from 'svelte/store';
 
