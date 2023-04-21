@@ -3,6 +3,7 @@
 	import { getRandomColor } from '$lib/utils';
 	import CustomNode from '../../example-components/CustomNode.svelte';
 	import type { CSSColorString, NodeProps } from '$lib/types';
+	import CustomEdge from '../../example-components/CustomEdge.svelte';
 
 	function randomColor() {
 		return Math.floor(Math.random() * 255);
@@ -38,6 +39,7 @@
 				dimensions={{ width: 400, height: 100 }}
 				id="node2"
 				label="test"
+				edge={CustomEdge}
 			/>
 			<Node position={{ x: 10, y: 200 }} inputs={3} TD />
 			<Minimap slot="minimap" />

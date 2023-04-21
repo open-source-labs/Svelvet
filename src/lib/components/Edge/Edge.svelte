@@ -255,9 +255,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
-		height: 100%;
+		width: fit-content;
+		height: fit-content;
 		transform: translate(-50%, -50%);
+		pointer-events: auto;
 	}
 
 	.target {

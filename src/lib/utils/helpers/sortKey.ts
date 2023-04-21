@@ -5,7 +5,7 @@ export function sortEdgeKey(keyOne: AnchorKey, keyTwo: AnchorKey): EdgeKey {
 	const sortedStrings = [keyOne, keyTwo].sort();
 
 	// Concatenate the sorted strings
-	const combinedString: EdgeKey = `${sortedStrings[0]}+${sortedStrings[1]};`;
+	const combinedString: EdgeKey = `${sortedStrings[0]}+${sortedStrings[1]}`;
 
 	return combinedString;
 }

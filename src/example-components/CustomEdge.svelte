@@ -10,17 +10,15 @@
 	}
 </script>
 
-<Edge {color} let:path width={4}>
-	<div slot="label">Custom Label</div>
+<Edge {color} let:destroy width={4} edgeClick={() => (color = 'blue')}>
+	<button id="destroy-edge" on:click={destroy} slot="label">Custom Label</button>
 </Edge>
 
 <style>
-	div {
-		width: fit-content;
-		height: 2rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: rgb(229, 10, 10);
+	#destroy-edge {
+		background-color: #fff;
+		border: none;
+		border-radius: 5px;
+		padding: 5px;
 	}
 </style>
