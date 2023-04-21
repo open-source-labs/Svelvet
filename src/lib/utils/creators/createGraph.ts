@@ -6,30 +6,29 @@ import type {
 	EdgeKey,
 	GraphKey,
 	GroupKey,
-	GraphDimensions,
-	Theme
+	GraphDimensions
 } from '$lib/types';
 import { createStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import type { WritableEdge, NodeKey } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
+import type { GraphProps } from '$lib/types';
 
-export interface GraphConfig {
-	editable?: boolean;
-	zoom?: number;
-	direction?: 'TD' | 'LR';
-	locked?: boolean;
-	theme?: Theme;
-	edge?: ConstructorOfATypedSvelteComponent;
-}
-
-export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const { zoom, editable, theme, direction, locked, edge } = config;
+export function createGraph(id: GraphKey, config: GraphProps): Graph {
+	const {
+		zoom,
+		editable,
+		translation: initialTranslation,
+		theme,
+		direction,
+		locked,
+		edge
+	} = config;
 
 	const translation = {
-		x: writable(0),
-		y: writable(0)
+		x: writable(initialTranslation?.x || 0),
+		y: writable(initialTranslation?.y || 0)
 	};
 	const dimensions = writable({} as GraphDimensions);
 

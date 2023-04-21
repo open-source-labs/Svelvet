@@ -9,7 +9,7 @@ import Slider from './components/data/Slider/Slider.svelte';
 import RadioGroup from './components/data/RadioGroup/RadioGroup.svelte';
 import Background from './containers/Background/Background.svelte';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle.svelte';
-import ColorWheel from './components/data/ColorPicker/ColorWheel.svelte';
+import ColorPicker from './components/data/ColorPicker/ColorWheel.svelte';
 import Resizer from './components/Resizer/Resizer.svelte';
 import { generateInput, generateOutput } from './utils/creators';
 
@@ -26,7 +26,7 @@ export {
 	Slider,
 	RadioGroup,
 	ThemeToggle,
-	ColorWheel,
+	ColorPicker,
 	generateInput,
 	generateOutput
 };

@@ -3,11 +3,12 @@
 	import type {
 		Graph as GraphType,
 		GraphKey,
-		NodeConfig,
+		NodeProps,
 		NodeStore,
 		Theme,
 		CSSColorString,
-		EdgeStyle
+		EdgeStyle,
+		XYPair
 	} from '$lib/types';
 	import { populateStore } from '$lib/utils';
 	import { createNode, createGraph } from '$lib/utils/';
@@ -21,7 +22,6 @@
 	export let mermaid = '';
 	export let theme: Theme = 'light';
 	export let id: number | string = 0;
-	export let nodes: Array<NodeConfig> = [];
 	export let snapTo = 1;
 	export let zoom = 1;
 	export let TD = false;
@@ -37,7 +37,8 @@
 	export let edgeStyle: EdgeStyle = 'bezier';
 	export let edge: ConstructorOfATypedSvelteComponent | null = null;
 	export let disableSelection = false;
-	export let mermaidConfig: Record<string, NodeConfig> = {};
+	export let mermaidConfig: Record<string, NodeProps> = {};
+	export let translation: XYPair = { x: 0, y: 0 };
 
 	let graph: GraphType;
 	let nodeStore: NodeStore;
@@ -57,20 +58,8 @@
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked });
+			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked, translation });
 
-			if (nodes.length && !mermaid) {
-				const nodeObjects = generateNodes(nodes);
-				populateStore(nodeObjects, graph);
-				nodeStore = graph.nodes;
-			}
-
-			// if (mermaid.length) {
-			// 	const mermaidNodes = flowChartParser(mermaid);
-			// 	const createdNodes = populateMermaidNodes(mermaidNodes, 'td');
-			// 	populateStore(Object.values(createdNodes), graph);
-			// 	nodeStore = graph.nodes;
-			// }
 			graphStore.add(graph, graphKey);
 		}
 	});
@@ -82,10 +71,6 @@
 		$currentTheme = THEMES[theme];
 	}
 
-	function generateNodes(nodes: Array<NodeConfig>) {
-		const nodeObjects = nodes.map((node) => createNode(node));
-		return nodeObjects;
-	}
 	$: backgroundExists = $$slots.background;
 
 	$: if (graph) graph.transforms.scale.set(zoom);
