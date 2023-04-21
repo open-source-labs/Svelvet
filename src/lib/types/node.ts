@@ -70,6 +70,7 @@ export interface NodeProps {
 	props?: object;
 	borderColor?: CSSColorString;
 	bgColor?: CSSColorString;
+	useDefaults?: boolean;
 	borderRadius?: number;
 	borderWidth?: number;
 	rotation?: number;

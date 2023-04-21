@@ -31,6 +31,8 @@
 	export let label = '';
 	export let inputs = 1;
 	export let outputs = 1;
+	export let width: number | null = null;
+	export let height: number | null = null;
 	export let TD = false;
 	export let LR = false;
 	export let zIndex = 1;
@@ -61,7 +63,7 @@
 				position: groupBox
 					? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
 					: position,
-				dimensions,
+				dimensions: width && height ? { width, height } : dimensions,
 				editable: editable || graph.editable,
 				label,
 				group,
@@ -145,8 +147,8 @@
 </script>
 
 {#if node && $nodes[node.id]}
-	<InternalNode {isDefault} let:selected let:grabHandle on:nodeClicked {node}>
-		<slot {selected} {grabHandle} {node}>
+	<InternalNode {isDefault} let:destroy let:selected let:grabHandle on:nodeClicked {node}>
+		<slot {selected} {grabHandle} {node} {destroy}>
 			<DefaultNode {selected} on:connection on:disconnection />
 		</slot>
 	</InternalNode>
