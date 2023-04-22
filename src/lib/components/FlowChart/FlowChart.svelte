@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Graph, NodeProps, NodeKey, Node as NodeType } from '$lib/types';
+	import type { Graph, NodeConfig, NodeKey, Node as NodeType } from '$lib/types';
 
 	import Node from '../Node/Node.svelte';
 	import { onMount, getContext } from 'svelte';
@@ -8,7 +8,7 @@
 	import { flowChartParser } from '$lib/utils/helpers/parser';
 
 	export let mermaid = '';
-	export let mermaidConfig: Record<string, NodeProps> = {};
+	export let mermaidConfig: Record<string, NodeConfig> = {};
 
 	const flowChart = flowChartParser(mermaid);
 	const grid = flowChartDrawer(flowChart, 'td');

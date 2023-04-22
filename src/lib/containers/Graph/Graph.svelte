@@ -29,6 +29,7 @@
 	import { get } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
+	import type { ComponentType } from 'svelte';
 
 	export let graph: Graph;
 	export let width: number;
@@ -90,9 +91,9 @@
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
 	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 
-	let toggleComponent: ConstructorOfATypedSvelteComponent | null = null;
-	let minimapComponent: ConstructorOfATypedSvelteComponent | null = null;
-	let controlsComponent: ConstructorOfATypedSvelteComponent | null = null;
+	let toggleComponent: ComponentType | null = null;
+	let minimapComponent: ComponentType | null = null;
+	let controlsComponent: ComponentType | null = null;
 
 	onMount(() => {
 		updateGraphDimensions();

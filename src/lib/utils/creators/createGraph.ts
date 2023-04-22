@@ -13,9 +13,9 @@ import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import type { WritableEdge, NodeKey } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
-import type { GraphProps } from '$lib/types';
+import type { GraphConfig } from '$lib/types';
 
-export function createGraph(id: GraphKey, config: GraphProps): Graph {
+export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	const {
 		zoom,
 		editable,

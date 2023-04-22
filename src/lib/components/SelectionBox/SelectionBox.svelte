@@ -54,6 +54,7 @@
 			) {
 				const id = node.id as NodeKey;
 				const selectedNode = graph.nodes.get(id);
+				if (!selectedNode) return accumulator;
 				accumulator.push(selectedNode);
 			}
 			return accumulator;

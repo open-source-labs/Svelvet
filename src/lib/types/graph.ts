@@ -15,6 +15,7 @@ import type {
 	GraphDimensions,
 	Theme
 } from '.';
+import type { ComponentType } from 'svelte';
 
 export interface Graph {
 	id: GraphKey;
@@ -43,7 +44,7 @@ export interface Graph {
 	linkingAny: Writable<Anchor | null>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
-	edge: ConstructorOfATypedSvelteComponent | null;
+	edge: ComponentType | null;
 	groupBoxes: GroupBoxStore;
 	theme: Writable<Theme>;
 	editing: Writable<Node | null>;
@@ -51,14 +52,14 @@ export interface Graph {
 	initialNodePositions: Writable<XYPair[]>;
 }
 
-export interface GraphProps {
+export interface GraphConfig {
 	editable?: boolean;
 	zoom?: number;
 	direction?: 'TD' | 'LR';
 	locked?: boolean;
 	theme?: Theme;
 	translation?: { x: number; y: number };
-	edge?: ConstructorOfATypedSvelteComponent;
+	edge?: ComponentType;
 }
 
 export type LinkingAny = Anchor | Anchor;

@@ -3,7 +3,7 @@
 	import type {
 		Graph as GraphType,
 		GraphKey,
-		NodeProps,
+		NodeConfig,
 		Theme,
 		CSSColorString,
 		EdgeStyle,
@@ -16,6 +16,7 @@
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 	import { writable } from 'svelte/store';
 	import { THEMES } from '$lib/constants/themes';
+	import type { ComponentType } from 'svelte';
 
 	export let mermaid = '';
 	export let theme: Theme = 'light';
@@ -33,9 +34,9 @@
 	export let fitView: boolean | 'resize' = false;
 	export let selectionColor: CSSColorString = 'lightblue';
 	export let edgeStyle: EdgeStyle = 'bezier';
-	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let edge: ComponentType | null = null;
 	export let disableSelection = false;
-	export let mermaidConfig: Record<string, NodeProps> = {};
+	export let mermaidConfig: Record<string, NodeConfig> = {};
 	export let translation: XYPair = { x: 0, y: 0 };
 
 	let graph: GraphType;
