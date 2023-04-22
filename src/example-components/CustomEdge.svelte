@@ -11,7 +11,7 @@
 </script>
 
 <Edge {color} let:destroy width={4} edgeClick={() => (color = 'blue')}>
-	<button id="destroy-edge" on:click={destroy} slot="label">DynamicEdges</button>
+	<button id="destroy-edge" on:click={destroy} slot="label">Custom Label</button>
 </Edge>
 
 <style>
