@@ -1,16 +1,10 @@
 <script lang="ts">
-	import { THEMES } from '$lib/constants/themes';
-	import type { Graph, Theme } from '$lib/types';
+	import type { Graph } from '$lib/types';
 	import { getContext } from 'svelte';
-	import {
-		calculateTranslation,
-		zoomGraph,
-		translateGraph,
-		calculateZoom,
-		calculateFitView
-	} from '$lib/utils';
+	import { calculateFitView } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ThemeGroup, CSSColorString } from '$lib/types';
+	import { zoomAndTranslate } from '$lib/utils/movers/';
 
 	export let increment = 0.1;
 	export let horizontal = false;
@@ -22,7 +16,7 @@
 	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
 
 	const { transforms, locked, groups, dimensions } = graph;
-	const { scale, translation } = transforms;
+	const { translation } = transforms;
 
 	const hidden = $groups.hidden.nodes;
 	const translationX = translation.x;
@@ -34,28 +28,12 @@
 		hidden.set(new Set());
 	}
 
-	function zoom(direction = 1) {
-		// Zoom in by 10%
-		const { width, height, top, left } = $dimensions;
-
-		const newScale = calculateZoom($scale, direction, increment);
-		const newTranslation = calculateTranslation(
-			$scale,
-			newScale,
-			{ x: $translationX, y: $translationY },
-			{ x: width / 2 + left, y: height / 2 + top },
-			$dimensions
-		);
-		zoomGraph(scale, newScale);
-		translateGraph(translation, newTranslation);
-	}
-
 	function zoomIn() {
-		zoom(-1);
+		zoomAndTranslate(-1, graph, increment);
 	}
 
 	function zoomOut() {
-		zoom(1);
+		zoomAndTranslate(1, graph, increment);
 	}
 
 	function fitView() {

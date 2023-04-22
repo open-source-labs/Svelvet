@@ -14,13 +14,7 @@ test('custom edges are rendered correctly and labels can be interacted with', as
 	await expect(newEdge).toHaveAttribute('d', 'M 700, 350 C 1050, 350 -350, 50 0, 50');
 	await expect(newEdge).toHaveAttribute('style', 'stroke: yellow; stroke-width: 4px;');
 
-	// const sourcePosition = await sourceAnchor.boundingBox();
 	await page.locator('.svelvet-anchor').first().click();
-
-	// if (!sourcePosition) throw new Error('Source position not found');
-	// // page.mouse.move(sourcePosition.x + 13, sourcePosition.y);
-	// // await page.mouse.down();
-	// await expect(newEdge).toHaveAttribute('style', 'stroke: blue; stroke-width: 4px;');
 
 	await page.getByRole('button', { name: 'Custom Label' }).click();
 

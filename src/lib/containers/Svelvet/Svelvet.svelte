@@ -41,12 +41,10 @@
 	export let translation: XYPair = { x: 0, y: 0 };
 
 	let graph: GraphType;
-	let nodeStore: NodeStore;
 
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
 	setContext('snapTo', snapTo);
-
 	setContext('edgeStyle', edgeStyle);
 	setContext('graphEdge', edge);
 

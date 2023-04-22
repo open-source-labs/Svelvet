@@ -96,12 +96,14 @@
 		updateGraphDimensions();
 	});
 
-	setContext('fitView', fitView);
-
 	$: if (fitView && graphDimensions) {
 		if (fitView !== 'resize') {
 			fitView = false;
 		}
+		fitIntoView();
+	}
+
+	function fitIntoView() {
 		const { x, y, scale } = calculateFitView(graphDimensions, get(nodeBounds));
 		if (x && y && scale) {
 			translationX.set(x);
@@ -291,11 +293,11 @@
 		}
 		interval = undefined;
 	}
-
+	import { zoomAndTranslate } from '$lib/utils/movers';
 	const triggerActionBasedOn: Record<string, (key: string) => void> = {
-		'=': () => zoomGraph(scale, calculateZoom($scale, -10, ZOOM_INCREMENT)),
-		'-': () => zoomGraph(scale, calculateZoom($scale, 10, ZOOM_INCREMENT)),
-		'0': resetTransforms,
+		'=': () => zoomAndTranslate(-1, graph, ZOOM_INCREMENT),
+		'-': () => zoomAndTranslate(1, graph, ZOOM_INCREMENT),
+		'0': fitIntoView,
 		ArrowLeft: (key) => handleArrowKey(key as Arrow),
 		ArrowRight: (key) => handleArrowKey(key as Arrow),
 		ArrowUp: (key) => handleArrowKey(key as Arrow),
