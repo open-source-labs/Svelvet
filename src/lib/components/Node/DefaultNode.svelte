@@ -26,13 +26,7 @@
 	let right = get(node.direction) === 'TD' ? false : true;
 </script>
 
-<div
-	style:width="{$width}px"
-	style:height="{$height}px"
-	style:border-radius="{$borderRadius}px"
-	class:selected
-	class="default-node"
->
+<div class:selected class="default-node" style:border-radius="{$borderRadius}px">
 	<div class="input-anchors" class:top class:left>
 		{#each { length: $inputs } as _, i}
 			<Anchor on:connection on:disconnection input direction={top ? 'north' : 'west'} />
@@ -65,9 +59,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-
 		position: relative;
 		box-sizing: border-box;
+		width: inherit;
+		height: inherit;
 	}
 	p {
 		font-size: 20px;

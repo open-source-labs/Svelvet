@@ -1,6 +1,6 @@
 import { writable, readable } from 'svelte/store';
 import { getTouchDistance } from '$lib/utils/helpers';
-import { get } from 'svelte/store';
+
 // This gets updated on user click
 // Value is relative to the scale/translation of the particular graph
 // It's updated via the derived cursor store on every graph

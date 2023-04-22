@@ -16,7 +16,7 @@
 		EdgeStyle,
 		EdgeConfig
 	} from '$lib/types';
-	import { onMount, getContext, onDestroy } from 'svelte';
+	import { onMount, getContext, onDestroy, afterUpdate, beforeUpdate } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
@@ -71,12 +71,12 @@
 	const resizingWidth = node.resizingWidth;
 	const resizingHeight = node.resizingHeight;
 	const rotating = node.rotating;
-	const nodeLevelConnections = node.nodeLevelConnections;
+	const nodeLevelConnections = node.connections;
 	const linkingInput = graph.linkingInput;
 	const linkingOutput = graph.linkingOutput;
 	const linkingAny = graph.linkingAny;
 
-	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections.length > 0;
+	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections?.length > 0;
 	$: connecting =
 		input === output
 			? $linkingAny === anchor
@@ -109,10 +109,15 @@
 		anchors.add(anchor, anchor.id);
 
 		checkConnections();
-		updatePosition();
+		// This is to avoid a strange bug where the anchor positions are off
+		// It only seems to happen in dev and doesn't seem to affect the final product
 		setTimeout(() => {
 			updatePosition();
-		}, 100);
+		}, 20);
+	});
+
+	beforeUpdate(() => {
+		updatePosition();
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -175,10 +180,6 @@
 		}
 
 		clearAllLinking();
-	}
-	import { tracking as nodeTracking } from '$lib/stores/CursorStore';
-	function handleTouch() {
-		nodeTracking.set(false);
 	}
 
 	function startEdge() {
@@ -341,6 +342,7 @@
 
 	// This can be simplified/made more efficient
 	const updatePosition = () => {
+		console.log('updating');
 		if (!anchorElement) return;
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 

@@ -15,6 +15,7 @@
 
 	export let bgColor: CSSColorString | null = null;
 	export let dotColor: CSSColorString | null = null;
+	import { onMount } from 'svelte';
 
 	// Import relevant data from store
 	const { transforms } = graph;

@@ -4,14 +4,12 @@
 		Graph as GraphType,
 		GraphKey,
 		NodeProps,
-		NodeStore,
 		Theme,
 		CSSColorString,
 		EdgeStyle,
 		XYPair
 	} from '$lib/types';
-	import { populateStore } from '$lib/utils';
-	import { createNode, createGraph } from '$lib/utils/';
+	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';

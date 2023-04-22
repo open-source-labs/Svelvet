@@ -6,7 +6,8 @@
 		NodeProps,
 		GroupKey,
 		Connections,
-		CSSColorString
+		CSSColorString,
+		InitialDimensions
 	} from '$lib/types';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
@@ -19,7 +20,7 @@
 	const { nodes } = graph;
 
 	export let position = { x: 0, y: 0 };
-	export let dimensions = { width: 200, height: 100 };
+	export let dimensions: InitialDimensions | null = null;
 	export let id: string | number = 0;
 	export let bgColor: CSSColorString | null = null;
 	export let borderRadius: number | null = null;
@@ -54,39 +55,42 @@
 
 		const nodeCount = graph.nodes.count() + 1;
 
-		isDefault = !$$slots.default || useDefaults;
+		isDefault = !$$slots.default;
 
-		const foundNode = graph.nodes.get(`N-${id || nodeCount}`);
-		if (!foundNode) {
-			const config: NodeProps = {
-				id: id || nodeCount,
-				position: groupBox
-					? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
-					: position,
-				dimensions: width && height ? { width, height } : dimensions,
-				editable: editable || graph.editable,
-				label,
-				group,
-				resizable,
-				inputs,
-				outputs,
-				zIndex,
-				direction,
-				locked,
-				nodeLevelConnections: connections,
-				rotation
-			};
-			if (borderWidth) config.borderWidth = borderWidth;
-			if (borderRadius) config.borderRadius = borderRadius;
-			if (borderColor) config.borderColor = borderColor;
-			if (selectionColor) config.selectionColor = selectionColor;
-			if (textColor) config.textColor = textColor;
-			if (bgColor) config.bgColor = bgColor;
-			if (edge) config.edge = edge;
-			node = createNode(config);
-		} else {
-			node = foundNode;
-		}
+		const initialDimensions: InitialDimensions = dimensions
+			? dimensions
+			: width || height
+			? { width: width || height || 200, height: height || width || 100 }
+			: isDefault
+			? { width: 200, height: 100 }
+			: { width: 0, height: 0 };
+
+		const config: NodeProps = {
+			id: id || nodeCount,
+			position: groupBox
+				? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
+				: position,
+			dimensions: initialDimensions,
+			editable: editable || graph.editable,
+			label,
+			group,
+			resizable,
+			inputs,
+			outputs,
+			zIndex,
+			direction,
+			locked,
+			connections,
+			rotation
+		};
+		if (borderWidth) config.borderWidth = borderWidth;
+		if (borderRadius) config.borderRadius = borderRadius;
+		if (borderColor) config.borderColor = borderColor;
+		if (selectionColor) config.selectionColor = selectionColor;
+		if (textColor) config.textColor = textColor;
+		if (bgColor) config.bgColor = bgColor;
+		if (edge) config.edge = edge;
+		node = createNode(config);
 
 		if (groupBox) {
 			graph.groups.update((groups) => {
@@ -147,7 +151,15 @@
 </script>
 
 {#if node && $nodes[node.id]}
-	<InternalNode {isDefault} let:destroy let:selected let:grabHandle on:nodeClicked {node}>
+	<InternalNode
+		isDefault={isDefault || useDefaults}
+		let:destroy
+		let:selected
+		let:grabHandle
+		on:nodeClicked
+		on:nodeMount
+		{node}
+	>
 		<slot {selected} {grabHandle} {node} {destroy}>
 			<DefaultNode {selected} on:connection on:disconnection />
 		</slot>
