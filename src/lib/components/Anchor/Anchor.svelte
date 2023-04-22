@@ -112,7 +112,7 @@
 		updatePosition();
 		setTimeout(() => {
 			updatePosition();
-		}, 0);
+		}, 100);
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -147,7 +147,7 @@
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
 
-  $: if ($connectedAnchors) {
+	$: if ($connectedAnchors) {
 		if ($connectedAnchors.size < previousConnectionCount) {
 			dispatch('disconnection', { node, anchor });
 		} else if ($connectedAnchors.size > previousConnectionCount) {
@@ -334,7 +334,6 @@
 
 	// This just repeatedly calls updatePosition until cancelled
 	function trackPosition() {
-		// console.log('tracking anchor');
 		if (!tracking) return;
 		updatePosition();
 		animationFrameId = requestAnimationFrame(trackPosition);

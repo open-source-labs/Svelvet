@@ -44,7 +44,7 @@
 
 	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
-
+	const scale = graph.transforms.scale;
 	const dispatch = createEventDispatcher();
 
 	// Creates reactive variable for whether the node is selected
@@ -69,21 +69,18 @@
 
 		const nodeRect = DOMnode.getBoundingClientRect();
 		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		const calcWidth = Math.max(nodeRect.width, minWidth);
-		const calcHeight = Math.max(nodeRect.height, minHeight);
-
+		const calcWidth = Math.max(nodeRect.width / $scale, minWidth);
+		const calcHeight = Math.max(nodeRect.height / $scale, minHeight);
 		if (calcWidth === 0) {
 			$widthStore = s.NODE_WIDTH;
 		} else {
 			$widthStore = calcWidth;
 		}
-
 		if (calcHeight === 0) {
 			$heightStore = s.NODE_HEIGHT;
 		} else {
 			$heightStore = calcHeight;
 		}
-
 		DOMnode.style.width = `${$widthStore}px`;
 		DOMnode.style.height = `${$heightStore}px`;
 	});
