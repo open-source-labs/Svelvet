@@ -32,7 +32,7 @@
 
 	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
-	const fitView = getContext('fitView');
+	const mounted = getContext<Writable<number>>('mounted');
 
 	setContext<Node>('node', node);
 
@@ -44,7 +44,6 @@
 
 	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
-	const scale = graph.transforms.scale;
 	const dispatch = createEventDispatcher();
 
 	// Creates reactive variable for whether the node is selected
@@ -59,30 +58,18 @@
 	$: cursor = graph.cursor;
 	$: initialNodePositions = graph.initialNodePositions;
 
-	// Dynamically import the component for the node
 	onMount(() => {
-		// Not every browser handles fit-content well, so this is a workaround
-		// We assign fit-content, calculate those dimensions
-		// And reassign the width store the max value of
-		// The initial dom dimensions, the min dimenions calculated, or the initial store value
-		// Spend more time looking into this and see if there is a more obvious fix
+		// If the node dimensions got set in previous steps, we don't need to do anything
+		if ($widthStore && $heightStore) return;
 
-		const nodeRect = DOMnode.getBoundingClientRect();
+		// This only runs when a width and height were not provided via props
+		// Set the wrapper to fit-content and grab the width and height
 		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-		const calcWidth = Math.max(nodeRect.width / $scale, minWidth);
-		const calcHeight = Math.max(nodeRect.height / $scale, minHeight);
-		if (calcWidth === 0) {
-			$widthStore = s.NODE_WIDTH;
-		} else {
-			$widthStore = calcWidth;
-		}
-		if (calcHeight === 0) {
-			$heightStore = s.NODE_HEIGHT;
-		} else {
-			$heightStore = calcHeight;
-		}
-		DOMnode.style.width = `${$widthStore}px`;
-		DOMnode.style.height = `${$heightStore}px`;
+
+		// Update the node dimensions in the store
+		$widthStore = minWidth;
+		$heightStore = minHeight;
+		$mounted++;
 	});
 
 	onDestroy(() => {
@@ -92,6 +79,7 @@
 			$selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		}
+		$mounted--;
 	});
 
 	function toggleSelected() {

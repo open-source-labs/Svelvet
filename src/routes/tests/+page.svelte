@@ -1,31 +1,6 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node } from '$lib';
-	import { getRandomColor } from '$lib/utils';
-	import CustomNode from '../../example-components/CustomNode.svelte';
-	import type { CSSColorString, NodeProps } from '$lib/types';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
-
-	function randomColor() {
-		return Math.floor(Math.random() * 255);
-	}
-
-	let nodes: NodeProps[] = [
-		{
-			bgColor: 'red',
-			label: 'Color Will Change',
-			position: { x: 100, y: 100 }
-		},
-		{
-			bgColor: 'green',
-			label: 'Node 2',
-			position: { x: 200, y: 200 }
-		},
-		{
-			bgColor: 'blue',
-			label: 'Node 3',
-			position: { x: 300, y: 300 }
-		}
-	];
 </script>
 
 <body>
@@ -41,7 +16,7 @@
 				label="test"
 				edge={CustomEdge}
 			/>
-			<Node position={{ x: 10, y: 200 }} inputs={3} TD />
+			<Node label="what" position={{ x: 10, y: 200 }} inputs={3} TD />
 			<Minimap slot="minimap" />
 		</Svelvet>
 	</div>

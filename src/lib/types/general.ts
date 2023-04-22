@@ -51,6 +51,11 @@ export interface Dimensions {
 	height: Writable<number>;
 }
 
+export interface InitialDimensions {
+	width: number;
+	height?: number;
+}
+
 export interface ActiveKeys {
 	[key: string]: boolean | number;
 }

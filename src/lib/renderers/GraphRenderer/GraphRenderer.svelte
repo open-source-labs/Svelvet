@@ -4,7 +4,7 @@
 	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
 	import { initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { captureGroup, moveNodes } from '$lib/utils/movers/';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { Graph } from '$lib/types';
 
 	const graph = getContext<Graph>('graph');

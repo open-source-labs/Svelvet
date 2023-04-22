@@ -67,6 +67,8 @@
 	let pinching = false;
 	let animationFrameId: number;
 
+	let mounted = writable(0);
+	setContext('mounted', mounted);
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
 	const groupBoxes = graph.groupBoxes;
@@ -96,15 +98,16 @@
 		updateGraphDimensions();
 	});
 
-	$: if (fitView && graphDimensions) {
-		if (fitView !== 'resize') {
-			fitView = false;
-		}
+	// Wait until all Nodes are mounted
+	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
+		// If fitView is not set to resize, only run once
+		if (fitView !== 'resize') fitView = false;
 		fitIntoView();
 	}
 
 	function fitIntoView() {
-		const { x, y, scale } = calculateFitView(graphDimensions, get(nodeBounds));
+		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
+
 		if (x && y && scale) {
 			translationX.set(x);
 			translationY.set(y);
