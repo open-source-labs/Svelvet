@@ -26,6 +26,7 @@
 	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
+	import type { ComponentType } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -33,7 +34,7 @@
 	const graph = getContext<Graph>('graph');
 	const graphDirection = getContext<string>('direction');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
-	const graphEdge = getContext<ConstructorOfATypedSvelteComponent>('graphEdge');
+	const graphEdge = getContext<ComponentType>('graphEdge');
 
 	export let bgColor: CSSColorString | null = null;
 
@@ -44,7 +45,7 @@
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let dynamic = false;
-	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let edge: ComponentType | null = null;
 	export let inputsStore: InputStore | null = null;
 	export let key: string | number | null = null;
 	export let outputStore: OutputStore | null = null;

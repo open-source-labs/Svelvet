@@ -1,7 +1,7 @@
 import type { Writable } from 'svelte/store';
 import type { AnchorStore, CSSDimensionString, InitialDimensions } from '.';
 import type { XYPair, NodeKey, Dimensions, CSSColorString, GroupKey } from '.';
-
+import type { ComponentType } from 'svelte';
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
@@ -29,7 +29,7 @@ export interface Node {
 	focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
 	zIndex: Writable<number>;
-	edge: ConstructorOfATypedSvelteComponent | null;
+	edge: ComponentType | null;
 	ariaLabel: string;
 	direction: Writable<'TD' | 'LR'>;
 	borderRadius: Writable<number>;
@@ -43,7 +43,7 @@ export interface Node {
 
 // This defines an interface for the node object
 // Passed to the createNode function
-export interface NodeProps {
+export interface NodeConfig {
 	id?: string | number;
 	dimensions?: InitialDimensions;
 	position?: {
@@ -60,7 +60,7 @@ export interface NodeProps {
 	outputs?: number;
 	locked?: boolean;
 	selectionColor?: CSSColorString;
-	component?: ConstructorOfATypedSvelteComponent;
+	component?: ComponentType;
 	width?: number;
 	height?: number;
 	header?: true;
@@ -73,7 +73,7 @@ export interface NodeProps {
 	rotation?: number;
 	textColor?: CSSColorString;
 	connections?: Connections;
-	edge?: ConstructorOfATypedSvelteComponent;
+	edge?: ComponentType;
 }
 
 export type UserDimension = number | CSSDimensionString;

@@ -1,7 +1,7 @@
 import type { Writable, Readable } from 'svelte/store';
 import type { Anchor, CSSColorString, EmValue, EdgeKey, CustomWritable } from '.';
 import type { PixelValue, RemValue } from '.';
-
+import type { ComponentType } from 'svelte';
 export type EdgeStyle = 'straight' | 'step' | 'bezier';
 
 // With writable properties
@@ -17,7 +17,7 @@ export type WritableEdge = {
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
-	component: ConstructorOfATypedSvelteComponent | null;
+	component: ComponentType | null;
 };
 
 export interface EdgeLabel {

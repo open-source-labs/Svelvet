@@ -3,7 +3,7 @@
 	import type {
 		Graph,
 		Node as NodeType,
-		NodeProps,
+		NodeConfig,
 		GroupKey,
 		Connections,
 		CSSColorString,
@@ -13,6 +13,7 @@
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
 	import { get } from 'svelte/store';
+	import type { ComponentType } from 'svelte';
 
 	const graph = getContext<Graph>('graph');
 
@@ -40,7 +41,7 @@
 	export let editable = false;
 	export let locked = false;
 	export let rotation = 0;
-	export let edge: ConstructorOfATypedSvelteComponent | null = null;
+	export let edge: ComponentType | null = null;
 	export let connections: Connections = [];
 	export let useDefaults = false;
 
@@ -65,7 +66,7 @@
 			? { width: 200, height: 100 }
 			: { width: 0, height: 0 };
 
-		const config: NodeProps = {
+		const config: NodeConfig = {
 			id: id || nodeCount,
 			position: groupBox
 				? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
