@@ -1,20 +1,11 @@
 <script lang="ts">
 	import { Node, Anchor, Slider } from '$lib';
-	import type { Node as NodeType } from '$lib/types';
 	import { writable } from 'svelte/store';
-	import { getContext } from 'svelte';
-	import type { Graph } from '$lib/types';
-	const graph = getContext<Graph>('graph');
 
-	const connections: [string, string][] = [['1', '1']];
-
-	function handleClick(node: NodeType) {
-		node.locked.set(true);
-	}
 	const parameter = writable(10);
 </script>
 
-<Node let:grabHandle let:selected let:destroy let:node>
+<Node let:grabHandle let:selected>
 	<div class="node" use:grabHandle class:selected>
 		<Slider parameterStore={parameter} />
 		<div class="input-anchors">

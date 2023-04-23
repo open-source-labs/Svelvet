@@ -15,7 +15,6 @@
 		CSSColorString
 	} from '$lib/types';
 	import { writable } from 'svelte/store';
-	import { getJSONState } from '$lib/utils/savers/saveStore';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { isArrow } from '$lib/types';
 	import {
@@ -55,15 +54,15 @@
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	let interval: number | undefined = undefined;
-	interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {}
+	type ActiveIntervals = Record<string, ReturnType<typeof setInterval> | undefined>;
 	const activeIntervals: ActiveIntervals = {};
 
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
-	let selecting: boolean = false;
+	let selecting = false;
 	let graphDimensions: GraphDimensions;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
-	let initialDistance: number = 0;
+	let initialDistance = 0;
 	let initialScale = 1;
 	let pinching = false;
 	let animationFrameId: number;
@@ -115,23 +114,25 @@
 			graph.transforms.scale.set(scale);
 		}
 	}
+	async function loadMinimap() {
+		minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+	}
+
+	async function loadToggle() {
+		toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+	}
+
+	async function loadControls() {
+		controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+	}
 
 	$: if (toggle && !toggleComponent) {
-		async function loadToggle() {
-			toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
-		}
 		loadToggle();
 	}
 	$: if (minimap && !minimapComponent) {
-		async function loadMinimap() {
-			minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
-		}
 		loadMinimap();
 	}
 	$: if (controls && !controlsComponent) {
-		async function loadControls() {
-			controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
-		}
 		loadControls();
 	}
 
@@ -253,7 +254,7 @@
 		}
 	}
 
-	function onTouchEnd(e: TouchEvent) {
+	function onTouchEnd() {
 		isMovable = false;
 		pinching = false;
 	}
@@ -354,12 +355,6 @@
 			}, 5);
 			activeIntervals[key] = interval;
 		}
-	}
-
-	function resetTransforms() {
-		$scale = 1;
-		$translationY = 0;
-		$translationX = 0;
 	}
 </script>
 

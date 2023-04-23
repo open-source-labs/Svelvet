@@ -10,13 +10,10 @@
 	const node = getContext<Node>('node');
 
 	const label = node.label;
-	const bgColor = node.bgColor;
 	const borderRadius = node.borderRadius;
 	const textColor = node.textColor;
 	const inputs = node.inputs;
 	const outputs = node.outputs;
-	const width = node.dimensions.width;
-	const height = node.dimensions.height;
 	const resizable = node.resizable;
 
 	let top = get(node.direction) === 'TD' ? true : false;

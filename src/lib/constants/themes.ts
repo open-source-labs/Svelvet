@@ -1,4 +1,4 @@
-import type { CSSColorString, ThemeGroup } from '$lib/types';
+import type { ThemeGroup } from '$lib/types';
 
 const light: ThemeGroup = {
 	node: '#F3F3F3',

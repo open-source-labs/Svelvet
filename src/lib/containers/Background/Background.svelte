@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
-	import { THEMES } from '$lib/constants/themes';
 	import type { Graph, CSSColorString } from '$lib/types';
-	import type { BackgroundStyles, Theme, ThemeGroup } from '$lib/types/general';
+	import type { BackgroundStyles, ThemeGroup } from '$lib/types/general';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
@@ -15,7 +14,6 @@
 
 	export let bgColor: CSSColorString | null = null;
 	export let dotColor: CSSColorString | null = null;
-	import { onMount } from 'svelte';
 
 	// Import relevant data from store
 	const { transforms } = graph;

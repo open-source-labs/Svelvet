@@ -1,12 +1,4 @@
-import { createNode } from '$lib/utils';
-
-import type { Node, NodeProps } from '$lib/types';
 import type { FlowChart, Node as FlowChartNode } from '$lib/types/parser';
-import { writable } from 'svelte/store';
-
-interface Nodes {
-	[key: string]: Node;
-}
 
 type LayerNode = {
 	id: string;
@@ -22,11 +14,7 @@ interface LayerTracker {
 	[key: number]: Array<LayerNode>;
 }
 
-const directionRef: { [key: string]: number } = { td: 0, tb: 0, lr: 1, bt: 2, bu: 2, rl: 3 };
-
-const nodes: Nodes = {};
-
-export function flowChartDrawer(flowChart: FlowChart, direction: 'td' | 'bt' | 'lr' | 'rl') {
+export function flowChartDrawer(flowChart: FlowChart) {
 	flowChart.parentNodes.forEach((node) => assignNodeDepthAndNesting(node));
 	const [layerTracker, maxLayer] = layerAssignment(flowChart);
 	populateGhostNodes(layerTracker, flowChart);
@@ -396,20 +384,20 @@ function siftNodes(layerTracker: LayerTracker, sortedNodes: Array<LayerNode>) {
 	return nodeWasSwapped;
 }
 
-function rotateGrid(grid: Array<Array<LayerNode>>, n: number) {
-	if (n === 0) return;
-	while (n > 0) {
-		for (let i = 0; i < grid.length; i++) grid[i].reverse();
-		for (let i = 0; i < grid.length; i++) {
-			for (let j = i; j < grid.length; j++) {
-				const temp = grid[i][j];
-				grid[i][j] = grid[j][i];
-				grid[j][i] = temp;
-			}
-		}
-		n--;
-	}
-}
+// function rotateGrid(grid: Array<Array<LayerNode>>, n: number) {
+// 	if (n === 0) return;
+// 	while (n > 0) {
+// 		for (let i = 0; i < grid.length; i++) grid[i].reverse();
+// 		for (let i = 0; i < grid.length; i++) {
+// 			for (let j = i; j < grid.length; j++) {
+// 				const temp = grid[i][j];
+// 				grid[i][j] = grid[j][i];
+// 				grid[j][i] = temp;
+// 			}
+// 		}
+// 		n--;
+// 	}
+// }
 
 // function makeGridSquare(grid: Array<Array<LayerNode>>) {
 // 	let largestSubArray = 0;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
 	import type { Theme, ThemeGroup, CSSColorString } from '$lib/types';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { THEMES } from '$lib/constants/themes';
 
 	const themeStore: Writable<ThemeGroup> = getContext('themeStore');

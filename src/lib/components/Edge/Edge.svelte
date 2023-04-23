@@ -5,9 +5,7 @@
 		EdgeStyle,
 		Graph,
 		ThemeGroup,
-		WritableEdge,
-		Node,
-		XYPair
+		WritableEdge
 	} from '$lib/types';
 	import { getContext } from 'svelte';
 	import { readable, writable } from 'svelte/store';
@@ -30,7 +28,7 @@
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
 	export let animate = false;
-	export let label: string = '';
+	export let label = '';
 	export let labelColor: CSSColorString | null = null;
 	export let textColor: CSSColorString | null = null;
 	export let cornerRadius = 8;

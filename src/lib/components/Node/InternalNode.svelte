@@ -2,7 +2,7 @@
 	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
-	import { captureGroup, calculateFitContentWidth, calculateFitView } from '$lib/utils';
+	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';

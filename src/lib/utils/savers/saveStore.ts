@@ -1,5 +1,4 @@
-import type { Graph, Node } from '$lib/types';
-import { createNode } from '../creators';
+import type { Graph } from '$lib/types';
 
 // Function to check if a value is a Svelte store
 function isStore(value) {

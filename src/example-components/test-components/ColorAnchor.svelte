@@ -1,9 +1,8 @@
 <script lang="ts">
 	import type { CSSColorString, CustomWritable } from '$lib';
-	import type { Writable } from 'svelte/store';
 
-	export let linked: boolean = false;
-	export let connecting: boolean = false;
+	export let linked = false;
+	export let connecting = false;
 	export let color: CustomWritable<CSSColorString>;
 </script>
 
