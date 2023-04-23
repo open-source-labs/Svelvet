@@ -343,7 +343,6 @@
 
 	// This can be simplified/made more efficient
 	const updatePosition = () => {
-		console.log('updating');
 		if (!anchorElement) return;
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 
