@@ -1,7 +1,6 @@
 import { createGraph, createNode } from '../creators';
-import type { AnchorKey, GraphKey, NodeProps } from '$lib/types';
+import type { AnchorKey, GraphKey, NodeConfig } from '$lib/types';
 import { createAnchor } from '../creators/createAnchor';
-import type { Anchor } from '$lib';
 
 export function reloadStore(store: string) {
 	const object = JSON.parse(store);
@@ -11,7 +10,7 @@ export function reloadStore(store: string) {
 		initialZoom: object.transforms.scale
 	});
 	Object.entries(object.nodes).forEach(([id, node]) => {
-		const nodeProps: NodeProps = node;
+		const nodeProps: NodeConfig = node as NodeConfig;
 
 		const newNode = createNode(nodeProps);
 

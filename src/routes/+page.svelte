@@ -1,28 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
-	import type { NodeProps } from '$lib';
 	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
-
-	function randomColor() {
-		return Math.floor(Math.random() * 255);
-	}
-
-	function updateConnected(e: CustomEvent) {
-		const { node } = e.detail;
-		node.label.set('Connected');
-	}
-
-	function updateDisconnected(e: CustomEvent) {
-		const { node } = e.detail;
-		node.label.set('Disconnected');
-	}
-
-	const mermaidConfig: Record<string, NodeProps> = {
-		A: { bgColor: 'blue' },
-		B: { dimensions: { width: 600, height: 100 } },
-		C: { dimensions: { width: 100, height: 600 } }
-	};
 </script>
 
 <body>

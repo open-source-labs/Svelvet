@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CSSColorString, Dimensions, XYPair, XYPosition } from '$lib/types';
+	import type { CSSColorString, Dimensions, XYPair } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
 

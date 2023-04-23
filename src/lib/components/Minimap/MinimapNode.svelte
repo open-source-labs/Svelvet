@@ -14,7 +14,7 @@
 
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
-	const { position, dimensions, bgColor, borderRadius, rotation, borderColor } = node;
+	const { position, dimensions, bgColor, borderRadius, rotation } = node;
 	const { width, height } = dimensions;
 	$: nodePosition = $position;
 	$: nodeRotation = $rotation;

@@ -27,7 +27,7 @@
 
 	const random = Array(50)
 		.fill(null)
-		.map((_, i) => Math.random() - 0.5);
+		.map(() => Math.random() - 0.5);
 
 	function generateCircles(
 		size: number,

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
-	import type { Connections, NodeProps } from '$lib/types';
+	import type { Connections, NodeConfig } from '$lib/types';
 
-	const initialNodes: Array<NodeProps> = [
+	const initialNodes = [
 		{
 			id: 1,
 			position: { x: 50, y: 50 },
@@ -61,8 +61,7 @@
 			data: { label: 'clickCallback' },
 			width: 150,
 			height: 40,
-			bgColor: 'white',
-			clickCallback: (node) => console.log(node)
+			bgColor: 'white'
 		}
 	];
 

@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "7.0.22",
+	"version": "7.0.23",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -53,6 +53,7 @@
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"husky": "^8.0.3",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"publint": "^0.1.9",

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Svelvet, Node, Group, ThemeToggle, Minimap } from '$lib';
+	import { Svelvet, Group, ThemeToggle } from '$lib';
 	import DashCount from '../../example-components/test-components/DashCount.svelte';
 	import CircleColor from '../../example-components/test-components/CircleColor.svelte';
 	import Noise from '../../example-components/test-components/Noise.svelte';

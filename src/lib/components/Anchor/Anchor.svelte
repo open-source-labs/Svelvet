@@ -16,7 +16,7 @@
 		EdgeStyle,
 		EdgeConfig
 	} from '$lib/types';
-	import { onMount, getContext, onDestroy, afterUpdate, beforeUpdate } from 'svelte';
+	import { onMount, getContext, onDestroy, beforeUpdate } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
@@ -39,8 +39,8 @@
 	export let bgColor: CSSColorString | null = null;
 
 	export let id: string | number = 0;
-	export let input: boolean = false;
-	export let output: boolean = false;
+	export let input = false;
+	export let output = false;
 	export let multiple = output ? true : input ? false : true;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
@@ -343,7 +343,6 @@
 
 	// This can be simplified/made more efficient
 	const updatePosition = () => {
-		console.log('updating');
 		if (!anchorElement) return;
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 

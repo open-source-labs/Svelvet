@@ -4,7 +4,7 @@
 	import type { Graph } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 
-	import { getContext, onMount, setContext } from 'svelte';
+	import { getContext, setContext } from 'svelte';
 
 	import type { CSSColorString, Node as SvelvetNode } from '$lib/types';
 	import Node from '../Node/Node.svelte';
@@ -15,7 +15,6 @@
 	setContext<Writable<string | null>>('textStore', editing.label);
 	setContext<Writable<CSSColorString | null>>('colorStore', editing.bgColor);
 
-	$: dimenions = graph.dimensions;
 	$: cursor = graph.cursor;
 
 	function deleteNode() {

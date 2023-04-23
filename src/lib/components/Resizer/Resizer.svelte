@@ -7,8 +7,8 @@
 	export let width = false;
 	export let height = false;
 	export let rotation = false;
-	export let minHeight: number = 100;
-	export let minWidth: number = 200;
+	export let minHeight = 100;
+	export let minWidth = 200;
 
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');

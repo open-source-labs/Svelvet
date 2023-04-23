@@ -2,15 +2,14 @@
 	import { onMount } from 'svelte';
 	import { cursorPositionRaw } from '$lib/stores/CursorStore';
 	import type { CSSColorString, Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
+
 	export let graph: Graph;
 	export let anchor: { x: number; y: number; top: number; left: number };
 	export let adding = false;
-
 	export let creating = false;
 	export let color: CSSColorString = 'lightblue';
 
-	const { groups, nodes: nodeStore, cursor, bounds } = graph;
-	const { x, y } = $cursorPositionRaw;
+	const { groups } = graph;
 
 	let nodes: Array<NodeDOMBounds>;
 	let box: HTMLDivElement;

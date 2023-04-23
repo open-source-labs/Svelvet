@@ -12,7 +12,7 @@ export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 }
 
 export function moveNodes(graph: Graph, snapTo?: number) {
-	let animationFrame;
+	let animationFrame: number;
 	const groups = get(graph.groups);
 	const groupName = get(graph.activeGroup);
 
@@ -77,7 +77,11 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 			}
 		});
 
-		if (get(tracking)) animationFrame = requestAnimationFrame(moveGroup);
+		if (get(tracking)) {
+			animationFrame = requestAnimationFrame(moveGroup);
+		} else {
+			cancelAnimationFrame(animationFrame);
+		}
 	}
 }
 

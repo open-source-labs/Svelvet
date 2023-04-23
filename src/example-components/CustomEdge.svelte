@@ -1,13 +1,8 @@
 <script lang="ts">
 	import Edge from '$lib/components/Edge/Edge.svelte';
-	import { getRandomColor } from '$lib/utils';
 	import type { CSSColorString } from '$lib/types';
 
 	let color: CSSColorString = 'yellow';
-
-	function randomColor() {
-		color = getRandomColor();
-	}
 </script>
 
 <Edge {color} let:destroy width={4} edgeClick={() => (color = 'blue')}>
