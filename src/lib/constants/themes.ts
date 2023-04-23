@@ -71,7 +71,7 @@ const ocean: ThemeGroup = {
 	dots: '#2D9743',
 	alt: '#5DADE2'
 };
-const parchment = {
+const parchment: ThemeGroup = {
 	map: '#E0DFD5',
 	dots: '#313638',
 	node: '#E8E9EB',

@@ -52,6 +52,7 @@ export interface Graph {
 	initialNodePositions: Writable<XYPair[]>;
 }
 
+// Props for Svelvet component
 export interface GraphConfig {
 	editable?: boolean;
 	zoom?: number;
@@ -62,7 +63,7 @@ export interface GraphConfig {
 	edge?: ComponentType;
 }
 
-export type LinkingAny = Anchor | Anchor;
+export type LinkingAny = Anchor;
 
 export interface LinkingInput {
 	anchor: Anchor;
