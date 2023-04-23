@@ -26,7 +26,7 @@ export interface NodeDOMBounds {
 	width: number;
 	height: number;
 }
-export type Theme = 'light' | 'dark' | 'purple';
+export type Theme = 'light' | 'dark' | 'purple' | 'parchment';
 
 export interface ThemeGroup {
 	node: CSSColorString;
