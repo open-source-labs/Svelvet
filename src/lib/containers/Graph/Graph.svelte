@@ -369,11 +369,11 @@
 	style:color={$themeStore.text || 'black'}
 	id={graph.id}
 	bind:this={graphDOMElement}
-	on:mousedown|preventDefault={onMouseDown}
+	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
-	on:touchstart|preventDefault={onTouchStart}
+	on:touchstart|preventDefault|self={onTouchStart}
 	on:wheel|preventDefault={handleScroll}
-	on:keydown|preventDefault={handleKeyDown}
+	on:keydown|self|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >

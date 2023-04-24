@@ -2,12 +2,14 @@
 	import { Svelvet, Node } from '$lib';
 	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
+	import InputNode from '../example-components/InputNode.svelte';
 </script>
 
 <body>
 	<div class="wrapper">
 		<Svelvet controls edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
 			<CustomNode />
+			<InputNode />
 			<Node center position={{ x: -200, y: 200 }} id="NODE" label="NODE" resizable />
 		</Svelvet>
 	</div>
