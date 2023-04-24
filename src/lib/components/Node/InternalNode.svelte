@@ -11,6 +11,7 @@
 
 	export let node: Node;
 	export let isDefault: boolean;
+	export let center: boolean;
 
 	const position = node.position;
 	const widthStore = node.dimensions.width;
@@ -57,18 +58,29 @@
 	$: activeGroup = graph.activeGroup;
 	$: cursor = graph.cursor;
 	$: initialNodePositions = graph.initialNodePositions;
+	$: centerPoint = graph.center;
 
 	onMount(() => {
 		// If the node dimensions got set in previous steps, we don't need to do anything
-		if ($widthStore && $heightStore) return;
+		if (!$widthStore && !$heightStore) {
+			// This only runs when a width and height were not provided via props
+			// Set the wrapper to fit-content and grab the width and height
+			[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
 
-		// This only runs when a width and height were not provided via props
-		// Set the wrapper to fit-content and grab the width and height
-		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+			// Update the node dimensions in the store
+			$widthStore = minWidth;
+			$heightStore = minHeight;
+		}
 
-		// Update the node dimensions in the store
-		$widthStore = minWidth;
-		$heightStore = minHeight;
+		if (center) {
+			const opticalCenter = {
+				x: $centerPoint.x - $widthStore / 2,
+				y: $centerPoint.y - $heightStore / 2
+			};
+			node.position.set(opticalCenter);
+			tracking.set(true);
+			tracking.set(false);
+		}
 		$mounted++;
 	});
 

@@ -3,6 +3,7 @@
 	import ColorAnchor from './ColorAnchor.svelte';
 	import { generateInput, generateOutput, Resizer, ColorPicker, Node, Anchor } from '$lib';
 	import type { CSSColorString } from '$lib';
+	import CustomEdge from '../CustomEdge.svelte';
 
 	type Inputs = {
 		color: CSSColorString;
@@ -33,9 +34,9 @@
 				let:connecting
 				outputStore={output}
 				output
-				edgeStyle="bezier"
 				edgeColor={output}
 				edgeLabel="Dynamic Edges"
+				edge={CustomEdge}
 				locked
 			>
 				<ColorAnchor color={output} {connecting} {linked} />

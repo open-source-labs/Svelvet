@@ -12,7 +12,7 @@ import ThemeToggle from './components/ThemeToggle/ThemeToggle.svelte';
 import ColorPicker from './components/data/ColorPicker/ColorWheel.svelte';
 import Resizer from './components/Resizer/Resizer.svelte';
 import { generateInput, generateOutput } from './utils/creators';
-
+import { getViewportCenter } from './utils/getters/getViewportCenter';
 export {
 	Svelvet,
 	Controls,
@@ -28,7 +28,8 @@ export {
 	ThemeToggle,
 	ColorPicker,
 	generateInput,
-	generateOutput
+	generateOutput,
+	getViewportCenter
 };
 
 export * from './types';
