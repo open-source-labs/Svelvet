@@ -138,7 +138,11 @@
 	}
 
 	function handleNodeClicked(e: MouseEvent) {
-		e.preventDefault();
+		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
+
+		if (targetElement.tagName !== 'INPUT') {
+			e.preventDefault();
+		}
 		e.stopPropagation();
 
 		if ($locked || $nodeLock) return;
@@ -221,7 +225,7 @@
 		style:--selection-color={$selectionColor || $themeStore.selection}
 		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
-		on:keydown={handleKeydown}
+		on:keydown|preventDefault|self={handleKeydown}
 		bind:this={DOMnode}
 		use:grabHandle
 		tabIndex={0}

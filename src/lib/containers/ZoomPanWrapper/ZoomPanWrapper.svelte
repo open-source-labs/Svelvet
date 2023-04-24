@@ -28,9 +28,9 @@
 </script>
 
 <div
-	on:contextmenu|preventDefault
-	on:click|preventDefault
-	on:touchstart|preventDefault
+	on:contextmenu|preventDefault|self
+	on:click|preventDefault|self
+	on:touchstart|preventDefault|self
 	style:transform
 	class="svelvet-graph-wrapper"
 	role="presentation"
