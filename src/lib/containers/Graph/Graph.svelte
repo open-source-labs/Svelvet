@@ -146,6 +146,7 @@
 			width: DOMRect.width,
 			height: DOMRect.height
 		};
+
 		graph.dimensions.set(graphDimensions);
 	}
 

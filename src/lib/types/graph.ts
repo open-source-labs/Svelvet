@@ -34,6 +34,7 @@ export interface Graph {
 			bottom: number;
 		}>;
 	};
+	center: Readable<XYPair>;
 	maxZIndex: Writable<number>;
 	dimensions: Writable<GraphDimensions>;
 	editable: boolean;

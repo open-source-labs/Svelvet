@@ -18,8 +18,6 @@
 	const graph = getContext<Graph>('graph');
 
 	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
-	const { nodes } = graph;
-
 	export let position = { x: 0, y: 0 };
 	export let dimensions: InitialDimensions | null = null;
 	export let id: string | number = 0;
@@ -44,6 +42,7 @@
 	export let edge: ComponentType | null = null;
 	export let connections: Connections = [];
 	export let useDefaults = false;
+	export let center = false;
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
@@ -140,8 +139,7 @@
 		node.zIndex.set(zIndex);
 	}
 	// $: if (node) {
-	// 	node.position.x.set(position.x);
-	// 	node.position.y.set(position.y);
+	// 	node.position.set({ x: position.x, y: position.y });
 	// }
 	$: if (node) {
 		node.inputs.set(inputs);
@@ -151,8 +149,9 @@
 	}
 </script>
 
-{#if node && $nodes[node.id]}
+{#if node}
 	<InternalNode
+		{center}
 		isDefault={isDefault || useDefaults}
 		let:destroy
 		let:selected
