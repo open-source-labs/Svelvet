@@ -230,6 +230,7 @@
 	}
 
 	function onMouseDown(e: MouseEvent) {
+		if (e.button === 2) return;
 		graphDOMElement.focus();
 
 		const { clientX, clientY } = e;

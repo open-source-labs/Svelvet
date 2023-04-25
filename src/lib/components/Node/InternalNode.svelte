@@ -216,6 +216,13 @@
 	function destroy() {
 		nodeStore.delete(id);
 	}
+
+	function onMouseUp(e: MouseEvent) {
+		const mouseDeltaX = $cursor.x - $initialClickPosition.x;
+		const mouseDeltaY = $cursor.y - $initialClickPosition.y;
+		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
+		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+	}
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
@@ -239,6 +246,7 @@
 		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
+		on:mouseup={onMouseUp}
 		bind:this={DOMnode}
 		use:grabHandle
 		tabIndex={0}

@@ -173,6 +173,7 @@
 		let:grabHandle
 		on:nodeClicked
 		on:nodeMount
+		on:nodeReleased
 		{node}
 	>
 		<slot {selected} {grabHandle} {node} {destroy}>
