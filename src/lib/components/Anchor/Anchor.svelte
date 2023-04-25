@@ -203,11 +203,12 @@
 		}
 	}
 
-	function createCursorEdge(source: Anchor | null, target: Anchor | null) {
+	function createCursorEdge(source: Anchor | null, target: Anchor | null, disconnect = false) {
 		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+		if (disconnect) edgeConfig.disconnect = true;
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		// Create a temporary edge to track the cursor
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
@@ -406,14 +407,14 @@
 		destroy();
 
 		if (source.type === 'output') {
-			createCursorEdge(source, null);
+			createCursorEdge(source, null, true);
 			disconnectStore();
 			const store: ReturnType<typeof generateOutput> = source.store as ReturnType<
 				typeof generateOutput
 			>;
 			$linkingOutput = { anchor: source, store };
 		} else {
-			createCursorEdge(source, null);
+			createCursorEdge(source, null, true);
 			$linkingAny = source;
 		}
 	}

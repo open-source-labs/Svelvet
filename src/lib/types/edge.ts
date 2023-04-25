@@ -17,6 +17,7 @@ export type WritableEdge = {
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
+	disconnect?: true;
 	component: ComponentType | null;
 };
 
@@ -41,6 +42,7 @@ export interface EdgeConfig {
 	width?: number;
 	label?: EdgeLabelConfig;
 	animated?: boolean;
+	disconnect?: true;
 }
 
 export interface EdgeLabelConfig {

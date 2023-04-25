@@ -206,10 +206,11 @@
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
 			nodeGroupArray.forEach((node) => node.moving.set(false));
 		}
+		const cursorEdge = graph.edges.get('cursor');
 
-		if (graph.edges.get('cursor')) {
-			dispatch('edgeDrop');
+		if (cursorEdge) {
 			graph.edges.delete('cursor');
+			if (!cursorEdge.disconnect) dispatch('edgeDrop');
 		}
 
 		$activeGroup = null;
@@ -218,6 +219,7 @@
 		selecting = false;
 		isMovable = false;
 		$tracking = false;
+
 		if ($linkingAny) linkingAny.set(null);
 		if ($linkingInput) linkingInput.set(null);
 		if ($linkingOutput) linkingOutput.set(null);
