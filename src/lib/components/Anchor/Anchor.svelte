@@ -58,6 +58,8 @@
 	export let locked = false;
 	export let edgeStyle: EdgeStyle | null = null;
 
+	const mounted = getContext<Writable<number | true>>('mounted');
+
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
 	let anchor: Anchor;
@@ -65,6 +67,7 @@
 	let hovering = false;
 	let previousConnectionCount = 0;
 	let type: InputType = input === output ? null : input ? 'input' : 'output';
+	let assignedConnections: Connections = [];
 
 	const nodeEdge = node.edge;
 	const anchors = node.anchors;
@@ -77,7 +80,6 @@
 	const linkingOutput = graph.linkingOutput;
 	const linkingAny = graph.linkingAny;
 
-	$: isWaitingForConnection = connections.length > 0 || $nodeLevelConnections?.length > 0;
 	$: connecting =
 		input === output
 			? $linkingAny === anchor
@@ -109,12 +111,16 @@
 
 		anchors.add(anchor, anchor.id);
 
-		checkConnections();
+		if (!input) {
+			const poppedConnections = $nodeLevelConnections?.pop();
+			if (poppedConnections) assignedConnections = poppedConnections;
+		}
+
 		// This is to avoid a strange bug where the anchor positions are off
 		// It only seems to happen in dev and doesn't seem to affect the final product
 		setTimeout(() => {
 			updatePosition();
-		}, 20);
+		}, 0);
 	});
 
 	beforeUpdate(() => {
@@ -127,10 +133,18 @@
 		cancelAnimationFrame(animationFrameId);
 	});
 
-	// If the user has specifcied connections, we check if the anchor pair is in memory yet
-	$: if (isWaitingForConnection) {
-		$anchors;
-		checkConnections();
+	$: if ($mounted === graph.nodes.count() && connections.length) {
+		checkDirectConnections();
+	}
+
+	// // If the user has specifcied connections, we check once all nodes have mounted
+	$: if ($mounted === graph.nodes.count() && assignedConnections.length) {
+		checkNodeLevelConnections();
+	}
+
+	$: {
+		$connectedAnchors;
+		updatePosition();
 	}
 
 	// If an anchor is added to the store, we update all anchor positions
@@ -419,17 +433,23 @@
 		}
 	}
 
-	function checkConnections() {
-		connections.forEach((connection, index) => {
+	function checkNodeLevelConnections() {
+		assignedConnections.forEach((connection, index) => {
+			if (!connection) return;
 			const connected = processConnection(connection);
-			if (connected) connections.splice(index, 1);
+			if (connected) connections[index] = null;
 		});
-		if (!input) {
-			$nodeLevelConnections.forEach((connection, index) => {
-				const connected = processConnection(connection);
-				if (connected) $nodeLevelConnections.splice(index, 1);
-			});
-		}
+		assignedConnections = assignedConnections.filter((connection) => connection !== null);
+	}
+
+	function checkDirectConnections() {
+		connections.forEach((connection, index) => {
+			if (!connection) return;
+			const connected = processConnection(connection);
+			if (connected) connections[index] = null;
+		});
+
+		connections = connections.filter((connection) => connection !== null);
 	}
 
 	const processConnection = (connection: [string | number, string | number] | string | number) => {
@@ -449,14 +469,18 @@
 		const nodekey: NodeKey = `N-${nodeId}`;
 		// Look up node in store
 		const nodeToConnect = graph.nodes.get(nodekey);
-		if (!nodeToConnect) return false;
+		if (!nodeToConnect) {
+			return false;
+		}
 
 		if (!anchorId) {
 			// Connect to the anchor with the fewest connections
 			const anchorStore = get(nodeToConnect.anchors);
 			const anchors = Object.values(anchorStore);
 
-			if (!anchors.length) return false;
+			if (!anchors.length) {
+				return false;
+			}
 			anchorToConnect = anchors.reduce<Anchor | null>((a, b) => {
 				if (!a && b.type === 'output') return null;
 				if (b.type === 'output') return a;
@@ -471,7 +495,10 @@
 			anchorToConnect = nodeToConnect.anchors.get(anchorKey) || null;
 		}
 
-		if (!anchorToConnect) return false;
+		if (!anchorToConnect) {
+			return false;
+		}
+
 		connectAnchors(anchor, anchorToConnect);
 
 		if (anchorToConnect.store && (inputsStore || outputStore)) {

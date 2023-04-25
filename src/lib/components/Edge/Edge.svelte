@@ -223,6 +223,7 @@
 	/>
 	<slot {path} {destroy}>
 		<path
+			class="edge"
 			id={edgeKey}
 			class:animate
 			d={path}

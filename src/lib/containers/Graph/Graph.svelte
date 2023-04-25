@@ -68,7 +68,7 @@
 	let pinching = false;
 	let animationFrameId: number;
 
-	let mounted = writable(0);
+	let mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
@@ -104,6 +104,7 @@
 	// Wait until all Nodes are mounted
 	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
 		// If fitView is not set to resize, only run once
+		$mounted = true;
 		if (fitView !== 'resize') fitView = false;
 		fitIntoView();
 	}

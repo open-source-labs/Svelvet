@@ -265,6 +265,7 @@
 		cursor: not-allowed;
 	}
 	.selected {
-		box-shadow: 0 0 0 var(--border-width) var(--selection-color);
+		box-shadow: 0 0 0 var(--border-width) var(--selection-color),
+			0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
 	}
 </style>
