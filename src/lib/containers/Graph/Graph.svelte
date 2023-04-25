@@ -3,7 +3,7 @@
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { onMount, setContext, getContext } from 'svelte';
+	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
 	import type {
 		ThemeGroup,
 		Graph,
@@ -29,6 +29,7 @@
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
+	import { zoomAndTranslate } from '$lib/utils/movers';
 
 	export let graph: Graph;
 	export let width: number;
@@ -67,7 +68,7 @@
 	let pinching = false;
 	let animationFrameId: number;
 
-	let mounted = writable(0);
+	let mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
@@ -86,6 +87,8 @@
 	const linkingOutput = graph.linkingOutput;
 	const nodeBounds = graph.bounds.nodeBounds;
 
+	const dispatch = createEventDispatcher();
+
 	$: dimensions = $dimensionsStore;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
 	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
@@ -101,6 +104,7 @@
 	// Wait until all Nodes are mounted
 	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
 		// If fitView is not set to resize, only run once
+		$mounted = true;
 		if (fitView !== 'resize') fitView = false;
 		fitIntoView();
 	}
@@ -203,14 +207,20 @@
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
 			nodeGroupArray.forEach((node) => node.moving.set(false));
 		}
+		const cursorEdge = graph.edges.get('cursor');
+
+		if (cursorEdge) {
+			graph.edges.delete('cursor');
+			if (!cursorEdge.disconnect) dispatch('edgeDrop');
+		}
 
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
-		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
 		$tracking = false;
+
 		if ($linkingAny) linkingAny.set(null);
 		if ($linkingInput) linkingInput.set(null);
 		if ($linkingOutput) linkingOutput.set(null);
@@ -220,6 +230,7 @@
 	}
 
 	function onMouseDown(e: MouseEvent) {
+		if (e.button === 2) return;
 		graphDOMElement.focus();
 
 		const { clientX, clientY } = e;
@@ -299,7 +310,7 @@
 		}
 		interval = undefined;
 	}
-	import { zoomAndTranslate } from '$lib/utils/movers';
+
 	const triggerActionBasedOn: Record<string, (key: string) => void> = {
 		'=': () => zoomAndTranslate(-1, graph, ZOOM_INCREMENT),
 		'-': () => zoomAndTranslate(1, graph, ZOOM_INCREMENT),

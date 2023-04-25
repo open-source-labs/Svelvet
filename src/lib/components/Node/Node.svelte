@@ -80,9 +80,9 @@
 			zIndex,
 			direction,
 			locked,
-			connections,
 			rotation
 		};
+		if (connections.length && outputs) config.connections = processConnections(connections);
 		if (borderWidth) config.borderWidth = borderWidth;
 		if (borderRadius) config.borderRadius = borderRadius;
 		if (borderColor) config.borderColor = borderColor;
@@ -102,6 +102,21 @@
 
 		graph.nodes.add(node, node.id);
 	});
+
+	function processConnections(connectionsArray: Connections) {
+		const processedConnections: Array<Connections> = Array(outputs)
+			.fill(null)
+			.map(() => []);
+		let currentAnchor = 0;
+		connectionsArray.forEach((connection) => {
+			currentAnchor = currentAnchor % outputs;
+
+			processedConnections[currentAnchor].push(connection);
+			currentAnchor++;
+		});
+
+		return processedConnections.reverse();
+	}
 
 	// All these functions below essentially enable data binding to the props
 	// We should not recommend developers utilize this, but it is a nice feature
@@ -158,6 +173,7 @@
 		let:grabHandle
 		on:nodeClicked
 		on:nodeMount
+		on:nodeReleased
 		{node}
 	>
 		<slot {selected} {grabHandle} {node} {destroy}>

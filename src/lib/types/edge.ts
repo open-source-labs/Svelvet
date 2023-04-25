@@ -17,6 +17,7 @@ export type WritableEdge = {
 	width: Writable<number>;
 	label?: EdgeLabel;
 	animated: Writable<boolean>;
+	disconnect?: true;
 	component: ComponentType | null;
 };
 
@@ -41,6 +42,7 @@ export interface EdgeConfig {
 	width?: number;
 	label?: EdgeLabelConfig;
 	animated?: boolean;
+	disconnect?: true;
 }
 
 export interface EdgeLabelConfig {
@@ -58,3 +60,5 @@ export interface EdgeLabelConfig {
 export type StepDirection = 'left' | 'right' | 'up' | 'down';
 
 export type ArcKey = '1001' | '0110' | '100-1' | '0-110' | '-1001' | '0110' | '-100-1' | '0-110';
+
+export type Connections = Array<[string | number, string | number] | string | number | null>;

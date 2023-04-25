@@ -140,23 +140,36 @@
 	function handleNodeClicked(e: MouseEvent) {
 		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
 
-		if (targetElement.tagName !== 'INPUT') {
-			e.preventDefault();
-		}
+		// Bring node to front regardless of event target
+		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+
+		// If the event target is an input, don't do anything
+		if (targetElement.tagName === 'INPUT') return;
+
+		//Dispatch nodeClick event fo rdeveloper use
+		dispatch('nodeClicked', { node, e });
+
+		// Stop event from propagating to other mousedown listeners
 		e.stopPropagation();
 
-		if ($locked || $nodeLock) return;
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-		dispatch('nodeClicked', { node, e });
-		$tracking = true;
-		const { button } = e;
+		// Prevent the default behavir of text selection on drag
+		// May be safe to move this to the global mouse move listener
+		e.preventDefault();
 
+		// If the node or graph is locked, don't do anything
+		if ($locked || $nodeLock) return;
+
+		// Set our global tracking boolean to true
+		$tracking = true;
+
+		// Capture the initial click position
 		$initialClickPosition = $cursor;
 
 		// Right click sets editing node
-		if (button === 2 && $editable) {
+		if (e.button === 2 && $editable) {
 			$editing = node;
 		}
+		// Handle selection logic
 		nodeSelectLogic();
 	}
 
@@ -203,6 +216,13 @@
 	function destroy() {
 		nodeStore.delete(id);
 	}
+
+	function onMouseUp(e: MouseEvent) {
+		const mouseDeltaX = $cursor.x - $initialClickPosition.x;
+		const mouseDeltaY = $cursor.y - $initialClickPosition.y;
+		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
+		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+	}
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
@@ -226,6 +246,7 @@
 		style:transform="rotate({$rotation}deg)"
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
+		on:mouseup={onMouseUp}
 		bind:this={DOMnode}
 		use:grabHandle
 		tabIndex={0}
@@ -252,6 +273,7 @@
 		cursor: not-allowed;
 	}
 	.selected {
-		box-shadow: 0 0 0 var(--border-width) var(--selection-color);
+		box-shadow: 0 0 0 var(--border-width) var(--selection-color),
+			0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
 	}
 </style>
