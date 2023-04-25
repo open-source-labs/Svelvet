@@ -3,7 +3,7 @@
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { onMount, setContext, getContext } from 'svelte';
+	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
 	import type {
 		ThemeGroup,
 		Graph,
@@ -29,6 +29,7 @@
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
+	import { zoomAndTranslate } from '$lib/utils/movers';
 
 	export let graph: Graph;
 	export let width: number;
@@ -85,6 +86,8 @@
 	const linkingInput = graph.linkingInput;
 	const linkingOutput = graph.linkingOutput;
 	const nodeBounds = graph.bounds.nodeBounds;
+
+	const dispatch = createEventDispatcher();
 
 	$: dimensions = $dimensionsStore;
 	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
@@ -204,10 +207,14 @@
 			nodeGroupArray.forEach((node) => node.moving.set(false));
 		}
 
+		if (graph.edges.get('cursor')) {
+			dispatch('edgeDrop');
+			graph.edges.delete('cursor');
+		}
+
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
-		graph.edges.delete('cursor');
 		selecting = false;
 		isMovable = false;
 		$tracking = false;
@@ -299,7 +306,7 @@
 		}
 		interval = undefined;
 	}
-	import { zoomAndTranslate } from '$lib/utils/movers';
+
 	const triggerActionBasedOn: Record<string, (key: string) => void> = {
 		'=': () => zoomAndTranslate(-1, graph, ZOOM_INCREMENT),
 		'-': () => zoomAndTranslate(1, graph, ZOOM_INCREMENT),

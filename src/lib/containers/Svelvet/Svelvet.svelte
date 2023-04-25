@@ -85,6 +85,7 @@
 		{controls}
 		{selectionColor}
 		{disableSelection}
+		on:edgeDrop
 	>
 		{#if mermaid.length}
 			<FlowChart {mermaid} {mermaidConfig} />
