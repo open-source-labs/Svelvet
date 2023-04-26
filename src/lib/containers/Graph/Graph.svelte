@@ -211,7 +211,7 @@
 
 		if (cursorEdge) {
 			graph.edges.delete('cursor');
-			if (!cursorEdge.disconnect) dispatch('edgeDrop');
+			if (!cursorEdge.disconnect) dispatch('edgeDrop', $cursor);
 		}
 
 		$activeGroup = null;
