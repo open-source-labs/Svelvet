@@ -236,14 +236,18 @@
 
 		// If the anchor is already connected and multiple connections are not allowed
 		// We don't want to create a new edge
-		if ($connectedAnchors?.size && !multiple) return;
+		if ($connectedAnchors?.size && !multiple) {
+			clearAllLinking();
+			return;
+		}
 		if (
 			$linkingAny === anchor ||
 			$linkingOutput?.anchor === anchor ||
 			$linkingInput?.anchor === anchor
-		)
+		) {
+			clearAllLinking();
 			return;
-
+		}
 		updatePosition();
 
 		// Create edge
