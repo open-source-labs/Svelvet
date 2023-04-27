@@ -16,6 +16,7 @@
 	import type { ComponentType } from 'svelte';
 
 	const graph = getContext<Graph>('graph');
+	const { nodes } = graph;
 
 	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
 	export let position = { x: 0, y: 0 };
@@ -164,7 +165,7 @@
 	}
 </script>
 
-{#if node}
+{#if node && $nodes[node.id]}
 	<InternalNode
 		{center}
 		isDefault={isDefault || useDefaults}

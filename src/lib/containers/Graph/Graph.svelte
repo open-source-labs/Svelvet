@@ -4,28 +4,13 @@
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
-	import type {
-		ThemeGroup,
-		Graph,
-		GroupBox,
-		Arrow,
-		GroupKey,
-		Group,
-		GraphDimensions,
-		CSSColorString
-	} from '$lib/types';
-	import { writable } from 'svelte/store';
-	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
+	import type { ThemeGroup, Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
+	import type { Arrow, GroupKey, Group } from '$lib/types';
 	import { isArrow } from '$lib/types';
-	import {
-		calculateFitView,
-		calculateTranslation,
-		calculateZoom,
-		generateKey,
-		zoomGraph
-	} from '$lib/utils';
+	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
+	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
@@ -68,7 +53,6 @@
 	let initialScale = 1;
 	let pinching = false;
 	let animationFrameId: number;
-	let scrollInterval;
 
 	let mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
@@ -154,6 +138,7 @@
 		};
 
 		graph.dimensions.set(graphDimensions);
+		if (fitView === 'resize') fitIntoView();
 	}
 
 	function onMouseUp() {
@@ -344,7 +329,7 @@
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
+		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), Infinity);
 		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
 
 		// Calculate the translation adjustment
@@ -357,7 +342,7 @@
 		);
 
 		// Apply transforms
-		zoomGraph(scale, newScale);
+		scale.set(newScale);
 		translateGraph(translation, newTranslation);
 	}
 
@@ -382,8 +367,6 @@
 			activeIntervals[key] = interval;
 		}
 	}
-
-	//on:wheel|preventDefault|self={handleScroll}
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
