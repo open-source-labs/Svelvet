@@ -5,7 +5,7 @@
 
 	const graph = getContext<Graph>('graph');
 
-	$: groupBoxes = graph.groupBoxes;
+	const groupBoxes = graph.groupBoxes;
 </script>
 
 {#each Object.entries($groupBoxes) as [id, group] (id)}

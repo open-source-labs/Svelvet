@@ -4,7 +4,6 @@ export * from './graph';
 export * from './data';
 export * from './key';
 export * from './store';
-export * from './keypress';
 export * from './context';
 export * from './edge';
 export * from './anchor';

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import MinimapNode from './MinimapNode.svelte';
+	import MiniNode from './MiniNode.svelte';
+	import MiniGroupBox from './MiniGroupBox.svelte';
 	import type { CSSColorString, Graph, Corner, ThemeGroup } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
@@ -35,6 +36,7 @@
 	const scale = transforms.scale;
 	const xTranslation = transforms.translation.x;
 	const yTranslation = transforms.translation.y;
+	const groupBoxes = graph.groupBoxes;
 
 	$: graphWidth = $dimensions.width;
 	$: graphHeight = $dimensions.height;
@@ -108,7 +110,7 @@
 	>
 		{#each Object.entries($nodes) as [id, node] (id)}
 			{#if node.id !== 'N-editor'}
-				<MinimapNode
+				<MiniNode
 					{node}
 					top={$top}
 					left={$left}
@@ -118,6 +120,10 @@
 					{hideable}
 				/>
 			{/if}
+		{/each}
+
+		{#each Object.entries($groupBoxes) as [id, group] (id)}
+			<MiniGroupBox {...group} top={$top} left={$left} groupName={id} />
 		{/each}
 	</div>
 

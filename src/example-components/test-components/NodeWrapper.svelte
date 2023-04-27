@@ -6,7 +6,6 @@
 	export let outputStore: ReturnType<typeof generateOutput> | null = null;
 	export let key = '';
 	export let destroy: null | (() => void) = null;
-	console.log(destroy);
 </script>
 
 <div class="node">

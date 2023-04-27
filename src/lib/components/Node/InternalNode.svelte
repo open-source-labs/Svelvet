@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Graph, Node, ThemeGroup } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
-	import { initialClickPosition, activeKeys, tracking } from '$lib/stores';
+	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { get } from 'svelte/store';
@@ -34,6 +34,7 @@
 	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const mounted = getContext<Writable<number>>('mounted');
+	const duplicate = getContext<Writable<boolean>>('duplicate');
 
 	setContext<Node>('node', node);
 
@@ -59,6 +60,12 @@
 	$: cursor = graph.cursor;
 	$: initialNodePositions = graph.initialNodePositions;
 	$: centerPoint = graph.center;
+
+	// If the node is selected and the duplicate key pair is pressed
+	// Dispatch the duplicate event
+	$: if (selected && $duplicate) {
+		dispatch('duplicate', node);
+	}
 
 	onMount(() => {
 		// If the node dimensions got set in previous steps, we don't need to do anything
@@ -134,7 +141,7 @@
 		dispatch('nodeClicked', { node, e });
 
 		$initialClickPosition = $cursor;
-		nodeSelectLogic();
+		nodeSelectLogic(e);
 	}
 
 	function handleNodeClicked(e: MouseEvent) {
@@ -170,10 +177,10 @@
 			$editing = node;
 		}
 		// Handle selection logic
-		nodeSelectLogic();
+		nodeSelectLogic(e);
 	}
 
-	function nodeSelectLogic() {
+	function nodeSelectLogic(e: MouseEvent | TouchEvent) {
 		let groupData: Group;
 		let parent;
 		let isParent = false;
@@ -196,11 +203,11 @@
 		}
 
 		// If you click on a node that is already selected
-		if (!$activeKeys['Shift'] && selected) {
+		if (!e.shiftKey && selected) {
 			$activeGroup = 'selected';
 		} else {
 			// If you click on a new node outside of the current group, clear the group
-			if (!$activeKeys['Shift'] && !selected && !$activeKeys['Meta']) {
+			if (!e.shiftKey && !selected && !e.shiftKey) {
 				$selectedNodes.clear();
 				$selectedNodes = $selectedNodes;
 			}
