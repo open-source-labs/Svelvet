@@ -3,6 +3,8 @@ import type { Node, Graph, XYPair, GroupBox } from '$lib/types';
 import { get } from 'svelte/store';
 import { initialClickPosition, tracking } from '$lib/stores';
 
+const buffer = 10;
+
 export function captureGroup(group: Writable<Set<Node | GroupBox>>): XYPair[] {
 	const groupSet = get(group);
 	const groupArray = Array.from(groupSet);
@@ -24,12 +26,7 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 
 	const initialPositions = get(graph.initialNodePositions);
 	const { x: initialClickX, y: initialClickY } = get(initialClickPosition);
-	const groupBounds = {
-		left: -Infinity,
-		right: Infinity,
-		top: -Infinity,
-		bottom: Infinity
-	};
+
 	const nodeGroupArray = Array.from(get(nodeGroup));
 	const groupBoxes = get(graph.groupBoxes);
 
@@ -67,13 +64,8 @@ export function moveNodes(graph: Graph, snapTo?: number) {
 			} else {
 				const nodeWidth = get(node.dimensions.width);
 				const nodeHeight = get(node.dimensions.height);
-				const { x: groupBoxX, y: groupBoxY } = get(groupBox.position);
-				const buffer = 10;
-				groupBounds.left = groupBoxX + buffer;
-				groupBounds.right = groupBoxX + get(groupBox.dimensions.width) - nodeWidth - buffer;
-				groupBounds.top = groupBoxY + buffer;
-				groupBounds.bottom = groupBoxY + get(groupBox.dimensions.height) - nodeHeight - buffer;
-				moveElementWithBounds(initialPosition, delta, position, groupBounds);
+				const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
+				moveElementWithBounds(initialPosition, delta, position, bounds);
 			}
 		});
 
@@ -102,4 +94,14 @@ export function moveElementWithBounds(
 		x: Math.min(Math.max(bounds.left, initialPosition.x + delta.x), bounds.right),
 		y: Math.min(Math.max(bounds.top, initialPosition.y + delta.y), bounds.bottom)
 	});
+}
+
+export function calculateRelativeBounds(groupBox: GroupBox, nodeWidth: number, nodeHeight: number) {
+	const { x: groupBoxX, y: groupBoxY } = get(groupBox.position);
+	return {
+		left: groupBoxX + buffer,
+		right: groupBoxX + get(groupBox.dimensions.width) - nodeWidth - buffer,
+		top: groupBoxY + buffer,
+		bottom: groupBoxY + get(groupBox.dimensions.height) - nodeHeight - buffer
+	};
 }

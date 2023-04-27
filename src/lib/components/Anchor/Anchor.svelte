@@ -1,21 +1,7 @@
 <script lang="ts">
-	import type {
-		Graph,
-		Node,
-		Anchor,
-		Direction,
-		AnchorKey,
-		InputType,
-		NodeKey,
-		OutputStore,
-		InputStore,
-		ThemeGroup,
-		Connections,
-		CSSColorString,
-		CustomWritable,
-		EdgeStyle,
-		EdgeConfig
-	} from '$lib/types';
+	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
+	import type { ThemeGroup, Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
+	import type { InputType, NodeKey, OutputStore, InputStore } from '$lib/types';
 	import { onMount, getContext, onDestroy, beforeUpdate } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
@@ -23,7 +9,6 @@
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
 	import { calculateRelativeCursor } from '$lib/utils/calculators';
 	import { get } from 'svelte/store';
-	import { activeKeys } from '$lib/stores';
 	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
 	import type { ComponentType } from 'svelte';
@@ -153,8 +138,6 @@
 		updatePosition();
 	}
 
-	$: if (!$activeKeys['Shift']) clearAllLinking();
-
 	// If the parent node is resizing, we actively track the position of the anchor
 	$: if (!tracking && ($resizingWidth || $resizingHeight || $rotating)) {
 		tracking = true;
@@ -166,7 +149,6 @@
 
 	// This fires the connection/disconnection events
 	// We track previous connections and fire a correct event accordingly
-
 	$: if ($connectedAnchors) {
 		if ($connectedAnchors.size < previousConnectionCount) {
 			dispatch('disconnection', { node, anchor });
@@ -176,25 +158,32 @@
 		previousConnectionCount = $connectedAnchors.size;
 	}
 
-	function handleClick() {
+	function handleClick(e: MouseEvent) {
 		updatePosition(); // Just in case the anchor has moved
-		if (locked) return;
+		if (locked) return; // Return if the anchor is locked
+		if (!e.shiftKey) clearAllLinking(); // If the shift key isn't pressed, clear all linking
+
+		// If the Anchor being clicked has connections
+		// And it can't have multiple connections
+		// And there isn't an active connection being made
+		// Then this is a disconnection event
 		if ($connectedAnchors?.size && !multiple && !$linkingInput && !$linkingOutput && !$linkingAny)
 			return disconnect();
 
+		// If there isn't an active connection being made, start a new edge
 		if (!$linkingInput && !$linkingOutput && !$linkingAny) return startEdge();
 
+		// If there is an active connection being made
+		// Proceed with the edge connection logic
 		if (input === output) {
-			connectEdge();
+			connectEdge(e);
 		} else if (input) {
-			if ($linkingInput) return;
-			if ($linkingOutput || $linkingAny) connectEdge();
+			if ($linkingInput) return; // If you're trying to connect inputs to each other, return
+			if ($linkingOutput || $linkingAny) connectEdge(e);
 		} else if (output) {
-			if ($linkingOutput) return;
-			if ($linkingInput || $linkingAny) connectEdge();
+			if ($linkingOutput) return; // If you're trying to connect outputs to each other, return
+			if ($linkingInput || $linkingAny) connectEdge(e);
 		}
-
-		clearAllLinking();
 	}
 
 	function startEdge() {
@@ -230,16 +219,10 @@
 		edges.add(newEdge, 'cursor');
 	}
 
-	function connectEdge() {
+	function connectEdge(e: MouseEvent) {
 		// Delete the temporary edge
 		edges.delete('cursor');
 
-		// If the anchor is already connected and multiple connections are not allowed
-		// We don't want to create a new edge
-		if ($connectedAnchors?.size && !multiple) {
-			clearAllLinking();
-			return;
-		}
 		if (
 			$linkingAny === anchor ||
 			$linkingOutput?.anchor === anchor ||
@@ -287,7 +270,7 @@
 
 		connectStores();
 
-		if (!$activeKeys['Shift']) {
+		if (!e.shiftKey) {
 			clearAllLinking();
 		} else {
 			if ($linkingInput) {
@@ -528,9 +511,14 @@
 		return true;
 	};
 
-	function handleMouseUp() {
+	function handleMouseUp(e: MouseEvent) {
 		if (isSelf()) return;
-		if ($linkingAny || $linkingInput || $linkingOutput) connectEdge();
+		if ($connectedAnchors?.size && !multiple) {
+			edges.delete('cursor');
+			clearAllLinking();
+			return;
+		}
+		if ($linkingAny || $linkingInput || $linkingOutput) connectEdge(e);
 	}
 
 	function isSelf() {

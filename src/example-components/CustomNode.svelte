@@ -6,6 +6,7 @@
 
 	const parameter = writable(10);
 	const graph: Graph = getContext('graph');
+	let nodeSelected = false;
 </script>
 
 <Node let:grabHandle let:selected>

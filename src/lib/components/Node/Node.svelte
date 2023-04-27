@@ -175,6 +175,7 @@
 		on:nodeClicked
 		on:nodeMount
 		on:nodeReleased
+		on:duplicate
 		{node}
 	>
 		<slot {selected} {grabHandle} {node} {destroy}>

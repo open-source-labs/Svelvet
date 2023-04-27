@@ -3,13 +3,22 @@
 	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
 	import InputNode from '../example-components/InputNode.svelte';
+	import { writable } from 'svelte/store';
+	import { setContext } from 'svelte';
+	let customNodeCount = writable(1);
+	let thisNodeCount = writable(3);
+	setContext('customNodeCount', customNodeCount);
 </script>
 
 <body>
 	<Svelvet edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
-		<CustomNode />
-		<InputNode />
-		<Node center position={{ x: -200, y: 200 }} id="NODE" label="NODE" resizable />
+		{#each { length: $customNodeCount } as _, i}
+			<CustomNode />
+		{/each}
+
+		{#each { length: $thisNodeCount } as _, i}
+			<Node on:duplicate={() => $thisNodeCount++} />
+		{/each}
 	</Svelvet>
 </body>
 

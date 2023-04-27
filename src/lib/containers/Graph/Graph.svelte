@@ -9,12 +9,11 @@
 	import { isArrow } from '$lib/types';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
-	import { activeKeys } from '$lib/stores';
 	import { get, writable } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
-	import { zoomAndTranslate } from '$lib/utils/movers';
+	import { moveElement, zoomAndTranslate } from '$lib/utils/movers';
 
 	export let graph: Graph;
 	export let width: number;
@@ -35,6 +34,9 @@
 	export let fitView: boolean | 'resize' = false;
 	export let trackpadPan: boolean;
 
+	const duplicate = writable(false);
+
+	setContext('duplicate', duplicate);
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
 	setContext('theme', graph.theme);
@@ -46,6 +48,8 @@
 
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
 	let selecting = false;
+	let creating = false;
+	let adding = false;
 	let graphDimensions: GraphDimensions;
 	let graphDOMElement: HTMLElement;
 	let isMovable = false;
@@ -54,7 +58,7 @@
 	let pinching = false;
 	let animationFrameId: number;
 
-	let mounted: Writable<number | true> = writable(0);
+	const mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
@@ -76,8 +80,6 @@
 	const dispatch = createEventDispatcher();
 
 	$: dimensions = $dimensionsStore;
-	$: creating = ($activeKeys['Shift'] && $activeKeys['Meta'] === true) === true;
-	$: adding = $activeKeys['Meta'] === true && !$activeKeys['Shift'];
 
 	let toggleComponent: ComponentType | null = null;
 	let minimapComponent: ComponentType | null = null;
@@ -141,7 +143,7 @@
 		if (fitView === 'resize') fitIntoView();
 	}
 
-	function onMouseUp() {
+	function onMouseUp(e: MouseEvent | TouchEvent) {
 		if (creating) {
 			const groupName = generateKey();
 			const groupKey: GroupKey = `${groupName}/${graph.id}`;
@@ -208,9 +210,11 @@
 		isMovable = false;
 		$tracking = false;
 
-		if ($linkingAny) linkingAny.set(null);
-		if ($linkingInput) linkingInput.set(null);
-		if ($linkingOutput) linkingOutput.set(null);
+		if (!e.shiftKey) {
+			if ($linkingAny) linkingAny.set(null);
+			if ($linkingInput) linkingInput.set(null);
+			if ($linkingOutput) linkingOutput.set(null);
+		}
 
 		anchor.y = 0;
 		anchor.x = 0;
@@ -224,7 +228,7 @@
 
 		$initialClickPosition = $cursor;
 
-		if ($activeKeys['Shift'] || $activeKeys['Meta']) {
+		if (e.shiftKey || e.metaKey) {
 			e.preventDefault();
 			selecting = true;
 			const { top, left } = dimensions;
@@ -232,6 +236,17 @@
 			anchor.x = clientX - left;
 			anchor.top = top;
 			anchor.left = left;
+			if (e.shiftKey && e.metaKey) {
+				creating = true;
+			} else {
+				creating = false;
+			}
+
+			if (e.metaKey && !e.shiftKey) {
+				adding = true;
+			} else {
+				adding = false;
+			}
 		} else {
 			isMovable = true;
 			$selected = new Set();
@@ -278,36 +293,42 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
+		e.preventDefault();
 		const { key } = e;
-		$activeKeys[key] = true;
 
-		triggerActionBasedOn[key]?.(key);
+		if (key === 'a' && e.metaKey) {
+			$selected = new Set([...Object.values(get(graph.nodes))]);
+		} else if (isArrow(key)) {
+			handleArrowKey(key as Arrow, e);
+		} else if (key === '=') {
+			zoomAndTranslate(-1, graph, ZOOM_INCREMENT);
+		} else if (key === '-') {
+			zoomAndTranslate(1, graph, ZOOM_INCREMENT);
+		} else if (key === '0') {
+			fitIntoView();
+		} else if (key === 'Control') {
+			$groups['selected'].nodes.set(new Set());
+		} else if (key === 'd' && e.metaKey) {
+			duplicate.set(true);
+			setTimeout(() => {
+				duplicate.set(false);
+			}, 100);
+		}
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
 		const { key } = e;
-		activeKeys.update((keys) => {
-			delete keys[key];
-			return keys;
-		});
 
 		if (isArrow(key)) {
 			clearInterval(activeIntervals[key]);
 			delete activeIntervals[key];
+		} else if (key === 'Shift') {
+			linkingAny.set(null);
+			linkingInput.set(null);
+			linkingOutput.set(null);
 		}
 		interval = undefined;
 	}
-
-	const triggerActionBasedOn: Record<string, (key: string) => void> = {
-		'=': () => zoomAndTranslate(-1, graph, ZOOM_INCREMENT),
-		'-': () => zoomAndTranslate(1, graph, ZOOM_INCREMENT),
-		'0': fitIntoView,
-		ArrowLeft: (key) => handleArrowKey(key as Arrow),
-		ArrowRight: (key) => handleArrowKey(key as Arrow),
-		ArrowUp: (key) => handleArrowKey(key as Arrow),
-		ArrowDown: (key) => handleArrowKey(key as Arrow),
-		Control: () => $groups['selected'].nodes.set(new Set())
-	};
 
 	function handleScroll(e: WheelEvent) {
 		if (fixedZoom) return;
@@ -329,7 +350,7 @@
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), Infinity);
+		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
 		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
 
 		// Calculate the translation adjustment
@@ -345,9 +366,9 @@
 		scale.set(newScale);
 		translateGraph(translation, newTranslation);
 	}
-
-	function handleArrowKey(key: Arrow) {
-		const multiplier = $activeKeys['Shift'] ? 2 : 1;
+	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
+	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
+		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
 		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
@@ -357,13 +378,38 @@
 		if (!activeIntervals[key]) {
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
-				const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 
-				translateGraph(translation, {
-					x: leftRight ? movement : null,
-					y: leftRight ? null : movement
-				});
-			}, 5);
+				if ($selected.size === 0) {
+					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
+					translateGraph(translation, {
+						x: leftRight ? movement : null,
+						y: leftRight ? null : movement
+					});
+				} else {
+					const delta = {
+						x: leftRight ? direction * 2 : 0,
+						y: leftRight ? 0 : direction * 2
+					};
+					Array.from($selected).forEach((node) => {
+						const currentPosition = get(node.position);
+						let groupBox: GroupBox | undefined;
+						const groupName = get(node.group);
+
+						const groupBoxes = get(graph.groupBoxes);
+
+						if (groupName) groupBox = groupBoxes[groupName];
+
+						if (groupBox) {
+							const nodeWidth = get(node.dimensions.width);
+							const nodeHeight = get(node.dimensions.height);
+							const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
+							moveElementWithBounds(currentPosition, delta, node.position, bounds);
+						} else {
+							moveElement(currentPosition, delta, node.position);
+						}
+					});
+				}
+			}, 2);
 			activeIntervals[key] = interval;
 		}
 	}
