@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "7.0.29",
+	"version": "7.0.30",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
