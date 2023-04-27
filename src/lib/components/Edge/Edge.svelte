@@ -127,7 +127,9 @@
 	}
 
 	onMount(() => {
-		calculatePath();
+		setTimeout(() => {
+			calculatePath();
+		}, 0);
 	});
 
 	onDestroy(() => {

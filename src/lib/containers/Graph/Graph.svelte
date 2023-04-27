@@ -4,28 +4,13 @@
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
-	import type {
-		ThemeGroup,
-		Graph,
-		GroupBox,
-		Arrow,
-		GroupKey,
-		Group,
-		GraphDimensions,
-		CSSColorString
-	} from '$lib/types';
-	import { writable } from 'svelte/store';
-	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
+	import type { ThemeGroup, Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
+	import type { Arrow, GroupKey, Group } from '$lib/types';
 	import { isArrow } from '$lib/types';
-	import {
-		calculateFitView,
-		calculateTranslation,
-		calculateZoom,
-		generateKey,
-		zoomGraph
-	} from '$lib/utils';
+	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
+	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
 	import { activeKeys } from '$lib/stores';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import { getRandomColor, translateGraph } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
@@ -48,6 +33,7 @@
 	export let selectionColor: CSSColorString;
 	export let backgroundExists: boolean;
 	export let fitView: boolean | 'resize' = false;
+	export let trackpadPan: boolean;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -152,6 +138,7 @@
 		};
 
 		graph.dimensions.set(graphDimensions);
+		if (fitView === 'resize') fitIntoView();
 	}
 
 	function onMouseUp() {
@@ -324,14 +311,26 @@
 
 	function handleScroll(e: WheelEvent) {
 		if (fixedZoom) return;
+		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
 		const currentTranslation = { x: $translationX, y: $translationY };
 		const pointerPosition = { x: clientX, y: clientY };
 
+		// Check if deltaY has decimal places
+		// If it does, it means the user is using a trackpad
+		// If trackpadPan is enabled or the meta key is pressed
+		// Pan the graph instead of zooming
+		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+			$translationX -= e.deltaX;
+			$translationY -= e.deltaY;
+			return;
+		}
+
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
+		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), Infinity);
+		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
 
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
@@ -343,7 +342,7 @@
 		);
 
 		// Apply transforms
-		zoomGraph(scale, newScale);
+		scale.set(newScale);
 		translateGraph(translation, newTranslation);
 	}
 
@@ -380,10 +379,10 @@
 	style:color={$themeStore.text || 'black'}
 	id={graph.id}
 	bind:this={graphDOMElement}
+	on:wheel|preventDefault={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault|self={onTouchStart}
-	on:wheel|preventDefault={handleScroll}
 	on:keydown|self|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}

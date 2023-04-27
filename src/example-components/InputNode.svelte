@@ -18,7 +18,7 @@
 	let week = '';
 </script>
 
-<Node bgColor="black" label="StartNode" borderRadius={10}>
+<Node bgColor="black" label="StartNode" borderRadius={10} let:destroy>
 	<div class="node">
 		<input type="text" bind:value={text} />
 		<input type="checkbox" bind:checked />
@@ -33,7 +33,7 @@
 		<input type="range" bind:value={range} />
 		<input type="search" bind:value={search} />
 		<input type="tel" bind:value={tel} />
-		<button>Test</button>
+		<button on:click={destroy}>Test</button>
 	</div>
 </Node>
 

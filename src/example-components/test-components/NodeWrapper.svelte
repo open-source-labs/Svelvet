@@ -6,6 +6,7 @@
 	export let outputStore: ReturnType<typeof generateOutput> | null = null;
 	export let key = '';
 	export let destroy: null | (() => void) = null;
+	console.log(destroy);
 </script>
 
 <div class="node">
@@ -71,6 +72,7 @@
 		border: none;
 		color: inherit;
 		cursor: pointer;
+		pointer-events: auto;
 	}
 	.header {
 		display: flex;

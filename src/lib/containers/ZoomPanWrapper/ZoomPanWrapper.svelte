@@ -6,24 +6,34 @@
 	import { get } from 'svelte/store';
 
 	const graph = getContext<Graph>('graph');
+	const transforms = graph.transforms;
+	const scale = transforms.scale;
+	const translationX = transforms.translation.x;
+	const translationY = transforms.translation.y;
+	const cursor = graph.cursor;
 
 	export let isMovable: boolean;
-
-	$: transforms = graph.transforms;
-	$: scale = transforms.scale;
-	$: translationX = transforms.translation.x;
-	$: translationY = transforms.translation.y;
-	$: cursor = graph.cursor;
+	let animationFrameId: number;
+	let moving = false;
 
 	// Reactive statement to update the transform attribute of the wrapper
 	$: transform = `translate(${$translationX}px, ${$translationY}px) scale(${$scale})`;
 
-	$: if (isMovable) {
+	$: if (isMovable && !moving) {
+		moving = true;
+		animationFrameId = requestAnimationFrame(translate);
+	} else if (!isMovable || !moving) {
+		moving = false;
+		cancelAnimationFrame(animationFrameId);
+	}
+
+	function translate() {
 		[$translationX, $translationY] = updateTranslation(
 			get(initialClickPosition),
 			$cursor,
 			transforms
 		);
+		animationFrameId = requestAnimationFrame(translate);
 	}
 </script>
 

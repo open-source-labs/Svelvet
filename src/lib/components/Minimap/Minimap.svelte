@@ -106,7 +106,7 @@
 		style:height="{boundsHeight}px"
 		style:transform="scale({boundsScale})"
 	>
-		{#each Object.values($nodes) as node}
+		{#each Object.entries($nodes) as [id, node] (id)}
 			{#if node.id !== 'N-editor'}
 				<MinimapNode
 					{node}
