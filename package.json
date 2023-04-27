@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "7.0.31",
+	"version": "7.0.32",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -40,28 +40,27 @@
 	"files": [
 		"dist"
 	],
-	"peerDependencies": {
-		"svelte": "^3.54.0"
-	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
-		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/kit": "^1.5.0",
-		"@sveltejs/package": "^2.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
-		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^8.5.0",
+		"@sveltejs/adapter-auto": "^2.0.1",
+		"@sveltejs/kit": "^1.15.9",
+		"@sveltejs/package": "^2.0.2",
+		"@typescript-eslint/eslint-plugin": "^5.59.1",
+		"@typescript-eslint/parser": "^5.59.1",
+		"eslint": "^8.39.0",
+		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"prettier": "^2.8.0",
-		"prettier-plugin-svelte": "^2.8.1",
-		"publint": "^0.1.9",
-		"svelte": "^3.54.0",
-		"svelte-check": "^3.0.1",
+		"prettier": "^2.8.8",
+		"prettier-plugin-svelte": "^2.10.0",
+		"publint": "^0.1.11",
+		"svelte-check": "^3.2.0",
 		"tslib": "^2.4.1",
-		"typescript": "^4.9.3",
-		"vite": "^4.0.0",
-		"vitest": "^0.25.3"
+		"typescript": "^5.0.4",
+		"vite": "^4.3.3",
+		"vitest": "^0.30.1"
+	},
+	"peerDependencies": {
+		"svelte": "^3.58.0"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -69,5 +68,8 @@
 	"main": "svelte.config.js",
 	"directories": {
 		"test": "tests"
+	},
+	"dependencies": {
+		"@playwright/test": "^1.28.1"
 	}
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Svelvet, Node } from '$lib';
 	import FitContent from '../../example-components/FitContent.svelte';
-	import PxValue from '../../example-components/PxValue.svelte';
 	import Percent from '../../example-components/Percent.svelte';
+	import PxValue from '../../example-components/PxValue.svelte';
 </script>
 
 <body>

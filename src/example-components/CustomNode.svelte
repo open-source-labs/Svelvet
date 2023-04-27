@@ -1,12 +1,8 @@
 <script lang="ts">
 	import { Node, Anchor, Slider } from '$lib';
-	import { get, writable } from 'svelte/store';
-	import { getContext, onMount } from 'svelte';
-	import type { Graph } from '$lib/types';
+	import { writable } from 'svelte/store';
 
 	const parameter = writable(10);
-	const graph: Graph = getContext('graph');
-	let nodeSelected = false;
 </script>
 
 <Node let:grabHandle let:selected>
