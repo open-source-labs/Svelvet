@@ -48,6 +48,7 @@
 	export let selectionColor: CSSColorString;
 	export let backgroundExists: boolean;
 	export let fitView: boolean | 'resize' = false;
+	export let trackpadPan: boolean;
 
 	setContext('snapTo', snapTo);
 	setContext<Graph>('graph', graph);
@@ -67,6 +68,7 @@
 	let initialScale = 1;
 	let pinching = false;
 	let animationFrameId: number;
+	let scrollInterval;
 
 	let mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
@@ -324,14 +326,26 @@
 
 	function handleScroll(e: WheelEvent) {
 		if (fixedZoom) return;
+		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
 		const currentTranslation = { x: $translationX, y: $translationY };
 		const pointerPosition = { x: clientX, y: clientY };
 
+		// Check if deltaY has decimal places
+		// If it does, it means the user is using a trackpad
+		// If trackpadPan is enabled or the meta key is pressed
+		// Pan the graph instead of zooming
+		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+			$translationX -= e.deltaX;
+			$translationY -= e.deltaY;
+			return;
+		}
+
 		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
-		const newScale = calculateZoom($scale, Math.sign(deltaY), ZOOM_INCREMENT);
+		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
+		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
 
 		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
@@ -368,6 +382,8 @@
 			activeIntervals[key] = interval;
 		}
 	}
+
+	//on:wheel|preventDefault|self={handleScroll}
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
@@ -380,10 +396,10 @@
 	style:color={$themeStore.text || 'black'}
 	id={graph.id}
 	bind:this={graphDOMElement}
+	on:wheel|preventDefault={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault|self={onTouchStart}
-	on:wheel|preventDefault={handleScroll}
 	on:keydown|self|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
