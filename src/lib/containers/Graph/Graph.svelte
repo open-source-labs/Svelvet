@@ -33,6 +33,7 @@
 	export let backgroundExists: boolean;
 	export let fitView: boolean | 'resize' = false;
 	export let trackpadPan: boolean;
+	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
 
 	const duplicate = writable(false);
 
@@ -294,9 +295,10 @@
 
 	function handleKeyDown(e: KeyboardEvent) {
 		e.preventDefault();
-		const { key } = e;
+		const { key, code } = e;
 
-		if (key === 'a' && e.metaKey) {
+		if (code === 'KeyA' && e[`${modifier}Key`]) {
+			console.log('select all');
 			$selected = new Set([...Object.values(get(graph.nodes))]);
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
@@ -308,7 +310,7 @@
 			fitIntoView();
 		} else if (key === 'Control') {
 			$groups['selected'].nodes.set(new Set());
-		} else if (key === 'd' && e.metaKey) {
+		} else if (code === 'KeyD' && e[`${modifier}Key`]) {
 			duplicate.set(true);
 			setTimeout(() => {
 				duplicate.set(false);
