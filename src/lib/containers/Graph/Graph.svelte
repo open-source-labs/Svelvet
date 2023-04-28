@@ -52,12 +52,14 @@
 	let creating = false;
 	let adding = false;
 	let graphDimensions: GraphDimensions;
-	let graphDOMElement: HTMLElement;
+	let graphDOMElement: Writable<HTMLElement | null> = writable(null);
 	let isMovable = false;
 	let initialDistance = 0;
 	let initialScale = 1;
 	let pinching = false;
 	let animationFrameId: number;
+
+	setContext('graphDOMElement', graphDOMElement);
 
 	const mounted: Writable<number | true> = writable(0);
 	setContext('mounted', mounted);
@@ -130,7 +132,8 @@
 	}
 
 	function updateGraphDimensions() {
-		const DOMRect = graphDOMElement.getBoundingClientRect();
+		if (!$graphDOMElement) return;
+		const DOMRect = $graphDOMElement.getBoundingClientRect();
 		graphDimensions = {
 			top: DOMRect.top,
 			left: DOMRect.left,
@@ -223,7 +226,7 @@
 
 	function onMouseDown(e: MouseEvent) {
 		if (e.button === 2) return;
-		graphDOMElement.focus();
+		if ($graphDOMElement) $graphDOMElement.focus();
 
 		const { clientX, clientY } = e;
 
@@ -294,11 +297,9 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		e.preventDefault();
 		const { key, code } = e;
 
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
-			console.log('select all');
 			$selected = new Set([...Object.values(get(graph.nodes))]);
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
@@ -426,12 +427,12 @@
 	style:height={height ? height + 'px' : '100%'}
 	style:color={$themeStore.text || 'black'}
 	id={graph.id}
-	bind:this={graphDOMElement}
+	bind:this={$graphDOMElement}
 	on:wheel|preventDefault={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault|self={onTouchStart}
-	on:keydown|self|preventDefault={handleKeyDown}
+	on:keydown|preventDefault={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >
