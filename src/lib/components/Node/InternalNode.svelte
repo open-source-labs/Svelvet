@@ -35,6 +35,7 @@
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const mounted = getContext<Writable<number>>('mounted');
 	const duplicate = getContext<Writable<boolean>>('duplicate');
+	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
 
 	setContext<Node>('node', node);
 
@@ -133,6 +134,7 @@
 	}
 
 	function handleNodeTouch(e: TouchEvent) {
+		$graphDOMElement.focus();
 		e.stopPropagation();
 		e.preventDefault();
 		if (e.touches.length > 1) return;
@@ -145,6 +147,7 @@
 	}
 
 	function handleNodeClicked(e: MouseEvent) {
+		$graphDOMElement.focus();
 		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
 
 		// Bring node to front regardless of event target
