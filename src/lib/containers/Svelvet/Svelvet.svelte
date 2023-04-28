@@ -39,6 +39,7 @@
 	export let mermaidConfig: Record<string, NodeConfig> = {};
 	export let translation: XYPair = { x: 0, y: 0 };
 	export let trackpadPan = false;
+	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
 
 	let graph: GraphType;
 
@@ -87,6 +88,7 @@
 		{selectionColor}
 		{disableSelection}
 		{trackpadPan}
+		{modifier}
 		on:edgeDrop
 	>
 		{#if mermaid.length}
