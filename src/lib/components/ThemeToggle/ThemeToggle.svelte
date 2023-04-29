@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
-	import type { ThemeGroup, CSSColorString, Theme } from '$lib/types';
+	import type { Theme, ThemeGroup, CSSColorString } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { THEMES } from '$lib/constants/themes';
 
@@ -18,6 +18,7 @@
 	let current: ThemeGroup = mainTheme;
 
 	function toggleTheme() {
+		console.log(THEMES[main], THEMES[alt]);
 		current = current === mainTheme ? altTheme : mainTheme;
 	}
 

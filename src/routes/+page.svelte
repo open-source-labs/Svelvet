@@ -1,31 +1,18 @@
 <script lang="ts">
-	import { Svelvet, Node, type ThemeGroup } from '$lib';
+	import { Svelvet, Node } from '$lib';
 	import CustomNode from '../example-components/CustomNode.svelte';
 	import CustomEdge from '../example-components/CustomEdge.svelte';
 	import InputNode from '../example-components/InputNode.svelte';
-	import { readable, writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import { setContext } from 'svelte';
 	let customNodeCount = writable(1);
 	let thisNodeCount = writable(3);
 	setContext('customNodeCount', customNodeCount);
 
-	const customTheme = writable(<ThemeGroup>{
-		node: '#AED6F1',
-		map: '#5DADE2',
-		border: '#2874A6',
-		text: '#1F618D',
-		selection: '#5499C7',
-		header: '#3498DB',
-		edge: 'white',
-		anchor: '#85C1E9',
-		controls: '#1B4F72',
-		dots: '#2D9743',
-		alt: '#5DADE2'
-	});
 </script>
 
 <body>
-	<Svelvet edgeStyle="step" edge={CustomEdge} TD zoom={0.6} minimap toggle>
+	<Svelvet edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
 		{#each { length: $customNodeCount } as _, i}
 			<CustomNode />
 		{/each}
