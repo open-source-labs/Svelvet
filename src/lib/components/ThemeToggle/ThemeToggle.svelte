@@ -1,24 +1,27 @@
 <script lang="ts">
 	import type { Writable } from 'svelte/store';
-	import type { Theme, ThemeGroup, CSSColorString } from '$lib/types';
+	import type { ThemeGroup, CSSColorString, Theme } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { THEMES } from '$lib/constants/themes';
 
 	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
+	const altThemeFromContext: ThemeGroup = getContext('altTheme');
 
-	export let main: Theme = 'dark';
-	export let alt: Theme = 'light';
+	export let main: ThemeGroup | Theme = $themeStore;
+	export let alt: ThemeGroup | Theme = altThemeFromContext;
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
 
-	let current: Theme = main;
+	let mainTheme = typeof main === 'string' ? THEMES[main] : main;
+	let altTheme = typeof alt === 'string' ? THEMES[alt] : alt;
+	let current: ThemeGroup = mainTheme;
 
 	function toggleTheme() {
-		current = current === main ? alt : main;
+		current = current === mainTheme ? altTheme : mainTheme;
 	}
 
-	$: $themeStore = THEMES[current];
+	$: $themeStore = current;
 </script>
 
 <div
@@ -31,7 +34,9 @@
 	class:NW={corner === 'NW'}
 >
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<span class="material-symbols-outlined">{current === main ? 'light_mode' : 'dark_mode'}</span>
+		<span class="material-symbols-outlined"
+			>{current === mainTheme ? 'light_mode' : 'dark_mode'}</span
+		>
 	</button>
 </div>
 

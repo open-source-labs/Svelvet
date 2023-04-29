@@ -7,12 +7,22 @@
 	import Scale from '../../example-components/test-components/Scale.svelte';
 	import Output from '../../example-components/test-components/Output.svelte';
 	let theme: import('$lib/types').Theme = 'light';
+	let altTheme: import('$lib/types').Theme = 'purple';
 	let zoom = 0.6;
 	let minimapVisible = true;
 </script>
 
 <div class="diagram">
-	<Svelvet fitView="resize" edgeStyle="step" TD {theme} {zoom} controls minimap={minimapVisible}>
+	<Svelvet
+		fitView="resize"
+		edgeStyle="step"
+		TD
+		{theme}
+		{altTheme}
+		{zoom}
+		controls
+		minimap={minimapVisible}
+	>
 		<Group
 			position={{ x: -150, y: -100 }}
 			width={600}
@@ -29,7 +39,7 @@
 		<Output />
 		<span id="state" class="note"> Stateful Anchors</span>
 		<span id="groups" class="note">Group Boxes</span>
-		<ThemeToggle main="light" alt="dark" slot="toggle" />
+		<ThemeToggle main="light" slot="toggle" />
 	</Svelvet>
 </div>
 

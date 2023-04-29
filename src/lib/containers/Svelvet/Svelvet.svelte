@@ -4,22 +4,25 @@
 		Graph as GraphType,
 		GraphKey,
 		NodeConfig,
-		Theme,
+		ThemeGroup,
 		CSSColorString,
 		EdgeStyle,
-		XYPair
+		XYPair,
+		Theme
 	} from '$lib/types';
+
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import { THEMES } from '$lib/constants/themes';
 	import type { ComponentType } from 'svelte';
 
 	export let mermaid = '';
-	export let theme: Theme = 'light';
+	export let theme: Writable<ThemeGroup> | Theme = 'dark';
+	export let altTheme: ThemeGroup | Theme = 'light';
 	export let id: number | string = 0;
 	export let snapTo = 1;
 	export let zoom = 1;
@@ -42,6 +45,8 @@
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
 
 	let graph: GraphType;
+	let currentTheme: Writable<ThemeGroup> =
+		typeof theme === 'string' ? writable(THEMES[theme]) : theme;
 
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
@@ -57,18 +62,21 @@
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked, translation });
+			graph = createGraph(graphKey, {
+				zoom,
+				theme: $currentTheme,
+				direction,
+				editable,
+				locked,
+				translation
+			});
 
 			graphStore.add(graph, graphKey);
 		}
 	});
 
-	let currentTheme = writable(THEMES[theme]);
 	setContext('themeStore', currentTheme);
-
-	$: if (graph) {
-		$currentTheme = THEMES[theme];
-	}
+	setContext('altTheme', typeof altTheme === 'string' ? THEMES[altTheme] : altTheme);
 
 	$: backgroundExists = $$slots.background;
 
@@ -104,6 +112,6 @@
 	<div
 		style:width={width ? width + 'px' : '100%'}
 		style:height={height ? height + 'px' : '100%'}
-		style:background-color={THEMES[theme].map}
+		style:background-color={$currentTheme.map}
 	/>
 {/if}

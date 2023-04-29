@@ -7,6 +7,7 @@ import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
 import type { GraphConfig } from '$lib/types';
 import { calculateViewportCenter } from '../calculators/calculateViewPortCenter';
+import { THEMES } from '$lib/constants/themes';
 
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	const {
@@ -65,7 +66,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		groupBoxes: createStore<GroupBox, GroupKey>(),
 		activeGroup: writable(null),
 		initialNodePositions: writable([]),
-		theme: writable(theme || 'light')
+		theme: writable(theme || THEMES['light'])
 	};
 
 	return graph;

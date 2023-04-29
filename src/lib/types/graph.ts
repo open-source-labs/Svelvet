@@ -13,7 +13,7 @@ import type {
 	InputStore,
 	OutputStore,
 	GraphDimensions,
-	Theme
+	ThemeGroup
 } from '.';
 import type { ComponentType } from 'svelte';
 
@@ -47,7 +47,7 @@ export interface Graph {
 	edges: EdgeStore;
 	edge: ComponentType | null;
 	groupBoxes: GroupBoxStore;
-	theme: Writable<Theme>;
+	theme: Writable<ThemeGroup>;
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;
@@ -59,7 +59,7 @@ export interface GraphConfig {
 	zoom?: number;
 	direction?: 'TD' | 'LR';
 	locked?: boolean;
-	theme?: Theme;
+	theme?: ThemeGroup;
 	translation?: { x: number; y: number };
 	edge?: ComponentType;
 }
