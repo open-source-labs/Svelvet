@@ -34,8 +34,7 @@
 	const dimensions = graph.dimensions;
 	const hidden = $groups.hidden.nodes;
 	const scale = transforms.scale;
-	const xTranslation = transforms.translation.x;
-	const yTranslation = transforms.translation.y;
+	const translation = transforms.translation;
 	const groupBoxes = graph.groupBoxes;
 
 	$: graphWidth = $dimensions.width;
@@ -47,16 +46,7 @@
 
 	$: minimapRatio = width / height;
 
-	$: window = calculateRelativeCursor(
-		e,
-		0,
-		0,
-		graphWidth,
-		graphHeight,
-		$scale,
-		$xTranslation,
-		$yTranslation
-	);
+	$: window = calculateRelativeCursor(e, 0, 0, graphWidth, graphHeight, $scale, $translation);
 
 	$: windowWidth = graphWidth / boundsWidth / $scale;
 	$: windowHeight = graphHeight / boundsHeight / $scale;
@@ -108,7 +98,7 @@
 		style:height="{boundsHeight}px"
 		style:transform="scale({boundsScale})"
 	>
-		{#each Object.entries($nodes) as [id, node] (id)}
+		{#each Array.from($nodes.entries()) as [id, node] (id)}
 			{#if node.id !== 'N-editor'}
 				<MiniNode
 					{node}
@@ -122,7 +112,7 @@
 			{/if}
 		{/each}
 
-		{#each Object.entries($groupBoxes) as [id, group] (id)}
+		{#each Array.from($groupBoxes.entries()) as [id, group] (id)}
 			<MiniGroupBox {...group} top={$top} left={$left} groupName={id} />
 		{/each}
 	</div>

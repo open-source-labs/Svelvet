@@ -8,6 +8,6 @@
 	const groupBoxes = graph.groupBoxes;
 </script>
 
-{#each Object.entries($groupBoxes) as [id, group] (id)}
+{#each Array.from($groupBoxes) as [id, group] (id)}
 	<GroupBoundingBox on:groupClick {...group} groupName={id} />
 {/each}

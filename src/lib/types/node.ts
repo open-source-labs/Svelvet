@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { AnchorStore, CSSDimensionString, InitialDimensions, Connections } from '.';
+import type { AnchorStore, CSSDimensionString, InitialDimensions, Connections, Direction } from '.';
 import type { XYPair, NodeKey, Dimensions, CSSColorString, GroupKey } from '.';
 import type { ComponentType } from 'svelte';
 // This defines an interface for the actual node object that is used in the graph/stores
@@ -21,6 +21,7 @@ export interface Node {
 	rotating: Writable<boolean>;
 	editable: Writable<boolean>;
 	locked: Writable<boolean>;
+	recalculateAnchors: (direction?: Direction) => void;
 	selectable: Writable<boolean>;
 	connectable: Writable<boolean>;
 	collapsible: Writable<boolean>;

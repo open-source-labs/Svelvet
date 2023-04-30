@@ -6,7 +6,7 @@
 	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 
 	export let selected: boolean;
-
+	const dynamic = getContext<boolean>('dynamic');
 	const node = getContext<Node>('node');
 
 	const label = node.label;
@@ -24,16 +24,25 @@
 </script>
 
 <div class:selected class="default-node" style:border-radius="{$borderRadius}px">
-	<div class="input-anchors" class:top class:left>
+	{#if dynamic}
 		{#each { length: $inputs } as _, i}
-			<Anchor on:connection on:disconnection input direction={top ? 'north' : 'west'} />
+			<Anchor on:connection on:disconnection />
 		{/each}
-	</div>
-	<div class="output-anchors" class:bottom class:right>
 		{#each { length: $outputs } as _, i}
-			<Anchor on:connection on:disconnection output direction={top ? 'south' : 'east'} />
+			<Anchor on:connection on:disconnection />
 		{/each}
-	</div>
+	{:else}
+		<div class="input-anchors" class:top class:left>
+			{#each { length: $inputs } as _, i (i)}
+				<Anchor on:connection on:disconnection input direction={top ? 'north' : 'west'} />
+			{/each}
+		</div>
+		<div class="output-anchors" class:bottom class:right>
+			{#each { length: $outputs } as _, i (i)}
+				<Anchor on:connection on:disconnection output direction={top ? 'south' : 'east'} />
+			{/each}
+		</div>
+	{/if}
 	<p style:color={$textColor}>{$label}</p>
 
 	{#if $resizable}
@@ -67,7 +76,6 @@
 		text-align: center;
 		user-select: none;
 	}
-
 	.input-anchors,
 	.output-anchors {
 		display: flex;
@@ -76,11 +84,11 @@
 		align-items: center;
 		z-index: 1;
 		pointer-events: none;
+		/* outline: solid 1px red; */
 	}
 
 	.top,
 	.bottom {
-		padding: 0px 20px;
 		width: 100%;
 		justify-content: space-around;
 	}
@@ -97,7 +105,6 @@
 
 	.left,
 	.right {
-		padding: 20px 0px;
 		height: 100%;
 		flex-direction: column;
 		justify-content: space-around;

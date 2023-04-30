@@ -37,3 +37,5 @@ export const DOT_WIDTH = 1.4;
 export const ANCHOR_SIZE = 14;
 export const ANCHOR_COLOR: CSSColorString = 'gray';
 export const ANCHOR_RADIUS = '50%';
+
+export const stepBuffer = 40;

@@ -1,10 +1,12 @@
-import type { Anchor, Node, XYPair, Direction, AnchorKey, CSSColorString } from '$lib/types';
+import type { Anchor, Node, Direction, AnchorKey, Graph } from '$lib/types';
 import { writable, derived, get } from 'svelte/store';
 import type { Writable, Readable } from 'svelte/store';
-import type { CustomWritable } from '$lib/types';
+import type { CustomWritable, CSSColorString, XYPair } from '$lib/types';
 import type { ComponentType } from 'svelte';
+import { calculateRelativePosition } from '..';
 
 export function createAnchor(
+	graph: Graph,
 	node: Node,
 	id: AnchorKey,
 	position: XYPair,
@@ -24,21 +26,37 @@ export function createAnchor(
 	const { x, y } = position;
 	// Create stores for the anchor offset values
 	const nodePosition = get(node.position);
-	const xOffset = writable(x - nodePosition.x);
-	const yOffset = writable(y - nodePosition.y);
 
-	const offset = { x: xOffset, y: yOffset };
+	const offset = writable({
+		x: x - nodePosition.x + width / 2,
+		y: y - nodePosition.y + height / 2
+	});
 
 	// Create derived stores for the anchor X and Y positions based on the node position and the offset
-	const anchorX = derived(
-		[node.position, xOffset],
-		([$position, $xOffset]) => $position.x + $xOffset + width / 2
-	);
-	const anchorY = derived(
-		[node.position, yOffset],
-		([$position, $yOffset]) => $position.y + $yOffset + height / 2
-	);
-	// Moving is derived from whether or not the parent node is moving or resizing
+	const anchorPosition = derived([node.position, offset], ([$position, $offset]) => {
+		return { x: $position.x + $offset.x, y: $position.y + $offset.y };
+	});
+	const transforms = graph.transforms;
+	const graphDimensions = graph.dimensions;
+
+	const recalculatePosition = () => {
+		const anchorElement = document.getElementById(id);
+		if (!anchorElement) return;
+		const { x, y, width, height } = anchorElement.getBoundingClientRect();
+		const oldOffset = get(offset);
+		const oldPosition = get(anchorPosition);
+
+		const { scaled, scale } = calculateRelativePosition(graphDimensions, transforms, { x, y });
+		const deltaX = scaled.x - oldPosition.x;
+		const deltaY = scaled.y - oldPosition.y;
+
+		offset.set({
+			x: oldOffset.x + deltaX + width / scale / 2,
+			y: oldOffset.y + deltaY + height / scale / 2
+		});
+	};
+
+	// Moving s derived from whether or not the parent node is moving or resizing
 	const moving = derived(
 		[node.moving, node.resizingWidth, node.resizingHeight, node.rotating],
 		([$moving, $resizingWidth, $resizingHeight, $rotating]) => {
@@ -48,17 +66,19 @@ export function createAnchor(
 	const rotation = derived([node.rotation], ([$rotation]) => $rotation);
 	return {
 		id,
-		position: { x: anchorX, y: anchorY },
+		position: anchorPosition,
 		offset,
-		direction: writable(direction),
+		direction: writable(direction || 'self'),
 		dynamic: writable(dynamic || false),
 		type,
 		edge,
 		moving,
+		recalculatePosition,
 		connected: writable(new Set()),
 		store: store || null,
 		inputKey: key || null,
 		edgeColor: edgeColor || writable(null),
-		rotation
+		rotation,
+		node
 	};
 }

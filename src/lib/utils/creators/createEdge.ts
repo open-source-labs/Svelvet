@@ -6,12 +6,12 @@ import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 import type { ComponentType } from 'svelte';
 
 export function createEdge(
-	connection: { source: Anchor | null; target: Anchor | null },
+	connection: { source: Anchor; target: Anchor },
 	component: ComponentType | null,
 	config?: EdgeConfig
 ): WritableEdge {
 	const { source, target } = connection;
-	const edgeId: EdgeKey = source?.id && target?.id ? sortEdgeKey(source.id, target.id) : 'cursor';
+	const edgeId: EdgeKey = source.id && target.id ? sortEdgeKey(source.id, target.id) : 'cursor';
 
 	const writableEdge: WritableEdge = {
 		id: edgeId,

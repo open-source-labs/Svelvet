@@ -1,26 +1,29 @@
 import { get } from 'svelte/store';
 import type { Graph } from '$lib/types';
 import { calculateZoom, calculateTranslation } from '../calculators';
-import { zoomGraph, translateGraph } from '.';
 
-export function zoomAndTranslate(direction = 1, graphStore: Graph, increment = 0.1) {
-	const dimensions = get(graphStore.dimensions);
+export function zoomAndTranslate(
+	direction = 1,
+	dimensions: Graph['dimensions'],
+	transforms: Graph['transforms'],
+	increment = 0.1
+) {
+	const graphDimensions = get(dimensions);
 
-	const { width, height, top, left } = dimensions;
+	const { width, height, top, left } = graphDimensions;
 
-	const scaleStore = graphStore.transforms.scale;
-	const translationXStore = graphStore.transforms.translation.x;
-	const translationYStore = graphStore.transforms.translation.y;
+	const scaleStore = transforms.scale;
+	const graphTranslation = get(transforms.translation);
 	const scale = get(scaleStore);
 
 	const newScale = calculateZoom(scale, direction, increment);
 	const newTranslation = calculateTranslation(
 		scale,
 		newScale,
-		{ x: get(translationXStore), y: get(translationYStore) },
+		graphTranslation,
 		{ x: width / 2 + left, y: height / 2 + top },
-		dimensions
+		graphDimensions
 	);
-	zoomGraph(scaleStore, newScale);
-	translateGraph(graphStore.transforms.translation, newTranslation);
+	scaleStore.set(newScale);
+	transforms.translation.set(newTranslation);
 }

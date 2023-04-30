@@ -1,24 +1,24 @@
 <script lang="ts">
 	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
-	import type { ThemeGroup, Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
+	import type { Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
 	import type { InputType, NodeKey, OutputStore, InputStore } from '$lib/types';
 	import { onMount, getContext, onDestroy, beforeUpdate } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
-	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
 	import { writable } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
-	import { calculateRelativeCursor } from '$lib/utils/calculators';
 	import { get } from 'svelte/store';
-	import { sortEdgeKey } from '$lib/utils/helpers/sortKey';
 	import { createEventDispatcher } from 'svelte';
 	import type { ComponentType } from 'svelte';
+	import DefaultAnchor from './DefaultAnchor.svelte';
 
 	const dispatch = createEventDispatcher();
-
+	const nodeDynamic = getContext<boolean>('dynamic');
 	const node = getContext<Node>('node');
-	const graph = getContext<Graph>('graph');
+	const edgeStore = getContext<Graph['edges']>('edgeStore');
+	const cursorAnchor = getContext<Anchor>('cursorAnchor');
 	const graphDirection = getContext<string>('direction');
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
+
+	const nodeStore = getContext<Graph['nodes']>('nodeStore');
 	const graphEdge = getContext<ComponentType>('graphEdge');
 
 	export let bgColor: CSSColorString | null = null;
@@ -27,9 +27,8 @@
 	export let input = false;
 	export let output = false;
 	export let multiple = output ? true : input ? false : true;
-	export let direction: Direction =
-		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
-	export let dynamic = false;
+	export let dynamic = nodeDynamic || false;
+
 	export let edge: ComponentType | null = null;
 	export let inputsStore: InputStore | null = null;
 	export let key: string | number | null = null;
@@ -42,8 +41,19 @@
 	export let edgeLabel = '';
 	export let locked = false;
 	export let edgeStyle: EdgeStyle | null = null;
+	export let invisible = false;
+	export let direction: Direction = invisible
+		? 'self'
+		: graphDirection === 'TD'
+		? input
+			? 'north'
+			: 'south'
+		: input
+		? 'west'
+		: 'east';
 
 	const mounted = getContext<Writable<number | true>>('mounted');
+	const graph = getContext<Graph>('graph');
 
 	let animationFrameId: number;
 	let anchorElement: HTMLDivElement;
@@ -56,14 +66,14 @@
 
 	const nodeEdge = node.edge;
 	const anchors = node.anchors;
-	const edges = graph.edges;
 	const resizingWidth = node.resizingWidth;
 	const resizingHeight = node.resizingHeight;
 	const rotating = node.rotating;
 	const nodeLevelConnections = node.connections;
-	const linkingInput = graph.linkingInput;
-	const linkingOutput = graph.linkingOutput;
-	const linkingAny = graph.linkingAny;
+
+	const linkingInput = getContext<Graph['linkingInput']>('linkingInput');
+	const linkingOutput = getContext<Graph['linkingOutput']>('linkingOutput');
+	const linkingAny = getContext<Graph['linkingAny']>('linkingAny');
 
 	$: connecting =
 		input === output
@@ -78,9 +88,9 @@
 	onMount(() => {
 		const { top, left, width, height } = anchorElement.getBoundingClientRect();
 		const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
-
 		const anchorPosition = { y: top, x: left };
 		anchor = createAnchor(
+			graph,
 			node,
 			anchorKey,
 			anchorPosition,
@@ -104,12 +114,35 @@
 		// This is to avoid a strange bug where the anchor positions are off
 		// It only seems to happen in dev and doesn't seem to affect the final product
 		setTimeout(() => {
-			updatePosition();
-		}, 0);
+			if (anchorElement) anchor.recalculatePosition();
+		}, 4);
 	});
 
+	$: dynamicDirection = anchor?.direction;
+
+	$: if (dynamic && anchorElement) changeAnchorSide(anchorElement, $dynamicDirection);
+
+	function changeAnchorSide(anchorElement: HTMLElement, newSide: Direction) {
+		if (newSide === 'self') return;
+		const parentNode = anchorElement.parentNode;
+		if (!parentNode) return;
+		// Remove the anchor from its current container
+		parentNode.removeChild(anchorElement);
+
+		// Add the anchor to the new container
+		const newContainer = document.querySelector(`#anchors-${newSide}-${node.id}`);
+		if (!newContainer) return;
+		newContainer.appendChild(anchorElement);
+		if (anchorElement) node.recalculateAnchors();
+	}
+
+	$: if (!input) {
+		const poppedConnections = $nodeLevelConnections?.pop();
+		if (poppedConnections) assignedConnections = poppedConnections;
+	}
+
 	beforeUpdate(() => {
-		updatePosition();
+		if (anchorElement) anchor.recalculatePosition();
 	});
 
 	// When the anchor is destroyed we remove the edge and cancel any animation
@@ -118,24 +151,21 @@
 		cancelAnimationFrame(animationFrameId);
 	});
 
-	$: if ($mounted === graph.nodes.count() && connections.length) {
+	$: if ($mounted === nodeStore.count() && connections.length) {
 		checkDirectConnections();
 	}
 
 	// // If the user has specifcied connections, we check once all nodes have mounted
-	$: if ($mounted === graph.nodes.count() && assignedConnections.length) {
+	$: if ($mounted === nodeStore.count() && assignedConnections.length) {
 		checkNodeLevelConnections();
-	}
-
-	$: {
-		$connectedAnchors;
-		updatePosition();
 	}
 
 	// If an anchor is added to the store, we update all anchor positions
 	$: if (anchorElement) {
 		$anchors;
-		updatePosition();
+		$connectedAnchors;
+		$dynamicDirection;
+		setTimeout(() => anchor.recalculatePosition(), 4);
 	}
 
 	// If the parent node is resizing, we actively track the position of the anchor
@@ -159,7 +189,6 @@
 	}
 
 	function handleClick(e: MouseEvent) {
-		updatePosition(); // Just in case the anchor has moved
 		if (locked) return; // Return if the anchor is locked
 		if (!e.shiftKey) clearAllLinking(); // If the shift key isn't pressed, clear all linking
 
@@ -189,24 +218,24 @@
 	function startEdge() {
 		if (input === output) {
 			$linkingAny = anchor;
-			createCursorEdge(anchor, null);
+			createCursorEdge(anchor, cursorAnchor);
 		} else if (input) {
 			$linkingInput = {
 				anchor,
 				store: inputsStore,
 				key
 			};
-			createCursorEdge(null, anchor);
+			createCursorEdge(cursorAnchor, anchor);
 		} else if (output) {
 			$linkingOutput = {
 				anchor,
 				store: outputStore
 			};
-			createCursorEdge(anchor, null);
+			createCursorEdge(anchor, cursorAnchor);
 		}
 	}
 
-	function createCursorEdge(source: Anchor | null, target: Anchor | null, disconnect = false) {
+	function createCursorEdge(source: Anchor, target: Anchor, disconnect = false) {
 		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
@@ -216,12 +245,12 @@
 		// Create a temporary edge to track the cursor
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		// Add the edge to the store
-		edges.add(newEdge, 'cursor');
+		edgeStore.add(newEdge, 'cursor');
 	}
 
 	function connectEdge(e: MouseEvent) {
 		// Delete the temporary edge
-		edges.delete('cursor');
+		edgeStore.delete('cursor');
 
 		if (
 			$linkingAny === anchor ||
@@ -231,7 +260,7 @@
 			clearAllLinking();
 			return;
 		}
-		updatePosition();
+		anchor.recalculatePosition();
 
 		// Create edge
 		let source: Anchor | null = null;
@@ -289,18 +318,15 @@
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
-		updatePosition(); // Just in case
+		if (source === target) return;
 		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
-
-		target.connected.update((anchors) => anchors.add(source));
-		source.connected.update((anchors) => anchors.add(target));
-		const id = newEdge.id;
-		edges.add(newEdge, id);
+		if (!source.node || !target.node) return;
+		edgeStore.add(newEdge, new Set([source, target, source.node, target.node]));
 	}
 
 	// If both anchors have stores, we "link" them
@@ -339,59 +365,19 @@
 	// This just repeatedly calls updatePosition until cancelled
 	function trackPosition() {
 		if (!tracking) return;
-		updatePosition();
+		if (anchorElement) anchor.recalculatePosition();
 		animationFrameId = requestAnimationFrame(trackPosition);
 	}
 
-	// This can be simplified/made more efficient
-	const updatePosition = () => {
-		if (!anchorElement) return;
-		const { top, left, width, height } = anchorElement.getBoundingClientRect();
-
-		const oldOffsetX = get(anchor.offset.x);
-		const oldOffsetY = get(anchor.offset.y);
-
-		const oldPositionX = get(anchor.position.x);
-		const oldPositionY = get(anchor.position.y);
-
-		const dimensions = get(graph.dimensions);
-		const scale = get(graph.transforms.scale);
-
-		const translationX = get(graph.transforms.translation.x);
-		const translationY = get(graph.transforms.translation.y);
-
-		const scaled = calculateRelativeCursor(
-			{ clientX: left, clientY: top },
-			dimensions.top,
-			dimensions.left,
-			dimensions.width,
-			dimensions.height,
-			scale,
-			translationX,
-			translationY
-		);
-
-		const deltaX = scaled.x - oldPositionX;
-		const deltaY = scaled.y - oldPositionY;
-
-		if (deltaX !== 0) anchor.offset.x.set(oldOffsetX + deltaX + width / scale / 2);
-		if (deltaY !== 0) anchor.offset.y.set(oldOffsetY + deltaY + height / scale / 2);
-	};
-
 	// Destroy the edge and disconnect the anchors/stores
 	function destroy() {
-		edges.delete('cursor');
+		edgeStore.delete('cursor');
 
-		anchor.connected.update((connectedAnchors) => {
-			Array.from(connectedAnchors).forEach((connectedAnchor) => {
-				edges.delete(sortEdgeKey(anchor.id, connectedAnchor.id));
-				connectedAnchor.connected.update((connectedAnchorConnections) => {
-					connectedAnchorConnections.delete(anchor);
-					return connectedAnchorConnections;
-				});
-			});
-			return new Set();
-		});
+		// Get all edges connected to this anchor
+		const connections = edgeStore.match(anchor);
+
+		// Delete them from the store
+		connections.forEach((edge) => edgeStore.delete(edge));
 
 		clearAllLinking();
 		disconnectStore();
@@ -408,14 +394,14 @@
 		destroy();
 
 		if (source.type === 'output') {
-			createCursorEdge(source, null, true);
+			createCursorEdge(source, cursorAnchor, true);
 			disconnectStore();
 			const store: ReturnType<typeof generateOutput> = source.store as ReturnType<
 				typeof generateOutput
 			>;
 			$linkingOutput = { anchor: source, store };
 		} else {
-			createCursorEdge(source, null, true);
+			createCursorEdge(source, cursorAnchor, true);
 			$linkingAny = source;
 		}
 	}
@@ -455,7 +441,7 @@
 		//Convert to node key used in store/DOM
 		const nodekey: NodeKey = `N-${nodeId}`;
 		// Look up node in store
-		const nodeToConnect = graph.nodes.get(nodekey);
+		const nodeToConnect = nodeStore.get(nodekey);
 		if (!nodeToConnect) {
 			return false;
 		}
@@ -463,7 +449,7 @@
 		if (!anchorId) {
 			// Connect to the anchor with the fewest connections
 			const anchorStore = get(nodeToConnect.anchors);
-			const anchors = Object.values(anchorStore);
+			const anchors = Array.from(anchorStore.values());
 
 			if (!anchors.length) {
 				return false;
@@ -514,7 +500,7 @@
 	function handleMouseUp(e: MouseEvent) {
 		if (isSelf()) return;
 		if ($connectedAnchors?.size && !multiple) {
-			edges.delete('cursor');
+			edgeStore.delete('cursor');
 			clearAllLinking();
 			return;
 		}
@@ -530,30 +516,38 @@
 	}
 </script>
 
-<div
-	class="anchor-wrapper"
-	id={anchor?.id}
-	class:locked
-	bind:this={anchorElement}
-	on:mouseenter={() => (hovering = true)}
-	on:mouseleave={() => (hovering = false)}
-	on:mousedown|stopPropagation|preventDefault={handleClick}
-	on:mouseup|stopPropagation={handleMouseUp}
->
-	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
-		<div
-			class="svelvet-anchor"
-			class:output
-			class:input
-			class:connected={$connectedAnchors?.size >= 1}
-			class:connecting
-			class:hovering
-			style:--default-width={`${ANCHOR_SIZE}px`}
-			style:background-color={bgColor || $themeStore.anchor}
-			style:--default-radius={ANCHOR_RADIUS}
-		/>
-	</slot>
-</div>
+{#if !invisible}
+	<div
+		class="anchor-wrapper"
+		id={anchor?.id}
+		class:locked
+		bind:this={anchorElement}
+		on:mouseenter={() => (hovering = true)}
+		on:mouseleave={() => (hovering = false)}
+		on:mousedown|stopPropagation|preventDefault={handleClick}
+		on:mouseup|stopPropagation={handleMouseUp}
+	>
+		<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
+			<DefaultAnchor
+				{output}
+				{input}
+				{connecting}
+				{hovering}
+				connected={$connectedAnchors?.size >= 1}
+				{bgColor}
+			/>
+		</slot>
+	</div>
+{:else}
+	<div
+		class="anchor-wrapper"
+		class:invisible
+		id={anchor?.id}
+		class:locked
+		bind:this={anchorElement}
+		on:mouseup={handleMouseUp}
+	/>
+{/if}
 
 <style>
 	* {
@@ -567,22 +561,6 @@
 		pointer-events: all;
 	}
 
-	.svelvet-anchor {
-		width: var(--anchor-size, var(--default-width));
-		height: var(--anchor-size, var(--default-width));
-		z-index: 12;
-		border-radius: var(--anchor-radius, var(--default-radius));
-		background-color: var(--anchor-color, var(--default-color));
-		cursor: pointer;
-		border: solid 1px black;
-		pointer-events: auto;
-	}
-	.output {
-		border-color: white;
-	}
-	.input {
-		border-color: rgb(255, 255, 255);
-	}
 	.locked {
 		cursor: not-allowed !important;
 	}
@@ -593,5 +571,11 @@
 		font: inherit;
 		cursor: pointer;
 		outline: inherit;
+	}
+
+	.invisible {
+		position: absolute;
+		width: 100%;
+		height: 100%;
 	}
 </style>

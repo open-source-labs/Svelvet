@@ -4,21 +4,28 @@
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
-	import type { ThemeGroup, Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
-	import type { Arrow, GroupKey, Group } from '$lib/types';
+	import type {
+		ThemeGroup,
+		Graph,
+		GroupBox,
+		GraphDimensions,
+		CSSColorString,
+		Connections
+	} from '$lib/types';
+	import type { Arrow, GroupKey, Group, CursorAnchor, XYPair } from '$lib/types';
 	import { isArrow } from '$lib/types';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
 	import { get, writable } from 'svelte/store';
-	import { getRandomColor, translateGraph } from '$lib/utils';
+	import { getRandomColor } from '$lib/utils';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
 	import { moveElement, zoomAndTranslate } from '$lib/utils/movers';
+	import { readable } from 'svelte/store';
 
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
-	export let snapTo = 1;
 	export let minimap = false;
 	export let controls = false;
 	export let toggle = false;
@@ -38,9 +45,42 @@
 	const duplicate = writable(false);
 
 	setContext('duplicate', duplicate);
-	setContext('snapTo', snapTo);
-	setContext<Graph>('graph', graph);
+	setContext('graph', graph);
+	setContext('transforms', graph.transforms);
+	setContext('dimensions', graph.dimensions);
 	setContext('theme', graph.theme);
+	setContext('locked', graph.locked);
+	setContext('groups', graph.groups);
+	setContext('bounds', graph.bounds);
+	setContext('edgeStore', graph.edges);
+	setContext('nodeStore', graph.nodes);
+	setContext('linkingInput', graph.linkingInput);
+	setContext('linkingOutput', graph.linkingOutput);
+	setContext('linkingAny', graph.linkingAny);
+
+	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
+	const cursorAnchor: CursorAnchor = {
+		id: null,
+		position: graph.cursor,
+		offset: writable({ x: 0, y: 0 }),
+		connected: writable(new Set()),
+		dynamic: writable(false),
+		edge: null,
+		edgeColor: writable(null),
+		direction: writable('self'),
+		inputKey: null,
+		type: 'output',
+		moving: readable(false),
+		store: null,
+		rotation: readable(0),
+		node: {
+			rotating: writable(false),
+			position: graph.cursor,
+			dimensions: { width: writable(0), height: writable(0) }
+		}
+	};
+	setContext('cursorAnchor', cursorAnchor);
+
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	let interval: number | undefined = undefined;
@@ -61,7 +101,7 @@
 
 	setContext('graphDOMElement', graphDOMElement);
 
-	const mounted: Writable<number | true> = writable(0);
+	const mounted: Writable<number> = writable(0);
 	setContext('mounted', mounted);
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
@@ -70,8 +110,6 @@
 	const groups = graph.groups;
 	const selected = $groups.selected.nodes;
 	const translation = graph.transforms.translation;
-	const translationX = translation.x;
-	const translationY = translation.y;
 	const activeGroup = graph.activeGroup;
 	const initialNodePositions = graph.initialNodePositions;
 	const editing = graph.editing;
@@ -95,7 +133,6 @@
 	// Wait until all Nodes are mounted
 	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
 		// If fitView is not set to resize, only run once
-		$mounted = true;
 		if (fitView !== 'resize') fitView = false;
 		fitIntoView();
 	}
@@ -104,8 +141,7 @@
 		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
 
 		if (x && y && scale) {
-			translationX.set(x);
-			translationY.set(y);
+			translation.set({ x, y });
 			graph.transforms.scale.set(scale);
 		}
 	}
@@ -299,14 +335,21 @@
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key, code } = e;
 
+		// We dont want to prevent users from refreshing the page
+		if (code === 'KeyR' && e.metaKey) return;
+
+		//Otherwise we prevent default keydown behavior
+		e.preventDefault();
+
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
-			$selected = new Set([...Object.values(get(graph.nodes))]);
+			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
+			$selected = new Set(unlockedNodes);
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
 		} else if (key === '=') {
-			zoomAndTranslate(-1, graph, ZOOM_INCREMENT);
+			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '-') {
-			zoomAndTranslate(1, graph, ZOOM_INCREMENT);
+			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '0') {
 			fitIntoView();
 		} else if (key === 'Control') {
@@ -337,7 +380,7 @@
 		if (fixedZoom) return;
 		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
-		const currentTranslation = { x: $translationX, y: $translationY };
+		const currentTranslation = $translation;
 		const pointerPosition = { x: clientX, y: clientY };
 
 		// Check if deltaY has decimal places
@@ -345,8 +388,11 @@
 		// If trackpadPan is enabled or the meta key is pressed
 		// Pan the graph instead of zooming
 		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
-			$translationX -= e.deltaX;
-			$translationY -= e.deltaY;
+			$translation = {
+				x: ($translation.x -= e.deltaX),
+				y: ($translation.y -= e.deltaY)
+			};
+
 			return;
 		}
 
@@ -367,7 +413,7 @@
 
 		// Apply transforms
 		scale.set(newScale);
-		translateGraph(translation, newTranslation);
+		translation.set(newTranslation);
 	}
 	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
@@ -375,7 +421,7 @@
 		const start = performance.now();
 		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
-		const startOffset = leftRight ? $translationX : $translationY;
+		const startOffset = leftRight ? $translation.x : $translation.y;
 		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
 		if (!activeIntervals[key]) {
@@ -384,9 +430,9 @@
 
 				if ($selected.size === 0) {
 					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					translateGraph(translation, {
-						x: leftRight ? movement : null,
-						y: leftRight ? null : movement
+					translation.set({
+						x: leftRight ? movement : 0,
+						y: leftRight ? 0 : movement
 					});
 				} else {
 					const delta = {
@@ -400,8 +446,7 @@
 
 						const groupBoxes = get(graph.groupBoxes);
 
-						if (groupName) groupBox = groupBoxes[groupName];
-
+						if (groupName) groupBox = groupBoxes.get(groupName);
 						if (groupBox) {
 							const nodeWidth = get(node.dimensions.width);
 							const nodeHeight = get(node.dimensions.height);
@@ -432,7 +477,7 @@
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault|self={onTouchStart}
-	on:keydown|preventDefault={handleKeyDown}
+	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	tabindex={0}
 >

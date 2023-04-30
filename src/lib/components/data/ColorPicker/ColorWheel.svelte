@@ -1,11 +1,22 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import type { Graph, CustomWritable, CSSColorString, RGBString, HSLString } from '$lib/types';
+	import type {
+		Graph,
+		CustomWritable,
+		CSSColorString,
+		RGBString,
+		HSLString,
+		Node
+	} from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
 	import { get } from 'svelte/store';
+	import { roundNum } from '$lib/utils';
 
 	const graph = getContext<Graph>('graph');
-	$: cursor = graph.cursor;
+	const node = getContext<Node>('node');
+
+	const rotation = node.rotation;
+	const cursor = graph.cursor;
 	$: cursorX = $cursor.x;
 	$: cursorY = $cursor.y;
 
@@ -28,8 +39,7 @@
 		const dimensions = get(graph.dimensions);
 		const scale = get(graph.transforms.scale);
 
-		const translationX = get(graph.transforms.translation.x);
-		const translationY = get(graph.transforms.translation.y);
+		const translation = get(graph.transforms.translation);
 
 		const scaled = calculateRelativeCursor(
 			{ clientX: left, clientY: top },
@@ -38,8 +48,7 @@
 			dimensions.width,
 			dimensions.height,
 			scale,
-			translationX,
-			translationY
+			translation
 		);
 
 		wheelTop = scaled.y;
@@ -57,17 +66,19 @@
 		const normalizedDistance = Math.min(distanceFromCenter, radius);
 		const angle = Math.atan2(dy, dx);
 
-		const normalizedX = radius + (dx / distanceFromCenter) * normalizedDistance;
-		const normalizedY = radius + (dy / distanceFromCenter) * normalizedDistance;
+		const nodeRotationInRadians = $rotation * (Math.PI / 180);
+		const rotatedAngle = angle - nodeRotationInRadians;
 
-		pickerX = normalizedX;
-		pickerY = normalizedY;
-
-		const hue = ((angle + Math.PI) / (2 * Math.PI)) * 360;
-		const saturation = (normalizedDistance / radius) * 100;
-		const pickedColor: CSSColorString = `hsl(${hue}, ${saturation}%, ${
+		const rotatedHue = (((rotatedAngle + Math.PI) / (2 * Math.PI)) * 360) % 360;
+		const adjustedHue =
+			rotatedHue >= 0 ? (rotatedHue > 360 ? 360 - rotatedHue : rotatedHue) : 360 + rotatedHue;
+		const saturation = roundNum((normalizedDistance / radius) * 100);
+		const pickedColor: CSSColorString = `hsl(${roundNum(adjustedHue)}, ${saturation}%, ${
 			50 + (100 - saturation) / 2
 		}%)`;
+		const picker = colorToPickerXY(pickedColor, size);
+		pickerX = picker.pickerX;
+		pickerY = picker.pickerY;
 		$parameterStore = pickedColor;
 	}
 	function downUp(node: HTMLDivElement) {
@@ -113,9 +124,6 @@
 
 		const pickerX = radius + Math.cos(angle) * normalizedDistance;
 		const pickerY = radius + Math.sin(angle) * normalizedDistance;
-
-		// const xValue = (hue / 360) * size;
-		// return { pickerX: xValue, pickerY: 0 };
 		return { pickerX, pickerY };
 	}
 
@@ -152,11 +160,15 @@
 			hue = 0;
 		} else if (max === r) {
 			hue = 60 * (((g - b) / delta) % 6);
+			if (hue < 0) {
+				hue += 360;
+			}
 		} else if (max === g) {
 			hue = 60 * ((b - r) / delta + 2);
 		} else {
 			hue = 60 * ((r - g) / delta + 4);
 		}
+
 		hue = Math.round(hue);
 
 		const lightness = (max + min) / 2;

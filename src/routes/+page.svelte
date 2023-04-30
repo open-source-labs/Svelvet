@@ -1,33 +1,30 @@
 <script lang="ts">
-	import { Svelvet, Node } from '$lib';
-	import CustomNode from '../example-components/CustomNode.svelte';
-	import CustomEdge from '../example-components/CustomEdge.svelte';
-	import InputNode from '../example-components/InputNode.svelte';
-	import { writable } from 'svelte/store';
-	import { setContext } from 'svelte';
-	let customNodeCount = writable(1);
-	let thisNodeCount = writable(3);
-	setContext('customNodeCount', customNodeCount);
+	import { Svelvet, Node, Anchor } from '$lib';
+	import { getContext } from 'svelte';
+	import Connector from '../example-components/Connector.svelte';
+	function addAndConnect(connect: (connections: string | number) => void) {
+		connect(totalNodes + 4);
+		totalNodes++;
+	}
+	let totalNodes = 0;
 </script>
 
 <body>
-	<Svelvet edgeStyle="step" edge={CustomEdge} TD theme="dark" zoom={0.6} minimap>
-		{#each { length: $customNodeCount } as _, i}
-			<CustomNode />
-		{/each}
-
-		{#each { length: $thisNodeCount } as _, i}
-			<Node on:duplicate={() => $thisNodeCount++} />
+	<Svelvet snapTo={40}>
+		<Connector />
+		<Node inputs={4} position={{ x: 600, y: 200 }} />
+		<Node inputs={5} position={{ x: 600, y: 600 }} />
+		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
+			<Anchor invisible />
+		</Node>
+		{#each { length: totalNodes } as node}
+			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 	</Svelvet>
 </body>
 
 <style>
 	body {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: gray;
 		width: 100vw;
 		height: 100vh;
 		margin: 0;

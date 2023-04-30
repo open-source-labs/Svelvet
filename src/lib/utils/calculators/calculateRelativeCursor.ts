@@ -1,3 +1,5 @@
+import type { Graph } from '$lib/types';
+
 export const calculateRelativeCursor = (
 	e: { clientX: number; clientY: number },
 	top: number,
@@ -5,8 +7,7 @@ export const calculateRelativeCursor = (
 	width: number,
 	height: number,
 	scale: number,
-	translationX: number,
-	translationY: number
+	translation: { x: number; y: number }
 ) => {
 	const { clientX, clientY } = e;
 	const scaleCapture = scale;
@@ -14,8 +15,8 @@ export const calculateRelativeCursor = (
 	const xRelativeToWrapper = clientX - left;
 	const yRelativeToWrapper = clientY - top;
 
-	const xOffsetDueToTranslation = translationX;
-	const yOffsetDueToTranslation = translationY;
+	const xOffsetDueToTranslation = translation.x;
+	const yOffsetDueToTranslation = translation.y;
 
 	const xOffsetDuetToScale = (width * (1 - scale)) / 2;
 	const yOffsetDuetToScale = (height * (1 - scale)) / 2;
@@ -28,3 +29,24 @@ export const calculateRelativeCursor = (
 
 	return { x: newCursorX, y: newCursorY };
 };
+import { get } from 'svelte/store';
+
+export function calculateRelativePosition(
+	dimensions: Graph['dimensions'],
+	transforms: Graph['transforms'],
+	position: { x: number; y: number }
+) {
+	const { top, left, width, height } = get(dimensions);
+	const scale = get(transforms.scale);
+	const translation = get(transforms.translation);
+	const scaled = calculateRelativeCursor(
+		{ clientX: position.x, clientY: position.y },
+		top,
+		left,
+		width,
+		height,
+		scale,
+		translation
+	);
+	return { scaled, scale };
+}

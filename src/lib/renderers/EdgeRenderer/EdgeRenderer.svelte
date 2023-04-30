@@ -6,11 +6,11 @@
 
 	const graph = getContext<Graph>('graph');
 
-	$: edges = graph.edges;
+	const edges = graph.edges;
 </script>
 
 <svg class="edges-wrapper">
-	{#each Object.entries($edges) as [edgeKey, edge] (edgeKey)}
+	{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
 		{@const CustomEdge = edge.component}
 		{#if CustomEdge}
 			<EdgeContext {edge}>

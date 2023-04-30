@@ -8,6 +8,8 @@ function calculateDotProduct(vector1: XYPair, vector2: XYPair) {
 export interface VectorPlusPosition extends XYPair {
 	direction: XYPair;
 }
+
+// This can absolutley be optimized
 export function calculateStepPath(
 	source: VectorPlusPosition,
 	target: VectorPlusPosition,
@@ -24,7 +26,7 @@ export function calculateStepPath(
 
 	const oppositeSource = multiply(source.direction, -1, -1);
 	const oppositeTarget = multiply(target.direction, -1, -1);
-	const perpendicularSource = { x: source.direction.y, y: source.direction.x };
+	const perpendicularSource = { x: Math.abs(source.direction.y), y: Math.abs(source.direction.x) };
 
 	const sourceDirectionDelta = multiply(
 		source.direction,
@@ -41,19 +43,26 @@ export function calculateStepPath(
 		Math.sign(sourceDirectionDelta.x) === -1 || Math.sign(sourceDirectionDelta.y) === -1;
 	const targetReaching =
 		Math.sign(targetDirectionDelta.x) === 1 || Math.sign(targetDirectionDelta.y) === 1;
-
+	const absoluteX = Math.abs(deltaX);
+	const absoluteY = Math.abs(deltaY);
 	const sourceBuffer = multiply(source.direction, buffer, buffer);
-	const targetBuffer = multiply(oppositeTarget, buffer, buffer);
+	const oppositeTargetBuffer = multiply(oppositeTarget, buffer, buffer);
+	const targetBuffer = multiply(target.direction, buffer, buffer);
 
-	const fullSource = multiply(source.direction, deltaX, deltaY);
-	const fullTarget = multiply(oppositeTarget, Math.abs(deltaX), Math.abs(deltaY));
+	const fullSource = multiply(source.direction, absoluteX, absoluteY);
+	const fullTarget = multiply(oppositeTarget, absoluteX, absoluteY);
 
-	const halfSource = multiply(source.direction, deltaX / 2, deltaY / 2);
-	const halfTarget = multiply(oppositeTarget, Math.abs(deltaX) / 2, Math.abs(deltaY) / 2);
+	const halfSource = multiply(source.direction, absoluteX / 2, absoluteY / 2);
+	const halfTarget = multiply(oppositeTarget, absoluteX / 2, absoluteY / 2);
 
 	const fullDelta = multiply(perpendicularSource, deltaX, deltaY);
 
 	const sourceFacingTarget = !crossing && !targetReaching && !sourceReaching;
+
+	const sourceToXBuffer = source.x + sourceBuffer.x;
+	const sourceToYBuffer = source.y + sourceBuffer.y;
+	const targetToXBuffer = target.x + targetBuffer.x;
+	const targetToYBuffer = target.y + targetBuffer.y;
 
 	if (sourceReaching) steps.push(sourceBuffer);
 
@@ -62,23 +71,11 @@ export function calculateStepPath(
 		steps.push(fullTarget);
 	} else if (sameDirection) {
 		if (!sourceReaching) {
-			steps.push(
-				multiply(
-					source.direction,
-					buffer + (deltaX > 0 ? deltaX : 0),
-					buffer + (deltaY > 0 ? deltaY : 0)
-				)
-			);
+			steps.push(multiply(source.direction, buffer + absoluteX, buffer + absoluteY));
 		}
 		steps.push(fullDelta);
 		if (!targetReaching) {
-			steps.push(
-				multiply(
-					oppositeTarget,
-					buffer + (deltaX > 0 ? 0 : Math.abs(deltaX)),
-					buffer + (deltaY > 0 ? 0 : Math.abs(deltaY))
-				)
-			);
+			steps.push(multiply(oppositeTarget, buffer + absoluteX, buffer + absoluteY));
 		}
 	} else if (sourceFacingTarget) {
 		steps.push(halfSource);
@@ -86,87 +83,59 @@ export function calculateStepPath(
 		steps.push(halfTarget);
 	} else if (sourceReaching && targetReaching) {
 		if (orthogonal) {
+			const xReach = Math.abs(sourceToXBuffer - targetToXBuffer);
+			const yReach = Math.abs(sourceToYBuffer - targetToYBuffer);
 			steps.push(
 				multiply(
 					target.direction,
-					Math.abs(deltaX) < buffer * 2
+					absoluteX < buffer * 2
 						? target.direction.x * (deltaX + target.direction.x * buffer)
-						: Math.abs(deltaX) + buffer,
-					Math.abs(deltaY) < buffer * 2
+						: absoluteX + buffer,
+					absoluteY < buffer * 2
 						? target.direction.y * (deltaY + target.direction.y * buffer)
-						: Math.abs(deltaY) + buffer
+						: absoluteY + buffer
 				)
 			);
-			steps.push(
-				multiply(
-					oppositeSource,
-					deltaX < 0 ? Math.abs(deltaX) + buffer : buffer - deltaX,
-					deltaY < 0 ? Math.abs(deltaY) + buffer : buffer - deltaY
-				)
-			);
+			steps.push(multiply(oppositeSource, xReach, yReach));
 		} else {
+			const xReach = Math.abs(sourceToXBuffer - targetToXBuffer);
+			const yReach = Math.abs(sourceToYBuffer - targetToYBuffer);
 			steps.push(multiply(perpendicularSource, deltaX / 2, deltaY / 2));
-			steps.push(
-				multiply(
-					target.direction,
-					deltaX > 0 ? -(deltaX - buffer * 2) : Math.abs(deltaX) + buffer * 2,
-					deltaY > 0 ? -(deltaY - buffer * 2) : Math.abs(deltaY) + buffer * 2
-				)
-			);
+			steps.push(multiply(target.direction, xReach, yReach));
 			steps.push(multiply(perpendicularSource, deltaX / 2, deltaY / 2));
 		}
 	} else if (sourceReaching) {
+		const xReach = Math.abs(sourceToXBuffer - target.x);
+		const yReach = Math.abs(sourceToYBuffer - target.y);
 		steps.push(
 			multiply(
 				oppositeTarget,
-				Math.abs(deltaX) < buffer * 2 ? Math.abs(deltaX) - buffer : Math.abs(deltaX) / 2,
-				Math.abs(deltaY) < buffer * 2 ? Math.abs(deltaY) - buffer : Math.abs(deltaY) / 2
+				absoluteX < buffer * 2 ? absoluteX - buffer : absoluteX / 2,
+				absoluteY < buffer * 2 ? absoluteY - buffer : absoluteY / 2
 			)
 		);
+		steps.push(multiply(oppositeSource, xReach, yReach));
 		steps.push(
-			multiply(
-				source.direction,
-				Math.abs(deltaX) < buffer * 2 ? deltaX - buffer : deltaX - buffer,
-				Math.abs(deltaY) < buffer * 2 ? deltaY - buffer : deltaY - buffer
-			)
-		);
-		steps.push(
-			multiply(
-				oppositeTarget,
-				Math.max(buffer, Math.abs(deltaX) / 2),
-				Math.max(buffer, Math.abs(deltaY) / 2)
-			)
+			multiply(oppositeTarget, Math.max(buffer, absoluteX / 2), Math.max(buffer, absoluteY / 2))
 		);
 	} else if (targetReaching) {
+		const xReach = Math.abs(targetToXBuffer - source.x);
+		const yReach = Math.abs(targetToYBuffer - source.y);
+		steps.push(
+			multiply(source.direction, Math.max(buffer, absoluteX / 2), Math.max(buffer, absoluteY / 2))
+		);
+		steps.push(multiply(target.direction, xReach, yReach));
 		steps.push(
 			multiply(
 				source.direction,
-				Math.max(buffer, Math.abs(deltaX) / 2),
-				Math.max(buffer, Math.abs(deltaY) / 2)
-			)
-		);
-		steps.push(
-			multiply(
-				target.direction,
-				Math.abs(deltaX) < buffer && Math.sign(deltaX) !== target.direction.x
-					? buffer - Math.abs(deltaX)
-					: Math.abs(deltaX) + buffer,
-				Math.abs(deltaY) < buffer && Math.sign(deltaY) !== target.direction.y
-					? buffer - Math.abs(deltaY)
-					: Math.abs(deltaY) + buffer
-			)
-		);
-		steps.push(
-			multiply(
-				source.direction,
-				Math.abs(deltaX) < buffer * 2 ? deltaX - buffer : Math.abs(deltaX) / 2,
-				Math.abs(deltaY) < buffer * 2 ? deltaY - buffer : Math.abs(deltaY) / 2
+				absoluteX < buffer * 2 ? deltaX - buffer : absoluteX / 2,
+				absoluteY < buffer * 2 ? deltaY - buffer : absoluteY / 2
 			)
 		);
 	}
 
 	if (targetReaching) {
-		steps.push(targetBuffer);
+		steps.push(oppositeTargetBuffer);
 	}
 
 	return steps;

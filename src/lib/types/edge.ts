@@ -1,5 +1,13 @@
 import type { Writable, Readable } from 'svelte/store';
-import type { Anchor, CSSColorString, EmValue, EdgeKey, CustomWritable } from '.';
+import type {
+	Anchor,
+	CSSColorString,
+	EmValue,
+	EdgeKey,
+	CustomWritable,
+	XYPair,
+	Direction
+} from '.';
 import type { PixelValue, RemValue } from '.';
 import type { ComponentType } from 'svelte';
 export type EdgeStyle = 'straight' | 'step' | 'bezier';
@@ -7,8 +15,8 @@ export type EdgeStyle = 'straight' | 'step' | 'bezier';
 // With writable properties
 export type WritableEdge = {
 	id: EdgeKey;
-	source: Anchor | null;
-	target: Anchor | null;
+	source: Anchor | CursorAnchor;
+	target: Anchor | CursorAnchor;
 	type: Writable<EdgeStyle | null>;
 	color:
 		| Writable<CSSColorString | null>
@@ -20,6 +28,32 @@ export type WritableEdge = {
 	disconnect?: true;
 	component: ComponentType | null;
 };
+
+interface CursorNode {
+	rotating: Writable<boolean>;
+	position: Readable<XYPair>;
+	dimensions: {
+		width: Writable<number>;
+		height: Writable<number>;
+	};
+}
+
+export interface CursorAnchor {
+	id: null;
+	position: Readable<XYPair>;
+	offset: Writable<XYPair>;
+	connected: Writable<Set<Anchor>>;
+	dynamic: Writable<boolean>;
+	edge: null;
+	edgeColor: Writable<null>;
+	direction: Writable<Direction>;
+	inputKey: null;
+	type: 'output';
+	moving: Readable<boolean>;
+	store: null;
+	rotation: Readable<number>;
+	node: CursorNode;
+}
 
 export interface EdgeLabel {
 	text: Writable<string>;
