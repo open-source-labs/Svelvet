@@ -1,8 +1,8 @@
 import { derived, writable } from 'svelte/store';
-import type { Graph, Node, GroupBox, EdgeKey, GraphKey, GroupKey } from '$lib/types';
-import { createStore } from './createStore';
+import type { Graph, Node, GroupBox, GraphKey, GroupKey } from '$lib/types';
+import { createStore, createEdgeStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
-import type { WritableEdge, NodeKey } from '$lib/types';
+import type { NodeKey } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
 import type { GraphConfig } from '$lib/types';
@@ -19,28 +19,28 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		edge
 	} = config;
 
-	const translation = {
-		x: writable(initialTranslation?.x || 0),
-		y: writable(initialTranslation?.y || 0)
-	};
+	const translation = writable({
+		x: initialTranslation?.x || 0,
+		y: initialTranslation?.y || 0
+	});
 
 	const dimensions = writable({ top: 0, left: 0, width: 0, height: 0, bottom: 0, right: 0 });
 
 	const scale = writable(zoom);
 
 	const nodes = createStore<Node, NodeKey>();
-	const bounds = createBoundsStore(nodes, dimensions, scale, translation.x, translation.y);
+	const bounds = createBoundsStore(nodes, dimensions, scale, translation);
 
 	const center = derived(
-		[dimensions, translation.x, translation.y, scale],
-		([$dimensions, $translationX, $translationY, $scale]) => {
-			return calculateViewportCenter($dimensions, $translationX, $translationY, $scale);
+		[dimensions, translation, scale],
+		([$dimensions, $translation, $scale]) => {
+			return calculateViewportCenter($dimensions, $translation, $scale);
 		}
 	);
 	const graph: Graph = {
 		id,
 		nodes,
-		edges: createStore<WritableEdge, EdgeKey>(),
+		edges: createEdgeStore(),
 		transforms: {
 			translation,
 			scale

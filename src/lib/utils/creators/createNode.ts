@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
-import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey } from '$lib/types';
+import type { Node, NodeConfig, Anchor, AnchorKey, NodeKey, Direction } from '$lib/types';
 import { createStore } from './createStore';
+import { get } from 'svelte/store';
 
 export function createNode(userNode: NodeConfig): Node {
 	const {
@@ -21,6 +22,13 @@ export function createNode(userNode: NodeConfig): Node {
 		userNode;
 	const anchorStore = createStore<Anchor, AnchorKey>();
 
+	const recalculateAnchors = (direction: Direction = 'self') => {
+		get(anchorStore).forEach((anchor) => {
+			if (direction === 'self' || get(anchor.direction) === direction) {
+				anchor.recalculatePosition();
+			}
+		});
+	};
 	const nodeKey: NodeKey =
 		typeof id === 'string' && id.slice(0, 2) === 'N-' ? (id as NodeKey) : `N-${id}`;
 
@@ -41,6 +49,7 @@ export function createNode(userNode: NodeConfig): Node {
 		outputs: writable(outputs),
 		connectable: writable(true),
 		deletable: writable(true),
+		recalculateAnchors,
 		rotation: writable(rotation || 0),
 		hideable: writable(true),
 		moving: writable(false),

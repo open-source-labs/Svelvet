@@ -12,16 +12,17 @@
 	export let iconColor: CSSColorString | null = null;
 	export let corner = 'SW';
 
-	const graph: Graph = getContext<Graph>('graph');
+	const transforms = getContext<Graph['transforms']>('transforms');
+	const dimensions = getContext<Graph['dimensions']>('dimensions');
+	const locked = getContext<Graph['locked']>('locked');
+	const groups = getContext<Graph['groups']>('groups');
+	const bounds = getContext<Graph['bounds']>('bounds');
 	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
 
-	const { transforms, locked, groups, dimensions } = graph;
 	const { translation } = transforms;
 
 	const hidden = $groups.hidden.nodes;
-	const translationX = translation.x;
-	const translationY = translation.y;
-	const bounds = graph.bounds;
+
 	const nodeBounds = bounds.nodeBounds;
 
 	function unhideAll() {
@@ -29,17 +30,16 @@
 	}
 
 	function zoomIn() {
-		zoomAndTranslate(-1, graph, increment);
+		zoomAndTranslate(-1, dimensions, transforms, increment);
 	}
 
 	function zoomOut() {
-		zoomAndTranslate(1, graph, increment);
+		zoomAndTranslate(1, dimensions, transforms, increment);
 	}
 
 	function fitView() {
 		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
-		translationX.set(x || 0);
-		translationY.set(y || 0);
+		translation.set({ x: x || 0, y: y || 0 });
 		transforms.scale.set(scale || 1);
 	}
 

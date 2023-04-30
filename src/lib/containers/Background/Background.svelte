@@ -18,7 +18,7 @@
 	// Import relevant data from store
 	const { transforms } = graph;
 	const { scale, translation } = transforms;
-	const { x: translateX, y: translateY } = translation;
+	$: graphTranslation = $translation;
 
 	// Update dot radius and perceived grid width when scale changes
 	$: gridScale = $scale * gridWidth;
@@ -34,8 +34,8 @@
 	$: {
 		svgWidth = backgroundWrapper?.offsetWidth || 0;
 		svgHeight = backgroundWrapper?.offsetHeight || 0;
-		backgroundOffsetX = ((svgWidth + radius) * (1 - $scale)) / 2 + $translateX;
-		backgroundOffsetY = ((svgHeight + radius) * (1 - $scale)) / 2 + $translateY;
+		backgroundOffsetX = ((svgWidth + radius) * (1 - $scale)) / 2 + graphTranslation.x;
+		backgroundOffsetY = ((svgHeight + radius) * (1 - $scale)) / 2 + graphTranslation.y;
 	}
 
 	// Place dot in the center of the grid

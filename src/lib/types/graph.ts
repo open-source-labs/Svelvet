@@ -102,9 +102,6 @@ export interface Group {
 }
 
 export interface GraphTransforms {
-	translation: {
-		x: Writable<number>;
-		y: Writable<number>;
-	};
+	translation: Writable<XYPair>;
 	scale: Writable<number>;
 }

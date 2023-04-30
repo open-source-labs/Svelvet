@@ -8,6 +8,7 @@
 	import type { Graph } from '$lib/types';
 
 	const graph = getContext<Graph>('graph');
+	const snapTo = getContext<number>('snapTo');
 
 	export let isMovable: boolean;
 
@@ -17,7 +18,7 @@
 	const cursor = graph.cursor;
 
 	$: if ($activeGroup && $tracking) {
-		moveNodes(graph);
+		moveNodes(graph, snapTo);
 	}
 
 	function handleGroupClicked(event: CustomEvent) {

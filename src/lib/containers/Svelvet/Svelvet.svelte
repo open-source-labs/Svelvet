@@ -21,7 +21,7 @@
 	export let mermaid = '';
 	export let theme: Theme = 'light';
 	export let id: number | string = 0;
-	export let snapTo = 1;
+	export let snapTo = 0;
 	export let zoom = 1;
 	export let TD = false;
 	export let editable = false;

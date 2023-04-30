@@ -1,26 +1,23 @@
 <script lang="ts">
-	import type {
-		CSSColorString,
-		Direction,
-		EdgeStyle,
-		Graph,
-		ThemeGroup,
-		WritableEdge
-	} from '$lib/types';
+	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
+	import type { CursorAnchor, ThemeGroup, WritableEdge } from '$lib/types';
+	import { get } from 'svelte/store';
 	import { getContext } from 'svelte';
-	import { readable, writable } from 'svelte/store';
 	import { EDGE_WIDTH } from '$lib/constants';
-	import { roundNum, rotateVector } from '$lib/utils/helpers';
-	import { calculateStepPath } from '$lib/utils/calculators';
+	import { calculateStepPath, calculateRadius } from '$lib/utils/calculators';
 	import { onMount, onDestroy } from 'svelte';
-	import { directionVectors } from '$lib/constants/math';
-	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
+	import { directionVectors, stepBuffer } from '$lib/constants';
+	import {
+		buildArcStringKey,
+		constructArcString,
+		buildPath,
+		rotateVector
+	} from '$lib/utils/helpers';
 	import type { Writable } from 'svelte/store';
 
-	const graph = getContext<Graph>('graph');
+	const edgeStore = getContext<Graph['edges']>('edgeStore');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
-	const { cursor } = graph;
 
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let width: number = EDGE_WIDTH;
@@ -35,38 +32,54 @@
 	export let edgeClick: null | (() => void) = null;
 	export let targetColor: CSSColorString | null = null;
 
+	const source = edge.source;
+	const target = edge.target;
+	const sourceDirection = source.direction;
+	const targetDirection = target.direction;
+	const sourceRotation = source.rotation;
+	const targetRotation = target.rotation;
+	const sourcePositionStore = source.position;
+	const targetPositionStore = target.position;
+	const sourceDynamic = source.dynamic;
+	const targetDynamic = target.dynamic;
+	const sourceMoving = source.moving;
+	const targetMoving = target.moving;
+	const sourceNodePosition = source.node?.position;
+	const targetNodePosition = target.node?.position;
+	const edgeType = edge.type;
+	const edgeKey = edge.id;
+
 	let path: string;
 	let animationFrameId: number;
 	let DOMPath: SVGPathElement; // The SVG path element used for calculating the midpoint of the curve for labels
 	let pathMidPointX = 0;
 	let pathMidPointY = 0;
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
+	let prefersVertical = false;
+	let sourceAbove = false;
+	let sourceLeft = false;
 
-	const stepBuffer = 40; // This is the buffer around the nodes that a step path should take
+	$: dynamic = $sourceDynamic || $targetDynamic;
 
-	$: edgeKey = edge && edge.id;
-	$: source = edge && edge.source;
-	$: target = edge && edge.target;
 	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
 	$: edgeLabel = edge && edge.label?.text;
-	$: edgeType = edge && edge?.type;
 	$: finalColor = color || $edgeColor || $themeStore.edge;
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
 
-	$: sourceRotation = source?.rotation;
-	$: targetRotation = target?.rotation;
+	$: sourcePosition = $sourcePositionStore;
+	$: targetPosition = $targetPositionStore;
 
 	// The coordinates of the source and target anchors
 	// If there is no source or target, use the cursor position
-	$: sourceX = (source && source.position.x) || readable($cursor.x);
-	$: sourceY = (source && source.position.y) || readable($cursor.y);
-	$: targetX = (target && target.position.x) || readable($cursor.x);
-	$: targetY = (target && target.position.y) || readable($cursor.y);
+	$: sourceX = sourcePosition.x;
+	$: sourceY = sourcePosition.y;
+	$: targetX = targetPosition.x;
+	$: targetY = targetPosition.y;
 
 	// The distances between the points
-	$: deltaX = roundNum($targetX - $sourceX);
-	$: deltaY = roundNum($targetY - $sourceY);
+	$: deltaX = targetX - sourceX;
+	$: deltaY = targetY - sourceY;
 	$: anchorWidth = Math.abs(deltaX);
 	$: anchorHeight = Math.abs(deltaY);
 
@@ -74,31 +87,23 @@
 	$: maxCurveDisplaceX = Math.max(30, Math.min(600, anchorWidth / 2));
 	$: maxCurveDisplaceY = Math.max(30, Math.min(600, anchorHeight / 2));
 
-	// The directionality of the source and target anchors
-	$: sourceDirection = source?.direction || writable('self' as Direction);
-	$: targetDirection = target?.direction || writable('self' as Direction);
-
 	// Helper XY pair to offset the control points
 	$: sourceControlVector = rotateVector(directionVectors[$sourceDirection], $sourceRotation || 0);
 	$: targetControlVector = rotateVector(directionVectors[$targetDirection], $targetRotation || 0);
 
 	// Calculating the control points for the bezier curve
-	$: sourceControlX = roundNum($sourceX + sourceControlVector.x * maxCurveDisplaceX);
-	$: sourceControlY = roundNum($sourceY + sourceControlVector.y * maxCurveDisplaceY);
-	$: targetControlX = roundNum($targetX + targetControlVector.x * maxCurveDisplaceX);
-	$: targetControlY = roundNum($targetY + targetControlVector.y * maxCurveDisplaceY);
+	$: sourceControlX = sourceX + sourceControlVector.x * maxCurveDisplaceX;
+	$: sourceControlY = sourceY + sourceControlVector.y * maxCurveDisplaceY;
+	$: targetControlX = targetX + targetControlVector.x * maxCurveDisplaceX;
+	$: targetControlY = targetY + targetControlVector.y * maxCurveDisplaceY;
 
 	// Constructing the control point element of the path string
 	$: controlPointString = `C ${sourceControlX}, ${sourceControlY} ${targetControlX}, ${targetControlY}`;
 
 	// The full SVG path string
 	$: if (!step || edgeKey === 'cursor' || $edgeType === 'bezier') {
-		path = `M ${$sourceX}, ${$sourceY} ${!straight && controlPointString} ${$targetX}, ${$targetY}`;
+		path = `M ${sourceX}, ${sourceY} ${!straight && controlPointString} ${targetX}, ${targetY}`;
 	}
-
-	// Is the source or target moving?
-	$: sourceMoving = source?.moving || readable(false);
-	$: targetMoving = target?.moving || readable(false);
 
 	// We only want to recalculate the path midpoints if the source or target is moving
 	// And we only want to recalculate the path midpoints if there is a label
@@ -108,6 +113,49 @@
 	} else if (tracking && !$sourceMoving && !$targetMoving && edgeKey !== 'cursor') {
 		tracking = false;
 		cancelAnimationFrame(animationFrameId);
+	}
+
+	$: if (dynamic && source.node && target.node) {
+		const nodeXDelta = $targetNodePosition.x - $sourceNodePosition.x;
+		const nodeYDelta = $targetNodePosition.y - $sourceNodePosition.y;
+		sourceAbove = nodeYDelta > 0;
+		sourceLeft = nodeXDelta > 0;
+		let borderDeltaY;
+		let borderDeltaX;
+		if (sourceAbove) {
+			const sourceHeight = get(source.node.dimensions.height);
+			const sourceBottom = $sourceNodePosition.y + sourceHeight;
+			borderDeltaY = $targetNodePosition.y - sourceBottom;
+		} else {
+			const targetHeight = get(target.node.dimensions.height);
+			const targetBottom = $targetNodePosition.y + targetHeight;
+			borderDeltaY = $sourceNodePosition.y - targetBottom;
+		}
+		if (sourceLeft) {
+			const sourceWidth = get(source.node.dimensions.width);
+			const sourceRight = $sourceNodePosition.x + sourceWidth;
+			borderDeltaX = $targetNodePosition.x - sourceRight;
+		} else {
+			const targetWidth = get(target.node.dimensions.width);
+			const targetRight = $targetNodePosition.x + targetWidth;
+			borderDeltaX = $sourceNodePosition.x - targetRight;
+		}
+
+		prefersVertical = borderDeltaY > borderDeltaX;
+	}
+
+	$: if (dynamic) {
+		let newSourceDirection: Direction;
+		let newTargetDirection: Direction;
+		if (prefersVertical) {
+			newSourceDirection = sourceAbove ? 'south' : 'north';
+			newTargetDirection = sourceAbove ? 'north' : 'south';
+		} else {
+			newSourceDirection = sourceLeft ? 'east' : 'west';
+			newTargetDirection = sourceLeft ? 'west' : 'east';
+		}
+		if ($sourceDynamic) $sourceDirection = newSourceDirection;
+		if ($targetDynamic) $targetDirection = newTargetDirection;
 	}
 
 	// Track the path in sync with browser animation frames
@@ -137,7 +185,9 @@
 	});
 
 	function destroy() {
-		graph.edges.delete(edgeKey);
+		if (source.id === null || target.id === null) return;
+		const edgeKey = edgeStore.match(source, target);
+		edgeStore.delete(edgeKey[0]);
 		source?.connected.update((connected) => {
 			if (target) connected.delete(target);
 			return connected;
@@ -150,15 +200,16 @@
 
 	$: if (step && edgeKey !== 'cursor' && !($edgeType && $edgeType === 'bezier')) {
 		const sourceObject = {
-			x: $sourceX,
-			y: $sourceY,
+			x: sourceX,
+			y: sourceY,
 			direction: directionVectors[$sourceDirection]
 		};
 		const targetObject = {
-			x: $targetX,
-			y: $targetY,
+			x: targetX,
+			y: targetY,
 			direction: directionVectors[$targetDirection]
 		};
+
 		const steps = calculateStepPath(sourceObject, targetObject, stepBuffer);
 
 		const buildArcStringIfNeeded = (
@@ -184,10 +235,10 @@
 				const nextStep = steps[index + 1] || { x: 0, y: 0 };
 				const previousStep = steps[index - 1] || { x: 0, y: 0 };
 
-				const radiusX = calculateRadius(step.x, nextStep.x);
-				const radiusY = calculateRadius(nextStep.y, step.y);
-				const previousRadiusX = calculateRadius(previousStep.x, step.x);
-				const previousRadiusY = calculateRadius(previousStep.y, step.y);
+				const radiusX = calculateRadius(step.x, nextStep.x, cornerRadius);
+				const radiusY = calculateRadius(nextStep.y, step.y, cornerRadius);
+				const previousRadiusX = calculateRadius(previousStep.x, step.x, cornerRadius);
+				const previousRadiusY = calculateRadius(previousStep.y, step.y, cornerRadius);
 				const previousRadius = Math.min(previousRadiusX, previousRadiusY);
 				const radius = Math.min(radiusX, radiusY);
 
@@ -201,54 +252,46 @@
 			}
 
 			return buildPath(string, xStep, yStep, arcString);
-		}, `M ${$sourceX}, ${$sourceY}`);
+		}, `M ${sourceX}, ${sourceY}`);
 	}
-
-	const buildPath = (string: string, xStep: number, yStep: number, arcString: string) =>
-		string + ` l ${xStep} ${yStep} ` + arcString;
-
-	const calculateRadius = (value1: number, value2: number) =>
-		Math.min(Math.abs(value1 || value2) / 2, cornerRadius);
 </script>
 
-{#if source || target}
+<path
+	bind:this={DOMPath}
+	class:cursor={edgeKey === 'cursor'}
+	on:mousedown={edgeClick}
+	style:cursor={edgeClick ? 'pointer' : 'move'}
+	class="target"
+	id={edgeKey + '-target'}
+	style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
+	d={path}
+	style:stroke-width={width + 8 + 'px'}
+/>
+<slot {path} {destroy}>
 	<path
-		bind:this={DOMPath}
-		class:cursor={edgeKey === 'cursor'}
-		on:mousedown={edgeClick}
-		style:cursor={edgeClick ? 'pointer' : 'move'}
-		class="target"
-		id={edgeKey + '-target'}
-		style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
+		class="edge"
+		id={edgeKey}
+		class:animate
 		d={path}
-		style:stroke-width={width + 8 + 'px'}
+		style:stroke={finalColor}
+		style:stroke-width={width + 'px'}
 	/>
-	<slot {path} {destroy}>
-		<path
-			class="edge"
-			id={edgeKey}
-			class:animate
-			d={path}
-			style:stroke={finalColor}
-			style:stroke-width={width + 'px'}
-		/>
-	</slot>
+</slot>
 
-	{#if renderLabel}
-		<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
-			<span class="label-wrapper">
-				<slot name="label">
-					<div
-						class="default-label"
-						style:background-color={labelColor || $themeStore.node}
-						style:color={textColor || $themeStore.text}
-					>
-						{labelText}
-					</div>
-				</slot>
-			</span>
-		</foreignObject>
-	{/if}
+{#if renderLabel}
+	<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
+		<span class="label-wrapper">
+			<slot name="label">
+				<div
+					class="default-label"
+					style:background-color={labelColor || $themeStore.node}
+					style:color={textColor || $themeStore.text}
+				>
+					{labelText}
+				</div>
+			</slot>
+		</span>
+	</foreignObject>
 {/if}
 
 <style>

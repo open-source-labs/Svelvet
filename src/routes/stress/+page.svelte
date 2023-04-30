@@ -5,9 +5,10 @@
 <body>
 	<div class="wrapper">
 		<Svelvet width={800} height={500} theme="dark" minimap controls>
-			{#each { length: 150 } as _, i}
+			{#each { length: 200 } as _, i}
 				<Node
-					position={{ x: Math.random() * 1000, y: Math.random() * 1000 }}
+					position={{ x: Math.random() * 4000, y: Math.random() * 4000 }}
+					connections={[Math.floor(Math.random() * 200)]}
 					inputs={1}
 					outputs={1}
 				/>

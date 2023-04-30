@@ -7,13 +7,17 @@
 		GroupKey,
 		Connections,
 		CSSColorString,
-		InitialDimensions
+		InitialDimensions,
+		NodeKey,
+		Anchor,
+		AnchorKey
 	} from '$lib/types';
 	import { createNode } from '$lib/utils';
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
 	import { get } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
+	import { setContext } from 'svelte';
 
 	const graph = getContext<Graph>('graph');
 	const { nodes } = graph;
@@ -44,6 +48,9 @@
 	export let connections: Connections = [];
 	export let useDefaults = false;
 	export let center = false;
+	export let dynamic = false;
+
+	setContext('dynamic', dynamic);
 
 	let node: NodeType;
 	const group: GroupKey = getContext('group');
@@ -109,15 +116,45 @@
 			.fill(null)
 			.map(() => []);
 		let currentAnchor = 0;
+
 		connectionsArray.forEach((connection) => {
 			currentAnchor = currentAnchor % outputs;
-
 			processedConnections[currentAnchor].push(connection);
 			currentAnchor++;
 		});
 
 		return processedConnections.reverse();
 	}
+
+	function connect(connections: number | string | Connections) {
+		if (!node) return;
+		const adjustedConnections = Array.isArray(connections) ? connections : [connections];
+		const processedConnections = processConnections(adjustedConnections as Connections);
+		node.connections.set(processedConnections);
+	}
+
+	function disconnect(connections: number | string | Connections) {
+		if (!node) return;
+		const adjustedConnections = Array.isArray(connections) ? connections : [connections];
+
+		adjustedConnections.forEach((connection) => {
+			const [nodeId, anchorId] = Array.isArray(connection) ? connection : [connection, null];
+			const nodeKey: NodeKey = `N-${nodeId}`;
+			const otherNode = graph.nodes.get(nodeKey);
+			if (!otherNode) return;
+			let specificAnchor: Anchor | null = null;
+			const anchorKey: AnchorKey | null = anchorId ? `A-${anchorId}/${nodeKey}` : null;
+			if (anchorKey) {
+				specificAnchor = otherNode.anchors.get(anchorKey);
+			}
+			const matchingEdgeKeys = graph.edges.match(node, otherNode, specificAnchor);
+			if (matchingEdgeKeys.length)
+				graph.edges.delete(matchingEdgeKeys[matchingEdgeKeys.length - 1]);
+		});
+	}
+
+	setContext('connect', connect);
+	setContext('disconnect', disconnect);
 
 	// All these functions below essentially enable data binding to the props
 	// We should not recommend developers utilize this, but it is a nice feature
@@ -165,7 +202,7 @@
 	}
 </script>
 
-{#if node && $nodes[node.id]}
+{#if node && $nodes.get(node.id)}
 	<InternalNode
 		{center}
 		isDefault={isDefault || useDefaults}
@@ -177,8 +214,17 @@
 		on:nodeReleased
 		on:duplicate
 		{node}
+		nodeStore={graph.nodes}
+		locked={graph.locked}
+		groups={graph.groups}
+		maxZIndex={graph.maxZIndex}
+		centerPoint={graph.center}
+		cursor={graph.cursor}
+		activeGroup={graph.activeGroup}
+		editing={graph.editing}
+		initialNodePositions={graph.initialNodePositions}
 	>
-		<slot {selected} {grabHandle} {node} {destroy}>
+		<slot {selected} {grabHandle} {disconnect} {connect} {node} {destroy}>
 			<DefaultNode {selected} on:connection on:disconnection />
 		</slot>
 	</InternalNode>

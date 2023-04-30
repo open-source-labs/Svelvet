@@ -12,13 +12,21 @@
 	export let node: Node;
 	export let isDefault: boolean;
 	export let center: boolean;
+	export let nodeStore: Graph['nodes'];
+	export let locked: Graph['locked'];
+	export let groups: Graph['groups'];
+	export let maxZIndex: Graph['maxZIndex'];
+	export let centerPoint: Graph['center'];
+	export let cursor: Graph['cursor'];
+	export let initialNodePositions: Graph['initialNodePositions'];
+	export let activeGroup: Graph['activeGroup'];
+	export let editing: Graph['editing'];
 
 	const position = node.position;
 	const widthStore = node.dimensions.width;
 	const heightStore = node.dimensions.height;
 
 	$: actualPosition = $position;
-	$: maxZIndex = graph.maxZIndex;
 	$: id = node.id;
 	$: editable = node.editable;
 	$: nodeLock = node.locked;
@@ -31,7 +39,6 @@
 	$: borderWidth = node.borderWidth;
 	$: rotation = node.rotation;
 
-	const graph: Graph = getContext<Graph>('graph');
 	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const mounted = getContext<Writable<number>>('mounted');
 	const duplicate = getContext<Writable<boolean>>('duplicate');
@@ -45,7 +52,6 @@
 
 	let DOMnode: HTMLElement;
 
-	const { locked, nodes: nodeStore, groups } = graph;
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 	const dispatch = createEventDispatcher();
 
@@ -55,12 +61,6 @@
 	$: selected = $selectedNodes.has(node);
 	$: hiddenNodes = hiddenNodesGroup.nodes;
 	$: hidden = $hiddenNodes.has(node);
-
-	$: editing = graph.editing;
-	$: activeGroup = graph.activeGroup;
-	$: cursor = graph.cursor;
-	$: initialNodePositions = graph.initialNodePositions;
-	$: centerPoint = graph.center;
 
 	// If the node is selected and the duplicate key pair is pressed
 	// Dispatch the duplicate event
@@ -117,7 +117,7 @@
 		if (e.key === 'Enter') {
 			toggleSelected();
 		} else if (e.key === 'Backspace') {
-			delete $nodeStore[id];
+			$nodeStore.delete(node.id);
 			$nodeStore = $nodeStore;
 		}
 	}
@@ -263,6 +263,10 @@
 	>
 		{#if !collapsed}
 			<slot {grabHandle} {selected} {destroy} />
+			<div id={`anchors-west-${node.id}`} class="anchors left" />
+			<div id={`anchors-east-${node.id}`} class="anchors right" />
+			<div id={`anchors-north-${node.id}`} class="anchors top" />
+			<div id={`anchors-south-${node.id}`} class="anchors bottom" />
 		{/if}
 	</div>
 {/if}
@@ -277,6 +281,47 @@
 		align-items: center;
 		will-change: top, left;
 		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
+	}
+	.anchors {
+		/* outline: solid 1px red; */
+		display: flex;
+		position: absolute;
+		justify-content: center;
+		align-items: center;
+		z-index: 1;
+		pointer-events: none;
+	}
+	.top,
+	.bottom {
+		width: 100%;
+		justify-content: space-around;
+	}
+
+	.top {
+		transform: translate(0px, -50%);
+		top: 0px;
+	}
+
+	.bottom {
+		transform: translate(0px, 50%);
+		bottom: 0px;
+	}
+
+	.left,
+	.right {
+		height: 100%;
+		flex-direction: column;
+		justify-content: space-around;
+	}
+
+	.left {
+		transform: translate(-50%);
+		left: 0px;
+	}
+
+	.right {
+		transform: translate(50%);
+		right: 0px;
 	}
 
 	.locked {

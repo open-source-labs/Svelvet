@@ -8,16 +8,17 @@
 	const graph = getContext<Graph>('graph');
 	const transforms = graph.transforms;
 	const scale = transforms.scale;
-	const translationX = transforms.translation.x;
-	const translationY = transforms.translation.y;
+	const translation = transforms.translation;
 	const cursor = graph.cursor;
 
 	export let isMovable: boolean;
 	let animationFrameId: number;
 	let moving = false;
 
+	$: graphTranslation = $translation;
+
 	// Reactive statement to update the transform attribute of the wrapper
-	$: transform = `translate(${$translationX}px, ${$translationY}px) scale(${$scale})`;
+	$: transform = `translate(${graphTranslation.x}px, ${graphTranslation.y}px) scale(${$scale})`;
 
 	$: if (isMovable && !moving) {
 		moving = true;
@@ -28,11 +29,7 @@
 	}
 
 	function translate() {
-		[$translationX, $translationY] = updateTranslation(
-			get(initialClickPosition),
-			$cursor,
-			transforms
-		);
+		$translation = updateTranslation(get(initialClickPosition), $cursor, transforms);
 		animationFrameId = requestAnimationFrame(translate);
 	}
 </script>
