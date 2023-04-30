@@ -21,6 +21,9 @@
 	const nodeStore = getContext<Graph['nodes']>('nodeStore');
 	const graphEdge = getContext<ComponentType>('graphEdge');
 
+	const raiseEdgesNode = getContext('raiseEdgesNode');
+	const edgesAboveNode = getContext('edgesAboveNode');
+
 	export let bgColor: CSSColorString | null = null;
 
 	export let id: string | number = 0;
@@ -240,6 +243,7 @@
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+
 		if (disconnect) edgeConfig.disconnect = true;
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		// Create a temporary edge to track the cursor
@@ -323,6 +327,7 @@
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		if (!source.node || !target.node) return;

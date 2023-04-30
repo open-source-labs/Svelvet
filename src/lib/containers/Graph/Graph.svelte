@@ -4,15 +4,8 @@
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
-	import type {
-		ThemeGroup,
-		Graph,
-		GroupBox,
-		GraphDimensions,
-		CSSColorString,
-		Connections
-	} from '$lib/types';
-	import type { Arrow, GroupKey, Group, CursorAnchor, XYPair } from '$lib/types';
+	import type { ThemeGroup, Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
+	import type { Arrow, GroupKey, Group, CursorAnchor } from '$lib/types';
 	import { isArrow } from '$lib/types';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
@@ -74,6 +67,7 @@
 		store: null,
 		rotation: readable(0),
 		node: {
+			zIndex: writable(Infinity),
 			rotating: writable(false),
 			position: graph.cursor,
 			dimensions: { width: writable(0), height: writable(0) }

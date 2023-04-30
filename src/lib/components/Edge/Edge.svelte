@@ -254,45 +254,66 @@
 			return buildPath(string, xStep, yStep, arcString);
 		}, `M ${sourceX}, ${sourceY}`);
 	}
+
+	$: sourceZIndex = source.node.zIndex || 0;
+	$: targetZIndex = target.node.zIndex || 0;
+	$: maxZIndex = Math.max($sourceZIndex, $targetZIndex);
+	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
+	const edgesAboveNode = getContext('edgesAboveNode');
+
+	$: zIndex =
+		edgesAboveNode === 'all'
+			? 100000
+			: edgesAboveNode
+			? maxZIndex
+			: raiseEdgesOnSelect === true
+			? maxZIndex - 1
+			: raiseEdgesOnSelect === 'source'
+			? $sourceZIndex - 1
+			: raiseEdgesOnSelect === 'target'
+			? $targetZIndex - 1
+			: 0;
 </script>
 
-<path
-	bind:this={DOMPath}
-	class:cursor={edgeKey === 'cursor'}
-	on:mousedown={edgeClick}
-	style:cursor={edgeClick ? 'pointer' : 'move'}
-	class="target"
-	id={edgeKey + '-target'}
-	style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
-	d={path}
-	style:stroke-width={width + 8 + 'px'}
-/>
-<slot {path} {destroy}>
+<svg class="edges-wrapper" style:z-index={zIndex}>
 	<path
-		class="edge"
-		id={edgeKey}
-		class:animate
+		bind:this={DOMPath}
+		class:cursor={edgeKey === 'cursor'}
+		on:mousedown={edgeClick}
+		style:cursor={edgeClick ? 'pointer' : 'move'}
+		class="target"
+		id={edgeKey + '-target'}
+		style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
 		d={path}
-		style:stroke={finalColor}
-		style:stroke-width={width + 'px'}
+		style:stroke-width={width + 8 + 'px'}
 	/>
-</slot>
+	<slot {path} {destroy}>
+		<path
+			class="edge"
+			id={edgeKey}
+			class:animate
+			d={path}
+			style:stroke={finalColor}
+			style:stroke-width={width + 'px'}
+		/>
+	</slot>
 
-{#if renderLabel}
-	<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
-		<span class="label-wrapper">
-			<slot name="label">
-				<div
-					class="default-label"
-					style:background-color={labelColor || $themeStore.node}
-					style:color={textColor || $themeStore.text}
-				>
-					{labelText}
-				</div>
-			</slot>
-		</span>
-	</foreignObject>
-{/if}
+	{#if renderLabel}
+		<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
+			<span class="label-wrapper">
+				<slot name="label">
+					<div
+						class="default-label"
+						style:background-color={labelColor || $themeStore.node}
+						style:color={textColor || $themeStore.text}
+					>
+						{labelText}
+					</div>
+				</slot>
+			</span>
+		</foreignObject>
+	{/if}
+</svg>
 
 <style>
 	.label-wrapper {
@@ -303,6 +324,15 @@
 		height: fit-content;
 		transform: translate(-50%, -50%);
 		pointer-events: auto;
+	}
+	.edges-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		fill: transparent;
+		overflow: visible;
 	}
 
 	.target {

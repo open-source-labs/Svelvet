@@ -5,22 +5,21 @@
 	import EdgeContext from '$lib/components/Edge/EdgeContext.svelte';
 
 	const graph = getContext<Graph>('graph');
+	const edgesAboveGraph = getContext<boolean>('edgesAboveGraph');
 
 	const edges = graph.edges;
 </script>
 
-<svg class="edges-wrapper">
-	{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
-		{@const CustomEdge = edge.component}
-		{#if CustomEdge}
-			<EdgeContext {edge}>
-				<CustomEdge />
-			</EdgeContext>
-		{:else}
-			<InternalEdge {edge} />
-		{/if}
-	{/each}
-</svg>
+{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
+	{@const CustomEdge = edge.component}
+	{#if CustomEdge}
+		<EdgeContext {edge}>
+			<CustomEdge />
+		</EdgeContext>
+	{:else}
+		<InternalEdge {edge} />
+	{/if}
+{/each}
 
 <style>
 	.edges-wrapper {

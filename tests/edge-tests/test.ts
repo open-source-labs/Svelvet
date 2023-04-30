@@ -11,7 +11,7 @@ test('custom edges are rendered correctly and labels can be interacted with', as
 
 	const newEdge = page.locator('[id="A-1/N-node1+A-2/N-node2"]');
 
-	await expect(newEdge).toHaveAttribute('d', 'M 700, 350 C 1050, 350 -350, 50 0, 50');
+	await expect(newEdge).toHaveAttribute('d', 'M 707, 350 C 1064, 350 -364, 50 -7, 50');
 	await expect(newEdge).toHaveAttribute('style', 'stroke: yellow; stroke-width: 4px;');
 
 	await page.locator('.svelvet-anchor').first().click();

@@ -23,6 +23,8 @@ export function createEdge(
 		width: writable(config?.width || s.EDGE_WIDTH),
 		animated: writable(config?.animated || false)
 	};
+	// if (config?.raiseEdges) writableEdge.raiseEdgeOnSelect = true;
+	// if (config?.edgesAbove) writableEdge.edgesAbove = true;
 	if (config?.disconnect) writableEdge.disconnect = true;
 	if (config?.label) {
 		const baseLabel: EdgeLabel = {

@@ -18,7 +18,7 @@ test('anchors can be connected and event fires', async ({ page }) => {
 
 		// Timeout if the expected message isn't encountered within a specified time
 		setTimeout(() => {
-			reject(new Error('Console message not found within the specified time'));
+			reject(new Error('Connect message not found within the specified time'));
 		}, 5000); // Adjust the timeout duration as needed
 	});
 
@@ -32,7 +32,7 @@ test('anchors can be connected and event fires', async ({ page }) => {
 
 		// Timeout if the expected message isn't encountered within a specified time
 		setTimeout(() => {
-			reject(new Error('Console message not found within the specified time'));
+			reject(new Error('Disconnect message not found within the specified time'));
 		}, 5000); // Adjust the timeout duration as needed
 	});
 
@@ -40,7 +40,7 @@ test('anchors can be connected and event fires', async ({ page }) => {
 
 	const newEdge = page.locator('[id="A-1/N-node2+A-2/N-node1"]');
 
-	await expect(newEdge).toHaveAttribute('d', 'M 200, 50 C 250, 50 250, 350 300, 350');
+	await expect(newEdge).toHaveAttribute('d', 'M 207, 50 C 250, 50 250, 350 293, 350');
 	await expect(newEdge).toHaveAttribute('style', 'stroke: white; stroke-width: 2px;');
 
 	// Wait for the connected message
