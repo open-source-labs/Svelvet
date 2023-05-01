@@ -27,6 +27,8 @@ export type WritableEdge = {
 	animated: Writable<boolean>;
 	disconnect?: true;
 	component: ComponentType | null;
+	// raiseEdgeOnSelect?: boolean;
+	// edgesAbove?: boolean;
 };
 
 interface CursorNode {
@@ -36,6 +38,7 @@ interface CursorNode {
 		width: Writable<number>;
 		height: Writable<number>;
 	};
+	zIndex: Writable<number>;
 }
 
 export interface CursorAnchor {
@@ -49,6 +52,7 @@ export interface CursorAnchor {
 	direction: Writable<Direction>;
 	inputKey: null;
 	type: 'output';
+	mounted: Writable<true>;
 	moving: Readable<boolean>;
 	store: null;
 	rotation: Readable<number>;
@@ -64,6 +68,7 @@ export interface EdgeLabel {
 		width: Writable<number>;
 		height: Writable<number>;
 	};
+
 	borderRadius: Writable<number>;
 }
 
@@ -77,6 +82,8 @@ export interface EdgeConfig {
 	label?: EdgeLabelConfig;
 	animated?: boolean;
 	disconnect?: true;
+	raiseEdges?: boolean;
+	edgesAbove?: boolean;
 }
 
 export interface EdgeLabelConfig {

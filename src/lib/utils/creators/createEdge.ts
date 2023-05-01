@@ -19,10 +19,12 @@ export function createEdge(
 		source: connection.source,
 		component,
 		type: writable(config?.type || null),
-		color: config?.color || writable(s.EDGE_COLOR),
-		width: writable(config?.width || s.EDGE_WIDTH),
+		color: config?.color || writable(null),
+		width: writable(config?.width || 0),
 		animated: writable(config?.animated || false)
 	};
+	// if (config?.raiseEdges) writableEdge.raiseEdgeOnSelect = true;
+	// if (config?.edgesAbove) writableEdge.edgesAbove = true;
 	if (config?.disconnect) writableEdge.disconnect = true;
 	if (config?.label) {
 		const baseLabel: EdgeLabel = {

@@ -3,8 +3,8 @@
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { onMount, setContext, getContext, createEventDispatcher } from 'svelte';
-	import type { ThemeGroup, Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
+	import { onMount, setContext, createEventDispatcher } from 'svelte';
+	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor } from '$lib/types';
 	import { isArrow } from '$lib/types';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
@@ -34,6 +34,7 @@
 	export let fitView: boolean | 'resize' = false;
 	export let trackpadPan: boolean;
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
+	export let theme = 'light';
 
 	const duplicate = writable(false);
 
@@ -41,7 +42,6 @@
 	setContext('graph', graph);
 	setContext('transforms', graph.transforms);
 	setContext('dimensions', graph.dimensions);
-	setContext('theme', graph.theme);
 	setContext('locked', graph.locked);
 	setContext('groups', graph.groups);
 	setContext('bounds', graph.bounds);
@@ -65,16 +65,16 @@
 		type: 'output',
 		moving: readable(false),
 		store: null,
+		mounted: writable(true),
 		rotation: readable(0),
 		node: {
+			zIndex: writable(Infinity),
 			rotating: writable(false),
 			position: graph.cursor,
 			dimensions: { width: writable(0), height: writable(0) }
 		}
 	};
 	setContext('cursorAnchor', cursorAnchor);
-
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	let interval: number | undefined = undefined;
 	type ActiveIntervals = Record<string, ReturnType<typeof setInterval> | undefined>;
@@ -123,6 +123,10 @@
 		updateGraphDimensions();
 	});
 
+	$: if (theme) {
+		document.documentElement.setAttribute('svelvet-theme', theme);
+	}
+
 	// Wait until all Nodes are mounted
 	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
 		// If fitView is not set to resize, only run once
@@ -132,8 +136,7 @@
 
 	function fitIntoView() {
 		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
-
-		if (x && y && scale) {
+		if (x !== null && y !== null && scale !== null) {
 			translation.set({ x, y });
 			graph.transforms.scale.set(scale);
 		}
@@ -463,7 +466,6 @@
 	title="graph"
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
-	style:color={$themeStore.text || 'black'}
 	id={graph.id}
 	bind:this={$graphDOMElement}
 	on:wheel|preventDefault={handleScroll}
@@ -519,18 +521,10 @@
 		line-height: 1rem;
 		font-size: 0.85rem;
 		pointer-events: auto;
+		color: var(--default-text-color);
 	}
 	.svelvet-wrapper:focus {
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
-	}
-
-	:root {
-		--dark-background: hsl(0, 1%, 21%);
-		--light-background: hsl(0, 0%, 93%);
-		--node-background-light: hsl(0, 0%, 93%);
-		--node-background-dark: hsl(0, 0%, 11%);
-		--text-color-dark: hsl(0, 0%, 93%);
-		--text-color-light: hsl(0, 0%, 21%);
 	}
 </style>

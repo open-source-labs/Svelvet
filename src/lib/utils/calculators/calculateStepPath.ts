@@ -128,8 +128,8 @@ export function calculateStepPath(
 		steps.push(
 			multiply(
 				source.direction,
-				absoluteX < buffer * 2 ? deltaX - buffer : absoluteX / 2,
-				absoluteY < buffer * 2 ? deltaY - buffer : absoluteY / 2
+				absoluteX < buffer * 2 ? absoluteX - buffer : absoluteX / 2,
+				absoluteY < buffer * 2 ? absoluteY - buffer : absoluteY / 2
 			)
 		);
 	}

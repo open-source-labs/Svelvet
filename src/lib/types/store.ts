@@ -1,14 +1,6 @@
-import type {
-	Anchor,
-	Graph,
-	Node,
-	GroupKey,
-	GroupBox,
-	NodeKey,
-	GraphKey,
-	AnchorKey
-} from '$lib/types';
-import type { CursorAnchor, WritableEdge } from './edge';
+import type { Anchor, Graph, Node, GroupKey } from '$lib/types';
+import type { GroupBox, NodeKey, GraphKey, AnchorKey } from '$lib/types';
+import type { WritableEdge } from './edge';
 import type { CustomEdgeKey, generateOutput } from '$lib/utils/creators/';
 import type { Writable, Readable } from 'svelte/store';
 

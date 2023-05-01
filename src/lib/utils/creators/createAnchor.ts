@@ -4,6 +4,7 @@ import type { Writable, Readable } from 'svelte/store';
 import type { CustomWritable, CSSColorString, XYPair } from '$lib/types';
 import type { ComponentType } from 'svelte';
 import { calculateRelativePosition } from '..';
+import { directionVectors } from '$lib/constants';
 
 export function createAnchor(
 	graph: Graph,
@@ -38,9 +39,12 @@ export function createAnchor(
 	});
 	const transforms = graph.transforms;
 	const graphDimensions = graph.dimensions;
-
+	const directionStore = writable(direction || 'self');
 	const recalculatePosition = () => {
 		const anchorElement = document.getElementById(id);
+		const direction = get(directionStore);
+		const vector = directionVectors[direction];
+
 		if (!anchorElement) return;
 		const { x, y, width, height } = anchorElement.getBoundingClientRect();
 		const oldOffset = get(offset);
@@ -51,8 +55,8 @@ export function createAnchor(
 		const deltaY = scaled.y - oldPosition.y;
 
 		offset.set({
-			x: oldOffset.x + deltaX + width / scale / 2,
-			y: oldOffset.y + deltaY + height / scale / 2
+			x: oldOffset.x + deltaX + width / scale / 2 + (vector.x * width) / scale / 2,
+			y: oldOffset.y + deltaY + height / scale / 2 + (vector.y * height) / scale / 2
 		});
 	};
 
@@ -68,11 +72,12 @@ export function createAnchor(
 		id,
 		position: anchorPosition,
 		offset,
-		direction: writable(direction || 'self'),
+		direction: directionStore,
 		dynamic: writable(dynamic || false),
 		type,
 		edge,
 		moving,
+		mounted: writable(false),
 		recalculatePosition,
 		connected: writable(new Set()),
 		store: store || null,

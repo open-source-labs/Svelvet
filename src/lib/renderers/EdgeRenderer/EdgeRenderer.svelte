@@ -9,21 +9,19 @@
 	const edges = graph.edges;
 </script>
 
-<svg class="edges-wrapper">
-	{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
-		{@const CustomEdge = edge.component}
-		{#if CustomEdge}
-			<EdgeContext {edge}>
-				<CustomEdge />
-			</EdgeContext>
-		{:else}
-			<InternalEdge {edge} />
-		{/if}
-	{/each}
-</svg>
+{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
+	{@const CustomEdge = edge.component}
+	{#if CustomEdge}
+		<EdgeContext {edge}>
+			<CustomEdge />
+		</EdgeContext>
+	{:else}
+		<InternalEdge {edge} />
+	{/if}
+{/each}
 
 <style>
-	.edges-wrapper {
+	/* .edges-wrapper {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -31,5 +29,5 @@
 		height: 100%;
 		fill: transparent;
 		overflow: visible;
-	}
+	} */
 </style>

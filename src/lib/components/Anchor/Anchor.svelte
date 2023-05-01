@@ -113,9 +113,10 @@
 
 		// This is to avoid a strange bug where the anchor positions are off
 		// It only seems to happen in dev and doesn't seem to affect the final product
+		if (anchorElement) anchor.recalculatePosition();
 		setTimeout(() => {
-			if (anchorElement) anchor.recalculatePosition();
-		}, 4);
+			anchor.mounted.set(true);
+		}, 0);
 	});
 
 	$: dynamicDirection = anchor?.direction;
@@ -190,7 +191,7 @@
 
 	function handleClick(e: MouseEvent) {
 		if (locked) return; // Return if the anchor is locked
-		if (!e.shiftKey) clearAllLinking(); // If the shift key isn't pressed, clear all linking
+		// If the shift key isn't pressed, clear all linking
 
 		// If the Anchor being clicked has connections
 		// And it can't have multiple connections
@@ -240,6 +241,7 @@
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+
 		if (disconnect) edgeConfig.disconnect = true;
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		// Create a temporary edge to track the cursor
@@ -323,6 +325,7 @@
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		if (!source.node || !target.node) return;
@@ -501,7 +504,7 @@
 		if (isSelf()) return;
 		if ($connectedAnchors?.size && !multiple) {
 			edgeStore.delete('cursor');
-			clearAllLinking();
+			if (!e.shiftKey) clearAllLinking();
 			return;
 		}
 		if ($linkingAny || $linkingInput || $linkingOutput) connectEdge(e);

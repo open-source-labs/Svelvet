@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { Svelvet, Minimap, Node } from '$lib';
+	import { Svelvet, Node } from '$lib';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	let outputs = 4;
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet width={600} height={900} theme="purple" controls>
-			<!-- <Node
+		<Svelvet edgeStyle="step" width={600} height={900} controls>
+			<Node
 				position={{ x: 200, y: 800 }}
 				{outputs}
 				id="dynamic"
 				label="Dynamic 1"
 				resizable
 				dynamic
-				connections={[2, 3, 4, 2, 3, 2]}
+				connections={[2, 2]}
 			/>
-			<Node connections={[1, 3]} position={{ x: 500, y: 400 }} label="Static" />
-			<Node useDefaults width={200} height={100} connections={[1, 3, 4, 4]}>
+			<Node connections={[1]} position={{ x: 500, y: 400 }} label="Static" />
+			<Node useDefaults width={200} height={100} connections={[1, 4]}>
 				<Anchor dynamic />
 				<h1>Half</h1>
 				<div class="anchor">
-					<Anchor direction="west" />
+					<Anchor direction="west" connections={[2]} />
 				</div>
 			</Node>
 			<Node
@@ -35,9 +35,7 @@
 			<Node bgColor="transparent" connections={[6]} dynamic />
 			<Node bgColor="transparent" />
 			<Node bgColor="transparent" connections={[[8, 2]]} TD />
-			<Node bgColor="transparent" LR /> -->
-			<Node dynamic />
-			<Node dynamic />
+			<Node bgColor="transparent" LR />
 		</Svelvet>
 	</div>
 </body>

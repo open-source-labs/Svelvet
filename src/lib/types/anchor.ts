@@ -22,6 +22,7 @@ export interface Anchor {
 	rotation: Readable<number>;
 	recalculatePosition: () => void;
 	type: InputType;
+	mounted: Writable<boolean>;
 	inputKey: string | number | null;
 	moving: Readable<boolean>;
 	edgeColor:

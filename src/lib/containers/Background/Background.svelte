@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
 	import type { Graph, CSSColorString } from '$lib/types';
-	import type { BackgroundStyles, ThemeGroup } from '$lib/types/general';
+	import type { BackgroundStyles } from '$lib/types/general';
 	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
 
 	const graph = getContext<Graph>('graph');
-	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
 
 	export let style: BackgroundStyles = 'dots';
 	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
@@ -46,7 +44,7 @@
 <div
 	id="background-wrapper"
 	bind:this={backgroundWrapper}
-	style:background-color={bgColor || $themeStore.map}
+	style:--calculated-background-color={bgColor}
 >
 	<svg>
 		<defs>
@@ -60,7 +58,8 @@
 			>
 				{#if style === 'dots'}
 					<circle
-						style:fill={dotColor || $themeStore.dots}
+						class="background-dot"
+						style:--calculated-dot-color={dotColor}
 						r={radius}
 						cx={dotCenterCoordinate}
 						cy={dotCenterCoordinate}
@@ -97,8 +96,15 @@
 		pointer-events: none;
 		z-index: -10;
 		box-sizing: border-box;
+		background-color: var(
+			--calculated-background-color,
+			var(--background-color, var(--default-background-color))
+		);
 	}
 
+	.background-dot {
+		fill: var(--calculated-dot-color, var(--dot-color, var(--default-dot-color)));
+	}
 	svg {
 		width: 100%;
 		height: 100%;

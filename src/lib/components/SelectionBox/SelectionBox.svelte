@@ -7,7 +7,7 @@
 	export let anchor: { x: number; y: number; top: number; left: number };
 	export let adding = false;
 	export let creating = false;
-	export let color: CSSColorString = 'lightblue';
+	export let color: CSSColorString | null = null;
 
 	const { groups } = graph;
 
@@ -71,14 +71,14 @@
 
 <div
 	class="selection-border"
-	style:border-color={color}
+	style:--prop-selection-box-color={color}
 	style:height={CSSheight}
 	style:width={CSSwidth}
 	style:top={CSStop}
 	style:left={CSSleft}
 	class:creating
 >
-	<div class:creating bind:this={box} class="selection-box" style:background-color={color} />
+	<div class:creating bind:this={box} class="selection-box" />
 </div>
 
 <style>
@@ -90,6 +90,10 @@
 		width: 100%;
 		height: 100%;
 		opacity: 20%;
+		background-color: var(
+			--prop-selection-box-color,
+			var(--selection-box-color, var(--default-selection-box-color))
+		);
 	}
 
 	.selection-border {
@@ -99,6 +103,10 @@
 		z-index: 100;
 		cursor: crosshair;
 		border: 1px dashed;
+		border-color: var(
+			--prop-selection-box-color,
+			var(--selection-box-color, var(--default-selection-box-color))
+		);
 	}
 
 	.selection-box.creating {

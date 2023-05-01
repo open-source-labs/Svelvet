@@ -1,35 +1,29 @@
 <script lang="ts">
 	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
-	import type { CursorAnchor, ThemeGroup, WritableEdge } from '$lib/types';
-	import { get } from 'svelte/store';
-	import { getContext } from 'svelte';
-	import { EDGE_WIDTH } from '$lib/constants';
+	import type { WritableEdge } from '$lib/types';
 	import { calculateStepPath, calculateRadius } from '$lib/utils/calculators';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, getContext } from 'svelte';
 	import { directionVectors, stepBuffer } from '$lib/constants';
-	import {
-		buildArcStringKey,
-		constructArcString,
-		buildPath,
-		rotateVector
-	} from '$lib/utils/helpers';
-	import type { Writable } from 'svelte/store';
+	import { buildPath, rotateVector } from '$lib/utils/helpers';
+	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
+	import { get } from 'svelte/store';
 
 	const edgeStore = getContext<Graph['edges']>('edgeStore');
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
 
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
-	export let width: number = EDGE_WIDTH;
-	export let color: CSSColorString | null = null;
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
 	export let animate = false;
 	export let label = '';
+	export let edgeClick: null | (() => void) = null;
+
+	// Styling via props/objects will likely be deprecated
+	export let width: number | null = null;
+	export let color: CSSColorString | null = null;
 	export let labelColor: CSSColorString | null = null;
 	export let textColor: CSSColorString | null = null;
 	export let cornerRadius = 8;
-	export let edgeClick: null | (() => void) = null;
 	export let targetColor: CSSColorString | null = null;
 
 	const source = edge.source;
@@ -63,10 +57,9 @@
 
 	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
 	$: edgeLabel = edge && edge.label?.text;
-	$: finalColor = color || $edgeColor || $themeStore.edge;
+	$: finalColor = color || $edgeColor || null;
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
-
 	$: sourcePosition = $sourcePositionStore;
 	$: targetPosition = $targetPositionStore;
 
@@ -254,47 +247,76 @@
 			return buildPath(string, xStep, yStep, arcString);
 		}, `M ${sourceX}, ${sourceY}`);
 	}
+
+	$: sourceZIndex = source.node.zIndex || 0;
+	$: targetZIndex = target.node.zIndex || 0;
+	$: maxZIndex = Math.max($sourceZIndex, $targetZIndex);
+	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
+	const edgesAboveNode = getContext('edgesAboveNode');
+
+	$: zIndex =
+		edgesAboveNode === 'all'
+			? 100000
+			: edgesAboveNode
+			? maxZIndex
+			: raiseEdgesOnSelect === true
+			? maxZIndex - 1
+			: raiseEdgesOnSelect === 'source'
+			? $sourceZIndex - 1
+			: raiseEdgesOnSelect === 'target'
+			? $targetZIndex - 1
+			: 0;
+
+	$: sourceMounted = source.mounted;
+	$: targetMounted = target.mounted;
 </script>
 
-<path
-	bind:this={DOMPath}
-	class:cursor={edgeKey === 'cursor'}
-	on:mousedown={edgeClick}
-	style:cursor={edgeClick ? 'pointer' : 'move'}
-	class="target"
-	id={edgeKey + '-target'}
-	style:--hover-color={edgeClick ? targetColor || $themeStore.node : 'transparent'}
-	d={path}
-	style:stroke-width={width + 8 + 'px'}
-/>
-<slot {path} {destroy}>
-	<path
-		class="edge"
-		id={edgeKey}
-		class:animate
-		d={path}
-		style:stroke={finalColor}
-		style:stroke-width={width + 'px'}
-	/>
-</slot>
+{#if $sourceMounted && $targetMounted}
+	<svg class="edges-wrapper" style:z-index={zIndex}>
+		<path
+			id={edgeKey + '-target'}
+			bind:this={DOMPath}
+			class="target"
+			class:cursor={edgeKey === 'cursor' || !edgeClick}
+			style:cursor={edgeClick ? 'pointer' : 'move'}
+			style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
+			d={path}
+			on:mousedown={edgeClick}
+		/>
+		<slot {path} {destroy}>
+			<path
+				id={edgeKey}
+				class="edge"
+				class:animate
+				d={path}
+				style:--prop-edge-color={finalColor}
+				style:--prop-stroke-width={width ? width + 'px' : null}
+			/>
+		</slot>
 
-{#if renderLabel}
-	<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
-		<span class="label-wrapper">
-			<slot name="label">
-				<div
-					class="default-label"
-					style:background-color={labelColor || $themeStore.node}
-					style:color={textColor || $themeStore.text}
-				>
-					{labelText}
-				</div>
-			</slot>
-		</span>
-	</foreignObject>
+		{#if renderLabel}
+			<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
+				<span class="label-wrapper">
+					<slot name="label">
+						<div
+							class="default-label"
+							style:--prop-label-color={labelColor}
+							style:--prop-label-text-color={textColor}
+						>
+							{labelText}
+						</div>
+					</slot>
+				</span>
+			</foreignObject>
+		{/if}
+	</svg>
 {/if}
 
 <style>
+	.edge {
+		stroke: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
+		stroke-width: var(--prop-stroke-width, var(--edge-width, var(--default-edge-width)));
+	}
 	.label-wrapper {
 		display: flex;
 		justify-content: center;
@@ -305,13 +327,27 @@
 		pointer-events: auto;
 	}
 
+	.edges-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		fill: transparent;
+		overflow: visible;
+	}
+
 	.target {
 		pointer-events: stroke;
 		stroke: none;
+		stroke-width: calc(var(--edge-width, var(--default-edge-width)) + 8px);
 	}
 
 	.target:hover {
-		stroke: var(--hover-color);
+		stroke: var(
+			--prop-target-edge-color,
+			var(--target-edge-color, var(--default-target-edge-color))
+		);
 		opacity: 50%;
 	}
 
@@ -342,6 +378,8 @@
 		height: 1.5rem;
 		border-radius: 5px;
 		padding: 10px;
+		color: var(--prop-label-text-color, var(--label-text-color, var(--default-label-text-color)));
+		background-color: var(--prop-label-color, var(--label-color, var(--default-label-color)));
 	}
 
 	@keyframes dash {

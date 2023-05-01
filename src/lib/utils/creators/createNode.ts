@@ -72,7 +72,7 @@ export function createNode(userNode: NodeConfig): Node {
 		label: writable(userNode.label || ''),
 		borderColor: writable(borderColor || null),
 		borderWidth: writable(borderWidth),
-		selectionColor: writable(selectionColor),
+		selectionColor: writable(selectionColor || null),
 		textColor: writable(textColor || null),
 		connections: writable(connections)
 	};
