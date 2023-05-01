@@ -21,9 +21,6 @@
 	const nodeStore = getContext<Graph['nodes']>('nodeStore');
 	const graphEdge = getContext<ComponentType>('graphEdge');
 
-	const raiseEdgesNode = getContext('raiseEdgesNode');
-	const edgesAboveNode = getContext('edgesAboveNode');
-
 	export let bgColor: CSSColorString | null = null;
 
 	export let id: string | number = 0;
@@ -116,9 +113,10 @@
 
 		// This is to avoid a strange bug where the anchor positions are off
 		// It only seems to happen in dev and doesn't seem to affect the final product
+		if (anchorElement) anchor.recalculatePosition();
 		setTimeout(() => {
-			if (anchorElement) anchor.recalculatePosition();
-		}, 4);
+			anchor.mounted.set(true);
+		}, 0);
 	});
 
 	$: dynamicDirection = anchor?.direction;
@@ -193,7 +191,7 @@
 
 	function handleClick(e: MouseEvent) {
 		if (locked) return; // Return if the anchor is locked
-		if (!e.shiftKey) clearAllLinking(); // If the shift key isn't pressed, clear all linking
+		// If the shift key isn't pressed, clear all linking
 
 		// If the Anchor being clicked has connections
 		// And it can't have multiple connections
@@ -506,7 +504,7 @@
 		if (isSelf()) return;
 		if ($connectedAnchors?.size && !multiple) {
 			edgeStore.delete('cursor');
-			clearAllLinking();
+			if (!e.shiftKey) clearAllLinking();
 			return;
 		}
 		if ($linkingAny || $linkingInput || $linkingOutput) connectEdge(e);

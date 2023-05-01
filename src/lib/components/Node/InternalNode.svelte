@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Graph, Node, ThemeGroup } from '$lib/types';
+	import type { Graph, Node } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
@@ -7,7 +7,6 @@
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
-	import * as s from '$lib/constants/styles';
 
 	export let node: Node;
 	export let isDefault: boolean;
@@ -39,7 +38,6 @@
 	$: borderWidth = node.borderWidth;
 	$: rotation = node.rotation;
 
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 	const mounted = getContext<Writable<number>>('mounted');
 	const duplicate = getContext<Writable<boolean>>('duplicate');
 	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
@@ -247,13 +245,15 @@
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
 		style:z-index={$zIndex}
-		style:background-color={$bgColor || (isDefault ? $themeStore.node : 'transparent')}
-		style:border-radius="{$borderRadius || (isDefault && s.NODE_BORDER_RADIUS)}px"
-		style:color={$textColor || $themeStore.text}
-		style:--border-color={$borderColor || $themeStore.border}
-		style:--border-width="{$borderWidth || (isDefault && s.NODE_BORDER_WIDTH)}px"
-		style:--selection-color={$selectionColor || $themeStore.selection}
 		style:transform="rotate({$rotation}deg)"
+		style:--prop-background-color={$bgColor || (isDefault ? null : 'transparent')}
+		style:--prop-text-color={$textColor}
+		style:--prop-border-color={$borderColor}
+		style:--prop-selection-color={$selectionColor}
+		style:--prop-border-radius={$borderRadius ? `${$borderRadius}px` : isDefault ? null : '0px'}
+		style:--prop-border-width={$borderWidth || (isDefault ? null : '0px')}
+		bind:clientWidth={$widthStore}
+		bind:clientHeight={$heightStore}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
@@ -273,14 +273,34 @@
 
 <style>
 	.svelvet-node {
-		cursor: grab;
 		position: absolute;
 		pointer-events: all;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		will-change: top, left;
-		box-shadow: 0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
+		cursor: var(--node-cursor, var(--default-node-cursor));
+		--final-border-width: var(
+			--prop-border-width,
+			var(--node-border-width, var(--default-node-border-width))
+		);
+		--final-border-color: var(
+			--node-border-color,
+			var(--node-border-color, var(--default-node-border-color))
+		);
+		--final-selection-color: var(
+			--prop-selection-color,
+			var(--node-selection-color, var(--default-node-selection-color))
+		);
+
+		border-radius: var(
+			--prop-border-radius,
+			var(--node-border-radius, var(--default-node-border-radius))
+		);
+		background-color: var(--prop-background-color, var(--node-color, var(--default-node-color)));
+		color: var(--prop-text-color, var(--text-color, var(--default-text-color)));
+		box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+			var(--default-node-shadow);
 	}
 	.anchors {
 		/* outline: solid 1px red; */
@@ -328,7 +348,7 @@
 		cursor: not-allowed;
 	}
 	.selected {
-		box-shadow: 0 0 0 var(--border-width) var(--selection-color),
-			0 0 0 var(--border-width) var(--border-color), var(--shadow-elevation-medium);
+		box-shadow: 0 0 0 var(--final-border-width) var(--final-selection-color),
+			var(--default-node-shadow);
 	}
 </style>

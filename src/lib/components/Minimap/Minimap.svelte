@@ -2,13 +2,11 @@
 	import { getContext } from 'svelte';
 	import MiniNode from './MiniNode.svelte';
 	import MiniGroupBox from './MiniGroupBox.svelte';
-	import type { CSSColorString, Graph, Corner, ThemeGroup } from '$lib/types';
+	import type { CSSColorString, Graph, Corner } from '$lib/types';
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
-	import type { Writable } from 'svelte/store';
 
 	let graph: Graph = getContext<Graph>('graph');
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let width = 100;
 	export let height = width;
@@ -83,10 +81,10 @@
 
 <div
 	class="minimap-wrapper"
-	style:background-color={mapColor || $themeStore.map}
 	style:width="{width}px"
 	style:height="{height ? height : width}px"
-	style:border-color={borderColor || $themeStore.border}
+	style:--prop-minimap-border-color={borderColor}
+	style:--prop-minimap-background-color={mapColor}
 	class:SW={corner === 'SW'}
 	class:NE={corner === 'NE'}
 	class:SE={corner === 'SE'}
@@ -128,12 +126,20 @@
 		position: absolute;
 		border-radius: 6px;
 		overflow: hidden;
-		box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+		box-shadow: var(--minimap-shadow, var(--default-minimap-shadow));
 		border: solid 1px;
 		z-index: 10;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		background-color: var(
+			--prop-minimap-background-color,
+			var(--minimap-background-color, var(--default-minimap-background-color))
+		);
+		border-color: var(
+			--prop-minimap-border-color,
+			var(--minimap-border, var(--default-minimap-border))
+		);
 	}
 
 	.NW {

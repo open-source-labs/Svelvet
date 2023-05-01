@@ -4,7 +4,6 @@
 		Graph as GraphType,
 		GraphKey,
 		NodeConfig,
-		Theme,
 		CSSColorString,
 		EdgeStyle,
 		XYPair
@@ -14,12 +13,17 @@
 	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { writable } from 'svelte/store';
-	import { THEMES } from '$lib/constants/themes';
 	import type { ComponentType } from 'svelte';
 
 	export let mermaid = '';
-	export let theme: Theme = 'light';
+	/**
+	 * @default light
+	 * @description This prop is used to interface with custom style blocks created using CSS. You can create any number of
+	 * themes with the following selector `:root[svelvet-theme="your-theme"]` and then pass the name of your theme
+	 * to this prop to apply it to the graph. Please see the docs for the CSS variables options. Svelvet reserves the "light" and "dark" themes for
+	 * internal use.
+	 */
+	export let theme = 'light';
 	export let id: number | string = 0;
 	export let snapTo = 0;
 	/**
@@ -40,7 +44,7 @@
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
 	 * and scale to fit all nodes with inthe viewport. When set to `resize`, this
-	 * will continuously happen as the viewport changes size.
+	 * will continuously happen as the viewport changes size. This value is reactive.
 	 */
 	export let fitView: boolean | 'resize' = false;
 	/**
@@ -102,18 +106,11 @@
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { zoom, theme, direction, editable, locked, translation });
+			graph = createGraph(graphKey, { zoom, direction, editable, locked, translation });
 
 			graphStore.add(graph, graphKey);
 		}
 	});
-
-	let currentTheme = writable(THEMES[theme]);
-	setContext('themeStore', currentTheme);
-
-	$: if (graph) {
-		$currentTheme = THEMES[theme];
-	}
 
 	$: backgroundExists = $$slots.background;
 
@@ -129,6 +126,7 @@
 		{minimap}
 		{graph}
 		{fitView}
+		{theme}
 		{controls}
 		{selectionColor}
 		{disableSelection}
@@ -147,8 +145,182 @@
 	</Graph>
 {:else}
 	<div
+		class="svelvet-temp"
 		style:width={width ? width + 'px' : '100%'}
 		style:height={height ? height + 'px' : '100%'}
-		style:background-color={THEMES[theme].map}
 	/>
 {/if}
+
+<style>
+	.svelvet-temp {
+		background-color: var(--default-background-color);
+	}
+	:root {
+		--default-node-border-width: 1.5px;
+		--default-node-width: 200px;
+		--default-node-height: 100px;
+		--default-node-border-radius: 10px;
+
+		--default-node-cursor: grab;
+		--default-background-cursor: move;
+
+		--default-anchor-border-width: 1px;
+		--default-anchor-radius: 50%;
+		--default-anchor-size: 12px;
+
+		--default-edge-width: 2px;
+
+		--default-selection-box-border-width: 1px;
+
+		--shadow-color: 0deg 0% 10%;
+		--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.4),
+			0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
+			1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
+		--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.42),
+			0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.1),
+			2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.1),
+			5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.1);
+
+		--default-controls-shadow: var(--shadow-elevation-medium);
+		--default-minimap-shadow: var(--shadow-elevation-medium);
+		--default-theme-toggle-shadow: var(--shadow-elevation-medium);
+	}
+
+	:root {
+		--default-node-color: hsl(0, 0%, 95%);
+		--default-node-border-color: hsl(0, 0%, 87%);
+		--default-node-selection-color: hsl(0, 0%, 13%);
+		--default-text-color: hsl(0, 0%, 20%);
+		--default-node-shadow: var(--shadow-elevation-medium);
+
+		--default-background-color: hsl(0, 0%, 100%);
+		--default-dot-color: hsl(0, 0%, 53%);
+
+		--default-accent-color: hsl(0, 0%, 100%);
+		--default-primary-color: #d3d3d3;
+
+		--default-selection-box-color: hsl(195, 53%, 79%);
+
+		--default-edge-color: hsl(0, 0%, 40%);
+		--default-target-edge-color: hsl(0, 0%, 0%);
+		--default-edge-shadow: var(--shadow-elevation-medium);
+
+		--plugin-border: hsl(0, 0%, 42%);
+		--default-controls-border: var(--plugin-border);
+		--default-minimap-border: var(--plugin-border);
+		--default-theme-toggle-border: var(--plugin-border);
+
+		--default-anchor-color: hsl(0, 0%, 67%);
+		--default-anchor-border-color: hsl(0, 0%, 100%);
+
+		--default-anchor-connected: hsl(0, 0%, 40%);
+		--default-anchor-connected-border: hsl(0, 0%, 95%);
+
+		--default-anchor-connecting: hsl(0, 0%, 40%);
+		--default-anchor-connecting-border: hsl(0, 0%, 100%);
+
+		--default-anchor-hovering: hsl(0, 0%, 46%);
+		--default-anchor-hovering-border: hsl(0, 0%, 0%);
+
+		--default-minimap-background-color: hsl(0, 0%, 100%);
+		--default-minimap-node-color: hsl(0, 0%, 95%);
+
+		--default-controls-background-color: hsl(0, 0%, 100%);
+		--default-controls-text-color: hsl(0, 0%, 20%);
+
+		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
+		--default-theme-toggle-color: hsl(0, 0%, 100%);
+	}
+
+	:root[svelvet-theme='dark'] {
+		--default-node-color: hsl(0, 0%, 20%);
+		--default-node-border-color: hsl(0, 0%, 7%);
+		--default-node-selection-color: hsl(0, 0%, 87%);
+		--default-text-color: hsl(0, 0%, 100%);
+		--default-node-shadow: var(--shadow-elevation-medium);
+
+		--default-background-color: hsl(0, 0%, 27%);
+		--default-dot-color: hsl(0, 0%, 60%);
+
+		--default-accent-color: hsl(0, 0%, 7%);
+		--default-primary-color: hsl(0, 0%, 66%);
+
+		--default-selection-box-color: hsl(195, 53%, 79%);
+
+		--default-edge-color: hsl(0, 0%, 100%);
+		--default-target-edge-color: hsl(0, 0%, 0%);
+		--default-edge-shadow: var(--shadow-elevation-medium);
+
+		--default-anchor-color: hsl(0, 0%, 67%);
+		--default-anchor-border-color: hsl(0, 0%, 87%);
+		--default-anchor-connected: hsl(0, 0%, 100%);
+		--default-anchor-connected-border: hsl(0, 0%, 20%);
+
+		--default-anchor-connecting: hsl(0, 0%, 40%);
+		--default-anchor-connecting-border: hsl(0, 0%, 100%);
+
+		--default-anchor-hovering: hsl(0, 0%, 46%);
+		--default-anchor-hovering-border: hsl(0, 0%, 0%);
+
+		--plugin-border: hsl(0, 0%, 42%);
+		--default-controls-border: var(--plugin-border);
+		--default-minimap-border: var(--plugin-border);
+		--default-theme-toggle-border: var(--plugin-border);
+
+		--default-minimap-background-color: hsl(0, 0%, 27%);
+
+		--default-minimap-node-color: hsl(0, 0%, 20%);
+
+		--default-controls-background-color: hsl(0, 0%, 27%);
+		--default-controls-text-color: hsl(0, 0%, 100%);
+
+		--default-theme-toggle-text-color: hsl(0, 0%, 100%);
+		--default-theme-toggle-color: hsl(0, 0%, 27%);
+	}
+
+	:root[svelvet-theme='light'] {
+		--default-node-color: hsl(0, 0%, 95%);
+		--default-node-border-color: hsl(0, 0%, 87%);
+		--default-node-selection-color: hsl(0, 0%, 13%);
+		--default-text-color: hsl(0, 0%, 20%);
+		--default-node-shadow: var(--shadow-elevation-medium);
+
+		--default-background-color: hsl(0, 0%, 100%);
+		--default-dot-color: hsl(0, 0%, 53%);
+
+		--default-accent-color: hsl(0, 0%, 100%);
+		--default-primary-color: #d3d3d3;
+
+		--default-selection-box-color: hsl(195, 53%, 79%);
+
+		--default-edge-color: hsl(0, 0%, 40%);
+		--default-target-edge-color: hsl(0, 0%, 0%);
+		--default-edge-shadow: var(--shadow-elevation-medium);
+
+		--plugin-border: hsl(0, 0%, 42%);
+		--default-controls-border: var(--plugin-border);
+		--default-minimap-border: var(--plugin-border);
+		--default-theme-toggle-border: var(--plugin-border);
+
+		--default-anchor-color: hsl(0, 0%, 67%);
+		--default-anchor-border-color: hsl(0, 0%, 100%);
+
+		--default-anchor-connected: hsl(0, 0%, 40%);
+		--default-anchor-connected-border: hsl(0, 0%, 95%);
+
+		--default-anchor-connecting: hsl(0, 0%, 40%);
+		--default-anchor-connecting-border: hsl(0, 0%, 100%);
+
+		--default-anchor-hovering: hsl(0, 0%, 46%);
+		--default-anchor-hovering-border: hsl(0, 0%, 0%);
+
+		--default-minimap-background-color: hsl(0, 0%, 100%);
+		--default-minimap-node-color: hsl(0, 0%, 95%);
+
+		--default-controls-background-color: hsl(0, 0%, 100%);
+		--default-controls-text-color: hsl(0, 0%, 20%);
+
+		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
+		--default-theme-toggle-color: hsl(0, 0%, 100%);
+	}
+</style>

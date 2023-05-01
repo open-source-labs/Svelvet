@@ -1,37 +1,36 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import type { Theme, ThemeGroup, CSSColorString } from '$lib/types';
-	import { getContext } from 'svelte';
-	import { THEMES } from '$lib/constants/themes';
+	import type { CSSColorString } from '$lib/types';
+	import { onMount } from 'svelte';
 
-	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
-
-	export let main: Theme = 'dark';
-	export let alt: Theme = 'light';
+	export let main = 'light';
+	export let alt = 'dark';
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
 
-	let current: Theme = main;
+	let current = main;
 
 	function toggleTheme() {
-		current = current === main ? alt : main;
+		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
+		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
 	}
 
-	$: $themeStore = THEMES[current];
+	onMount(() => {
+		document.documentElement.setAttribute('svelvet-theme', main);
+	});
 </script>
 
 <div
 	class="controls-wrapper"
-	style:background-color={bgColor || $themeStore.controls}
-	style:color={iconColor || $themeStore.text}
+	style:--prop-theme-toggle-color={bgColor}
+	style:--prop-theme-toggle-text-color={iconColor}
 	class:SW={corner === 'SW'}
 	class:NE={corner === 'NE'}
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 >
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<span class="material-symbols-outlined">{current === main ? 'light_mode' : 'dark_mode'}</span>
+		<span class="material-symbols-outlined">{current === main ? 'dark_mode' : 'light_mode'}</span>
 	</button>
 </div>
 
@@ -66,11 +65,20 @@
 		flex-direction: column;
 		border-radius: 6px;
 		overflow: hidden;
-		box-shadow: var(--shadow-elevation-low);
 		padding: 4px;
 		width: fit-content;
 		height: fit-content;
 		cursor: pointer;
+		box-shadow: var(--theme-toggle-shadow, var(--default-theme-toggle-shadow));
+		border: solid 1px var(--theme-toggle-border, var(--default-theme-toggle-border));
+		color: var(
+			--prop-theme-toggle-text-color,
+			var(--theme-toggle-text-color, var(--default-theme-toggle-text-color))
+		);
+		background-color: var(
+			--prop-theme-toggle-color,
+			var(--theme-toggle-color, var(--default-theme-toggle-color))
+		);
 	}
 
 	/* reset button */

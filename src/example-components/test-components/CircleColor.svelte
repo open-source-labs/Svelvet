@@ -27,23 +27,23 @@
 		<div class="node-body">
 			<ColorPicker parameterStore={$inputs.color} />
 		</div>
-		<div class="output-anchors">
-			<Anchor
-				connections={[['output', 'color']]}
-				let:linked
-				let:connecting
-				outputStore={output}
-				output
-				edgeColor={output}
-				edgeLabel="Dynamic Edges"
-				edge={CustomEdge}
-				locked
-			>
-				<ColorAnchor color={output} {connecting} {linked} />
-			</Anchor>
-		</div>
 	</NodeWrapper>
-	<Resizer rotation width />
+	<div class="output-anchors">
+		<Anchor
+			connections={[['output', 'color']]}
+			let:linked
+			let:connecting
+			outputStore={output}
+			output
+			edgeColor={output}
+			edgeLabel="Dynamic Edges"
+			edge={CustomEdge}
+			locked
+		>
+			<ColorAnchor color={output} {connecting} {linked} />
+		</Anchor>
+	</div>
+	<Resizer rotation />
 </Node>
 
 <style>

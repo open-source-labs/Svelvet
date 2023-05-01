@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { ANCHOR_SIZE, ANCHOR_RADIUS } from '$lib/constants';
-	import type { CSSColorString, ThemeGroup } from '$lib/types';
-	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
+	import type { CSSColorString } from '$lib/types';
 
 	export let output: boolean;
 	export let input: boolean;
@@ -10,8 +7,6 @@
 	export let connected: boolean;
 	export let hovering: boolean;
 	export let bgColor: CSSColorString | null;
-
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 </script>
 
 <div
@@ -21,9 +16,7 @@
 	class:connected
 	class:connecting
 	class:hovering
-	style:--default-width={`${ANCHOR_SIZE}px`}
-	style:background-color={bgColor || $themeStore.anchor}
-	style:--default-radius={ANCHOR_RADIUS}
+	style:--prop-anchor-color={bgColor}
 />
 
 <style>
@@ -32,20 +25,29 @@
 	}
 
 	.svelvet-anchor {
-		width: var(--anchor-size, var(--default-width));
-		height: var(--anchor-size, var(--default-width));
+		width: var(--anchor-width, var(--default-anchor-size));
+		height: var(--anchor-height, var(--default-anchor-size));
+		border-radius: var(--anchor-radius, var(--default-anchor-radius));
+		background-color: var(--prop-anchor-color, var(--anchor-color, var(--default-anchor-color)));
 		z-index: 12;
-		border-radius: var(--anchor-radius, var(--default-radius));
-		background-color: var(--anchor-color, var(--default-color));
 		cursor: pointer;
-		border: solid 1px black;
+		box-shadow: 0 0 0px 1px var(--anchor-border-color, var(--default-anchor-border-color));
 		pointer-events: auto;
 	}
-	.output {
-		border-color: white;
+
+	.connecting {
+		background-color: var(--anchor-connecting, var(--default-anchor-connecting));
+		box-shadow: 0 0 0px 1px var(--anchor-connecting-border, var(--default-anchor-connecting-border));
 	}
-	.input {
-		border-color: rgb(255, 255, 255);
+
+	.hovering {
+		background-color: var(--anchor-hovering, var(--default-anchor-hovering));
+		box-shadow: 0 0 0px 1px var(--anchor-hovering-border, var(--default-anchor-hovering-border));
+	}
+
+	.connected {
+		background-color: var(--anchor-connected, var(--default-anchor-connected));
+		box-shadow: 0 0 0px 1px var(--anchor-connected-border, var(--default-anchor-connected-border));
 	}
 
 	div {

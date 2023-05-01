@@ -9,15 +9,7 @@ import type { GraphConfig } from '$lib/types';
 import { calculateViewportCenter } from '../calculators/calculateViewPortCenter';
 
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {
-	const {
-		zoom,
-		editable,
-		translation: initialTranslation,
-		theme,
-		direction,
-		locked,
-		edge
-	} = config;
+	const { zoom, editable, translation: initialTranslation, direction, locked, edge } = config;
 
 	const translation = writable({
 		x: initialTranslation?.x || 0,
@@ -64,8 +56,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		}),
 		groupBoxes: createStore<GroupBox, GroupKey>(),
 		activeGroup: writable(null),
-		initialNodePositions: writable([]),
-		theme: writable(theme || 'light')
+		initialNodePositions: writable([])
 	};
 
 	return graph;

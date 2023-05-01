@@ -2,8 +2,7 @@
 	import type { Graph } from '$lib/types';
 	import { getContext } from 'svelte';
 	import { calculateFitView } from '$lib/utils';
-	import type { Writable } from 'svelte/store';
-	import type { ThemeGroup, CSSColorString } from '$lib/types';
+	import type { CSSColorString } from '$lib/types';
 	import { zoomAndTranslate } from '$lib/utils/movers/';
 
 	export let increment = 0.1;
@@ -17,7 +16,6 @@
 	const locked = getContext<Graph['locked']>('locked');
 	const groups = getContext<Graph['groups']>('groups');
 	const bounds = getContext<Graph['bounds']>('bounds');
-	const themeStore: Writable<ThemeGroup> = getContext('themeStore');
 
 	const { translation } = transforms;
 
@@ -61,8 +59,8 @@
 		<div
 			class="controls-wrapper"
 			class:horizontal
-			style:background-color={bgColor || $themeStore.controls}
-			style:color={iconColor || $themeStore.text}
+			style:--prop-controls-background-color={bgColor}
+			style:--prop-controls-text-color={iconColor}
 		>
 			{#if $hidden.size > 0}
 				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
@@ -124,8 +122,17 @@
 		flex-direction: column;
 		border-radius: 6px;
 		overflow: hidden;
-		box-shadow: var(--shadow-elevation-low);
+		box-shadow: var(--controls-shadow, var(--default-controls-shadow));
+		border: solid 1px var(--controls-border, var(--default-controls-border));
 		padding: 4px;
+		color: var(
+			--prop-controls-text-color,
+			var(--controls-text-color, var(--default-controls-text-color))
+		);
+		background-color: var(
+			--prop-controls-background-color,
+			var(--controls-background-color, var(--default-controls-background-color))
+		);
 	}
 
 	/* reset button */

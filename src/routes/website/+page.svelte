@@ -29,7 +29,7 @@
 		<Output />
 		<span id="state" class="note"> Stateful Anchors</span>
 		<span id="groups" class="note">Group Boxes</span>
-		<ThemeToggle main="light" alt="dark" slot="toggle" />
+		<ThemeToggle slot="toggle" />
 	</Svelvet>
 </div>
 

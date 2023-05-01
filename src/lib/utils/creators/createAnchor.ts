@@ -77,6 +77,7 @@ export function createAnchor(
 		type,
 		edge,
 		moving,
+		mounted: writable(false),
 		recalculatePosition,
 		connected: writable(new Set()),
 		store: store || null,

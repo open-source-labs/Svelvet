@@ -47,7 +47,6 @@ export interface Graph {
 	edges: EdgeStore;
 	edge: ComponentType | null;
 	groupBoxes: GroupBoxStore;
-	theme: Writable<Theme>;
 	editing: Writable<Node | null>;
 	activeGroup: Writable<GroupKey | null>;
 	initialNodePositions: Writable<XYPair[]>;

@@ -52,6 +52,7 @@ export interface CursorAnchor {
 	direction: Writable<Direction>;
 	inputKey: null;
 	type: 'output';
+	mounted: Writable<true>;
 	moving: Readable<boolean>;
 	store: null;
 	rotation: Readable<number>;

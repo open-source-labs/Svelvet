@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Store, Anchor, Node, WritableEdge, EdgeStore, CursorAnchor } from '$lib/types';
+import type { Store, Anchor, Node, WritableEdge, EdgeStore } from '$lib/types';
 
 export type CustomEdgeKey = Set<Anchor | Node> | 'cursor';
 

@@ -82,7 +82,7 @@
 	/**
 	 * @default false
 	 * @type boolean
-	 * @description When true, the a custom Node will use some of the default styling provided by Svelvet.
+	 * @description When true, the a custom Node will use the default styling provided by Svelvet.
 	 */
 	export let useDefaults = false;
 	/**

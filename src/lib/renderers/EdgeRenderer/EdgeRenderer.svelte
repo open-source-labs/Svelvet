@@ -5,7 +5,6 @@
 	import EdgeContext from '$lib/components/Edge/EdgeContext.svelte';
 
 	const graph = getContext<Graph>('graph');
-	const edgesAboveGraph = getContext<boolean>('edgesAboveGraph');
 
 	const edges = graph.edges;
 </script>
@@ -22,7 +21,7 @@
 {/each}
 
 <style>
-	.edges-wrapper {
+	/* .edges-wrapper {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -30,5 +29,5 @@
 		height: 100%;
 		fill: transparent;
 		overflow: visible;
-	}
+	} */
 </style>

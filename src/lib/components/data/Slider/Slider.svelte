@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { type Graph, type Node, isArrow, type CustomWritable } from '$lib/types';
-	import type { ThemeGroup, CSSColorString } from '$lib/types';
+	import type { CSSColorString } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
 	import { roundNum } from '$lib/utils';
-	import type { Writable } from 'svelte/store';
 	import { tracking } from '$lib/stores/CursorStore';
-	const themeStore = getContext<Writable<ThemeGroup>>('themeStore');
 
 	export let parameterStore: CustomWritable<number>;
 	export let min = 0;
@@ -139,13 +137,13 @@
 
 	$: sliderStyle = `linear-gradient(
 			90deg,
-			${barColor || $themeStore.primary} ${CSSpercentage},
-			${bgColor || $themeStore.alt} ${CSSpercentage}
+			${barColor || 'var(--default-primary-color)'} ${CSSpercentage},
+			${bgColor || 'var(--default-accent-color)'} ${CSSpercentage}
 		)`;
 </script>
 
 {#if !connected}
-	<div class="wrapper" style:color={fontColor || $themeStore.text}>
+	<div class="wrapper" style:color={fontColor}>
 		<button
 			class="button"
 			on:touchstart|stopPropagation={() => updateValue(-1)}
