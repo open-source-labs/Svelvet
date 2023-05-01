@@ -4,6 +4,18 @@
 
 	export let main = 'light';
 	export let alt = 'dark';
+	/**
+	 * @default 'light_mode'
+	 * @description This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
+	 * @link https://fonts.google.com/icons
+	 */
+	export let mainIcon = 'light_mode';
+	/**
+	 * @default 'dark_mode'
+	 * @description This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
+	 *  @link https://fonts.google.com/icons
+	 */
+	export let altIcon = 'dark_mode';
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
@@ -12,6 +24,9 @@
 
 	function toggleTheme() {
 		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
+		if (!currentTheme) return;
+		const newTheme = currentTheme === main ? alt : main;
+		current = newTheme;
 		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
 	}
 
@@ -30,7 +45,7 @@
 	class:NW={corner === 'NW'}
 >
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<span class="material-symbols-outlined">{current === main ? 'dark_mode' : 'light_mode'}</span>
+		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
 	</button>
 </div>
 

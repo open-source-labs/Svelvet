@@ -2,7 +2,7 @@
 	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
 	import type { WritableEdge } from '$lib/types';
 	import { calculateStepPath, calculateRadius } from '$lib/utils/calculators';
-	import { onMount, onDestroy, getContext } from 'svelte';
+	import { onMount, onDestroy, getContext, afterUpdate } from 'svelte';
 	import { directionVectors, stepBuffer } from '$lib/constants';
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
@@ -52,6 +52,10 @@
 	let prefersVertical = false;
 	let sourceAbove = false;
 	let sourceLeft = false;
+
+	afterUpdate(() => {
+		if (DOMPath) calculatePath();
+	});
 
 	$: dynamic = $sourceDynamic || $targetDynamic;
 

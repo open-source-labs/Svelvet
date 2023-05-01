@@ -204,6 +204,8 @@
 		--default-edge-color: hsl(0, 0%, 40%);
 		--default-target-edge-color: hsl(0, 0%, 0%);
 		--default-edge-shadow: var(--shadow-elevation-medium);
+		--default-label-color: hsl(0, 0%, 95%);
+		--default-label-text-color: hsl(0, 0%, 20%);
 
 		--plugin-border: hsl(0, 0%, 42%);
 		--default-controls-border: var(--plugin-border);
@@ -250,6 +252,8 @@
 		--default-edge-color: hsl(0, 0%, 100%);
 		--default-target-edge-color: hsl(0, 0%, 0%);
 		--default-edge-shadow: var(--shadow-elevation-medium);
+		--default-label-color: hsl(0, 0%, 20%);
+		--default-label-text-color: hsl(0, 0%, 100%);
 
 		--default-anchor-color: hsl(0, 0%, 67%);
 		--default-anchor-border-color: hsl(0, 0%, 87%);
@@ -296,6 +300,8 @@
 		--default-edge-color: hsl(0, 0%, 40%);
 		--default-target-edge-color: hsl(0, 0%, 0%);
 		--default-edge-shadow: var(--shadow-elevation-medium);
+		--default-label-color: hsl(0, 0%, 95%);
+		--default-label-text-color: hsl(0, 0%, 20%);
 
 		--plugin-border: hsl(0, 0%, 42%);
 		--default-controls-border: var(--plugin-border);

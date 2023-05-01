@@ -2,7 +2,7 @@
 	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
 	import type { Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
 	import type { InputType, NodeKey, OutputStore, InputStore } from '$lib/types';
-	import { onMount, getContext, onDestroy, beforeUpdate } from 'svelte';
+	import { onMount, getContext, onDestroy, afterUpdate } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
 	import { writable } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
@@ -142,7 +142,7 @@
 		if (poppedConnections) assignedConnections = poppedConnections;
 	}
 
-	beforeUpdate(() => {
+	afterUpdate(() => {
 		if (anchorElement) anchor.recalculatePosition();
 	});
 

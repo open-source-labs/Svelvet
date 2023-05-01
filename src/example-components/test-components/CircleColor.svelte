@@ -37,6 +37,7 @@
 			output
 			edgeColor={output}
 			edgeLabel="Dynamic Edges"
+			edgeStyle="bezier"
 			edge={CustomEdge}
 			locked
 		>

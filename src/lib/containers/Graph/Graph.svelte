@@ -91,6 +91,7 @@
 	let initialScale = 1;
 	let pinching = false;
 	let animationFrameId: number;
+	let initialFit = false;
 
 	setContext('graphDOMElement', graphDOMElement);
 
@@ -128,17 +129,16 @@
 	}
 
 	// Wait until all Nodes are mounted
-	$: if (fitView && graphDimensions && $mounted === graph.nodes.count()) {
-		// If fitView is not set to resize, only run once
-		if (fitView !== 'resize') fitView = false;
+	$: if (!initialFit && fitView && graphDimensions && $mounted === graph.nodes.count()) {
 		fitIntoView();
+		initialFit = true;
 	}
 
 	function fitIntoView() {
 		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
-			translation.set({ x, y });
 			graph.transforms.scale.set(scale);
+			translation.set({ x, y });
 		}
 	}
 	async function loadMinimap() {
