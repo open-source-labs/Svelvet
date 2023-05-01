@@ -5,7 +5,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet fitView theme="dark" width={800} height={500} controls>
+		<Svelvet theme="dark" width={800} height={500} controls>
 			<Node id="node1" label="test" resizable />
 			<Node
 				on:connection={() => console.log('node2 connected')}
