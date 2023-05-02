@@ -1,16 +1,23 @@
-<script lang="ts">
-	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
-	import type { WritableEdge } from '$lib/types';
-	import { calculateStepPath, calculateRadius } from '$lib/utils/calculators';
+<script context="module" lang="ts">
+	import { calculateStepPath, calculateRadius, calculatePath } from '$lib/utils/calculators';
 	import { onMount, onDestroy, getContext, afterUpdate } from 'svelte';
 	import { directionVectors, stepBuffer } from '$lib/constants';
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
 	import { get } from 'svelte/store';
+	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
+	import type { WritableEdge } from '$lib/types';
 
+	let animationFrameId: number;
+</script>
+
+<script lang="ts">
 	const edgeStore = getContext<Graph['edges']>('edgeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
+	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
+	const edgesAboveNode = getContext('edgesAboveNode');
 
+	// Props
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
@@ -26,6 +33,7 @@
 	export let cornerRadius = 8;
 	export let targetColor: CSSColorString | null = null;
 
+	// External stores
 	const source = edge.source;
 	const target = edge.target;
 	const sourceDirection = source.direction;
@@ -38,37 +46,35 @@
 	const targetDynamic = target.dynamic;
 	const sourceMoving = source.moving;
 	const targetMoving = target.moving;
-	const sourceNodePosition = source.node?.position;
-	const targetNodePosition = target.node?.position;
+	const sourceNodePositionStore = source.node?.position;
+	const targetNodePositionStore = target.node?.position;
 	const edgeType = edge.type;
 	const edgeKey = edge.id;
 
+	// Reactive variables
 	let path: string;
-	let animationFrameId: number;
 	let DOMPath: SVGPathElement; // The SVG path element used for calculating the midpoint of the curve for labels
-	let pathMidPointX = 0;
-	let pathMidPointY = 0;
+	let pathMidPoint = { x: 0, y: 0 };
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
 	let prefersVertical = false;
 	let sourceAbove = false;
 	let sourceLeft = false;
 
-	afterUpdate(() => {
-		if (DOMPath) calculatePath();
-	});
-
+	// Reactive declarations
 	$: dynamic = $sourceDynamic || $targetDynamic;
-
 	$: edgeColor = source?.edgeColor || target?.edgeColor || null;
-	$: edgeLabel = edge && edge.label?.text;
+	$: edgeLabel = edge.label?.text;
 	$: finalColor = color || $edgeColor || null;
 	$: labelText = label || $edgeLabel || '';
 	$: renderLabel = labelText || $$slots.label; // Boolean that determines whether or not to render the label
+
+	// Subscriptions
 	$: sourcePosition = $sourcePositionStore;
 	$: targetPosition = $targetPositionStore;
+	$: sourceNodePosition = $sourceNodePositionStore;
+	$: targetNodePosition = $targetNodePositionStore;
 
-	// The coordinates of the source and target anchors
-	// If there is no source or target, use the cursor position
+	//Reactive declarations
 	$: sourceX = sourcePosition.x;
 	$: sourceY = sourcePosition.y;
 	$: targetX = targetPosition.x;
@@ -113,29 +119,29 @@
 	}
 
 	$: if (dynamic && source.node && target.node) {
-		const nodeXDelta = $targetNodePosition.x - $sourceNodePosition.x;
-		const nodeYDelta = $targetNodePosition.y - $sourceNodePosition.y;
+		const nodeXDelta = targetNodePosition.x - sourceNodePosition.x;
+		const nodeYDelta = targetNodePosition.y - sourceNodePosition.y;
 		sourceAbove = nodeYDelta > 0;
 		sourceLeft = nodeXDelta > 0;
 		let borderDeltaY;
 		let borderDeltaX;
 		if (sourceAbove) {
 			const sourceHeight = get(source.node.dimensions.height);
-			const sourceBottom = $sourceNodePosition.y + sourceHeight;
-			borderDeltaY = $targetNodePosition.y - sourceBottom;
+			const sourceBottom = sourceNodePosition.y + sourceHeight;
+			borderDeltaY = targetNodePosition.y - sourceBottom;
 		} else {
 			const targetHeight = get(target.node.dimensions.height);
-			const targetBottom = $targetNodePosition.y + targetHeight;
-			borderDeltaY = $sourceNodePosition.y - targetBottom;
+			const targetBottom = targetNodePosition.y + targetHeight;
+			borderDeltaY = sourceNodePosition.y - targetBottom;
 		}
 		if (sourceLeft) {
 			const sourceWidth = get(source.node.dimensions.width);
-			const sourceRight = $sourceNodePosition.x + sourceWidth;
-			borderDeltaX = $targetNodePosition.x - sourceRight;
+			const sourceRight = sourceNodePosition.x + sourceWidth;
+			borderDeltaX = targetNodePosition.x - sourceRight;
 		} else {
 			const targetWidth = get(target.node.dimensions.width);
-			const targetRight = $targetNodePosition.x + targetWidth;
-			borderDeltaX = $sourceNodePosition.x - targetRight;
+			const targetRight = targetNodePosition.x + targetWidth;
+			borderDeltaX = sourceNodePosition.x - targetRight;
 		}
 
 		prefersVertical = borderDeltaY > borderDeltaX;
@@ -155,31 +161,33 @@
 		if ($targetDynamic) $targetDirection = newTargetDirection;
 	}
 
-	// Track the path in sync with browser animation frames
-	function trackPath() {
-		if (!tracking) return;
-		if (DOMPath) calculatePath();
-		animationFrameId = requestAnimationFrame(trackPath);
-	}
-
-	// One time calculatin of path midpoint
-	function calculatePath() {
-		const pathLength = DOMPath.getTotalLength();
-		const halfLength = pathLength / 2;
-		const pathMidPoint = DOMPath.getPointAtLength(halfLength);
-		pathMidPointX = pathMidPoint.x;
-		pathMidPointY = pathMidPoint.y;
-	}
-
+	// Lifecycle methods
 	onMount(() => {
 		setTimeout(() => {
-			calculatePath();
+			if (DOMPath) {
+				pathMidPoint = calculatePath(DOMPath);
+			}
 		}, 0);
+	});
+
+	afterUpdate(() => {
+		if (DOMPath) {
+			pathMidPoint = calculatePath(DOMPath);
+		}
 	});
 
 	onDestroy(() => {
 		cancelAnimationFrame(animationFrameId);
 	});
+
+	// Track the path in sync with browser animation frames
+	function trackPath() {
+		if (!tracking) return;
+		if (DOMPath) {
+			pathMidPoint = calculatePath(DOMPath);
+		}
+		animationFrameId = requestAnimationFrame(trackPath);
+	}
 
 	function destroy() {
 		if (source.id === null || target.id === null) return;
@@ -255,8 +263,6 @@
 	$: sourceZIndex = source.node.zIndex || 0;
 	$: targetZIndex = target.node.zIndex || 0;
 	$: maxZIndex = Math.max($sourceZIndex, $targetZIndex);
-	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
-	const edgesAboveNode = getContext('edgesAboveNode');
 
 	$: zIndex =
 		edgesAboveNode === 'all'
@@ -270,56 +276,52 @@
 			: raiseEdgesOnSelect === 'target'
 			? $targetZIndex - 1
 			: 0;
-
-	$: sourceMounted = source.mounted;
-	$: targetMounted = target.mounted;
 </script>
 
-{#if $sourceMounted && $targetMounted}
-	<svg class="edges-wrapper" style:z-index={zIndex}>
+<svg class="edges-wrapper" style:z-index={zIndex}>
+	<path
+		id={edgeKey + '-target'}
+		class="target"
+		class:cursor={edgeKey === 'cursor' || !edgeClick}
+		style:cursor={edgeClick ? 'pointer' : 'move'}
+		style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
+		d={path}
+		on:mousedown={edgeClick}
+		bind:this={DOMPath}
+	/>
+	<slot {path} {destroy}>
 		<path
-			id={edgeKey + '-target'}
-			bind:this={DOMPath}
-			class="target"
-			class:cursor={edgeKey === 'cursor' || !edgeClick}
-			style:cursor={edgeClick ? 'pointer' : 'move'}
-			style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
+			id={edgeKey}
+			class="edge"
+			class:animate
 			d={path}
-			on:mousedown={edgeClick}
+			style:--prop-edge-color={finalColor}
+			style:--prop-stroke-width={width ? width + 'px' : null}
 		/>
-		<slot {path} {destroy}>
-			<path
-				id={edgeKey}
-				class="edge"
-				class:animate
-				d={path}
-				style:--prop-edge-color={finalColor}
-				style:--prop-stroke-width={width ? width + 'px' : null}
-			/>
-		</slot>
+	</slot>
 
-		{#if renderLabel}
-			<foreignObject x={pathMidPointX} y={pathMidPointY} width="100%" height="100%">
-				<span class="label-wrapper">
-					<slot name="label">
-						<div
-							class="default-label"
-							style:--prop-label-color={labelColor}
-							style:--prop-label-text-color={textColor}
-						>
-							{labelText}
-						</div>
-					</slot>
-				</span>
-			</foreignObject>
-		{/if}
-	</svg>
-{/if}
+	{#if renderLabel}
+		<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
+			<span class="label-wrapper">
+				<slot name="label">
+					<div
+						class="default-label"
+						style:--prop-label-color={labelColor}
+						style:--prop-label-text-color={textColor}
+					>
+						{labelText}
+					</div>
+				</slot>
+			</span>
+		</foreignObject>
+	{/if}
+</svg>
 
 <style>
 	.edge {
 		stroke: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
 		stroke-width: var(--prop-stroke-width, var(--edge-width, var(--default-edge-width)));
+		contain: strict;
 	}
 	.label-wrapper {
 		display: flex;
@@ -389,17 +391,6 @@
 	@keyframes dash {
 		from {
 			stroke-dashoffset: 30;
-		}
-	}
-
-	/* .retract {
-		stroke-dasharray: 1000;
-		stroke-dashoffset: 0;
-		animation: retract 1s linear infinite forwards;
-	} */
-	@keyframes retract {
-		to {
-			stroke-dashoffset: 1000;
 		}
 	}
 </style>

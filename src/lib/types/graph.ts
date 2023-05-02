@@ -40,9 +40,6 @@ export interface Graph {
 	editable: boolean;
 	direction: 'TD' | 'LR';
 	cursor: Readable<{ x: number; y: number }>;
-	linkingInput: Writable<LinkingInput | null>;
-	linkingOutput: Writable<LinkingOutput | null>;
-	linkingAny: Writable<Anchor | null>;
 	groups: Writable<Groups>;
 	edges: EdgeStore;
 	edge: ComponentType | null;
@@ -74,6 +71,12 @@ export interface LinkingInput {
 export interface LinkingOutput {
 	anchor: Anchor;
 	store: OutputStore | null;
+}
+
+export interface ConnectingFrom {
+	anchor: Anchor;
+	store: InputStore | OutputStore | null;
+	key: string | number | null;
 }
 
 export type Groups = Record<GroupKey, Group>;

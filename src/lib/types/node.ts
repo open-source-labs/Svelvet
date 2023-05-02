@@ -5,10 +5,11 @@ import type { ComponentType } from 'svelte';
 // This defines an interface for the actual node object that is used in the graph/stores
 export interface Node {
 	id: NodeKey;
-	label: Writable<string>; // Primary label for default node
-	dimensions: Dimensions;
 	rotation: Writable<number>;
 	position: Writable<XYPair>;
+	moving: Writable<boolean>;
+	label: Writable<string>; // Primary label for default node
+	dimensions: Dimensions;
 	inputs: Writable<number>; //Number of default input anchors to render
 	outputs: Writable<number>; // Number of default output anchors to render
 	anchors: AnchorStore;
@@ -17,7 +18,6 @@ export interface Node {
 	visible: Writable<boolean>;
 	resizingWidth: Writable<boolean>;
 	resizingHeight: Writable<boolean>;
-	moving: Writable<boolean>;
 	rotating: Writable<boolean>;
 	editable: Writable<boolean>;
 	locked: Writable<boolean>;

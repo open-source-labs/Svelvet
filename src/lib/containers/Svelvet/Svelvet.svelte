@@ -1,20 +1,17 @@
-<script lang="ts">
+<script context="module" lang="ts">
+	import Graph from '../Graph/Graph.svelte';
+	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 	import { onMount, setContext } from 'svelte';
-	import type {
-		Graph as GraphType,
-		GraphKey,
-		NodeConfig,
-		CSSColorString,
-		EdgeStyle,
-		XYPair
-	} from '$lib/types';
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
-	import Graph from '../Graph/Graph.svelte';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
-	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 	import type { ComponentType } from 'svelte';
+	import type { Graph as GraphType, EdgeStyle, XYPair } from '$lib/types';
+	import type { NodeConfig, GraphKey, CSSColorString } from '$lib/types';
+</script>
 
+<script lang="ts">
+	// Props
 	export let mermaid = '';
 	/**
 	 * @default light
@@ -43,7 +40,7 @@
 	/**
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
-	 * and scale to fit all nodes with inthe viewport. When set to `resize`, this
+	 * and scale to fit all nodes within the viewport. When set to `resize`, this
 	 * will continuously happen as the viewport changes size. This value is reactive.
 	 */
 	export let fitView: boolean | 'resize' = false;
@@ -88,15 +85,14 @@
 	 */
 	export let edgesAboveNode: boolean | 'all' = false;
 
-	setContext('raiseEdgesOnSelect', raiseEdgesOnSelect);
-	setContext('edgesAboveNode', edgesAboveNode);
 	let graph: GraphType;
-
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
 	setContext('snapTo', snapTo);
 	setContext('edgeStyle', edgeStyle);
 	setContext('graphEdge', edge);
+	setContext('raiseEdgesOnSelect', raiseEdgesOnSelect);
+	setContext('edgesAboveNode', edgesAboveNode);
 
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
@@ -153,7 +149,7 @@
 
 <style>
 	.svelvet-temp {
-		background-color: var(--default-background-color);
+		background-color: transparent;
 	}
 	:root {
 		--default-node-border-width: 1.5px;
@@ -197,7 +193,7 @@
 		--default-dot-color: hsl(0, 0%, 53%);
 
 		--default-accent-color: hsl(0, 0%, 100%);
-		--default-primary-color: #d3d3d3;
+		--default-primary-color: hsl(0, 0%, 83%);
 
 		--default-selection-box-color: hsl(195, 53%, 79%);
 
@@ -293,7 +289,7 @@
 		--default-dot-color: hsl(0, 0%, 53%);
 
 		--default-accent-color: hsl(0, 0%, 100%);
-		--default-primary-color: #d3d3d3;
+		--default-primary-color: hsl(0, 0%, 83%);
 
 		--default-selection-box-color: hsl(195, 53%, 79%);
 

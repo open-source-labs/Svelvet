@@ -8,8 +8,7 @@ export function getViewportCenter(graphId: string) {
 
 	return calculateViewportCenter(
 		get(graph.dimensions),
-		get(graph.transforms.translation.x),
-		get(graph.transforms.translation.y),
+		get(graph.transforms.translation),
 		get(graph.transforms.scale)
 	);
 }

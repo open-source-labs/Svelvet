@@ -1,21 +1,27 @@
-<script lang="ts">
+<script context="module" lang="ts">
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
-	import { onMount, setContext, createEventDispatcher } from 'svelte';
-	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
-	import type { Arrow, GroupKey, Group, CursorAnchor } from '$lib/types';
+	import { connectingFrom } from '$lib/components/Anchor/Anchor.svelte';
+	import { onMount, setContext, createEventDispatcher, tick } from 'svelte';
 	import { isArrow } from '$lib/types';
+	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
 	import { calculateFitView, calculateTranslation, calculateZoom, generateKey } from '$lib/utils';
-	import { get, writable } from 'svelte/store';
+	import { get, writable, readable } from 'svelte/store';
 	import { getRandomColor } from '$lib/utils';
+	import { moveElement, zoomAndTranslate } from '$lib/utils/movers';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentType } from 'svelte';
-	import { moveElement, zoomAndTranslate } from '$lib/utils/movers';
-	import { readable } from 'svelte/store';
+	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
+	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
 
+	let animationFrameId: number;
+</script>
+
+<script lang="ts">
+	// Props
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
@@ -36,20 +42,60 @@
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
 	export let theme = 'light';
 
-	const duplicate = writable(false);
+	// Local constants
+	const dispatch = createEventDispatcher();
+	const activeIntervals: ActiveIntervals = {};
 
-	setContext('duplicate', duplicate);
-	setContext('graph', graph);
-	setContext('transforms', graph.transforms);
-	setContext('dimensions', graph.dimensions);
-	setContext('locked', graph.locked);
-	setContext('groups', graph.groups);
-	setContext('bounds', graph.bounds);
-	setContext('edgeStore', graph.edges);
-	setContext('nodeStore', graph.nodes);
-	setContext('linkingInput', graph.linkingInput);
-	setContext('linkingOutput', graph.linkingOutput);
-	setContext('linkingAny', graph.linkingAny);
+	// Local stores
+	const duplicate = writable(false);
+	const mounted = writable(0);
+	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
+
+	// External stores
+	const cursor = graph.cursor;
+	const scale = graph.transforms.scale;
+	const dimensionsStore = graph.dimensions;
+	const translation = graph.transforms.translation;
+	const groups = graph.groups;
+	const groupBoxes = graph.groupBoxes;
+	const selected = $groups.selected.nodes;
+	const activeGroup = graph.activeGroup;
+	const initialNodePositions = graph.initialNodePositions;
+	const editing = graph.editing;
+	const nodeBounds = graph.bounds.nodeBounds;
+
+	// Reactive variables
+	let initialDistance = 0;
+	let initialScale = 1;
+	let anchor = { x: 0, y: 0, top: 0, left: 0 };
+	let selecting = false;
+	let creating = false;
+	let adding = false;
+	let isMovable = false;
+	let pinching = false;
+	let initialFit = false;
+	let interval: number | undefined = undefined;
+	let graphDimensions: GraphDimensions;
+	let toggleComponent: ComponentType | null = null;
+	let minimapComponent: ComponentType | null = null;
+	let controlsComponent: ComponentType | null = null;
+
+	// Subscriptions
+	$: dimensions = $dimensionsStore;
+
+	// Update the svelvet-theme attribute everytime the theme changes
+	$: if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
+
+	$: if (!initialFit && fitView) {
+		fitIntoView();
+		initialFit = true;
+	}
+
+	$: if (toggle && !toggleComponent) loadToggle();
+
+	$: if (minimap && !minimapComponent) loadMinimap();
+
+	$: if (controls && !controlsComponent) loadControls();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -74,67 +120,29 @@
 			dimensions: { width: writable(0), height: writable(0) }
 		}
 	};
-	setContext('cursorAnchor', cursorAnchor);
 
-	let interval: number | undefined = undefined;
-	type ActiveIntervals = Record<string, ReturnType<typeof setInterval> | undefined>;
-	const activeIntervals: ActiveIntervals = {};
-
-	let anchor = { x: 0, y: 0, top: 0, left: 0 };
-	let selecting = false;
-	let creating = false;
-	let adding = false;
-	let graphDimensions: GraphDimensions;
-	let graphDOMElement: Writable<HTMLElement | null> = writable(null);
-	let isMovable = false;
-	let initialDistance = 0;
-	let initialScale = 1;
-	let pinching = false;
-	let animationFrameId: number;
-	let initialFit = false;
-
+	// This is an experiment to see if there's a benefit
+	// to selectively splitting up the contexts into smaller pieces
 	setContext('graphDOMElement', graphDOMElement);
-
-	const mounted: Writable<number> = writable(0);
+	setContext('cursorAnchor', cursorAnchor);
+	setContext('duplicate', duplicate);
+	setContext('graph', graph);
+	setContext('transforms', graph.transforms);
+	setContext('dimensions', graph.dimensions);
+	setContext('locked', graph.locked);
+	setContext('groups', graph.groups);
+	setContext('bounds', graph.bounds);
+	setContext('edgeStore', graph.edges);
+	setContext('nodeStore', graph.nodes);
 	setContext('mounted', mounted);
-	const cursor = graph.cursor;
-	const scale = graph.transforms.scale;
-	const groupBoxes = graph.groupBoxes;
-	const dimensionsStore = graph.dimensions;
-	const groups = graph.groups;
-	const selected = $groups.selected.nodes;
-	const translation = graph.transforms.translation;
-	const activeGroup = graph.activeGroup;
-	const initialNodePositions = graph.initialNodePositions;
-	const editing = graph.editing;
-	const linkingAny = graph.linkingAny;
-	const linkingInput = graph.linkingInput;
-	const linkingOutput = graph.linkingOutput;
-	const nodeBounds = graph.bounds.nodeBounds;
 
-	const dispatch = createEventDispatcher();
-
-	$: dimensions = $dimensionsStore;
-
-	let toggleComponent: ComponentType | null = null;
-	let minimapComponent: ComponentType | null = null;
-	let controlsComponent: ComponentType | null = null;
-
+	// Lifecycle methods
 	onMount(() => {
 		updateGraphDimensions();
 	});
 
-	$: if (theme) {
-		document.documentElement.setAttribute('svelvet-theme', theme);
-	}
-
-	// Wait until all Nodes are mounted
-	$: if (!initialFit && fitView && graphDimensions && $mounted === graph.nodes.count()) {
-		fitIntoView();
-		initialFit = true;
-	}
-
-	function fitIntoView() {
+	async function fitIntoView() {
+		await tick();
 		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
 			graph.transforms.scale.set(scale);
@@ -151,16 +159,6 @@
 
 	async function loadControls() {
 		controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
-	}
-
-	$: if (toggle && !toggleComponent) {
-		loadToggle();
-	}
-	$: if (minimap && !minimapComponent) {
-		loadMinimap();
-	}
-	$: if (controls && !controlsComponent) {
-		loadControls();
 	}
 
 	function updateGraphDimensions() {
@@ -236,7 +234,14 @@
 
 		if (cursorEdge) {
 			graph.edges.delete('cursor');
-			if (!cursorEdge.disconnect) dispatch('edgeDrop', $cursor);
+			if (!cursorEdge.disconnect)
+				dispatch('edgeDrop', {
+					cursor: $cursor,
+					source: {
+						node: $connectingFrom?.anchor.node.id.slice(2),
+						anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
+					}
+				});
 		}
 
 		$activeGroup = null;
@@ -247,9 +252,7 @@
 		$tracking = false;
 
 		if (!e.shiftKey) {
-			if ($linkingAny) linkingAny.set(null);
-			if ($linkingInput) linkingInput.set(null);
-			if ($linkingOutput) linkingOutput.set(null);
+			connectingFrom.set(null);
 		}
 
 		anchor.y = 0;
@@ -365,9 +368,7 @@
 			clearInterval(activeIntervals[key]);
 			delete activeIntervals[key];
 		} else if (key === 'Shift') {
-			linkingAny.set(null);
-			linkingInput.set(null);
-			linkingOutput.set(null);
+			connectingFrom.set(null);
 		}
 		interval = undefined;
 	}
@@ -411,7 +412,7 @@
 		scale.set(newScale);
 		translation.set(newTranslation);
 	}
-	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
+
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
@@ -427,8 +428,8 @@
 				if ($selected.size === 0) {
 					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 					translation.set({
-						x: leftRight ? movement : 0,
-						y: leftRight ? 0 : movement
+						x: leftRight ? movement : $translation.x,
+						y: leftRight ? $translation.y : movement
 					});
 				} else {
 					const delta = {
@@ -462,18 +463,18 @@
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
+	id={graph.id}
 	class="svelvet-wrapper"
 	title="graph"
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
-	id={graph.id}
-	bind:this={$graphDOMElement}
 	on:wheel|preventDefault={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
 	on:touchstart|preventDefault|self={onTouchStart}
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
+	bind:this={$graphDOMElement}
 	tabindex={0}
 >
 	<GraphRenderer {isMovable}>

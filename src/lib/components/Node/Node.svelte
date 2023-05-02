@@ -1,26 +1,18 @@
-<script lang="ts">
-	import { getContext, onMount } from 'svelte';
-	import type {
-		Graph,
-		Node as NodeType,
-		NodeConfig,
-		GroupKey,
-		Connections,
-		CSSColorString,
-		InitialDimensions,
-		NodeKey,
-		Anchor,
-		AnchorKey
-	} from '$lib/types';
-	import { createNode } from '$lib/utils';
+<script context="module" lang="ts">
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
 	import { get } from 'svelte/store';
+	import { createNode } from '$lib/utils';
+	import { getContext, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
-	import { setContext } from 'svelte';
+	import type { NodeKey, Anchor, AnchorKey } from '$lib/types';
+	import type { Graph, Node as NodeType, NodeConfig, GroupKey } from '$lib/types';
+	import type { Connections, CSSColorString, InitialDimensions } from '$lib/types';
+</script>
 
+<script lang="ts">
 	const graph = getContext<Graph>('graph');
-	const { nodes } = graph;
+	const group: GroupKey = getContext('group');
 
 	//const storedNode = JSON.parse(localStorage.getItem('state'))?.nodes?[id]
 	/**
@@ -99,10 +91,12 @@
 	 */
 	export let dynamic = false;
 
+	// External stores
+	const nodes = graph.nodes;
+
 	setContext('dynamic', dynamic);
 
 	let node: NodeType;
-	const group: GroupKey = getContext('group');
 	let isDefault = true;
 
 	onMount(() => {
@@ -253,16 +247,9 @@
 
 {#if node && $nodes.get(node.id)}
 	<InternalNode
+		{node}
 		{center}
 		isDefault={isDefault || useDefaults}
-		let:destroy
-		let:selected
-		let:grabHandle
-		on:nodeClicked
-		on:nodeMount
-		on:nodeReleased
-		on:duplicate
-		{node}
 		nodeStore={graph.nodes}
 		locked={graph.locked}
 		groups={graph.groups}
@@ -272,6 +259,13 @@
 		activeGroup={graph.activeGroup}
 		editing={graph.editing}
 		initialNodePositions={graph.initialNodePositions}
+		on:nodeClicked
+		on:nodeMount
+		on:nodeReleased
+		on:duplicate
+		let:destroy
+		let:selected
+		let:grabHandle
 	>
 		<slot {selected} {grabHandle} {disconnect} {connect} {node} {destroy}>
 			<DefaultNode {selected} on:connection on:disconnection />

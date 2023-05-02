@@ -11,3 +11,5 @@ export interface CustomWritable<T> extends Omit<Writable<T>, 'set' | 'update'> {
 export type WrappedWritable<T> = {
 	[K in keyof T]: CustomWritable<T[K]>;
 };
+
+export type ActiveIntervals = Record<string, ReturnType<typeof setInterval> | undefined>;
