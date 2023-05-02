@@ -4,9 +4,13 @@
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
-	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
+	import { get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
+
+	const mounted = getContext<Writable<number>>('mounted');
+	const duplicate = getContext<Writable<boolean>>('duplicate');
+	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
 
 	export let node: Node;
 	export let isDefault: boolean;
@@ -21,43 +25,39 @@
 	export let activeGroup: Graph['activeGroup'];
 	export let editing: Graph['editing'];
 
+	setContext<Node>('node', node);
+
+	const id = node.id;
 	const position = node.position;
 	const widthStore = node.dimensions.width;
 	const heightStore = node.dimensions.height;
+	const selectionColor = node.selectionColor;
+	const editable = node.editable;
+	const nodeLock = node.locked;
+	const zIndex = node.zIndex;
+	const bgColor = node.bgColor;
+	const borderRadius = node.borderRadius;
+	const textColor = node.textColor;
+	const borderColor = node.borderColor;
+	const borderWidth = node.borderWidth;
+	const rotation = node.rotation;
 
-	$: actualPosition = $position;
-	$: id = node.id;
-	$: editable = node.editable;
-	$: nodeLock = node.locked;
-	$: zIndex = node.zIndex;
-	$: bgColor = node.bgColor;
-	$: borderRadius = node.borderRadius;
-	$: textColor = node.textColor;
-	$: borderColor = node.borderColor;
-	$: selectionColor = node.selectionColor;
-	$: borderWidth = node.borderWidth;
-	$: rotation = node.rotation;
+	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
+	const hiddenNodes = hiddenNodesGroup.nodes;
+	const selectedNodes = selectedNodeGroup.nodes;
 
-	const mounted = getContext<Writable<number>>('mounted');
-	const duplicate = getContext<Writable<boolean>>('duplicate');
-	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
-
-	setContext<Node>('node', node);
+	const dispatch = createEventDispatcher();
 
 	let collapsed = false;
 	let minWidth = 200;
 	let minHeight = 100;
-
 	let DOMnode: HTMLElement;
 
-	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
-	const dispatch = createEventDispatcher();
+	$: actualPosition = $position;
 
 	// Creates reactive variable for whether the node is selected
 	// We use this as a class directive in the component
-	$: selectedNodes = selectedNodeGroup.nodes;
 	$: selected = $selectedNodes.has(node);
-	$: hiddenNodes = hiddenNodesGroup.nodes;
 	$: hidden = $hiddenNodes.has(node);
 
 	// If the node is selected and the duplicate key pair is pressed
@@ -97,6 +97,7 @@
 			$selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		}
+		// Decrement the store value for mounted nodes
 		$mounted--;
 	});
 
@@ -110,6 +111,7 @@
 		}
 	}
 
+	// This doesn't really do anything at the moment
 	function handleKeydown(e: KeyboardEvent) {
 		// If node is focused, hitting enter will toggle the selected state
 		if (e.key === 'Enter') {
@@ -120,30 +122,30 @@
 		}
 	}
 
-	function grabHandle(node: HTMLElement) {
-		node.addEventListener('mousedown', handleNodeClicked);
-		node.addEventListener('touchstart', handleNodeTouch);
-		return {
-			destroy() {
-				node.removeEventListener('mousedown', handleNodeClicked);
-				node.removeEventListener('touchstart', handleNodeTouch);
-			}
-		};
-	}
-
+	// Initial handler for a touch event on a node
 	function handleNodeTouch(e: TouchEvent) {
 		$graphDOMElement.focus();
 		e.stopPropagation();
 		e.preventDefault();
-		if (e.touches.length > 1) return;
-		if ($locked || $nodeLock) return;
+
+		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
+		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
+
+		// If the node is Node is not currently on top, bring it to the front
+		// Unless the zIndex prop has been set to infinity
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
+
+		// Dispatch our nodeClicked event for developer use
 		dispatch('nodeClicked', { node, e });
 
+		// Capture the initial touch position
 		$initialClickPosition = $cursor;
+
+		// Handle the node selection logic
 		nodeSelectLogic(e);
 	}
 
+	// Initial handler for a click event on a node
 	function handleNodeClicked(e: MouseEvent) {
 		$graphDOMElement.focus();
 		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
@@ -221,6 +223,7 @@
 		$initialNodePositions = captureGroup($groups['selected'].nodes);
 	}
 
+	// Delete the node from the store
 	function destroy() {
 		nodeStore.delete(id);
 	}
@@ -230,6 +233,18 @@
 		const mouseDeltaY = $cursor.y - $initialClickPosition.y;
 		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
 		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+	}
+
+	// Custom action to handle Node interactions
+	function grabHandle(node: HTMLElement) {
+		node.addEventListener('mousedown', handleNodeClicked);
+		node.addEventListener('touchstart', handleNodeTouch);
+		return {
+			destroy() {
+				node.removeEventListener('mousedown', handleNodeClicked);
+				node.removeEventListener('touchstart', handleNodeTouch);
+			}
+		};
 	}
 </script>
 
@@ -252,13 +267,13 @@
 		style:--prop-selection-color={$selectionColor}
 		style:--prop-border-radius={$borderRadius ? `${$borderRadius}px` : isDefault ? null : '0px'}
 		style:--prop-border-width={$borderWidth || (isDefault ? null : '0px')}
-		bind:clientWidth={$widthStore}
-		bind:clientHeight={$heightStore}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
-		bind:this={DOMnode}
 		use:grabHandle
+		bind:clientWidth={$widthStore}
+		bind:clientHeight={$heightStore}
+		bind:this={DOMnode}
 		tabIndex={0}
 	>
 		{#if !collapsed}
