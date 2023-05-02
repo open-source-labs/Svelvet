@@ -18,10 +18,10 @@
 	let week = '';
 </script>
 
-<Node bgColor="black" label="StartNode" borderRadius={10} let:destroy>
+<Node id="input" bgColor="black" label="StartNode" borderRadius={10} let:destroy>
 	<div class="node">
-		<input type="text" bind:value={text} />
-		<input type="checkbox" bind:checked />
+		<input id="text-test" type="text" bind:value={text} />
+		<input id="checkbox-test" type="checkbox" bind:checked />
 		<input type="color" bind:value={color} />
 		<input type="date" bind:value={date} />
 		<input type="datetime-local" bind:value={datetime} />

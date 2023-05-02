@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte';
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
+	import InputNode from '../example-components/InputNode.svelte';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -25,6 +26,7 @@
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 		<ThemeToggle slot="toggle" />
+		<InputNode />
 	</Svelvet>
 </body>
 
