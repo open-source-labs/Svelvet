@@ -1,17 +1,23 @@
-<script lang="ts">
-	import type { Graph, Node } from '$lib/types';
-	import type { GroupKey, Group } from '$lib/types';
+<script context="module" lang="ts">
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
+	import type { Node, Graph } from '$lib/types';
+	import type { GroupKey, Group } from '$lib/types';
+</script>
 
+<script lang="ts">
+	// Context
 	const mounted = getContext<Writable<number>>('mounted');
 	const duplicate = getContext<Writable<boolean>>('duplicate');
 	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
 
+	const dispatch = createEventDispatcher();
+
+	// Props
 	export let node: Node;
 	export let isDefault: boolean;
 	export let center: boolean;
@@ -25,8 +31,7 @@
 	export let activeGroup: Graph['activeGroup'];
 	export let editing: Graph['editing'];
 
-	setContext<Node>('node', node);
-
+	// External stores
 	const id = node.id;
 	const position = node.position;
 	const widthStore = node.dimensions.width;
@@ -38,27 +43,26 @@
 	const bgColor = node.bgColor;
 	const borderRadius = node.borderRadius;
 	const textColor = node.textColor;
+	const group = node.group;
 	const borderColor = node.borderColor;
 	const borderWidth = node.borderWidth;
 	const rotation = node.rotation;
-
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 	const hiddenNodes = hiddenNodesGroup.nodes;
 	const selectedNodes = selectedNodeGroup.nodes;
 
-	const dispatch = createEventDispatcher();
-
+	// Reactive variables
 	let collapsed = false;
 	let minWidth = 200;
 	let minHeight = 100;
 	let DOMnode: HTMLElement;
 
+	// Subscriptions
 	$: actualPosition = $position;
 
-	// Creates reactive variable for whether the node is selected
-	// We use this as a class directive in the component
-	$: selected = $selectedNodes.has(node);
-	$: hidden = $hiddenNodes.has(node);
+	// Reactive declarations
+	$: selected = $selectedNodes.has(node); // Used as class directive
+	$: hidden = $hiddenNodes.has(node); // Used as class directive
 
 	// If the node is selected and the duplicate key pair is pressed
 	// Dispatch the duplicate event
@@ -66,6 +70,9 @@
 		dispatch('duplicate', node);
 	}
 
+	setContext<Node>('node', node);
+
+	// Lifecycle methods
 	onMount(() => {
 		// If the node dimensions got set in previous steps, we don't need to do anything
 		if (!$widthStore && !$heightStore) {
@@ -189,7 +196,7 @@
 		let isParent = false;
 
 		// Check if the node is in a group
-		const nodeGroup: GroupKey | null = get(node.group);
+		const nodeGroup: GroupKey | null = $group;
 
 		// If it is in a group, check if it's the parent
 		if (nodeGroup) {
@@ -227,12 +234,16 @@
 	function destroy() {
 		nodeStore.delete(id);
 	}
-
+	import { writable } from 'svelte/store';
+	const nodeConnectEvent = writable<null | MouseEvent>(null);
+	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {
 		const mouseDeltaX = $cursor.x - $initialClickPosition.x;
 		const mouseDeltaY = $cursor.y - $initialClickPosition.y;
 		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
 		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+
+		$nodeConnectEvent = e;
 	}
 
 	// Custom action to handle Node interactions

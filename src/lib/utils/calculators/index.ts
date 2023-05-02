@@ -6,3 +6,4 @@ export * from './updateTranslation';
 export * from './calculateStepPath';
 export * from './calculateFitView';
 export * from './calculateRadius';
+export * from './calculatePath';

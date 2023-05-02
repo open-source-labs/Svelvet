@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { type Graph, type Node, isArrow, type CustomWritable } from '$lib/types';
-	import type { CSSColorString } from '$lib/types';
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
+	import { isArrow } from '$lib/types';
 	import { roundNum } from '$lib/utils';
 	import { tracking } from '$lib/stores/CursorStore';
+	import type { Graph, Node, CustomWritable } from '$lib/types';
+	import type { CSSColorString } from '$lib/types';
 
+	// Props
 	export let parameterStore: CustomWritable<number>;
 	export let min = 0;
 	export let max = 100;
@@ -137,8 +139,8 @@
 
 	$: sliderStyle = `linear-gradient(
 			90deg,
-			${barColor || 'var(--primary-color, --default-primary-color)'} ${CSSpercentage},
-			${bgColor || 'var(--accent-color, --default-accent-color)'} ${CSSpercentage}
+			${barColor || 'var(--primary-color, var(--default-primary-color))'} ${CSSpercentage},
+			${bgColor || 'var(--accent-color, var(--default-accent-color))'} ${CSSpercentage}
 		)`;
 </script>
 

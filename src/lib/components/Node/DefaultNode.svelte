@@ -1,20 +1,29 @@
-<script lang="ts">
-	import { getContext } from 'svelte';
-	import type { Node } from '$lib/types';
+<script context="module" lang="ts">
+	import Resizer from '$lib/components/Resizer/Resizer.svelte';
 	import Anchor from '$lib/components/Anchor/Anchor.svelte';
 	import { get } from 'svelte/store';
-	import Resizer from '$lib/components/Resizer/Resizer.svelte';
+	import { getContext } from 'svelte';
+	import type { Node } from '$lib/types';
+</script>
 
-	export let selected: boolean;
+<script lang="ts">
 	const dynamic = getContext<boolean>('dynamic');
 	const node = getContext<Node>('node');
 
+	// Props
+	export let selected: boolean;
+
+	// External stores
 	const label = node.label;
 	const borderRadius = node.borderRadius;
 	const textColor = node.textColor;
 	const inputs = node.inputs;
 	const outputs = node.outputs;
 	const resizable = node.resizable;
+	const directionStore = node.direction;
+
+	//Subscriptions
+	$: direction = $directionStore;
 
 	let top = get(node.direction) === 'TD' ? true : false;
 	let bottom = get(node.direction) === 'TD' ? true : false;

@@ -11,12 +11,15 @@
 </script>
 
 <body>
-	<Svelvet snapTo={40}>
+	<Svelvet snapTo={40} on:edgeDrop={(e) => console.log(e)}>
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }} />
 		<Node inputs={5} position={{ x: 600, y: 600 }} />
 		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
-			<Anchor invisible />
+			<div class="anchor">
+				<Anchor nodeConnect />
+			</div>
+			<Anchor nodeConnect />
 		</Node>
 		{#each { length: totalNodes } as node}
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
@@ -26,6 +29,10 @@
 </body>
 
 <style>
+	.anchor {
+		position: absolute;
+		right: 10px;
+	}
 	body {
 		width: 100vw;
 		height: 100vh;
