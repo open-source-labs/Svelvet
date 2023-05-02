@@ -337,8 +337,12 @@
 		// We dont want to prevent users from refreshing the page
 		if (code === 'KeyR' && e.metaKey) return;
 
+		const target = e.target as HTMLElement;
+
 		//Otherwise we prevent default keydown behavior
-		e.preventDefault();
+		if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+			e.preventDefault();
+		}
 
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
 			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
