@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "7.0.37",
+	"version": "7.0.38",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -68,8 +68,5 @@
 	"main": "svelte.config.js",
 	"directories": {
 		"test": "tests"
-	},
-	"dependencies": {
-		"@playwright/test": "^1.28.1"
 	}
 }
