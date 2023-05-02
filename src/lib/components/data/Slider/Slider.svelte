@@ -137,8 +137,8 @@
 
 	$: sliderStyle = `linear-gradient(
 			90deg,
-			${barColor || 'var(--default-primary-color)'} ${CSSpercentage},
-			${bgColor || 'var(--default-accent-color)'} ${CSSpercentage}
+			${barColor || 'var(--primary-color, --default-primary-color)'} ${CSSpercentage},
+			${bgColor || 'var(--accent-color, --default-accent-color)'} ${CSSpercentage}
 		)`;
 </script>
 
