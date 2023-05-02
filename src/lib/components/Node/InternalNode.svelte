@@ -300,7 +300,7 @@
 			var(--node-border-width, var(--default-node-border-width))
 		);
 		--final-border-color: var(
-			--node-border-color,
+			--prop-border-color,
 			var(--node-border-color, var(--default-node-border-color))
 		);
 		--final-selection-color: var(
