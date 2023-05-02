@@ -134,7 +134,10 @@
 		align-items: center;
 		background-color: var(
 			--prop-minimap-background-color,
-			var(--minimap-background-color, var(--default-minimap-background-color))
+			var(
+				--minimap-background-color,
+				var(--background-color, var(--default-minimap-background-color))
+			)
 		);
 		border-color: var(
 			--prop-minimap-border-color,

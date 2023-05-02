@@ -6,7 +6,7 @@
 
 <body>
 	<div class="wrapper">
-		<Svelvet edgeStyle="step" width={600} height={900} controls>
+		<Svelvet width={600} height={900} controls>
 			<Node
 				position={{ x: 200, y: 800 }}
 				{outputs}

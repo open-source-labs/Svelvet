@@ -42,6 +42,7 @@ export function createAnchor(
 	const directionStore = writable(direction || 'self');
 	const recalculatePosition = () => {
 		const anchorElement = document.getElementById(id);
+
 		const direction = get(directionStore);
 		const vector = directionVectors[direction];
 
