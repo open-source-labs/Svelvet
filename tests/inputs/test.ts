@@ -5,6 +5,7 @@ const testRoute = '/inputs';
 test('inputs can be interacted with', async ({ page }) => {
 	await page.goto(testRoute);
 
+	// Grab the input elements for testing
 	const textField = page.locator('#text-test');
 	const checkBox = page.locator('#checkbox-test');
 
@@ -20,8 +21,10 @@ test('inputs can be interacted with', async ({ page }) => {
 	await textField.press('B');
 	await textField.press('C');
 
+	// Chcek that the value has changed
 	await expect(textField).toHaveValue('TestABC');
 
+	// Clear the input
 	await textField.press('Backspace');
 	await textField.press('Backspace');
 	await textField.press('Backspace');
@@ -30,6 +33,9 @@ test('inputs can be interacted with', async ({ page }) => {
 	await textField.press('Backspace');
 	await textField.press('Backspace');
 	await textField.press('Backspace');
+
+	// Check that it was cleared
+	await expect(textField).toHaveValue('');
 
 	await textField.press('1');
 	await textField.press('Space');
@@ -37,16 +43,38 @@ test('inputs can be interacted with', async ({ page }) => {
 
 	await expect(textField).toHaveValue('1 2');
 
-	// Select the checkbox element
-	const checkbox = await page.$('#checkbox-test');
-	if (!checkbox) throw new Error('Checkbox not found');
+	if (!checkBox) throw new Error('Checkbox not found');
 	// Check if the checkbox is checked
-	const isChecked = await checkbox.isChecked();
+	const isChecked = await checkBox.isChecked();
 	await expect(isChecked).toBe(true);
 	// Click the checkbox
 	await checkBox.click();
 
-	const isNowChecked = await checkbox.isChecked();
+	const isNowChecked = await checkBox.isChecked();
+
 	// Check the current value of the chebox
 	await expect(isNowChecked).toBe(false);
+
+	// Grab the graph element
+	const graphWrapper = page.locator('.svelvet-graph-wrapper');
+
+	// Check the transforms
+	await expect(graphWrapper).toHaveAttribute('style', 'transform: translate(0px, 0px) scale(1);');
+
+	// These commands should not affect the graph
+	await textField.press('=');
+	await textField.press('=');
+	await textField.press('=');
+
+	await expect(graphWrapper).toHaveAttribute('style', 'transform: translate(0px, 0px) scale(1);');
+
+	await textField.press('-');
+	await textField.press('-');
+
+	await expect(graphWrapper).toHaveAttribute('style', 'transform: translate(0px, 0px) scale(1);');
+
+	await textField.press('0');
+	await textField.press('0');
+
+	await expect(graphWrapper).toHaveAttribute('style', 'transform: translate(0px, 0px) scale(1);');
 });

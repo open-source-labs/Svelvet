@@ -333,17 +333,15 @@
 
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key, code } = e;
-
-		// We dont want to prevent users from refreshing the page
-		if (code === 'KeyR' && e.metaKey) return;
-
 		const target = e.target as HTMLElement;
+		// We dont want to prevent users from refreshing the page
+		// Or interacting with inputs
+		if (code === 'KeyR' && e.metaKey) return;
+		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
 		//Otherwise we prevent default keydown behavior
-		if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
-			e.preventDefault();
-		}
 
+		e.preventDefault();
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
 			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
 			$selected = new Set(unlockedNodes);
