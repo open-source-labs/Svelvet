@@ -181,9 +181,9 @@
 		if (creating) {
 			const groupName = generateKey();
 			const groupKey: GroupKey = `${groupName}/${graph.id}`;
-
-			const width = $cursor.x - $initialClickPosition.x;
-			const height = $cursor.y - $initialClickPosition.y;
+			const cursorPosition = get(cursor);
+			const width = cursorPosition.x - $initialClickPosition.x;
+			const height = cursorPosition.y - $initialClickPosition.y;
 			const top = Math.min($initialClickPosition.y, $initialClickPosition.y + height);
 			const left = Math.min($initialClickPosition.x, $initialClickPosition.x + width);
 
@@ -236,7 +236,7 @@
 			graph.edges.delete('cursor');
 			if (!cursorEdge.disconnect)
 				dispatch('edgeDrop', {
-					cursor: $cursor,
+					cursor: get(cursor),
 					source: {
 						node: $connectingFrom?.anchor.node.id.slice(2),
 						anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
@@ -265,7 +265,7 @@
 
 		const { clientX, clientY } = e;
 
-		$initialClickPosition = $cursor;
+		$initialClickPosition = get(cursor);
 
 		if (e.shiftKey || e.metaKey) {
 			e.preventDefault();
@@ -297,7 +297,7 @@
 		$selected = new Set();
 		$selected = $selected;
 
-		$initialClickPosition = $cursor;
+		$initialClickPosition = get(cursor);
 
 		isMovable = true;
 		if (e.touches.length === 2) {
@@ -340,8 +340,8 @@
 		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
 		//Otherwise we prevent default keydown behavior
-
 		e.preventDefault();
+
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
 			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
 			$selected = new Set(unlockedNodes);
