@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
-	import { getContext, onDestroy, onMount, setContext } from 'svelte';
+	import { afterUpdate, getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
@@ -56,6 +56,7 @@
 	let minWidth = 200;
 	let minHeight = 100;
 	let DOMnode: HTMLElement;
+	let wrapper: HTMLElement;
 
 	// Subscriptions
 	$: actualPosition = $position;
@@ -146,7 +147,7 @@
 		dispatch('nodeClicked', { node, e });
 
 		// Capture the initial touch position
-		$initialClickPosition = $cursor;
+		$initialClickPosition = get(cursor);
 
 		// Handle the node selection logic
 		nodeSelectLogic(e);
@@ -180,7 +181,7 @@
 		$tracking = true;
 
 		// Capture the initial click position
-		$initialClickPosition = $cursor;
+		$initialClickPosition = get(cursor);
 
 		// Right click sets editing node
 		if (e.button === 2 && $editable) {
@@ -238,8 +239,9 @@
 	const nodeConnectEvent = writable<null | MouseEvent>(null);
 	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {
-		const mouseDeltaX = $cursor.x - $initialClickPosition.x;
-		const mouseDeltaY = $cursor.y - $initialClickPosition.y;
+		const cursorPosition = get(cursor);
+		const mouseDeltaX = cursorPosition.x - $initialClickPosition.x;
+		const mouseDeltaY = cursorPosition.y - $initialClickPosition.y;
 		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
 		if (combinedDelta < 4) dispatch('nodeReleased', { e });
 
@@ -257,6 +259,32 @@
 			}
 		};
 	}
+
+	afterUpdate(() => {
+		if (isDefault) return;
+		const currentWidth = get(widthStore);
+		const currentHeight = get(heightStore);
+
+		const heightPreviouslyEqual = currentHeight === minHeight;
+		const widthPreviouslyEqual = currentWidth === minWidth;
+
+		// Capture the new min width and height of the node
+		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+
+		if (widthPreviouslyEqual || currentWidth <= minWidth) {
+			DOMnode.style.width = `${minWidth}px`;
+			$widthStore = minWidth;
+		} else {
+			DOMnode.style.width = `${currentWidth}px`;
+		}
+
+		if (heightPreviouslyEqual || currentHeight <= minHeight) {
+			DOMnode.style.height = `${minHeight}px`;
+			$heightStore = minHeight;
+		} else {
+			DOMnode.style.height = `${currentHeight}px`;
+		}
+	});
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
@@ -268,9 +296,10 @@
 		class:locked={$locked || $nodeLock}
 		style:top="{actualPosition.y}px"
 		style:left="{actualPosition.x}px"
+		style:z-index={$zIndex}
+		title="node"
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
-		style:z-index={$zIndex}
 		style:transform="rotate({$rotation}deg)"
 		style:--prop-background-color={$bgColor || (isDefault ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
@@ -282,13 +311,12 @@
 		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
 		use:grabHandle
-		bind:clientWidth={$widthStore}
-		bind:clientHeight={$heightStore}
 		bind:this={DOMnode}
 		tabIndex={0}
 	>
 		{#if !collapsed}
 			<slot {grabHandle} {selected} {destroy} />
+
 			<div id={`anchors-west-${node.id}`} class="anchors left" />
 			<div id={`anchors-east-${node.id}`} class="anchors right" />
 			<div id={`anchors-north-${node.id}`} class="anchors top" />

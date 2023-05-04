@@ -501,6 +501,7 @@
 	id={anchor?.id}
 	class="anchor-wrapper"
 	class:locked
+	title="anchor"
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}

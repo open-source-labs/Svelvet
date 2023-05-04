@@ -1,52 +1,57 @@
 <script lang="ts">
-	import { Svelvet, Node, Anchor } from '$lib';
-	import { getContext } from 'svelte';
-	import Connector from '../example-components/Connector.svelte';
-	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
-	import InputNode from '../example-components/InputNode.svelte';
-	function addAndConnect(connect: (connections: string | number) => void) {
-		connect(totalNodes + 4);
-		totalNodes++;
-	}
-	let totalNodes = 0;
+	import { Node, Svelvet, Anchor, Resizer } from '$lib';
+	import Percent from '../example-components/Percent.svelte';
+
+	let itemArr = ['h-40'];
 </script>
 
-<body>
-	<Svelvet snapTo={40} on:edgeDrop={(e) => console.log(e)}>
-		<Connector />
-		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }} />
-		<Node inputs={5} position={{ x: 600, y: 600 }} />
-		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
+<div class="wrapper">
+	<Svelvet id="my-canvas" TD minimap>
+		<Node
+			id="alpha"
+			bgColor="red"
+			dimensions={{ width: 300, height: 400 }}
+			position={{ x: 250, y: 100 }}
+		>
 			<div class="anchor">
-				<Anchor nodeConnect />
+				<Anchor nodeConnect let:connecting let:hovering let:linked />
 			</div>
-			<Anchor nodeConnect />
+			<button on:click={() => (itemArr = [...itemArr, 'h-40'])} class="bg-white">
+				Increase height
+			</button>
+			<div>
+				{#each itemArr as div, idx}
+					<div class="w-40 h-40 bg-white border">
+						<button
+							class="border"
+							on:click={() => {
+								itemArr = itemArr.filter((_, i) => i !== idx);
+								itemArr = itemArr;
+							}}
+						>
+							Remove height
+						</button>
+					</div>
+				{/each}
+			</div>
+
+			<Resizer width height />
 		</Node>
-		{#each { length: totalNodes } as node}
-			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
-		{/each}
-		<ThemeToggle slot="toggle" />
-		<InputNode />
+		<Percent />
 	</Svelvet>
-</body>
+</div>
 
 <style>
-	.anchor {
-		position: absolute;
-		right: 10px;
-	}
-	body {
+	.wrapper {
 		width: 100vw;
 		height: 100vh;
-		margin: 0;
 		padding: 0;
+		margin: 0;
 	}
-	:root[theme='dark'] {
-		--background-color: black;
-		--node-color: white;
-	}
-	:root[theme='light'] {
-		--background-color: purple;
-		--node-color: green;
+
+	.anchor {
+		position: absolute;
+		left: 0px;
+		top: 2px;
 	}
 </style>

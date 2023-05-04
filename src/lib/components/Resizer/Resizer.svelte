@@ -1,32 +1,47 @@
-<!-- ParentComponent.svelte -->
-<script lang="ts">
-	import type { Graph, Node } from '$lib/types';
+<script context="module" lang="ts">
 	import { getContext } from 'svelte';
+	import { get } from 'svelte/store';
 	import { initialClickPosition } from '$lib/stores';
+	import type { Graph, Node } from '$lib/types';
+</script>
+
+<script lang="ts">
+	let graph = getContext<Graph>('graph');
+	let node = getContext<Node>('node');
 
 	export let width = false;
 	export let height = false;
 	export let rotation = false;
-	export let minHeight = 100;
-	export let minWidth = 200;
+	export let minHeight = 0;
+	export let minWidth = 0;
 
-	let graph = getContext<Graph>('graph');
-	let node = getContext<Node>('node');
+	let left = width;
+	let right = width;
+	let top = height;
+	let bottom = height;
 
-	const { cursor } = graph;
-	const position = node.position;
 	let both = width && height;
 	let startingRotation = 0;
 	let initialClickAngle = 0;
+	let initialNodePosition = get(node.position);
 
-	$: resizingWidth = node.resizingWidth;
-	$: resizingHeight = node.resizingHeight;
-	$: rotating = node.rotating;
+	const position = node.position;
 
-	$: nodeRotation = node.rotation;
+	const resizingWidth = node.resizingWidth;
+	const resizingHeight = node.resizingHeight;
+	const rotating = node.rotating;
 
-	$: heightStore = node.dimensions.height;
-	$: widthStore = node.dimensions.width;
+	const nodeRotation = node.rotation;
+
+	const heightStore = node.dimensions.height;
+	const widthStore = node.dimensions.width;
+
+	const cursor = graph.cursor;
+
+	let initialWidth: number;
+	let initialHeight: number;
+
+	let direction = 1;
 
 	$: x = $position.x;
 	$: y = $position.y;
@@ -36,16 +51,28 @@
 		y: y + $heightStore / 2
 	};
 
-	$: cursorY = $cursor.y;
-	$: cursorX = $cursor.x;
-
 	$: if ($resizingHeight) {
-		const newHeight = Math.max(minHeight, cursorY - $position.y);
+		const initialClick = get(initialClickPosition);
+		const newHeight = Math.max(minHeight, initialHeight + ($cursor.y - initialClick.y) * direction);
 		$heightStore = newHeight;
+		if (direction === -1) {
+			$position = {
+				x: initialNodePosition.x,
+				y: initialNodePosition.y + $cursor.y - initialClick.y
+			};
+		}
 	}
+
 	$: if ($resizingWidth) {
-		const newWidth = Math.max(minWidth, cursorX - $position.x);
+		const initialClick = get(initialClickPosition);
+		const newWidth = Math.max(minWidth, initialWidth + ($cursor.x - initialClick.x) * direction);
 		$widthStore = newWidth;
+		if (direction === -1) {
+			$position = {
+				x: initialNodePosition.x + $cursor.x - initialClick.x,
+				y: initialNodePosition.y
+			};
+		}
 	}
 
 	$: if ($rotating) {
@@ -55,15 +82,24 @@
 
 	function resizeHandler(
 		node: HTMLElement,
-		dimensions: { width?: boolean; height?: boolean; both?: boolean }
+		dimensions: { left?: boolean; right?: boolean; both?: boolean; top?: boolean; bottom?: boolean }
 	) {
 		const setResize = (e: MouseEvent) => {
 			e.stopPropagation();
 			e.preventDefault();
+			if (dimensions.left || dimensions.top) {
+				direction = -1;
+			} else {
+				direction = 1;
+			}
+			$initialClickPosition = { x: $cursor.x, y: $cursor.y };
+			initialWidth = $widthStore;
+			initialHeight = $heightStore;
+			initialNodePosition = $position;
 
 			dimensions.both ? ($resizingWidth = true) : ($resizingWidth = false);
-			$resizingWidth = dimensions.width || dimensions.both || false;
-			$resizingHeight = dimensions.height || dimensions.both || false;
+			$resizingWidth = dimensions.left || dimensions.right || dimensions.both || false;
+			$resizingHeight = dimensions.top || dimensions.bottom || dimensions.both || false;
 			window.addEventListener('mouseup', removeResize);
 		};
 
@@ -92,7 +128,7 @@
 			startingRotation = $nodeRotation;
 
 			//Capture current click position
-			$initialClickPosition = { x: cursorX, y: cursorY };
+			$initialClickPosition = { x: $cursor.x, y: $cursor.y };
 
 			// Calculate the initial angle
 			const initialDeltaX = $initialClickPosition.x - centerPoint.x;
@@ -118,8 +154,9 @@
 	}
 
 	function calculateRotation() {
-		const currentDeltaX = cursorX - centerPoint.x;
-		const currentDeltaY = cursorY - centerPoint.y;
+		const cursorPosition = get(cursor);
+		const currentDeltaX = cursorPosition.x - centerPoint.x;
+		const currentDeltaY = cursorPosition.y - centerPoint.y;
 
 		const currentAngle = Math.atan2(currentDeltaY, currentDeltaX);
 
@@ -134,10 +171,21 @@
 	}
 </script>
 
-<div use:resizeHandler={{ width }} class:width />
-<div use:resizeHandler={{ height }} class:height />
-<div use:resizeHandler={{ both }} class:both />
-<div use:rotateHandler class:rotation />
+{#if width}
+	<div use:resizeHandler={{ left }} class:width class="left" />
+	<div use:resizeHandler={{ right }} class:width class="right" />
+{/if}
+
+{#if height}
+	<div use:resizeHandler={{ top }} class:height class="top" />
+	<div use:resizeHandler={{ bottom }} class:height class="bottom" />
+{/if}
+{#if both}
+	<div use:resizeHandler={{ both }} class:both />
+{/if}
+{#if rotation}
+	<div use:rotateHandler class:rotation />
+{/if}
 
 <style>
 	* {
@@ -145,29 +193,43 @@
 		width: 9px;
 		height: 9px;
 		z-index: 0;
-		/* background-color: red; */
+		/* background-color: black; */
 		pointer-events: auto;
 	}
 	.width {
 		height: calc(100% - 3px);
-		right: -3px;
 		top: -3px;
 		cursor: col-resize;
+	}
+
+	.left {
+		left: -3px;
+	}
+	.right {
+		right: -3px;
 	}
 	.height {
 		width: calc(100% - 3px);
 		left: -3px;
-		bottom: -3px;
 		cursor: row-resize;
+	}
+
+	.top {
+		top: -3px;
+	}
+	.bottom {
+		bottom: -3px;
 	}
 	.both {
 		bottom: -3px;
 		right: -3px;
 		cursor: nwse-resize;
+		/* background-color: green; */
 	}
 	.rotation {
 		top: -3px;
 		left: -3px;
 		cursor: crosshair;
+		/* background-color: blue; */
 	}
 </style>
