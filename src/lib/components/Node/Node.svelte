@@ -5,7 +5,7 @@
 	import { createNode } from '$lib/utils';
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
-	import type { NodeKey, Anchor, AnchorKey } from '$lib/types';
+	import type { NodeKey, Anchor, AnchorKey, XYPair } from '$lib/types';
 	import type { Graph, Node as NodeType, NodeConfig, GroupKey } from '$lib/types';
 	import type { Connections, CSSColorString, InitialDimensions } from '$lib/types';
 </script>
@@ -21,6 +21,7 @@
 	 * at default graph scale. This value does not currently feature two way binding
 	 */
 	export let position = { x: 0, y: 0 };
+	export let drop: 'cursor' | 'center' | false = false;
 	/**
 	 * @type { width: number, height: number}
 	 * @description Used to set the initial dimensions of the Node. Primarily used for default Nodes,
@@ -91,7 +92,7 @@
 	 */
 	export let dynamic = false;
 
-	// External stores
+	//External stores
 	const nodes = graph.nodes;
 
 	setContext('dynamic', dynamic);
@@ -118,9 +119,12 @@
 
 		const config: NodeConfig = {
 			id: id || nodeCount,
-			position: groupBox
-				? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
-				: position,
+			position:
+				drop === 'cursor'
+					? { x: get(graph.cursor).x, y: get(graph.cursor).y }
+					: groupBox
+					? { x: get(groupBox.position).x + position.x, y: get(groupBox.position).y + position.y }
+					: position,
 			dimensions: initialDimensions,
 			editable: editable || graph.editable,
 			label,
@@ -231,7 +235,7 @@
 {#if node && $nodes.get(node.id)}
 	<InternalNode
 		{node}
-		{center}
+		center={center || drop === 'center'}
 		{isDefault}
 		{useDefaults}
 		nodeStore={graph.nodes}
