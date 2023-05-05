@@ -1,13 +1,17 @@
 <script context="module" lang="ts">
-	import { getContext } from 'svelte';
+	import { calculateFitContentWidth } from '$lib/utils';
+	import { beforeUpdate, getContext, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { initialClickPosition } from '$lib/stores';
 	import type { Graph, Node } from '$lib/types';
+	import type { Writable } from 'svelte/store';
 </script>
 
 <script lang="ts">
-	let graph = getContext<Graph>('graph');
-	let node = getContext<Node>('node');
+	const graph = getContext<Graph>('graph');
+	const node = getContext<Node>('node');
+	const DOMnode = getContext<Writable<HTMLElement | null>>('DOMnode');
+	const resized = getContext<Writable<boolean>>('resized');
 
 	export let width = false;
 	export let height = false;
@@ -53,23 +57,43 @@
 
 	$: if ($resizingHeight) {
 		const initialClick = get(initialClickPosition);
-		const newHeight = Math.max(minHeight, initialHeight + ($cursor.y - initialClick.y) * direction);
-		$heightStore = newHeight;
+		const cursorPosition = $cursor;
+		const newHeight = Math.max(
+			minHeight,
+			initialHeight + (cursorPosition.y - initialClick.y) * direction
+		);
+		if (newHeight > minHeight) {
+			resized.set(true);
+			$heightStore = newHeight;
+		} else {
+			resized.set(false);
+		}
+
 		if (direction === -1) {
 			$position = {
 				x: initialNodePosition.x,
-				y: initialNodePosition.y + $cursor.y - initialClick.y
+				y: initialNodePosition.y + cursorPosition.y - initialClick.y
 			};
 		}
 	}
 
 	$: if ($resizingWidth) {
 		const initialClick = get(initialClickPosition);
-		const newWidth = Math.max(minWidth, initialWidth + ($cursor.x - initialClick.x) * direction);
-		$widthStore = newWidth;
+		const cursorPosition = $cursor;
+		const newWidth = Math.max(
+			minWidth,
+			initialWidth + (cursorPosition.x - initialClick.x) * direction
+		);
+		if (newWidth > minWidth) {
+			resized.set(true);
+			$widthStore = newWidth;
+		} else {
+			resized.set(false);
+		}
+
 		if (direction === -1) {
 			$position = {
-				x: initialNodePosition.x + $cursor.x - initialClick.x,
+				x: initialNodePosition.x + cursorPosition.x - initialClick.x,
 				y: initialNodePosition.y
 			};
 		}
@@ -79,6 +103,10 @@
 		$cursor;
 		$nodeRotation = calculateRotation();
 	}
+
+	onMount(() => {
+		if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
+	});
 
 	function resizeHandler(
 		node: HTMLElement,
@@ -92,7 +120,8 @@
 			} else {
 				direction = 1;
 			}
-			$initialClickPosition = { x: $cursor.x, y: $cursor.y };
+
+			$initialClickPosition = get(cursor);
 			initialWidth = $widthStore;
 			initialHeight = $heightStore;
 			initialNodePosition = $position;
@@ -100,6 +129,8 @@
 			dimensions.both ? ($resizingWidth = true) : ($resizingWidth = false);
 			$resizingWidth = dimensions.left || dimensions.right || dimensions.both || false;
 			$resizingHeight = dimensions.top || dimensions.bottom || dimensions.both || false;
+
+			if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
 			window.addEventListener('mouseup', removeResize);
 		};
 
@@ -128,7 +159,7 @@
 			startingRotation = $nodeRotation;
 
 			//Capture current click position
-			$initialClickPosition = { x: $cursor.x, y: $cursor.y };
+			$initialClickPosition = get(cursor);
 
 			// Calculate the initial angle
 			const initialDeltaX = $initialClickPosition.x - centerPoint.x;
@@ -169,6 +200,11 @@
 	function radiansToDegrees(radians: number) {
 		return radians * (180 / Math.PI);
 	}
+	beforeUpdate(() => {
+		if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
+		if ($widthStore < minWidth) resized.set(false);
+		if ($heightStore < minHeight) resized.set(false);
+	});
 </script>
 
 {#if width}
@@ -193,9 +229,10 @@
 		width: 9px;
 		height: 9px;
 		z-index: 0;
-		/* background-color: black; */
+		/* background-color: rgba(0, 0, 0, 0.419); */
 		pointer-events: auto;
 	}
+
 	.width {
 		height: calc(100% - 3px);
 		top: -3px;

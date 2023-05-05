@@ -11,6 +11,7 @@ export const tracking = writable(false);
 // This can be refined
 export const cursorPositionRaw = readable({ x: 0, y: 0 }, (set) => {
 	const updateCursorPosition = (e: MouseEvent) => {
+		e.preventDefault();
 		set({ x: e.clientX, y: e.clientY });
 	};
 
@@ -42,7 +43,7 @@ export const cursorPositionRaw = readable({ x: 0, y: 0 }, (set) => {
 		window.removeEventListener('touchmove', updateTouchPosition);
 	};
 
-	window.addEventListener('mousemove', updateCursorPosition);
+	document.addEventListener('mousemove', updateCursorPosition);
 	window.addEventListener('touchstart', onTouchStart, true);
 
 	return () => {

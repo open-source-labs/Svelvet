@@ -47,11 +47,8 @@ export function getJSONState(store: Graph) {
 	const raw = JSON.stringify(data, domRectReplacer);
 
 	// const object = JSON.parse(raw);
-	// console.log(object.nodes['N-1']);
 	// const node: Node = createNode(object.nodes['N-1']);
-	// console.log(node);
 	// store.nodes.add(node, 'N-TEST');
-	// //console.log(raw);
 	localStorage.setItem('state', raw);
 	return raw;
 }

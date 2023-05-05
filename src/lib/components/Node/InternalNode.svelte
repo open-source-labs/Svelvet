@@ -1,12 +1,13 @@
 <script context="module" lang="ts">
 	import { initialClickPosition, tracking } from '$lib/stores';
-	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
-	import { afterUpdate, getContext, onDestroy, onMount, setContext } from 'svelte';
+	import { captureGroup } from '$lib/utils';
+	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import type { Node, Graph } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
+	const tagsToIgnore = new Set(['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA']);
 </script>
 
 <script lang="ts">
@@ -31,6 +32,7 @@
 	export let initialNodePositions: Graph['initialNodePositions'];
 	export let activeGroup: Graph['activeGroup'];
 	export let editing: Graph['editing'];
+	export let dimensionsProvided = false;
 
 	// Local stores
 	const anchorsMounted = writable(0);
@@ -54,12 +56,11 @@
 	const { selected: selectedNodeGroup, hidden: hiddenNodesGroup } = $groups;
 	const hiddenNodes = hiddenNodesGroup.nodes;
 	const selectedNodes = selectedNodeGroup.nodes;
+	const resized = writable(false);
 
 	// Reactive variables
 	let collapsed = false;
-	let minWidth = 200;
-	let minHeight = 100;
-	let DOMnode: HTMLElement;
+	const DOMnode: Writable<HTMLElement | null> = writable(null);
 
 	// Subscriptions
 	$: actualPosition = $position;
@@ -76,20 +77,11 @@
 
 	setContext<Node>('node', node);
 	setContext<Writable<number>>('anchorsMounted', anchorsMounted);
+	setContext<Writable<HTMLElement | null>>('DOMnode', DOMnode);
+	setContext<Writable<boolean>>('resized', resized);
 
 	// Lifecycle methods
 	onMount(() => {
-		// If the node dimensions got set in previous steps, we don't need to do anything
-		if (!$widthStore && !$heightStore) {
-			// This only runs when a width and height were not provided via props
-			// Set the wrapper to fit-content and grab the width and height
-			[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-
-			// Update the node dimensions in the store
-			$widthStore = minWidth;
-			$heightStore = minHeight;
-		}
-
 		if (center) {
 			const opticalCenter = {
 				x: $centerPoint.x - $widthStore / 2,
@@ -137,14 +129,17 @@
 	// Initial handler for a touch event on a node
 	function handleNodeTouch(e: TouchEvent) {
 		$graphDOMElement.focus();
-		e.stopPropagation();
-		e.preventDefault();
+
+		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
 
 		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
 		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
 
+		// If the event target is an input, don't do anything
+		if (tagsToIgnore.has(targetElement.tagName)) return;
+
 		// If the node is Node is not currently on top, bring it to the front
-		// Unless the zIndex prop has been set to infinity
+		// Unless the zIndex prop has ben set to infinity
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
 		// Dispatch our nodeClicked event for developer use
@@ -156,36 +151,24 @@
 		// Handle the node selection logic
 		nodeSelectLogic(e);
 	}
-
 	// Initial handler for a click event on a node
 	function handleNodeClicked(e: MouseEvent) {
+		// Capture the initial click position
+		$initialClickPosition = get(cursor);
+
 		$graphDOMElement.focus();
 		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
 
 		// Bring node to front regardless of event target
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
-		// If the event target is an input, don't do anything
-		if (targetElement.tagName === 'INPUT') return;
-
-		//Dispatch nodeClick event fo rdeveloper use
-		dispatch('nodeClicked', { node, e });
-
-		// Stop event from propagating to other mousedown listeners
-		e.stopPropagation();
-
-		// Prevent the default behavir of text selection on drag
-		// May be safe to move this to the global mouse move listener
-		e.preventDefault();
+		if (tagsToIgnore.has(targetElement.tagName)) return;
 
 		// If the node or graph is locked, don't do anything
 		if ($locked || $nodeLock) return;
 
 		// Set our global tracking boolean to true
 		$tracking = true;
-
-		// Capture the initial click position
-		$initialClickPosition = get(cursor);
 
 		// Right click sets editing node
 		if (e.button === 2 && $editable) {
@@ -239,7 +222,7 @@
 	function destroy() {
 		nodeStore.delete(id);
 	}
-	import { writable } from 'svelte/store';
+
 	const nodeConnectEvent = writable<null | MouseEvent>(null);
 	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {
@@ -263,32 +246,6 @@
 			}
 		};
 	}
-
-	afterUpdate(() => {
-		if (isDefault) return;
-		const currentWidth = get(widthStore);
-		const currentHeight = get(heightStore);
-
-		const heightPreviouslyEqual = currentHeight === minHeight;
-		const widthPreviouslyEqual = currentWidth === minWidth;
-
-		// Capture the new min width and height of the node
-		[minWidth, minHeight] = calculateFitContentWidth(DOMnode);
-
-		if (widthPreviouslyEqual || currentWidth <= minWidth) {
-			DOMnode.style.width = `${minWidth}px`;
-			$widthStore = minWidth;
-		} else {
-			DOMnode.style.width = `${currentWidth}px`;
-		}
-
-		if (heightPreviouslyEqual || currentHeight <= minHeight) {
-			DOMnode.style.height = `${minHeight}px`;
-			$heightStore = minHeight;
-		} else {
-			DOMnode.style.height = `${currentHeight}px`;
-		}
-	});
 </script>
 
 <!-- svelte-ignore a11y-non-interactive-element -->
@@ -302,8 +259,8 @@
 		style:left="{actualPosition.x}px"
 		style:z-index={$zIndex}
 		title="node"
-		style:width="{$widthStore}px"
-		style:height="{$heightStore}px"
+		style:width={dimensionsProvided || $resized ? $widthStore + 'px' : 'fit-content'}
+		style:height={dimensionsProvided || $resized ? $heightStore + 'px' : 'fit-content'}
 		style:transform="rotate({$rotation}deg)"
 		style:--prop-background-color={$bgColor || (isDefault || useDefaults ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
@@ -318,8 +275,10 @@
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
+		bind:clientHeight={$heightStore}
+		bind:clientWidth={$widthStore}
 		use:grabHandle
-		bind:this={DOMnode}
+		bind:this={$DOMnode}
 		tabIndex={0}
 	>
 		{#if !collapsed}

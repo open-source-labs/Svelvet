@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Svelvet, Node, Anchor } from '$lib';
-	import { getContext } from 'svelte';
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	function addAndConnect(connect: (connections: string | number) => void) {
@@ -8,17 +7,19 @@
 		totalNodes++;
 	}
 	let totalNodes = 0;
-	let nodeVisible = false;
+	let widthCount = 1;
 </script>
 
-<body on:keydown={() => (nodeVisible = !nodeVisible)}>
-	<Svelvet snapTo={40} on:edgeDrop={(e) => console.log(e)}>
+<body>
+	<Svelvet minimap>
 		<Connector />
-		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }} />
+		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
+			<button on:click={() => widthCount++} />
+			{#each { length: widthCount } as item}
+				<div>Height</div>
+			{/each}
+		</Node>
 		<Node inputs={5} position={{ x: 600, y: 600 }} />
-		{#if nodeVisible}
-			<Node inputs={5} drop="cursor" />
-		{/if}
 		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
 			<div class="anchor">
 				<Anchor nodeConnect />

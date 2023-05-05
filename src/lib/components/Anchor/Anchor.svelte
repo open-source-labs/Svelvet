@@ -136,7 +136,7 @@
 		if (anchorElement) anchor.recalculatePosition();
 
 		// Need to add this to the Anchor store as a native property
-		const outputCount = Array.from(get(node.anchors)).reduce((acc, [key, anchor]) => {
+		const outputCount = Array.from(get(node.anchors)).reduce((acc, [, anchor]) => {
 			if (anchor.type === 'output') acc++;
 			return acc;
 		}, 0);
