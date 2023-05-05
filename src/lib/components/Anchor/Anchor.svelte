@@ -88,6 +88,7 @@
 	export let invisible = false;
 	export let direction: Direction =
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
+	export let title = '';
 
 	const dispatch = createEventDispatcher();
 
@@ -526,7 +527,7 @@
 	id={anchor?.id}
 	class="anchor-wrapper"
 	class:locked
-	title="anchor"
+	title={title || ''}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}

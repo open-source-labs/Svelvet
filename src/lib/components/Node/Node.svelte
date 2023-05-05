@@ -91,6 +91,7 @@
 	 * based on the relative position of the source and target nodes.
 	 */
 	export let dynamic = false;
+	export let title = '';
 
 	//External stores
 	const nodes = graph.nodes;
@@ -242,6 +243,7 @@
 		nodeStore={graph.nodes}
 		locked={graph.locked}
 		groups={graph.groups}
+		{title}
 		maxZIndex={graph.maxZIndex}
 		centerPoint={graph.center}
 		cursor={graph.cursor}

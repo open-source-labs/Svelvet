@@ -33,6 +33,7 @@
 	export let activeGroup: Graph['activeGroup'];
 	export let editing: Graph['editing'];
 	export let dimensionsProvided = false;
+	export let title: string;
 
 	// Local stores
 	const anchorsMounted = writable(0);
@@ -258,7 +259,7 @@
 		style:top="{actualPosition.y}px"
 		style:left="{actualPosition.x}px"
 		style:z-index={$zIndex}
-		title="node"
+		{title}
 		style:width={dimensionsProvided || $resized ? $widthStore + 'px' : 'fit-content'}
 		style:height={dimensionsProvided || $resized ? $heightStore + 'px' : 'fit-content'}
 		style:transform="rotate({$rotation}deg)"

@@ -84,6 +84,7 @@
 	 * edges at higher z-Index than the Node.
 	 */
 	export let edgesAboveNode: boolean | 'all' = false;
+	export let title = '';
 
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
@@ -128,6 +129,7 @@
 		{disableSelection}
 		{trackpadPan}
 		{modifier}
+		{title}
 		on:edgeDrop
 	>
 		{#if mermaid.length}
