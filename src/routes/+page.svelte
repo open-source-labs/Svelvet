@@ -11,7 +11,7 @@
 </script>
 
 <body>
-	<Svelvet minimap>
+	<Svelvet minimap title="test">
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />

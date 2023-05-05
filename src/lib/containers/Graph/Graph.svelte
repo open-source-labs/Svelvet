@@ -41,6 +41,7 @@
 	export let trackpadPan: boolean;
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
 	export let theme = 'light';
+	export let title: string;
 
 	// Local constants
 	const dispatch = createEventDispatcher();
@@ -250,6 +251,7 @@
 					}
 				});
 		}
+		console.log('mouse up');
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
@@ -473,7 +475,7 @@
 <section
 	id={graph.id}
 	class="svelvet-wrapper"
-	title="graph"
+	{title}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	on:wheel|preventDefault={handleScroll}
