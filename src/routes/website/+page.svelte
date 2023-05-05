@@ -9,23 +9,25 @@
 	let theme: import('$lib/types').Theme = 'light';
 	let zoom = 0.6;
 	let minimapVisible = true;
+
+	const arr = [Thickness, Noise, Scale, CircleColor, DashCount];
 </script>
 
 <div class="diagram">
 	<Svelvet fitView="resize" edgeStyle="step" TD {theme} {zoom} controls minimap={minimapVisible}>
-		<Group
-			position={{ x: -150, y: -100 }}
-			width={600}
-			height={700}
-			color="goldenrod"
-			groupName="parameters"
+		{#each arr as node}
+			<svelte:component this={node} />
+		{/each}
+		<button
+			style="pointer-events: auto;"
+			on:click={() => {
+				const tmp = arr[0];
+				arr[0] = arr[1];
+				arr[1] = tmp;
+			}}
 		>
-			<Thickness />
-			<Noise />
-			<Scale />
-			<CircleColor />
-			<DashCount />
-		</Group>
+			Swap elements
+		</button>
 		<Output />
 		<span id="state" class="note"> Stateful Anchors</span>
 		<span id="groups" class="note">Group Boxes</span>

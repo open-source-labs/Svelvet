@@ -20,6 +20,7 @@
 	// Props
 	export let node: Node;
 	export let isDefault: boolean;
+	export let useDefaults: boolean;
 	export let center: boolean;
 	export let nodeStore: Graph['nodes'];
 	export let locked: Graph['locked'];
@@ -30,6 +31,9 @@
 	export let initialNodePositions: Graph['initialNodePositions'];
 	export let activeGroup: Graph['activeGroup'];
 	export let editing: Graph['editing'];
+
+	// Local stores
+	const anchorsMounted = writable(0);
 
 	// External stores
 	const id = node.id;
@@ -56,7 +60,6 @@
 	let minWidth = 200;
 	let minHeight = 100;
 	let DOMnode: HTMLElement;
-	let wrapper: HTMLElement;
 
 	// Subscriptions
 	$: actualPosition = $position;
@@ -72,6 +75,7 @@
 	}
 
 	setContext<Node>('node', node);
+	setContext<Writable<number>>('anchorsMounted', anchorsMounted);
 
 	// Lifecycle methods
 	onMount(() => {
@@ -301,12 +305,16 @@
 		style:width="{$widthStore}px"
 		style:height="{$heightStore}px"
 		style:transform="rotate({$rotation}deg)"
-		style:--prop-background-color={$bgColor || (isDefault ? null : 'transparent')}
+		style:--prop-background-color={$bgColor || (isDefault || useDefaults ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
 		style:--prop-border-color={$borderColor}
 		style:--prop-selection-color={$selectionColor}
-		style:--prop-border-radius={$borderRadius ? `${$borderRadius}px` : isDefault ? null : '0px'}
-		style:--prop-border-width={$borderWidth || (isDefault ? null : '0px')}
+		style:--prop-border-radius={$borderRadius
+			? `${$borderRadius}px`
+			: isDefault || useDefaults
+			? null
+			: '0px'}
+		style:--prop-border-width={$borderWidth || (isDefault || useDefaults ? null : '0px')}
 		on:contextmenu|preventDefault|stopPropagation
 		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}

@@ -133,7 +133,7 @@
 			locked,
 			rotation
 		};
-		if (connections.length && outputs) config.connections = processConnections(connections);
+		if (connections.length) config.connections = connections;
 		if (borderWidth) config.borderWidth = borderWidth;
 		if (borderRadius) config.borderRadius = borderRadius;
 		if (borderColor) config.borderColor = borderColor;
@@ -154,26 +154,9 @@
 		graph.nodes.add(node, node.id);
 	});
 
-	function processConnections(connectionsArray: Connections) {
-		const processedConnections: Array<Connections> = Array(outputs)
-			.fill(null)
-			.map(() => []);
-		let currentAnchor = 0;
-
-		connectionsArray.forEach((connection) => {
-			currentAnchor = currentAnchor % outputs;
-			processedConnections[currentAnchor].push(connection);
-			currentAnchor++;
-		});
-
-		return processedConnections.reverse();
-	}
-
-	function connect(connections: number | string | Connections) {
+	function connect(connections: number | string | [number | string, number | string]) {
 		if (!node) return;
-		const adjustedConnections = Array.isArray(connections) ? connections : [connections];
-		const processedConnections = processConnections(adjustedConnections as Connections);
-		node.connections.set(processedConnections);
+		node.connections.set([connections]);
 	}
 
 	function disconnect(connections: number | string | Connections) {
@@ -249,7 +232,8 @@
 	<InternalNode
 		{node}
 		{center}
-		isDefault={isDefault || useDefaults}
+		{isDefault}
+		{useDefaults}
 		nodeStore={graph.nodes}
 		locked={graph.locked}
 		groups={graph.groups}
