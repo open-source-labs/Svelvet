@@ -35,7 +35,7 @@ export interface Node {
 	direction: Writable<'TD' | 'LR'>;
 	borderRadius: Writable<number>;
 	borderWidth: Writable<number>;
-	connections: Writable<Array<Connections>>;
+	connections: Writable<Connections>;
 	bgColor: Writable<CSSColorString | null>;
 	borderColor: Writable<CSSColorString | null>;
 	selectionColor: Writable<CSSColorString | null>;
@@ -73,7 +73,7 @@ export interface NodeConfig {
 	borderWidth?: number;
 	rotation?: number;
 	textColor?: CSSColorString;
-	connections?: Array<Connections>;
+	connections?: Connections;
 	edge?: ComponentType;
 }
 

@@ -39,6 +39,7 @@
 	const nodeStore = getContext<Graph['nodes']>('nodeStore');
 	const graphEdge = getContext<ComponentType>('graphEdge');
 	const nodeConnectEvent = getContext<Writable<null | MouseEvent>>('nodeConnectEvent');
+	const anchorsMounted = getContext<Writable<number>>('anchorsMounted');
 
 	export let bgColor: CSSColorString | null = null;
 	export let id: string | number = 0;
@@ -127,12 +128,35 @@
 			);
 			anchors.add(anchor, anchor.id);
 		}
+
 		anchor.recalculatePosition();
 	});
 
 	onMount(() => {
 		if (anchorElement) anchor.recalculatePosition();
-		//anchor.mounted.set(true);
+
+		// Need to add this to the Anchor store as a native property
+		const outputCount = Array.from(get(node.anchors)).reduce((acc, [key, anchor]) => {
+			if (anchor.type === 'output') acc++;
+			return acc;
+		}, 0);
+		if ($nodeLevelConnections?.length && !input) {
+			const remainingConnections: Connections = [];
+			let first: number | null = null;
+			$nodeLevelConnections.forEach((connection, i) => {
+				if (!connection) return;
+				if (first === null) first = i;
+
+				if ((i - first) % outputCount === 0) {
+					assignedConnections.push(connection);
+					remainingConnections.push(null);
+				} else {
+					remainingConnections.push(connection);
+				}
+			});
+			$nodeLevelConnections = remainingConnections;
+		}
+		$anchorsMounted++;
 	});
 
 	afterUpdate(() => {
@@ -149,9 +173,10 @@
 
 	$: if (dynamic && anchorElement) changeAnchorSide(anchorElement, $dynamicDirection, node);
 
-	$: if (!input) {
+	$: if (!input && $anchorsMounted && $anchorsMounted === node.anchors.count()) {
 		const poppedConnections = $nodeLevelConnections?.pop();
-		if (poppedConnections) assignedConnections = poppedConnections;
+		if (poppedConnections) connections.push(poppedConnections);
+		connections = connections;
 	}
 
 	$: if ($mounted === nodeStore.count() && connections.length) {
@@ -162,7 +187,7 @@
 		handleMouseUp($nodeConnectEvent);
 	}
 
-	// // If the user has specifcied connections, we check once all nodes have mounted
+	// If the user has specifcied connections, we check once all nodes have mounted
 	$: if ($mounted === nodeStore.count() && assignedConnections.length) {
 		checkNodeLevelConnections();
 	}

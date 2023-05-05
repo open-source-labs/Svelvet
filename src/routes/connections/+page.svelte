@@ -23,15 +23,19 @@
 		<Node label="Node 4" inputs={2} outputs={5} position={{ x: 400, y: 500 }} />
 		<Node
 			label="Node 5"
-			connections={[['8', 1]]}
+			connections={[
+				['8', 1],
+				['custom', 'custom2']
+			]}
 			inputs={5}
 			outputs={2}
 			position={{ x: 400, y: 700 }}
 		/>
 		<Node label="Node 6" position={{ x: 400, y: 900 }} />
-		<Node id="custom" position={{ x: -100, y: 300 }}>
+		<Node id="custom" position={{ x: -100, y: 300 }} connections={[4, ['3', 4]]}>
 			<div class="node">
-				<Anchor id="custom" direction="west" connections={[5, [5, 5]]} />
+				<Anchor output id="custom" direction="west" connections={[5, [5, 5]]} />
+				<Anchor output id="custom2" direction="west" />
 			</div>
 		</Node>
 		<Node
