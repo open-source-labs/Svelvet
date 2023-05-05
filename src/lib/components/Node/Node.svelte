@@ -5,7 +5,7 @@
 	import { createNode } from '$lib/utils';
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
-	import type { NodeKey, Anchor, AnchorKey, XYPair } from '$lib/types';
+	import type { NodeKey, Anchor, AnchorKey } from '$lib/types';
 	import type { Graph, Node as NodeType, NodeConfig, GroupKey } from '$lib/types';
 	import type { Connections, CSSColorString, InitialDimensions } from '$lib/types';
 </script>

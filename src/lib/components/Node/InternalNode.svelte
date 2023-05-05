@@ -3,10 +3,11 @@
 	import { captureGroup, calculateFitContentWidth } from '$lib/utils';
 	import { afterUpdate, getContext, onDestroy, onMount, setContext } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { get } from 'svelte/store';
+	import { get, writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import type { Node, Graph } from '$lib/types';
 	import type { GroupKey, Group } from '$lib/types';
+	const tagsToIgnore = new Set(['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA']);
 </script>
 
 <script lang="ts">
@@ -166,7 +167,7 @@
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
 		// If the event target is an input, don't do anything
-		if (targetElement.tagName === 'INPUT') return;
+		if (tagsToIgnore.has(targetElement.tagName)) return;
 
 		//Dispatch nodeClick event fo rdeveloper use
 		dispatch('nodeClicked', { node, e });
@@ -239,7 +240,7 @@
 	function destroy() {
 		nodeStore.delete(id);
 	}
-	import { writable } from 'svelte/store';
+
 	const nodeConnectEvent = writable<null | MouseEvent>(null);
 	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {

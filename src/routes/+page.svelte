@@ -9,17 +9,20 @@
 	}
 	let totalNodes = 0;
 	let nodeVisible = false;
+	let position = { x: 100, y: 300 };
+	$: console.log(position);
 </script>
 
 <body on:keydown={() => (nodeVisible = !nodeVisible)}>
-	<Svelvet snapTo={40} on:edgeDrop={(e) => console.log(e)}>
+	<div draggable={true}>Node</div>
+	<Svelvet width={600} height={600} snapTo={40} on:edgeDrop={() => (nodeVisible = !nodeVisible)}>
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }} />
 		<Node inputs={5} position={{ x: 600, y: 600 }} />
 		{#if nodeVisible}
 			<Node inputs={5} drop="cursor" />
 		{/if}
-		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
+		<Node useDefaults dimensions={{ width: 400, height: 300 }} {position}>
 			<div class="anchor">
 				<Anchor nodeConnect />
 			</div>
