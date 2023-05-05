@@ -250,7 +250,6 @@
 					}
 				});
 		}
-
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];

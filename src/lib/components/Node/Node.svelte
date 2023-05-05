@@ -238,6 +238,7 @@
 		center={center || drop === 'center'}
 		{isDefault}
 		{useDefaults}
+		dimensionsProvided={!!dimensions || !!width || !!height || isDefault || false}
 		nodeStore={graph.nodes}
 		locked={graph.locked}
 		groups={graph.groups}
