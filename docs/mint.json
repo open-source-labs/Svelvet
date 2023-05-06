@@ -1,0 +1,75 @@
+{
+	"$schema": "https://mintlify.com/schema.json",
+	"name": "Svelvet",
+	"logo": {
+		"dark": "/logo/dark.png",
+		"light": "/logo/light.png"
+	},
+	"favicon": "/favicon.png",
+	"colors": {
+		"primary": "#E94646",
+		"light": "#E94646",
+		"dark": "#9F1239"
+	},
+	"topbarLinks": [
+		{
+			"name": "Documentation",
+			"url": "https://mintlify.com/docs"
+		}
+	],
+	"topbarCtaButton": {
+		"type": "github",
+		"url": "https://github.com/open-source-labs/Svelvet/"
+	},
+	"anchors": [
+		{
+			"name": "GitHub",
+			"icon": "github",
+			"url": "https://github.com/open-source-labs/Svelvet/"
+		}
+	],
+	"navigation": [
+		{
+			"group": "Overview",
+			"pages": ["introduction", "changelog", "roadmap", "upgrading"]
+		},
+		{
+			"group": "Getting Started",
+			"pages": ["getting-started/installation"]
+		},
+
+		{
+			"group": "Styling",
+			"pages": ["styling"]
+		},
+		{
+			"group": "Components",
+			"pages": [
+				"components/svelvet",
+				"components/node",
+				"components/anchor",
+				"components/edge",
+				"components/group",
+				"components/resizer",
+				"components/minimap",
+				"components/controls",
+				"components/background",
+				"components/themetoggle"
+			]
+		},
+		{
+			"group": "Data Flow",
+			"pages": [
+				"data-flow/overview",
+				"data-flow/slider",
+				"data-flow/radiogroup",
+				"data-flow/colorpicker"
+			]
+		}
+	],
+	"footerSocials": {
+		"twitter": "https://twitter.com/SvelvetOSLabs",
+		"github": "https://github.com/open-source-labs/Svelvet/",
+		"linkedin": "https://www.linkedin.com/company/svelvet"
+	}
+}

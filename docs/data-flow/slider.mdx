@@ -1,0 +1,49 @@
+---
+title: 'Slider'
+sidebarTitle: 'Slider'
+description: 'A flexible slider component for use with our data flow system'
+---
+
+## Description
+
+The Slider is an accessible, flexible component that directly interfaces with Svelvet's custom input and output stores. It can be controlled via keyboard input, arrow keys, click and drag, scroll and button presses.
+
+Refer to the overview in this section for more detailed usage.
+
+## Props
+
+<ResponseField name="parameterStore" required type="CustomWritable<number>">
+	The input store associated with the parameter.
+</ResponseField>
+
+<ResponseField name="min" type="number" default="0">
+	The minimum value allowed when interacting with the Slider.
+</ResponseField>
+
+<ResponseField name="max" type="number" default="100">
+	The maximum value allowed when interacting with the Slider.
+</ResponseField>
+
+<ResponseField name="step" type="number" default="1">
+	Value by which the stored value should increment.
+</ResponseField>
+
+<ResponseField name="label" type="string" default="Value">
+	Displayed label for the slider.
+</ResponseField>
+
+<ResponseField name="fixed" type="number" default="2">
+	Precision in decimal places.
+</ResponseField>
+
+<ResponseField name="fontColor" type="CSS Color String" default="theme dependent">
+	Text and button color.
+</ResponseField>
+
+<ResponseField name="barColor" type="CSS Color String" default="theme dependent">
+	Color of the percentage bar representing the value of the slider relative to its max.
+</ResponseField>
+
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	Background color of the percentage bar.
+</ResponseField>

@@ -1,0 +1,61 @@
+---
+title: 'Resizer'
+sidebarTitle: 'Resizer'
+description: ''
+---
+
+<Info>This component is only used when constructing custom Nodes</Info>
+
+## Description
+
+The Resizer component can be passed to a custom [Node](/components/node) to enable dynamic resizing and rotation. Dimensions allowed for resizing and minimum dimensions can be set via props.
+
+```HTML MyNode.svelte
+<script>
+	import { Node, Resizer } from 'svelvet'
+</script>
+
+<Node let:selected dimensions={{ width: 400, height: 100 }}>
+	<div class="node" class:selected>
+    	<Resizer width height rotation/>
+    </div>
+</Node>
+
+<style>
+	.node {
+		width: 100%;
+		height: 100%;
+		background-color: red;
+		border-radius: 8px;
+		border: 2px solid black;
+	}
+	.selected {
+		border: 2px solid white;
+	}
+</style>
+```
+
+<Warning>
+	When using the Resizier component. You must specify your root level HTML element width and height
+	as 100%. Set initial size via Node props.
+</Warning>
+
+## Props
+
+<ResponseField name="width" type="number" default="false">
+	Boolean controlling whether the Node can be resized along its width.
+</ResponseField>
+
+<ResponseField name="width" type="number" default="false">
+	Boolean controlling whether the Node can be resized along its height.
+</ResponseField>
+<ResponseField name="rotation" type="boolean" default="false">
+	Boolean controlling whether the Node can be rotated via the top left corner.
+</ResponseField>
+
+<ResponseField name="minHeight" type="number" default="200">
+	Pixel value reprsenting the minimum alowed height when resizing.
+</ResponseField>
+<ResponseField name="minHeight" type="number" default="100">
+	Pixel value reprsenting the minimum alowed width when resizing.
+</ResponseField>

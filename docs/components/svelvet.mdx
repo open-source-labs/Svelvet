@@ -1,0 +1,117 @@
+---
+title: 'Svelvet'
+sidebarTitle: 'Svelvet'
+description: 'Primary canvas component configurable via props. Enables zoom, pan and translation of the canvas.'
+---
+
+## Description
+
+Svelvet is the wrapping parent component that renders out nodes and edges. It is configurable via props, but no props are required. Many props can be set globally at this level and then overriden at the Node, Edge or Anchor level.
+
+```HTML App.svelte
+<script>
+  import { Node, Svelvet, Minimap, Controls } from 'svelvet';
+</script>
+
+<Svelvet id="my-canvas" width="{500}" height="{500}" TD minimap locked>
+  <Node />
+  <Node id="alpha" bgColor="red" label="Default Node" />
+  <Controls />
+</Svelvet>
+```
+
+## Props
+
+<ResponseField name="width" type="number" default="size of wrapping element">
+	Width of the canvas window on the DOM. If not passed, element will fill its wrapping container.
+</ResponseField>
+<ResponseField name="height" type="number" default="size of wrapping element">
+	Height of the canvas window on the DOM. If not passed, element will fill its wrapping container.
+</ResponseField>
+<ResponseField name="id" type="number | string" default="incrementing integer">
+	Identification for the canvas. If not passed, defaults to an incrementing integer. Used as the
+	HTML id value for the element taking the form G-id.
+</ResponseField>
+<ResponseField name="minimap" type="boolean" default="false">
+	Boolean used to render the default Minimap component. Just pass "minimap" rather than minimap=
+	{true}.
+</ResponseField>
+<ResponseField name="translation" type="{x: number, y: number}" default="{x: 0, y: 0}">
+	Initial translation of the graph. Does not currently feature two way data binding.
+</ResponseField>
+<ResponseField name="controls" type="boolean" default="false">
+	Boolean used to render the default Controls component. Just pass "controls" rather than controls=
+	{true}.
+</ResponseField>
+<ResponseField name="edge" type="Edge Component">
+	A custom Edge component to be used as the global Edge style for the canvas. Can be overriden at
+	the Node and Anchor level.
+</ResponseField>
+<ResponseField name="edgeStyle" type="bezier | step | straight" default="bezier">
+	Enum representing the global edge style for the canvas. Overriden when passing custom Edges.
+</ResponseField>
+<ResponseField name="snapTo" type="number" default="1">
+	Pixel value at default scale that Nodes should snap to when being moved.
+</ResponseField>
+<ResponseField name="editable" type="boolean" default="false">
+	Allows the Node properties to be edited via CTRL+click.
+</ResponseField>
+<ResponseField name="fitView" type="boolean" default="false">
+	Adjusts scale and translation to fit all Nodes in view on mount.
+</ResponseField>
+<ResponseField name="locked" type="boolean" default="false">
+	Locks node movement, but still allows the canvas to be panned.
+</ResponseField>
+<ResponseField name="initialZoom" type="number" default="1">
+	Sets the initial zoom level for the canvas. Below 1 zooms out, above 1 zooms in.
+</ResponseField>
+<ResponseField name="theme" type="string" default="light">
+	A string associated with a custom theme created using a `:root[svelvet-theme="theme-name"]` CSS
+	selector. Svelvet reserves `light` and `dark`.
+</ResponseField>
+<ResponseField name="mermaid" type="string" default="">
+	canvas representation using Mermaid-inspired string syntax. Great for quickly developing simple
+	Nodes and Edges.
+</ResponseField>
+<ResponseField name="mermaidConfig" type="string">
+	An object of key value pairs where the key is a Node ID and the value a Node configuration object.
+	Used only when creating canvases via the Mermaid syntax.
+</ResponseField>
+<ResponseField name="TD" type="boolean" default="false">
+	Boolean controlling the directionality of the canvas. TD being set false by default means that the
+	canvas direction is inherently left-to-right. Pass "TD" as a prop to change the direction to
+	top-down.
+</ResponseField>
+
+<ResponseField name="disableSelection" type="boolean" default="false">
+	Boolean controlling whether or not Shift + Click enables the selection of multiple components.
+	This feature is enabled by default.
+</ResponseField>
+
+<ResponseField name="edgesAboveNode" type="boolean | 'all'" default="false">
+	Sets whether Edges should, by default, be placed above or below connected Nodes. Can be set to
+	`all` to force Edges above all nodes. Otherwise, true essentially turns on `raiseEdgesOnSelect`,
+	but places the edges at higher z-Index than the Node.
+</ResponseField>
+
+<ResponseField name="raiseEdgesOnSelect" type="boolean | 'source' | 'target'" default="false">
+	When a Node is selected, this prop controls whether the z-index of a connected edge should be
+	raised. Setting to `true` raises the edge regardless of if the source or target is selected.
+</ResponseField>
+
+<ResponseField name="modifier" type="'alt' | 'ctrl' | 'meta' | 'shift'" default="meta">
+	Sets global key modifier used to detect select all and duplicate events.
+</ResponseField>
+
+<ResponseField name="trackpadPan" type="boolean" default="false">
+	When using a trackpadPan, setting this prop to true enables two finger pan on the Graph and pinch
+	to zoom. Will conflict with scroll behavior on mice. This mode of navigation can be enabled
+	dynamically by hodling down the meta key.
+</ResponseField>
+
+## Events
+
+<ResponseField name="on:edgeDrop">
+	Fires when an Edge connection is started and not completed. Does not fire on drops after a
+	disconnection.
+</ResponseField>

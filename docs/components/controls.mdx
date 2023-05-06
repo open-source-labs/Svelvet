@@ -1,0 +1,74 @@
+---
+title: 'Controls'
+sidebarTitle: 'Controls'
+description: 'Optional component offering zoom, fit-in-view, lock and unhide functionality. Configurable via props or by passing your own custom buttons as children'
+---
+
+## Description
+
+The Controls component can be rendered using defaults by passing the "controls" prop to the Svelvet componet.
+
+Customize the Controls component by wrapping it around custom buttons. Zoom increment and position are configurable via props. Trigger the exposed functions via mouse, keyboard and touch events.
+
+```HTML MyControls.svelte
+<script>
+	import { Controls } from 'svelvet';
+</script>
+
+<Controls let:zoomIn let:zoomOut let:fitView let:unhideAll corner="SW">
+	<button class="my-zoom-in" on:click|stopPropagation={zoomIn}/>
+	<button on:click|stopPropagation={zoomOut}/>
+  <button on:click|stopPropagation={fitView}/>
+  <button on:click|stopPropagation={unhideAll}/>
+</Controls>
+
+<style>
+.my-zoom-in {
+    border: none;
+    background-color: black;
+}
+</style>
+```
+
+<Note>When passing the component to Svelvet, you must specify slot="controls"</Note>
+
+```HTML MyControls.svelte
+<script>
+	import { Svelvet, Node} from 'svelvet';
+</script>
+
+<Svelvet>
+    <Node/>
+    <MyControls slot="controls"/>
+</Svelvet>
+```
+
+## Props
+
+<ResponseField name="increment" type="number" default="0.1">
+	Controls strength of zoom. Default of 0.1 means each button click zooms the canvas by 10% in or
+	out.
+</ResponseField>
+
+<ResponseField name="horizontal" type="boolean" default="false">
+	Displays control buttons horizontally.
+</ResponseField>
+
+## Functions
+
+<ResponseField name="let:zoomIn" type="function">
+	Used to trigger a zoom in on the canvas element.
+</ResponseField>
+
+<ResponseField name="let:zoomOut" type="function">
+	Used to trigger a zoom out on the canvas element.
+</ResponseField>
+
+<ResponseField name="let:fitView" type="function">
+	Adjusts scale and translation to fit all nodes within the viewport
+</ResponseField>
+
+<ResponseField name="let:unhideAll" type="function">
+	Unhides all nodes. When using default Controls component, this button is only visible when Nodes
+	are hidden.
+</ResponseField>

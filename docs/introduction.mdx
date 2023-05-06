@@ -1,0 +1,24 @@
+---
+title: 'Svelvet'
+sidebarTitle: 'Introduction'
+description: 'Build and interact with node-based user interfaces using Svelte'
+---
+
+## Description
+
+Svelvet is a lightweight and infinitely customizable component library used to build interactive, node-based user interfaces.
+
+Canvases are composed structurally by passing [Groups](/components/group), [Nodes](/components/node) and other components as children to the [Svelvet](/components/svelvet) wrapper. Standard Svelte syntax applies for conditional rendering and iteration to place Nodes on the canvas.
+
+Default Nodes can be configured by passing props to the Node component, but wrapping custom components or HTML elements in a Node component allows for greater flexibility and functionality.
+
+[Edges](/components/edge), the connections between [Anchors](/components/anchor), can be specified ahead of time or dynamically and are fully customizable.
+
+Default canvas styling can be configured via specific props or, more generally, by specifying a theme such as `light` or `dark`.
+
+You can also place arbitrary HTML elements on the canvas, which is especially useful for notes and annotations.
+
+<iframe
+	src="https://stackblitz.com/edit/svelvet-v7?embed=1&file=src/routes/+page.svelte&theme=dark&view=preview"
+	style={{ width: '100%', height: '500px' }}
+></iframe>

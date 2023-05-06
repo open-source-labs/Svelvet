@@ -1,0 +1,117 @@
+---
+title: 'Edge'
+sidebarTitle: 'Edge'
+description: 'Optional component for customizing Edges and Edge labels'
+---
+
+## Description
+
+Visualization and interaction behavior can be customized for Edges by creating your own custom components.
+
+Edges styling can be fully controlled via CSS by passing the expose "path" variable on an HTML Path Element. Custom labels can also be passed via the "label" slot.
+
+Custom Edges are then passed to the "edge" prop of an Anchor component. Any Edge initiated from that Anchor will render out your custom path and label.
+
+Edges can also be passed to the Svelvet and Node components, enabling the ability to set a global Edge style which can be overriden at the [Anchor](/components/anchor) or [Node](/components/node) level.
+
+Edges also accept callback functions that run in response to click events on the path.
+
+<Warning>
+	When customizing the Edge path via your own path element, props controlling the Edge apperance
+	such as color, width and animate will no longer apply
+</Warning>
+
+<CodeGroup>
+```HTML MyEdge.svelte
+<script>
+	import { Edge } from 'svelvet';
+</script>
+
+<Edge let:path let:destroy edgeClick="{() => alert('Edge clicked')}" step>
+	<path d={path} />
+	<button on:click={destroy} slot="label">
+		<p>Custom Label</p>
+	</button>
+</Edge>
+
+<style>
+	path {
+		stroke: rgb(246, 231, 20);
+		stroke-width: 4px;
+	}
+</style>
+
+````
+
+
+```HTML MyNode.svelte
+<script>
+	import { Svelvet, Node } from 'svelvet';
+    import MyEdge from './MyEdge.svelte
+</script>
+
+<Svelvet>
+    <Node>
+        <div class="my-node">
+            <Anchor edge={MyEdge}/>
+        </div>
+    </Node>
+</Svelvet>
+````
+
+</CodeGroup>
+
+##
+
+<Note>When passing a custom label, you must specify slot="label"</Note>
+
+## Props
+
+<ResponseField name="width" type="number" default="2">
+	Pixel width of stroke at scale 1.
+</ResponseField>
+<ResponseField name="edgeClick" type="(() => void) | null" default="null">
+	Function to run when a click event is fired on an Edge.
+</ResponseField>
+<ResponseField name="targetColor" type="CSSColorString">
+	Color of the Edge click target. Set to opacity 50%. Only displayed when an edgeClick function is
+	passed.
+</ResponseField>
+<ResponseField name="color" type="CSS Color String" default="theme dependent">
+	Color of the edge path.
+</ResponseField>
+<ResponseField name="straight" type="boolean" default="false">
+	Boolean controlling curvate of edge path. Renders edge using "step" logic.
+</ResponseField>
+
+<ResponseField name="step" type="CSS Color String" default="false">
+	Boolean controlling curvate of edge path. Renders edge as straight line.
+</ResponseField>
+<ResponseField name="cornerRadius" type="number" default="8">
+	Radius of corners when rendering out a step path. Set to 0 for hard corners.
+</ResponseField>
+<ResponseField name="animate" type="boolean" default="false">
+	Renders edge path as a dashed, moving line.
+</ResponseField>
+<ResponseField name="label" type="string">
+	Label text.
+</ResponseField>
+<ResponseField name="labelColor" type="CSS Color String" default="theme dependent">
+	Color of the label.
+</ResponseField>
+<ResponseField name="textColor" type="CSS Color String" default="theme dependent">
+	Color of the label text.
+</ResponseField>
+
+## Properties
+
+<ResponseField name="let:path" type="string">
+	The SVG path string used for rendering the edge. Pass to the "d" parameter on your custom path
+	component.
+</ResponseField>
+
+## Functions
+
+<ResponseField name="let:destroy" type="function">
+	Function to remove the edge and break Anchor connections.
+</ResponseField>

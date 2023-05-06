@@ -1,0 +1,81 @@
+---
+title: 'Upgrading'
+sidebarTitle: 'Upgrading'
+description: 'Work in progress enumeration of changes to Svelvet 7 from previous versions'
+---
+
+<Warning>
+	This page is a work in progress and is currently provided only as a general reference. Please
+	refer to the pages for each component for more detailed usage and prop definitions.
+</Warning>
+
+## Changes
+
+- There is no longer a nodes prop on the [Svelvet](/components/svelvet) component. There is a new [Node](/components/node) component itself that takes props and should be passed as a child of Svelvet. You can iterate and conditionally render Nodes using all the standard Svelte syntax. Svelvet 6 functionality is emulated using the following approach:
+
+```html
+<script>
+    import { Node, Svelvet} from 'svelvet'
+    import type { NodeProps } from 'svelvet'
+
+    const nodes: Array<NodeProps> = [
+        {
+            bgColor: "red",
+            dimensions: {
+                width: 400,
+                height: 200
+            }
+        }
+    ]
+</script>
+
+<Svelvet width={1200} height={1000} zoom={1} minimap/>
+  {#each nodes as node}
+      <Node {...node} />
+  {/each}
+</Svelvet>
+```
+
+- The equivalent to UserNodeType is NodeProps. There is also a type "Node" for the structure of the actual Node in the store. We will be adding extensive type definitions to our documentation soon, but mostly everything developers need is included in the prop definitons for each component.
+
+- Node width and height are now passed as part of a dimensions object `{width: number, height: number}`. Default is 200x100
+
+- The prop controlling initial zoom is now called `zoom` as it features two way data binding and can be updated dynamically.
+
+- Setting initial location is now done via the `translation` prop, which takes the structure `{ x: number, y: number}`
+
+- Target position and source position are no longer part of a NodeProps/UserNodeType. You can specify Node direction by passing `TD` or `LR`, which would place input anchors on the top/bottom or left/right respectively. You can specify an arbitrary number of Anchors with the `inputs`/`outputs` props. For the greatest level of customization, we suggest creating custom Nodes.
+
+- Click callbacks are no longer part of the NodeProps/UserNodeType or a prop on the Node component. Instead, there is an event on the Node component you can listen for called on:nodeClicked. We pass the entire Node object as part of the event, but it's also accessible via let:node. There's also on:connection and on:disconnection for firing events when the state of an [Anchor](/components/anchor) changes.
+
+```html
+<script>
+	import { Node, Svelvet } from 'svelvet';
+	import type { NodeProps } from 'svelvet';
+	import CustomNode from './CustomNode.svelte';
+
+	function myFunction(e: CustomEvent) {
+		console.log(e);
+	}
+</script>
+
+<Svelvet>
+	<Node on:nodeClicked="{myFunction}" />
+	<CustomNode />
+</Svelvet>
+```
+
+- Pre-defined [Edges](/components/edge) are specified via the connections prop on Nodes and Anchors. These can be numbers/strings representing Node IDs or a tuple of a Node ID and Anchor ID. You only need to specify them on one end of the connection. To customize Edges, you can create your own custom Edge components and pass that to Svelvet, Node and/or Anchor to set edge types at increasing levels of granularity.
+
+- The background color of a graph is no longer set via a bgColor prop on Svelvet. Instead, you would import the Background component, configure its props (`bgColor`, `dotColor`, `gridSize`, etc.) and pass it via the background slot. If you're just looking to more generally style everything at once, Svelvet now takes a `theme` prop with a few default styles like light and dark. We'll be adding more soon and allowing developers to pass their own global theme as well.
+
+```html
+<script lang="ts">
+	import { Svelvet, Node, Background } from 'svelvet';
+</script>
+
+<Svelvet width="{800}" height="{600}" minimap>
+	<Node />
+	<Background slot="background" bgColor="transparent" />
+</Svelvet>
+```

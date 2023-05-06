@@ -1,0 +1,43 @@
+---
+title: 'Theme Toggle'
+sidebarTitle: 'Theme Toggle'
+description: 'Optional component offering ability to dynamically toggle between themes'
+---
+
+## Description
+
+The Theme Toggle component can be rendered by passing the `toggle` prop to the Svelvet component. By default, this will toggle between light and dark themes. For additional customization, import the component and pass the entire thing as a child of Svelvet
+
+<Note>When passing the component to Svelvet, you must specify slot="toggle"</Note>
+
+```HTML
+<script lang="ts">
+	import { Svelvet, Node, ThemeToggle } from 'svelvet';
+
+</script>
+
+<body>
+    <Svelvet widht={400} height={400}>
+        <Node />
+        <ThemeToggle main="dark" alt="light" slot="toggle" />
+    </Svelvet>
+</body>
+```
+
+<ResponseField name="main" type="string" default="light">
+	A string associated with a custom theme created using a `:root[svelvet-theme="theme-name"]` CSS
+	selector. Svelvet reserves `light` and `dark`.
+</ResponseField>
+<ResponseField name="alt" type="string" default="dark">
+	A string associated with a custom theme created using a `:root[svelvet-theme="theme-name"]` CSS
+	selector. Svelvet reserves `light` and `dark`.
+</ResponseField>
+<ResponseField name="corner" type="NE | SE | NW | SW" default="NE">
+	Enum controlling corner positioning of button element.
+</ResponseField>
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	Color of background.
+</ResponseField>
+<ResponseField name="iconColor" type="CSS Color String" default="theme dependent">
+	Color of icon.
+</ResponseField>
