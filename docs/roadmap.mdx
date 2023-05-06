@@ -1,0 +1,53 @@
+---
+title: 'Roadmap'
+sidebarTitle: 'Roadmap'
+description: 'Priorities and future ideas for iteration'
+---
+
+## Planned Features
+
+What we're working on and thinking about.
+
+### Persistent Canvas state
+
+We will be exposing functions that can be used to capture and restore the state of the canvas including node positions, dimensions and data flow state. We may also expose a boolean that can be set on the Svelvet component to automatically save canvas state to local storage.
+
+### Improving Window Resize Logic
+
+While the Svelvet component can now fill the size of its wrapping container, we want to improve the logic about node positioning and canvas scale during window resize events.
+
+### Additional Data Input Components
+
+We plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
+
+### Drag and Drop Drawer for Custom Components
+
+A component that can take custom Nodes as props and add them to canvas via the UI.
+
+### Edge Drop Callback
+
+Allow for custom functions to be run when an Edge connection is started, but not completed. This currently exists on the Svelvet component, but needs to be added to Node and Anchor.
+
+### Snap To Grid Guide Lines
+
+Visual representation of Snap To Grid functionality a la Photoshop
+
+### Additional Customization of Input Mechanism
+
+We'd like to add greater configuration of how end-users interact with the canvas, allowing developers to set defaults related to panning, zooming and selection.
+
+### Accesibility
+
+It's a high priority for the Svelvet team that navigating the canvas is accessible for keyboard users. We plan on implementing Node movement and dynamic Edge creation soon.
+
+### Conditional Custom Edges
+
+Rendering out different custom edges based on the state of the associated Anchors.
+
+### Improved Step Edge and Resize Rendering When Rotated
+
+Currently, when Nodes are rotated, their positioning updates in an unintuitive manner when resizing. When using step Edges, the directionality of the edge does not fully respect the rotation.
+
+### Extensive Test Coverage
+
+We expect to have full E2E and unit test coverage relatively soon.

@@ -1,0 +1,192 @@
+---
+title: 'Node'
+sidebarTitle: 'Node'
+description: 'Primary canvas element. Configurable via props or by passing a custom node as children'
+---
+
+<Tip>
+	The props interface for the Node component is available by importing the `NodeConfig` type
+</Tip>
+
+## Description
+
+A Node can be configured in two primary ways.
+
+First, you can customize the default node by passing props to control color, border, size, position, etc.
+
+Second, you can wrap your own custom components with our Node component and use the exposed actions, properties and events however you choose. Pass the entire component as a child of the Svelvet component to render it on the canvas.
+
+<RequestExample>
+```HTML MyNode.svelte
+<script>
+  import { Node } from 'svelvet';
+
+function handleClick(e: CustomEvent) {
+const { detail } = e;
+detail.node.set.bgColor('red');
+}
+
+</script>
+
+<Node id="55" let:grabHandle let:selected on:nodeClicked="{handleClick}">
+  <div use:grabHandle class:selected class="my-component">
+    <span>Click Me</span>
+  </div>
+</Node>
+```
+</RequestExample>
+```HTML MyNode.svelte
+<script>
+  import { Node, Svelvet } from 'svelvet';
+  import { MyNode } from './MyNode.svelte';
+</script>
+
+<Svelvet>
+	<MyNode />
+	<Node id="alpha" bgColor="red" label="Default Node" />
+</Svelvet>
+```
+<Tip>
+	When creating custom nodes, styling should be handled entirely within the context of your
+	component. Passing props to the Node wrapper may not result in your intended styling. If you'd
+	like the Node to be resizable, you can set initial dimensions via props, but set your CSS width
+	and height to 100%
+</Tip>
+
+## Props
+
+<ResponseField name="position" type="{x: number, y: number}" default="{x: 0, y: 0}">
+	Initial position of the node. Coordinate is relative to the top/left point of the canvas.
+</ResponseField>
+<ResponseField
+	name="dimensions"
+	type="{ width: number, height: number }"
+	default="{ width: 200, height: 100 }"
+>
+	Initial dimensions of the node. Pixel value based on initial scale.
+</ResponseField>
+<ResponseField name="connections" type="Array<[nodeId, anchorId] | nodeId>" default="[]">
+	Used to specify Node connections ahead of time. Array of tuples representing a node/anchor pair or
+	of nodeIds themselves. IDs can be strings or numbers. When specifying nodeIds only, connections
+	are spread evenly across the input anchors of the target.
+</ResponseField>
+
+<ResponseField name="id" type="number | string" default="incrementing integer">
+	Identification for the node. If not passed, defaults to an incrementing integer. Used as the HTML
+	id value for the element taking the form N-id.
+</ResponseField>
+<ResponseField name="edge" type="Edge Component">
+	A custom Edge component to be used as the default Edge style for the Node. Can be overriden at the
+	Anchor level.
+</ResponseField>
+<ResponseField name="inputs" type="number" default="1">
+	Number of input anchors placed on the node.
+</ResponseField>
+<ResponseField name="outputs" type="number" default="1">
+	Number of output anchors placed on the node.
+</ResponseField>
+<ResponseField name="drop" type="'cursor' | 'center'" default="false">
+	When passed a value, the initial drop position of the Node is set to the current relative cursor
+	position or the current viewport center.
+</ResponseField>
+<ResponseField name="useDefaults" type="boolean" default="false">
+	When creating custom Nodes, pass the useDefaults prop to use Svelvet's default Node styling.
+</ResponseField>
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	The initial background color of the node. Default changes based on theme.
+</ResponseField>
+<ResponseField name="borderColor" type="CSS Color String" default="theme dependent">
+	The initial border color of the node. Default changes based on theme.
+</ResponseField>
+<ResponseField name="rotation" type="number" default="0">
+	Initial roation of node. Can be set dynamically when the Node is resizable.
+</ResponseField>
+<ResponseField name="borderWidth" type="number" default="1">
+	Pixel value of the border at default scale.
+</ResponseField>
+<ResponseField name="textColor" type="CSS Color String" default="theme dependent">
+	The initial text color of the node. Default changes based on theme.
+</ResponseField>
+<ResponseField name="selectionColor" type="CSS Color String" default="theme dependent">
+	Color of the border when the node is selected.
+</ResponseField>
+<ResponseField name="label" type="string" default="">
+	Label for the default node. Centered horizontally and vertically
+</ResponseField>
+<ResponseField name="TD" type="boolean" default="false">
+	Controls the default direction of the canvas. When true, input anchors on top and output anchors
+	on the bottom. If neither TD or LR are passed, node direction defaults to canvas direction.
+</ResponseField>
+<ResponseField name="LR" type="boolean" default="false">
+	Controls the default direction of the canvas. When true, input anchors are placed on left and
+	output anchors on the right. If neither TD or LR are passed, node direction defaults to canvas
+	direction.
+</ResponseField>
+<ResponseField name="zIndex" type="number | Infinity | -Infinity" default="1">
+	Initial stacking placement of the node. To force a node to the top or bottom at all times, pass
+	Infinity or -Infinity.
+</ResponseField>
+<ResponseField name="editable" type="boolean" default="false">
+	Determines whether the node properties can be edited via right click.
+</ResponseField>
+<ResponseField name="locked" type="boolean" default="false">
+	Prevents node from being moved. Can be set at the canvas level.
+</ResponseField>
+<ResponseField name="center" type="boolean" default="false">
+	When true, the Node is mounted in the optical center of the viewport
+</ResponseField>
+<ResponseField name="dynamic" type="boolean" default="false">
+	Enables dynamic Anchor positioning based on relative posiiton of conneted Nodes
+</ResponseField>
+
+## Actions
+
+<ResponseField name="let:grabHandle">
+	Accessed via the let directive. Placed on an element (use:grabHandle) you would like to control
+	movement and selection of the Node.
+</ResponseField>
+
+## Events
+
+<ResponseField name="on:nodeClicked">Fires when the node is clicked.</ResponseField>
+
+<ResponseField name="on:nodeReleased">
+	Fires when when a mouse up event occurs on the Node. Does not fire if the Node has been dragged
+	and then released.
+</ResponseField>
+
+<ResponseField name="on:connection">
+	Fires whenever an Anmchor on the Node is connected.
+</ResponseField>
+
+<ResponseField name="on:disconnection">
+	Fires whenever an Anchor on the Node is disconnected.
+</ResponseField>
+
+<ResponseField name="on:duplicate">
+	Fires whenever a Node is selected and the user triggers a modifier key command with the 'D' key
+	pressed.
+</ResponseField>
+
+## Properties
+
+<ResponseField name="let:selected" type="boolean">
+	Boolean representing whether or not the node is currently selected. Toggle classes by passing to
+	an element using the class directive (class:selected).
+</ResponseField>
+
+<ResponseField name="let:node" type="object">
+	The Node object from the Svelvet internal store.
+</ResponseField>
+
+## Functions
+
+<ResponseField name="let:connect">
+	Use to programatically create connections from Nodes. Accepts a single Node ID or a [Node ID,
+	Anchor ID] tuple.
+</ResponseField>
+
+<ResponseField name="let:disconnect">
+	Use to programatically remove connections from Nodes. Accepts a single Node ID or a [Node ID,
+	Anchor ID] tuple.
+</ResponseField>

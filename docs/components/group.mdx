@@ -1,0 +1,90 @@
+---
+title: 'Group'
+sidebarTitle: 'Group'
+description: 'A Group of Nodes represented by a bounding box'
+---
+
+## Description
+
+A Group component can be used to wrap a set of a Nodes and limit their movement to within the bounds of the Group. These can be created dynamically using Shift + Meta + Click, but can be specified ahead of time using the Group component.
+
+```jsx App.svelte
+<script>
+  import { Svelvet, Group, Node } from 'svelvet';
+</script>
+
+<Svelvet>
+    <Group color="lightblue" groupName="my-group" position={{x: 300, y: 400}} width={600} height={200}>
+        <Node/>
+        <Node/>
+    </Group>
+</Svelvet>
+```
+
+## Props
+
+<ResponseField name="groupName" required type="string | number">
+	Identification for the Group.
+</ResponseField>
+
+<ResponseField name="width" type="number" required>
+	Width of the bounding box relative to a scale of 1.
+</ResponseField>
+
+<ResponseField name="output" type="boolean" default="false">
+	Boolean that specifies the anchor can only connect to inputs or no-preference anchors. When not
+	passed, anchor allows all connections.
+</ResponseField>
+
+<ResponseField name="multiple" type="boolean" default="input/output dependent">
+	Boolean used to control whether input anchors can have multiple connections. This is false for
+	input anchors and true for output and no-preference anchors.
+</ResponseField>
+
+<ResponseField
+	name="direction"
+	type="north | south | east | west"
+	default="canvas direction dependent"
+>
+	Enum used to control the "directionality" of the anchor. By default, an input anchor on the left
+	side of the node has a directionality of "west". This is used to control the curvature of the
+	edge.
+</ResponseField>
+
+<ResponseField name="edge" type="Svelte Component | null" default="null">
+	An Edge component meant to be associated with the Anchor. Every connection made from this Anchor,
+	will render out the corresponding Edge.
+</ResponseField>
+
+<ResponseField name="connections" type="Array<[nodeId, anchorId]>" default="[]">
+	Array of anchors to connect to. Edges can be created dynamically, but this used to specify Edges
+	ahead of time.
+</ResponseField>
+
+<ResponseField name="inputsStore" type="ReturnType<typeof generateInputs> | null" default="null">
+	When using our data flow system, this is the store of possible inputs for the Node and is the
+	return value of the function generateInputs.
+</ResponseField>
+
+<ResponseField name="key" type="string | null" default="null">
+	Key associated with the input.
+</ResponseField>
+
+<ResponseField name="outputStore" type="Readable<unknown> | null" default=" null">
+	When using our data flow system, this is the store associated with a data output of a node. It is
+	return value of the function generateOutput.
+</ResponseField>
+
+## Properties
+
+<ResponseField name="let:linked" type="boolean">
+	True when the Anchor has an active connection.
+</ResponseField>
+
+<ResponseField name="let:connecting" type="boolean">
+	True when the Anchor is rendering a temporary Edge connected to the cursor.
+</ResponseField>
+
+<ResponseField name="let:hovering" type="boolean">
+	True when the cursor is over the Anchor element.
+</ResponseField>

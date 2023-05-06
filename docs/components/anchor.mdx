@@ -1,0 +1,145 @@
+---
+title: 'Anchor'
+sidebarTitle: 'Anchor'
+description: 'Point of connection from an Edge to a Node'
+---
+
+<Info>This component is only used when constructing custom Nodes</Info>
+
+## Description
+
+Anchors are passed as children to a Node component and can be placed anywhere using CSS.
+
+The visual representation of an Anchor can be customized by passing an HTML element or Svelte component as a child.
+
+Properties representing the state of the Anchor are exposed via the let directive. The booleans can control CSS styling of custom anchors using the class directive.
+
+When using Svelvet as a data flow system, Anchors also accept input and output stores as props. Connections made between Anchors will also connect the stores.
+
+Anchors can be created as inputs, outputs or default. This specification controls connection logic and directionality of the corresponding Edges.
+
+Finally, Edge connections can be specified at runtime by passing an array of tuples via the connections prop. Each tuple represents a corresponding user-defined Node and Anchor ID.
+
+```HTML MyNode.svelte
+<script>
+  import { Node, Anchor } from 'svelvet';
+  import CustomAnchor from './CustomAnchor'
+
+  const connections = [["node1", "4"],["node2", "3"]]
+</script>
+
+<Node let:selected>
+  <div class:selected>
+    <div class="input-anchors">
+      <Anchor bgColor="red" id="data-connection" input />
+      <Anchor multiple input nodeConnect/>
+    </div>
+    <div class="output-anchors">
+      <Anchor let:linked let:hovering let:connecting output edge="{CustomEdge}">
+        <CustomAnchor {linked} {hovering} {connecting} />
+      </Anchor>
+      <Anchor direction="east" {connections}  output />
+    </div>
+  </div>
+</Node>
+```
+
+## Props
+
+<ResponseField name="id" type="string | number" default="incrementing integer">
+	Identification for the Anchor. If not passed, defaults to an incrementing integer starting at 1
+	for each Node. Used as the HTML id value for the element taking the form A-id/N-id
+</ResponseField>
+
+<ResponseField name="invisible" type="boolean" default="false">
+	Prevents the default Anchor from rendering. When passing custom Anchors as children, it is not
+	necessary to set this prop to true. Usually used in combination with the nodeConnect prop.
+</ResponseField>
+
+<ResponseField name="nodeConnect" type="boolean" default="false">
+	Boolean that determines whether mouse up events on the parent Node should trigger connections to
+	the Anchor. When this value is true for multiple Anchors, connections will be made to open Anchors
+	in order.
+</ResponseField>
+
+<ResponseField name="input" type="boolean" default="false">
+	Boolean that specifies the anchor can only connect to output or no-preference anchors. When not
+	passed, anchor allows all connections.
+</ResponseField>
+
+<ResponseField name="output" type="boolean" default="false">
+	Boolean that specifies the anchor can only connect to inputs or no-preference anchors. When not
+	passed, anchor allows all connections.
+</ResponseField>
+
+<ResponseField name="multiple" type="boolean" default="input/output dependent">
+	Boolean used to control whether input anchors can have multiple connections. This is false for
+	input anchors and true for output and no-preference anchors.
+</ResponseField>
+
+<ResponseField
+	name="direction"
+	type="north | south | east | west"
+	default="canvas direction dependent"
+>
+	Enum used to control the "directionality" of the anchor. By default, an input anchor on the left
+	side of the node has a directionality of "west". This is used to control the curvature of the
+	edge.
+</ResponseField>
+<ResponseField name="dynamic" type="boolean" default="false">
+	Enables dynamic Anchor positioning based on relative posiiton of conneted Nodes
+</ResponseField>
+
+<ResponseField name="edge" type="Svelte Component | null" default="null">
+	An Edge component associated with the Anchor. Every connection made from this Anchor will render
+	out the corresponding Edge.
+</ResponseField>
+<ResponseField name="edgeLabel" type="string" default="">
+	When not passing a custom Edge component, this prop can be used to set the label for all Edges
+	initiated from the Anchor
+</ResponseField>
+<ResponseField name="edgeColor" type="Writable<CSS Color String>" default="theme dependent">
+	This prop accepts a store value associated with a CSS Color String. It applies to both default and
+	custom Edges so long as the latter do not render out a custom path or pass a `color` prop.
+</ResponseField>
+
+<ResponseField name="connections" type="Array<[nodeId, anchorId] | nodeId>" default="[]">
+	Used to specify Node connections ahead of time. Array of tuples representing a node/anchor pair or
+	of nodeIds themselves. IDs can be strings or numbers. When specifying nodeIds only, connections
+	are spread evenly across the input anchors of the target.
+</ResponseField>
+<ResponseField name="locked" type="boolean" default="false">
+	Prevents Anchor from being connected/disconnected
+</ResponseField>
+
+<ResponseField name="inputsStore" type="ReturnType<typeof generateInputs> | null" default="null">
+	When using our data flow system, this is the store of possible inputs for the Node and is the
+	return value of the function generateInputs.
+</ResponseField>
+
+<ResponseField name="outputStore" type="Readable<unknown> | null" default=" null">
+	When using our data flow system, this is the store associated with a data output of a node. It is
+	return value of the function generateOutput.
+</ResponseField>
+
+<ResponseField name="key" type="string | null" default="null">
+	Key associated with the input store.
+</ResponseField>
+
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	Used for styling the default anchor
+</ResponseField>
+
+## Properties
+
+<ResponseField name="let:linked" type="boolean">
+	True when the Anchor has an active connection.
+</ResponseField>
+
+<ResponseField name="let:connecting" type="boolean">
+	True when the Anchor is rendering a temporary Edge connected to the cursor.
+</ResponseField>
+
+<ResponseField name="let:hovering" type="boolean">
+	True when the cursor is over the Anchor element.
+</ResponseField>

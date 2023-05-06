@@ -1,0 +1,41 @@
+---
+title: 'Background'
+sidebarTitle: 'Background'
+description: 'Optional component for configuring the background beyond the default themes'
+---
+
+## Description
+
+The Background component is configurable via props and can be passed to the Svelvet component as a child.
+
+```jsx App.svelte
+<script>
+	import { Background, Node, Svelvet } from 'svelvet';
+    import CustomEdge from './CustomEdge.svelte'
+</script>
+
+<Svelvet controls minimap>
+    <Node />
+    <Background dotColor="red" bgColor="black gridWidth={40} dotSize={3} slot="background" />
+</Svelvet>
+```
+
+<Note>When passing the Background component to Svelvet, you must specify slot="background"</Note>
+
+## Props
+
+<ResponseField name="gridWidth" type="number" default="22">
+	Pixel value representing space between dots at default scale.
+</ResponseField>
+
+<ResponseField name="dotSize" type="number" default="1.4">
+	Pixel value representing the size of each grid point at default scale.
+</ResponseField>
+
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	Primary background color.
+</ResponseField>
+
+<ResponseField name="dotColor" type="CSS Color String" default="theme dependent">
+	Primary dot color.
+</ResponseField>

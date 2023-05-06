@@ -1,0 +1,90 @@
+---
+title: 'Changelog'
+sidebarTitle: 'Changelog'
+description: 'New features, bug fixes, and improvements organized by release'
+---
+
+## May 2, 2023
+
+**Svelvet `7.0.37`**
+
+- feat: graphs and other components can now be styled using CSS variables and :root[svelvet-theme="theme-name"] selectors
+- fix: hook custom themes into slider implementation and add unused border c… by @madvib in
+- refactor: reorganized internal node as an example file structure for other components
+- feat: nodeConnect prop on Anchor component initiates connection when an edge is dropped on a parent node
+- chore: update package version and gitignore file
+
+## April 26, 2023
+
+**Svelvet `7.0.34`**
+
+- feat: added modifier prop to Svelvet component to set key modifier globally #297
+- feat: added a new implementation of dynamic anchors
+- feat: added let:connect and let:disconnect methods to Node component
+- fix: graph element was not being focused when clicking node #298
+- fix: keydown listener was not activating when selecting something other than the Graph itself
+- fix: color wheel component was not tracking cursor properly when rotated
+- refactor: store structures now use maps instead of objects
+- refactor: EdgeStore now has custom methods
+- refactor: removed unnecessary helpers
+- refactor: moved DefaultAnchor to its own component
+- chore: update package version by
+
+## April 21, 2023
+
+**Svelvet `7.0.15`**
+
+- Exported GraphConfig interface
+- Added `translation` prop to Svelvet component to set initial translation of the graph
+- Renamed ColorWheel component to ColorPicker
+
+## April 19, 2023
+
+**Svelvet `7.0.4`**
+
+- Added fit-in-view functionality to Svelvet and Controls components.
+- Optimized bounds recalculation when moving Nodes as a group. You can now move hundreds of Nodes at once.
+
+## April 18, 2023
+
+**Svelvet `7.0.0`**
+
+- Changed primary API. Developers now pass Node and other exposed components directly as children to Svelvet
+- Added the ability to specify Anchors as inputs, outputs or any, enabling connection logic and "directionality" of Edge curvature
+- Added the ability to dynamically attach/reattach Edges
+- All new Anchor component that developers can add anywhere within custom nodes. Can be wrapped around custom anchor elements or customized via props
+- All new Edge component for developer customization
+- All new Node component for developer customization
+- All new Resizer component used when composing custom nodes
+- Improved realiability and DX around Edge click events
+- Node connections can be specified at the Node or Anchor level. Improved flexibility of input options
+- Improved consistency of touch events on mobile devices. Added touch support for controls component
+- Nodes and Edges no longer require specified IDs. Defaults to incrementing value
+- Added Controls component with zoom, reset, lock and unhide functionality plus the ability to pass custom control buttons as children
+- Added the ability to specify an arbitrary number of Anchors on default nodes
+- Added z-index stacking logic when interacting with Nodes
+- Improved step path algorithm, which now connects Anchors regardless of their position. Exposed corner radius as prop
+- Added keyboard navigation to canvas when focused
+- Added selection box functionality via Shift + Click. Color can be controlled via the selectionColor prop on the Svelvet component.
+- Added node grouping functionality via Shift + CMD + Click
+- Added the ability to pass custom edges at the Graph, Node and Anchor level
+- No longer required to pass width/height to Svelvet component. Will fill wrapping container by default
+- Added the abilty to specify canvas/node direction as top-down TD or left-right LR. Controls placement of input/output anchors on default nodes
+- All new Minimap component that accepts props for placement, dimensions and styling the background and nodes (defaults to node color) and features dramatically improved tracking/visualization plus the ability to hide nodes
+- All new Theme Toggle component that can toggle between a main and alt theme
+- Enabled two way data binding for some parameters when creating default Nodes
+- All new Background component allowing customization of grid size and color
+- Exposed custom events on the Node component for on:nodeClicked, on:connection and on:disconnection that developers can listen for when implementing custom nodes
+- Added theme prop to Svelvet component. Defaults to light. Accepts parameters like "dark", "purple", "parchment"
+- Removed frontend website code from library repository
+- Added E2E tests using Playwright
+- Simplified bezier curve logic and added the ability to specify anchor "direction"
+- Added ability to parse Mermaid strings into node graphs + edges
+- Added a series of accessible input components (Slider, RadioGroup, TextField, ColorWheel) that can be composed in custom nodes and are linked with our data flow system
+- Library now features 100% TypeScript coverage and fully exported types
+- Removed D3-zoom dependency
+- Removed redundant window and event listeners
+- Added dynamic data flow/state management system that tracks Anchor connections
+- Updated home page to include newest collaborators
+- Temporarily removed dynamic anchor logic due to library re-write. May re-add
+- Made progress on restoring graph state from local storage. Coming soon!

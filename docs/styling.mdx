@@ -1,0 +1,199 @@
+---
+title: 'Styling'
+sidebarTitle: 'Styling'
+description: 'Recommended patterns for styling Graphs, Nodes, Edges and Anchors'
+---
+
+## Overview
+
+This section is a work in progress, but listed below are the available CSS variables for styling elements. Types are not provided as these are traditional CSS parameters.
+
+These variables can be passed as styling props to individual components or used to create global themes using a selector with the following structure: `:root[svelvet-theme="theme-name"]`.
+
+These theme names cna be passed to the [Svelvet](components/svelvet) component via the reactive `theme` prop and to the [Theme Toggle](components/theme-toggle) component via the `main` and `alt` props.
+
+When passing to individual components, these styles are scoped to the component itself. This is not currently true of Edges and our recommendation is to create custom [Edge](components/edge) components.
+
+Scroll to the bottom for example code.
+
+<Tip>
+	You can style parameters beyond those available here by using global selectors.
+	`:global(.svelvet-node)` applies to all Nodes, for instance. Will add all internal class names
+	with time!
+</Tip>
+
+### Graph
+
+<ResponseField name="--background-cursor" default="move">
+	Icon displayed when the cursor is over the background element.
+</ResponseField>
+
+<ResponseField name="--background-color" default="white">
+	Color of the background.
+</ResponseField>
+
+<ResponseField name="--dot-color" default="gray">
+	Color of the grid dots
+</ResponseField>
+
+<ResponseField name="--selection-box-color" default="lightblue">
+	Color of the selection box used to grab multiple Nodes
+</ResponseField>
+
+### Nodes
+
+<ResponseField name="--node-border-width" default="1px">
+	Width of the default Node border
+</ResponseField>
+<ResponseField name="--node-border-radius" default="10px">
+	Border radius of the default Node
+</ResponseField>
+
+<ResponseField name="--node-cursor" default="grab">
+	Icon displayed when the cursor is over a Node component
+</ResponseField>
+
+<ResponseField name="--node-width" default="200px">
+	Width of the default Node
+</ResponseField>
+
+<ResponseField name="--node-height" default="100px">
+	Height of the default Node
+</ResponseField>
+
+<ResponseField name="--node-color" default="white">
+	Shadow of the default Node
+</ResponseField>
+
+<ResponseField name="--node-text-color" default="white">
+	Text color of the default Node
+</ResponseField>
+
+<ResponseField name="--node-selection-color" default="white">
+	Border color of the default Node when selected
+</ResponseField>
+
+<ResponseField name="--node-border-color" default="white">
+	Border color of the default Node when not selected
+</ResponseField>
+
+<ResponseField name="--node-shadow" default="multi-layer shadow">
+	Shadow of the default Node
+</ResponseField>
+
+### Anchors
+
+<ResponseField name="--anchor-border-width" default="1px">
+	Width of the default Anchor border
+</ResponseField>
+
+<ResponseField name="--anchor-radius" default="50%">
+	Border radius of the default Anchor
+</ResponseField>
+
+<ResponseField name="--anchor-width" default="12px">
+	Width of the default Anchor
+</ResponseField>
+
+<ResponseField name="--anchor-height" default="12px">
+	Height of the default Anchor
+</ResponseField>
+
+<ResponseField name="--anchor-color" default="gray">
+	Color when the default Anchor is in a neutral state
+</ResponseField>
+
+<ResponseField name="--anchor-border-color" default="gray">
+	Color when the default Anchor is in a neutral state
+</ResponseField>
+
+<ResponseField name="--anchor-connected" default="gray">
+	Color when the default Anchor is connected
+</ResponseField>
+
+<ResponseField name="--anchor-connected-border" default="gray">
+	Border color when the default Anchor is connected
+</ResponseField>
+
+<ResponseField name="--anchor-hovering" default="gray">
+	Color when the default Anchor is hovering
+</ResponseField>
+
+<ResponseField name="--anchor-hovering-border" default="gray">
+	Border color when the default Anchor is hovering
+</ResponseField>
+
+<ResponseField name="--anchor-connecting" default="gray">
+	Color when the default Anchor is connecting
+</ResponseField>
+
+<ResponseField name="--anchor-connecting-border" default="gray">
+	Border color when the default Anchor is connecting
+</ResponseField>
+
+### Edges
+
+<ResponseField name="--edge-width" default="2px">
+	Width of the default Edge
+</ResponseField>
+
+<ResponseField name="--edge-color" default="black">
+	Color of the default Edge
+</ResponseField>
+
+<ResponseField name="--target-edge-color" default="gray">
+	Color of the default target Edge visible only when hovering and the Edge has been created with an
+	edgeClick function.
+</ResponseField>
+
+```html
+<script lang="ts">
+	import { Svelvet, Node, ThemeToggle } from 'svelvet';
+</script>
+
+<Svelvet>
+	<Node --anchor-color="green" --anchor-width="20px" --anchor-radius="2px" />
+	<Node --node-color="red" --node-border-radius="40px" />
+	<Node --node-border-color="black" />
+	<ThemeToggle slot="toggle" main="light" alt="custom-theme" />
+</Svelvet>
+
+<style>
+	:root[svelvet-theme='custom-theme'] {
+		--node-color: hsl(225, 30%, 50%);
+		--node-border-color: hsl(225, 20%, 40%);
+		--node-selection-color: hsl(45, 90%, 60%);
+		--text-color: hsl(0, 0%, 100%);
+
+		--background-color: hsl(225, 20%, 27%);
+		--dot-color: hsl(225, 10%, 50%);
+
+		--accent-color: hsl(45, 90%, 60%);
+		--primary-color: hsl(225, 30%, 66%);
+
+		--edge-color: hsl(0, 0%, 100%);
+		--target-edge-color: hsl(225, 20%, 40%);
+
+		--anchor-color: hsl(45, 90%, 67%);
+		--anchor-border-color: hsl(45, 90%, 87%);
+		--anchor-connected: hsl(45, 90%, 100%);
+		--anchor-connected-border: hsl(225, 20%, 20%);
+
+		--anchor-connecting: hsl(225, 30%, 40%);
+		--anchor-connecting-border: hsl(0, 0%, 100%);
+
+		--anchor-hovering: hsl(225, 20%, 46%);
+		--anchor-hovering-border: hsl(0, 0%, 0%);
+
+		--minimap-background-color: hsl(225, 20%, 27%);
+
+		--minimap-node-color: hsl(225, 30%, 20%);
+
+		--controls-background-color: hsl(225, 20%, 27%);
+		--controls-text-color: hsl(0, 0%, 100%);
+
+		--theme-toggle-text-color: hsl(0, 0%, 100%);
+		--theme-toggle-color: hsl(225, 20%, 27%);
+	}
+</style>
+```

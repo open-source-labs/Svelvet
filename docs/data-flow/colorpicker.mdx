@@ -1,0 +1,19 @@
+---
+title: 'Color Picker'
+sidebarTitle: 'Color Picker'
+description: 'A color wheel selector for use with our data flow system'
+---
+
+## Description
+
+The Color Picker component is a simple color wheel tool that interfaces with Svelvet input and output stores.
+
+## Props
+
+<ResponseField name="parameterStore" required type="CustomWritable<CSS Color String>">
+	The input store associated with the parameter.
+</ResponseField>
+
+<ResponseField name="size" type="number" default="200">
+	Diamter of the color wheel at default scale.
+</ResponseField>
