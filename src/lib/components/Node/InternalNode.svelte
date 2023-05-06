@@ -138,6 +138,7 @@
 
 		// If the event target is an input, don't do anything
 		if (tagsToIgnore.has(targetElement.tagName)) return;
+		e.preventDefault();
 
 		// If the node is Node is not currently on top, bring it to the front
 		// Unless the zIndex prop has ben set to infinity
@@ -164,6 +165,7 @@
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
 		if (tagsToIgnore.has(targetElement.tagName)) return;
+		e.preventDefault();
 
 		// If the node or graph is locked, don't do anything
 		if ($locked || $nodeLock) return;

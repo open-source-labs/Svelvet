@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node } from '$lib';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
+	let position = { x: 300, y: 300 };
 </script>
 
 <body>
@@ -10,8 +11,8 @@
 			<Node
 				on:connection={() => console.log('node2 connected')}
 				on:disconnection={() => console.log('node2 disconnected')}
-				position={{ x: 300, y: 300 }}
 				dimensions={{ width: 400, height: 100 }}
+				bind:position
 				id="node2"
 				label="test"
 				edge={CustomEdge}

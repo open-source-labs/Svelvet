@@ -222,9 +222,13 @@
 	$: if (node) {
 		node.zIndex.set(zIndex);
 	}
-	// $: if (node) {
-	// 	node.position.set({ x: position.x, y: position.y });
-	// }
+	// This is a bit of a hack to get around the fact that the position prop is not two way bindable
+	// Future versions will have an implementation
+	// That uses component instance binding to achieve the same result
+	$: nodePosition = node && node?.position;
+	$: if (node) {
+		position = $nodePosition;
+	}
 	$: if (node) {
 		node.inputs.set(inputs);
 	}
