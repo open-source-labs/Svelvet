@@ -2,10 +2,9 @@ import { derived, writable } from 'svelte/store';
 import type { Graph, Node, GroupBox, GraphKey, GroupKey } from '$lib/types';
 import { createStore, createEdgeStore } from './createStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
-import type { NodeKey } from '$lib/types';
+import type { NodeKey, CursorNode, GraphConfig } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
 import { createBoundsStore } from './createBoundsStore';
-import type { GraphConfig } from '$lib/types';
 import { calculateViewportCenter } from '../calculators/calculateViewPortCenter';
 
 export function createGraph(id: GraphKey, config: GraphConfig): Graph {

@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	import { calculateStepPath, calculateRadius, calculatePath } from '$lib/utils/calculators';
-	import { onMount, onDestroy, getContext, afterUpdate } from 'svelte';
+	import { onMount, onDestroy, getContext, afterUpdate, hasContext } from 'svelte';
 	import { directionVectors, stepBuffer } from '$lib/constants';
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
@@ -16,6 +16,7 @@
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
 	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
 	const edgesAboveNode = getContext('edgesAboveNode');
+	const graph = getContext<Graph>('graph');
 
 	// Props
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
@@ -50,6 +51,8 @@
 	const targetNodePositionStore = target.node?.position;
 	const edgeType = edge.type;
 	const edgeKey = edge.id;
+	const sourceHidden = source.node.hidden;
+	const targetHidden = target.node.hidden;
 
 	// Reactive variables
 	let path: string;
@@ -278,44 +281,46 @@
 			: 0;
 </script>
 
-<svg class="edges-wrapper" style:z-index={zIndex}>
-	<path
-		id={edgeKey + '-target'}
-		class="target"
-		class:cursor={edgeKey === 'cursor' || !edgeClick}
-		style:cursor={edgeClick ? 'pointer' : 'move'}
-		style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
-		d={path}
-		on:mousedown={edgeClick}
-		bind:this={DOMPath}
-	/>
-	<slot {path} {destroy}>
+{#if !$sourceHidden && !$targetHidden}
+	<svg class="edges-wrapper" style:z-index={zIndex}>
 		<path
-			id={edgeKey}
-			class="edge"
-			class:animate
+			id={edgeKey + '-target'}
+			class="target"
+			class:cursor={edgeKey === 'cursor' || !edgeClick}
+			style:cursor={edgeClick ? 'pointer' : 'move'}
+			style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
 			d={path}
-			style:--prop-edge-color={finalColor}
-			style:--prop-stroke-width={width ? width + 'px' : null}
+			on:mousedown={edgeClick}
+			bind:this={DOMPath}
 		/>
-	</slot>
+		<slot {path} {destroy}>
+			<path
+				id={edgeKey}
+				class="edge"
+				class:animate
+				d={path}
+				style:--prop-edge-color={finalColor}
+				style:--prop-stroke-width={width ? width + 'px' : null}
+			/>
+		</slot>
 
-	{#if renderLabel}
-		<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
-			<span class="label-wrapper">
-				<slot name="label">
-					<div
-						class="default-label"
-						style:--prop-label-color={labelColor}
-						style:--prop-label-text-color={textColor}
-					>
-						{labelText}
-					</div>
-				</slot>
-			</span>
-		</foreignObject>
-	{/if}
-</svg>
+		{#if renderLabel}
+			<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
+				<span class="label-wrapper">
+					<slot name="label">
+						<div
+							class="default-label"
+							style:--prop-label-color={labelColor}
+							style:--prop-label-text-color={textColor}
+						>
+							{labelText}
+						</div>
+					</slot>
+				</span>
+			</foreignObject>
+		{/if}
+	</svg>
+{/if}
 
 <style>
 	.edge {

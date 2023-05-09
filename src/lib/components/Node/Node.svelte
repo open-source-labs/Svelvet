@@ -3,7 +3,7 @@
 	import DefaultNode from './DefaultNode.svelte';
 	import { get } from 'svelte/store';
 	import { createNode } from '$lib/utils';
-	import { getContext, onMount, setContext } from 'svelte';
+	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
 	import type { NodeKey, Anchor, AnchorKey } from '$lib/types';
 	import type { Graph, Node as NodeType, NodeConfig, GroupKey } from '$lib/types';
@@ -92,6 +92,7 @@
 	 */
 	export let dynamic = false;
 	export let title = '';
+	export let hidden = false;
 
 	//External stores
 	const nodes = graph.nodes;
@@ -132,6 +133,7 @@
 			group,
 			resizable,
 			inputs,
+			hidden,
 			outputs,
 			zIndex,
 			direction,
@@ -157,6 +159,10 @@
 		}
 
 		graph.nodes.add(node, node.id);
+	});
+
+	onDestroy(() => {
+		graph.nodes.delete(node.id);
 	});
 
 	function connect(connections: number | string | [number | string, number | string]) {
@@ -221,6 +227,16 @@
 	}
 	$: if (node) {
 		node.zIndex.set(zIndex);
+	}
+	$: if (node) {
+		if (hidden) {
+			get(graph.groups).hidden.nodes.update((nodes) => nodes.add(node));
+		} else {
+			get(graph.groups).hidden.nodes.update((nodes) => {
+				nodes.delete(node);
+				return nodes;
+			});
+		}
 	}
 	// This is a bit of a hack to get around the fact that the position prop is not two way bindable
 	// Future versions will have an implementation

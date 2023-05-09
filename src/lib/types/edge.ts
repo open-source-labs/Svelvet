@@ -31,7 +31,7 @@ export type WritableEdge = {
 	// edgesAbove?: boolean;
 };
 
-interface CursorNode {
+export interface CursorNode {
 	rotating: Writable<boolean>;
 	position: Readable<XYPair>;
 	dimensions: {
@@ -39,6 +39,7 @@ interface CursorNode {
 		height: Writable<number>;
 	};
 	zIndex: Writable<number>;
+	hidden: Writable<boolean>;
 }
 
 export interface CursorAnchor {

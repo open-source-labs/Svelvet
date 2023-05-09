@@ -118,6 +118,7 @@
 			zIndex: writable(Infinity),
 			rotating: writable(false),
 			position: graph.cursor,
+			hidden: writable(false),
 			dimensions: { width: writable(0), height: writable(0) }
 		}
 	};

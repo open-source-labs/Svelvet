@@ -15,7 +15,7 @@ export interface Node {
 	anchors: AnchorStore;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
-	visible: Writable<boolean>;
+	hidden: Writable<boolean>;
 	resizingWidth: Writable<boolean>;
 	resizingHeight: Writable<boolean>;
 	rotating: Writable<boolean>;
@@ -63,6 +63,7 @@ export interface NodeConfig {
 	selectionColor?: CSSColorString;
 	component?: ComponentType;
 	width?: number;
+	hidden?: boolean;
 	height?: number;
 	header?: true;
 	props?: object;

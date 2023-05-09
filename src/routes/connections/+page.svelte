@@ -7,17 +7,21 @@
 			y: Math.random() * 1000
 		};
 	}
+	let visible = true;
 </script>
 
 <body>
+	<button on:click={() => (visible = !visible)}>Toggle</button>
 	<Svelvet fitView>
 		<Node
 			label="Node 1"
 			connections={[2, 3, '4', [5, '1'], 6, ['custom', 'custom'], 27]}
 			inputs={0}
 			outputs={4}
+			hidden={!visible}
 			position={{ x: 0, y: 0 }}
 		/>
+
 		<Node label="Node 2" position={{ x: 400, y: 100 }} />
 		<Node label="Node 3" inputs={2} outputs={2} position={{ x: 400, y: 300 }} />
 		<Node label="Node 4" inputs={2} outputs={5} position={{ x: 400, y: 500 }} />

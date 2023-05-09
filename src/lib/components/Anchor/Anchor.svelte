@@ -437,6 +437,7 @@
 			const connected = processConnection(connection);
 			if (connected) connections[index] = null;
 		});
+		assignedConnections = [];
 		assignedConnections = assignedConnections.filter((connection) => connection !== null);
 	}
 
