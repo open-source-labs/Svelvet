@@ -65,6 +65,10 @@
 				"data-flow/radiogroup",
 				"data-flow/colorpicker"
 			]
+		},
+		{
+			"group": "Examples",
+			"pages": ["examples/database"]
 		}
 	],
 	"footerSocials": {
