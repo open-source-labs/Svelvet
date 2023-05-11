@@ -3,7 +3,7 @@
 	import DefaultNode from './DefaultNode.svelte';
 	import { get } from 'svelte/store';
 	import { createNode } from '$lib/utils';
-	import { getContext, onMount, setContext } from 'svelte';
+	import { getContext, onDestroy, onMount, setContext } from 'svelte';
 	import type { ComponentType } from 'svelte';
 	import type { NodeKey, Anchor, AnchorKey } from '$lib/types';
 	import type { Graph, Node as NodeType, NodeConfig, GroupKey } from '$lib/types';
@@ -157,6 +157,10 @@
 		}
 
 		graph.nodes.add(node, node.id);
+	});
+
+	onDestroy(() => {
+		graph.nodes.delete(node.id);
 	});
 
 	function connect(connections: number | string | [number | string, number | string]) {

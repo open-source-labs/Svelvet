@@ -1,30 +1,21 @@
 <script lang="ts">
-	import { Svelvet, Minimap, Node } from '$lib';
-	import CustomEdge from '../../example-components/CustomEdge.svelte';
-	let position = { x: 300, y: 300 };
-	let label = 'test';
+	import { Svelvet, Minimap, Node, Anchor } from '$lib';
+
+	let childrenHidden = true;
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="dark" width={800} height={500} controls title="tests">
-			<Node
-				id="node1"
-				{label}
-				resizable
-				on:nodeClicked={(e) => (label = e.detail.node.id)}
-				on:nodeReleased={(e) => (label = 'release')}
-			/>
-			<Node
-				on:connection={() => console.log('node2 connected')}
-				on:disconnection={() => console.log('node2 disconnected')}
-				dimensions={{ width: 400, height: 100 }}
-				bind:position
-				id="node2"
-				label="test"
-				edge={CustomEdge}
-			/>
-			<Node label="what" position={{ x: 10, y: 200 }} inputs={3} TD />
+		<Svelvet TD theme="dark" width={800} height={500} zoom={0.5} controls title="tests" minimap>
+			<Node connections={[2, 3]} useDefaults width={200} height={100}>
+				<button on:click={() => (childrenHidden = !childrenHidden)}>Hide Children</button>
+				<Anchor output />
+			</Node>
+			{#if childrenHidden}
+				<Node position={{ x: 200, y: 300 }} />
+				<Node position={{ x: -100, y: 300 }} connections={[4]} />
+				<Node position={{ x: -100, y: 500 }} />
+			{/if}
 			<Minimap slot="minimap" />
 		</Svelvet>
 	</div>
