@@ -9,7 +9,7 @@ Connections between [Anchors](/components/anchor) can be made functional by pass
 
 An `input store` is a Svelte writable with string keys and writable `numbers`, `strings`, `objects`, `arrays` or `booleans` as the values.
 
-In general terms, the return type of `generateInputs` is a `Writable<Record<string, Writable<unknown>>>`, though, this is a simplification for illustrative purposes.
+In general terms, the return type of `generateInput` is a `Writable<Record<string, Writable<unknown>>>`, though, this is a simplification for illustrative purposes.
 
 An `output store` is a custom readable derived from the current values of each parameter in an input store. Every time a parameter changes, the output store is rederived according to a user provided processors function.
 
