@@ -23,6 +23,7 @@
 	export let step = edgeStyle === 'step';
 	export let animate = false;
 	export let label = '';
+	export let enableHover = false;
 	export let edgeClick: null | (() => void) = null;
 
 	// Styling via props/objects will likely be deprecated
@@ -59,6 +60,7 @@
 	let prefersVertical = false;
 	let sourceAbove = false;
 	let sourceLeft = false;
+	let hovering = false;
 
 	// Reactive declarations
 	$: dynamic = $sourceDynamic || $targetDynamic;
@@ -282,14 +284,16 @@
 	<path
 		id={edgeKey + '-target'}
 		class="target"
-		class:cursor={edgeKey === 'cursor' || !edgeClick}
-		style:cursor={edgeClick ? 'pointer' : 'move'}
-		style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
+		class:cursor={edgeKey === 'cursor' || (!edgeClick && !enableHover)}
+		style:cursor={edgeClick || hovering ? 'pointer' : 'move'}
+		style:--prop-target-edge-color={edgeClick || hovering ? targetColor || null : 'transparent'}
 		d={path}
 		on:mousedown={edgeClick}
+		on:mouseenter={() => (hovering = true)}
+		on:mouseleave={() => (hovering = false)}
 		bind:this={DOMPath}
 	/>
-	<slot {path} {destroy}>
+	<slot {path} {destroy} {hovering}>
 		<path
 			id={edgeKey}
 			class="edge"
@@ -364,6 +368,7 @@
 	foreignObject {
 		overflow: visible;
 	}
+
 	path {
 		cursor: pointer;
 	}
