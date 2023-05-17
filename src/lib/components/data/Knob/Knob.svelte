@@ -44,7 +44,7 @@
 	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
 	let knobElement: HTMLDivElement;
-	let sliderElement: HTMLInputElement;
+	let sliderElement: HTMLDivElement;
 	let sliding = false; // Whether the knob is currently being dragged
 	let previousX = 0; // Represents previous cursor position
 	let previousAngle = 0;
@@ -89,7 +89,6 @@
 	function stopRotate() {
 		if (previousValue === $parameterStore) {
 			sliderElement.focus(); // sets focus on the this element
-			sliderElement.select(); // select the content of a text field
 		} else {
 			previousValue = $parameterStore;
 		}
@@ -108,24 +107,15 @@
 		};
 	}
 
-	// // This prevents users from typing in invalid characters
-	// function validateInput() {
-	// 	const number = parseFloat(sliderElement.value);
-	// 	// console.log('NUMBER:', number);
-	// 	if (!Number.isNaN(number)) {
-	// 		if (number <= minDegree) {
-	// 			$parameterStore = minDegree;
-	// 		} else if (number >= maxDegree) {
-	// 			$parameterStore = maxDegree;
-	// 		} else {
-	// 			$parameterStore = roundNum(number, 2);
-	// 		}
-	// 	}
-	// 	// For some reason, this line is necessary
-	// 	// Absurdly large or small numbers do not get reset without it
-	// 	sliderElement.value = JSON.stringify($parameterStore);
-	// 	sliderElement.blur(); // removes keyboard focus from the current element.
-	// }
+	// Update the value based on the direction and increment
+	function updateValue(delta: number, increment = step) {
+		if (typeof $parameterStore !== 'number') return;
+		$parameterStore = roundNum(
+			Math.max(min, Math.min($parameterStore + delta * increment, max)),
+			3
+		);
+		console.log('parameterStore: ', $parameterStore);
+	}
 
 	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
 	// $: angle = `rotate(${minDegree + knobValue}deg`;
@@ -165,46 +155,14 @@
 				? 270 + Math.atan(-y / x) * (180 / Math.PI)
 				: x < 0 && y < 0
 				? 90 - Math.atan(-y / -x) * (180 / Math.PI)
-				: minDegree + $parameterStore;
+				: minDegree + $parameterStore; // FIXME:
+		console.log('ANGLE: ', angle);
 
-		// const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
-		// let angle = radians * (180 / Math.PI); // Convert angle to degrees
-		// // Normalize the angle to start at 'from', so that the full circle starts
-		// // and ends at that point.
-		// angle = angle - from + (angle >= 0 && angle < from ? 360 : 0);
-		// // When the angle is outside of the given range, we want the angle to go either to the
-		// // start of the range or to the end of the range, based on proximity to either end.
-		// if (angle > 180 + range / 2) {
-		// 	angle = 0;
-		// }
 		console.log('x,y:', x, y);
 		console.log('angle before clamp', angle);
 		console.log('angle:', clamp(angle, minDegree, maxDegree));
 		return clamp(angle, minDegree, maxDegree);
 	}
-
-	// $: angle = minDegree;
-
-	// onMount(() => {
-	// 	// Access the DOM element and bind the drag event
-	// 	// const element = document.querySelector('.radial-slider');
-	// 	sliderElement.addEventListener('drag', (event) => {
-	// 		getAngle(getElementCenter(), [0, 0], 220, 280);
-	// 	});
-	// });
-
-	// const RadialSlider = () => {
-	//   const [angle, setAngle] = useState(40);
-	//   const bind = useDrag(({values, event}) => {
-	//     setAngle(getAngle(getElementCenter(event.target), values, 220, 280) + 40);
-	//   });
-
-	//   return (
-	//     <div {...bind()} className='radial-slider'>
-	//       <div className='cap'/>
-	//       <div className='indicator' style={{'--angle': `${angle}deg`}}/>
-	//     </div>
-	//   );
 </script>
 
 {#if !connected}
@@ -213,17 +171,17 @@
 		<div
 			class="knob"
 			bind:offsetWidth={sliderWidth}
-			style:transform={curAngle}
 			bind:this={knobElement}
+			style:transform={curAngle}
 		>
 			<!-- FIXME: change from input element to div element -->
 			<!-- <label for="knob-input" class="input-label">{label}</label> -->
 			<label for="knob-input" class="input-label" />
-			<input
+			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+			<div
 				tabindex={0}
 				id="knob-input"
 				class="knob-input"
-				type="text"
 				aria-label={label}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY), step); // FIXME:
@@ -274,19 +232,6 @@
 		/* cursor: ew-resize; */
 	}
 
-	/* .knob-input {
-		border: none;
-		border-radius: 50%;
-		color: inherit;
-		text-align: right;
-		width: 100%;
-		height: 10rem;
-		cursor: ew-resize;
-		padding: 0.25rem;
-		pointer-events: auto;
-		border: 3px solid blue;
-	} */
-
 	.knob-input {
 		display: flex;
 		border-radius: 50%;
@@ -296,35 +241,7 @@
 		cursor: pointer;
 		padding: 0.25rem;
 		box-shadow: 0 0 2px 1px #c7a472;
-		/* background: repeating-radial-gradient(transparent 0%, rgb(244 235 208 / 15%) 2%, transparent 4%),
-			repeating-conic-gradient(
-				from 15deg,
-				#4d3718 0%,
-				#c7a472 5%,
-				#4d3718 16%,
-				#4d3718 34%,
-				#c7a472 45%,
-				#4d3718 50%
-			); */
 		background-color: lightblue;
-	}
-	.knob-input::after {
-		content: '';
-		border-radius: 100%;
-		width: 90%;
-		height: 90%;
-		margin: 5%;
-		background: repeating-radial-gradient(transparent 0%, rgb(244 235 208 / 15%) 2%, transparent 4%),
-			repeating-conic-gradient(
-				from 15deg,
-				#4d3718 0%,
-				#c7a472 5%,
-				#4d3718 16%,
-				#4d3718 34%,
-				#c7a472 45%,
-				#4d3718 50%
-			);
-		box-shadow: inset 0 0 7px 0px #c7a472;
 	}
 
 	.indicator {

@@ -22,15 +22,7 @@
 		<Node useDefaults position={{ x: 0, y: 0 }} let:selected>
 			<NodeWrapper title="Volume" outputStore={output} key="volume">
 				<div class="node-body">
-					<Knob
-						fixed={0}
-						min={10}
-						max={20}
-						step={5}
-						minDegree={30}
-						maxDegree={330}
-						parameterStore={$inputs.value}
-					/>
+					<Knob fixed={0} min={10} max={20} step={5} minDegree={30} maxDegree={330} />
 				</div>
 			</NodeWrapper>
 			<Resizer width height rotation />
