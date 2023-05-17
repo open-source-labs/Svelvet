@@ -86,7 +86,29 @@
 </nav>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
+	@font-face {
+		font-family: 'Material Symbols Outlined';
+		font-style: normal;
+		font-weight: 400;
+		src: url(../../assets/fonts/materialsymbolsoutlined_v110.woff2) format('woff2');
+	}
+
+	.material-symbols-outlined {
+		font-family: 'Material Symbols Outlined';
+		font-weight: normal;
+		font-style: normal;
+		font-size: 24px;
+		line-height: 1;
+		letter-spacing: normal;
+		text-transform: none;
+		display: inline-block;
+		white-space: nowrap;
+		word-wrap: normal;
+		direction: ltr;
+		-webkit-font-feature-settings: 'liga';
+		-webkit-font-smoothing: antialiased;
+	}
+
 	* {
 		box-sizing: border-box;
 	}
