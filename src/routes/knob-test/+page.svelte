@@ -19,7 +19,7 @@
 
 <body>
 	<Svelvet>
-		<Node useDefaults position={{ x: 40, y: 358 }} let:selected>
+		<Node useDefaults position={{ x: 0, y: 0 }} let:selected>
 			<NodeWrapper title="Volume" outputStore={output} key="volume">
 				<div class="node-body">
 					<Knob fixed={0} min={0} max={10} step={1} parameterStore={$inputs.value} />

@@ -8,8 +8,8 @@
 	import type { CSSColorString } from '$lib/types';
 
 	// Props
-	// users should be able to customize: min, max, lowestValueInRange, step, subdivision, fix
-	export let parameterStore: CustomWritable<number>;
+	// users should be able to customize: min, max, minDegree, maxDegree, step, subdivision, fixed
+	export let parameterStore: CustomWritable<number>; // current angle ???
 	export let min = 0;
 	export let max = 100;
 	export let minDegree = 30;
@@ -38,67 +38,68 @@
 	$: width = node.dimensions.width;
 	$: height = node.dimensions.height;
 
+	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
 	let sliderElement: HTMLInputElement;
 	let sliding = false; // Whether the knob is currently being dragged
 	let previousX = 0; // Represents previous cursor position
+	let previousAngle = 0;
 	let pixelsMoved = 0; // Number of pixels moved during slide
 	let rotating = false;
 
 	// Grab cursor from store
 	$: cursor = graph.cursor;
 
+	// TODO: when the knob is rotating
 	$: if (rotating) {
-		calculateRotation(step);
+		$parameterStore = calculateNewAngle(
+			[$cursor.x, $cursor.y],
+			getElementCenter(),
+			minDegree,
+			maxDegree - minDegree
+		);
 	}
 
-	$: if (sliding) {
-		//UPDATE USING CALCULATEROTATION ~~~~~~~~~~~~~~~~~~~~~~
-		const deltaX = $cursor.x - previousX;
-		calculateSlide(deltaX);
-		previousX = $cursor.x;
-	}
-
-	// Begin sliding on mousedown
-	function startSlide(e: MouseEvent) {
+	// Begin rotating on mousedown
+	function startRotate(e: MouseEvent) {
 		e.stopPropagation();
 		e.preventDefault();
-		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
-		previousX = $cursor.x;
-		window.addEventListener('mouseup', stopSlide, { once: true });
-		sliding = true;
+		window.addEventListener('mouseup', stopRotate, { once: true });
+		rotating = true;
 	}
+
 	let previousValue = $parameterStore;
-	function startTouchSlide(e: TouchEvent) {
+
+	// TODO:
+	function startTouchRotate(e: TouchEvent) {
 		$activeGroup = null;
 		selected.nodes.set(new Set());
 		tracking.set(false);
 		e.stopPropagation();
 		e.preventDefault();
-		$initialClickPosition = { x: $cursor.x, y: $cursor.y };
-		previousX = $cursor.x;
-		window.addEventListener('touchend', stopSlide, { once: true });
-		sliding = true;
+		window.addEventListener('touchend', stopRotate, { once: true });
+		rotating = true;
 	}
 
-	// Stop sliding on mouseup
-	function stopSlide() {
+	// Done: Stop rotating on mouseup
+	function stopRotate() {
 		if (previousValue === $parameterStore) {
-			sliderElement.focus();
-			sliderElement.select();
+			sliderElement.focus(); // sets focus on the this element
+			sliderElement.select(); // select the content of a text field
 		} else {
 			previousValue = $parameterStore;
 		}
-		sliding = false;
-		window.removeEventListener('mouseup', stopSlide);
+		rotating = false;
+		window.removeEventListener('mouseup', stopRotate);
 	}
 
-	function slideable(node: HTMLElement) {
-		node.addEventListener('mousedown', startSlide);
-		node.addEventListener('touchstart', startTouchSlide);
+	// Done: set eventlisteners that enable rotating
+	function rotatable(node: HTMLElement) {
+		node.addEventListener('mousedown', startRotate);
+		node.addEventListener('touchstart', startTouchRotate);
 		return {
 			destroy() {
-				node.removeEventListener('mousedown', startSlide);
+				node.removeEventListener('mousedown', startRotate);
 			}
 		};
 	}
@@ -139,40 +140,15 @@
 		}
 	}
 
-	function calculateRotation(
-		cursorChange: number,
-		increment = step,
-		scaler = (1 / (max - min)) * 100
-	) {
-		const knobWidth = sliderElement.getBoundingClientRect().width;
-		const knobHeight = sliderElement.getBoundingClientRect().height;
-		if (typeof $parameterStore !== 'number') return;
-		const pixelsToMove = ($width * scaler) / ((maxDegree - minDegree) / increment);
-		pixelsMoved += cursorChange;
-
-		if (Math.abs(pixelsMoved) >= pixelsToMove) {
-			const incrementsToMove = Math.floor(Math.abs(pixelsMoved) / pixelsToMove);
-			if (pixelsMoved > 0) {
-				updateValue(incrementsToMove);
-			} else {
-				updateValue(-incrementsToMove);
-			}
-			pixelsMoved =
-				pixelsMoved > 0
-					? pixelsMoved - incrementsToMove * pixelsToMove
-					: pixelsMoved + incrementsToMove * pixelsToMove;
-		}
-	}
-
 	// This prevents users from typing in invalid characters
 	function validateInput() {
 		const number = parseFloat(sliderElement.value);
 		// console.log('NUMBER:', number);
 		if (!Number.isNaN(number)) {
-			if (number <= min) {
-				$parameterStore = min;
-			} else if (number >= max) {
-				$parameterStore = max;
+			if (number <= minDegree) {
+				$parameterStore = minDegree;
+			} else if (number >= maxDegree) {
+				$parameterStore = maxDegree;
 			} else {
 				$parameterStore = roundNum(number, 2);
 			}
@@ -180,55 +156,74 @@
 		// For some reason, this line is necessary
 		// Absurdly large or small numbers do not get reset without it
 		sliderElement.value = JSON.stringify($parameterStore);
-		sliderElement.blur();
+		sliderElement.blur(); // removes keyboard focus from the current element.
 	}
 
 	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
 	// $: angle = `rotate(${minDegree + knobValue}deg`;
+	$: curAngle = `rotate(${$parameterStore - minDegree}deg`;
 
 	function clamp(num: number, min: number, max: number): number {
 		return Math.min(Math.max(num, min), max);
 	}
 
+	// get the coordiates of the center of the knob
 	function getElementCenter(): [number, number] {
 		const { top, left, width, height } = sliderElement.getBoundingClientRect();
+		console.log('width,', width, 'height:', height);
+		console.log('left,', left, 'top:', top);
+		console.log('center: ', [left + width / 2, top + height / 2]);
+
 		return [left + width / 2, top + height / 2];
 	}
 
-	function getAngle(
+	function calculateNewAngle(
+		[cursorX, cursorY]: [number, number],
 		[centerX, centerY]: [number, number],
-		[left, top]: [number, number],
-		from: number,
-		range: number
+		minDegree: number,
+		maxDegree: number
 	): number {
-		const adjacent = left - centerX;
-		const opposite = top - centerY;
-		const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
-		let angle = radians * (180 / Math.PI); // Convert angle to degrees
+		const x = cursorX - centerX;
+		const y = centerY - cursorY;
 
-		// Normalize the angle to start at 'from', so that the full circle starts
-		// and ends at that point.
-		angle = angle - from + (angle >= 0 && angle < from ? 360 : 0);
+		// degree in relation to vertical
+		let angle =
+			x > 0 && y > 0
+				? 270 - Math.atan(y / x) * (180 / Math.PI)
+				: x < 0 && y > 0
+				? Math.atan(y / -x) * (180 / Math.PI) + 90
+				: x > 0 && y < 0
+				? 270 - Math.atan(-y / x) * (180 / Math.PI)
+				: x > 0 && y < 0
+				? Math.atan(-y / -x)
+				: minDegree + $parameterStore;
 
-		// When the angle is outside of the given range, we want the angle to go either to the
-		// start of the range or to the end of the range, based on proximity to either end.
-		if (angle > 180 + range / 2) {
-			angle = 0;
-		}
-
-		return clamp(angle, 0, range);
+		// const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
+		// let angle = radians * (180 / Math.PI); // Convert angle to degrees
+		// // Normalize the angle to start at 'from', so that the full circle starts
+		// // and ends at that point.
+		// angle = angle - from + (angle >= 0 && angle < from ? 360 : 0);
+		// // When the angle is outside of the given range, we want the angle to go either to the
+		// // start of the range or to the end of the range, based on proximity to either end.
+		// if (angle > 180 + range / 2) {
+		// 	angle = 0;
+		// }
+		console.log('cursorX,y:', cursorX, cursorY);
+		console.log('centerX,y:', centerX, centerY);
+		console.log('x,y:', x, y);
+		console.log('angle:', clamp(angle, minDegree, maxDegree));
+		return clamp(angle, minDegree, maxDegree);
 	}
 
-	$: angle = minDegree;
-	// $: knobValue =
+	// $: angle = minDegree;
 
-	onMount(() => {
-		// Access the DOM element and bind the drag event
-		// const element = document.querySelector('.radial-slider');
-		sliderElement.addEventListener('drag', (event) => {
-			getAngle(getElementCenter(), [0, 0], 220, 280);
-		});
-	});
+	// onMount(() => {
+	// 	// Access the DOM element and bind the drag event
+	// 	// const element = document.querySelector('.radial-slider');
+	// 	sliderElement.addEventListener('drag', (event) => {
+	// 		getAngle(getElementCenter(), [0, 0], 220, 280);
+	// 	});
+	// });
 
 	// const RadialSlider = () => {
 	//   const [angle, setAngle] = useState(40);
@@ -247,7 +242,7 @@
 {#if !connected}
 	<!-- this div is wrapping the knob input section -->
 	<div class="wrapper" style:color={fontColor}>
-		<div class="knob" bind:offsetWidth={sliderWidth} style:transform={angle}>
+		<div class="knob" bind:offsetWidth={sliderWidth} style:transform={curAngle}>
 			<!-- <label for="knob-input" class="input-label">{label}</label> -->
 			<label for="knob-input" class="input-label" />
 			<input
@@ -255,7 +250,6 @@
 				id="knob-input"
 				class="knob-input"
 				type="text"
-				value={$parameterStore.toFixed(fixed)}
 				aria-label={label}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY), step);
@@ -268,15 +262,16 @@
 						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0);
 					}
 
-					if (key === 'Enter') validateInput();
+					// if (key === 'Enter') validateInput();
 				}}
-				use:slideable
+				use:rotatable
 				bind:this={sliderElement}
 			/>
 			<div class="indicator" />
 		</div>
 		<div class="knob_value">{$parameterStore.toFixed(fixed)}</div>
 	</div>
+	<div class="anchorCenter">0</div>
 {:else}
 	<div class="wrapper connected">
 		<div class="knob-input connected" style:--percentage="10%" aria-label={label}>
@@ -289,6 +284,13 @@
 <style>
 	* {
 		box-sizing: border-box;
+	}
+	.anchorCenter {
+		position: absolute;
+		left: 298px;
+		top: 165px;
+		z-index: 10000;
+		background-color: red;
 	}
 	.wrapper {
 		display: flex;
@@ -323,7 +325,7 @@
 		cursor: pointer;
 		padding: 0.25rem;
 		box-shadow: 0 0 2px 1px #c7a472;
-		background: repeating-radial-gradient(transparent 0%, rgb(244 235 208 / 15%) 2%, transparent 4%),
+		/* background: repeating-radial-gradient(transparent 0%, rgb(244 235 208 / 15%) 2%, transparent 4%),
 			repeating-conic-gradient(
 				from 15deg,
 				#4d3718 0%,
@@ -332,7 +334,8 @@
 				#4d3718 34%,
 				#c7a472 45%,
 				#4d3718 50%
-			);
+			); */
+		background-color: lightblue;
 	}
 	.knob-input::after {
 		content: '';
