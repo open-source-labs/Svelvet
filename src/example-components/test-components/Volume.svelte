@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { Svelvet, Node } from '$lib';
-	import InputNode from '../../example-components/InputNode.svelte';
+	import { Node } from '$lib';
+
 	import { generateInput, generateOutput, Knob, Resizer } from '$lib';
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
-	import Output from '../../example-components/test-components/Output.svelte';
-	import Scale from '../../example-components/test-components/Scale.svelte';
+
 	type Inputs = {
 		degree: number;
 	};
@@ -24,7 +23,7 @@
 				fixed={0}
 				min={10}
 				max={20}
-				step={5}
+				step={2}
 				minDegree={30}
 				maxDegree={330}
 				parameterStore={$inputs.degree}

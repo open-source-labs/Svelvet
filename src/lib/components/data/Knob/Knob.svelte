@@ -54,14 +54,9 @@
 	// Grab cursor from store
 	$: cursor = graph.cursor;
 
-	// TODO: when the knob is rotating
+	// when the knob is rotating
 	$: if (rotating) {
-		$parameterStore = calculateNewAngle(
-			[$cursor.x, $cursor.y],
-			getElementCenter(),
-			minDegree,
-			maxDegree
-		);
+		$parameterStore = calculateNewAngle([$cursor.x, $cursor.y], getElementCenter());
 	}
 
 	// Begin rotating on mousedown
@@ -108,13 +103,12 @@
 	}
 
 	// Update the value based on the direction and increment
-	function updateValue(delta: number, increment = step) {
-		if (typeof $parameterStore !== 'number') return;
+	function updateValue(delta: number, increment = ((maxDegree - minDegree) / (max - min)) * step) {
+		// if (typeof $parameterStore !== 'number') return; //dont think we need this anymore since no longer an input
 		$parameterStore = roundNum(
-			Math.max(min, Math.min($parameterStore + delta * increment, max)),
+			Math.max(minDegree, Math.min($parameterStore + delta * increment, maxDegree)),
 			3
 		);
-		console.log('parameterStore: ', $parameterStore);
 	}
 
 	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
@@ -122,8 +116,11 @@
 	$: curAngle = `rotate(${$parameterStore}deg`;
 	$: curValue = ($parameterStore / (maxDegree - minDegree)) * (max - min) + min;
 
-	function clamp(num: number, min: number, max: number): number {
-		return Math.min(Math.max(num, min), max);
+	function clamp(num: number): number {
+		const increment = ((maxDegree - minDegree) / (max - min)) * step;
+		const degreeRoundToStep = Math.round((num - minDegree) / increment) * increment + minDegree;
+		const degree = Math.min(Math.max(degreeRoundToStep, minDegree), maxDegree);
+		return degree;
 	}
 
 	// get the coordiates of the center of the knob
@@ -138,9 +135,7 @@
 
 	function calculateNewAngle(
 		[cursorX, cursorY]: [number, number],
-		[centerX, centerY]: [number, number],
-		minDegree: number,
-		maxDegree: number
+		[centerX, centerY]: [number, number]
 	): number {
 		const x = cursorX - centerX;
 		const y = centerY - cursorY;
@@ -155,12 +150,8 @@
 				? 270 + Math.atan(-y / x) * (180 / Math.PI)
 				: x < 0 && y < 0
 				? 90 - Math.atan(-y / -x) * (180 / Math.PI)
-				: minDegree + $parameterStore; // FIXME:
-		// console.log('ANGLE: ', angle);
-		// console.log('x,y:', x, y);
-		// console.log('angle before clamp', angle);
-		// console.log('angle:', clamp(angle, minDegree, maxDegree));
-		return clamp(angle, minDegree, maxDegree);
+				: $parameterStore - minDegree;
+		return clamp(angle);
 	}
 </script>
 
@@ -173,8 +164,6 @@
 			bind:this={knobContainerElement}
 			style:transform={curAngle}
 		>
-			<!-- FIXME: change from input element to div element -->
-			<!-- <label for="knob-input" class="input-label">{label}</label> -->
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<div
 				tabindex={0}
@@ -182,7 +171,7 @@
 				class="knob"
 				aria-label="knob component"
 				on:wheel|stopPropagation|preventDefault={(event) => {
-					updateValue(Math.sign(event.deltaY), step); // FIXME:
+					updateValue(Math.sign(event.deltaY)); // FIXME:
 				}}
 				on:keydown|stopPropagation={(e) => {
 					const { key } = e;
