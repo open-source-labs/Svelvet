@@ -36,17 +36,24 @@
 	const activeGroup = graph.activeGroup;
 
 	$: width = node.dimensions.width;
+	$: height = node.dimensions.height;
 
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
 	let sliderElement: HTMLInputElement;
 	let sliding = false; // Whether the knob is currently being dragged
 	let previousX = 0; // Represents previous cursor position
 	let pixelsMoved = 0; // Number of pixels moved during slide
+	let rotating = false;
 
 	// Grab cursor from store
 	$: cursor = graph.cursor;
 
+	$: if (rotating) {
+		calculateRotation(step);
+	}
+
 	$: if (sliding) {
+		//UPDATE USING CALCULATEROTATION ~~~~~~~~~~~~~~~~~~~~~~
 		const deltaX = $cursor.x - previousX;
 		calculateSlide(deltaX);
 		previousX = $cursor.x;
@@ -105,11 +112,40 @@
 		);
 	}
 
+	// to be replaced by calculateRotation
 	function calculateSlide(
 		cursorChange: number,
 		increment = step,
 		scaler = (1 / (max - min)) * 100
 	) {
+		if (typeof $parameterStore !== 'number') return;
+		const pixelsToMove = ($width * scaler) / ((maxDegree - minDegree) / increment);
+		// const wd = sliderElement.getBoundingClientRect().width;
+		// console.log(wd, $width);
+
+		pixelsMoved += cursorChange;
+
+		if (Math.abs(pixelsMoved) >= pixelsToMove) {
+			const incrementsToMove = Math.floor(Math.abs(pixelsMoved) / pixelsToMove);
+			if (pixelsMoved > 0) {
+				updateValue(incrementsToMove);
+			} else {
+				updateValue(-incrementsToMove);
+			}
+			pixelsMoved =
+				pixelsMoved > 0
+					? pixelsMoved - incrementsToMove * pixelsToMove
+					: pixelsMoved + incrementsToMove * pixelsToMove;
+		}
+	}
+
+	function calculateRotation(
+		cursorChange: number,
+		increment = step,
+		scaler = (1 / (max - min)) * 100
+	) {
+		const knobWidth = sliderElement.getBoundingClientRect().width;
+		const knobHeight = sliderElement.getBoundingClientRect().height;
 		if (typeof $parameterStore !== 'number') return;
 		const pixelsToMove = ($width * scaler) / ((maxDegree - minDegree) / increment);
 		pixelsMoved += cursorChange;
@@ -147,68 +183,55 @@
 		sliderElement.blur();
 	}
 
-	// $: percentageSlid = ((($parameterStore as number) - min) / (max - min)) * 100; //why do we need to cast as number????
-	// $: CSSpercentage = `${percentageSlid}%`;
-
-	// $: sliderStyle = `linear-gradient(
-	// 		90deg,
-	// 		${barColor || 'var(--primary-color, var(--default-primary-color))'} ${CSSpercentage},
-	// 		${bgColor || 'var(--accent-color, var(--default-accent-color))'} ${CSSpercentage}
-	// 	)`;
-
 	$: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
-	console.log('KNOB VALUE: ', knobValue);
-
 	$: indicatorStyle = 'rotate(' + `${knobValue}` + 'deg)';
-
 	$: angle = `rotate(${minDegree + knobValue}deg`;
-	console.log('ANGLE: ', angle);
 
-	// function clamp(num: number, min: number, max: number) {
-	// 	return Math.min(Math.max(num, min), max);
-	// }
+	function clamp(num: number, min: number, max: number) {
+		return Math.min(Math.max(num, min), max);
+	}
 
-	// function getElementCeneter(element: HTMLInputElement) {
-	// 	const { top, left, width, height } = element.getBoundingClientRect();
-	// 	return [left + width / 2, top + height / 2];
-	// }
+	function getElementCenter(): [number, number] {
+		const { top, left, width, height } = sliderElement.getBoundingClientRect();
+		return [left + width / 2, top + height / 2];
+	}
 
-	// function getAngle([x, y], [left, top], from, range) {
-	// 	const adjacent = left - x;
-	// 	const opposite = top - y;
-	// 	const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
-	// 	let angle = radians * (180 / Math.PI); // Convert angle to degrees
+	function getAngle(
+		[centerX, centerY]: [number, number],
+		[left, top]: [number, number],
+		from: number,
+		range: number
+	) {
+		const adjacent = left - centerX;
+		const opposite = top - centerY;
+		const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
+		let angle = radians * (180 / Math.PI); // Convert angle to degrees
 
-	// 	// Normalize the angle to start at 'from', so that the full circle starts
-	// 	// and ends at that point.
-	// 	angle = angle - from + (angle >= 0 && angle < from ? 360 : 0);
+		// Normalize the angle to start at 'from', so that the full circle starts
+		// and ends at that point.
+		angle = angle - from + (angle >= 0 && angle < from ? 360 : 0);
 
-	// 	// When the angle is outside of the given range, we want the angle to go either to the
-	// 	// start of the range or to the end of the range, based on proximity to either end.
-	// 	if (angle > 180 + range / 2) {
-	// 		angle = 0;
-	// 	}
+		// When the angle is outside of the given range, we want the angle to go either to the
+		// start of the range or to the end of the range, based on proximity to either end.
+		if (angle > 180 + range / 2) {
+			angle = 0;
+		}
 
-	// 	return clamp(angle, 0, range);
-	// }
+		return clamp(angle, 0, range);
+	}
 
-	// onMount(() => {
-	// 	// Access the DOM element and bind the drag event
-	// 	const element = document.querySelector('.radial-slider');
-	// 	element.addEventListener('drag', (event) => {
-	// 		setAngle(getAngle(getElementCenter(event.target), [0, 0], 220, 280) + 40);
-	// 	});
-	// });
+	onMount(() => {
+		// Access the DOM element and bind the drag event
+		// const element = document.querySelector('.radial-slider');
+		sliderElement.addEventListener('drag', (event) => {
+			setAngle(getAngle(getElementCenter(), [0, 0], 220, 280) + 40);
+		});
+	});
 </script>
 
 {#if !connected}
 	<!-- this div is wrapping the knob input section -->
 	<div class="wrapper" style:color={fontColor}>
-		<!-- <button
-			class="minus button"
-			on:touchstart|stopPropagation={() => updateValue(-1)}
-			on:mousedown|stopPropagation={() => updateValue(-1)}>−</button
-		> -->
 		<div class="knob" bind:offsetWidth={sliderWidth} style:transform={angle}>
 			<!-- <label for="knob-input" class="input-label">{label}</label> -->
 			<label for="knob-input" class="input-label" />
@@ -237,11 +260,7 @@
 			/>
 			<div class="indicator" />
 		</div>
-		<!-- <button
-			class="plus button"
-			on:touchstart|stopPropagation={() => updateValue(1)}
-			on:mousedown|stopPropagation={() => updateValue(1)}>+</button
-		> -->
+		<div class="knob_value">{$parameterStore.toFixed(fixed)}</div>
 	</div>
 {:else}
 	<div class="wrapper connected">
@@ -264,6 +283,7 @@
 		border: 1px solid red;
 		height: 11rem;
 		width: 11rem;
+		/* cursor: ew-resize; */
 	}
 
 	/* .knob-input {
@@ -330,6 +350,15 @@
 		box-shadow: 0 0 2px white;
 		border-radius: 30%/10%;
 		pointer-events: none;
+	}
+	.knob_value {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 50%);
+		font-size: 2em;
+		color: white;
+		z-index: 100;
 	}
 
 	.button {
