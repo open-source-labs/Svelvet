@@ -1,11 +1,14 @@
 <script lang='ts'>
-   import { Node, Svelvet, Anchor} from '$lib';
+   import { Node, Svelvet, Anchor, Edge } from '$lib';
    import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
    import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
+   import CustomEdge from '../../example-components/CustomEdge.svelte';
 
    let defaultNodes: NodeConfig[] = [];
    let customNodes: NodeConfig[] = [];
-   let anchors: any = {};
+   let anchors: any[] = [];
+   let edges: any[] = [];
+   let customEdge: any;
    let dropped_in :boolean;
 
    // types for node creation
@@ -14,12 +17,16 @@
    let label: string | undefined;
    let width: number = 200;
    let height: number = 100;
+   let nodeDirection: string | undefined;
    let inputs: number | undefined;
    let outputs: number | undefined;
    let locked: boolean | undefined;
    let center: boolean | undefined;
    let rotation: number | undefined;
    let zIndex: number | undefined;
+   let TD: boolean | undefined;
+   let LR: boolean | undefined;
+   let useDefaults: boolean | undefined;
 
    // types for anchor creation
    let invisible: boolean | undefined;
@@ -30,23 +37,22 @@
    let direction: Direction | undefined;
    let dynamic: boolean | undefined;
    let anchorEdgeLabel: string | undefined;
-   let edgeColor: CSSColorString | undefined;
    let anchorLocked: boolean | undefined;
    let anchorBgColor: CSSColorString | undefined;
 
 
    //types for edge creation
-   let edgeWidth: number | undefined;
-   let edgeClick: () => void | null;
+   let edgeWidth: number | undefined; 
    let targetColor: CSSColorString | undefined;
    let color: CSSColorString | undefined;
-   let  straight: boolean | undefined;
+   let straight: boolean | undefined;
    let step: boolean | undefined;
    let cornerRadius: number | undefined;
    let animate: boolean | undefined;
    let edgeLabel: string | undefined;
    let labelColor: CSSColorString | undefined;
    let textColor: CSSColorString | undefined;
+   let edgeClick: () => void | null; // Stretch feature
 
 
 
@@ -85,8 +91,8 @@
         // Object that stores properties for the created node
         const nodeProps: any = {};
         // Array of property names and values for node
-        const nodePropNames: any[] = ['bgColor', 'borderColor','label', 'width', 'height', 'locked', 'center', 'inputs', 'outputs', 'rotation', 'zIndex'];
-        const nodePropsArray: any[] = [bgColor, borderColor, label, width, height, locked, center, inputs, outputs, rotation, zIndex];
+        const nodePropNames: any[] = ['bgColor', 'borderColor','label', 'width', 'height', 'locked', 'center', 'inputs', 'outputs', 'rotation', 'zIndex', 'TD', 'LR', 'useDefaults'];
+        const nodePropsArray: any[] = [bgColor, borderColor, label, width, height, locked, center, inputs, outputs, rotation, zIndex, TD, LR, useDefaults];
        // Adds props to object if they exist
         const addProp = (names: any, vals : any, nodeProps : any): any => {
             for (let i = 0; i < names.length; i++) {
@@ -100,15 +106,32 @@
          // Object that stores properties for the created anchor
         const anchorProps: any = {};
         // Array of property names and values for anchor
-        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'edgeColor', 'locked', 'bgColor'];
-        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, edgeColor, anchorLocked, anchorBgColor];
+        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'direction', 'locked', 'bgColor'];
+        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
         // Adds props to anchor if they exist
         addProp(anchorPropNames, anchorPropsArray, anchorProps);
-        // If props were given to create an anchor, an anchor has been created
+
+        // Objec that stores properties for the created edge
+        const edgeProps: any = {};
+        // Array of property names and values for edge
+        const edgePropsNames: any[] = ['width', 'targetColor', 'color', 'straight', 'step', 'cornerRadius', 'animate', 'label', 'labelColor', 'textColor'];
+        const edgePropsArray: any[] = [edgeWidth, targetColor, color, straight, step, cornerRadius, animate, edgeLabel, labelColor, textColor];
+        // Add props to edge if they exist
+        addProp(edgePropsNames, edgePropsArray, edgeProps);
+
+        // If anchor props were given to create an anchor, an anchor has been created
         if (Object.keys(anchorProps).length) {
+            // Add custom node to array and push the custom props
             customNodes = [...customNodes, {...nodeProps}]
-            anchors = anchorProps;
-            console.log(anchors)
+            anchors.push(anchorProps)
+
+            //If edge props were given to create an achor, a custom edge has been created
+            if(Object.keys(edgeProps).length) {
+                // Add edge props to edge array
+                edges.push({...edgeProps});
+                
+            }
+            
         } else {
             defaultNodes = [...defaultNodes, {...nodeProps}];
         }
@@ -127,6 +150,9 @@
         center = undefined;
         rotation = undefined;
         zIndex = undefined;
+        TD = undefined;
+        LR = undefined;
+        useDefaults = undefined;
 	}
 
     const handleLockedButtonClick = (e: any) => {
@@ -136,6 +162,27 @@
 	const handleCenterButtonClick = (e: any) => {
 		center = e.target.checked;
 	}
+
+    const handleUseDefaultsButtonClick = (e: any) => {     
+            useDefaults = e.target.checked;
+          
+    }
+
+    const handleAnchorPositionButton = (e: any) => {
+        if (e.target.value == '') nodeDirection = undefined;
+        else {    
+            console.log(e.target.value);   
+            nodeDirection = e.target.value;
+            if (nodeDirection === 'LR') {
+                LR = true;
+                TD = false;
+            }
+            else {
+                TD = true;
+                LR = false;
+            }
+       }
+    }
     
     //Button Clicks for Anchors
     const handleAnchorLockedButtonClick = (e: any) => {
@@ -170,7 +217,7 @@
         if (e.target.value == '') direction = undefined;
         else {
             direction = e.target.value;
-        }
+       }
     }
 
     const handleAnchorResetButtonClick = (e: any) => {
@@ -182,11 +229,8 @@
         direction = undefined;
         dynamic = undefined;
         anchorEdgeLabel = undefined;
-        edgeColor = undefined;
         anchorLocked = undefined;
         anchorBgColor = undefined;
-
-        anchors = {};
 	}
 
     //Button clicks for Edges
@@ -202,7 +246,6 @@
 
     const handleEdgeResetButtonClick = (e: any) => {
         edgeWidth = undefined;
-        //edgeClick: () => void | null;
         targetColor = undefined;
         color = undefined;
         straight = undefined;
@@ -212,9 +255,8 @@
         edgeLabel = undefined;
         labelColor = undefined;
         textColor = undefined;
-
+        //edgeClick: () => void | null;
     }
-    
 
 </script>
 
@@ -230,14 +272,15 @@
     {#each defaultNodes as node}
         <Node {...node} drop="cursor"/>		
     {/each}
-    {#each customNodes as node}
-        <Node {...node} drop="cursor">
-                <Anchor {...anchors}></Anchor>
+    {#each customNodes as cNode, index}
+        <Node {...cNode} drop="cursor">
+            <Anchor {...anchors[index]} edge={Edge}>
+                <Edge {...edges[index]}></Edge>
+            </Anchor>
         </Node>			
     {/each}
     <ThemeToggle main=light alt=dark slot='toggle'/>
 </Svelvet>
-
 
 
 </div>
@@ -259,9 +302,14 @@
                 <input id='borderColor' class='colorWheel' type='color' bind:value={borderColor}>
             </li>
             <li class='list-item'>
+                <label for='useDefaults'>useDefaults: </label> 
+                <input id='useDefaults' type="checkbox" bind:value={useDefaults} on:change={handleUseDefaultsButtonClick}>
+            </li>
+            <li class='list-item'>
                 <label for='label'>Label : </label>
                 <input id='label' type="text" bind:value={label}>
             </li>
+
             <li class='list-item'>
                 <h4>Dimensions: </h4>
             </li>
@@ -280,7 +328,14 @@
                 <label for="outputAnchor">Output Anchors: </label>
                 <input id='outputAnchor' class='inputField' type="number" bind:value={outputs}>
             </li>
-          
+            <li class="list-item">
+					<label for='anchorPositon'>Anchor Position: </label>
+                    <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
+                        <option value=''>-</option>
+                        <option value='LR'>LR</option>
+                        <option value='TD'>TD</option>                        
+                    </select>					
+				</li>          
             <li class='list-item'>
                 <button class ='nodeResetBtn btn' on:click|stopPropagation={handleNodeResetButtonClick}>Reset</button>
             </li>
@@ -302,8 +357,7 @@
             <li class='list-item'>
                 <label for='zIndex'>zIndex:</label> 
                 <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
-            </li>
-            
+            </li>      
         </ul>
     </div>
     <div id='customContainer'>
@@ -319,10 +373,6 @@
             <li class='list-item'>
                 <label for='anchorBgColor'>Background Color : </label>
                 <input id='anchorBgColor' class='colorWheel' type='color' bind:value={anchorBgColor}>
-            </li>
-            <li class='list-item'>
-                <label for='edgeColor'>Edge Color : </label>
-                <input id='edgeColor' class='colorWheel' type='color' bind:value={edgeColor}>
             </li>
             <li class='list-item'>
                 <label for='invisible'>Invisible : </label> 
