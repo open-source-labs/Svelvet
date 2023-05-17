@@ -3,8 +3,9 @@
    import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
    import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
 
-   let nodes: NodeConfig[] = [];
-   let anchors: any[] = [];
+   let defaultNodes: NodeConfig[] = [];
+   let customNodes: NodeConfig[] = [];
+   let anchors: any = {};
    let dropped_in :boolean;
 
    // types for node creation
@@ -32,6 +33,7 @@
    let edgeColor: CSSColorString | undefined;
    let anchorLocked: boolean | undefined;
    let anchorBgColor: CSSColorString | undefined;
+
 
    //types for edge creation
    let edgeWidth: number | undefined;
@@ -91,21 +93,28 @@
                 if(vals[i]) nodeProps[names[i]] = vals[i];
             }
         }
+        
         // Add props to node if they exist 
         addProp(nodePropNames, nodePropsArray, nodeProps);
-        nodes = [...nodes, {...nodeProps}];
 
-        // Object that stores properties for the created anchor
+         // Object that stores properties for the created anchor
         const anchorProps: any = {};
         // Array of property names and values for anchor
-        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'direction', 'dynamic', 'edgeLabel', 'edgeColor', 'locked', 'bgColor'];
-        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, direction, dynamic, anchorEdgeLabel, edgeColor, anchorLocked, anchorBgColor];
+        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'edgeColor', 'locked', 'bgColor'];
+        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, edgeColor, anchorLocked, anchorBgColor];
         // Adds props to anchor if they exist
         addProp(anchorPropNames, anchorPropsArray, anchorProps);
-        anchors = [...anchors, {...anchorProps}]
-        console.log(anchors)
+        // If props were given to create an anchor, an anchor has been created
+        if (Object.keys(anchorProps).length) {
+            customNodes = [...customNodes, {...nodeProps}]
+            anchors = anchorProps;
+            console.log(anchors)
+        } else {
+            defaultNodes = [...defaultNodes, {...nodeProps}];
+        }
     }
-    // Button clicks for Nodes
+
+    // Button clicks for defaultNodes
     const handleNodeResetButtonClick = (e: any) => {
 		bgColor = undefined;
 	 	borderColor = undefined;
@@ -176,6 +185,8 @@
         edgeColor = undefined;
         anchorLocked = undefined;
         anchorBgColor = undefined;
+
+        anchors = {};
 	}
 
     //Button clicks for Edges
@@ -212,24 +223,33 @@
 	on:dragenter={handleDragEnter}
 	on:dragleave={handleDragLeave}
 	on:drop={handleDragDrop}   
-    on:dragover = {onDragOver}
->
-	<Svelvet height={600} zoom={0.75} minimap controls>
-		{#each nodes as node}
-			<Node {...node} drop="cursor">
-                {#each anchors as anchor}
-                    <Anchor {...anchor}></Anchor>
-                {/each}
-            </Node>			
-		{/each}
-        <ThemeToggle main=light alt=dark slot='toggle'/>
-	</Svelvet>
+    on:dragover = {onDragOver}>
+
+    
+<Svelvet height={600} zoom={0.70} minimap controls>
+    {#each defaultNodes as node}
+        <Node {...node} drop="cursor"/>		
+    {/each}
+    {#each customNodes as node}
+        <Node {...node} drop="cursor">
+                <Anchor {...anchors}></Anchor>
+        </Node>			
+    {/each}
+    <ThemeToggle main=light alt=dark slot='toggle'/>
+</Svelvet>
+
+
+
 </div>
 
 
 <div id='drawerContainer'>
     <div id='nodeContainer'>
+        <h2>Nodes </h2>
         <ul>
+            <li class='list-item'>
+                <div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>               
+            </li>
             <li class='list-item'>
                 <label for='bgColor'>Background Color : </label>
                 <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
@@ -242,25 +262,31 @@
                 <label for='label'>Label : </label>
                 <input id='label' type="text" bind:value={label}>
             </li>
-            <li class="list-item">
+            <li class='list-item'>
                 <h4>Dimensions: </h4>
+            </li>
+            <li class="list-item">               
                 <label for='width'>Width:</label>
                     <input id='width' class='inputField' type='input' bind:value={width}>
                 <label for='height'>Height:</label> 
                     <input id='height' class='inputField' type='input' bind:value={height}>
             </li>
-            <li class="list-item">
+            <li class='list-item'>
                 <h4>Default Anchors: </h4>
+            </li>
+            <li class="list-item">
                 <label for="inputAnchor">Input Anchors: </label>
                 <input id='inputAnchor' class='inputField' type="number" bind:value={inputs}>
                 <label for="outputAnchor">Output Anchors: </label>
                 <input id='outputAnchor' class='inputField' type="number" bind:value={outputs}>
             </li>
+          
             <li class='list-item'>
-                <div class='nodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>
                 <button class ='nodeResetBtn btn' on:click|stopPropagation={handleNodeResetButtonClick}>Reset</button>
             </li>
-            <li>Additional Settings: </li>
+            <li class='list-item'>
+                <h4>Additional Settings:</h4>
+            </li>
             <li class='list-item'>
                 <label for='locked'>Locked: </label> 
                 <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
@@ -280,7 +306,15 @@
             
         </ul>
     </div>
-    <div id='anchorContainer'>
+    <div id='customContainer'>
+        <div id="customHeading">
+            <h2>Customize</h2>
+        </div>
+       <div id="innerContainer">
+    
+      <div id='anchorContainer'>
+        
+        <h3>Anchors:</h3>
         <ul>
             <li class='list-item'>
                 <label for='anchorBgColor'>Background Color : </label>
@@ -340,6 +374,7 @@
         </ul>
     </div>
     <div id="edgeContainer">
+        <h3>Edges:</h3>
         <ul>
             <li class='list-item'>
                 <label for='targetColor'>Target Color : </label>
@@ -387,46 +422,46 @@
             </li>
         </ul>
     </div>
+    </div>
+    </div>
 </div>
 
 
-
-   
-
-
-
-
-
 <style>
+
+    /* General Styling */
     #drawerContainer{
         display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
+        position: relative;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    #customHeading{
+        margin: auto;
+        display: block;
+        text-align: center;
+    }
+
+    #customContainer{
+        width: 60%;
+    }
+
+    #innerContainer{
+       display: flex;
+      
     }
 
     label {
         margin-right: 10px;
     }
 
-    /* nodeContainer Styling */
-    .nodes{
-        box-sizing: border-box;
-       
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px;
-        width: 100px;
-        border: 1px solid gray;
-        cursor: pointer;
-    }
     .list-item{
         display: flex;
         flex-direction: row;
         align-items: center;
         list-style: none;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
     .colorWheel{
         -webkit-appearance: none;
@@ -454,26 +489,56 @@
     }
 
     .btn {
-        width: 100px;
-       
+        width: 150px;
         color: aliceblue;
         padding: 5px;
-        margin-left: 10px;
+        margin: auto;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        
     }
+
+    /* nodeContainer Styling */
+    #nodeContainer{
+        width: 40%;
+        padding-right: 20px;
+        border-right: 1px solid gray;
+    }
+
+    #nodeContainer h2{
+        text-align: center;
+    }
+    .defaultNodes{
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: 100px;
+        border: 1px solid gray;
+        cursor: grab;
+    }
+    
     .nodeResetBtn{
         background-color: rgb(109, 109, 246);
     }
-    /* --------- */
+ 
     /* Anchor Styling  */
-
+    #anchorContainer{
+        width: 50%;
+        margin-left: 20px;
+        padding-right: 20px;
+        border-right: 1px solid gray;
+    }
     .anchorResetBtn{   
         background-color: rgb(236, 107, 118);   
     }
 
     /* Edge Styling  */
+    #edgeContainer{
+        margin-left: 20px;
+    }
     .edgeResetBtn{
         background-color: rgb(81, 122, 49);  
     }
