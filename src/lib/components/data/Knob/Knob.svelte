@@ -244,7 +244,9 @@
 			<div class="indicator" />
 		</div>
 		<div class="knob_value">
-			{((($parameterStore - minDegree) / (maxDegree - minDegree)) * (max - min)).toFixed(fixed)}
+			{((($parameterStore - minDegree) / (maxDegree - minDegree)) * (max - min) + min).toFixed(
+				fixed
+			)}
 			<!-- {$parameterStore.toFixed(fixed)} -->
 		</div>
 	</div>
