@@ -28,10 +28,25 @@
    let multiple: boolean | undefined;
    let direction: Direction | undefined;
    let dynamic: boolean | undefined;
-   let edgeLabel: string | undefined;
+   let anchorEdgeLabel: string | undefined;
    let edgeColor: CSSColorString | undefined;
    let anchorLocked: boolean | undefined;
    let anchorBgColor: CSSColorString | undefined;
+
+   //types for edge creation
+   let edgeWidth: number | undefined;
+   let edgeClick: () => void | null;
+   let targetColor: CSSColorString | undefined;
+   let color: CSSColorString | undefined;
+   let  straight: boolean | undefined;
+   let step: boolean | undefined;
+   let cornerRadius: number | undefined;
+   let animate: boolean | undefined;
+   let edgeLabel: string | undefined;
+   let labelColor: CSSColorString | undefined;
+   let textColor: CSSColorString | undefined;
+
+
 
    // Drag and drop events
    const handleDragEnter = (e: any) => {
@@ -84,7 +99,7 @@
         const anchorProps: any = {};
         // Array of property names and values for anchor
         const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'direction', 'dynamic', 'edgeLabel', 'edgeColor', 'locked', 'bgColor'];
-        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, direction, dynamic, edgeLabel, edgeColor, anchorLocked, anchorBgColor];
+        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, direction, dynamic, anchorEdgeLabel, edgeColor, anchorLocked, anchorBgColor];
         // Adds props to anchor if they exist
         addProp(anchorPropNames, anchorPropsArray, anchorProps);
         anchors = [...anchors, {...anchorProps}]
@@ -157,11 +172,38 @@
         multiple = undefined;
         direction = undefined;
         dynamic = undefined;
-        edgeLabel = undefined;
+        anchorEdgeLabel = undefined;
         edgeColor = undefined;
         anchorLocked = undefined;
         anchorBgColor = undefined;
 	}
+
+    //Button clicks for Edges
+    const handleStraightButtonClick = (e: any) => {
+       straight = e.target.checked;
+    }
+    const handleStepButtonClick = (e: any) => {
+        step = e.target.checked;
+    }
+    const handleAnimateButtonClick = (e: any) => {
+        animate = e.target.checked;
+    }
+
+    const handleEdgeResetButtonClick = (e: any) => {
+        edgeWidth = undefined;
+        //edgeClick: () => void | null;
+        targetColor = undefined;
+        color = undefined;
+        straight = undefined;
+        step = undefined;
+        cornerRadius = undefined;
+        animate = undefined;
+        edgeLabel = undefined;
+        labelColor = undefined;
+        textColor = undefined;
+
+    }
+    
 
 </script>
 
@@ -284,8 +326,8 @@
                 <input id='dynamic' type="checkbox" bind:value={dynamic} on:change={handleDynamicButtonClick}>
             </li>
             <li class='list-item'>
-                <label for='edgeLabel'>Edge Label : </label>
-                <input id='edgeLabel' type="text" bind:value={edgeLabel}>
+                <label for='anchorEdgeLabel'>Edge Label : </label>
+                <input id='anchorEdgeLabel' type="text" bind:value={anchorEdgeLabel}>
             </li>
             
             <li class='list-item'>
@@ -297,7 +339,62 @@
             </li>
         </ul>
     </div>
+    <div id="edgeContainer">
+        <ul>
+            <li class='list-item'>
+                <label for='targetColor'>Target Color : </label>
+                <input id='targetColor' class='colorWheel' type='color' bind:value={targetColor}>
+            </li>
+            <li class='list-item'>
+                <label for='color'>Color : </label>
+                <input id='color' class='colorWheel' type='color' bind:value={color}>
+            </li>
+            <li class='list-item'>
+                <label for='labelColor'>Label Color : </label>
+                <input id='labelColor' class='colorWheel' type='color' bind:value={labelColor}>
+            </li>
+            <li class='list-item'>
+                <label for='textColor'>Text Color : </label>
+                <input id='textColor' class='colorWheel' type='color' bind:value={textColor}>
+            </li>
+            <li class='list-item'>
+                <label for='width'>Width :</label> 
+                <input id = 'width'  class='inputField' type="number"  bind:value={edgeWidth}>
+            </li>
+            <li class='list-item'>
+                <label for='cornerRadius'>Corner Radius :</label> 
+                <input id = 'cornerRadius'  class='inputField' type="number"  bind:value={cornerRadius}>
+            </li>            
+            <li class='list-item'>
+                <label for='straight'>Straight : </label>
+                <input id='straight' type="checkbox" bind:value={straight} on:change={handleStraightButtonClick}>
+            </li>
+            <li class='list-item'>
+                <label for='step'>Step : </label>
+                <input id='step' type="checkbox" bind:value={step} on:change={handleStepButtonClick}>
+            </li>
+            <li class='list-item'>
+                <label for='animate'>Animate : </label>
+                <input id='animate' type="checkbox" bind:value={animate} on:change={handleAnimateButtonClick}>
+            </li>
+           
+            <li class='list-item'>
+                <label for='edgeLabel'>Edge Label : </label>
+                <input id='edgeLabel' type="text" bind:value={edgeLabel}>
+            </li>
+            <li class='list-item'>
+                <button class ='edgeResetBtn btn' on:click|stopPropagation={handleEdgeResetButtonClick}>Reset</button>
+            </li>
+        </ul>
+    </div>
 </div>
+
+
+
+   
+
+
+
 
 
 <style>
@@ -374,6 +471,11 @@
 
     .anchorResetBtn{   
         background-color: rgb(236, 107, 118);   
+    }
+
+    /* Edge Styling  */
+    .edgeResetBtn{
+        background-color: rgb(81, 122, 49);  
     }
 
 </style>
