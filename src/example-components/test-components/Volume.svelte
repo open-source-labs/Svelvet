@@ -5,7 +5,6 @@
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
 	import Output from '../../example-components/test-components/Output.svelte';
 	import Scale from '../../example-components/test-components/Scale.svelte';
-	import Volume from '../../example-components/test-components/Volume.svelte';
 	type Inputs = {
 		degree: number;
 	};
@@ -18,21 +17,19 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<body>
-	<Svelvet>
-		<Volume />
-
-		<Scale />
-
-		<Output />
-	</Svelvet>
-</body>
-
-<style>
-	body {
-		width: 100vw;
-		height: 100vh;
-		margin: 0;
-		padding: 0;
-	}
-</style>
+<Node useDefaults position={{ x: 0, y: 0 }} let:selected>
+	<NodeWrapper title="Volume" outputStore={output} key="volume">
+		<div class="node-body">
+			<Knob
+				fixed={0}
+				min={10}
+				max={20}
+				step={5}
+				minDegree={30}
+				maxDegree={330}
+				parameterStore={$inputs.degree}
+			/>
+		</div>
+	</NodeWrapper>
+	<Resizer width height rotation />
+</Node>

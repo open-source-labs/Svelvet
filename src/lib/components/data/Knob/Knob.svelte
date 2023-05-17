@@ -14,7 +14,7 @@
 	export let minDegree = 60;
 	export let maxDegree = 300;
 	// export let curDegree = minDegree; // current angle in relation to vertical y bottom
-	export let parameterStore: CustomWritable<number> = writable(minDegree); // FIXME: how to set the initial position to minDegree?
+	export let parameterStore: CustomWritable<number>; // FIXME: how to set the initial position to minDegree?
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
@@ -43,8 +43,8 @@
 
 	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
+	let knobContainerElement: HTMLDivElement;
 	let knobElement: HTMLDivElement;
-	let sliderElement: HTMLDivElement;
 	let sliding = false; // Whether the knob is currently being dragged
 	let previousX = 0; // Represents previous cursor position
 	let previousAngle = 0;
@@ -88,7 +88,7 @@
 	// Done: Stop rotating on mouseup
 	function stopRotate() {
 		if (previousValue === $parameterStore) {
-			sliderElement.focus(); // sets focus on the this element
+			knobElement.focus(); // sets focus on the this element
 		} else {
 			previousValue = $parameterStore;
 		}
@@ -128,7 +128,7 @@
 
 	// get the coordiates of the center of the knob
 	function getElementCenter(): [number, number] {
-		const { top, left, width, height } = knobElement.getBoundingClientRect();
+		const { top, left, width, height } = knobContainerElement.getBoundingClientRect();
 		console.log('width,', width, 'height:', height);
 		console.log('left,', left, 'top:', top);
 		console.log('center: ', [left + width / 2, top + height / 2]);
@@ -156,11 +156,10 @@
 				: x < 0 && y < 0
 				? 90 - Math.atan(-y / -x) * (180 / Math.PI)
 				: minDegree + $parameterStore; // FIXME:
-		console.log('ANGLE: ', angle);
-
-		console.log('x,y:', x, y);
-		console.log('angle before clamp', angle);
-		console.log('angle:', clamp(angle, minDegree, maxDegree));
+		// console.log('ANGLE: ', angle);
+		// console.log('x,y:', x, y);
+		// console.log('angle before clamp', angle);
+		// console.log('angle:', clamp(angle, minDegree, maxDegree));
 		return clamp(angle, minDegree, maxDegree);
 	}
 </script>
@@ -169,20 +168,19 @@
 	<!-- this div is wrapping the knob input section -->
 	<div class="wrapper" style:color={fontColor}>
 		<div
-			class="knob"
+			class="knob-container"
 			bind:offsetWidth={sliderWidth}
-			bind:this={knobElement}
+			bind:this={knobContainerElement}
 			style:transform={curAngle}
 		>
 			<!-- FIXME: change from input element to div element -->
 			<!-- <label for="knob-input" class="input-label">{label}</label> -->
-			<label for="knob-input" class="input-label" />
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<div
 				tabindex={0}
-				id="knob-input"
-				class="knob-input"
-				aria-label={label}
+				id="knob"
+				class="knob"
+				aria-label="knob component"
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY), step); // FIXME:
 				}}
@@ -197,11 +195,11 @@
 					// if (key === 'Enter') validateInput();
 				}}
 				use:rotatable
-				bind:this={sliderElement}
+				bind:this={knobElement}
 			/>
 			<div class="indicator" />
 		</div>
-		<div class="knob_value">
+		<div class="knob-value">
 			{((($parameterStore - minDegree) / (maxDegree - minDegree)) * (max - min) + min).toFixed(
 				fixed
 			)}
@@ -210,7 +208,7 @@
 	</div>
 {:else}
 	<div class="wrapper connected">
-		<div class="knob-input connected" style:--percentage="10%" aria-label={label}>
+		<div class="knob connected" style:--percentage="10%" aria-label={label}>
 			<p>{label}</p>
 			<p>{$parameterStore}</p>
 		</div>
@@ -232,7 +230,7 @@
 		/* cursor: ew-resize; */
 	}
 
-	.knob-input {
+	.knob {
 		display: flex;
 		border-radius: 50%;
 		width: 10rem;
@@ -257,50 +255,20 @@
 		border-radius: 30%/10%;
 		pointer-events: none;
 	}
-	.knob_value {
+	.knob-value {
 		position: absolute;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, 50%);
-		font-size: 2em;
+		font-size: 3em;
 		color: white;
 		z-index: 100;
 	}
-
-	.button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		color: inherit;
-		line-height: 1rem;
-		cursor: pointer;
-		display: flex;
-		align-items: baseline;
-		justify-content: center;
-	}
-	.button:hover {
-		opacity: 50%;
-	}
-
-	/* .knob {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-		pointer-events: auto;
-		border: 1px solid purple;
-	} */
 
 	.connected {
 		display: flex;
 		justify-content: space-between;
 		padding: 0.25rem 0.5rem;
-	}
-	.input-label {
-		margin-left: 0.5rem;
-		position: absolute;
-		pointer-events: none;
-		color: inherit;
+		border: 10px red solid;
 	}
 </style>
