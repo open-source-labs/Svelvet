@@ -183,11 +183,10 @@
 		sliderElement.blur();
 	}
 
-	$: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
-	$: indicatorStyle = 'rotate(' + `${knobValue}` + 'deg)';
-	$: angle = `rotate(${minDegree + knobValue}deg`;
+	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
+	// $: angle = `rotate(${minDegree + knobValue}deg`;
 
-	function clamp(num: number, min: number, max: number) {
+	function clamp(num: number, min: number, max: number): number {
 		return Math.min(Math.max(num, min), max);
 	}
 
@@ -201,7 +200,7 @@
 		[left, top]: [number, number],
 		from: number,
 		range: number
-	) {
+	): number {
 		const adjacent = left - centerX;
 		const opposite = top - centerY;
 		const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
@@ -220,13 +219,29 @@
 		return clamp(angle, 0, range);
 	}
 
+	$: angle = minDegree;
+	// $: knobValue =
+
 	onMount(() => {
 		// Access the DOM element and bind the drag event
 		// const element = document.querySelector('.radial-slider');
 		sliderElement.addEventListener('drag', (event) => {
-			setAngle(getAngle(getElementCenter(), [0, 0], 220, 280) + 40);
+			getAngle(getElementCenter(), [0, 0], 220, 280);
 		});
 	});
+
+	// const RadialSlider = () => {
+	//   const [angle, setAngle] = useState(40);
+	//   const bind = useDrag(({values, event}) => {
+	//     setAngle(getAngle(getElementCenter(event.target), values, 220, 280) + 40);
+	//   });
+
+	//   return (
+	//     <div {...bind()} className='radial-slider'>
+	//       <div className='cap'/>
+	//       <div className='indicator' style={{'--angle': `${angle}deg`}}/>
+	//     </div>
+	//   );
 </script>
 
 {#if !connected}
