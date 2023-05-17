@@ -6,14 +6,17 @@
 	import { tracking } from '$lib/stores/CursorStore';
 	import type { Graph, Node, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
+	import { writable } from 'svelte/store';
 
 	// Props
 	// users should be able to customize: min, max, minDegree, maxDegree, step, subdivision, fixed
-	export let parameterStore: CustomWritable<number>; // current angle ???
+	// export let parameterStore: CustomWritable<number> ;
+	export let minDegree = 60;
+	export let maxDegree = 300;
+	// export let curDegree = minDegree; // current angle in relation to vertical y bottom
+	export let parameterStore: CustomWritable<number> = writable(minDegree); // FIXME: how to set the initial position to minDegree?
 	export let min = 0;
 	export let max = 100;
-	export let minDegree = 30;
-	export let maxDegree = 330;
 	export let step = 1;
 	export let label = 'Value';
 	/**
@@ -23,8 +26,8 @@
 	 */
 	export let fixed = 0;
 	export let fontColor: CSSColorString | null = null;
-	export let barColor: CSSColorString | null = null;
-	export let bgColor: CSSColorString | null = null;
+	// export let barColor: CSSColorString | null = null;
+	// export let bgColor: CSSColorString | null = null;
 
 	$: connected = typeof parameterStore.set !== 'function';
 
@@ -40,6 +43,7 @@
 
 	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
+	let knobElement: HTMLDivElement;
 	let sliderElement: HTMLInputElement;
 	let sliding = false; // Whether the knob is currently being dragged
 	let previousX = 0; // Represents previous cursor position
@@ -56,7 +60,7 @@
 			[$cursor.x, $cursor.y],
 			getElementCenter(),
 			minDegree,
-			maxDegree - minDegree
+			maxDegree
 		);
 	}
 
@@ -104,64 +108,29 @@
 		};
 	}
 
-	// Update the value based on the direction and increment
-	function updateValue(delta: number, increment = step) {
-		if (typeof $parameterStore !== 'number') return;
-		$parameterStore = roundNum(
-			Math.max(min, Math.min($parameterStore + delta * increment, max)),
-			3
-		);
-	}
-
-	// to be replaced by calculateRotation
-	function calculateSlide(
-		cursorChange: number,
-		increment = step,
-		scaler = (1 / (max - min)) * 100
-	) {
-		if (typeof $parameterStore !== 'number') return;
-		const pixelsToMove = ($width * scaler) / ((maxDegree - minDegree) / increment);
-		// const wd = sliderElement.getBoundingClientRect().width;
-		// console.log(wd, $width);
-
-		pixelsMoved += cursorChange;
-
-		if (Math.abs(pixelsMoved) >= pixelsToMove) {
-			const incrementsToMove = Math.floor(Math.abs(pixelsMoved) / pixelsToMove);
-			if (pixelsMoved > 0) {
-				updateValue(incrementsToMove);
-			} else {
-				updateValue(-incrementsToMove);
-			}
-			pixelsMoved =
-				pixelsMoved > 0
-					? pixelsMoved - incrementsToMove * pixelsToMove
-					: pixelsMoved + incrementsToMove * pixelsToMove;
-		}
-	}
-
-	// This prevents users from typing in invalid characters
-	function validateInput() {
-		const number = parseFloat(sliderElement.value);
-		// console.log('NUMBER:', number);
-		if (!Number.isNaN(number)) {
-			if (number <= minDegree) {
-				$parameterStore = minDegree;
-			} else if (number >= maxDegree) {
-				$parameterStore = maxDegree;
-			} else {
-				$parameterStore = roundNum(number, 2);
-			}
-		}
-		// For some reason, this line is necessary
-		// Absurdly large or small numbers do not get reset without it
-		sliderElement.value = JSON.stringify($parameterStore);
-		sliderElement.blur(); // removes keyboard focus from the current element.
-	}
+	// // This prevents users from typing in invalid characters
+	// function validateInput() {
+	// 	const number = parseFloat(sliderElement.value);
+	// 	// console.log('NUMBER:', number);
+	// 	if (!Number.isNaN(number)) {
+	// 		if (number <= minDegree) {
+	// 			$parameterStore = minDegree;
+	// 		} else if (number >= maxDegree) {
+	// 			$parameterStore = maxDegree;
+	// 		} else {
+	// 			$parameterStore = roundNum(number, 2);
+	// 		}
+	// 	}
+	// 	// For some reason, this line is necessary
+	// 	// Absurdly large or small numbers do not get reset without it
+	// 	sliderElement.value = JSON.stringify($parameterStore);
+	// 	sliderElement.blur(); // removes keyboard focus from the current element.
+	// }
 
 	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
 	// $: angle = `rotate(${minDegree + knobValue}deg`;
-	$: curAngle = `rotate(${$parameterStore - minDegree}deg`;
+	$: curAngle = `rotate(${$parameterStore}deg`;
+	$: curValue = ($parameterStore / (maxDegree - minDegree)) * (max - min) + min;
 
 	function clamp(num: number, min: number, max: number): number {
 		return Math.min(Math.max(num, min), max);
@@ -169,7 +138,7 @@
 
 	// get the coordiates of the center of the knob
 	function getElementCenter(): [number, number] {
-		const { top, left, width, height } = sliderElement.getBoundingClientRect();
+		const { top, left, width, height } = knobElement.getBoundingClientRect();
 		console.log('width,', width, 'height:', height);
 		console.log('left,', left, 'top:', top);
 		console.log('center: ', [left + width / 2, top + height / 2]);
@@ -193,9 +162,9 @@
 				: x < 0 && y > 0
 				? Math.atan(y / -x) * (180 / Math.PI) + 90
 				: x > 0 && y < 0
-				? 270 - Math.atan(-y / x) * (180 / Math.PI)
-				: x > 0 && y < 0
-				? Math.atan(-y / -x)
+				? 270 + Math.atan(-y / x) * (180 / Math.PI)
+				: x < 0 && y < 0
+				? 90 - Math.atan(-y / -x) * (180 / Math.PI)
 				: minDegree + $parameterStore;
 
 		// const radians = Math.atan(opposite / adjacent) + (adjacent < 0 ? Math.PI : 0) + Math.PI / 2;
@@ -208,9 +177,8 @@
 		// if (angle > 180 + range / 2) {
 		// 	angle = 0;
 		// }
-		console.log('cursorX,y:', cursorX, cursorY);
-		console.log('centerX,y:', centerX, centerY);
 		console.log('x,y:', x, y);
+		console.log('angle before clamp', angle);
 		console.log('angle:', clamp(angle, minDegree, maxDegree));
 		return clamp(angle, minDegree, maxDegree);
 	}
@@ -242,7 +210,13 @@
 {#if !connected}
 	<!-- this div is wrapping the knob input section -->
 	<div class="wrapper" style:color={fontColor}>
-		<div class="knob" bind:offsetWidth={sliderWidth} style:transform={curAngle}>
+		<div
+			class="knob"
+			bind:offsetWidth={sliderWidth}
+			style:transform={curAngle}
+			bind:this={knobElement}
+		>
+			<!-- FIXME: change from input element to div element -->
 			<!-- <label for="knob-input" class="input-label">{label}</label> -->
 			<label for="knob-input" class="input-label" />
 			<input
@@ -252,14 +226,14 @@
 				type="text"
 				aria-label={label}
 				on:wheel|stopPropagation|preventDefault={(event) => {
-					updateValue(Math.sign(event.deltaY), step);
+					updateValue(Math.sign(event.deltaY), step); // FIXME:
 				}}
 				on:keydown|stopPropagation={(e) => {
 					const { key } = e;
 
 					if (isArrow(key)) {
 						e.preventDefault(); // Stops cursor from moving
-						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0);
+						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0); // FIXME:
 					}
 
 					// if (key === 'Enter') validateInput();
@@ -269,9 +243,11 @@
 			/>
 			<div class="indicator" />
 		</div>
-		<div class="knob_value">{$parameterStore.toFixed(fixed)}</div>
+		<div class="knob_value">
+			{((($parameterStore - minDegree) / (maxDegree - minDegree)) * (max - min)).toFixed(fixed)}
+			<!-- {$parameterStore.toFixed(fixed)} -->
+		</div>
 	</div>
-	<div class="anchorCenter">0</div>
 {:else}
 	<div class="wrapper connected">
 		<div class="knob-input connected" style:--percentage="10%" aria-label={label}>
@@ -284,13 +260,6 @@
 <style>
 	* {
 		box-sizing: border-box;
-	}
-	.anchorCenter {
-		position: absolute;
-		left: 298px;
-		top: 165px;
-		z-index: 10000;
-		background-color: red;
 	}
 	.wrapper {
 		display: flex;
