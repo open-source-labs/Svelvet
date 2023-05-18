@@ -16,6 +16,8 @@
 <body>
 	<Svelvet>
 		<Volume />
+		<Volume />
+		<Volume />
 
 		<Scale />
 
