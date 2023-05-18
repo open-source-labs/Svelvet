@@ -274,8 +274,8 @@
     {/each}
     {#each customNodes as cNode, index}
         <Node {...cNode} drop="cursor">
-            <Anchor {...anchors[index]} edge={Edge}>
-                <Edge {...edges[index]}></Edge>
+            <Anchor {...anchors[index]}>
+                <!-- <Edge {...edges[index]}></Edge> -->
             </Anchor>
         </Node>			
     {/each}
