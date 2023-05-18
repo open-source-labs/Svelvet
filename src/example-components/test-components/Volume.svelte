@@ -21,9 +21,9 @@
 		<div class="node-body">
 			<Knob
 				fixed={0}
-				min={10}
-				max={20}
-				step={2}
+				min={0}
+				max={100}
+				step={5}
 				minDegree={30}
 				maxDegree={330}
 				parameterStore={$inputs.degree}

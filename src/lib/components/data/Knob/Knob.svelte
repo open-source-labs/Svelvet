@@ -43,12 +43,8 @@
 
 	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
-	let knobContainerElement: HTMLDivElement;
+	let knobWrapperElement: HTMLDivElement;
 	let knobElement: HTMLDivElement;
-	let sliding = false; // Whether the knob is currently being dragged
-	let previousX = 0; // Represents previous cursor position
-	let previousAngle = 0;
-	let pixelsMoved = 0; // Number of pixels moved during slide
 	let rotating = false;
 
 	// Grab cursor from store
@@ -61,7 +57,7 @@
 
 	// when the knob is rotating
 	$: if (rotating) {
-		$parameterStore = calculateNewAngle([$cursor.x, $cursor.y], getElementCenter());
+		$parameterStore = calculateNewAngle($cursor.x, $cursor.y); // need to pass these arguments to trigger updates
 	}
 
 	// Begin rotating on mousedown
@@ -130,12 +126,12 @@
 
 	// get the coordiates of the center of the knob
 	function getElementCenter(): [number, number] {
-		const { top, left, width, height } = knobContainerElement.getBoundingClientRect();
+		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
 		const e = { clientX: $cursor.x, clientY: $cursor.y };
 		//X and Y will be the position relative to the target element
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		console.log('calculateRelativeCursor result', x, y);
-		console.log('scale: ', $scale, 'width:', width);
+		console.log('scale: ', $scale, 'width:', width, 'height: ', height);
 		// console.log('zoom value: ', Graph.ZOOM_INCREMENT);
 		// console.log('width,', width, 'height:', height);
 		// console.log('left,', left, 'top:', top);
@@ -144,40 +140,71 @@
 		return [left + width / 2, top + height / 2];
 	}
 
-	function calculateNewAngle(
-		[cursorX, cursorY]: [number, number],
-		[centerX, centerY]: [number, number]
-	): number {
-		const x = cursorX - centerX;
-		const y = centerY - cursorY;
-
-		// console.log('zoom', $scale);
-		console.log('cursor: ', cursorX, cursorY);
-		console.log('center', centerX, centerY);
+	// need to pass cursorX and cursorY to trigger updates
+	function calculateNewAngle(cursorX: number, cursorY: number): number {
+		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
+		const e = { clientX: cursorX, clientY: cursorY };
+		// X and Y are the position relative to the target element's left and top
+		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
+		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
+		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
+		// console.log(relativeX, relativeY);
+		console.log('click');
+		console.log('my part', relativeX, relativeY);
+		console.log('calculateRelativeCursor result', x, y);
+		console.log('cursorAbsolute', cursorX, cursorY);
+		console.log(
+			'scale: ',
+			$scale,
+			'width:',
+			width,
+			'height: ',
+			height,
+			'top',
+			top,
+			'left',
+			left,
+			'Transilation: ',
+			$translation
+		);
 
 		let angle =
-			x > 0 && y > 0
-				? 270 - Math.atan(y / x) * (180 / Math.PI)
-				: x < 0 && y > 0
-				? Math.atan(y / -x) * (180 / Math.PI) + 90
-				: x > 0 && y < 0
-				? 270 + Math.atan(-y / x) * (180 / Math.PI)
-				: x < 0 && y < 0
-				? 90 - Math.atan(-y / -x) * (180 / Math.PI)
-				: $parameterStore - minDegree;
+			relativeX > 0 && relativeY > 0
+				? 270 - Math.atan(relativeY / relativeX) * (180 / Math.PI)
+				: relativeX < 0 && relativeY > 0
+				? Math.atan(relativeY / -relativeX) * (180 / Math.PI) + 90
+				: relativeX > 0 && relativeY < 0
+				? 270 + Math.atan(-relativeY / relativeX) * (180 / Math.PI)
+				: relativeX < 0 && relativeY < 0
+				? 90 - Math.atan(-relativeY / -relativeX) * (180 / Math.PI)
+				: $parameterStore;
 		return clamp(angle);
 	}
+	// function calculateNewAngle(
+	// 	[cursorX, cursorY]: [number, number],
+	// 	[centerX, centerY]: [number, number]
+	// ): number {
+	// 	const x = cursorX - centerX;
+	// 	const y = centerY - cursorY;
+
+	// 	let angle =
+	// 		x > 0 && y > 0
+	// 			? 270 - Math.atan(y / x) * (180 / Math.PI)
+	// 			: x < 0 && y > 0
+	// 			? Math.atan(y / -x) * (180 / Math.PI) + 90
+	// 			: x > 0 && y < 0
+	// 			? 270 + Math.atan(-y / x) * (180 / Math.PI)
+	// 			: x < 0 && y < 0
+	// 			? 90 - Math.atan(-y / -x) * (180 / Math.PI)
+	// 			: $parameterStore;
+	// 	return clamp(angle);
+	// }
 </script>
 
 {#if !connected}
 	<!-- this div is wrapping the knob section -->
-	<div class="wrapper" style:color={fontColor}>
-		<div
-			class="knob-container"
-			bind:offsetWidth={sliderWidth}
-			bind:this={knobContainerElement}
-			style:transform={curAngle}
-		>
+	<div class="wrapper" style:color={fontColor} bind:this={knobWrapperElement}>
+		<div class="knob-container" bind:offsetWidth={sliderWidth} style:transform={curAngle}>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<div
 				tabindex={0}
@@ -230,11 +257,11 @@
 		height: 11rem;
 		width: 11rem;
 		/* cursor: ew-resize; */
-		border: 1px solid gold;
+		/* border: 1px solid gold; */
 	}
 
 	.knob-container {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 	}
 
 	.knob {
@@ -245,21 +272,21 @@
 		pointer-events: auto;
 		cursor: pointer;
 		padding: 0.25rem;
-		box-shadow: 0 0 2px 1px #c7a472;
+		box-shadow: 0 0 2px 1px rgb(152, 214, 235);
 		background-color: lightblue;
-		border: 1px solid purple;
+		/* border: 1px solid purple; */
 	}
 
 	.indicator {
-		top: 75%;
+		top: 80%;
 		left: 48%;
 		transform-origin: 50% -50%;
 		position: absolute;
 		/* transform: ro÷tate(30 deg); */
 		width: 4%;
-		height: 20%;
-		background: black;
-		box-shadow: 0 0 2px white;
+		height: 15%;
+		background-color: #666565;
+		/* box-shadow: 0 0 2px white; */
 		border-radius: 30%/10%;
 		pointer-events: none;
 	}
