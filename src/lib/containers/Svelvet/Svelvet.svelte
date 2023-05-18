@@ -100,6 +100,7 @@
 		if (stateObject) {
 			graph = reloadStore(stateObject);
 			graphStore.add(graph, graph.id);
+			zoom;
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
 

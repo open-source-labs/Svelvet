@@ -9,13 +9,6 @@
 	type Inputs = {
 		degree: number;
 	};
-
-	const initialData = {
-		degree: 30
-	};
-	const inputs = generateInput(initialData);
-	const procesor = (inputs: Inputs) => inputs.degree;
-	const output = generateOutput(inputs, procesor);
 </script>
 
 <body>

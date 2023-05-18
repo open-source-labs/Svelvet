@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { initialClickPosition } from '$lib/stores/CursorStore';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { isArrow } from '$lib/types';
 	import { roundNum } from '$lib/utils';
 	import { tracking } from '$lib/stores/CursorStore';
 	import type { Graph, Node, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
 	import { writable } from 'svelte/store';
+	import { calculateRelativeCursor } from '$lib/utils';
 
 	// Props
 	// users should be able to customize: min, max, minDegree, maxDegree, step, subdivision, fixed
@@ -14,7 +14,7 @@
 	export let minDegree = 60;
 	export let maxDegree = 300;
 	// export let curDegree = minDegree; // current angle in relation to vertical y bottom
-	export let parameterStore: CustomWritable<number>; // FIXME: how to set the initial position to minDegree?
+	export let parameterStore: CustomWritable<number>;
 	export let min = 0;
 	export let max = 100;
 	export let step = 1;
@@ -26,7 +26,7 @@
 	 */
 	export let fixed = 0;
 	export let fontColor: CSSColorString | null = null;
-	// export let barColor: CSSColorString | null = null;
+	// export let barColor: CSSColorString | null = null; // TODO: stretch feature: customize background
 	// export let bgColor: CSSColorString | null = null;
 
 	$: connected = typeof parameterStore.set !== 'function';
@@ -53,6 +53,11 @@
 
 	// Grab cursor from store
 	$: cursor = graph.cursor;
+
+	//Grab scale/zoom value of graph
+	$: scale = graph.transforms.scale;
+
+	$: translation = graph.transforms.translation;
 
 	// when the knob is rotating
 	$: if (rotating) {
@@ -104,7 +109,7 @@
 
 	// Update the value based on the direction and increment
 	function updateValue(delta: number, increment = ((maxDegree - minDegree) / (max - min)) * step) {
-		// if (typeof $parameterStore !== 'number') return; //dont think we need this anymore since no longer an input
+		// ADD SETTIMEOUT FOR SCROLL TO SLOW DOWN KNOB INPUT UPDATES
 		$parameterStore = roundNum(
 			Math.max(minDegree, Math.min($parameterStore + delta * increment, maxDegree)),
 			3
@@ -126,9 +131,15 @@
 	// get the coordiates of the center of the knob
 	function getElementCenter(): [number, number] {
 		const { top, left, width, height } = knobContainerElement.getBoundingClientRect();
-		console.log('width,', width, 'height:', height);
-		console.log('left,', left, 'top:', top);
-		console.log('center: ', [left + width / 2, top + height / 2]);
+		const e = { clientX: $cursor.x, clientY: $cursor.y };
+		//X and Y will be the position relative to the target element
+		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
+		console.log('calculateRelativeCursor result', x, y);
+		console.log('scale: ', $scale, 'width:', width);
+		// console.log('zoom value: ', Graph.ZOOM_INCREMENT);
+		// console.log('width,', width, 'height:', height);
+		// console.log('left,', left, 'top:', top);
+		// console.log('center: ', [left + width / 2, top + height / 2]);
 
 		return [left + width / 2, top + height / 2];
 	}
@@ -140,7 +151,10 @@
 		const x = cursorX - centerX;
 		const y = centerY - cursorY;
 
-		// degree in relation to vertical
+		// console.log('zoom', $scale);
+		console.log('cursor: ', cursorX, cursorY);
+		console.log('center', centerX, centerY);
+
 		let angle =
 			x > 0 && y > 0
 				? 270 - Math.atan(y / x) * (180 / Math.PI)
@@ -156,7 +170,7 @@
 </script>
 
 {#if !connected}
-	<!-- this div is wrapping the knob input section -->
+	<!-- this div is wrapping the knob section -->
 	<div class="wrapper" style:color={fontColor}>
 		<div
 			class="knob-container"
@@ -213,10 +227,14 @@
 		gap: 0.5rem;
 		justify-content: center;
 		align-items: center;
-		border: 1px solid red;
 		height: 11rem;
 		width: 11rem;
 		/* cursor: ew-resize; */
+		border: 1px solid gold;
+	}
+
+	.knob-container {
+		border: 1px solid red;
 	}
 
 	.knob {
@@ -229,6 +247,7 @@
 		padding: 0.25rem;
 		box-shadow: 0 0 2px 1px #c7a472;
 		background-color: lightblue;
+		border: 1px solid purple;
 	}
 
 	.indicator {
@@ -258,6 +277,5 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 0.25rem 0.5rem;
-		border: 10px red solid;
 	}
 </style>
