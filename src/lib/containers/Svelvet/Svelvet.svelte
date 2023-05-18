@@ -37,6 +37,7 @@
 	export let minimap = false;
 	export let controls = false;
 	export let toggle = false;
+	export let drawer = false;
 	/**
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
@@ -124,6 +125,7 @@
 		{graph}
 		{fitView}
 		{theme}
+		{drawer}
 		{controls}
 		{selectionColor}
 		{disableSelection}
