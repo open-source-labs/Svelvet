@@ -6,6 +6,8 @@
 	import Output from '../../example-components/test-components/Output.svelte';
 	import Scale from '../../example-components/test-components/Scale.svelte';
 	import Volume from '../../example-components/test-components/Volume.svelte';
+	import Audio from '../../example-components/test-components/Audio.svelte';
+
 	type Inputs = {
 		degree: number;
 	};
@@ -18,6 +20,8 @@
 		<Scale />
 
 		<Output />
+
+		<Audio />
 	</Svelvet>
 </body>
 
