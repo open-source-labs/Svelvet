@@ -28,6 +28,7 @@
 	 * @description Sets initial zoom level of the graph. This value
 	 * features two way binding, so changing it will update the zoom.
 	 */
+	export let fixedZoom = false;
 	export let zoom = 1;
 	export let TD = false;
 	export let editable = false;
@@ -130,6 +131,7 @@
 		{trackpadPan}
 		{modifier}
 		{title}
+		{fixedZoom}
 		on:edgeDrop
 	>
 		{#if mermaid.length}

@@ -308,18 +308,24 @@
 
 		isMovable = true;
 		if (e.touches.length === 2) {
-			startPinching();
+			startPinching(e);
 			initialDistance = $touchDistance;
 			initialScale = $scale;
+		} else {
+			e.preventDefault();
 		}
 	}
 
-	function onTouchEnd() {
+	function onTouchEnd(e: TouchEvent) {
 		isMovable = false;
 		pinching = false;
+		e.preventDefault();
 	}
 
-	function startPinching() {
+	function startPinching(e: TouchEvent) {
+		if (fixedZoom) return;
+		e.preventDefault();
+
 		if (!pinching) {
 			pinching = true;
 			animationFrameId = requestAnimationFrame(handlePinch);
@@ -355,8 +361,10 @@
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
 		} else if (key === '=') {
+			if (fixedZoom) return;
 			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '-') {
+			if (fixedZoom) return;
 			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '0') {
 			fitIntoView();
@@ -384,6 +392,7 @@
 
 	function handleScroll(e: WheelEvent) {
 		if (fixedZoom) return;
+		e.preventDefault();
 		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
 		const currentTranslation = $translation;
@@ -477,10 +486,10 @@
 	{title}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
-	on:wheel|preventDefault={handleScroll}
+	on:wheel={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
-	on:touchend|preventDefault={onTouchEnd}
-	on:touchstart|preventDefault|self={onTouchStart}
+	on:touchend={onTouchEnd}
+	on:touchstart|self={onTouchStart}
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	bind:this={$graphDOMElement}
