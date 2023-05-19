@@ -367,6 +367,7 @@
 			if (fixedZoom) return;
 			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '0') {
+			if (fixedZoom) return;
 			fitIntoView();
 		} else if (key === 'Control') {
 			$groups['selected'].nodes.set(new Set());
