@@ -14,7 +14,7 @@
 
 	let bassLevel = 0;
 	let trebleLevel = 0;
-	let volumeLevel = 1;
+	let volumeLevel = 0.1;
 	let song: string =
 		'https://otnmsonvlxvlokpdgsky.supabase.co/storage/v1/object/public/ape-escape-time-station/What%20is%20Love.mp3?t=2023-05-18T05%3A01%3A32.321Z';
 
@@ -93,15 +93,15 @@
 	}
 
 	type Inputs = {
-		volume: number;
-		treble: number;
 		bass: number;
+		treble: number;
+		volume: number;
 	};
 
 	const initialData = {
-		volume: 2,
+		bass: 2,
 		treble: 2,
-		bass: 2
+		volume: 1
 	};
 	const processor = (inputs: Inputs) => inputs;
 	const inputs = generateInput(initialData);
@@ -151,11 +151,11 @@
 				type="range"
 				id="volume-level"
 				min="0"
-				max="10"
+				max="100"
 				bind:value={volumeLevel}
 				on:input={updateVolumeLevel}
 			/>
-			<span>{(volumeLevel * 10).toFixed()}%</span>
+			<span>{(volumeLevel * 1).toFixed()}%</span>
 		</div>
 	</div>
 </Node>

@@ -5,29 +5,28 @@
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
 
 	type Inputs = {
-		data: number;
+		degree: number;
 	};
 
 	const initialData = {
-		data: 50
+		degree: 180
 	};
 	const inputs = generateInput(initialData);
-	const procesor = (inputs: Inputs) => inputs.data;
+	const procesor = (inputs: Inputs) => inputs.degree;
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 110, y: 700 }} let:selected>
-	<NodeWrapper title="Volume" outputStore={output} key="volume">
+<Node useDefaults position={{ x: 110, y: 100 }} let:selected>
+	<NodeWrapper title="Bass" outputStore={output} key="bass">
 		<div class="node-body">
 			<Knob
 				fixed={0}
-				min={0}
-				max={100}
-				step={2}
+				min={-20}
+				max={20}
+				step={5}
 				minDegree={30}
 				maxDegree={330}
-				knobValueColor={'#666565'}
-				parameterStore={$inputs.data}
+				parameterStore={$inputs.degree}
 			/>
 		</div>
 	</NodeWrapper>
