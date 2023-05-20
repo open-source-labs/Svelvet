@@ -1,14 +1,13 @@
 <script lang='ts'>
    import { Node, Svelvet, Anchor, Edge } from '$lib';
    import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
-   import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
+   import type { NodeConfig, CSSColorString, Direction, EdgeConfig} from '$lib/types';
    import CustomEdge from '../../example-components/CustomEdge.svelte';
 
    let defaultNodes: NodeConfig[] = [];
    let customNodes: NodeConfig[] = [];
    let anchors: any[] = [];
    let edges: any[] = [];
-   let customEdge: any;
    let dropped_in :boolean;
 
    // types for node creation
@@ -128,8 +127,8 @@
             //If edge props were given to create an achor, a custom edge has been created
             if(Object.keys(edgeProps).length) {
                 // Add edge props to edge array
-                edges.push({...edgeProps});
-                
+                edges.push({...edgeProps}); 
+                console.log(edges);              
             }
             
         } else {
@@ -275,7 +274,7 @@
     {#each customNodes as cNode, index}
         <Node {...cNode} drop="cursor">
             <Anchor {...anchors[index]} edge={Edge}>
-                <Edge {...edges[index]}></Edge>
+                 <!-- <Edge {...edges[index]}></Edge>   -->
             </Anchor>
         </Node>			
     {/each}
@@ -294,7 +293,7 @@
                 <div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>               
             </li>
             <li class='list-item'>
-                <label for='bgColor'>Background Color : </label>
+                <label for='bgColor'>Color : </label>
                 <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
             </li>
             <li class='list-item'>
@@ -371,7 +370,7 @@
         <h3>Anchors:</h3>
         <ul>
             <li class='list-item'>
-                <label for='anchorBgColor'>Background Color : </label>
+                <label for='anchorBgColor'>Color : </label>
                 <input id='anchorBgColor' class='colorWheel' type='color' bind:value={anchorBgColor}>
             </li>
             <li class='list-item'>
