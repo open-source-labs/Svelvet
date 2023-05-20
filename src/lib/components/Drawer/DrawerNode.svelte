@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import { Node } from '$lib';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
 
   const defaultNodes: NodeConfig[] = [];

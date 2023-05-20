@@ -142,6 +142,7 @@
 		<slot name="controls" slot="controls" />
 		<slot name="background" slot="background" />
 		<slot name="toggle" slot="toggle" />
+		<slot name="drawer" slot="drawer" />
 	</Graph>
 {:else}
 	<div

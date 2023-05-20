@@ -1,4 +1,46 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
+	import type { CSSColorString, Graph, Corner } from '$lib/types';
+  import type { Node } from '$lib/types';
+	import { calculateRelativeCursor } from '$lib/utils';
+  
+
+  let graph: Graph = getContext<Graph>('graph');
+
+  
+
+</script>
+
+
+<nav class ='drawerWrapper'>
+    <button>Node<button>    
+</nav>
+
+
+
+
+
+<style>
+
+.drawerWrapper{
+  position: absolute;
+  border-radius: 6px;
+  overflow: hidden;
+  left: 10px;
+  top: 10px;
+  /* box-shadow: var(--minimap-shadow, var(--default-minimap-shadow)); */
+  border: solid 1px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+</style>
+
+
+
+<!-- <script lang="ts">
 	import { Node, Svelvet } from '$lib';
 	import type { NodeConfig } from '$lib/types';
 	let dropZoneClass = 'inactive';
@@ -46,7 +88,7 @@
 		on:dragleave={onDragLeave}
 		on:drop={onDrop}
 	>
-	    <Svelvet height={800}  zoom={0.75} minimap controls>
+	    <Svelvet height={800}  zoom={0.75} minimap controls></Svelvet>
 	
 			{#each nodes as node (node.id)}
 				<Node {...node} drop="cursor" />
@@ -73,4 +115,4 @@
 			Red Square
 		</li>
 	</ul>
-</div>
+</div> -->

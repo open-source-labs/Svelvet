@@ -167,7 +167,7 @@
 	}
 
 	async function loadDrawer() {
-		drawerComponent = (await import ('$lib/components/Drawer/Drawer.svelte')).default;
+		drawerComponent = (await import ('$lib/components/Drawer/DrawerController.svelte')).default;
 	}
 
 	function updateGraphDimensions() {
