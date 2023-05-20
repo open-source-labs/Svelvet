@@ -1,10 +1,14 @@
 <script lang='ts'>
-   import { Node, Svelvet, Anchor} from '$lib';
+   import { Node, Svelvet, Anchor, Edge } from '$lib';
    import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
    import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
+   import CustomEdge from '../../example-components/CustomEdge.svelte';
 
-   let nodes: NodeConfig[] = [];
+   let defaultNodes: NodeConfig[] = [];
+   let customNodes: NodeConfig[] = [];
    let anchors: any[] = [];
+   let edges: any[] = [];
+   let customEdge: any;
    let dropped_in :boolean;
 
    // types for node creation
@@ -13,12 +17,16 @@
    let label: string | undefined;
    let width: number = 200;
    let height: number = 100;
+   let nodeDirection: string | undefined;
    let inputs: number | undefined;
    let outputs: number | undefined;
    let locked: boolean | undefined;
    let center: boolean | undefined;
    let rotation: number | undefined;
    let zIndex: number | undefined;
+   let TD: boolean | undefined;
+   let LR: boolean | undefined;
+   let useDefaults: boolean | undefined;
 
    // types for anchor creation
    let invisible: boolean | undefined;
@@ -29,22 +37,22 @@
    let direction: Direction | undefined;
    let dynamic: boolean | undefined;
    let anchorEdgeLabel: string | undefined;
-   let edgeColor: CSSColorString | undefined;
    let anchorLocked: boolean | undefined;
    let anchorBgColor: CSSColorString | undefined;
 
+
    //types for edge creation
-   let edgeWidth: number | undefined;
-   let edgeClick: () => void | null;
+   let edgeWidth: number | undefined; 
    let targetColor: CSSColorString | undefined;
    let color: CSSColorString | undefined;
-   let  straight: boolean | undefined;
+   let straight: boolean | undefined;
    let step: boolean | undefined;
    let cornerRadius: number | undefined;
    let animate: boolean | undefined;
    let edgeLabel: string | undefined;
    let labelColor: CSSColorString | undefined;
    let textColor: CSSColorString | undefined;
+   let edgeClick: () => void | null; // Stretch feature
 
 
 
@@ -83,29 +91,53 @@
         // Object that stores properties for the created node
         const nodeProps: any = {};
         // Array of property names and values for node
-        const nodePropNames: any[] = ['bgColor', 'borderColor','label', 'width', 'height', 'locked', 'center', 'inputs', 'outputs', 'rotation', 'zIndex'];
-        const nodePropsArray: any[] = [bgColor, borderColor, label, width, height, locked, center, inputs, outputs, rotation, zIndex];
+        const nodePropNames: any[] = ['bgColor', 'borderColor','label', 'width', 'height', 'locked', 'center', 'inputs', 'outputs', 'rotation', 'zIndex', 'TD', 'LR', 'useDefaults'];
+        const nodePropsArray: any[] = [bgColor, borderColor, label, width, height, locked, center, inputs, outputs, rotation, zIndex, TD, LR, useDefaults];
        // Adds props to object if they exist
         const addProp = (names: any, vals : any, nodeProps : any): any => {
             for (let i = 0; i < names.length; i++) {
                 if(vals[i]) nodeProps[names[i]] = vals[i];
             }
         }
+        
         // Add props to node if they exist 
         addProp(nodePropNames, nodePropsArray, nodeProps);
-        nodes = [...nodes, {...nodeProps}];
 
-        // Object that stores properties for the created anchor
+         // Object that stores properties for the created anchor
         const anchorProps: any = {};
         // Array of property names and values for anchor
-        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'direction', 'dynamic', 'edgeLabel', 'edgeColor', 'locked', 'bgColor'];
-        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, direction, dynamic, anchorEdgeLabel, edgeColor, anchorLocked, anchorBgColor];
+        const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'direction', 'locked', 'bgColor'];
+        const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
         // Adds props to anchor if they exist
         addProp(anchorPropNames, anchorPropsArray, anchorProps);
-        anchors = [...anchors, {...anchorProps}]
-        console.log(anchors)
+
+        // Objec that stores properties for the created edge
+        const edgeProps: any = {};
+        // Array of property names and values for edge
+        const edgePropsNames: any[] = ['width', 'targetColor', 'color', 'straight', 'step', 'cornerRadius', 'animate', 'label', 'labelColor', 'textColor'];
+        const edgePropsArray: any[] = [edgeWidth, targetColor, color, straight, step, cornerRadius, animate, edgeLabel, labelColor, textColor];
+        // Add props to edge if they exist
+        addProp(edgePropsNames, edgePropsArray, edgeProps);
+
+        // If anchor props were given to create an anchor, an anchor has been created
+        if (Object.keys(anchorProps).length) {
+            // Add custom node to array and push the custom props
+            customNodes = [...customNodes, {...nodeProps}]
+            anchors.push(anchorProps)
+
+            //If edge props were given to create an achor, a custom edge has been created
+            if(Object.keys(edgeProps).length) {
+                // Add edge props to edge array
+                edges.push({...edgeProps});
+                
+            }
+            
+        } else {
+            defaultNodes = [...defaultNodes, {...nodeProps}];
+        }
     }
-    // Button clicks for Nodes
+
+    // Button clicks for defaultNodes
     const handleNodeResetButtonClick = (e: any) => {
 		bgColor = undefined;
 	 	borderColor = undefined;
@@ -118,6 +150,9 @@
         center = undefined;
         rotation = undefined;
         zIndex = undefined;
+        TD = undefined;
+        LR = undefined;
+        useDefaults = undefined;
 	}
 
     const handleLockedButtonClick = (e: any) => {
@@ -127,6 +162,27 @@
 	const handleCenterButtonClick = (e: any) => {
 		center = e.target.checked;
 	}
+
+    const handleUseDefaultsButtonClick = (e: any) => {     
+            useDefaults = e.target.checked;
+          
+    }
+
+    const handleAnchorPositionButton = (e: any) => {
+        if (e.target.value == '') nodeDirection = undefined;
+        else {    
+            console.log(e.target.value);   
+            nodeDirection = e.target.value;
+            if (nodeDirection === 'LR') {
+                LR = true;
+                TD = false;
+            }
+            else {
+                TD = true;
+                LR = false;
+            }
+       }
+    }
     
     //Button Clicks for Anchors
     const handleAnchorLockedButtonClick = (e: any) => {
@@ -161,7 +217,7 @@
         if (e.target.value == '') direction = undefined;
         else {
             direction = e.target.value;
-        }
+       }
     }
 
     const handleAnchorResetButtonClick = (e: any) => {
@@ -173,7 +229,6 @@
         direction = undefined;
         dynamic = undefined;
         anchorEdgeLabel = undefined;
-        edgeColor = undefined;
         anchorLocked = undefined;
         anchorBgColor = undefined;
 	}
@@ -191,7 +246,6 @@
 
     const handleEdgeResetButtonClick = (e: any) => {
         edgeWidth = undefined;
-        //edgeClick: () => void | null;
         targetColor = undefined;
         color = undefined;
         straight = undefined;
@@ -201,9 +255,8 @@
         edgeLabel = undefined;
         labelColor = undefined;
         textColor = undefined;
-
+        //edgeClick: () => void | null;
     }
-    
 
 </script>
 
@@ -212,24 +265,34 @@
 	on:dragenter={handleDragEnter}
 	on:dragleave={handleDragLeave}
 	on:drop={handleDragDrop}   
-    on:dragover = {onDragOver}
->
-	<Svelvet height={600} zoom={0.75} minimap controls>
-		{#each nodes as node}
-			<Node {...node} drop="cursor">
-                {#each anchors as anchor}
-                    <Anchor {...anchor}></Anchor>
-                {/each}
-            </Node>			
-		{/each}
-        <ThemeToggle main=light alt=dark slot='toggle'/>
-	</Svelvet>
+    on:dragover = {onDragOver}>
+
+    
+<Svelvet height={600} zoom={0.70} minimap controls>
+    {#each defaultNodes as node}
+        <Node {...node} drop="cursor"/>		
+    {/each}
+    {#each customNodes as cNode, index}
+        <Node {...cNode} drop="cursor">
+            <Anchor {...anchors[index]}>
+                <!-- <Edge {...edges[index]}></Edge> -->
+            </Anchor>
+        </Node>			
+    {/each}
+    <ThemeToggle main=light alt=dark slot='toggle'/>
+</Svelvet>
+
+
 </div>
 
 
 <div id='drawerContainer'>
     <div id='nodeContainer'>
+        <h2>Nodes </h2>
         <ul>
+            <li class='list-item'>
+                <div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>               
+            </li>
             <li class='list-item'>
                 <label for='bgColor'>Background Color : </label>
                 <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
@@ -239,28 +302,46 @@
                 <input id='borderColor' class='colorWheel' type='color' bind:value={borderColor}>
             </li>
             <li class='list-item'>
+                <label for='useDefaults'>useDefaults: </label> 
+                <input id='useDefaults' type="checkbox" bind:value={useDefaults} on:change={handleUseDefaultsButtonClick}>
+            </li>
+            <li class='list-item'>
                 <label for='label'>Label : </label>
                 <input id='label' type="text" bind:value={label}>
             </li>
-            <li class="list-item">
+
+            <li class='list-item'>
                 <h4>Dimensions: </h4>
+            </li>
+            <li class="list-item">               
                 <label for='width'>Width:</label>
                     <input id='width' class='inputField' type='input' bind:value={width}>
                 <label for='height'>Height:</label> 
                     <input id='height' class='inputField' type='input' bind:value={height}>
             </li>
-            <li class="list-item">
+            <li class='list-item'>
                 <h4>Default Anchors: </h4>
+            </li>
+            <li class="list-item">
                 <label for="inputAnchor">Input Anchors: </label>
                 <input id='inputAnchor' class='inputField' type="number" bind:value={inputs}>
                 <label for="outputAnchor">Output Anchors: </label>
                 <input id='outputAnchor' class='inputField' type="number" bind:value={outputs}>
             </li>
+            <li class="list-item">
+					<label for='anchorPositon'>Anchor Position: </label>
+                    <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
+                        <option value=''>-</option>
+                        <option value='LR'>LR</option>
+                        <option value='TD'>TD</option>                        
+                    </select>					
+				</li>          
             <li class='list-item'>
-                <div class='nodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>
                 <button class ='nodeResetBtn btn' on:click|stopPropagation={handleNodeResetButtonClick}>Reset</button>
             </li>
-            <li>Additional Settings: </li>
+            <li class='list-item'>
+                <h4>Additional Settings:</h4>
+            </li>
             <li class='list-item'>
                 <label for='locked'>Locked: </label> 
                 <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
@@ -276,19 +357,22 @@
             <li class='list-item'>
                 <label for='zIndex'>zIndex:</label> 
                 <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
-            </li>
-            
+            </li>      
         </ul>
     </div>
-    <div id='anchorContainer'>
+    <div id='customContainer'>
+        <div id="customHeading">
+            <h2>Customize</h2>
+        </div>
+       <div id="innerContainer">
+    
+      <div id='anchorContainer'>
+        
+        <h3>Anchors:</h3>
         <ul>
             <li class='list-item'>
                 <label for='anchorBgColor'>Background Color : </label>
                 <input id='anchorBgColor' class='colorWheel' type='color' bind:value={anchorBgColor}>
-            </li>
-            <li class='list-item'>
-                <label for='edgeColor'>Edge Color : </label>
-                <input id='edgeColor' class='colorWheel' type='color' bind:value={edgeColor}>
             </li>
             <li class='list-item'>
                 <label for='invisible'>Invisible : </label> 
@@ -340,6 +424,7 @@
         </ul>
     </div>
     <div id="edgeContainer">
+        <h3>Edges:</h3>
         <ul>
             <li class='list-item'>
                 <label for='targetColor'>Target Color : </label>
@@ -387,46 +472,46 @@
             </li>
         </ul>
     </div>
+    </div>
+    </div>
 </div>
 
 
-
-   
-
-
-
-
-
 <style>
+
+    /* General Styling */
     #drawerContainer{
         display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
+        position: relative;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    #customHeading{
+        margin: auto;
+        display: block;
+        text-align: center;
+    }
+
+    #customContainer{
+        width: 60%;
+    }
+
+    #innerContainer{
+       display: flex;
+      
     }
 
     label {
         margin-right: 10px;
     }
 
-    /* nodeContainer Styling */
-    .nodes{
-        box-sizing: border-box;
-       
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px;
-        width: 100px;
-        border: 1px solid gray;
-        cursor: pointer;
-    }
     .list-item{
         display: flex;
         flex-direction: row;
         align-items: center;
         list-style: none;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
     .colorWheel{
         -webkit-appearance: none;
@@ -454,26 +539,56 @@
     }
 
     .btn {
-        width: 100px;
-       
+        width: 150px;
         color: aliceblue;
         padding: 5px;
-        margin-left: 10px;
+        margin: auto;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        
     }
+
+    /* nodeContainer Styling */
+    #nodeContainer{
+        width: 40%;
+        padding-right: 20px;
+        border-right: 1px solid gray;
+    }
+
+    #nodeContainer h2{
+        text-align: center;
+    }
+    .defaultNodes{
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: 100px;
+        border: 1px solid gray;
+        cursor: grab;
+    }
+    
     .nodeResetBtn{
         background-color: rgb(109, 109, 246);
     }
-    /* --------- */
+ 
     /* Anchor Styling  */
-
+    #anchorContainer{
+        width: 50%;
+        margin-left: 20px;
+        padding-right: 20px;
+        border-right: 1px solid gray;
+    }
     .anchorResetBtn{   
         background-color: rgb(236, 107, 118);   
     }
 
     /* Edge Styling  */
+    #edgeContainer{
+        margin-left: 20px;
+    }
     .edgeResetBtn{
         background-color: rgb(81, 122, 49);  
     }
