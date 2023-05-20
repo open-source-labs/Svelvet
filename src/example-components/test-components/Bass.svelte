@@ -5,14 +5,14 @@
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
 
 	type Inputs = {
-		degree: number;
+		data: number;
 	};
 
 	const initialData = {
-		degree: 180
+		data: 10
 	};
 	const inputs = generateInput(initialData);
-	const procesor = (inputs: Inputs) => inputs.degree;
+	const procesor = (inputs: Inputs) => inputs.data;
 	const output = generateOutput(inputs, procesor);
 </script>
 
@@ -21,12 +21,12 @@
 		<div class="node-body">
 			<Knob
 				fixed={0}
-				min={-20}
-				max={20}
-				step={5}
+				min={0}
+				max={300}
+				step={150}
 				minDegree={30}
 				maxDegree={330}
-				parameterStore={$inputs.degree}
+				parameterStore={$inputs.data}
 			/>
 		</div>
 	</NodeWrapper>

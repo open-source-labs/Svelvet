@@ -5,18 +5,18 @@
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
 
 	type Inputs = {
-		degree: number;
+		data: number;
 	};
 
 	const initialData = {
-		degree: 180
+		data: 10
 	};
 	const inputs = generateInput(initialData);
-	const procesor = (inputs: Inputs) => inputs.degree;
+	const procesor = (inputs: Inputs) => inputs.data;
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 110, y: 400 }} let:selected>
+<Node useDefaults rotation={0} position={{ x: 110, y: 400 }} let:selected>
 	<NodeWrapper title="Treble" outputStore={output} key="treble">
 		<div class="node-body">
 			<Knob
@@ -26,7 +26,7 @@
 				step={5}
 				minDegree={30}
 				maxDegree={330}
-				parameterStore={$inputs.degree}
+				parameterStore={$inputs.data}
 			/>
 		</div>
 	</NodeWrapper>

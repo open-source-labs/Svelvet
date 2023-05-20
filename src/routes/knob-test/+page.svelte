@@ -9,6 +9,7 @@
 	import Bass from '../../example-components/test-components/Bass.svelte';
 	import Treble from '../../example-components/test-components/Treble.svelte';
 	import Audio from '../../example-components/test-components/Audio.svelte';
+	import Scale from '../../example-components/test-components/Scale.svelte';
 
 	type Inputs = {
 		degree: number;
@@ -17,9 +18,10 @@
 
 <body>
 	<Svelvet>
+		<!-- <Scale /> -->
 		<Volume />
-		<!-- <Treble /> -->
-		<!-- <Bass /> -->
+		<Treble />
+		<Bass />
 		<Output />
 		<Audio />
 		<ThemeToggle main="light" alt="dark" slot="toggle" />

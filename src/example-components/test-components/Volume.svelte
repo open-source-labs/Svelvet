@@ -9,7 +9,7 @@
 	};
 
 	const initialData = {
-		data: 50
+		data: 1
 	};
 	const inputs = generateInput(initialData);
 	const procesor = (inputs: Inputs) => inputs.data;
@@ -23,7 +23,7 @@
 				fixed={0}
 				min={0}
 				max={100}
-				step={2}
+				step={5}
 				minDegree={30}
 				maxDegree={330}
 				knobValueColor={'#666565'}
