@@ -9,24 +9,23 @@
 	};
 
 	const initialData = {
-		data: 1
+		data: 10
 	};
 	const inputs = generateInput(initialData);
 	const procesor = (inputs: Inputs) => inputs.data;
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 110, y: 700 }} let:selected>
-	<NodeWrapper title="Volume" outputStore={output} key="volume">
+<Node useDefaults rotation={0} position={{ x: 110, y: 400 }} let:selected>
+	<NodeWrapper title="Treble" outputStore={output} key="treble">
 		<div class="node-body">
 			<Knob
 				fixed={0}
-				min={0}
-				max={100}
+				min={-20}
+				max={20}
 				step={5}
 				minDegree={30}
 				maxDegree={330}
-				knobValueColor={'#666565'}
 				parameterStore={$inputs.data}
 			/>
 		</div>

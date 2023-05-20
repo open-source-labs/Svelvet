@@ -7,28 +7,84 @@
 	import type { CSSColorString } from '$lib/types';
 	import { writable } from 'svelte/store';
 	import { calculateRelativeCursor } from '$lib/utils';
+	import { error } from '@sveltejs/kit';
 
 	// Props
-	// users should be able to customize: min, max, minDegree, maxDegree, step, subdivision, fixed
-	// export let parameterStore: CustomWritable<number> ;
+	/**
+	 * @default 60
+	 * @description Minimum angle allowed when interacting with the knob rotation.
+	 */
 	export let minDegree = 60;
+	/**
+	 * @default 300
+	 * @description Maximum angle allowed when interacting with the knob rotation.
+	 */
 	export let maxDegree = 300;
-	// export let curDegree = minDegree; // current angle in relation to vertical y bottom
+	/**
+	 * @default 'No default value'
+	 * @description This is the store that contains the output value of the knob.
+	 * The initial value should be passed as a property when creating the component.
+	 */
 	export let parameterStore: CustomWritable<number>;
+	/**
+	 * @default 0
+	 * @description Minimum allowable output value of parameterStore.
+	 */
 	export let min = 0;
+	/**
+	 * @default 100
+	 * @description Maximum allowable output value of parameterStore.
+	 */
 	export let max = 100;
+	/**
+	 * @default 0
+	 * @description Recommendation to set step to a value that is a factor of the set the range (max - min).
+	 */
 	export let step = 1;
+	/**
+	 * @default 'Value'
+	 * @description Label for the knob compoent.
+	 */
 	export let label = 'Value';
 	/**
-	 * @default "2"
-	 * @description Precision in decimal places.
-	 * for output anchors or anchors that have not specified an input/output prop.
+	 * @default 0
+	 * @description Precision in decimal places for the output value.
 	 */
 	export let fixed = 0;
+	/**
+	 * @default null
+	 * @description Text color.
+	 */
 	export let fontColor: CSSColorString | null = null;
-	// export let barColor: CSSColorString | null = null; // TODO: stretch feature: customize background
-	// export let bgColor: CSSColorString | null = null;
+	/**
+	 * @default 'lightblue'
+	 * @description Knob background color.
+	 */
+	export let knobColor: CSSColorString | null = 'lightblue';
+	/**
+	 * @default 'white'
+	 * @description Color for the output value displayed at the center of the knob.
+	 */
+	export let knobValueColor: CSSColorString | null = 'white';
+	/**
+	 * @default '#666565'
+	 * @description Color for indicator symbol displaying the current rotational position of the knob.
+	 */
+	export let indicatorColor: CSSColorString | null = '#666565';
 
+	console.log('0', $parameterStore);
+	$parameterStore =
+		$parameterStore < min
+			? min
+			: $parameterStore > max
+			? max
+			: Math.floor(($parameterStore - min) / step) * step + min;
+
+	console.log('1', $parameterStore);
+	$: currentDegree =
+		((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree) + minDegree;
+
+	console.log('2', $parameterStore);
 	$: connected = typeof parameterStore.set !== 'function';
 
 	let graph = getContext<Graph>('graph');
@@ -57,7 +113,7 @@
 
 	// when the knob is rotating
 	$: if (rotating) {
-		$parameterStore = calculateNewAngle($cursor.x, $cursor.y); // need to pass these arguments to trigger updates
+		calculateNewAngle($cursor.x, $cursor.y); // need to pass these arguments to trigger updates
 	}
 
 	// Begin rotating on mousedown
@@ -106,67 +162,35 @@
 	// Update the value based on the direction and increment
 	function updateValue(delta: number, increment = ((maxDegree - minDegree) / (max - min)) * step) {
 		// ADD SETTIMEOUT FOR SCROLL TO SLOW DOWN KNOB INPUT UPDATES
-		$parameterStore = roundNum(
-			Math.max(minDegree, Math.min($parameterStore + delta * increment, maxDegree)),
+		currentDegree = roundNum(
+			Math.max(minDegree, Math.min(currentDegree + delta * increment, maxDegree)),
 			3
 		);
+		$parameterStore =
+			((clamp(currentDegree) - minDegree) / (maxDegree - minDegree)) * (max - min) + min;
 	}
 
-	// $: knobValue = ((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree); //why do we need to cast as number????
 	// $: angle = `rotate(${minDegree + knobValue}deg`;
-	$: curAngle = `rotate(${$parameterStore}deg`;
-	$: curValue = ($parameterStore / (maxDegree - minDegree)) * (max - min) + min;
+	$: curAngle = `rotate(${currentDegree}deg`;
 
 	function clamp(num: number): number {
 		const increment = ((maxDegree - minDegree) / (max - min)) * step;
 		const degreeRoundToStep = Math.round((num - minDegree) / increment) * increment + minDegree;
 		const degree = Math.min(Math.max(degreeRoundToStep, minDegree), maxDegree);
+		//this is a band-aid solution
+		//currentDegree should be updating when parameterStore updates within calculateNewAngle
+		currentDegree = degree;
 		return degree;
 	}
 
-	// get the coordiates of the center of the knob
-	function getElementCenter(): [number, number] {
-		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
-		const e = { clientX: $cursor.x, clientY: $cursor.y };
-		//X and Y will be the position relative to the target element
-		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
-		console.log('calculateRelativeCursor result', x, y);
-		console.log('scale: ', $scale, 'width:', width, 'height: ', height);
-		// console.log('zoom value: ', Graph.ZOOM_INCREMENT);
-		// console.log('width,', width, 'height:', height);
-		// console.log('left,', left, 'top:', top);
-		// console.log('center: ', [left + width / 2, top + height / 2]);
-
-		return [left + width / 2, top + height / 2];
-	}
-
 	// need to pass cursorX and cursorY to trigger updates
-	function calculateNewAngle(cursorX: number, cursorY: number): number {
+	function calculateNewAngle(cursorX: number, cursorY: number): void {
 		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
 		const e = { clientX: cursorX, clientY: cursorY };
 		// X and Y are the position relative to the target element's left and top
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
 		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
-		// console.log(relativeX, relativeY);
-		console.log('click');
-		console.log('my part', relativeX, relativeY);
-		console.log('calculateRelativeCursor result', x, y);
-		console.log('cursorAbsolute', cursorX, cursorY);
-		console.log(
-			'scale: ',
-			$scale,
-			'width:',
-			width,
-			'height: ',
-			height,
-			'top',
-			top,
-			'left',
-			left,
-			'Transilation: ',
-			$translation
-		);
 
 		let angle =
 			relativeX > 0 && relativeY > 0
@@ -177,28 +201,12 @@
 				? 270 + Math.atan(-relativeY / relativeX) * (180 / Math.PI)
 				: relativeX < 0 && relativeY < 0
 				? 90 - Math.atan(-relativeY / -relativeX) * (180 / Math.PI)
-				: $parameterStore;
-		return clamp(angle);
-	}
-	// function calculateNewAngle(
-	// 	[cursorX, cursorY]: [number, number],
-	// 	[centerX, centerY]: [number, number]
-	// ): number {
-	// 	const x = cursorX - centerX;
-	// 	const y = centerY - cursorY;
+				: currentDegree;
+		// caculate the new parameterstore based on clamp(angle)
 
-	// 	let angle =
-	// 		x > 0 && y > 0
-	// 			? 270 - Math.atan(y / x) * (180 / Math.PI)
-	// 			: x < 0 && y > 0
-	// 			? Math.atan(y / -x) * (180 / Math.PI) + 90
-	// 			: x > 0 && y < 0
-	// 			? 270 + Math.atan(-y / x) * (180 / Math.PI)
-	// 			: x < 0 && y < 0
-	// 			? 90 - Math.atan(-y / -x) * (180 / Math.PI)
-	// 			: $parameterStore;
-	// 	return clamp(angle);
-	// }
+		$parameterStore = ((clamp(angle) - minDegree) / (maxDegree - minDegree)) * (max - min) + min;
+		// return clamp(angle);
+	}
 </script>
 
 {#if !connected}
@@ -211,6 +219,7 @@
 				id="knob"
 				class="knob"
 				aria-label="knob component"
+				style:background={knobColor}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY)); // FIXME:
 				}}
@@ -227,20 +236,17 @@
 				use:rotatable
 				bind:this={knobElement}
 			/>
-			<div class="indicator" />
+			<div class="indicator" style:background={indicatorColor} />
 		</div>
-		<div class="knob-value">
-			{((($parameterStore - minDegree) / (maxDegree - minDegree)) * (max - min) + min).toFixed(
-				fixed
-			)}
-			<!-- {$parameterStore.toFixed(fixed)} -->
+		<div class="knob-value" style:color={knobValueColor}>
+			{$parameterStore.toFixed(fixed)}
 		</div>
 	</div>
 {:else}
 	<div class="wrapper connected">
 		<div class="knob connected" style:--percentage="10%" aria-label={label}>
 			<p>{label}</p>
-			<p>{$parameterStore}</p>
+			<p>{currentDegree}</p>
 		</div>
 	</div>
 {/if}
@@ -254,8 +260,8 @@
 		gap: 0.5rem;
 		justify-content: center;
 		align-items: center;
-		height: 11rem;
-		width: 11rem;
+		height: 7rem;
+		width: 7rem;
 		/* cursor: ew-resize; */
 		/* border: 1px solid gold; */
 	}
@@ -267,13 +273,12 @@
 	.knob {
 		display: flex;
 		border-radius: 50%;
-		width: 10rem;
-		height: 10rem;
+		width: 7rem;
+		height: 7rem;
 		pointer-events: auto;
 		cursor: pointer;
 		padding: 0.25rem;
-		box-shadow: 0 0 2px 1px rgb(152, 214, 235);
-		background-color: lightblue;
+		/* background-color: lightblue; */
 		/* border: 1px solid purple; */
 	}
 
@@ -295,7 +300,7 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, 50%);
-		font-size: 3em;
+		font-size: 2.5em;
 		color: white;
 		z-index: 100;
 	}
