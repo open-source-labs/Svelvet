@@ -1,7 +1,12 @@
-<script lang='ts'>
+<script context='module' lang='ts'>
   import { Node } from '$lib';
+  import { writable } from 'svelte/store';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
+	import { set_svg_attributes } from 'svelte/internal';
+
+  // External stores
+  export const defaultNodes = writable<Array<any>>([]);
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -27,6 +32,10 @@
         e.dataTransfer.dropEffect = "move"; 
   }
 
+  const handleDragEnd = (e: any) => {
+    dropped_in = false;
+  }
+
   const handleDragDrop = (e: any) => {
     e.preventDefault();
     const moveEvent = new MouseEvent('mousemove', {
@@ -50,6 +59,7 @@
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
       // Add to store here
+      defaultNodes.update(nodes => [...nodes, nodeProps])
     }
   }
 
@@ -102,10 +112,9 @@
 
 </script>
 
-<div id='nodeContainer'>
+<div id='nodeContainer' >
   <h2>Nodes </h2>
   <ul>
-
       <li class='list-item'>
           <label for='bgColor'>Background Color : </label>
           <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
