@@ -7,16 +7,16 @@
 	
 </script>
 
-<Drawer>
-	<Svelte>
-		{...nodes}
-		{...customNodes}
-	</Svelte>
-</Drawer>
+<body>
+	<div dropzone knob>
+		<Svelvet height drawer>
+	</div>
+</body>
 
 
-
-
+<Svelvet slot='drawer'>
+	<slot></slot>
+</Svelvet>
 
 <style>
 	body {
