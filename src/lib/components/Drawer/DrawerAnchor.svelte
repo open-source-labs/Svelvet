@@ -19,44 +19,143 @@
   let anchorLocked: boolean | undefined;
   let anchorBgColor: CSSColorString | undefined;
 
+  let dropped_in: boolean;
+
   // Drag and drop functionality
   const handleDragStart = (e: any)  => {
-        e.dataTransfer.dropEffect = "move"; 
+    e.dataTransfer.dropEffect = "move"; 
+  }
+
+  const handleDragDrop = (e: any) => {
+    e.preventDefault();
+    const moveEvent = new MouseEvent('mousemove', {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      bubbles: true
+    });
+
+    e.target.dispatchEvent(moveEvent);
+    dropped_in = true;
+      
+    // Object that stores properties for the created anchor
+    const anchorProps: any = {};
+    // Array of property names and values for anchor
+    const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'direction', 'locked', 'bgColor'];
+    const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
+    // Adds props to anchor if they exist
+    addProps(anchorPropNames, anchorPropsArray, anchorProps);
+
+    // If props were created add anchorProps object to store
+    if (Object.keys(anchorProps).length) {
+      // Add to store here
+    }
+  }
+
+  //Button Clicks for Anchors
+  const handleAnchorLockedButtonClick = (e: any) => {
+		anchorLocked = e.target.checked;
+	}
+
+	const handleInvisibleButtonClick = (e: any) => {
+		invisible = e.target.checked;
+	}
+
+  const handleNodeConnectButtonClick = (e: any) => {
+		nodeConnect = e.target.checked;
+	}
+
+  const handleInputButtonClick = (e: any) => {
+		input = e.target.checked;
+	}
+    
+  const handleOutputButtonClick = (e: any) => {
+		output = e.target.checked;
+	}
+
+  const handleMultipleButtonClick = (e: any) => {
+		multiple = e.target.checked;
+	}
+
+  const handleDynamicButtonClick = (e: any) => {
+    dynamic = e.target.checked;
+  }
+
+    const handleDirectionButtonClick = (e: any) => {
+        if (e.target.value == '') direction = undefined;
+        else {
+            direction = e.target.value;
+       }
     }
 
-    const handleDragDrop = (e: any) => {
-      e.preventDefault();
-      const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		e.target.dispatchEvent(moveEvent);
-        dropped_in = true;
-        
-        // Object that stores properties for the created anchor
-      const anchorProps: any = {};
-      // Array of property names and values for anchor
-      const anchorPropNames: any[] = ['invisible', 'nodeConnect', 'input', 'output', 'multiple', 'dynamic', 'edgeLabel', 'direction', 'locked', 'bgColor'];
-      const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
-      // Adds props to anchor if they exist
-      addProps(anchorPropNames, anchorPropsArray, anchorProps);
+    const handleAnchorResetButtonClick = (e: any) => {
+        invisible = undefined;
+        nodeConnect= undefined;
+        input = undefined;
+        output = undefined;
+        multiple = undefined;
+        direction = undefined;
+        dynamic = undefined;
+        anchorEdgeLabel = undefined;
+        anchorLocked = undefined;
+        anchorBgColor = undefined;
+	}
 
-      // If anchor props were given to create an anchor, an anchor has been created
-      if (Object.keys(anchorProps).length) {
-          // Add custom node to array and push the custom props
-          customNodes = [...customNodes, {...nodeProps}]
-          anchors.push(anchorProps)
-
-          //If edge props were given to create an achor, a custom edge has been created
-          if(Object.keys(edgeProps).length) {
-              // Add edge props to edge array
-              edges.push({...edgeProps});
-              
-          }
-          
-      } else {
-          defaultNodes = [...defaultNodes, {...nodeProps}];
-      }
-    }
 </script>
+
+<div id='anchorContainer'>
+  
+  <h3>Anchors:</h3>
+  <ul>
+      <li class='list-item'>
+          <label for='anchorBgColor'>Background Color : </label>
+          <input id='anchorBgColor' class='colorWheel' type='color' bind:value={anchorBgColor}>
+      </li>
+      <li class='list-item'>
+          <label for='invisible'>Invisible : </label> 
+          <input id='invisible' type="checkbox" bind:value={invisible} on:change={handleInvisibleButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='nodeConnect'>Node Connect: </label>
+          <input id='nodeConnect' type="checkbox" bind:value={nodeConnect} on:change={handleNodeConnectButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='input'>Input : </label> 
+          <input id='input' type="checkbox" bind:value={input} on:change={handleInputButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='output'>Output: </label>
+          <input id='output' type="checkbox" bind:value={output} on:change={handleOutputButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='multiple'>Multiple: </label>
+          <input id='multiple' type="checkbox" bind:value={multiple} on:change={handleMultipleButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='direction'>Direction: </label>
+          <select id='direction' bind:value={direction} on:change={handleDirectionButtonClick}>
+              <option value =''>-</option>
+              <option value ='north'>North</option>
+              <option value ='south'>South</option>
+              <option value ='east'>East</option>
+              <option value ='west'>West</option>
+              <option value ='self'>Self</option>
+          </select>                
+      </li>
+      <li class='list-item'>
+          <label for='dynamic'>Dynamic: </label>
+          <input id='dynamic' type="checkbox" bind:value={dynamic} on:change={handleDynamicButtonClick}>
+      </li>
+      <li class='list-item'>
+          <label for='anchorEdgeLabel'>Edge Label : </label>
+          <input id='anchorEdgeLabel' type="text" bind:value={anchorEdgeLabel}>
+      </li>
+      
+      <li class='list-item'>
+          <label for='anchorLocked'>Locked : </label>
+          <input id='anchorLocked' type="checkbox" bind:value={anchorLocked} on:change={handleAnchorLockedButtonClick}>
+      </li>
+      <li class='list-item'>
+          <button class ='anchorResetBtn btn' on:click|stopPropagation={handleAnchorResetButtonClick}>Reset</button>
+      </li>
+  </ul>
+</div>

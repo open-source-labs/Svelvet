@@ -1,118 +1,82 @@
-<script lang="ts">
-  import { getContext } from 'svelte';
-	import type { CSSColorString, Graph, Corner } from '$lib/types';
-  import type { Node } from '$lib/types';
-	import { calculateRelativeCursor } from '$lib/utils';
-  
+<script context='module' lang="ts">
+  import {onMount} from 'svelte';
+ 	import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
+	import DrawerNode from './DrawerNode.svelte';
+	import DrawerAnchor from './DrawerAnchor.svelte';
+	import DrawerEdge from './DrawerEdge.svelte';
 
-  let graph: Graph = getContext<Graph>('graph');
+  // import { createEventDispatcher } from 'svelte';
+  // const dispatch = createEventDispatcher();
 
-  
+	let defaultNodes: NodeConfig[] = [];
+  let customNodes: NodeConfig[] = [];
+  let anchors: any[] = [];
+  let edges: any[] = [];
+  let customEdge: any;
+  let dropped_in :boolean;
+  let nav: HTMLElement;
+
+	const handleDragStart = (e: any)  => {
+    e.dataTransfer.dropEffect = "move";
+  }
+
+	const handleDragEnd = (e: any) => {
+    dropped_in = false;
+  }
+
+   const openDrawer = (e: any) => {
+    console.log('open btn clicked');
+   nav.style.backgroundColor = 'red';
+  }
+
+  const closeDrawer = () => {
+    nav.style.width = '0px';
+  }
+
+ 
 
 </script>
 
+<div>
+ 
+	<nav id ='drawerWrapper' bind:this={nav} >
+    <button class='openbtn' on:click={openDrawer}>Open Drawer</button>
+    <button class='closebtn' on:click={closeDrawer}>x</button>   
+		<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} on:dragend={handleDragEnd}> Node </div>
+			<DrawerNode></DrawerNode>
+			<!-- <DrawerAnchor></DrawerAnchor>
+			<DrawerEdge></DrawerEdge> -->
+	</nav>
+  <!-- <button class='openbtn' on:click={openDrawer}>Open Drawer</button> -->
+</div>
 
-<nav class ='drawerWrapper'>
-    <button>Node<button>    
-</nav>
-
-
-
-
-
+ 
 <style>
 
-.drawerWrapper{
+#drawerWrapper{
   position: absolute;
+  width: 250px;
+  min-height: 600px;
   border-radius: 6px;
-  overflow: hidden;
+  overflow-y: auto;
   left: 10px;
-  top: 10px;
+  top: 20px;
   /* box-shadow: var(--minimap-shadow, var(--default-minimap-shadow)); */
   border: solid 1px;
   z-index: 10;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
 }
 
 </style>
 
-
-
-<!-- <script lang="ts">
-	import { Node, Svelvet } from '$lib';
-	import type { NodeConfig } from '$lib/types';
-	let dropZoneClass = 'inactive';
-	let NODE_DATA_TYPE = 'node';
-	let nodes: NodeConfig[] = [];
-	const onDragStart = (e: any) => {
-		e.dataTransfer.setData(NODE_DATA_TYPE, e.target.dataset.value);
-	};
-
-	const onDragOver = (e: Event) => {
-		e.preventDefault();
-		return false;
-	};
-
-	const onDragEnter = (e: Event) => {
-		dropZoneClass = 'active';
-	};
-
-	const onDragLeave = (e: Event) => {
-		dropZoneClass = 'inactive';
-	};
-
-	const onDrop = (e: any) => {
-		e.stopPropagation();
-		//Issue click event
-		const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		e.target.dispatchEvent(moveEvent);
-
-		dropZoneClass = 'inactive';
-		const nodeType: string = e.dataTransfer.getData(NODE_DATA_TYPE);
-		nodes = [...nodes, { id: nodes.length }];
-		return false;
-	};
-</script>
-
-
-	<div
-		class={dropZoneClass}
-		on:dragover={onDragOver}
-		on:dragenter={onDragEnter}
-		on:dragleave={onDragLeave}
-		on:drop={onDrop}
-	>
-	    <Svelvet height={800}  zoom={0.75} minimap controls></Svelvet>
-	
-			{#each nodes as node (node.id)}
-				<Node {...node} drop="cursor" />
-			{/each}
-		</Svelvet>	
-</div>
-	
-	
-
-
-<div class="toolbox">
-	<h3 class="title">Toolbox</h3>
-	<ul class="toolbox-items">
-		<li class="list-item" draggable="true" data-value="green" on:dragstart={onDragStart}>
-			<div class="icon green" />
-			Green Square
-		</li>
-		<li class="list-item" draggable="true" data-value="blue" on:dragstart={onDragStart}>
-			<div class="icon blue" />
-			Blue Square
-		</li>
-		<li class="list-item" draggable="true" data-value="red" on:dragstart={onDragStart}>
-			<div class="icon red" />
-			Red Square
-		</li>
-	</ul>
-</div> -->
