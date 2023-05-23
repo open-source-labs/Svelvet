@@ -7,16 +7,13 @@
 	
 </script>
 
-<body>
-	<div dropzone knob>
-		<Svelvet height drawer>
-	</div>
-</body>
+<Drawer>
+	<Svelvet drawer height={800}>
+
+	</Svelvet>
+</Drawer>
 
 
-<Svelvet slot='drawer'>
-	<slot></slot>
-</Svelvet>
 
 <style>
 	body {
