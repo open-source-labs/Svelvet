@@ -1,7 +1,11 @@
-<script lang='ts'>
-  import { Edge } from '$lib';
-  import type { NodeConfig, CSSColorString} from '$lib/types'; 
+<script context='module' lang='ts'>
+  import { writable } from 'svelte/store';
+  import type { CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
+  import { Edge } from '$lib';
+
+  // External Stores
+  const edgePropsStore = writable<Array<any>>([]);
 
   //types for edge creation
   let edgeWidth: number | undefined; 
@@ -16,23 +20,8 @@
   let textColor: CSSColorString | undefined;
   let edgeClick: () => void | null; // Stretch feature
 
-  let dropped_in: boolean;
-
-  // Drag and drop functionality
-  const handleDragStart = (e: any) => {
-    e.dataTransfer.dropEffect = "move"; 
-  }
-
-  const handleDragDrop = (e: any) => {
-    e.preventDefault();
-    const moveEvent = new MouseEvent('mousemove', {
-      clientX: e.clientX,
-      clientY: e.clientY,
-      bubbles: true
-    });
-
-    e.target.dispatchEvent(moveEvent);
-    dropped_in = true;
+  // Creates props and adds to store, returns true if anchor was created
+  export const createEdgeProps = () => {
       
     // Object that stores properties for the created edge
     const edgeProps: any = {};
@@ -45,9 +34,34 @@
 
     // If props were created add edgeProps object to store
     if (Object.keys(edgeProps).length) {
-      // Add to store here
+      edgePropsStore.update(edges => [edges, {...edgeProps}])
     }
   }
+
+  const handleStraightButtonClick = (e: any) => {
+    straight = e.target.checked;
+  }
+  const handleStepButtonClick = (e: any) => {
+    step = e.target.checked;
+  }
+  const handleAnimateButtonClick = (e: any) => {
+    animate = e.target.checked;
+  }
+
+  const handleEdgeResetButtonClick = (e: any) => {
+    edgeWidth = undefined;
+    targetColor = undefined;
+    color = undefined;
+    straight = undefined;
+    step = undefined;
+    cornerRadius = undefined;
+    animate = undefined;
+    edgeLabel = undefined;
+    labelColor = undefined;
+    textColor = undefined;
+    //edgeClick: () => void | null;
+  }
+
 </script>
 
 <div id="edgeContainer">
