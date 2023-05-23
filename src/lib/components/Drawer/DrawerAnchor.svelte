@@ -1,11 +1,10 @@
-<script lang='ts'>
-  import { Anchor } from '$lib';
+<script context='module' lang='ts'>
+  import { writable } from 'svelte/store';
+  import type { CSSColorString, Direction} from '$lib/types';
   import { addProps } from '$lib/utils';
-  import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
 
-  // Array of current anchors and nodes
-  let anchors: any[] = [];
-  let customNodes: NodeConfig[] = [];
+  // External stores
+  export const anchorPropsStore = writable<Array<any>>([]);
 
   // types for anchor creation
   let invisible: boolean | undefined;
@@ -19,24 +18,8 @@
   let anchorLocked: boolean | undefined;
   let anchorBgColor: CSSColorString | undefined;
 
-  let dropped_in: boolean;
-
-  // Drag and drop functionality
-  const handleDragStart = (e: any)  => {
-    e.dataTransfer.dropEffect = "move"; 
-  }
-
-  const handleDragDrop = (e: any) => {
-    e.preventDefault();
-    const moveEvent = new MouseEvent('mousemove', {
-      clientX: e.clientX,
-      clientY: e.clientY,
-      bubbles: true
-    });
-
-    e.target.dispatchEvent(moveEvent);
-    dropped_in = true;
-      
+  // Creates props and adds to store, returns true if anchor was created
+  export const createAnchorProps = () => {
     // Object that stores properties for the created anchor
     const anchorProps: any = {};
     // Array of property names and values for anchor
@@ -44,11 +27,12 @@
     const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
     // Adds props to anchor if they exist
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
-
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
-      // Add to store here
+      anchorPropsStore.update(anchors => [...anchors, anchorProps])
+      return true;
     }
+    return false;
   }
 
   //Button Clicks for Anchors
@@ -80,24 +64,24 @@
     dynamic = e.target.checked;
   }
 
-    const handleDirectionButtonClick = (e: any) => {
-        if (e.target.value == '') direction = undefined;
-        else {
-            direction = e.target.value;
-       }
-    }
+  const handleDirectionButtonClick = (e: any) => {
+      if (e.target.value == '') direction = undefined;
+      else {
+          direction = e.target.value;
+      }
+  }
 
-    const handleAnchorResetButtonClick = (e: any) => {
-        invisible = undefined;
-        nodeConnect= undefined;
-        input = undefined;
-        output = undefined;
-        multiple = undefined;
-        direction = undefined;
-        dynamic = undefined;
-        anchorEdgeLabel = undefined;
-        anchorLocked = undefined;
-        anchorBgColor = undefined;
+  const handleAnchorResetButtonClick = (e: any) => {
+    invisible = undefined;
+    nodeConnect= undefined;
+    input = undefined;
+    output = undefined;
+    multiple = undefined;
+    direction = undefined;
+    dynamic = undefined;
+    anchorEdgeLabel = undefined;
+    anchorLocked = undefined;
+    anchorBgColor = undefined;
 	}
 
 </script>
