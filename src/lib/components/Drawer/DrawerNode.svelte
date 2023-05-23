@@ -4,7 +4,8 @@
   import { addProps } from '$lib/utils';
 
   // External stores
-  export const defaultNodeProps = writable<Array<NodeConfig>>([]);
+  export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
+  export const customNodePropsStore = writable<Array<NodeConfig>>([]);
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -23,8 +24,8 @@
   let LR: boolean | undefined;
   let useDefaults: boolean | undefined;
 
-  // Creates props and adds to store
-  export const createProps = () => {
+  // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
+  export const createNodeProps = (anchorCreated: boolean) => {
     // Object that stores properties for the created node
     const nodeProps: any = {};
     // Array of property names and values for node
@@ -36,7 +37,8 @@
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
-      defaultNodeProps.update(nodes => [...nodes, nodeProps])
+      if(!anchorCreated) defaultNodePropsStore.update(nodes => [...nodes, nodeProps])
+      else customNodePropsStore.update(nodes => [...nodes, nodeProps]) 
     }
   }
 
