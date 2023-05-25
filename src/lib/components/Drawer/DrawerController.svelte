@@ -5,21 +5,16 @@
 	import DrawerEdge from './DrawerEdge.svelte';
   import { createNodeProps } from './DrawerNode.svelte';
   import { createAnchorProps } from './DrawerAnchor.svelte'
-  import { anchorPropsStore } from './DrawerAnchor.svelte';
+  import { createEdgeProps } from './DrawerEdge.svelte';
 
-	let defaultNodes: NodeConfig[] = [];
-  let customNodes: NodeConfig[] = [];
-  let anchors: any[] = [];
-  let edges: any[] = [];
-  let customEdge: any;
-  let dropped_in :boolean;
   let nav: HTMLElement;
 
 	const handleDragStart = (e: any)  => {
     e.dataTransfer.dropEffect = "move";
   
-    // Create props for anchor if values were given
+    // Create props for anchor or edge if values were given
     const anchorCreated = createAnchorProps();
+    const edgeCreated = createEdgeProps();
     // Create props for node or custom node if anchor was created
     createNodeProps(anchorCreated);
   }
@@ -45,7 +40,7 @@
 		<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} > Node </div>
 			<DrawerNode></DrawerNode>
 			<DrawerAnchor></DrawerAnchor>
-			<!-- <DrawerEdge></DrawerEdge> -->
+			<DrawerEdge></DrawerEdge>
 	</nav>
   <!-- <button class='openbtn' on:click={openDrawer}>Open Drawer</button> -->
 </div>
