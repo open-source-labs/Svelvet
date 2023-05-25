@@ -1,29 +1,23 @@
-<script context='module' lang="ts">
-  import {onMount} from 'svelte';
+<script lang="ts">
  	import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
 	import DrawerNode from './DrawerNode.svelte';
 	import DrawerAnchor from './DrawerAnchor.svelte';
 	import DrawerEdge from './DrawerEdge.svelte';
+  import { createNodeProps } from './DrawerNode.svelte';
+  import { createAnchorProps } from './DrawerAnchor.svelte'
+  import { createEdgeProps } from './DrawerEdge.svelte';
 
-  // import { createEventDispatcher } from 'svelte';
-  // const dispatch = createEventDispatcher();
-
-  let defaultNodes: NodeConfig[] = [];
-  let customNodes: NodeConfig[] = [];
-  let anchors: any[] = [];
-  let edges: any[] = [];
-  let customEdge: any;
-  let dropped_in :boolean;
-  let isOpen: boolean = false;
   let nav: HTMLElement;
   let drawerBtn: HTMLElement;
 
 	const handleDragStart = (e: any)  => {
     e.dataTransfer.dropEffect = "move";
-  }
-
-	const handleDragEnd = (e: any) => {
-    dropped_in = false;
+  
+    // Create props for anchor or edge if values were given
+    const anchorCreated = createAnchorProps();
+    const edgeCreated = createEdgeProps();
+    // Create props for node or custom node if anchor was created
+    createNodeProps(anchorCreated);
   }
 
   const handleDrawer = (e: any) => {
@@ -40,6 +34,8 @@
     }
    
   } 
+
+
 
 </script>
 

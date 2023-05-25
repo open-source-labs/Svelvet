@@ -1,30 +1,23 @@
-<script context='module' lang='ts'>
+<script lang='ts'>
   import { Node, Svelvet, Anchor, Edge } from '$lib';
   import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
   import type { NodeConfig, CSSColorString } from '$lib/types';
-  import { addProps } from '$lib/utils';
-  import { defaultNodes } from './DrawerNode.svelte'
-	import DrawerNode from './DrawerNode.svelte';
-  
+  import { defaultNodePropsStore } from './DrawerNode.svelte'
+  import { customNodePropsStore } from './DrawerNode.svelte';
+  import { anchorPropsStore } from './DrawerAnchor.svelte';
+  import { edgePropsStore } from './DrawerEdge.svelte';
+
+	import Test from './Test.svelte';
+
+   
   // Array of default and custom nodes
-  // let defaultNodes: NodeConfig[] = [];
+  let defaultNodes: NodeConfig[] = [];
   let customNodes: NodeConfig[] = [];
   let anchors: any[] = [];
   let edges: any[] = [];
 
-  let dropped_in: boolean;
-
-  defaultNodes.subscribe(value => console.log(value))
-
-  // Store that will have all default nodes
-  // Store that will have all custom nodes
-  // Store that will have all anchors
-  // Store that will have all edges
   
-  // Bind defaultNodes to the default node store
-  // Bind customNodes to custom node store
-  // Bind anchors to anchor store
-  // bind edges to edges store
+  let dropped_in: boolean;
 
   // Drag and drop events
   const handleDragEnter = (e: any) => {
@@ -44,6 +37,21 @@
     return false;
   };
 
+  const handleDrop = (e: any) => {
+		e.stopPropagation();
+		//Issue click event
+		const moveEvent = new MouseEvent('mousemove', {
+			clientX: e.clientX,
+			clientY: e.clientY,
+			bubbles: true
+		});
+		e.target.dispatchEvent(moveEvent);
+
+    defaultNodes = $defaultNodePropsStore;
+    customNodes = $customNodePropsStore;
+    anchors = $anchorPropsStore;
+    edges = $edgePropsStore;
+	};
 
 </script>
 
@@ -52,20 +60,19 @@
   on:dragenter={handleDragEnter}
 	on:dragleave={handleDragLeave}
   on:dragover={onDragOver}
+  on:drop={handleDrop}
   > 
-	<!-- on:drop={handleDragDrop}    -->
-  
-    <Svelvet drawer height={600} zoom={0.70} minimap controls>
-        {#each $defaultNodes as node}
-            <Node {...node} drop="cursor"/>		
+    <Svelvet drawer height={1200} zoom={0.70} minimap controls edge={Test}>
+        {#each defaultNodes as node, index}
+            <Node {...node} drop="cursor"  />
         {/each}
-        <!-- {#each customNodes as cNode, index}
-            <Node {...cNode} drop="cursor">
+        {#each customNodes as customNode, index}
+            <Node {...customNode} drop="cursor">
                 <Anchor {...anchors[index]}>
-                    <Edge {...edges[index]}></Edge>
                 </Anchor>
             </Node>			
-        {/each} -->
+        {/each}
+        <slot></slot>
         <ThemeToggle main=light alt=dark slot='toggle'/>
     </Svelvet>
     

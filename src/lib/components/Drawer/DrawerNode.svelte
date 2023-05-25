@@ -1,12 +1,11 @@
 <script context='module' lang='ts'>
-  import { Node } from '$lib';
   import { writable } from 'svelte/store';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
-	import { set_svg_attributes } from 'svelte/internal';
 
   // External stores
-  export const defaultNodes = writable<Array<any>>([]);
+  export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
+  export const customNodePropsStore = writable<Array<NodeConfig>>([]);
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -25,28 +24,8 @@
   let LR: boolean | undefined;
   let useDefaults: boolean | undefined;
 
-  let dropped_in: boolean;
-
-  // Drag and drop functionality
-  const handleDragStart = (e: any) => {
-        e.dataTransfer.dropEffect = "move"; 
-  }
-
-  const handleDragEnd = (e: any) => {
-    dropped_in = false;
-  }
-
-  const handleDragDrop = (e: any) => {
-    e.preventDefault();
-    const moveEvent = new MouseEvent('mousemove', {
-      clientX: e.clientX,
-      clientY: e.clientY,
-      bubbles: true
-    });
-
-    e.target.dispatchEvent(moveEvent);
-    dropped_in = true;
-      
+  // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
+  export const createNodeProps = (anchorCreated: boolean) => {
     // Object that stores properties for the created node
     const nodeProps: any = {};
     // Array of property names and values for node
@@ -58,18 +37,18 @@
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
-      // Add to store here
-      defaultNodes.update(nodes => [...nodes, nodeProps])
+      if(!anchorCreated) defaultNodePropsStore.update(nodes => [...nodes, nodeProps])
+      else customNodePropsStore.update(nodes => [...nodes, nodeProps]) 
     }
   }
 
   // Button clicks for defaultNodes
   const handleNodeResetButtonClick = (e: any) => {
-		bgColor = undefined;
-	 	borderColor = undefined;
+	bgColor = undefined;
+	borderColor = undefined;
     label = undefined;
-		width = 200;
-		height = 100;
+	width = 200;
+	height = 100;
     inputs = undefined;
     outputs = undefined;
     locked = undefined;
@@ -79,15 +58,15 @@
     TD = undefined;
     LR = undefined;
     useDefaults = undefined;
-	}
+  }
 
   const handleLockedButtonClick = (e: any) => {
-		locked = e.target.checked;
-	}
+	locked = e.target.checked;
+  }
 
-	const handleCenterButtonClick = (e: any) => {
-		center = e.target.checked;
-	}
+  const handleCenterButtonClick = (e: any) => {
+	center = e.target.checked;
+  }
 
   const handleUseDefaultsButtonClick = (e: any) => {     
     useDefaults = e.target.checked;
@@ -112,7 +91,7 @@
 
 </script>
 
-<div id='nodeContainer' >
+<div id='nodeContainer'>
   <h2>Nodes </h2>
   <ul>
       <li class='list-item'>
