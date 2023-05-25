@@ -2,11 +2,14 @@
   import { Node, Svelvet, Anchor, Edge } from '$lib';
   import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
   import type { NodeConfig, CSSColorString } from '$lib/types';
-  import { addProps } from '$lib/utils';
   import { defaultNodePropsStore } from './DrawerNode.svelte'
   import { customNodePropsStore } from './DrawerNode.svelte';
   import { anchorPropsStore } from './DrawerAnchor.svelte';
-  
+  import { edgePropsStore } from './DrawerEdge.svelte';
+
+	import Test from './Test.svelte';
+
+   
   // Array of default and custom nodes
   let defaultNodes: NodeConfig[] = [];
   let customNodes: NodeConfig[] = [];
@@ -47,6 +50,7 @@
     defaultNodes = $defaultNodePropsStore;
     customNodes = $customNodePropsStore;
     anchors = $anchorPropsStore;
+    edges = $edgePropsStore;
 	};
 
 </script>
@@ -58,18 +62,13 @@
   on:dragover={onDragOver}
   on:drop={handleDrop}
   > 
-    <Svelvet drawer height={1200} zoom={0.70} minimap controls>
+    <Svelvet drawer height={1200} zoom={0.70} minimap controls edge={Test}>
         {#each defaultNodes as node, index}
-            <Node {...node} drop="cursor"> 
-            <!-- {#each anchors as anchor}
-              <Anchor {...anchor}></Anchor>
-            {/each} -->
-            </Node>		
+            <Node {...node} drop="cursor"  />
         {/each}
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
                 <Anchor {...anchors[index]}>
-                    <!-- <Edge {...edges[index]}></Edge> -->
                 </Anchor>
             </Node>			
         {/each}
