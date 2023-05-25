@@ -44,11 +44,11 @@
 
   // Button clicks for defaultNodes
   const handleNodeResetButtonClick = (e: any) => {
-		bgColor = undefined;
-	 	borderColor = undefined;
+	bgColor = undefined;
+	borderColor = undefined;
     label = undefined;
-		width = 200;
-		height = 100;
+	width = 200;
+	height = 100;
     inputs = undefined;
     outputs = undefined;
     locked = undefined;
@@ -58,15 +58,15 @@
     TD = undefined;
     LR = undefined;
     useDefaults = undefined;
-	}
+  }
 
   const handleLockedButtonClick = (e: any) => {
-		locked = e.target.checked;
-	}
+	locked = e.target.checked;
+  }
 
-	const handleCenterButtonClick = (e: any) => {
-		center = e.target.checked;
-	}
+  const handleCenterButtonClick = (e: any) => {
+	center = e.target.checked;
+  }
 
   const handleUseDefaultsButtonClick = (e: any) => {     
     useDefaults = e.target.checked;
