@@ -5,7 +5,7 @@
   import { Edge } from '$lib';
 
   // External Stores
-  const edgePropsStore = writable<Array<any>>([]);
+  export const edgePropsStore = writable<Array<any>>([]);
 
   //types for edge creation
   let edgeWidth: number | undefined; 
@@ -34,7 +34,9 @@
 
     // If props were created add edgeProps object to store
     if (Object.keys(edgeProps).length) {
-      edgePropsStore.update(edges => [edges, {...edgeProps}])
+      edgePropsStore.update(edges =>{
+        console.log(edges)
+         return [...edges, [Edge, edgeProps]]})
     }
   }
 
