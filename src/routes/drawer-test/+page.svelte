@@ -8,9 +8,7 @@
 </script>
 
 <Drawer>
-	<Svelvet drawer height={800}>
 
-	</Svelvet>
 </Drawer>
 
 
