@@ -6,6 +6,7 @@ import Node from './components/Node/Node.svelte';
 import Edge from './components/Edge/Edge.svelte';
 import Group from './components/Group/Group.svelte';
 import Knob from './components/data/Knob/Knob.svelte';
+import Drawer from './components/Drawer/Drawer.svelte';
 import Slider from './components/data/Slider/Slider.svelte';
 import RadioGroup from './components/data/RadioGroup/RadioGroup.svelte';
 import Background from './containers/Background/Background.svelte';
@@ -31,7 +32,8 @@ export {
 	ColorPicker,
 	generateInput,
 	generateOutput,
-	getViewportCenter
+	getViewportCenter,
+	Drawer
 };
 
 export * from './types';
