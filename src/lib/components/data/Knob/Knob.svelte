@@ -80,11 +80,9 @@
 			? max
 			: Math.floor(($parameterStore - min) / step) * step + min;
 
-	console.log('1', $parameterStore);
 	$: currentDegree =
 		((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree) + minDegree;
 
-	console.log('2', $parameterStore);
 	$: connected = typeof parameterStore.set !== 'function';
 
 	let graph = getContext<Graph>('graph');
@@ -173,7 +171,7 @@
 	// $: angle = `rotate(${minDegree + knobValue}deg`;
 	$: curAngle = `rotate(${currentDegree}deg`;
 
-	function clamp(num: number): number {
+	export function clamp(num: number): number {
 		const increment = ((maxDegree - minDegree) / (max - min)) * step;
 		const degreeRoundToStep = Math.round((num - minDegree) / increment) * increment + minDegree;
 		const degree = Math.min(Math.max(degreeRoundToStep, minDegree), maxDegree);
