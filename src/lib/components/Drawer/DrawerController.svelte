@@ -13,10 +13,10 @@
   let anchorContainerOpen: Boolean = false;
   let nav: HTMLElement;
   let drawerBtn: HTMLElement;
-  let drawerContents: HTMLElement;
   let nodeBtn: HTMLElement;
   let edgeBtn: HTMLElement;
   let anchorBtn: HTMLElement;
+  let drawerContents: HTMLElement;
   let nodeContainer: HTMLElement;
   let anchorContainer: HTMLElement;
   let edgeContainer: HTMLElement;
@@ -34,7 +34,7 @@
   const handleDrawer = (e: any) => {
     if(!isOpen){
       isOpen = true;
-      nav.style.height = '300px';
+      nav.style.height = 'fit-content';
       nav.style.width = '300px';   
       drawerBtn.innerHTML ='<span class="material-symbols-outlined">north_west</span>'
     } else {
@@ -42,47 +42,59 @@
       nav.style.height = '35px';
       nav.style.width = '35px';  
       drawerBtn.innerHTML ='<span class="material-symbols-outlined">south_east</span>'
+      anchorContainerOpen = false;
+      edgeContainerOpen = false;
+      nodeContainerOpen = false;
+      nodeContainer.style.display = 'block';
+      edgeContainer.style.display = 'none';
+      anchorContainer.style.display = 'none';
+      nodeBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
+      edgeBtn.style.borderBottom = 'none';
+      anchorBtn.style.borderBottom = 'none';
     }
    
   } 
 
   const handleNodeContainer = (e: any) => {
-      if(!anchorContainerOpen){
-        anchorContainerOpen = true;
-        nodeContainer.style.display = 'block';
-        nodeBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_up</span>'
-      } else {
+      if(!nodeContainerOpen){
+        nodeContainerOpen = true;
         anchorContainerOpen = false;
-        nodeContainer.style.display = 'none';
-        nodeBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_down</span>'
-
+        edgeContainerOpen = false;
+        nodeContainer.style.display = 'block';
+        edgeContainer.style.display = 'none';
+        anchorContainer.style.display = 'none';
+        nodeBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
+        edgeBtn.style.borderBottom = 'none';
+        anchorBtn.style.borderBottom = 'none';
       }
   }
   const handleEdgeContainer = (e: any) => {
     if(!edgeContainerOpen){
-        edgeContainerOpen = true;
+         edgeContainerOpen = true;
+         nodeContainerOpen = false;
+         anchorContainerOpen = false;
         edgeContainer.style.display = 'block';
-        edgeBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_up</span>'
-      } else {
-        edgeContainerOpen = false;
-        edgeContainer.style.display = 'none';
-        edgeBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_down</span>'
-
+        anchorContainer.style.display = 'none';
+        nodeContainer.style.display = 'none';
+        nodeBtn.style.borderBottom = 'none';
+        edgeBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
+        anchorBtn.style.borderBottom = 'none';
       }
   }
   const handleAnchorContainer = (e: any) => {
     if(!anchorContainerOpen){
         anchorContainerOpen = true;
+        edgeContainerOpen = false;
+        nodeContainerOpen = false;
         anchorContainer.style.display = 'block';
-        anchorBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_up</span>'
-      } else {
-        anchorContainerOpen = false;
-        anchorContainer.style.display = 'none';
-        anchorBtn.innerHTML = '<span class="material-symbols-outlined ">arrow_drop_down</span>'
-
+        edgeContainer.style.display = 'none';
+        nodeContainer.style.display = 'none';
+        nodeBtn.style.borderBottom = 'none';
+        edgeBtn.style.borderBottom = 'none';
+        anchorBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
+  
       }
   }
-
 
 </script>
 
@@ -93,49 +105,43 @@
     <button class='drawerBtn' bind:this = {drawerBtn} on:click={handleDrawer}>
       <span class="material-symbols-outlined">south_east</span>
     </button>  
-		<ul class='drawerContents' bind:this = {drawerContents}>
-      <!-- Handle Node Dropdown -->  			
-			<li class='list-item'>				
-          <div class='label'>Node
-            <button class='dropdown' bind:this = {nodeBtn} on:click={handleNodeContainer}>
-              <span class="material-symbols-outlined ">arrow_drop_down</span>
-            </button>
-          </div>
-          <hr/>
+		<ul class='drawerContents' bind:this = {drawerContents}>		
+			<li class='list-item'>	
+        <div class='menu'>
+          <button class='dropdown' bind:this = {nodeBtn} on:click={handleNodeContainer}>
+            Node
+           </button>
+           <button class='dropdown' bind:this = {edgeBtn} on:click={handleEdgeContainer}>
+             Edge
+           </button>
+           <button class='dropdown' bind:this = {anchorBtn} on:click={handleAnchorContainer}>
+             Anchor
+         </button>
+        </div>			          
+      </li>
+          <!-- Handle Node Dropdown -->  	
+      <li class='list-item'>
           <div class='propsContainer nodeContainer' bind:this={nodeContainer}>
             <DrawerNode></DrawerNode>
           </div>         
 			</li>
       <!-- Handle Edge Dropdown -->
       <li class='list-item'>
-				<div class= 'label'>Edge
-          <button class='dropdown' bind:this = {edgeBtn} on:click={handleEdgeContainer}>
-            <span class="material-symbols-outlined ">arrow_drop_down</span>
-          </button>
-       </div>
-        <hr/>
         <div class='propsContainer edgeContainer' bind:this = {edgeContainer}>          
           <DrawerEdge></DrawerEdge>
         </div>        
 			</li>	
       <!-- Handle Anchor Dropdown -->
-			<li class='list-item'>
-				<div class='label'>Anchor
-          <button class='dropdown'  bind:this = {anchorBtn} on:click={handleAnchorContainer}>
-            <span class="material-symbols-outlined ">arrow_drop_down</span>
-          </button>
-        </div>
-        <hr/>
+			<li class='list-item'>      
         <div class='propsContainer anchorContainer' bind:this = {anchorContainer}>
           <DrawerAnchor></DrawerAnchor>
         </div>      
 			</li>
-			
       <li class='list-item'>
 				<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart}> Node </div>
 			</li>
      	
-		</ul>
+    </ul>
     </slot>
 	</nav>  
 		
@@ -180,11 +186,10 @@
   overflow: hidden; 
   transition: 0.3s;
   padding: 0;
+  margin-top: 45px;
 
 }
-#drawerWrapper li:first-child{
-  margin-top: 10px;
-}
+
 .drawerBtn {
   position: fixed;
   display: flex;
@@ -197,25 +202,50 @@
   padding: 0.2rem 0;
   border: none;
   background: none;
-  color: inherit;
-  
+  color: inherit;  
 }
 
- .list-item .label{
-   display: flex;
-   justify-content: space-between;
-   padding-left: 10px;
-   margin-top: 10px;
-   margin-bottom: 0;
- }
- .list-item .label .dropdown{
-  padding: 0 10px;
-  font-size: 1.2rem; 
+hr{
+  margin-top: 0px;
+  width: 100%;
+}
+.menu{
+  display: flex;
+  justify-content: space-between;
+}
+
+ .menu .dropdown{ 
+  padding: 10px;
+  font-size: 1.0rem; 
+  flex-grow: 1;
   cursor: pointer;
   border: none;
-  background: none;
-  color: inherit;
-  
+  margin: 0;
+  color:  var(
+			--prop-drawer-button-text-color,
+			var(--drawer-button-text-color, var(--default-drawer-button-text-color))
+		);
+  background-color: var(
+			--prop-drawer-button-color,
+			var(--drawer-button-color, var(--default-drawer-button-color))
+		);
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px;   */
+ }
+/* 
+ .menu .dropdown:active{
+  background-color: var(
+			--prop-drawer-button-focus-color,
+			var(--drawer-button-focus-color, var(--default-drawer-button-focus-color))
+		);
+  color:  var(
+			--prop-drawer-button-focus-text-color,
+			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
+		);
+ } */
+
+ .menu .dropdown:first-child{
+  border-bottom: 3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)));
  }
 
   span {
@@ -225,7 +255,7 @@
 	}
   .defaultNodes{
     margin: auto;
-    margin-top: 5px;
+    margin-top: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -247,10 +277,11 @@
     width: fit-content;
     overflow: hidden;
     padding: 0 18px;
+    margin-top: 20px;
   }
 
   .nodeContainer{
-    display: none;
+    display: block;
   }
   .edgeContainer{
     display: none;
