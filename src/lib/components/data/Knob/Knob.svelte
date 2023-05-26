@@ -8,6 +8,7 @@
 	import { writable } from 'svelte/store';
 	import { calculateRelativeCursor } from '$lib/utils';
 	import { error } from '@sveltejs/kit';
+	import { get } from 'svelte/store';
 
 	// Props
 	/**
@@ -72,7 +73,6 @@
 	 */
 	export let indicatorColor: CSSColorString | null = '#666565';
 
-	console.log('0', $parameterStore);
 	$parameterStore =
 		$parameterStore < min
 			? min
@@ -85,8 +85,8 @@
 
 	$: connected = typeof parameterStore.set !== 'function';
 
-	let graph = getContext<Graph>('graph');
-	let node = getContext<Node>('node');
+	const graph = getContext<Graph>('graph');
+	const node = getContext<Node>('node');
 
 	const groups = graph.groups;
 	const selected = $groups.selected;
@@ -181,6 +181,9 @@
 		return degree;
 	}
 
+	// let wheelTop = 0;
+	// let wheelLeft = 0;
+
 	// need to pass cursorX and cursorY to trigger updates
 	function calculateNewAngle(cursorX: number, cursorY: number): void {
 		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
@@ -189,6 +192,29 @@
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
 		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
+		// width is width_origin * $scale
+		// console.log('scale, ', $scale, 'translation, ', $translation);
+		// console.log('top: ', top, 'left: ', left, 'width: ', width);
+		// console.log('top: ', top, 'left: ', left);
+
+		// console.log('cursorX:', cursorX, 'cursorY: ', cursorY);
+		// console.log('x: ', x, 'y: ', y);
+
+		// const dimensions = get(graph.dimensions);
+		// const scaled = calculateRelativeCursor(
+		// 	{ clientX: left, clientY: top },
+		// 	dimensions.top,
+		// 	dimensions.left,
+		// 	dimensions.width,
+		// 	dimensions.height,
+		// 	$scale,
+		// 	$translation
+		// );
+
+		// wheelTop = scaled.y;
+		// wheelLeft = scaled.x;
+
+		// console.log(wheelTop, wheelLeft);
 
 		let angle =
 			relativeX > 0 && relativeY > 0
@@ -202,8 +228,13 @@
 				: currentDegree;
 		// caculate the new parameterstore based on clamp(angle)
 
-		$parameterStore = ((clamp(angle) - minDegree) / (maxDegree - minDegree)) * (max - min) + min;
-		// return clamp(angle);
+		// a round-off error (see wiki: 'https://en.wikipedia.org/wiki/Round-off_error')
+		// occurs for particular values depending on their angle due to
+		// a computer's limited precision of floating-point number representation.
+		// To circumvent this issue, toFixed is used to adjust output to desired accuracy
+		$parameterStore = Number(
+			(((clamp(angle) - minDegree) / (maxDegree - minDegree)) * (max - min) + min).toFixed(fixed)
+		);
 	}
 </script>
 

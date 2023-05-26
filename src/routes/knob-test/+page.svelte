@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Svelvet, ThemeToggle, Node } from '$lib';
-	import type { Theme } from 'svelvet';
+	// import type { Theme } from 'svelvet';
 	import InputNode from '../../example-components/InputNode.svelte';
 	import { generateInput, generateOutput, Knob, Resizer } from '$lib';
 	import NodeWrapper from '../../example-components/test-components/NodeWrapper.svelte';
@@ -9,7 +9,8 @@
 	import Bass from '../../example-components/test-components/Bass.svelte';
 	import Treble from '../../example-components/test-components/Treble.svelte';
 	import Audio from '../../example-components/test-components/Audio.svelte';
-	import Scale from '../../example-components/test-components/Scale.svelte';
+	import KnobOutputDisplayer from '../../example-components/test-components/KnobOutputDisplayer.svelte';
+	import CircleColor from '../../example-components/test-components/CircleColor.svelte';
 
 	type Inputs = {
 		degree: number;
@@ -18,11 +19,9 @@
 
 <body>
 	<Svelvet>
-		<!-- <Scale /> -->
 		<Volume />
 		<Treble />
 		<Bass />
-		<Output />
 		<Audio />
 		<ThemeToggle main="light" alt="dark" slot="toggle" />
 	</Svelvet>
