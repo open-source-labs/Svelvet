@@ -6,7 +6,7 @@ import { Svelvet, Node, Knob } from '$lib';
 test('should render', () => {
 	// results is an object containing a series of methods that can be used to query the rendered component in a variety of ways: https://testing-library.com/docs/queries/about/#types-of-queries
 	const { container } = render(Svelvet, { id: 1 });
-	const svelvetElement = document.getElementById('1');
+	const svelvetElement = container.firstElementChild;
 	// expect().toBe(1);
 	expect(document.getElementById('1')).toBe(svelvetElement);
 });
