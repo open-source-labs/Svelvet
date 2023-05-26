@@ -24,7 +24,7 @@
 	const initialData = {
 		bass: 2,
 		treble: 2,
-		volume: 1
+		volume: 0.01
 	};
 	const processor = (inputs: Inputs) => inputs;
 	const inputs = generateInput(initialData);
