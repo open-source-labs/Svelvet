@@ -23,10 +23,9 @@
 				fixed={0}
 				min={0}
 				max={100}
-				step={5}
+				step={1}
 				minDegree={30}
 				maxDegree={330}
-				knobValueColor={'#666565'}
 				parameterStore={$inputs.data}
 			/>
 		</div>
