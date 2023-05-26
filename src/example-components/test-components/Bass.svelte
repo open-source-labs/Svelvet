@@ -9,7 +9,7 @@
 	};
 
 	const initialData = {
-		data: 10
+		data: 2
 	};
 	const inputs = generateInput(initialData);
 	const procesor = (inputs: Inputs) => inputs.data;
@@ -22,8 +22,8 @@
 			<Knob
 				fixed={0}
 				min={0}
-				max={300}
-				step={150}
+				max={20}
+				step={2}
 				minDegree={30}
 				maxDegree={330}
 				parameterStore={$inputs.data}
