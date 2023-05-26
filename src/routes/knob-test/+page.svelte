@@ -22,9 +22,8 @@
 		<Volume />
 		<Treble />
 		<Bass />
-		<Output />
 		<Audio />
-		<CircleColor />
+		<!-- <CircleColor /> -->
 		<ThemeToggle main="light" alt="dark" slot="toggle" />
 		<!-- <KnobOutputDisplayer /> -->
 	</Svelvet>
