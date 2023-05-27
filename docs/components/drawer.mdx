@@ -1,0 +1,29 @@
+---
+title: 'Drawer'
+sidebarTitle: 'Drawer'
+description: 'Optional component offering drap and drop functionality of Default Nodes and Custom Nodes which are configurable via props'
+---
+
+
+## Description
+
+The Drawer is a self-wrapping parent component which renders out a Drawer Controller, Controls, Theme Toggle and Minimap on the canvas. 
+
+The drawer controller provides drag and drop functionality of Nodes and an ability to customize them before adding them to the canvas.
+
+Nodes, Edges and Anchors styling are fully configurable by selecting the props that are available to these components to change their visualization and interaction behavior.
+
+```HTML MyDrawer.svelte
+<script>
+    import {Drawer} from 'svelvet';
+</script>
+
+<Drawer/>
+
+```
+Check out the video demo of the drawer functionality.
+
+<iframe 
+    width="710" height="418" 
+    src="https://www.youtube.com/embed/yAYVvexFoJ4">
+</iframe>
