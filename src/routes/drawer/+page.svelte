@@ -3,6 +3,7 @@
    import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
    import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
    import CustomEdge from '../../example-components/CustomEdge.svelte';
+   import { addProps } from '$lib/utils';
 
    let defaultNodes: NodeConfig[] = [];
    let customNodes: NodeConfig[] = [];

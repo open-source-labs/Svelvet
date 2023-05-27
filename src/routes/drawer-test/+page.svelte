@@ -1,16 +1,17 @@
 <script lang="ts">
-	import { Svelvet, Node} from '$lib';
+	import { Svelvet, Node, Drawer} from '$lib';
 	import InputNode from '../../example-components/InputNode.svelte';
-	import {  Drawer } from '$lib';	
+	import type { NodeConfig } from '$lib/types';
+	import { createNode } from '$lib/utils';
+
+	
 </script>
 
-<body>
-	<Svelvet drawer>
-		<Node useDefaults>
-        
-		</Node>
-	</Svelvet>
-</body>
+<Drawer>
+
+</Drawer>
+
+
 
 <style>
 	body {
