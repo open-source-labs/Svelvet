@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildArcStringKey } from '../../../src/lib/utils/helpers/buildArcStringKey';
+import { buildArcStringKey } from '$lib/utils';
 
 describe('Testing buildArcStringKey', () => {
 	it('zero values in input coordinates should be represented as "0" in the output string', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
-import { clickOutside } from '../../../src/lib/utils/helpers/clickOutside';
+import { clickOutside } from '../../../src/lib/utils/helpers';
 import { render } from '@testing-library/svelte';
 
 describe('clickOutside', () => {

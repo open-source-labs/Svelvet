@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { addProps } from '../../../src/lib/utils/helpers/addProps'; // there's probably a better way to write this path
+import { addProps } from '$lib/utils';
 
 describe('Testing addProps', () => {
 	const propObjectTest: Record<string, any> = {};

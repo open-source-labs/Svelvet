@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPath } from '../../../src/lib/utils/helpers/buildPath';
+import { buildPath } from '$lib/utils';
 
 describe('Testing buildPath', () => {
 	it('expect the output string to be formated as expected', () => {
