@@ -154,7 +154,7 @@
 #drawerWrapper{
   position: absolute;
   width: 35px;
-  height: 35px;
+  height: 30px;
   border-radius: 6px;
   left: 10px;
   top: 10px;
