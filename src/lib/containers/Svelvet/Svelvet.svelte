@@ -290,7 +290,7 @@
 		--default-theme-toggle-text-color: hsl(0, 0%, 100%);
 		--default-theme-toggle-color: hsl(0, 0%, 27%);
 
-		--default-drawer-button-color: hsl(0, 0%, 31%);
+		--default-drawer-button-color: hsl(0, 0%, 19%);
 		--default-drawer-button-text-color: hsl(0, 0%, 100%);
 		
 

@@ -82,12 +82,15 @@
     anchorEdgeLabel = undefined;
     anchorLocked = undefined;
     anchorBgColor = undefined;
+
+    e.target.reset();
 	}
 
 </script>
 
 <div id='anchorContainer'>
-
+<!-- On submit resets all the values on the input field in the form to default -->
+<form on:submit|preventDefault = {handleAnchorResetButtonClick}>
   <ul>
       <li class='list-item'>
           <label for='anchorBgColor'>Background: </label>
@@ -138,36 +141,34 @@
           <input id='anchorLocked' type="checkbox" bind:value={anchorLocked} on:change={handleAnchorLockedButtonClick}>
       </li>
       <li class='list-item'>
-          <button class ='anchorResetBtn btn' on:click|stopPropagation={handleAnchorResetButtonClick}>Reset</button>
+          <button class ='anchorResetBtn btn'>Reset</button>
       </li>
   </ul>
+ </form>
 </div>
 
-
 <style>
-    #anchorContainer{
-   
+ /* Anchor dropdown Styling */
+#anchorContainer{   
    width: 100%;
    font-size: 15px;
- }
- #anchorContainer ul{
- margin:0;
- padding:0;
- }
- 
- label {
+}
+#anchorContainer ul{
+    margin:0;
+    padding:0;
+}
+label {
    margin-right: 10px;
- }
- 
- .list-item{
+}
+.list-item{
    display: flex;
    flex-direction: row;
    align-items: center;
    list-style: none;
    margin-bottom: 10px;
    margin-right: 3px;
- }
- .colorWheel{
+}
+.colorWheel{
    -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;
@@ -177,34 +178,30 @@
    height: 35px;
    cursor: pointer;
    border-radius: 50%;
- }
+}
  
- .colorWheel::-webkit-color-swatch{
+.colorWheel::-webkit-color-swatch{
    border-radius: 40%;
- }
- .colorWheel::-moz-color-swatch{
+}
+.colorWheel::-moz-color-swatch{
    border-radius: 40%;
- }
+}
  
- .inputField {
-   width: 50px;
- 
- }
- 
- .btn {
-        width: 120px;
-        padding: 8px 20px;
-        margin: auto;
-        margin-top: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        margin-left: 70px;
-    }
+.btn {
+
+   width: 120px;
+   padding: 8px 20px;
+   margin: auto;
+   margin-top: 10px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 15px;
+   margin-left: 70px;      
+}
 
 .anchorResetBtn{
-        color:  var(
+      color:  var(
 			--prop-drawer-reset-button-text-color,
 			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
 		);;
@@ -216,7 +213,7 @@
 			var(--default-node-shadow);
     }
 
-    .anchorResetBtn:hover{
+.anchorResetBtn:hover{
         color:  var(
 			--prop-drawer-reset-button-hover-text-color,
 			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
@@ -225,5 +222,5 @@
 			--prop-drawer-reset-button-hover-color,
 			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
-    }
+}
 </style>

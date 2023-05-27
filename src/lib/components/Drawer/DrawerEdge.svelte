@@ -47,9 +47,6 @@
     return false;
   }
 
-  const handleStraightButtonClick = (e: any) => {
-    straight = e.target.checked;
-  }
   const handleStepButtonClick = (e: any) => {
     step = e.target.checked;
   }
@@ -69,13 +66,15 @@
     labelColor = undefined;
     textColor = undefined;
     //edgeClick: () => void | null;
+    e.target.reset();
   }
 
 </script>
 
 <div id="edgeContainer">
-  <ul>
-      
+ <!-- On submit resets all the values on the input field in the form to default -->
+ <form on:submit|preventDefault = {handleEdgeResetButtonClick}>
+  <ul> 
       <li class='list-item'>
           <label for='color'>Background: </label>
           <input id='color' class='colorWheel' type='color' bind:value={color}>
@@ -109,14 +108,15 @@
           <input id='edgeLabel' type="text" bind:value={edgeLabel}>
       </li>
       <li class='list-item'>
-          <button class ='edgeResetBtn btn' on:click|stopPropagation={handleEdgeResetButtonClick}>Reset</button>
+          <button class ='edgeResetBtn btn'>Reset</button>
       </li>
   </ul>
+ </form>
 </div>
 
 <style>
+/* Edge dropdown Styling */
 #edgeContainer{
-   
   width: 100%;
   font-size: 15px;
 }

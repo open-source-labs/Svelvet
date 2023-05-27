@@ -225,20 +225,8 @@ hr{
 			--prop-drawer-button-color,
 			var(--drawer-button-color, var(--default-drawer-button-color))
 		);
-  /* border-top-left-radius: 10px;
-  border-top-right-radius: 10px;   */
  }
-/* 
- .menu .dropdown:active{
-  background-color: var(
-			--prop-drawer-button-focus-color,
-			var(--drawer-button-focus-color, var(--default-drawer-button-focus-color))
-		);
-  color:  var(
-			--prop-drawer-button-focus-text-color,
-			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
-		);
- } */
+
 
  .menu .dropdown:first-child{
   border-bottom: 3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)));
