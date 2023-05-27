@@ -15,8 +15,10 @@
     // Create props for anchor or edge if values were given
     const anchorCreated = createAnchorProps();
     const edgeCreated = createEdgeProps();
-    // Create props for node or custom node if anchor was created
-    createNodeProps(anchorCreated);
+    // const test = document.getElementsByClassName('edges-wrapper')
+    // console.log(test)
+    // Create props for node and edges or custom creates node if anchor was created
+    createNodeProps(edgeCreated, anchorCreated);
   }
 
    const openDrawer = (e: any) => {
@@ -29,7 +31,6 @@
   }
 
 
-
 </script>
 
 <div>
@@ -39,8 +40,8 @@
     <button class='closebtn' on:click={closeDrawer}>x</button>   
 		<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} > Node </div>
 			<DrawerNode></DrawerNode>
-			<DrawerAnchor></DrawerAnchor>
 			<DrawerEdge></DrawerEdge>
+			<DrawerAnchor></DrawerAnchor>
 	</nav>
   <!-- <button class='openbtn' on:click={openDrawer}>Open Drawer</button> -->
 </div>
