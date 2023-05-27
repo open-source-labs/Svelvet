@@ -27,8 +27,10 @@
     // Create props for anchor or edge if values were given
     const anchorCreated = createAnchorProps();
     const edgeCreated = createEdgeProps();
-    // Create props for node or custom node if anchor was created
-    createNodeProps(anchorCreated);
+    // const test = document.getElementsByClassName('edges-wrapper')
+    // console.log(test)
+    // Create props for node and edges or custom creates node if anchor was created
+    createNodeProps(edgeCreated, anchorCreated);
   }
 
   const handleDrawer = (e: any) => {
@@ -97,8 +99,6 @@
   }
 
 </script>
-
-
 	
 	<nav id ='drawerWrapper' bind:this = {nav} >
     <slot>
@@ -144,11 +144,7 @@
     </ul>
     </slot>
 	</nav>  
-		
 
-
-
- 
 <style>
 
 #drawerWrapper{
