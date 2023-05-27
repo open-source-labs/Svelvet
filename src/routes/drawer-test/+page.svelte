@@ -2,6 +2,6 @@
 	import { Drawer } from '$lib';
 </script>
 
-<Drawer>
+<Drawer/>
 	
-</Drawer>
+

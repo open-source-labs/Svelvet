@@ -70,19 +70,6 @@
         anchorBtn.style.borderBottom = 'none';
       }
   }
-  const handleEdgeContainer = (e: any) => {
-    if(!edgeContainerOpen){
-         edgeContainerOpen = true;
-         nodeContainerOpen = false;
-         anchorContainerOpen = false;
-        edgeContainer.style.display = 'block';
-        anchorContainer.style.display = 'none';
-        nodeContainer.style.display = 'none';
-        nodeBtn.style.borderBottom = 'none';
-        edgeBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
-        anchorBtn.style.borderBottom = 'none';
-      }
-  }
   const handleAnchorContainer = (e: any) => {
     if(!anchorContainerOpen){
         anchorContainerOpen = true;
@@ -97,26 +84,39 @@
   
       }
   }
+  const handleEdgeContainer = (e: any) => {
+    if(!edgeContainerOpen){
+         edgeContainerOpen = true;
+         nodeContainerOpen = false;
+         anchorContainerOpen = false;
+        edgeContainer.style.display = 'block';
+        anchorContainer.style.display = 'none';
+        nodeContainer.style.display = 'none';
+        nodeBtn.style.borderBottom = 'none';
+        edgeBtn.style.borderBottom = '3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
+        anchorBtn.style.borderBottom = 'none';
+      }
+  }
 
 </script>
 	
 	<nav id ='drawerWrapper' bind:this = {nav} >
     <slot>
-    <button class='drawerBtn' bind:this = {drawerBtn} on:click={handleDrawer}>
+    <button class='drawerBtn' bind:this = {drawerBtn} on:click={handleDrawer} aria-label="Open/Close Drawer">
       <span class="material-symbols-outlined">south_east</span>
     </button>  
 		<ul class='drawerContents' bind:this = {drawerContents}>		
 			<li class='list-item'>	
         <div class='menu'>
-          <button class='dropdown' bind:this = {nodeBtn} on:click={handleNodeContainer}>
+          <button class='dropdown' bind:this = {nodeBtn} on:click={handleNodeContainer} aria-label="Component">
             Node
            </button>
-           <button class='dropdown' bind:this = {edgeBtn} on:click={handleEdgeContainer}>
-             Edge
-           </button>
-           <button class='dropdown' bind:this = {anchorBtn} on:click={handleAnchorContainer}>
-             Anchor
+           <button class='dropdown' bind:this = {anchorBtn} on:click={handleAnchorContainer} aria-label="Component">
+            Anchor
          </button>
+         <button class='dropdown' bind:this = {edgeBtn} on:click={handleEdgeContainer} aria-label="Component">
+            Edge
+        </button>
         </div>			          
       </li>
           <!-- Handle Node Dropdown -->  	
@@ -125,18 +125,18 @@
             <DrawerNode></DrawerNode>
           </div>         
 			</li>
-      <!-- Handle Edge Dropdown -->
-      <li class='list-item'>
-        <div class='propsContainer edgeContainer' bind:this = {edgeContainer}>          
-          <DrawerEdge></DrawerEdge>
-        </div>        
-			</li>	
       <!-- Handle Anchor Dropdown -->
 			<li class='list-item'>      
         <div class='propsContainer anchorContainer' bind:this = {anchorContainer}>
           <DrawerAnchor></DrawerAnchor>
         </div>      
 			</li>
+      <!-- Handle Edge Dropdown -->
+      <li class='list-item'>
+        <div class='propsContainer edgeContainer' bind:this = {edgeContainer}>          
+          <DrawerEdge></DrawerEdge>
+        </div>        
+			</li>	
       <li class='list-item'>
 				<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart}> Node </div>
 			</li>
@@ -225,20 +225,8 @@ hr{
 			--prop-drawer-button-color,
 			var(--drawer-button-color, var(--default-drawer-button-color))
 		);
-  /* border-top-left-radius: 10px;
-  border-top-right-radius: 10px;   */
  }
-/* 
- .menu .dropdown:active{
-  background-color: var(
-			--prop-drawer-button-focus-color,
-			var(--drawer-button-focus-color, var(--default-drawer-button-focus-color))
-		);
-  color:  var(
-			--prop-drawer-button-focus-text-color,
-			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
-		);
- } */
+
 
  .menu .dropdown:first-child{
   border-bottom: 3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)));
