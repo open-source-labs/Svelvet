@@ -6,12 +6,14 @@
 
   // External Stores
   export const edgePropsStore = writable<Array<any>>([]);
+  // export const edgePropsStore = writable<any>();
+
+  export const edgeComponentStore = writable<Array<any>>([]);
 
   //types for edge creation
   let edgeWidth: number | undefined; 
-  let targetColor: CSSColorString | undefined;
   let color: CSSColorString | undefined;
-  let straight: boolean | undefined;
+  let straight: boolean | undefined; // Stretch feature, requires additional logic
   let step: boolean | undefined;
   let cornerRadius: number | undefined;
   let animate: boolean | undefined;
@@ -19,8 +21,9 @@
   let labelColor: CSSColorString | undefined;
   let textColor: CSSColorString | undefined;
   let edgeClick: () => void | null; // Stretch feature
+  let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
-  // Creates props and adds to store, returns true if anchor was created
+  // Creates props and adds to store, returns true if edge was created
   export const createEdgeProps = () => {
       
     // Object that stores properties for the created edge
@@ -35,9 +38,13 @@
     // If props were created add edgeProps object to store
     if (Object.keys(edgeProps).length) {
       edgePropsStore.update(edges =>{
-        console.log(edges)
-         return [...edges, [Edge, edgeProps]]})
+         return [...edges, {...edgeProps}]
+        // return edgeProps;
+        })
+
+      return true;
     }
+    return false;
   }
 
   const handleStraightButtonClick = (e: any) => {
@@ -54,7 +61,7 @@
     edgeWidth = undefined;
     targetColor = undefined;
     color = undefined;
-    straight = undefined;
+    straight = undefined; 
     step = undefined;
     cornerRadius = undefined;
     animate = undefined;
@@ -70,10 +77,6 @@
   <h3>Edges:</h3>
   <ul>
       <li class='list-item'>
-          <label for='targetColor'>Target Color : </label>
-          <input id='targetColor' class='colorWheel' type='color' bind:value={targetColor}>
-      </li>
-      <li class='list-item'>
           <label for='color'>Color : </label>
           <input id='color' class='colorWheel' type='color' bind:value={color}>
       </li>
@@ -87,20 +90,20 @@
       </li>
       <li class='list-item'>
           <label for='width'>Width :</label> 
-          <input id = 'width'  class='inputField' type="number"  bind:value={edgeWidth}>
-      </li>
-      <li class='list-item'>
-          <label for='cornerRadius'>Corner Radius :</label> 
-          <input id = 'cornerRadius'  class='inputField' type="number"  bind:value={cornerRadius}>
-      </li>            
-      <li class='list-item'>
+          <input id = 'width' class='inputField' type="number"  bind:value={edgeWidth}>
+      </li>   
+      <!-- <li class='list-item'>
           <label for='straight'>Straight : </label>
           <input id='straight' type="checkbox" bind:value={straight} on:change={handleStraightButtonClick}>
-      </li>
+      </li> -->
       <li class='list-item'>
           <label for='step'>Step : </label>
           <input id='step' type="checkbox" bind:value={step} on:change={handleStepButtonClick}>
       </li>
+      <li class='list-item'>
+        <label for='cornerRadius'>Step Corner Radius :</label> 
+        <input id = 'cornerRadius' class='inputField' type="number"  bind:value={cornerRadius}>
+    </li>         
       <li class='list-item'>
           <label for='animate'>Animate : </label>
           <input id='animate' type="checkbox" bind:value={animate} on:change={handleAnimateButtonClick}>
