@@ -97,10 +97,13 @@
           <input id='step' type="checkbox" bind:value={step} on:change={handleStepButtonClick}>
       </li>
       <li class='list-item'>
-          <label for='animate'>Animate : </label>
-          <input id='animate' type="checkbox" bind:value={animate} on:change={handleAnimateButtonClick}>
-      </li>
-     
+        <label for='cornerRadius'>Corner Radius:</label> 
+        <input id = 'cornerRadius'  class='inputField' type="number"  bind:value={cornerRadius}>
+     </li>
+     <li class='list-item'>
+        <label for='width'>Width:</label> 
+        <input id = 'width'  class='inputField' type="number"  bind:value={edgeWidth}>
+      </li>  
       <li class='list-item'>
           <label for='edgeLabel'>Edge Label: </label>
           <input id='edgeLabel' type="text" bind:value={edgeLabel}>

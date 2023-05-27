@@ -54,7 +54,7 @@
         // if(!edgeCreated) 
         defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
         // else {
-            nodeProps.edge = edgeComponentStore;
+            // nodeProps.edge = edgeComponentStore;
             // else nodeProps.edge = edges[edges.length - 1]
         // }
       }
