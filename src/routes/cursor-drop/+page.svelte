@@ -128,20 +128,24 @@
 
 </script>
 
-<div
-	class={dropZoneClass}
-	on:dragover={onDragOver}
-	on:dragenter={onDragEnter}
-	on:dragleave={onDragLeave}
-	on:drop={onDrop}
->
-	<Svelvet height={600} zoom={0.75} minimap controls>
-		{#each nodes as node}
-			<Node {...node} drop="cursor">
-			</Node>
-		{/each}
-	</Svelvet>
+
+	<div
+		class={dropZoneClass}
+		on:dragover={onDragOver}
+		on:dragenter={onDragEnter}
+		on:dragleave={onDragLeave}
+		on:drop={onDrop}
+	>
+	    <Svelvet height={800}  zoom={0.75} minimap controls>
+	
+			{#each nodes as node (node.id)}
+				<Node {...node} drop="cursor" />
+			{/each}
+		</Svelvet>	
 </div>
+	
+	
+
 
 
 
