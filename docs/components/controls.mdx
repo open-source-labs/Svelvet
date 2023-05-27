@@ -16,8 +16,8 @@ Customize the Controls component by wrapping it around custom buttons. Zoom incr
 </script>
 
 <Controls let:zoomIn let:zoomOut let:fitView let:unhideAll corner="SW">
-	<button class="my-zoom-in" on:click|stopPropagation={zoomIn}/>
-	<button on:click|stopPropagation={zoomOut}/>
+  <button class="my-zoom-in" on:click|stopPropagation={zoomIn}/>
+  <button on:click|stopPropagation={zoomOut}/>
   <button on:click|stopPropagation={fitView}/>
   <button on:click|stopPropagation={unhideAll}/>
 </Controls>

@@ -49,6 +49,7 @@
 				"components/node",
 				"components/anchor",
 				"components/edge",
+				"components/drawer",
 				"components/group",
 				"components/resizer",
 				"components/minimap",
