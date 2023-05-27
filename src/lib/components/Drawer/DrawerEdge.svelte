@@ -74,7 +74,7 @@
 <div id="edgeContainer">
  <!-- On submit resets all the values on the input field in the form to default -->
  <form on:submit|preventDefault = {handleEdgeResetButtonClick}>
-  <ul> 
+  <ul aria-labelledby="select_props"> 
       <li class='list-item'>
           <label for='color'>Background: </label>
           <input id='color' class='colorWheel' type='color' bind:value={color}>
@@ -108,7 +108,7 @@
           <input id='edgeLabel' type="text" bind:value={edgeLabel}>
       </li>
       <li class='list-item'>
-          <button class ='edgeResetBtn btn'>Reset</button>
+          <button class ='edgeResetBtn btn' aria-label="Reset">Reset</button>
       </li>
   </ul>
  </form>

@@ -91,7 +91,7 @@
 <div id='anchorContainer'>
 <!-- On submit resets all the values on the input field in the form to default -->
 <form on:submit|preventDefault = {handleAnchorResetButtonClick}>
-  <ul>
+  <ul aria-labelledby="select_props">
       <li class='list-item'>
           <label for='anchorBgColor'>Background: </label>
           <input id='anchorBgColor' class='colorWheel' type='color' bind:value={anchorBgColor}>
@@ -141,7 +141,7 @@
           <input id='anchorLocked' type="checkbox" bind:value={anchorLocked} on:change={handleAnchorLockedButtonClick}>
       </li>
       <li class='list-item'>
-          <button class ='anchorResetBtn btn'>Reset</button>
+          <button class ='anchorResetBtn btn' aria-label="Reset">Reset</button>
       </li>
   </ul>
  </form>

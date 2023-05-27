@@ -53,7 +53,7 @@
         // if(!edgeCreated) 
         defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
         // else {
-            // nodeProps.edge = edgeComponentStore;
+        // nodeProps.edge = edgePropsStore;
             // else nodeProps.edge = edges[edges.length - 1]
         // }
       }
@@ -115,7 +115,7 @@
 <div id='nodeContainer'>
 <!-- On submit resets all the values on the input field in the form to default -->
  <form on:submit|preventDefault = {handleNodeResetButtonClick}>
-  <ul >
+  <ul aria-labelledby="select_props">
       <li class='list-item'>
           <label for='bgColor'>Background: </label>
           <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
@@ -175,7 +175,7 @@
             <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
         </li>            
         <li class='list-item'>
-            <button class ='nodeResetBtn btn'>Reset</button>
+            <button class ='nodeResetBtn btn' aria-label="Reset">Reset</button>
         </li>    
     </ul>
  </form>
