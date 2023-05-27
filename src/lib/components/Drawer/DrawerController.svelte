@@ -27,8 +27,10 @@
     // Create props for anchor or edge if values were given
     const anchorCreated = createAnchorProps();
     const edgeCreated = createEdgeProps();
-    // Create props for node or custom node if anchor was created
-    createNodeProps(anchorCreated);
+    // const test = document.getElementsByClassName('edges-wrapper')
+    // console.log(test)
+    // Create props for node and edges or custom creates node if anchor was created
+    createNodeProps(edgeCreated, anchorCreated);
   }
 
   const handleDrawer = (e: any) => {
@@ -96,7 +98,69 @@
       }
   }
 
+
 </script>
+
+<div>
+ 
+	<nav id ='drawerWrapper' bind:this={nav} >
+    <button class='openbtn' on:click={openDrawer}>Open Drawer</button>
+    <button class='closebtn' on:click={closeDrawer}>x</button>   
+		<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart} > Node </div>
+			<DrawerNode></DrawerNode>
+			<DrawerEdge></DrawerEdge>
+			<DrawerAnchor></DrawerAnchor>
+	</nav>
+  <!-- <button class='openbtn' on:click={openDrawer}>Open Drawer</button> -->
+</div>
+
+	
+	<nav id ='drawerWrapper' bind:this = {nav} >
+    <slot>
+    <button class='drawerBtn' bind:this = {drawerBtn} on:click={handleDrawer}>
+      <span class="material-symbols-outlined">south_east</span>
+    </button>  
+		<ul class='drawerContents' bind:this = {drawerContents}>		
+			<li class='list-item'>	
+        <div class='menu'>
+          <button class='dropdown' bind:this = {nodeBtn} on:click={handleNodeContainer}>
+            Node
+           </button>
+           <button class='dropdown' bind:this = {edgeBtn} on:click={handleEdgeContainer}>
+             Edge
+           </button>
+           <button class='dropdown' bind:this = {anchorBtn} on:click={handleAnchorContainer}>
+             Anchor
+         </button>
+        </div>			          
+      </li>
+          <!-- Handle Node Dropdown -->  	
+      <li class='list-item'>
+          <div class='propsContainer nodeContainer' bind:this={nodeContainer}>
+            <DrawerNode></DrawerNode>
+          </div>         
+			</li>
+      <!-- Handle Edge Dropdown -->
+      <li class='list-item'>
+        <div class='propsContainer edgeContainer' bind:this = {edgeContainer}>          
+          <DrawerEdge></DrawerEdge>
+        </div>        
+			</li>	
+      <!-- Handle Anchor Dropdown -->
+			<li class='list-item'>      
+        <div class='propsContainer anchorContainer' bind:this = {anchorContainer}>
+          <DrawerAnchor></DrawerAnchor>
+        </div>      
+			</li>
+      <li class='list-item'>
+				<div class='defaultNodes' draggable='true' on:dragstart={handleDragStart}> Node </div>
+			</li>
+     	
+    </ul>
+    </slot>
+	</nav>  
+		
+
 
 
 	

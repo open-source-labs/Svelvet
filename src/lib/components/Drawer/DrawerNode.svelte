@@ -2,10 +2,21 @@
   import { writable } from 'svelte/store';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
+  import { edgePropsStore } from './DrawerEdge.svelte'; 
+  import edgeComponentStore from './DrawerEdgeCreator.svelte'; 
+
+  
 
   // External stores
   export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
   export const customNodePropsStore = writable<Array<NodeConfig>>([]);
+  
+  
+
+//  let unsubscribe = edgeComponentStore.subscribe(values => {
+//     console.log(values)
+//     test = values[values.length - 1]
+//  })
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -23,9 +34,10 @@
   let TD: boolean | undefined;
   let LR: boolean | undefined;
   let useDefaults: boolean | undefined;
+  let edge: any;
 
   // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-  export const createNodeProps = (anchorCreated: boolean) => {
+  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean) => {
     // Object that stores properties for the created node
     const nodeProps: any = {};
     // Array of property names and values for node
@@ -37,18 +49,26 @@
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
-      if(!anchorCreated) defaultNodePropsStore.update(nodes => [...nodes, nodeProps])
+      // If anchor was not created, creates default node and custom edges if edge props were given
+      if(!anchorCreated) {
+        // if(!edgeCreated) 
+        defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
+        // else {
+            nodeProps.edge = edgeComponentStore;
+            // else nodeProps.edge = edges[edges.length - 1]
+        // }
+      }
       else customNodePropsStore.update(nodes => [...nodes, nodeProps]) 
     }
   }
 
   // Button clicks for defaultNodes
   const handleNodeResetButtonClick = (e: any) => {
-	bgColor = undefined;
-	borderColor = undefined;
+    bgColor = undefined;
+    borderColor = undefined;
     label = undefined;
-	width = 200;
-	height = 100;
+    width = 200;
+    height = 100;
     inputs = undefined;
     outputs = undefined;
     locked = undefined;
