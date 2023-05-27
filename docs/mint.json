@@ -62,6 +62,7 @@
 			"pages": [
 				"data-flow/overview",
 				"data-flow/slider",
+				"data-flow/knob",
 				"data-flow/radiogroup",
 				"data-flow/colorpicker"
 			]

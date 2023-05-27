@@ -59,9 +59,11 @@
   on:dragover={onDragOver}
   on:drop={handleDrop}
   > 
+  
     <Svelvet drawer height={1200} zoom={0.70} minimap controls>
         {#each defaultNodes as node, index}
             <Node {...node} drop="cursor"></Node>
+
         {/each}
         
         <!-- {#each edges as edge}
@@ -74,6 +76,7 @@
               
                 </Anchor>
             </Node>			
+
         {/each}
         <slot></slot>
         <ThemeToggle main=light alt=dark slot='toggle'/>

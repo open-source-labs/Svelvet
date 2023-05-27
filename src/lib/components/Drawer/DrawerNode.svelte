@@ -112,14 +112,13 @@
 </script>
 
 <div id='nodeContainer'>
-  <h2>Nodes </h2>
   <ul>
       <li class='list-item'>
-          <label for='bgColor'>Background Color : </label>
+          <label for='bgColor'>Background: </label>
           <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
       </li>
       <li class='list-item'>
-          <label for='borderColor'>Border Color : </label>
+          <label for='borderColor'>Border: </label>
           <input id='borderColor' class='colorWheel' type='color' bind:value={borderColor}>
       </li>
       <li class='list-item'>
@@ -132,52 +131,135 @@
       </li>
 
       <li class='list-item'>
-          <h4>Dimensions: </h4>
+        <label for='dimensions' style="fontWeight:'bold'">Dimensions:</label>
       </li>
       <li class="list-item">               
           <label for='width'>Width:</label>
               <input id='width' class='inputField' type='input' bind:value={width}>
-          <label for='height'>Height:</label> 
+          <label for='height' style="margin-left: 6px">Height:</label> 
               <input id='height' class='inputField' type='input' bind:value={height}>
       </li>
       <li class='list-item'>
-          <h4>Default Anchors: </h4>
+        <label for='defaultAnchors'>Default Anchors:</label>
       </li>
       <li class="list-item">
-          <label for="inputAnchor">Input Anchors: </label>
+          <label for="inputAnchor">Input: </label>
           <input id='inputAnchor' class='inputField' type="number" bind:value={inputs}>
-          <label for="outputAnchor">Output Anchors: </label>
+          <label for="outputAnchor" style="margin-left: 6px">Output: </label>
           <input id='outputAnchor' class='inputField' type="number" bind:value={outputs}>
       </li>
       <li class="list-item">
-    <label for='anchorPositon'>Anchor Position: </label>
-              <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
-                  <option value=''>-</option>
-                  <option value='LR'>LR</option>
-                  <option value='TD'>TD</option>                        
-              </select>					
-  </li>          
-      <li class='list-item'>
-          <button class ='nodeResetBtn btn' on:click|stopPropagation={handleNodeResetButtonClick}>Reset</button>
-      </li>
-      <li class='list-item'>
-          <h4>Additional Settings:</h4>
-      </li>
-      <li class='list-item'>
-          <label for='locked'>Locked: </label> 
-          <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
-      </li>
-      <li class='list-item'>
-          <label for='centered'>Centered: </label>
-          <input id='centered' type="checkbox" bind:value={center} on:change={handleCenterButtonClick}>
-      </li>
-      <li class='list-item'>
-          <label for='rotation'>Rotation:</label> 
-          <input id = 'rotation'  class='inputField' type="number"  bind:value={rotation}>
-      </li>
-      <li class='list-item'>
-          <label for='zIndex'>zIndex:</label> 
-          <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
-      </li>      
-  </ul>
+        <label for='anchorPositon'>Anchor Position: </label>
+        <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
+            <option value=''>-</option>
+            <option value='LR'>LR</option>
+            <option value='TD'>TD</option>                        
+        </select>					
+        </li> 
+        <li class='list-item'>
+            <label for='locked'>Locked: </label> 
+            <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
+        </li>
+        <li class='list-item'>
+            <label for='centered'>Centered: </label>
+            <input id='centered' type="checkbox" bind:value={center} on:change={handleCenterButtonClick}>
+        </li>
+        <li class='list-item'>
+            <label for='rotation'>Rotation:</label> 
+            <input id = 'rotation'  class='inputField' type="number"  bind:value={rotation}>
+        </li>
+        <li class='list-item'>
+            <label for='zIndex'>zIndex:</label> 
+            <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
+        </li>            
+        <li class='list-item'>
+            <button class ='nodeResetBtn btn' on:click|stopPropagation={handleNodeResetButtonClick}>Reset</button>
+        </li>    
+    </ul>
 </div>
+
+<style>
+  /* General Styling */
+  #nodeContainer{
+   
+        width: 100%;
+        font-size: 15px;
+    }
+ #nodeContainer ul{
+ margin:0;
+ padding:0;
+ }
+
+    label {
+        margin-right: 10px;
+    }
+
+    .list-item{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        list-style: none;
+        margin-bottom: 10px;
+        margin-right: 3px;
+    }
+    .colorWheel{
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        border-radius: 50%;
+    }
+
+    .colorWheel::-webkit-color-swatch{
+        border-radius: 40%;
+    }
+    .colorWheel::-moz-color-swatch{
+        border-radius: 40%;
+    }
+
+    .inputField {
+        width: 50px;
+
+    }
+
+    .btn {
+        width: 120px;
+        color: aliceblue;
+        padding: 8px 20px;
+        margin: auto;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-left: 70px;
+    }
+    .nodeResetBtn{
+        color:  var(
+			--prop-drawer-button-text-color,
+			var(--drawer-button-text-color, var(--default-drawer-button-text-color))
+		);;
+        background-color: var(
+			--prop-drawer-button-color,
+			var(--drawer-button-color, var(--default-drawer-button-color))
+		);
+        box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+			var(--default-node-shadow);
+    }
+
+    .nodeResetBtn:hover{
+        color:  var(
+			--prop-drawer-button--focus-text-color,
+			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
+		);;
+        background-color: var(
+			--prop-drawer-button-focus-color,
+			var(--prop-drawer-button-focus-color, var(--default-drawer-button-focus-color))
+		);
+    }
+ 
+</style>

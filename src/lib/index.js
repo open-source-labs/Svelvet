@@ -5,6 +5,7 @@ import Anchor from './components/Anchor/Anchor.svelte';
 import Node from './components/Node/Node.svelte';
 import Edge from './components/Edge/Edge.svelte';
 import Group from './components/Group/Group.svelte';
+import Knob from './components/data/Knob/Knob.svelte';
 import Drawer from './components/Drawer/Drawer.svelte';
 import Slider from './components/data/Slider/Slider.svelte';
 import RadioGroup from './components/data/RadioGroup/RadioGroup.svelte';
@@ -25,6 +26,7 @@ export {
 	Group,
 	Resizer,
 	Slider,
+	Knob,
 	RadioGroup,
 	ThemeToggle,
 	ColorPicker,

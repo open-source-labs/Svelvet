@@ -233,6 +233,11 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
 		--default-theme-toggle-color: hsl(0, 0%, 100%);
+
+		--default-drawer-button-color: hsl(0, 2%, 89%);
+		--default-drawer-button-text-color: hsl(0, 0%, 20%);
+		--default-drawer-button-focus-color: hsl(0, 1%, 30%);
+		--default-drawer-button-focus-text-color: hsl(0, 0%, 100%);
 	}
 
 	:root[svelvet-theme='dark'] {
@@ -281,6 +286,15 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 100%);
 		--default-theme-toggle-color: hsl(0, 0%, 27%);
+
+		--default-drawer-button-color: hsl(0, 0%, 31%);
+		--default-drawer-button-focus-color: hsl(0, 0%, 67%);
+
+		--default-drawer-button-color: hsl(0, 0%, 31%);
+		--default-drawer-button-text-color: hsl(0, 0%, 100%);
+		--default-drawer-button-focus-color: hsl(0, 0%, 67%);
+		--default-drawer-button-focus-text-color: hsl(0, 0%, 20%);
+		
 	}
 
 	:root[svelvet-theme='light'] {
@@ -329,5 +343,10 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
 		--default-theme-toggle-color: hsl(0, 0%, 100%);
+
+		--default-drawer-button-color: hsl(0, 2%, 89%);
+		--default-drawer-button-text-color: hsl(0, 0%, 20%);
+		--default-drawer-button-focus-color: hsl(0, 0%, 30%);
+		--default-drawer-button-focus-text-color: hsl(0, 0%, 100%);
 	}
 </style>
