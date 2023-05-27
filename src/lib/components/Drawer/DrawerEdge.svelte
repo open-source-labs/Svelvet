@@ -166,14 +166,14 @@ label {
         margin-left: 70px;
     }
 
-.edgeResetBtn{
+    .edgeResetBtn{
         color:  var(
-			--prop-drawer-button-text-color,
-			var(--drawer-button-text-color, var(--default-drawer-button-text-color))
+			--prop-drawer-reset-button-text-color,
+			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
 		);;
         background-color: var(
-			--prop-drawer-button-color,
-			var(--drawer-button-color, var(--default-drawer-button-color))
+			--prop-drawer-reset-button-color,
+			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
 		);
         box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
@@ -181,12 +181,12 @@ label {
 
     .edgeResetBtn:hover{
         color:  var(
-			--prop-drawer-button--focus-text-color,
-			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
+			--prop-drawer-reset-button-hover-text-color,
+			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
 		);;
         background-color: var(
-			--prop-drawer-button-focus-color,
-			var(--prop-drawer-button-focus-color, var(--default-drawer-button-focus-color))
+			--prop-drawer-reset-button-hover-color,
+			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
     }
 
