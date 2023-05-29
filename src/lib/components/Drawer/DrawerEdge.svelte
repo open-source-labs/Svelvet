@@ -22,7 +22,7 @@
   let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
   // Creates props and adds to store, returns true if edge was created
-  export const createEdgeProps = (anchorCreated: boolean) => {
+  export const createEdgeProps = (anchorCreated: boolean): boolean => {
       
     // Object that stores properties for the created edge
     const edgeProps: any = {};
