@@ -2,13 +2,11 @@
   import { writable } from 'svelte/store';
   import type { CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
-  import { Edge } from '$lib';
 
   // External Stores
-  export const edgePropsStore = writable<Array<any>>([]);
-  // export const edgePropsStore = writable<any>();
-
-  export const edgeComponentStore = writable<Array<any>>([]);
+  export const edgeNodeProps = writable<Array<any>>([]);
+  export const edgeAnchorProps = writable<Array<any>>([])
+  // export const edgeComponentStore = writable<any>();
 
   //types for edge creation
   let edgeWidth: number | undefined; 
@@ -24,7 +22,7 @@
   let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
   // Creates props and adds to store, returns true if edge was created
-  export const createEdgeProps = () => {
+  export const createEdgeProps = (anchorCreated: boolean) => {
       
     // Object that stores properties for the created edge
     const edgeProps: any = {};
@@ -35,14 +33,16 @@
     // Add props to edge if they exist
     addProps(edgePropsNames, edgePropsArray, edgeProps);
 
-    // If props were created add edgeProps object to store
+    // If props were created add edgeProps object to store correct store
     if (Object.keys(edgeProps).length) {
-      edgePropsStore.update(edges =>{
-         return [...edges, {...edgeProps}]
-        // return edgeProps;
-        })
-
-      return true;
+      if (!anchorCreated) {
+        edgeNodeProps.set(edgeProps);
+        return true;
+      }
+      else {
+        edgeAnchorProps.set(edgeProps);
+        return true;
+      }
     }
     return false;
   }
