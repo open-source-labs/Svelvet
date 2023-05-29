@@ -1,5 +1,4 @@
 <script lang="ts">
- 	import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
 	import DrawerNode from './DrawerNode.svelte';
 	import DrawerAnchor from './DrawerAnchor.svelte';
 	import DrawerEdge from './DrawerEdge.svelte';
