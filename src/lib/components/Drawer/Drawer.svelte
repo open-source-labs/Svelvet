@@ -92,7 +92,6 @@
     defaultNodes = $defaultNodePropsStore;
     customNodes = $customNodePropsStore;
     anchors = $anchorPropsStore;
-    // console.log(anchors)
 	};
 
 
@@ -114,10 +113,13 @@
 
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
-              <!-- {#if typeof anchors[index] } -->
-                <Anchor {...anchors[index]} >
-              
-                </Anchor>
+              {#if Array.isArray(anchors[index])}
+                {#each anchors[index] as anchorProp}
+                <Anchor {...anchorProp}></Anchor>
+                {/each}  
+              {:else}
+                <Anchor {...anchors[index]} />
+              {/if}
             </Node>			
         {/each}
         <slot/>
