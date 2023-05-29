@@ -29,7 +29,7 @@
   let edge: any;
 
   // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean) => {
+  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
     // Object that stores properties for the created node
     const nodeProps: any = {};
     // Array of property names and values for node
@@ -38,7 +38,6 @@
     
     // Add props to node if they exist 
     addProps(nodePropNames, nodePropsArray, nodeProps);
-    console.log(edgeCreated)
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
