@@ -2,21 +2,13 @@
   import { writable } from 'svelte/store';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
-  import { edgePropsStore } from './DrawerEdge.svelte'; 
-  import edgeComponentStore from './DrawerEdgeCreator.svelte'; 
-
-  
+	import nodeCustomEdge from './DefaultNodeEdge.svelte';
+  import anchorCustomEdge from './CustomNodeEdge.svelte';
 
   // External stores
   export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
   export const customNodePropsStore = writable<Array<NodeConfig>>([]);
   
-  
-
-//  let unsubscribe = edgeComponentStore.subscribe(values => {
-//     console.log(values)
-//     test = values[values.length - 1]
-//  })
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -46,19 +38,21 @@
     
     // Add props to node if they exist 
     addProps(nodePropNames, nodePropsArray, nodeProps);
+    console.log(edgeCreated)
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
-      // If anchor was not created, creates default node and custom edges if edge props were given
+      // If anchor was not created, creates default node 
       if(!anchorCreated) {
-        // if(!edgeCreated) 
+        // If edge was created, adds edge as prop to nodes
+        if(edgeCreated)  nodeProps.edge = nodeCustomEdge;
         defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
-        // else {
-            // nodeProps.edge = edgeComponentStore;
-            // else nodeProps.edge = edges[edges.length - 1]
-        // }
       }
-      else customNodePropsStore.update(nodes => [...nodes, nodeProps]) 
+      else {
+        // If edge was created, adds edge as prop to nodes
+        if(edgeCreated)  nodeProps.edge = anchorCustomEdge;
+        customNodePropsStore.update(nodes => [...nodes, nodeProps]);
+      }
     }
   }
 
