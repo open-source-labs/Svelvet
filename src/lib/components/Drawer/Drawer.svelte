@@ -1,19 +1,64 @@
 <script lang='ts'>
-  import { Node, Svelvet, Anchor, Edge } from '$lib';
+  import { Node, Svelvet, Anchor } from '$lib';
   import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
-  import type { NodeConfig, CSSColorString } from '$lib/types';
-  import  { defaultNodePropsStore } from './DrawerNode.svelte'
-  import  { customNodePropsStore } from './DrawerNode.svelte';
+	import type { SvelvetConfig , NodeConfig, XYPair, EdgeStyle } from '$lib/types';
+  import type { ComponentType } from 'svelte';
+  import  { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte'
   import { anchorPropsStore } from './DrawerAnchor.svelte';
-  import { edgePropsStore } from './DrawerEdge.svelte';
 
-  // Array of default and custom nodes
+  // Props
+  export let width: number = 0;
+  export let height: number = 0;
+  export let minimap: boolean = false;
+  export let translation: XYPair = { x: 0, y: 0 };
+  export let controls: boolean = false;
+  export let edge: ComponentType | null = null;
+  export let edgeStyle: EdgeStyle = 'bezier';
+  export let snapTo: number = 0;
+  export let editable: boolean = false;
+  export let fitView: boolean | 'resize' = false;
+  export let locked: boolean = false;
+  export let zoom: number = 1;
+  export let theme: string = 'light';
+  export let mermaid: string = '';
+  export let mermaidConfig: Record<string, NodeConfig> = {};
+  export let TD: boolean = false;
+  export let disableSelection: boolean = false;
+  export let raiseEdgesOnSelect: boolean | 'source' | 'target' = false;
+  export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
+  export let trackpadPan: boolean = false;
+  export let toggle: boolean = false;
+
+  // Store props in object to be passed to svelvet
+  const sveltetProps: SvelvetConfig = {
+    width,
+    height,
+    minimap,
+    translation,
+    controls,
+    edge,
+    edgeStyle,
+    snapTo,
+    editable,
+    fitView,
+    locked,
+    zoom,
+    theme,
+    mermaid,
+    mermaidConfig,
+    TD,
+    disableSelection,
+    raiseEdgesOnSelect,
+    modifier,
+    trackpadPan,
+    toggle,
+  }
+  
+  // Array of default and custom nodes, anchors
   let defaultNodes: NodeConfig[] = [];
   let customNodes: NodeConfig[] = [];
   let anchors: any[] = [];
-  let edges: any[] = [];
-
-  
+  // Drag and drop functionality
   let dropped_in: boolean;
 
   // Drag and drop events
@@ -47,8 +92,9 @@
     defaultNodes = $defaultNodePropsStore;
     customNodes = $customNodePropsStore;
     anchors = $anchorPropsStore;
-    edges = $edgePropsStore;
+    // console.log(anchors)
 	};
+
 
 </script>
 
@@ -60,25 +106,25 @@
   on:drop={handleDrop}
   > 
   
-    <Svelvet drawer height={1200} zoom={0.70} minimap controls>
+    <Svelvet {...sveltetProps} drawer>
         {#each defaultNodes as node, index}
             <Node {...node} drop="cursor"></Node>
 
         {/each}
-        
-        <!-- {#each edges as edge}
-          <Node drop='cursor' edge={DrawerEdgeCreator}></Node>
-        {/each} -->
 
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
+              <!-- {#if typeof anchors[index] } -->
                 <Anchor {...anchors[index]} >
               
                 </Anchor>
             </Node>			
         {/each}
-        <slot></slot>
-        <ThemeToggle main=light alt=dark slot='toggle'/>
+        <slot/>
+        <slot name="minimap" slot="minimap" />
+        <slot name="controls" slot="controls" />
+        <!-- <slot name="background" slot='background'></slot>  -->
+        <slot name="toggle" slot="toggle" />
     </Svelvet>
     
 </div>
