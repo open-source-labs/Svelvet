@@ -149,10 +149,6 @@
           <label for='dynamic'>Dynamic: </label>
           <input id='dynamic' type="checkbox" bind:value={dynamic} on:change={handleDynamicButtonClick}>
       </li>
-      <li class='list-item'>
-          <label for='anchorEdgeLabel'>Edge Label: </label>
-          <input id='anchorEdgeLabel' type="text" bind:value={anchorEdgeLabel}>
-      </li>
       
       <li class='list-item'>
           <label for='anchorLocked'>Locked: </label>
