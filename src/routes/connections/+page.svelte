@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Svelvet, Minimap, Node, Anchor } from '$lib';
+	import { Svelvet, Minimap, Node, Anchor, Background } from '$lib';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
 	function getPosition() {
 		return {
@@ -42,6 +42,8 @@
 			position={{ x: 0, y: 600 }}
 			connections={[2, 3, '4', [5, '1'], 6, ['custom', 'custom']]}
 		/>
+
+		<Background style="lines" slot="background" />
 	</Svelvet>
 </body>
 

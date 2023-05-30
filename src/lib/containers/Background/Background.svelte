@@ -67,8 +67,18 @@
 						cx={dotCenterCoordinate}
 						cy={dotCenterCoordinate}
 					/>
+				{:else if style === 'dual-dots'}
+					<circle
+						class="background-dot"
+						style:--calculated-dot-color={'red'}
+						r={radius}
+						cx={dotCenterCoordinate}
+						cy={dotCenterCoordinate}
+					/>
 				{:else if style === 'lines'}
 					<line
+						class="background-line"
+						style:--calculated-dot-color={dotColor}
 						x1={dotCenterCoordinate}
 						y1={0}
 						x2={dotCenterCoordinate}
@@ -76,6 +86,8 @@
 						stroke-width={radius}
 					/>
 					<line
+						class="background-line"
+						style:--calculated-dot-color={dotColor}
 						y1={dotCenterCoordinate}
 						x1={0}
 						y2={dotCenterCoordinate}
@@ -108,6 +120,11 @@
 	.background-dot {
 		fill: var(--calculated-dot-color, var(--dot-color, var(--default-dot-color)));
 	}
+
+	.background-line {
+		stroke: var(--calculated-dot-color, var(--dot-color, var(--default-dot-color)));
+	}
+
 	svg {
 		width: 100%;
 		height: 100%;
