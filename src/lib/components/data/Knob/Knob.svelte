@@ -291,12 +291,6 @@
 		align-items: center;
 		height: 7rem;
 		width: 7rem;
-		/* cursor: ew-resize; */
-		/* border: 1px solid gold; */
-	}
-
-	.knob-container {
-		/* border: 1px solid red; */
 	}
 
 	.knob {
@@ -307,8 +301,6 @@
 		pointer-events: auto;
 		cursor: pointer;
 		padding: 0.25rem;
-		/* background-color: lightblue; */
-		/* border: 1px solid purple; */
 	}
 
 	.indicator {
@@ -316,11 +308,9 @@
 		left: 48%;
 		transform-origin: 50% -50%;
 		position: absolute;
-		/* transform: ro÷tate(30 deg); */
 		width: 4%;
 		height: 15%;
 		background-color: #666565;
-		/* box-shadow: 0 0 2px white; */
 		border-radius: 30%/10%;
 		pointer-events: none;
 	}
