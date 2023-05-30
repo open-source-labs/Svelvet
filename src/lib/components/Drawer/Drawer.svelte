@@ -108,17 +108,20 @@
     <Svelvet {...sveltetProps} drawer>
         {#each defaultNodes as node, index}
             <Node {...node} drop="cursor"></Node>
-
         {/each}
 
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
               {#if Array.isArray(anchors[index])}
                 {#each anchors[index] as anchorProp}
-                <Anchor {...anchorProp}></Anchor>
+                  <div class={anchorProp.direction}>
+                    <Anchor {...anchorProp}></Anchor>
+                  </div>
                 {/each}  
               {:else}
-                <Anchor {...anchors[index]} />
+                <div class={anchors[index].direction}>
+                  <Anchor {...anchors[index]} />
+                </div>
               {/if}
             </Node>			
         {/each}
@@ -130,3 +133,36 @@
     </Svelvet>
     
 </div>
+
+<style>
+  /* Styling for anchor position */
+  .west {
+    width: 100%;
+    transform: translate(-2.5%);
+    position: absolute;
+	}
+
+  .east {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    transform: translate(2.5%);
+    position: absolute;
+	}
+
+  .north {
+    height: 100%;
+    transform: translate(0, -5%);
+    position: absolute;
+	}
+
+  
+	.south {
+    display: flex;
+		flex-direction: column-reverse;
+    height: 100%;
+    transform: translate(0,5%);
+    position: absolute;
+
+	}
+</style>
