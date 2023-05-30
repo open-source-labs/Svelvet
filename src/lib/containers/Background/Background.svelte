@@ -12,6 +12,7 @@
 	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
 	export let bgColor: CSSColorString | null = null;
 	export let dotColor: CSSColorString | null = null;
+	export let opacityThreshold = 1; // Scale after which the opacity of grid is reduced
 
 	// External stores
 	const transforms = graph.transforms;
@@ -24,6 +25,7 @@
 	let svgHeight;
 	let backgroundOffsetX: number;
 	let backgroundOffsetY: number;
+	let gridOpacity: number = 1;
 
 	//Subscriptions
 	$: graphTranslation = $translationStore;
@@ -40,6 +42,7 @@
 		svgHeight = backgroundWrapper?.offsetHeight || 0;
 		backgroundOffsetX = ((svgWidth + radius) * (1 - scale)) / 2 + graphTranslation.x;
 		backgroundOffsetY = ((svgHeight + radius) * (1 - scale)) / 2 + graphTranslation.y;
+		gridOpacity = scale > opacityThreshold ? 1 : scale / opacityThreshold;
 	}
 </script>
 
@@ -97,7 +100,7 @@
 				{/if}
 			</pattern>
 		</defs>
-		<rect width="100%" height="100%" fill="url(#graph-pattern)" />
+		<rect width="100%" height="100%" fill="url(#graph-pattern)" opacity={gridOpacity} />
 	</svg>
 </div>
 
