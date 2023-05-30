@@ -43,7 +43,7 @@
 			connections={[2, 3, '4', [5, '1'], 6, ['custom', 'custom']]}
 		/>
 
-		<Background style="dots" slot="background" />
+		<Background style="dots" majorGrid={4} slot="background" />
 	</Svelvet>
 </body>
 

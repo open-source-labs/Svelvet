@@ -60,7 +60,7 @@ export interface ActiveKeys {
 	[key: string]: boolean | number;
 }
 
-export type BackgroundStyles = 'lines' | 'dots' | 'dual-dots' | 'none';
+export type BackgroundStyles = 'lines' | 'dots' | 'none';
 
 export interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {
 	[key: string]: NodeJS.Timer | undefined;
