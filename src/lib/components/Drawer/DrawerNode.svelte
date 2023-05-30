@@ -2,19 +2,13 @@
   import { writable } from 'svelte/store';
   import type { NodeConfig, CSSColorString} from '$lib/types'; 
   import { addProps } from '$lib/utils';
-  import { edgePropsStore } from './DrawerEdge.svelte'; 
-  import edgeComponentStore from './DrawerEdgeCreator.svelte'; 
+	import nodeCustomEdge from './DefaultNodeEdge.svelte';
+  import anchorCustomEdge from './CustomNodeEdge.svelte';
 
   // External stores
   export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
   export const customNodePropsStore = writable<Array<NodeConfig>>([]);
   
-  
-
-//  let unsubscribe = edgeComponentStore.subscribe(values => {
-//     console.log(values)
-//     test = values[values.length - 1]
-//  })
 
   // types for node creation
   let bgColor: CSSColorString | undefined;
@@ -36,7 +30,7 @@
 
 
   // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean) => {
+  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
     // Object that stores properties for the created node
     const nodeProps: any = {};
     // Array of property names and values for node
@@ -48,16 +42,17 @@
 
     // If props were created add nodeProps object to store
     if (Object.keys(nodeProps).length) {
-      // If anchor was not created, creates default node and custom edges if edge props were given
+      // If anchor was not created, creates default node 
       if(!anchorCreated) {
-        // if(!edgeCreated) 
+        // If edge was created, adds edge as prop to nodes
+        if(edgeCreated)  nodeProps.edge = nodeCustomEdge;
         defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
-        // else {
-        // nodeProps.edge = edgePropsStore;
-            // else nodeProps.edge = edges[edges.length - 1]
-        // }
       }
-      else customNodePropsStore.update(nodes => [...nodes, nodeProps]) 
+      else {
+        // If edge was created, adds edge as prop to nodes
+        if(edgeCreated)  nodeProps.edge = anchorCustomEdge;
+        customNodePropsStore.update(nodes => [...nodes, nodeProps]);
+      }
     }
   }
 

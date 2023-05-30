@@ -6,7 +6,7 @@
   // External stores
   export const anchorPropsStore = writable<Array<any>>([]);
 
-  // types for anchor creation
+  // Props for anchor creation
   let invisible: boolean | undefined;
   let nodeConnect: boolean | undefined;
   let input: boolean | undefined;
@@ -18,8 +18,12 @@
   let anchorLocked: boolean | undefined;
   let anchorBgColor: CSSColorString | undefined;
 
+  // Props for adding multiple anchors
+  let multipleAnchors: boolean = false;
+  let anchorsCreated: any[] = [];
+
   // Creates props and adds to store, returns true if anchor was created
-  export const createAnchorProps = () => {
+  export const createAnchorProps = (resetAnchorArray: boolean): boolean => {
     // Object that stores properties for the created anchor
     const anchorProps: any = {};
     // Array of property names and values for anchor
@@ -29,8 +33,20 @@
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
-      anchorPropsStore.update(anchors => [...anchors, anchorProps])
-      return true;
+      // Creates a single anchor or array of anchors
+      if (!multipleAnchors) {
+        anchorPropsStore.update(anchors => [...anchors, anchorProps])
+        return true;
+      }
+      // Push anchors array into store and empty anchors array when node is created
+      if (resetAnchorArray) {
+        anchorPropsStore.update(anchors => [...anchors, anchorsCreated])
+        anchorsCreated = [];
+        multipleAnchors = false;
+        return true; 
+      }
+      anchorsCreated.push(anchorProps);
+      return true; 
     }
     return false;
   }
@@ -86,6 +102,11 @@
     e.target.reset();
 	}
 
+  const addAnchor = (e: any) => {
+    multipleAnchors = true;
+    createAnchorProps(false);
+  }
+
 </script>
 
 <div id='anchorContainer'>
@@ -131,17 +152,16 @@
           <label for='dynamic'>Dynamic: </label>
           <input id='dynamic' type="checkbox" bind:value={dynamic} on:change={handleDynamicButtonClick}>
       </li>
-      <li class='list-item'>
-          <label for='anchorEdgeLabel'>Edge Label: </label>
-          <input id='anchorEdgeLabel' type="text" bind:value={anchorEdgeLabel}>
-      </li>
       
       <li class='list-item'>
           <label for='anchorLocked'>Locked: </label>
           <input id='anchorLocked' type="checkbox" bind:value={anchorLocked} on:change={handleAnchorLockedButtonClick}>
       </li>
       <li class='list-item'>
-          <button class ='anchorResetBtn btn' aria-label="Reset">Reset</button>
+          <button class='addAnchor' on:click|stopPropagation={addAnchor}>Add Anchor</button>
+      </li>
+      <li class='list-item'>
+          <button class ='anchorResetBtn btn' on:click|stopPropagation={handleAnchorResetButtonClick}>Reset</button>
       </li>
   </ul>
  </form>
@@ -188,17 +208,37 @@ label {
 }
  
 .btn {
+      width: 120px;
+      padding: 8px 20px;
+      margin: auto;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-left: 70px;
+ }
 
-   width: 120px;
-   padding: 8px 20px;
-   margin: auto;
-   margin-top: 10px;
+ .addAnchor {
    border: none;
-   border-radius: 5px;
    cursor: pointer;
-   font-size: 15px;
-   margin-left: 70px;      
-}
+   padding: 8px;
+   border-radius: 8px;
+   background-color: var(--prop-background-color, var(--node-color, var(--default-node-color)));
+   color: var(--prop-text-color, var(--text-color, var(--default-text-color)));
+   box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color), var(--default-node-shadow);
+ }
+
+ .addAnchor:hover {
+   color:  var(
+			--prop-drawer-button--focus-text-color,
+			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
+		);;
+        background-color: var(
+			--prop-drawer-button-focus-color,
+			var(--prop-drawer-button-focus-color, var(--default-drawer-button-focus-color))
+		);
+ }
 
 .anchorResetBtn{
       color:  var(

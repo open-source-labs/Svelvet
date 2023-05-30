@@ -1,5 +1,4 @@
 <script lang="ts">
- 	import type { NodeConfig, CSSColorString, Direction} from '$lib/types';
 	import DrawerNode from './DrawerNode.svelte';
 	import DrawerAnchor from './DrawerAnchor.svelte';
 	import DrawerEdge from './DrawerEdge.svelte';
@@ -25,11 +24,10 @@
     e.dataTransfer.dropEffect = "move";
   
     // Create props for anchor or edge if values were given
-    const anchorCreated = createAnchorProps();
-    const edgeCreated = createEdgeProps();
-    // const test = document.getElementsByClassName('edges-wrapper')
-    // console.log(test)
-    // Create props for node and edges or custom creates node if anchor was created
+    const anchorCreated = createAnchorProps(true);
+    const edgeCreated = createEdgeProps(anchorCreated);
+
+    // Create props for node
     createNodeProps(edgeCreated, anchorCreated);
   }
 

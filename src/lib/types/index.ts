@@ -7,3 +7,4 @@ export * from './store';
 export * from './context';
 export * from './edge';
 export * from './anchor';
+export * from './svelvet';
