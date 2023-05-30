@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import CustomAnchor from './CustomAnchor.svelte';
 	import ColorAnchor from './ColorAnchor.svelte';
 	import { Node, Anchor } from '$lib';
@@ -30,7 +30,6 @@
 	const inputs = generateInput(initialData);
 	const output = generateOutput(inputs, processor);
 
-	// onMount(() => {
 	// Create an AudioContext instance
 	audioContext = new AudioContext();
 
@@ -45,14 +44,12 @@
 	// Create the gain node for volume control
 	gainNode = audioContext.createGain();
 	$: gainNode.gain.value = $output.volume;
-	console.log(gainNode.gain.value);
-	// Set the bass and treble levels
 
+	// Set the bass and treble levels
 	$: bassFilter.gain.value = $output.bass;
-	console.log(bassFilter.gain.value);
 
 	$: trebleFilter.gain.value = $output.treble;
-	console.log(trebleFilter.gain.value);
+	console.log($output.treble);
 
 	// Connect the audio source to the filters and gain node
 	bassFilter.connect(trebleFilter);
@@ -90,32 +87,59 @@
 	}
 </script>
 
-<Node useDefaults id="output" position={{ x: 560, y: 450 }} let:selected>
-	<div class="input-anchors">
-		{#each Object.keys(initialData) as key}
-			<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
-				<CustomAnchor {hovering} {connecting} {linked} />
-			</Anchor>
-		{/each}
-	</div>
-	<div class="node" class:selected>
-		<button on:click={() => loadAudio(song)}>Load Audio</button>
-		<button on:click={play}>Play</button>
-		<button on:click={stop}>Stop Audio</button>
-
-		<div id="bass-level">
-			Bass:
-			<span>{bassFilter.gain.value} dB</span>
+<Node useDefaults id="output" position={{ x: 550, y: 300 }} let:selected>
+	<div class="contentWrapper">
+		<div class="node" class:selected>
+			<button on:click={() => loadAudio(song)}>Load Audio</button>
+			<button on:click={play}>Play</button>
+			<button on:click={stop}>Stop</button>
 		</div>
+		<div class="audio_controls">
+			<div class="col input-anchors">
+				{#each Object.keys(initialData) as key}
+					<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
+						<CustomAnchor {hovering} {connecting} {linked} />
+					</Anchor>
+				{/each}
+			</div>
+			<div class="col col_2">
+				<div id="bass-level">
+					Bass:
+					<span>{bassFilter.gain.value} dB</span>
+				</div>
 
-		<div id="treble-level">
-			Treble:
-			<span>{trebleFilter.gain.value} dB</span>
-		</div>
+				<div id="treble-level">
+					Treble:
+					<span>{trebleFilter.gain.value} dB</span>
+				</div>
 
-		<div id="volume-level">
-			Volume:
-			<span>{$output.volume.toFixed()}%</span>
+				<div id="volume-level">
+					Volume:
+					<span>{$output.volume.toFixed()}%</span>
+				</div>
+			</div>
 		</div>
 	</div>
 </Node>
+
+<style>
+	.contentWrapper {
+		padding: 1rem;
+	}
+	.audio_controls {
+		padding-top: 1rem;
+	}
+	.col {
+		line-height: 1.5rem;
+	}
+	.input-anchors {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		left: -24px;
+	}
+	button {
+		border-radius: 4px;
+	}
+</style>

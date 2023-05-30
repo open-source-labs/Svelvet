@@ -47,9 +47,6 @@
     return false;
   }
 
-  const handleStraightButtonClick = (e: any) => {
-    straight = e.target.checked;
-  }
   const handleStepButtonClick = (e: any) => {
     step = e.target.checked;
   }
@@ -69,13 +66,15 @@
     labelColor = undefined;
     textColor = undefined;
     //edgeClick: () => void | null;
+    e.target.reset();
   }
 
 </script>
 
 <div id="edgeContainer">
-  <ul>
-      
+ <!-- On submit resets all the values on the input field in the form to default -->
+ <form on:submit|preventDefault = {handleEdgeResetButtonClick}>
+  <ul aria-labelledby="select_props"> 
       <li class='list-item'>
           <label for='color'>Background: </label>
           <input id='color' class='colorWheel' type='color' bind:value={color}>
@@ -109,14 +108,15 @@
           <input id='edgeLabel' type="text" bind:value={edgeLabel}>
       </li>
       <li class='list-item'>
-          <button class ='edgeResetBtn btn' on:click|stopPropagation={handleEdgeResetButtonClick}>Reset</button>
+          <button class ='edgeResetBtn btn' aria-label="Reset">Reset</button>
       </li>
   </ul>
+ </form>
 </div>
 
 <style>
+/* Edge dropdown Styling */
 #edgeContainer{
-   
   width: 100%;
   font-size: 15px;
 }
@@ -173,14 +173,14 @@ label {
         margin-left: 70px;
     }
 
-.edgeResetBtn{
+    .edgeResetBtn{
         color:  var(
-			--prop-drawer-button-text-color,
-			var(--drawer-button-text-color, var(--default-drawer-button-text-color))
+			--prop-drawer-reset-button-text-color,
+			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
 		);;
         background-color: var(
-			--prop-drawer-button-color,
-			var(--drawer-button-color, var(--default-drawer-button-color))
+			--prop-drawer-reset-button-color,
+			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
 		);
         box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
@@ -188,12 +188,12 @@ label {
 
     .edgeResetBtn:hover{
         color:  var(
-			--prop-drawer-button--focus-text-color,
-			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
+			--prop-drawer-reset-button-hover-text-color,
+			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
 		);;
         background-color: var(
-			--prop-drawer-button-focus-color,
-			var(--prop-drawer-button-focus-color, var(--default-drawer-button-focus-color))
+			--prop-drawer-reset-button-hover-color,
+			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
     }
 

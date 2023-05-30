@@ -18,7 +18,7 @@
 </script>
 
 <body>
-	<Svelvet>
+	<Svelvet minimap>
 		<Volume />
 		<Treble />
 		<Bass />

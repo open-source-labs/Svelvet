@@ -16,7 +16,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults rotation={0} position={{ x: 110, y: 400 }} let:selected>
+<Node useDefaults rotation={0} position={{ x: 110, y: 300 }} let:selected>
 	<NodeWrapper title="Treble" outputStore={output} key="treble">
 		<div class="node-body">
 			<Knob

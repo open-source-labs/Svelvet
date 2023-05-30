@@ -16,7 +16,7 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 110, y: 100 }} let:selected>
+<Node useDefaults position={{ x: 110, y: 50 }} let:selected>
 	<NodeWrapper title="Bass" outputStore={output} key="bass">
 		<div class="node-body">
 			<Knob

@@ -6,6 +6,7 @@
   import  { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte'
   import { anchorPropsStore } from './DrawerAnchor.svelte';
 
+
   // Props
   export let width: number = 0;
   export let height: number = 0;
@@ -58,7 +59,6 @@
   let defaultNodes: NodeConfig[] = [];
   let customNodes: NodeConfig[] = [];
   let anchors: any[] = [];
-  // Drag and drop functionality
   let dropped_in: boolean;
 
   // Drag and drop events
@@ -111,6 +111,7 @@
         {/each}
 
         {#each customNodes as customNode, index}
+            {#if edgeCreated}
             <Node {...customNode} drop="cursor">
               {#if Array.isArray(anchors[index])}
                 {#each anchors[index] as anchorProp}
@@ -124,6 +125,7 @@
                 </div>
               {/if}
             </Node>			
+
         {/each}
         <slot/>
         <slot name="minimap" slot="minimap" />
