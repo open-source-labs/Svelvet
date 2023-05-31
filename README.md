@@ -235,8 +235,6 @@ For more detailed use cases and examples, please visit our [website](https://sve
 </Svelvet>
 ```
 
-<iframe src="https://stackblitz.com/edit/svelvet-v7?embed=1&file=README.md&hideExplorer=1&hideNavigation=1&theme=dark&view=preview"></iframe>
-
 ## Testing
 
 Testing is done with Playwright, Vitest, and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/test) folder. We plan on dramatically expanding test coverage very soon. In order to run the tests use the command:
