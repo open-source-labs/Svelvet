@@ -11,12 +11,7 @@
 		"light": "#E94646",
 		"dark": "#9F1239"
 	},
-	"topbarLinks": [
-		{
-			"name": "Documentation",
-			"url": "https://mintlify.com/docs"
-		}
-	],
+
 	"topbarCtaButton": {
 		"type": "github",
 		"url": "https://github.com/open-source-labs/Svelvet/"
