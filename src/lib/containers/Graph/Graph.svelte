@@ -167,7 +167,7 @@
 	}
 
 	async function loadDrawer() {
-		drawerComponent = (await import ('$lib/components/Drawer/DrawerController.svelte')).default;
+		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
 	}
 
 	function updateGraphDimensions() {
@@ -515,10 +515,10 @@
 		<svelte:component this={toggleComponent} />
 	{/if}
 	{#if drawer}
-		<svelte:component this={drawerComponent}/>
+		<svelte:component this={drawerComponent} />
 	{/if}
 	<slot name="minimap" />
-	<slot name='drawer'/>
+	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
 	{#if selecting && !disableSelection}

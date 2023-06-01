@@ -1,260 +1,298 @@
-<script context='module' lang='ts'>
-  import { writable } from 'svelte/store';
-  import type { NodeConfig, CSSColorString} from '$lib/types'; 
-  import { addProps } from '$lib/utils';
+<script context="module" lang="ts">
+	import { writable } from 'svelte/store';
+	import type { NodeConfig, CSSColorString } from '$lib/types';
+	import { addProps } from '$lib/utils';
 	import nodeCustomEdge from './DefaultNodeEdge.svelte';
-  import anchorCustomEdge from './CustomNodeEdge.svelte';
+	import anchorCustomEdge from './CustomNodeEdge.svelte';
 
-  // External stores
-  export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
-  export const customNodePropsStore = writable<Array<NodeConfig>>([]);
-  
+	// External stores
+	export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
+	export const customNodePropsStore = writable<Array<NodeConfig>>([]);
 
-  // types for node creation
-  let bgColor: CSSColorString | undefined;
-  let borderColor: CSSColorString | undefined;
-  let label: string | undefined;
-  let width: number = 200;
-  let height: number = 100;
-  let nodeDirection: string | undefined;
-  let inputs: number | undefined;
-  let outputs: number | undefined;
-  let locked: boolean | undefined;
-  let center: boolean | undefined;
-  let rotation: number | undefined;
-  let zIndex: number | undefined;
-  let TD: boolean | undefined;
-  let LR: boolean | undefined;
-  let useDefaults: boolean | undefined;
-  let edge: any;
+	// types for node creation
+	let bgColor: CSSColorString | undefined;
+	let borderColor: CSSColorString | undefined;
+	let label: string | undefined;
+	let width: number = 200;
+	let height: number = 100;
+	let nodeDirection: string | undefined;
+	let inputs: number | undefined;
+	let outputs: number | undefined;
+	let locked: boolean | undefined;
+	let center: boolean | undefined;
+	let rotation: number | undefined;
+	let zIndex: number | undefined;
+	let TD: boolean | undefined;
+	let LR: boolean | undefined;
+	let useDefaults: boolean | undefined;
+	let edge: any;
 
+	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
+	export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
+		// Object that stores properties for the created node
+		const nodeProps: any = {};
+		// Array of property names and values for node
+		const nodePropNames: any[] = [
+			'bgColor',
+			'borderColor',
+			'label',
+			'width',
+			'height',
+			'locked',
+			'center',
+			'inputs',
+			'outputs',
+			'rotation',
+			'zIndex',
+			'TD',
+			'LR',
+			'useDefaults'
+		];
+		const nodePropsArray: any[] = [
+			bgColor,
+			borderColor,
+			label,
+			width,
+			height,
+			locked,
+			center,
+			inputs,
+			outputs,
+			rotation,
+			zIndex,
+			TD,
+			LR,
+			useDefaults
+		];
 
-  // Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-  export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
-    // Object that stores properties for the created node
-    const nodeProps: any = {};
-    // Array of property names and values for node
-    const nodePropNames: any[] = ['bgColor', 'borderColor','label', 'width', 'height', 'locked', 'center', 'inputs', 'outputs', 'rotation', 'zIndex', 'TD', 'LR', 'useDefaults'];
-    const nodePropsArray: any[] = [bgColor, borderColor, label, width, height, locked, center, inputs, outputs, rotation, zIndex, TD, LR, useDefaults];
-    
-    // Add props to node if they exist 
-    addProps(nodePropNames, nodePropsArray, nodeProps);
+		// Add props to node if they exist
+		addProps(nodePropNames, nodePropsArray, nodeProps);
 
-    // If props were created add nodeProps object to store
-    if (Object.keys(nodeProps).length) {
-      // If anchor was not created, creates default node 
-      if(!anchorCreated) {
-        // If edge was created, adds edge as prop to nodes
-        if(edgeCreated)  nodeProps.edge = nodeCustomEdge;
-        defaultNodePropsStore.update(nodes => [...nodes, nodeProps]);
-      }
-      else {
-        // If edge was created, adds edge as prop to nodes
-        if(edgeCreated)  nodeProps.edge = anchorCustomEdge;
-        customNodePropsStore.update(nodes => [...nodes, nodeProps]);
-      }
-    }
-  }
+		// If props were created add nodeProps object to store
+		if (Object.keys(nodeProps).length) {
+			// If anchor was not created, creates default node
+			if (!anchorCreated) {
+				// If edge was created, adds edge as prop to nodes
+				if (edgeCreated) nodeProps.edge = nodeCustomEdge;
+				defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+			} else {
+				// If edge was created, adds edge as prop to nodes
+				if (edgeCreated) nodeProps.edge = anchorCustomEdge;
+				customNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+			}
+		}
+	};
 
-  // Button clicks for defaultNodes
-  const handleNodeResetButtonClick = (e: any) => {
-    bgColor = undefined;
-    borderColor = undefined;
-    label = undefined;
-    width = 200;
-    height = 100;
-    inputs = undefined;
-    outputs = undefined;
-    locked = undefined;
-    center = undefined;
-    rotation = undefined;
-    zIndex = undefined;
-    TD = undefined;
-    LR = undefined;
-    useDefaults = undefined;
+	// Button clicks for defaultNodes
+	const handleNodeResetButtonClick = (e: any) => {
+		bgColor = undefined;
+		borderColor = undefined;
+		label = undefined;
+		width = 200;
+		height = 100;
+		inputs = undefined;
+		outputs = undefined;
+		locked = undefined;
+		center = undefined;
+		rotation = undefined;
+		zIndex = undefined;
+		TD = undefined;
+		LR = undefined;
+		useDefaults = undefined;
 
-    e.target.reset();
-  }
+		e.target.reset();
+	};
 
-  const handleLockedButtonClick = (e: any) => {
-	locked = e.target.checked;
-  }
+	const handleLockedButtonClick = (e: any) => {
+		locked = e.target.checked;
+	};
 
-  const handleCenterButtonClick = (e: any) => {
-	center = e.target.checked;
-  }
+	const handleCenterButtonClick = (e: any) => {
+		center = e.target.checked;
+	};
 
-  const handleUseDefaultsButtonClick = (e: any) => {     
-    useDefaults = e.target.checked;
-          
-  }
+	const handleUseDefaultsButtonClick = (e: any) => {
+		useDefaults = e.target.checked;
+	};
 
-  const handleAnchorPositionButton = (e: any) => {
-    if (e.target.value == '') nodeDirection = undefined;
-      else {    
-        console.log(e.target.value);   
-        nodeDirection = e.target.value;
-        if (nodeDirection === 'LR') {
-            LR = true;
-            TD = false;
-        }
-        else {
-            TD = true;
-            LR = false;
-        }
-      }
-  }
-
+	const handleAnchorPositionButton = (e: any) => {
+		if (e.target.value == '') nodeDirection = undefined;
+		else {
+			nodeDirection = e.target.value;
+			if (nodeDirection === 'LR') {
+				LR = true;
+				TD = false;
+			} else {
+				TD = true;
+				LR = false;
+			}
+		}
+	};
 </script>
 
-<div id='nodeContainer'>
-<!-- On submit resets all the values on the input field in the form to default -->
- <form on:submit|preventDefault = {handleNodeResetButtonClick}>
-  <ul aria-labelledby="select_props">
-      <li class='list-item'>
-          <label for='bgColor'>Background: </label>
-          <input id='bgColor' class='colorWheel' type='color' bind:value={bgColor}>
-      </li>
-      <li class='list-item'>
-          <label for='borderColor'>Border: </label>
-          <input id='borderColor' class='colorWheel' type='color' bind:value={borderColor}>
-      </li>
-      <li class='list-item'>
-          <label for='useDefaults'>useDefaults: </label> 
-          <input id='useDefaults' type="checkbox" bind:value={useDefaults} on:change={handleUseDefaultsButtonClick}>
-      </li>
-    
-      <li class='list-item'>
-        <label for='dimensions'>Dimensions:</label>
-      </li>
-      <li class="list-item">               
-          <label for='width'>Width:</label>
-              <input id='width' class='inputField' type='input' bind:value={width}>
-          <label for='height' style="margin-left: 6px">Height:</label> 
-              <input id='height' class='inputField' type='input' bind:value={height}>
-      </li>
-        <li class='list-item'>
-            <label for='locked'>Locked: </label> 
-            <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
-        </li>
-        <li class='list-item'>
-            <label for='centered'>Centered: </label>
-            <input id='centered' type="checkbox" bind:value={center} on:change={handleCenterButtonClick}>
-        </li>
-        <li class='list-item'>
-            <label for='rotation'>Rotation:</label> 
-            <input id = 'rotation'  class='inputField' type="number"  bind:value={rotation}>
-        </li>
-        <li class='list-item'>
-            <label for='zIndex'>zIndex:</label> 
-            <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
-        </li> 
-        <li class='list-item'>
-          <label for='label'>Label : </label>
-          <input id='label' type="text" bind:value={label}>
-      </li>
-        <li class='list-item'>
-          <label for='defaultAnchors'>Default Anchors:</label>
-        </li>
-        <li class="list-item">
-            <label for="inputAnchor">Input: </label>
-            <input id='inputAnchor' class='inputField' type="number" min='0' bind:value={inputs}>
-            <label for="outputAnchor" style="margin-left: 6px">Output: </label>
-            <input id='outputAnchor' class='inputField' type="number"  min='0' bind:value={outputs}>
-        </li>
-        <li class="list-item">
-          <label for='anchorPositon'>Anchor Position: </label>
-          <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
-              <option value=''>-</option>
-              <option value='LR'>LR</option>
-              <option value='TD'>TD</option>                        
-          </select>					
-          </li>            
-        <li class='list-item'>
-            <button class ='nodeResetBtn btn' aria-label="Reset">Reset</button>
-        </li>    
-    </ul>
- </form>
+<div id="nodeContainer">
+	<!-- On submit resets all the values on the input field in the form to default -->
+	<form on:submit|preventDefault={handleNodeResetButtonClick}>
+		<ul aria-labelledby="select_props">
+			<li class="list-item">
+				<label for="bgColor">Background: </label>
+				<input id="bgColor" class="colorWheel" type="color" bind:value={bgColor} />
+			</li>
+			<li class="list-item">
+				<label for="borderColor">Border: </label>
+				<input id="borderColor" class="colorWheel" type="color" bind:value={borderColor} />
+			</li>
+			<li class="list-item">
+				<label for="useDefaults">useDefaults: </label>
+				<input
+					id="useDefaults"
+					type="checkbox"
+					bind:value={useDefaults}
+					on:change={handleUseDefaultsButtonClick}
+				/>
+			</li>
+
+			<li class="list-item">
+				<label for="dimensions">Dimensions:</label>
+			</li>
+			<li class="list-item">
+				<label for="width">Width:</label>
+				<input id="width" class="inputField" type="input" bind:value={width} />
+				<label for="height" style="margin-left: 6px">Height:</label>
+				<input id="height" class="inputField" type="input" bind:value={height} />
+			</li>
+			<li class="list-item">
+				<label for="locked">Locked: </label>
+				<input id="label" type="checkbox" bind:value={locked} on:change={handleLockedButtonClick} />
+			</li>
+			<li class="list-item">
+				<label for="centered">Centered: </label>
+				<input
+					id="centered"
+					type="checkbox"
+					bind:value={center}
+					on:change={handleCenterButtonClick}
+				/>
+			</li>
+			<li class="list-item">
+				<label for="rotation">Rotation:</label>
+				<input id="rotation" class="inputField" type="number" bind:value={rotation} />
+			</li>
+			<li class="list-item">
+				<label for="zIndex">zIndex:</label>
+				<input id="zIndex" class="inputField" type="number" bind:value={zIndex} />
+			</li>
+			<li class="list-item">
+				<label for="label">Label : </label>
+				<input id="label" type="text" bind:value={label} />
+			</li>
+			<li class="list-item">
+				<label for="defaultAnchors">Default Anchors:</label>
+			</li>
+			<li class="list-item">
+				<label for="inputAnchor">Input: </label>
+				<input id="inputAnchor" class="inputField" type="number" min="0" bind:value={inputs} />
+				<label for="outputAnchor" style="margin-left: 6px">Output: </label>
+				<input id="outputAnchor" class="inputField" type="number" min="0" bind:value={outputs} />
+			</li>
+			<li class="list-item">
+				<label for="anchorPositon">Anchor Position: </label>
+				<select
+					id="anchorPosition"
+					bind:value={nodeDirection}
+					on:change={handleAnchorPositionButton}
+				>
+					<option value="">-</option>
+					<option value="LR">LR</option>
+					<option value="TD">TD</option>
+				</select>
+			</li>
+			<li class="list-item">
+				<button class="nodeResetBtn btn" aria-label="Reset">Reset</button>
+			</li>
+		</ul>
+	</form>
 </div>
 
 <style>
-  /* Node dropdown Styling */
-#nodeContainer{
-    width: 100%;
-    font-size: 15px;
-}
-#nodeContainer ul{
-    margin:0;
-    padding:0;
-}
-label {
-    margin-right: 10px;
-}
+	/* Node dropdown Styling */
+	#nodeContainer {
+		width: 100%;
+		font-size: 15px;
+	}
+	#nodeContainer ul {
+		margin: 0;
+		padding: 0;
+	}
+	label {
+		margin-right: 10px;
+	}
 
-.list-item{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    list-style: none;
-    margin-bottom: 10px;
-    margin-right: 3px;
-}
-.colorWheel{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    border: none;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-    border-radius: 50%;
-}
-.colorWheel::-webkit-color-swatch{
-   border-radius: 40%;
-}
-.colorWheel::-moz-color-swatch{
-    border-radius: 40%;
-}
+	.list-item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		list-style: none;
+		margin-bottom: 10px;
+		margin-right: 3px;
+	}
+	.colorWheel {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		background-color: transparent;
+		border: none;
+		width: 35px;
+		height: 35px;
+		cursor: pointer;
+		border-radius: 50%;
+	}
+	.colorWheel::-webkit-color-swatch {
+		border-radius: 40%;
+	}
+	.colorWheel::-moz-color-swatch {
+		border-radius: 40%;
+	}
 
-.inputField {
-    width: 50px;
-
-}
-.btn {
-    width: 120px;
-    color: aliceblue;
-    padding: 8px 20px;
-    margin: auto;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    margin-left: 70px;
-}
-.nodeResetBtn{
-        color:  var(
+	.inputField {
+		width: 50px;
+	}
+	.btn {
+		width: 120px;
+		color: aliceblue;
+		padding: 8px 20px;
+		margin: auto;
+		margin-top: 10px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 15px;
+		margin-left: 70px;
+	}
+	.nodeResetBtn {
+		color: var(
 			--prop-drawer-reset-button-text-color,
 			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
-		);;
-        background-color: var(
+		);
+		background-color: var(
 			--prop-drawer-reset-button-color,
 			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
 		);
-        box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+		box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
-}
+	}
 
-.nodeResetBtn:hover{
-        color:  var(
+	.nodeResetBtn:hover {
+		color: var(
 			--prop-drawer-reset-button-hover-text-color,
-			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
-		);;
-        background-color: var(
+			var(
+				--drawer-reset-button-hover-text-color,
+				var(--default-drawer-reset-button-hover-text-color)
+			)
+		);
+		background-color: var(
 			--prop-drawer-reset-button-hover-color,
 			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
-}
- 
+	}
 </style>

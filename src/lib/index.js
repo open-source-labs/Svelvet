@@ -33,8 +33,7 @@ export {
 	Drawer,
 	generateInput,
 	generateOutput,
-	getViewportCenter,
-	
+	getViewportCenter
 };
 
 export * from './types';

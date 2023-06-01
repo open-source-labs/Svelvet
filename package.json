@@ -1,13 +1,13 @@
 {
 	"name": "svelvet",
-	"version": "7.0.47",
+	"version": "8.0.0",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
 		"svelvet",
 		"typescript"
 	],
-	"authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Horacio, Ian, Jeffrey, Jen, Johnny, Justin, Mauricio, Michael, Rachel, Ryan, Samee, Taylor, Thomas, Timmy, Tony, Von, Walter",
+	"authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Horacio, Ian, Jeffrey, Jen, Johnny, Justin, Mauricio, Michael, Rachel, Rathna, Ruxin, Ryan, Sam, Samee, Taylor, Thomas, Timmy, Tony, Von, Walter, Wesley",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/open-source-labs/Svelvet/issues"

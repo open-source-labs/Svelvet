@@ -14,10 +14,9 @@
 				label="Dynamic 1"
 				resizable
 				dynamic
-				
 				connections={[2, 2]}
 			/>
-			<Node connections={[1]} position={{ x: 500, y: 400 }} label="Static"/>
+			<Node connections={[1]} position={{ x: 500, y: 400 }} label="Static" />
 			<Node useDefaults width={200} height={100} connections={[1, 4]}>
 				<Anchor dynamic />
 				<h1>Half</h1>
