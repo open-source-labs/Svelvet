@@ -7,23 +7,53 @@ description: 'Optional component offering drap and drop functionality of Default
 
 ## Description
 
-The Drawer is a self-wrapping parent component which renders out a Drawer Controller, Controls, Theme Toggle and Minimap on the canvas. 
+The Drawer is a self-wrapping parent component which renders out a Svelvet component and a Drawer Controller on the canvas. 
 
-The drawer controller provides drag and drop functionality of Nodes and an ability to customize them before adding them to the canvas.
+The drawer controller provides an interactive UI with drag and drop functionality for creating and customizing Svelvet components before adding them to the canvas.
 
-Nodes, Edges and Anchors styling are fully configurable by selecting the props that are available to these components to change their visualization and interaction behavior.
+The styling of [Nodes](/components/nodes), [Edges](/components/edges) and [Anchors](//components/anchors) are fully configurable by selecting the props that are 
+available to these components to change their visualization and interaction behavior.
+
+All the props that are available to the Svelvet component are available to be passed on to the Drawer component. See [Svelvet](/components/svelvet) For the list of available 
+props to be passed on to the Drawer component.
+
+
+<Warning>
+    When customizing props for Anchors and Edges, the props such as Label, Default Anchors & Anchor position for creating a Node will no longer apply.
+</Warning>
 
 ```HTML MyDrawer.svelte
 <script>
-    import {Drawer} from 'svelvet';
+    import {Drawer, ThemeToggle} from 'svelvet';
 </script>
 
-<Drawer/>
+<Drawer height={1200} zoom={0.70} controls>
+   <ThemeToggle main='light' alt='dark' slot='toggle'/>
+</Drawer>
 
 ```
-Check out the video demo of the drawer functionality.
 
+
+## Notes 
+
+Adding an anchor will create a custom node and override all default node settings.
+
+The anchor direction prop functions differently from a typical anchor component by modifying both its position and the rendered edge directions.
+
+
+
+<Warning>
+Adding an edge to a group of nodes will effect **all previous nodes**, i.e:
+Adding an edge to a default node effects all previous default node edges, whereas adding an edge to a custom node effects all previous custom node edges
+</Warning>
+
+Check out the video demo of the drawer functionality.
+ 
 <iframe 
-    width="710" height="418" 
-    src="https://www.youtube.com/embed/yAYVvexFoJ4">
+    width="595" height="410" 
+   src="https://www.youtube.com/embed/cAzNvl1a20g?rel=0&amp;vq=hd720">
 </iframe>
+
+
+
+

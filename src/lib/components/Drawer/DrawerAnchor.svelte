@@ -6,24 +6,28 @@
   // External stores
   export const anchorPropsStore = writable<Array<any>>([]);
 
+  // Local stores
+  const anchorCounter = writable<number>(0);
+
   // Props for anchor creation
   let invisible: boolean | undefined;
   let nodeConnect: boolean | undefined;
   let input: boolean | undefined;
   let output: boolean | undefined;
   let multiple: boolean | undefined;
-  let direction: Direction | undefined;
+  let direction: Direction | undefined | '';
   let dynamic: boolean | undefined;
-  let anchorEdgeLabel: string | undefined;
+  let anchorEdgeLabel: string | undefined;;
   let anchorLocked: boolean | undefined;
   let anchorBgColor: CSSColorString | undefined;
+  let directionValue: HTMLElement;
 
   // Props for adding multiple anchors
-  let multipleAnchors: boolean = false;
   let anchorsCreated: any[] = [];
 
   // Creates props and adds to store, returns true if anchor was created
-  export const createAnchorProps = (resetAnchorArray: boolean): boolean => {
+  export const createAnchorProps = (createAnchors: boolean): boolean => {
+    if (direction == '') direction = undefined;
     // Object that stores properties for the created anchor
     const anchorProps: any = {};
     // Array of property names and values for anchor
@@ -31,18 +35,11 @@
     const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
     // Adds props to anchor if they exist
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
+    console.log(anchorProps)
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
-      // Creates a single anchor or array of anchors
-      if (!multipleAnchors) {
-        anchorPropsStore.update(anchors => [...anchors, anchorProps])
-        return true;
-      }
-      // Push anchors array into store and empty anchors array when node is created
-      if (resetAnchorArray) {
-        anchorPropsStore.update(anchors => [...anchors, anchorsCreated])
-        anchorsCreated = [];
-        multipleAnchors = false;
+      if (createAnchors) {
+        anchorPropsStore.update(anchors => [...anchors, [...anchorsCreated]])
         return true; 
       }
       anchorsCreated.push(anchorProps);
@@ -98,13 +95,21 @@
     anchorEdgeLabel = undefined;
     anchorLocked = undefined;
     anchorBgColor = undefined;
+    anchorsCreated = [];
+
+    anchorCounter.set(anchorsCreated.length)
 
     e.target.reset();
 	}
 
   const addAnchor = (e: any) => {
-    multipleAnchors = true;
     createAnchorProps(false);
+    anchorCounter.set(anchorsCreated.length);
+  }
+
+  const deleteAnchor = (e:any) => {
+    anchorsCreated.pop();
+    anchorCounter.set(anchorsCreated.length);
   }
 
 </script>
@@ -139,7 +144,7 @@
       </li>
       <li class='list-item'>
           <label for='direction'>Direction: </label>
-          <select id='direction' bind:value={direction} on:change={handleDirectionButtonClick}>
+          <select id='direction' bind:this= {directionValue} bind:value={direction} on:change={handleDirectionButtonClick}>
               <option value =''>-</option>
               <option value ='north'>North</option>
               <option value ='south'>South</option>
@@ -157,11 +162,19 @@
           <label for='anchorLocked'>Locked: </label>
           <input id='anchorLocked' type="checkbox" bind:value={anchorLocked} on:change={handleAnchorLockedButtonClick}>
       </li>
+     
       <li class='list-item'>
-          <button class='addAnchor' on:click|stopPropagation={addAnchor}>Add Anchor</button>
+        <label for='addAnchors'> Add Anchors: </label>
+        <button class='deleteAnchor' type="button" on:click|stopPropagation={deleteAnchor}>
+          <span class="material-symbols-outlined"> arrow_left </span>
+        </button>
+        <span class="list-item counter" >{$anchorCounter}</span>
+        <button class='addAnchor' type="button" on:click|stopPropagation={addAnchor}>
+          <span class="material-symbols-outlined"> arrow_right </span>
+        </button>
       </li>
       <li class='list-item'>
-          <button class ='anchorResetBtn btn' on:click|stopPropagation={handleAnchorResetButtonClick}>Reset</button>
+          <button class ='anchorResetBtn btn' type="submit" aria-label="Reset">Reset</button>
       </li>
   </ul>
  </form>
@@ -178,7 +191,7 @@
     padding:0;
 }
 label {
-   margin-right: 10px;
+  margin-right: 10px;
 }
 .list-item{
    display: flex;
@@ -219,46 +232,61 @@ label {
       margin-left: 70px;
  }
 
- .addAnchor {
+ .addAnchor, .deleteAnchor {
    border: none;
    cursor: pointer;
-   padding: 8px;
+   padding: 5px;
    border-radius: 8px;
-   background-color: var(--prop-background-color, var(--node-color, var(--default-node-color)));
-   color: var(--prop-text-color, var(--text-color, var(--default-text-color)));
-   box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color), var(--default-node-shadow);
- }
-
- .addAnchor:hover {
    color:  var(
-			--prop-drawer-button--focus-text-color,
-			var(--drawer-button-focus-text-color, var(--default-drawer-button-focus-text-color))
-		);;
-        background-color: var(
-			--prop-drawer-button-focus-color,
-			var(--prop-drawer-button-focus-color, var(--default-drawer-button-focus-color))
-		);
- }
-
-.anchorResetBtn{
-      color:  var(
 			--prop-drawer-reset-button-text-color,
 			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
-		);;
-        background-color: var(
+		);
+   background-color: var(
 			--prop-drawer-reset-button-color,
 			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
 		);
-        box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+   box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+			var(--default-node-shadow);
+ }
+
+
+ .addAnchor:hover, .deleteAnchor:hover {
+    color: var(
+			--prop-drawer-reset-button-hover-text-color,
+			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
+		);
+    background-color: var(
+			--prop-drawer-reset-button-hover-color,
+			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
+		);
+ }
+
+ .counter {
+  display: inline-block;
+  width: 15px;
+  margin: 0 10px;
+  font-size: 18px;
+ }
+
+.anchorResetBtn{
+  color: var(
+			--prop-drawer-reset-button-text-color,
+			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
+		);
+  background-color: var(
+			--prop-drawer-reset-button-color,
+			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
+		);
+  box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
     }
 
 .anchorResetBtn:hover{
-        color:  var(
+  color: var(
 			--prop-drawer-reset-button-hover-text-color,
 			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
-		);;
-        background-color: var(
+		);
+  background-color: var(
 			--prop-drawer-reset-button-hover-color,
 			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);

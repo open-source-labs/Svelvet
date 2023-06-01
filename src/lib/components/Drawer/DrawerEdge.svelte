@@ -162,39 +162,39 @@ label {
 }
 
 .btn {
-        width: 120px;
-        padding: 8px 20px;
-        margin: auto;
-        margin-top: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        margin-left: 70px;
-    }
+  width: 120px;
+  padding: 8px 20px;
+  margin: auto;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-left: 70px;
+}
 
-    .edgeResetBtn{
-        color:  var(
+.edgeResetBtn{
+  color: var(
 			--prop-drawer-reset-button-text-color,
 			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
-		);;
-        background-color: var(
+		);
+  background-color: var(
 			--prop-drawer-reset-button-color,
 			var(--drawer-reset-button-color, var(--default-drawer-reset-button-color))
 		);
-        box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
+  box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
     }
 
-    .edgeResetBtn:hover{
-        color:  var(
+.edgeResetBtn:hover{
+  color: var(
 			--prop-drawer-reset-button-hover-text-color,
 			var(--drawer-reset-button-hover-text-color, var(--default-drawer-reset-button-hover-text-color))
-		);;
-        background-color: var(
+		);
+  background-color: var(
 			--prop-drawer-reset-button-hover-color,
 			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
-    }
+}
 
 </style>
