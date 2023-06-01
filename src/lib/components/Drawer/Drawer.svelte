@@ -112,17 +112,11 @@
 
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
-              {#if Array.isArray(anchors[index])}
                 {#each anchors[index] as anchorProp}
                   <div class={anchorProp.direction}>
                     <Anchor {...anchorProp}></Anchor>
                   </div>
                 {/each}  
-              {:else}
-                <div class={anchors[index].direction}>
-                  <Anchor {...anchors[index]} />
-                </div>
-              {/if}
             </Node>			
         {/each}
 
