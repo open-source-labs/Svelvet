@@ -1,10 +1,10 @@
 <script lang='ts'>
   import { Node, Svelvet, Anchor } from '$lib';
-  import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import type { SvelvetConfig , NodeConfig, XYPair, EdgeStyle } from '$lib/types';
   import type { ComponentType } from 'svelte';
   import  { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte'
   import { anchorPropsStore } from './DrawerAnchor.svelte';
+	import type { AnchorProps } from '$lib/types/props/anchorProps';
 
 
   // Props
@@ -58,23 +58,23 @@
   // Array of default and custom nodes, anchors
   let defaultNodes: NodeConfig[] = [];
   let customNodes: NodeConfig[] = [];
-  let anchors: any[] = [];
+  let anchors: any = [];
   let dropped_in: boolean;
 
   // Drag and drop events
-  const handleDragEnter = (e: any) => {
+  const handleDragEnter = (e: DragEvent): void => {
     dropped_in = true;
   }
 
-  const handleDragLeave = (e: any) => {
+  const handleDragLeave = (e: DragEvent): void => {
     dropped_in = false;
   }
 
-  const handleDragEnd = (e: any) => {
+  const handleDragEnd = (e: DragEvent): void => {
     dropped_in = false;
   }
 
-  const onDragOver = (e: Event) => {
+  const onDragOver = (e: DragEvent): boolean => {
     e.preventDefault();
     return false;
   };
@@ -82,12 +82,12 @@
   const handleDrop = (e: any) => {
 		e.stopPropagation();
 		//Issue click event
-		const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		e.target.dispatchEvent(moveEvent);
+    const moveEvent = new MouseEvent('mousemove', {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      bubbles: true
+    });
+    e.target.dispatchEvent(moveEvent);
 
     defaultNodes = $defaultNodePropsStore;
     customNodes = $customNodePropsStore;
@@ -111,19 +111,14 @@
         {/each}
 
         {#each customNodes as customNode, index}
-            {#if edgeCreated}
             <Node {...customNode} drop="cursor">
-              {#if Array.isArray(anchors[index])}
+    
                 {#each anchors[index] as anchorProp}
                   <div class={anchorProp.direction}>
                     <Anchor {...anchorProp}></Anchor>
                   </div>
                 {/each}  
-              {:else}
-                <div class={anchors[index].direction}>
-                  <Anchor {...anchors[index]} />
-                </div>
-              {/if}
+    
             </Node>			
 
         {/each}
