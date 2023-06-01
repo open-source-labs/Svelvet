@@ -1,0 +1,61 @@
+---
+title: 'Knob'
+sidebarTitle: 'Knob'
+description: 'A flexible knob component for use with our data flow system'
+---
+
+## Description
+
+The Knob is an accessible, flexible component that directly interfaces with Svelvet's custom input and output stores. It can be controlled via keyboard input, arrow keys, scroll, and click and drag.
+
+Refer to the overview in this section for more detailed usage.
+
+## Props
+
+<ResponseField name="parameterStore" required type="CustomWritable<number>">
+	The input store associated with the parameter.
+</ResponseField>
+
+<ResponseField name="min" type="number" default="0">
+	The minimum value allowed when interacting with the Knob.
+</ResponseField>
+
+<ResponseField name="max" type="number" default="100">
+	The maximum value allowed when interacting with the Knob.
+</ResponseField>
+
+<ResponseField name="minDegree" type="number" default="60">
+	Minimum angle allowed when interacting with the Knob rotation.
+</ResponseField>
+
+<ResponseField name="maxDegree" type="number" default="300">
+	Maximum angle allowed when interacting with the Knob rotation.
+</ResponseField>
+
+<ResponseField name="step" type="number" default="1">
+	Value by which the stored value should increment.
+</ResponseField>
+
+<ResponseField name="label" type="string" default="Value">
+	Displayed label for the slider.
+</ResponseField>
+
+<ResponseField name="fixed" type="number" default="2">
+	Precision in decimal places.
+</ResponseField>
+
+<ResponseField name="fontColor" type="CSS Color String" default="theme dependent">
+	Text color.
+</ResponseField>
+
+<ResponseField name="knobColor" type="CSS Color String" default="theme dependent">
+	Knob background color.
+</ResponseField>
+
+<ResponseField name="knobValueColor" type="CSS Color String" default="theme dependent">
+	Color of the output value displayed at the center of the knob.
+</ResponseField>
+
+<ResponseField name="indicatorColor" type="CSS Color String" default="theme dependent">
+	Color for indicator symbol displaying the current rotational position of the knob.
+</ResponseField>
