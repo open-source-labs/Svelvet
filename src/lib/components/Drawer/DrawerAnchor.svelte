@@ -35,8 +35,6 @@
     const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
     // Adds props to anchor if they exist
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
-    console.log(anchorProps)
-    console.log('anchorsCreated', anchorsCreated)
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
       if (createAnchors) {
@@ -51,7 +49,7 @@
 
   //Button Clicks for Anchors
   const handleAnchorLockedButtonClick = (e: any) => {
-		anchorLocked = e.target.checked;
+    anchorLocked = e.target.checked;
 	}
 
 	const handleInvisibleButtonClick = (e: any) => {
