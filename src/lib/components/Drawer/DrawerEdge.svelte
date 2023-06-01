@@ -121,8 +121,8 @@
   font-size: 15px;
 }
 #edgeContainer ul{
-margin:0;
-padding:0;
+  margin:0;
+  padding:0;
 }
 
 label {
