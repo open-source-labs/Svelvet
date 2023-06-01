@@ -129,43 +129,51 @@
 
 	// Initial handler for a touch event on a node
 	function handleNodeTouch(e: TouchEvent) {
+		// Capture the initial touch position
+		$initialClickPosition = get(cursor);
+
 		$graphDOMElement.focus();
-
-		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
-
-		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
-		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
-
-		// If the event target is an input, don't do anything
-		if (tagsToIgnore.has(targetElement.tagName)) return;
-		e.preventDefault();
 
 		// If the node is Node is not currently on top, bring it to the front
 		// Unless the zIndex prop has ben set to infinity
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
+		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
+
+		// If the event target is an input, don't do anything
+		if (tagsToIgnore.has(targetElement.tagName)) return;
+
+		e.preventDefault();
+
 		// Dispatch our nodeClicked event for developer use
 		dispatch('nodeClicked', { node, e });
 
-		// Capture the initial touch position
-		$initialClickPosition = get(cursor);
+		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
+		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
 
 		// Handle the node selection logic
 		nodeSelectLogic(e);
 	}
+
 	// Initial handler for a click event on a node
 	function handleNodeClicked(e: MouseEvent) {
 		// Capture the initial click position
 		$initialClickPosition = get(cursor);
 
 		$graphDOMElement.focus();
-		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
 
-		// Bring node to front regardless of event target
+		// If the node is Node is not currently on top, bring it to the front
+		// Unless the zIndex prop has ben set to infinity
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
+		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
+
 		if (tagsToIgnore.has(targetElement.tagName)) return;
+
 		e.preventDefault();
+
+		// Dispatch our nodeClicked event for developer use
+		dispatch('nodeClicked', { node, e });
 
 		// If the node or graph is locked, don't do anything
 		if ($locked || $nodeLock) return;

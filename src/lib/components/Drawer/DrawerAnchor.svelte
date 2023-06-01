@@ -35,7 +35,6 @@
     const anchorPropsArray: any[] = [invisible, nodeConnect, input, output, multiple, dynamic, anchorEdgeLabel, direction, anchorLocked, anchorBgColor];
     // Adds props to anchor if they exist
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
-    console.log(anchorProps)
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
       if (createAnchors) {
@@ -50,7 +49,7 @@
 
   //Button Clicks for Anchors
   const handleAnchorLockedButtonClick = (e: any) => {
-		anchorLocked = e.target.checked;
+    anchorLocked = e.target.checked;
 	}
 
 	const handleInvisibleButtonClick = (e: any) => {
@@ -84,7 +83,7 @@
       }
   }
 
-  const handleAnchorResetButtonClick = (e: any) => {
+  const handleAnchorResetButtonClick = (e?: any) => {
     invisible = undefined;
     nodeConnect= undefined;
     input = undefined;
@@ -98,8 +97,7 @@
     anchorsCreated = [];
 
     anchorCounter.set(anchorsCreated.length)
-
-    e.target.reset();
+    if (e) e.target.reset();
 	}
 
   const addAnchor = (e: any) => {
@@ -109,6 +107,7 @@
 
   const deleteAnchor = (e:any) => {
     anchorsCreated.pop();
+    if (anchorsCreated.length === 0) handleAnchorResetButtonClick();
     anchorCounter.set(anchorsCreated.length);
   }
 
