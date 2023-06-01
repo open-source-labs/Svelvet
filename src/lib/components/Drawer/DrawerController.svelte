@@ -164,7 +164,7 @@
 			--prop-controls-text-color,
 			var(--controls-text-color, var(--default-controls-text-color))
 		);
-		background-color: var(
+	background-color: var(
 			--prop-controls-background-color,
 			var(--controls-background-color, var(--default-controls-background-color))
 		);
@@ -197,11 +197,6 @@
   border: none;
   background: none;
   color: inherit;  
-}
-
-hr{
-  margin-top: 0px;
-  width: 100%;
 }
 .menu{
   display: flex;

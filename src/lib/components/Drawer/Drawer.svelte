@@ -112,16 +112,20 @@
 
         {#each customNodes as customNode, index}
             <Node {...customNode} drop="cursor">
-    
+              {#if Array.isArray(anchors[index])}
                 {#each anchors[index] as anchorProp}
                   <div class={anchorProp.direction}>
                     <Anchor {...anchorProp}></Anchor>
                   </div>
                 {/each}  
-    
+              {:else}
+                <div class={anchors[index].direction}>
+                  <Anchor {...anchors[index]} />
+                </div>
+              {/if}
             </Node>			
-
         {/each}
+
         <slot/>
         <slot name="minimap" slot="minimap" />
         <slot name="controls" slot="controls" />
@@ -134,32 +138,28 @@
 <style>
   /* Styling for anchor position */
   .west {
-    width: 100%;
-    transform: translate(-2.5%);
+    transform: translate(-50%); 
     position: absolute;
+    left: 0;
 	}
 
   .east {
-    display: flex;
-    flex-direction: row-reverse;
-    width: 100%;
-    transform: translate(2.5%);
+    transform: translate(50%); 
     position: absolute;
+    right: 0;
 	}
 
   .north {
-    height: 100%;
-    transform: translate(0, -5%);
+    transform: translate(0, -50%); 
     position: absolute;
+    top: 0;
 	}
-
-  
+ 
 	.south {
-    display: flex;
-		flex-direction: column-reverse;
-    height: 100%;
-    transform: translate(0,5%);
+    transform: translate(0, 50%);
     position: absolute;
+    bottom: 0;
 
 	}
+
 </style>

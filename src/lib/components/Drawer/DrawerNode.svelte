@@ -123,10 +123,7 @@
           <label for='useDefaults'>useDefaults: </label> 
           <input id='useDefaults' type="checkbox" bind:value={useDefaults} on:change={handleUseDefaultsButtonClick}>
       </li>
-      <li class='list-item'>
-          <label for='label'>Label : </label>
-          <input id='label' type="text" bind:value={label}>
-      </li>
+    
       <li class='list-item'>
         <label for='dimensions'>Dimensions:</label>
       </li>
@@ -136,23 +133,6 @@
           <label for='height' style="margin-left: 6px">Height:</label> 
               <input id='height' class='inputField' type='input' bind:value={height}>
       </li>
-      <li class='list-item'>
-        <label for='defaultAnchors'>Default Anchors:</label>
-      </li>
-      <li class="list-item">
-          <label for="inputAnchor">Input: </label>
-          <input id='inputAnchor' class='inputField' type="number" bind:value={inputs}>
-          <label for="outputAnchor" style="margin-left: 6px">Output: </label>
-          <input id='outputAnchor' class='inputField' type="number" bind:value={outputs}>
-      </li>
-      <li class="list-item">
-        <label for='anchorPositon'>Anchor Position: </label>
-        <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
-            <option value=''>-</option>
-            <option value='LR'>LR</option>
-            <option value='TD'>TD</option>                        
-        </select>					
-        </li> 
         <li class='list-item'>
             <label for='locked'>Locked: </label> 
             <input id='label' type="checkbox" bind:value={locked} on:change={handleLockedButtonClick}>
@@ -168,7 +148,28 @@
         <li class='list-item'>
             <label for='zIndex'>zIndex:</label> 
             <input id='zIndex'  class='inputField' type="number" bind:value={zIndex}>
-        </li>            
+        </li> 
+        <li class='list-item'>
+          <label for='label'>Label : </label>
+          <input id='label' type="text" bind:value={label}>
+      </li>
+        <li class='list-item'>
+          <label for='defaultAnchors'>Default Anchors:</label>
+        </li>
+        <li class="list-item">
+            <label for="inputAnchor">Input: </label>
+            <input id='inputAnchor' class='inputField' type="number" min='0' bind:value={inputs}>
+            <label for="outputAnchor" style="margin-left: 6px">Output: </label>
+            <input id='outputAnchor' class='inputField' type="number"  min='0' bind:value={outputs}>
+        </li>
+        <li class="list-item">
+          <label for='anchorPositon'>Anchor Position: </label>
+          <select id='anchorPosition' bind:value={nodeDirection} on:change={handleAnchorPositionButton}>
+              <option value=''>-</option>
+              <option value='LR'>LR</option>
+              <option value='TD'>TD</option>                        
+          </select>					
+          </li>            
         <li class='list-item'>
             <button class ='nodeResetBtn btn' aria-label="Reset">Reset</button>
         </li>    

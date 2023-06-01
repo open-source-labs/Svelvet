@@ -9,7 +9,7 @@ Connections between [Anchors](/components/anchor) can be made functional by pass
 
 An `input store` is a Svelte writable with string keys and writable `numbers`, `strings`, `objects`, `arrays` or `booleans` as the values.
 
-In general terms, the return type of `generateInputs` is a `Writable<Record<string, Writable<unknown>>>`, though, this is a simplification for illustrative purposes.
+In general terms, the return type of `generateInput` is a `Writable<Record<string, Writable<unknown>>>`, though, this is a simplification for illustrative purposes.
 
 An `output store` is a custom readable derived from the current values of each parameter in an input store. Every time a parameter changes, the output store is rederived according to a user provided processors function.
 
@@ -24,62 +24,63 @@ When connections are made to input [Anchors](/components/anchor), the writable a
 ```HTML
 <script lang="ts">
     import { Node, Anchor, Slider, RadioGroup } from 'svelvet'
-    import { generateInputs, generateOutput } from 'svelvet'
+    import { generateInput, generateOutput } from 'svelvet'
 
     // Type your input structure
-	type InputStructure = {
-		value1: number;
-		value2: number;
-		option: string;
-	};
+    type InputStructure = {
+        value1: number;
+        value2: number;
+        option: string;
+    };
 
     // Create initial values for your parameters
-	const initialData = {
-		value1: 10,
-		value2: 30,
-		option: 'multiply'
-	};
+    const initialData = {
+        value1: 10,
+        value2: 30,
+        option: 'multiply'
+    };
 
     // Generate a formatted inputs store
-	const inputs = generateInputs(initialData);
+    const inputs = generateInput(initialData);
 
     // Specify processor function
-	const processor = (inputs: InputStructure) => {
-		if (inputs.option === 'add') {
-			return inputs.value1 + inputs.value2;
-		} else if (inputs.option === 'subtract') {
-			return inputs.value1 - inputs.value2;
-		} else if (inputs.option === 'multiply') {
-			return inputs.value1 * inputs.value2;
-		} else {
-			return inputs.value1 / inputs.value2;
-		}
-	};
+    const processor = (inputs: InputStructure) => {
+        if (inputs.option === 'add') {
+            return inputs.value1 + inputs.value2;
+        } else if (inputs.option === 'subtract') {
+            return inputs.value1 - inputs.value2;
+        } else if (inputs.option === 'multiply') {
+            return inputs.value1 * inputs.value2;
+        } else {
+            return inputs.value1 / inputs.value2;
+        }
+    };
 
     // Generate output store
-	const output = generateOutput(inputs, processor);
+    const output = generateOutput(inputs, processor);
 </script>
 
-<Node>
-	<div class="node">
-		<div class="radio-group">
-			<RadioGroup
-				options={['subtract', 'add', 'multiply', 'divide']}
-				parameterStore={$inputs.option}
-			/>
-		</div>
+<Node width={400} height={200} useDefaults>
+    <div class="node">
+        <div class="radio-group">
+            <RadioGroup
+                options={['subtract', 'add', 'multiply', 'divide']}
+                parameterStore={$inputs.option}
+            />
+        </div>
         <div class="sliders">
-			<Slider parameterStore={$inputs.value1} />
-			<Slider parameterStore={$inputs.value2} />
-		</div>
-		<div class="input-anchors">
-			{#each Object.entries($inputs) as [key, value] (key)}
-				<Anchor {key} inputsStore={inputs} input />
-			{/each}
-		</div>
-		<div class="output-anchors">
-			<Anchor outputStore={output} output />
-		</div>
-	</div>
+            <Slider parameterStore={$inputs.value1} />
+            <Slider parameterStore={$inputs.value2} />
+        </div>
+        <div class="input-anchors">
+            {#each Object.entries($inputs) as [key, value] (key)}
+                <Anchor {key} inputsStore={inputs} input />
+            {/each}
+        </div>
+        <div class="output-anchors">
+            <Anchor outputStore={output} output />
+        </div>
+    </div>
 </Node>
+
 ```
