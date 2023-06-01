@@ -22,8 +22,8 @@ Second, you can wrap your own custom components with our Node component and use 
   import { Node } from 'svelvet';
 
 function handleClick(e: CustomEvent) {
-const { detail } = e;
-detail.node.set.bgColor('red');
+  const { detail } = e;
+  detail.node.set.bgColor('red');
 }
 
 </script>

@@ -25,10 +25,9 @@ Finally, Edge connections can be specified at runtime by passing an array of tup
     import { Node, Anchor } from 'svelvet';
     import type { Connections } from 'svelvet';
     import CustomAnchor from './CustomAnchor' // A Svelte component or HTML element of your creation
-
     const connections: Connections = [["node1", "4"],["node2", "3"]]
   </script>
-
+  
   <Node let:selected>
     <div class:selected>
       <div class="input-anchors">
@@ -89,7 +88,7 @@ Finally, Edge connections can be specified at runtime by passing an array of tup
 	edge.
 </ResponseField>
 <ResponseField name="dynamic" type="boolean" default="false">
-	Enables dynamic Anchor positioning based on relative posiiton of conneted Nodes
+	Enables dynamic Anchor positioning based on relative position of connected Nodes
 </ResponseField>
 
 <ResponseField name="edge" type="Svelte Component | null" default="null">

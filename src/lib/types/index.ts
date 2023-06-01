@@ -7,3 +7,6 @@ export * from './store';
 export * from './context';
 export * from './edge';
 export * from './anchor';
+export * from './props/svelvetProps';
+export * from './props/anchorProps';
+export * from './props/edgeProps';
