@@ -36,6 +36,7 @@
     // Adds props to anchor if they exist
     addProps(anchorPropNames, anchorPropsArray, anchorProps);
     console.log(anchorProps)
+    console.log('anchorsCreated', anchorsCreated)
     // If props were created add anchorProps object to store
     if (Object.keys(anchorProps).length) {
       if (createAnchors) {
@@ -84,7 +85,7 @@
       }
   }
 
-  const handleAnchorResetButtonClick = (e: any) => {
+  const handleAnchorResetButtonClick = (e?: any) => {
     invisible = undefined;
     nodeConnect= undefined;
     input = undefined;
@@ -98,8 +99,7 @@
     anchorsCreated = [];
 
     anchorCounter.set(anchorsCreated.length)
-
-    e.target.reset();
+    if (e) e.target.reset();
 	}
 
   const addAnchor = (e: any) => {
@@ -109,6 +109,7 @@
 
   const deleteAnchor = (e:any) => {
     anchorsCreated.pop();
+    if (anchorsCreated.length === 0) handleAnchorResetButtonClick();
     anchorCounter.set(anchorsCreated.length);
   }
 
