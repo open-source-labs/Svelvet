@@ -14,7 +14,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](/README.md) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@rathnaganjigunta/introducing-svelvet-8-new-features-for-a-user-friendly-svelte-component-library-c9b966c5eb75) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 <br>
