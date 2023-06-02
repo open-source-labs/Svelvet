@@ -51,6 +51,7 @@
 		"eslint": "^8.39.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"husky": "^8.0.3",
 		"jest-dom": "^4.0.0",
 		"jsdom": "^22.1.0",
 		"prettier": "^2.8.8",
