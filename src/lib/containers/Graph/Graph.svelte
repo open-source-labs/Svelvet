@@ -42,7 +42,7 @@
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
 	export let theme = 'light';
 	export let title: string;
-	export let drawer: boolean = false;
+	export let drawer = false;
 
 	// Local constants
 	const dispatch = createEventDispatcher();

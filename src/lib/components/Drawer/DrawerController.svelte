@@ -6,10 +6,10 @@
 	import { createAnchorProps } from './DrawerAnchor.svelte';
 	import { createEdgeProps } from './DrawerEdge.svelte';
 
-	let isOpen: boolean = false;
-	let nodeContainerOpen: boolean = false;
-	let edgeContainerOpen: boolean = false;
-	let anchorContainerOpen: boolean = false;
+	let isOpen = false;
+	let nodeContainerOpen = false;
+	let edgeContainerOpen = false;
+	let anchorContainerOpen = false;
 	let nav: HTMLElement;
 	let drawerBtn: HTMLElement;
 	let nodeBtn: HTMLElement;
@@ -20,7 +20,8 @@
 	let anchorContainer: HTMLElement;
 	let edgeContainer: HTMLElement;
 
-	const handleDragStart = (e: any) => {
+	const handleDragStart = (e: DragEvent) => {
+		if (!e.dataTransfer) return;
 		e.dataTransfer.dropEffect = 'move';
 
 		// Create props for anchor or edge if values were given
@@ -31,7 +32,7 @@
 		createNodeProps(edgeCreated, anchorCreated);
 	};
 
-	const handleDrawer = (e: any) => {
+	const handleDrawer = () => {
 		if (!isOpen) {
 			isOpen = true;
 			nav.style.height = 'fit-content';
@@ -55,7 +56,7 @@
 		}
 	};
 
-	const handleNodeContainer = (e: any) => {
+	const handleNodeContainer = () => {
 		if (!nodeContainerOpen) {
 			nodeContainerOpen = true;
 			anchorContainerOpen = false;
@@ -69,7 +70,7 @@
 			anchorBtn.style.borderBottom = 'none';
 		}
 	};
-	const handleAnchorContainer = (e: any) => {
+	const handleAnchorContainer = () => {
 		if (!anchorContainerOpen) {
 			anchorContainerOpen = true;
 			edgeContainerOpen = false;

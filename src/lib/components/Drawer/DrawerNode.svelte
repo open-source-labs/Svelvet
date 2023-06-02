@@ -13,8 +13,8 @@
 	let bgColor: CSSColorString | undefined;
 	let borderColor: CSSColorString | undefined;
 	let label: string | undefined;
-	let width: number = 200;
-	let height: number = 100;
+	let width = 200;
+	let height = 100;
 	let nodeDirection: string | undefined;
 	let inputs: number | undefined;
 	let outputs: number | undefined;

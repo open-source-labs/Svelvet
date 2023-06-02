@@ -1,14 +1,10 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { isArrow } from '$lib/types';
-	import { roundNum } from '$lib/utils';
+	import { roundNum, calculateRelativeCursor } from '$lib/utils';
 	import { tracking } from '$lib/stores/CursorStore';
 	import type { Graph, Node, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
-	import { writable } from 'svelte/store';
-	import { calculateRelativeCursor } from '$lib/utils';
-	import { error } from '@sveltejs/kit';
-	import { get } from 'svelte/store';
 
 	// Props
 	/**

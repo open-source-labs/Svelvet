@@ -4,30 +4,29 @@
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte';
 	import { anchorPropsStore } from './DrawerAnchor.svelte';
-	import type { AnchorProps } from '$lib/types/props/anchorProps';
 
 	// Props
-	export let width: number = 0;
-	export let height: number = 0;
-	export let minimap: boolean = false;
+	export let width = 0;
+	export let height = 0;
+	export let minimap = false;
 	export let translation: XYPair = { x: 0, y: 0 };
-	export let controls: boolean = false;
+	export let controls = false;
 	export let edge: ComponentType | null = null;
 	export let edgeStyle: EdgeStyle = 'bezier';
-	export let snapTo: number = 0;
-	export let editable: boolean = false;
+	export let snapTo = 0;
+	export let editable = false;
 	export let fitView: boolean | 'resize' = false;
-	export let locked: boolean = false;
-	export let zoom: number = 1;
-	export let theme: string = 'light';
-	export let mermaid: string = '';
+	export let locked = false;
+	export let zoom = 1;
+	export let theme = 'light';
+	export let mermaid = '';
 	export let mermaidConfig: Record<string, NodeConfig> = {};
-	export let TD: boolean = false;
-	export let disableSelection: boolean = false;
+	export let TD = false;
+	export let disableSelection = false;
 	export let raiseEdgesOnSelect: boolean | 'source' | 'target' = false;
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
-	export let trackpadPan: boolean = false;
-	export let toggle: boolean = false;
+	export let trackpadPan = false;
+	export let toggle = false;
 
 	// Store props in object to be passed to svelvet
 	const sveltetProps: SvelvetConfig = {
