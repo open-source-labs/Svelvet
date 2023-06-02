@@ -127,36 +127,8 @@
 		}
 	}
 
-	// Initial handler for a touch event on a node
-	function handleNodeTouch(e: TouchEvent) {
-		// Capture the initial touch position
-		$initialClickPosition = get(cursor);
-
-		$graphDOMElement.focus();
-
-		// If the node is Node is not currently on top, bring it to the front
-		// Unless the zIndex prop has ben set to infinity
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-
-		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
-
-		// If the event target is an input, don't do anything
-		if (tagsToIgnore.has(targetElement.tagName)) return;
-
-		e.preventDefault();
-
-		// Dispatch our nodeClicked event for developer use
-		dispatch('nodeClicked', { node, e });
-
-		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
-		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
-
-		// Handle the node selection logic
-		nodeSelectLogic(e);
-	}
-
 	// Initial handler for a click event on a node
-	function handleNodeClicked(e: MouseEvent) {
+	function handleNodeClicked(e: MouseEvent | TouchEvent) {
 		// Capture the initial click position
 		$initialClickPosition = get(cursor);
 
@@ -176,19 +148,23 @@
 		dispatch('nodeClicked', { node, e });
 
 		// If the node or graph is locked, don't do anything
-		if ($locked || $nodeLock) return;
+		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
 
+		if ('touches' in e) {
+			// TypeScript now knows that e is a TouchEvent
+			if (e.touches && e.touches.length > 1) return;
+		} else {
+			// TypeScript now knows that e is a MouseEvent
+			if (e.button === 2 && $editable) {
+				$editing = node;
+			}
+		}
 		// Set our global tracking boolean to true
 		$tracking = true;
 
-		// Right click sets editing node
-		if (e.button === 2 && $editable) {
-			$editing = node;
-		}
 		// Handle selection logic
 		nodeSelectLogic(e);
 	}
-
 	function nodeSelectLogic(e: MouseEvent | TouchEvent) {
 		let groupData: Group;
 		let parent;
@@ -249,11 +225,11 @@
 	// Custom action to handle Node interactions
 	function grabHandle(node: HTMLElement) {
 		node.addEventListener('mousedown', handleNodeClicked);
-		node.addEventListener('touchstart', handleNodeTouch);
+		node.addEventListener('touchstart', handleNodeClicked);
 		return {
 			destroy() {
 				node.removeEventListener('mousedown', handleNodeClicked);
-				node.removeEventListener('touchstart', handleNodeTouch);
+				node.removeEventListener('touchstart', handleNodeClicked);
 			}
 		};
 	}
