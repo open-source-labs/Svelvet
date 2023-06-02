@@ -37,6 +37,7 @@
 
 	// Local stores
 	const anchorsMounted = writable(0);
+	const nodeConnectEvent = writable<null | MouseEvent>(null);
 
 	// External stores
 	const id = node.id;
@@ -61,7 +62,6 @@
 
 	// Reactive variables
 	let collapsed = false;
-	const DOMnode: Writable<HTMLElement | null> = writable(null);
 
 	// Subscriptions
 	$: actualPosition = $position;
@@ -69,6 +69,7 @@
 	// Reactive declarations
 	$: selected = $selectedNodes.has(node); // Used as class directive
 	$: hidden = $hiddenNodes.has(node); // Used as class directive
+	$: fixedSizing = dimensionsProvided || $resized;
 
 	// If the node is selected and the duplicate key pair is pressed
 	// Dispatch the duplicate event
@@ -78,8 +79,9 @@
 
 	setContext<Node>('node', node);
 	setContext<Writable<number>>('anchorsMounted', anchorsMounted);
-	setContext<Writable<HTMLElement | null>>('DOMnode', DOMnode);
+	// setContext<Writable<HTMLElement | null>>('DOMnode', DOMnode);
 	setContext<Writable<boolean>>('resized', resized);
+	setContext('nodeConnectEvent', nodeConnectEvent);
 
 	// Lifecycle methods
 	onMount(() => {
@@ -117,15 +119,15 @@
 	}
 
 	// This doesn't really do anything at the moment
-	function handleKeydown(e: KeyboardEvent) {
-		// If node is focused, hitting enter will toggle the selected state
-		if (e.key === 'Enter') {
-			toggleSelected();
-		} else if (e.key === 'Backspace') {
-			$nodeStore.delete(node.id);
-			$nodeStore = $nodeStore;
-		}
-	}
+	// function handleKeydown(e: KeyboardEvent) {
+	// 	// If node is focused, hitting enter will toggle the selected state
+	// 	if (e.key === 'Enter') {
+	// 		toggleSelected();
+	// 	} else if (e.key === 'Backspace') {
+	// 		$nodeStore.delete(node.id);
+	// 		$nodeStore = $nodeStore;
+	// 	}
+	// }
 
 	// Initial handler for a click event on a node
 	function handleNodeClicked(e: MouseEvent | TouchEvent) {
@@ -165,6 +167,7 @@
 		// Handle selection logic
 		nodeSelectLogic(e);
 	}
+
 	function nodeSelectLogic(e: MouseEvent | TouchEvent) {
 		let groupData: Group;
 		let parent;
@@ -210,8 +213,6 @@
 		nodeStore.delete(id);
 	}
 
-	const nodeConnectEvent = writable<null | MouseEvent>(null);
-	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {
 		const cursorPosition = get(cursor);
 		const mouseDeltaX = cursorPosition.x - $initialClickPosition.x;
@@ -246,8 +247,8 @@
 		style:left="{actualPosition.x}px"
 		style:z-index={$zIndex}
 		{title}
-		style:width={dimensionsProvided || $resized ? $widthStore + 'px' : 'fit-content'}
-		style:height={dimensionsProvided || $resized ? $heightStore + 'px' : 'fit-content'}
+		style:width={fixedSizing ? $widthStore + 'px' : 'fit-content'}
+		style:height={fixedSizing ? $heightStore + 'px' : 'fit-content'}
 		style:transform="rotate({$rotation}deg)"
 		style:--prop-background-color={$bgColor || (isDefault || useDefaults ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
@@ -260,22 +261,27 @@
 			: '0px'}
 		style:--prop-border-width={$borderWidth || (isDefault || useDefaults ? null : '0px')}
 		on:contextmenu|preventDefault|stopPropagation
-		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
-		bind:clientHeight={$heightStore}
-		bind:clientWidth={$widthStore}
 		use:grabHandle
-		bind:this={$DOMnode}
 		tabIndex={0}
 	>
-		{#if !collapsed}
+		{#if !fixedSizing}
+			<div
+				style:width="fit-content"
+				style:height="fit-content"
+				bind:clientHeight={$heightStore}
+				bind:clientWidth={$widthStore}
+			>
+				<slot {grabHandle} {selected} {destroy} />
+			</div>
+		{:else}
 			<slot {grabHandle} {selected} {destroy} />
-
-			<div id={`anchors-west-${node.id}`} class="anchors left" />
-			<div id={`anchors-east-${node.id}`} class="anchors right" />
-			<div id={`anchors-north-${node.id}`} class="anchors top" />
-			<div id={`anchors-south-${node.id}`} class="anchors bottom" />
 		{/if}
+
+		<div id={`anchors-west-${node.id}`} class="anchors left" />
+		<div id={`anchors-east-${node.id}`} class="anchors right" />
+		<div id={`anchors-north-${node.id}`} class="anchors top" />
+		<div id={`anchors-south-${node.id}`} class="anchors bottom" />
 	</div>
 {/if}
 

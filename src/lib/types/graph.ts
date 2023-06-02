@@ -23,10 +23,12 @@ export interface Graph {
 	transforms: GraphTransforms;
 	locked: Writable<boolean>;
 	bounds: {
-		top: Writable<number>;
-		left: Writable<number>;
-		right: Writable<number>;
-		bottom: Writable<number>;
+		graphBounds: Writable<{
+			top: number;
+			left: number;
+			right: number;
+			bottom: number;
+		}>;
 		nodeBounds: Writable<{
 			top: number;
 			left: number;
@@ -34,6 +36,7 @@ export interface Graph {
 			bottom: number;
 		}>;
 	};
+	mounted: Writable<boolean>;
 	center: Readable<XYPair>;
 	maxZIndex: Writable<number>;
 	dimensions: Writable<GraphDimensions>;

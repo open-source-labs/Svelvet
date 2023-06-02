@@ -7,6 +7,8 @@ import { getTouchDistance } from '$lib/utils/helpers';
 export const initialClickPosition = writable({ x: 0, y: 0 });
 export const touchDistance = writable(0);
 export const tracking = writable(false);
+export const resizing = writable(false);
+
 // This is a global store/event listener for the raw cursor position
 // This can be refined
 export const cursorPositionRaw = readable({ x: 0, y: 0 }, (set) => {

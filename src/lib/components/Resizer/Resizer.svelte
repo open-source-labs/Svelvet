@@ -2,7 +2,7 @@
 	import { calculateFitContentWidth } from '$lib/utils';
 	import { beforeUpdate, getContext, onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { initialClickPosition } from '$lib/stores';
+	import { initialClickPosition, resizing } from '$lib/stores';
 	import type { Graph, Node } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 </script>
@@ -10,7 +10,6 @@
 <script lang="ts">
 	const graph = getContext<Graph>('graph');
 	const node = getContext<Node>('node');
-	const DOMnode = getContext<Writable<HTMLElement | null>>('DOMnode');
 	const resized = getContext<Writable<boolean>>('resized');
 
 	export let width = false;
@@ -18,6 +17,8 @@
 	export let rotation = false;
 	export let minHeight = 0;
 	export let minWidth = 0;
+
+	let DOMnode: HTMLElement;
 
 	let left = width;
 	let right = width;
@@ -75,6 +76,14 @@
 				y: initialNodePosition.y + cursorPosition.y - initialClick.y
 			};
 		}
+		if ($nodeRotation !== 0) {
+			node.position.update((pos) => {
+				return {
+					y: initialNodePosition.y - (newHeight - initialHeight) / 2,
+					x: pos.x
+				};
+			});
+		}
 	}
 
 	$: if ($resizingWidth) {
@@ -97,6 +106,14 @@
 				y: initialNodePosition.y
 			};
 		}
+		if ($nodeRotation !== 0) {
+			node.position.update((pos) => {
+				return {
+					x: initialNodePosition.x - (newWidth - initialWidth) / 2,
+					y: pos.y
+				};
+			});
+		}
 	}
 
 	$: if ($rotating) {
@@ -105,7 +122,8 @@
 	}
 
 	onMount(() => {
-		if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
+		DOMnode = document.querySelector(`#${node.id}`) as HTMLElement;
+		if (DOMnode) [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
 	});
 
 	function resizeHandler(
@@ -121,6 +139,7 @@
 				direction = 1;
 			}
 
+			resizing.set(true);
 			$initialClickPosition = get(cursor);
 			initialWidth = $widthStore;
 			initialHeight = $heightStore;
@@ -130,13 +149,14 @@
 			$resizingWidth = dimensions.left || dimensions.right || dimensions.both || false;
 			$resizingHeight = dimensions.top || dimensions.bottom || dimensions.both || false;
 
-			if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
+			if (DOMnode) [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
 			window.addEventListener('mouseup', removeResize);
 		};
 
 		const removeResize = () => {
 			$resizingWidth = false;
 			$resizingHeight = false;
+			resizing.set(false);
 			window.removeEventListener('mouseup', removeResize);
 		};
 
@@ -200,8 +220,9 @@
 	function radiansToDegrees(radians: number) {
 		return radians * (180 / Math.PI);
 	}
+
 	beforeUpdate(() => {
-		if ($DOMnode) [minWidth, minHeight] = calculateFitContentWidth($DOMnode);
+		if (DOMnode) [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
 		if ($widthStore < minWidth) resized.set(false);
 		if ($heightStore < minHeight) resized.set(false);
 	});

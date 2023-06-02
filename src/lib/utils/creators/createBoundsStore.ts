@@ -2,7 +2,7 @@ import type { GraphDimensions, NodeStore, XYPair } from '$lib/types';
 import type { Writable, Readable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
 import { calculateRelativeCursor } from '../calculators';
-import { tracking } from '$lib/stores/CursorStore';
+import { tracking, resizing } from '$lib/stores/CursorStore';
 
 export function createBoundsStore(
 	nodes: NodeStore,
@@ -10,16 +10,19 @@ export function createBoundsStore(
 	scale: Writable<number>,
 	translation: Writable<XYPair>
 ) {
-	const top = writable(Infinity);
-	const left = writable(Infinity);
-	const right = writable(-Infinity);
-	const bottom = writable(-Infinity);
+	const graphBounds = writable({
+		top: Infinity,
+		left: Infinity,
+		right: -Infinity,
+		bottom: -Infinity
+	});
 	const nodeBounds = writable({
 		top: Infinity,
 		left: Infinity,
 		right: -Infinity,
 		bottom: -Infinity
 	});
+
 	let animationFrame: number;
 	let graphDimensions = get(dimensions);
 	let graphScale = get(scale);
@@ -42,10 +45,12 @@ export function createBoundsStore(
 		);
 		const currentNodeBounds = get(nodeBounds);
 
-		top.set(Math.min(currentNodeBounds.top, graphTop));
-		left.set(Math.min(currentNodeBounds.left, graphLeft));
-		right.set(Math.max(currentNodeBounds.right, graphLeft + graphWidth));
-		bottom.set(Math.max(currentNodeBounds.bottom, graphHeight + graphTop));
+		graphBounds.set({
+			top: Math.min(currentNodeBounds.top, graphTop),
+			left: Math.min(currentNodeBounds.left, graphLeft),
+			right: Math.max(currentNodeBounds.right, graphLeft + graphWidth),
+			bottom: Math.max(currentNodeBounds.bottom, graphHeight + graphTop)
+		});
 	}
 
 	function recalculateNodeBounds(tracking = false) {
@@ -69,16 +74,13 @@ export function createBoundsStore(
 		if (tracking) animationFrame = requestAnimationFrame(() => recalculateNodeBounds(tracking));
 	}
 
-	nodes.subscribe((nodes) => {
+	nodes.subscribe(() => {
 		recalculateNodeBounds();
-		for (const node of nodes.values()) {
-			node.dimensions.width.subscribe(() => {
-				recalculateNodeBounds();
-			});
-			node.dimensions.height.subscribe(() => {
-				recalculateNodeBounds();
-			});
-		}
+	});
+
+	resizing.subscribe((resizing) => {
+		if (resizing) recalculateNodeBounds(resizing);
+		if (!resizing) cancelAnimationFrame(animationFrame);
 	});
 
 	tracking.subscribe((tracking) => {
@@ -103,5 +105,5 @@ export function createBoundsStore(
 		recalculateBounds();
 	});
 
-	return { top, left, right, bottom, nodeBounds };
+	return { graphBounds, nodeBounds };
 }
