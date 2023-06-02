@@ -217,7 +217,7 @@
 		const mouseDeltaX = cursorPosition.x - $initialClickPosition.x;
 		const mouseDeltaY = cursorPosition.y - $initialClickPosition.y;
 		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
-		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+		if (combinedDelta < 4) dispatch('nodeReleased', { e, node });
 
 		$nodeConnectEvent = e;
 	}
