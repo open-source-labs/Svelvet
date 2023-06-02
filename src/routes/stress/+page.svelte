@@ -5,7 +5,7 @@
 <body>
 	<div class="wrapper">
 		<Svelvet fitView width={800} height={500} theme="dark" minimap controls>
-			{#each { length: 200 } as _, i}
+			{#each { length: 400 } as _, i}
 				<Node
 					position={{ x: Math.random() * 4000, y: Math.random() * 4000 }}
 					connections={[Math.floor(Math.random() * 200)]}

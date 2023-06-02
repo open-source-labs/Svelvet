@@ -7,6 +7,7 @@ export interface Node {
 	id: NodeKey;
 	rotation: Writable<number>;
 	position: Writable<XYPair>;
+
 	moving: Writable<boolean>;
 	label: Writable<string>; // Primary label for default node
 	dimensions: Dimensions;
@@ -15,23 +16,23 @@ export interface Node {
 	anchors: AnchorStore;
 	group: Writable<GroupKey | null>;
 	collapsed: Writable<boolean>;
-	visible: Writable<boolean>;
+	// visible: Writable<boolean>;
 	resizingWidth: Writable<boolean>;
 	resizingHeight: Writable<boolean>;
 	rotating: Writable<boolean>;
 	editable: Writable<boolean>;
 	locked: Writable<boolean>;
 	recalculateAnchors: (direction?: Direction) => void;
-	selectable: Writable<boolean>;
-	connectable: Writable<boolean>;
-	collapsible: Writable<boolean>;
-	deletable: Writable<boolean>;
-	hideable: Writable<boolean>;
-	focusable: Writable<boolean>;
+	// selectable: Writable<boolean>;
+	// connectable: Writable<boolean>;
+	// collapsible: Writable<boolean>;
+	// deletable: Writable<boolean>;
+	// hideable: Writable<boolean>;
+	// focusable: Writable<boolean>;
 	resizable: Writable<boolean>;
 	zIndex: Writable<number>;
 	edge: ComponentType | null;
-	ariaLabel: string;
+	// ariaLabel: string;
 	direction: Writable<'TD' | 'LR'>;
 	borderRadius: Writable<number>;
 	borderWidth: Writable<number>;
