@@ -187,13 +187,6 @@
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		dispatch('edgeDrop', {
-			cursor: get(cursor),
-			source: {
-				node: $connectingFrom?.anchor.node.id.slice(2),
-				anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
-			}
-		});
 		if (creating) {
 			const groupName = generateKey();
 			const groupKey: GroupKey = `${groupName}/${graph.id}`;
