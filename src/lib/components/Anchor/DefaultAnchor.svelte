@@ -58,5 +58,4 @@
 		cursor: pointer;
 		outline: inherit;
 	}
-	
 </style>

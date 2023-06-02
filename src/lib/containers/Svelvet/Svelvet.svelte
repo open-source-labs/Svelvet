@@ -292,13 +292,11 @@
 
 		--default-drawer-button-color: hsl(0, 0%, 19%);
 		--default-drawer-button-text-color: hsl(0, 0%, 100%);
-		
 
 		--default-drawer-reset-button-color: hsl(0, 0%, 19%);
 		--default-drawer-reset-button-text-color: hsl(0, 0%, 89%);
 		--default-drawer-reset-button-hover-color: hsl(0, 0%, 59%);
 		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
-		
 	}
 
 	:root[svelvet-theme='light'] {
@@ -350,7 +348,7 @@
 
 		--default-drawer-button-color: hsl(0, 2%, 89%);
 		--default-drawer-button-text-color: hsl(0, 0%, 20%);
-		
+
 		--default-drawer-reset-button-color: hsl(0, 2%, 89%);
 		--default-drawer-reset-button-text-color: hsl(0, 0%, 20%);
 		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
