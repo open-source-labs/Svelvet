@@ -77,7 +77,7 @@
 		return false;
 	};
 
-	const handleDrop = (e: any) => {
+	const handleDrop = (e: MouseEvent): void => {
 		e.stopPropagation();
 		//Issue click event
 		const moveEvent = new MouseEvent('mousemove', {
@@ -85,7 +85,8 @@
 			clientY: e.clientY,
 			bubbles: true
 		});
-		e.target.dispatchEvent(moveEvent);
+		const target = e.target as HTMLElement;
+		target.dispatchEvent(moveEvent);
 
 		defaultNodes = $defaultNodePropsStore;
 		customNodes = $customNodePropsStore;
