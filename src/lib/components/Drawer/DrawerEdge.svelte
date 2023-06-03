@@ -1,12 +1,11 @@
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
-	import type { CSSColorString } from '$lib/types';
+	import type { CSSColorString, EdgeProps, EdgeDrawerConfig, AnchorDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 
 	// External Stores
-	export const edgeNodeProps = writable<Array<any>>([]);
-	export const edgeAnchorProps = writable<Array<any>>([]);
-	// export const edgeComponentStore = writable<any>();
+	export const edgeNodeProps = writable<EdgeDrawerConfig | object>({});
+	export const edgeAnchorProps = writable<AnchorDrawerConfig | object>({});
 
 	//types for edge creation
 	let edgeWidth: number | undefined;
@@ -18,15 +17,15 @@
 	let edgeLabel: string | undefined;
 	let labelColor: CSSColorString | undefined;
 	let textColor: CSSColorString | undefined;
-	let edgeClick: () => void | null; // Stretch feature
+	// let edgeClick: () => void | null; // Stretch feature
 	let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
 	// Creates props and adds to store, returns true if edge was created
 	export const createEdgeProps = (anchorCreated: boolean): boolean => {
 		// Object that stores properties for the created edge
-		const edgeProps: any = {};
+		const edgeProps: object | EdgeDrawerConfig = {};
 		// Array of property names and values for edge
-		const edgePropsNames: any[] = [
+		const edgePropsNames: string[] = [
 			'width',
 			'targetColor',
 			'color',
@@ -38,7 +37,7 @@
 			'labelColor',
 			'textColor'
 		];
-		const edgePropsArray: any[] = [
+		const edgePropsArray: EdgeProps = [
 			edgeWidth,
 			targetColor,
 			color,
