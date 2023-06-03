@@ -85,6 +85,17 @@ export function createEdgeStore(): EdgeStore {
 				});
 			});
 		},
+		fetch: (source: Anchor, target: Anchor) => {
+			const match = Array.from(data.keys()).filter((key) => {
+				if (key === 'cursor') return false;
+				return [source, target].every((arg) => {
+					if (!arg) return true;
+					return key.has(arg);
+				});
+			})[0];
+			// return matches.map((key) => data.get(key) as WritableEdge);
+			return data.get(match) || null;
+		},
 		delete: (key: CustomEdgeKey) => {
 			if (typeof key !== 'string') {
 				const elements = Array.from(key as Set<Node | Anchor>);

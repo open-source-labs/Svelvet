@@ -21,6 +21,7 @@ export interface EdgeStore {
 	get: (key: CustomEdgeKey) => WritableEdge | null;
 	getAll: () => WritableEdge[];
 	match: (...args: Array<Node | Anchor | null>) => CustomEdgeKey[];
+	fetch: (source: Anchor, target: Anchor) => WritableEdge | null;
 	subscribe: Writable<Map<CustomEdgeKey, WritableEdge>>['subscribe'];
 	update: Writable<Map<CustomEdgeKey, WritableEdge>>['update'];
 	set: Writable<Map<CustomEdgeKey, WritableEdge>>['set'];

@@ -21,7 +21,8 @@ export function createEdge(
 		type: writable(config?.type || null),
 		color: config?.color || writable(null),
 		width: writable(config?.width || 0),
-		animated: writable(config?.animated || false)
+		animated: writable(config?.animated || false),
+		rendered: writable(false)
 	};
 	// if (config?.raiseEdges) writableEdge.raiseEdgeOnSelect = true;
 	// if (config?.edgesAbove) writableEdge.edgesAbove = true;

@@ -9,7 +9,7 @@
 	const edges = graph.edges;
 </script>
 
-{#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
+<!-- {#each Array.from($edges) as [edgeKey, edge] (edgeKey)}
 	{@const CustomEdge = edge.component}
 	{#if CustomEdge}
 		<EdgeContext {edge}>
@@ -18,4 +18,4 @@
 	{:else}
 		<InternalEdge {edge} />
 	{/if}
-{/each}
+{/each} -->
