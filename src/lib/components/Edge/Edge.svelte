@@ -9,6 +9,18 @@
 	import type { WritableEdge } from '$lib/types';
 
 	let animationFrameId: number;
+
+	function moveEdge(edgeElement: SVGElement) {
+		const parentNode = edgeElement.parentNode;
+		if (!parentNode) return;
+		// Remove the anchor from its current container
+		parentNode.removeChild(edgeElement);
+
+		// Add the anchor to the new container
+		const newContainer = document.querySelector(`.svelvet-graph-wrapper`);
+		if (!newContainer) return;
+		newContainer.appendChild(edgeElement);
+	}
 </script>
 
 <script lang="ts">
@@ -59,6 +71,7 @@
 	let prefersVertical = false;
 	let sourceAbove = false;
 	let sourceLeft = false;
+	let edgeElement: SVGElement;
 
 	// Reactive declarations
 	$: dynamic = $sourceDynamic || $targetDynamic;
@@ -160,7 +173,7 @@
 		if ($sourceDynamic) $sourceDirection = newSourceDirection;
 		if ($targetDynamic) $targetDirection = newTargetDirection;
 	}
-
+	edge.rendered.set(true);
 	// Lifecycle methods
 	onMount(() => {
 		setTimeout(() => {
@@ -168,6 +181,7 @@
 				pathMidPoint = calculatePath(DOMPath);
 			}
 		}, 0);
+		moveEdge(edgeElement);
 	});
 
 	afterUpdate(() => {
@@ -278,7 +292,7 @@
 			: 0;
 </script>
 
-<svg class="edges-wrapper" style:z-index={zIndex}>
+<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
 	<path
 		id={edgeKey + '-target'}
 		class="target"
