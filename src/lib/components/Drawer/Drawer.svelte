@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { Node, Svelvet, Anchor } from '$lib';
-	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle } from '$lib/types';
+	import type {
+		SvelvetConfig,
+		NodeConfig,
+		XYPair,
+		EdgeStyle,
+		AnchorDrawerConfig
+	} from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte';
 	import { anchorPropsStore } from './DrawerAnchor.svelte';
@@ -60,24 +66,24 @@
 	let dropped_in: boolean;
 
 	// Drag and drop events
-	const handleDragEnter = (e: DragEvent): void => {
+	const handleDragEnter = (): void => {
 		dropped_in = true;
 	};
 
-	const handleDragLeave = (e: DragEvent): void => {
+	const handleDragLeave = (): void => {
 		dropped_in = false;
 	};
 
-	const handleDragEnd = (e: DragEvent): void => {
-		dropped_in = false;
-	};
+	// const handleDragEnd = (): void => {
+	// 	dropped_in = false;
+	// };
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
 		return false;
 	};
 
-	const handleDrop = (e: any) => {
+	const handleDrop = (e: MouseEvent): void => {
 		e.stopPropagation();
 		//Issue click event
 		const moveEvent = new MouseEvent('mousemove', {
@@ -85,7 +91,8 @@
 			clientY: e.clientY,
 			bubbles: true
 		});
-		e.target.dispatchEvent(moveEvent);
+		const target = e.target as HTMLElement;
+		target.dispatchEvent(moveEvent);
 
 		defaultNodes = $defaultNodePropsStore;
 		customNodes = $customNodePropsStore;

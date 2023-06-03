@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
-	import type { NodeConfig, CSSColorString } from '$lib/types';
+	import type { NodeConfig, CSSColorString, NodeProps } from '$lib/types';
 	import { addProps } from '$lib/utils';
 	import nodeCustomEdge from './DefaultNodeEdge.svelte';
 	import anchorCustomEdge from './CustomNodeEdge.svelte';
@@ -15,24 +15,23 @@
 	let label: string | undefined;
 	let width = 200;
 	let height = 100;
-	let nodeDirection: string | undefined;
-	let inputs: number | undefined;
-	let outputs: number | undefined;
 	let locked: boolean | undefined;
 	let center: boolean | undefined;
+	let inputs: number | undefined;
+	let outputs: number | undefined;
 	let rotation: number | undefined;
 	let zIndex: number | undefined;
 	let TD: boolean | undefined;
 	let LR: boolean | undefined;
 	let useDefaults: boolean | undefined;
-	let edge: any;
+	let nodeDirection: string | undefined;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
 	export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
 		// Object that stores properties for the created node
-		const nodeProps: any = {};
+		const nodeProps: NodeConfig = {};
 		// Array of property names and values for node
-		const nodePropNames: any[] = [
+		const nodePropNames: string[] = [
 			'bgColor',
 			'borderColor',
 			'label',
@@ -48,7 +47,7 @@
 			'LR',
 			'useDefaults'
 		];
-		const nodePropsArray: any[] = [
+		const nodePropsArray: NodeProps = [
 			bgColor,
 			borderColor,
 			label,

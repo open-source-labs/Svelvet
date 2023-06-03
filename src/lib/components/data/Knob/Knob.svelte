@@ -120,7 +120,6 @@
 
 	let previousValue = $parameterStore;
 
-	// TODO:
 	function startTouchRotate(e: TouchEvent) {
 		$activeGroup = null;
 		selected.nodes.set(new Set());
@@ -131,10 +130,9 @@
 		rotating = true;
 	}
 
-	// Done: Stop rotating on mouseup
 	function stopRotate() {
 		if (previousValue === $parameterStore) {
-			knobElement.focus(); // sets focus on the this element
+			knobElement.focus();
 		} else {
 			previousValue = $parameterStore;
 		}
@@ -142,7 +140,6 @@
 		window.removeEventListener('mouseup', stopRotate);
 	}
 
-	// Done: set eventlisteners that enable rotating
 	function rotatable(node: HTMLElement) {
 		node.addEventListener('mousedown', startRotate);
 		node.addEventListener('touchstart', startTouchRotate);
@@ -164,7 +161,6 @@
 			((clamp(currentDegree) - minDegree) / (maxDegree - minDegree)) * (max - min) + min;
 	}
 
-	// $: angle = `rotate(${minDegree + knobValue}deg`;
 	$: curAngle = `rotate(${currentDegree}deg`;
 
 	export function clamp(num: number): number {
@@ -177,9 +173,6 @@
 		return degree;
 	}
 
-	// let wheelTop = 0;
-	// let wheelLeft = 0;
-
 	// need to pass cursorX and cursorY to trigger updates
 	function calculateNewAngle(cursorX: number, cursorY: number): void {
 		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
@@ -188,29 +181,6 @@
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
 		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
-		// width is width_origin * $scale
-		// console.log('scale, ', $scale, 'translation, ', $translation);
-		// console.log('top: ', top, 'left: ', left, 'width: ', width);
-		// console.log('top: ', top, 'left: ', left);
-
-		// console.log('cursorX:', cursorX, 'cursorY: ', cursorY);
-		// console.log('x: ', x, 'y: ', y);
-
-		// const dimensions = get(graph.dimensions);
-		// const scaled = calculateRelativeCursor(
-		// 	{ clientX: left, clientY: top },
-		// 	dimensions.top,
-		// 	dimensions.left,
-		// 	dimensions.width,
-		// 	dimensions.height,
-		// 	$scale,
-		// 	$translation
-		// );
-
-		// wheelTop = scaled.y;
-		// wheelLeft = scaled.x;
-
-		// console.log(wheelTop, wheelLeft);
 
 		let angle =
 			relativeX > 0 && relativeY > 0
@@ -223,7 +193,6 @@
 				? 90 - Math.atan(-relativeY / -relativeX) * (180 / Math.PI)
 				: currentDegree;
 		// caculate the new parameterstore based on clamp(angle)
-
 		// a round-off error (see wiki: 'https://en.wikipedia.org/wiki/Round-off_error')
 		// occurs for particular values depending on their angle due to
 		// a computer's limited precision of floating-point number representation.
@@ -246,17 +215,15 @@
 				aria-label="knob component"
 				style:background={knobColor}
 				on:wheel|stopPropagation|preventDefault={(event) => {
-					updateValue(Math.sign(event.deltaY)); // FIXME:
+					updateValue(Math.sign(event.deltaY));
 				}}
 				on:keydown|stopPropagation={(e) => {
 					const { key } = e;
 
 					if (isArrow(key)) {
-						e.preventDefault(); // Stops cursor from moving
-						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0); // FIXME:
+						e.preventDefault();
+						updateValue(key == 'ArrowDown' ? -1 : key == 'ArrowUp' ? 1 : 0);
 					}
-
-					// if (key === 'Enter') validateInput();
 				}}
 				use:rotatable
 				bind:this={knobElement}
@@ -280,6 +247,7 @@
 	* {
 		box-sizing: border-box;
 	}
+
 	.wrapper {
 		display: flex;
 		gap: 0.5rem;

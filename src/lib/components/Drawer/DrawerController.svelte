@@ -84,7 +84,7 @@
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
 		}
 	};
-	const handleEdgeContainer = (e: any) => {
+	const handleEdgeContainer = () => {
 		if (!edgeContainerOpen) {
 			edgeContainerOpen = true;
 			nodeContainerOpen = false;
@@ -165,6 +165,7 @@
 </nav>
 
 <style>
+	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
 	#drawerWrapper {
 		position: absolute;
 		width: 35px;
