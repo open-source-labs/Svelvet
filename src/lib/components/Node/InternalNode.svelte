@@ -61,7 +61,7 @@
 	const resized = writable(false);
 
 	// Reactive variables
-	let collapsed = false;
+	// let collapsed = false; //not being used
 
 	// Subscriptions
 	$: actualPosition = $position;

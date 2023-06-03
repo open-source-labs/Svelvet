@@ -72,6 +72,7 @@
 
 	//Button Clicks for Anchors
 	const handleAnchorLockedButtonClick = (e: any) => {
+		// const target = e.target as HTMLButtonElement;
 		anchorLocked = e.target.checked;
 	};
 
