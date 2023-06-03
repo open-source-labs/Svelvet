@@ -12,6 +12,8 @@
 	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
 	export let bgColor: CSSColorString | null = null;
 	export let dotColor: CSSColorString | null = null;
+	export let opacityThreshold = 3; // Scale after which the opacity of grid is reduced
+	export let majorGrid = 0;
 
 	// External stores
 	const transforms = graph.transforms;
@@ -24,6 +26,8 @@
 	let svgHeight;
 	let backgroundOffsetX: number;
 	let backgroundOffsetY: number;
+	let gridOpacity: number = 1;
+	let majorGridOpacity: number = 1;
 
 	//Subscriptions
 	$: graphTranslation = $translationStore;
@@ -40,6 +44,8 @@
 		svgHeight = backgroundWrapper?.offsetHeight || 0;
 		backgroundOffsetX = ((svgWidth + radius) * (1 - scale)) / 2 + graphTranslation.x;
 		backgroundOffsetY = ((svgHeight + radius) * (1 - scale)) / 2 + graphTranslation.y;
+		gridOpacity = scale > opacityThreshold ? 1 : scale / opacityThreshold;
+		majorGridOpacity = scale > opacityThreshold / 3 ? 1 : scale / (opacityThreshold / 3);
 	}
 </script>
 
@@ -69,6 +75,8 @@
 					/>
 				{:else if style === 'lines'}
 					<line
+						class="background-line"
+						style:--calculated-dot-color={dotColor}
 						x1={dotCenterCoordinate}
 						y1={0}
 						x2={dotCenterCoordinate}
@@ -76,6 +84,8 @@
 						stroke-width={radius}
 					/>
 					<line
+						class="background-line"
+						style:--calculated-dot-color={dotColor}
 						y1={dotCenterCoordinate}
 						x1={0}
 						y2={dotCenterCoordinate}
@@ -84,8 +94,56 @@
 					/>
 				{/if}
 			</pattern>
+
+			{#if majorGrid > 0}
+				<pattern
+					id="graph-coarse-pattern"
+					x={backgroundOffsetX}
+					y={backgroundOffsetY}
+					width={gridScale * majorGrid}
+					height={gridScale * majorGrid}
+					patternUnits="userSpaceOnUse"
+				>
+					{#if style === 'dots'}
+						<circle
+							class="background-dot"
+							style:--calculated-dot-color={dotColor}
+							r={radius * 2}
+							cx={dotCenterCoordinate}
+							cy={dotCenterCoordinate}
+						/>
+					{:else if style === 'lines'}
+						<line
+							class="background-line"
+							style:--calculated-dot-color={dotColor}
+							x1={dotCenterCoordinate}
+							y1={0}
+							x2={dotCenterCoordinate}
+							y2={gridScale * majorGrid}
+							stroke-width={radius * 1.2}
+						/>
+						<line
+							class="background-line"
+							style:--calculated-dot-color={dotColor}
+							y1={dotCenterCoordinate}
+							x1={0}
+							y2={dotCenterCoordinate}
+							x2={gridScale * majorGrid}
+							stroke-width={radius * 1.2}
+						/>
+					{/if}
+				</pattern>
+			{/if}
 		</defs>
-		<rect width="100%" height="100%" fill="url(#graph-pattern)" />
+		<rect width="100%" height="100%" fill="url(#graph-pattern)" opacity={gridOpacity} />
+		{#if majorGrid > 0}
+			<rect
+				width="100%"
+				height="100%"
+				fill="url(#graph-coarse-pattern)"
+				opacity={majorGridOpacity}
+			/>
+		{/if}
 	</svg>
 </div>
 
@@ -108,6 +166,11 @@
 	.background-dot {
 		fill: var(--calculated-dot-color, var(--dot-color, var(--default-dot-color)));
 	}
+
+	.background-line {
+		stroke: var(--calculated-dot-color, var(--dot-color, var(--default-dot-color)));
+	}
+
 	svg {
 		width: 100%;
 		height: 100%;
