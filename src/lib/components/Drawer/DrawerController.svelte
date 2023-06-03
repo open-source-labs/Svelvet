@@ -84,7 +84,7 @@
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
 		}
 	};
-	const handleEdgeContainer = (e: any) => {
+	const handleEdgeContainer = () => {
 		if (!edgeContainerOpen) {
 			edgeContainerOpen = true;
 			nodeContainerOpen = false;
