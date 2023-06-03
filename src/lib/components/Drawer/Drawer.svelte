@@ -60,17 +60,17 @@
 	let dropped_in: boolean;
 
 	// Drag and drop events
-	const handleDragEnter = (e: DragEvent): void => {
+	const handleDragEnter = (): void => {
 		dropped_in = true;
 	};
 
-	const handleDragLeave = (e: DragEvent): void => {
+	const handleDragLeave = (): void => {
 		dropped_in = false;
 	};
 
-	const handleDragEnd = (e: DragEvent): void => {
-		dropped_in = false;
-	};
+	// const handleDragEnd = (): void => {
+	// 	dropped_in = false;
+	// };
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
