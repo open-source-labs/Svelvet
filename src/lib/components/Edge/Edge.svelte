@@ -191,6 +191,7 @@
 	});
 
 	onDestroy(() => {
+		edgeElement.remove();
 		cancelAnimationFrame(animationFrameId);
 	});
 
@@ -292,44 +293,46 @@
 			: 0;
 </script>
 
-<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
-	<path
-		id={edgeKey + '-target'}
-		class="target"
-		class:cursor={edgeKey === 'cursor' || !edgeClick}
-		style:cursor={edgeClick ? 'pointer' : 'move'}
-		style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
-		d={path}
-		on:mousedown={edgeClick}
-		bind:this={DOMPath}
-	/>
-	<slot {path} {destroy}>
+{#if source && target}
+	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
 		<path
-			id={edgeKey}
-			class="edge"
-			class:animate
+			id={edgeKey + '-target'}
+			class="target"
+			class:cursor={edgeKey === 'cursor' || !edgeClick}
+			style:cursor={edgeClick ? 'pointer' : 'move'}
+			style:--prop-target-edge-color={edgeClick ? targetColor || null : 'transparent'}
 			d={path}
-			style:--prop-edge-color={finalColor}
-			style:--prop-stroke-width={width ? width + 'px' : null}
+			on:mousedown={edgeClick}
+			bind:this={DOMPath}
 		/>
-	</slot>
+		<slot {path} {destroy}>
+			<path
+				id={edgeKey}
+				class="edge"
+				class:animate
+				d={path}
+				style:--prop-edge-color={finalColor}
+				style:--prop-stroke-width={width ? width + 'px' : null}
+			/>
+		</slot>
 
-	{#if renderLabel}
-		<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
-			<span class="label-wrapper">
-				<slot name="label">
-					<div
-						class="default-label"
-						style:--prop-label-color={labelColor}
-						style:--prop-label-text-color={textColor}
-					>
-						{labelText}
-					</div>
-				</slot>
-			</span>
-		</foreignObject>
-	{/if}
-</svg>
+		{#if renderLabel}
+			<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
+				<span class="label-wrapper">
+					<slot name="label">
+						<div
+							class="default-label"
+							style:--prop-label-color={labelColor}
+							style:--prop-label-text-color={textColor}
+						>
+							{labelText}
+						</div>
+					</slot>
+				</span>
+			</foreignObject>
+		{/if}
+	</svg>
+{/if}
 
 <style>
 	.edge {
