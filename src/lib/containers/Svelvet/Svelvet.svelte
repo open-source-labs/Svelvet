@@ -86,6 +86,11 @@
 	 */
 	export let edgesAboveNode: boolean | 'all' = false;
 	export let title = '';
+	/**
+	 * @default false
+	 * @description Prevents the graph scale/zoom from changing.
+	 */
+	export let fixedZoom = false;
 
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
@@ -124,6 +129,7 @@
 		{minimap}
 		{graph}
 		{fitView}
+		{fixedZoom}
 		{theme}
 		{drawer}
 		{controls}
