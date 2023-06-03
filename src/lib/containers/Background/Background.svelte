@@ -26,8 +26,8 @@
 	let svgHeight;
 	let backgroundOffsetX: number;
 	let backgroundOffsetY: number;
-	let gridOpacity: number = 1;
-	let majorGridOpacity: number = 1;
+	let gridOpacity = 1;
+	let majorGridOpacity = 1;
 
 	//Subscriptions
 	$: graphTranslation = $translationStore;
