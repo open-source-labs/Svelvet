@@ -14,6 +14,11 @@
 	export let dotColor: CSSColorString | null = null;
 	export let opacityThreshold = 3; // Scale after which the opacity of grid is reduced
 	export let majorGrid = 0;
+	/**
+	 * @default 0.4
+	 * @description The minimum opacity of the background grid
+	 */
+	export let minOpacity = 0.4;
 
 	// External stores
 	const transforms = graph.transforms;
@@ -44,8 +49,9 @@
 		svgHeight = backgroundWrapper?.offsetHeight || 0;
 		backgroundOffsetX = ((svgWidth + radius) * (1 - scale)) / 2 + graphTranslation.x;
 		backgroundOffsetY = ((svgHeight + radius) * (1 - scale)) / 2 + graphTranslation.y;
-		gridOpacity = scale > opacityThreshold ? 1 : scale / opacityThreshold;
-		majorGridOpacity = scale > opacityThreshold / 3 ? 1 : scale / (opacityThreshold / 3);
+		gridOpacity = scale > opacityThreshold ? 1 : scale / opacityThreshold + minOpacity;
+		majorGridOpacity =
+			scale > opacityThreshold / 3 ? 1 : scale / (opacityThreshold / 3) + minOpacity;
 	}
 </script>
 
