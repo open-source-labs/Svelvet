@@ -37,6 +37,7 @@
 	export let minimap = false;
 	export let controls = false;
 	export let toggle = false;
+	export let drawer = false;
 	/**
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
@@ -85,6 +86,11 @@
 	 */
 	export let edgesAboveNode: boolean | 'all' = false;
 	export let title = '';
+	/**
+	 * @default false
+	 * @description Prevents the graph scale/zoom from changing.
+	 */
+	export let fixedZoom = false;
 
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
@@ -123,7 +129,9 @@
 		{minimap}
 		{graph}
 		{fitView}
+		{fixedZoom}
 		{theme}
+		{drawer}
 		{controls}
 		{selectionColor}
 		{disableSelection}
@@ -140,6 +148,7 @@
 		<slot name="controls" slot="controls" />
 		<slot name="background" slot="background" />
 		<slot name="toggle" slot="toggle" />
+		<slot name="drawer" slot="drawer" />
 	</Graph>
 {:else}
 	<div
@@ -230,6 +239,14 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
 		--default-theme-toggle-color: hsl(0, 0%, 100%);
+
+		--default-drawer-button-color: hsl(0, 2%, 89%);
+		--default-drawer-button-text-color: hsl(0, 0%, 20%);
+
+		--default-drawer-reset-button-color: hsl(0, 2%, 89%);
+		--default-drawer-reset-button-text-color: hsl(0, 0%, 20%);
+		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
+		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
 	}
 
 	:root[svelvet-theme='dark'] {
@@ -278,6 +295,14 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 100%);
 		--default-theme-toggle-color: hsl(0, 0%, 27%);
+
+		--default-drawer-button-color: hsl(0, 0%, 19%);
+		--default-drawer-button-text-color: hsl(0, 0%, 100%);
+
+		--default-drawer-reset-button-color: hsl(0, 0%, 19%);
+		--default-drawer-reset-button-text-color: hsl(0, 0%, 89%);
+		--default-drawer-reset-button-hover-color: hsl(0, 0%, 59%);
+		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
 	}
 
 	:root[svelvet-theme='light'] {
@@ -326,5 +351,13 @@
 
 		--default-theme-toggle-text-color: hsl(0, 0%, 20%);
 		--default-theme-toggle-color: hsl(0, 0%, 100%);
+
+		--default-drawer-button-color: hsl(0, 2%, 89%);
+		--default-drawer-button-text-color: hsl(0, 0%, 20%);
+
+		--default-drawer-reset-button-color: hsl(0, 2%, 89%);
+		--default-drawer-reset-button-text-color: hsl(0, 0%, 20%);
+		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
+		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
 	}
 </style>

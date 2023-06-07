@@ -37,6 +37,7 @@
 
 	// Local stores
 	const anchorsMounted = writable(0);
+	const nodeConnectEvent = writable<null | MouseEvent>(null);
 
 	// External stores
 	const id = node.id;
@@ -60,8 +61,7 @@
 	const resized = writable(false);
 
 	// Reactive variables
-	let collapsed = false;
-	const DOMnode: Writable<HTMLElement | null> = writable(null);
+	// let collapsed = false; //not being used
 
 	// Subscriptions
 	$: actualPosition = $position;
@@ -69,6 +69,7 @@
 	// Reactive declarations
 	$: selected = $selectedNodes.has(node); // Used as class directive
 	$: hidden = $hiddenNodes.has(node); // Used as class directive
+	$: fixedSizing = dimensionsProvided || $resized;
 
 	// If the node is selected and the duplicate key pair is pressed
 	// Dispatch the duplicate event
@@ -78,8 +79,9 @@
 
 	setContext<Node>('node', node);
 	setContext<Writable<number>>('anchorsMounted', anchorsMounted);
-	setContext<Writable<HTMLElement | null>>('DOMnode', DOMnode);
+	// setContext<Writable<HTMLElement | null>>('DOMnode', DOMnode);
 	setContext<Writable<boolean>>('resized', resized);
+	setContext('nodeConnectEvent', nodeConnectEvent);
 
 	// Lifecycle methods
 	onMount(() => {
@@ -117,66 +119,51 @@
 	}
 
 	// This doesn't really do anything at the moment
-	function handleKeydown(e: KeyboardEvent) {
-		// If node is focused, hitting enter will toggle the selected state
-		if (e.key === 'Enter') {
-			toggleSelected();
-		} else if (e.key === 'Backspace') {
-			$nodeStore.delete(node.id);
-			$nodeStore = $nodeStore;
-		}
-	}
+	// function handleKeydown(e: KeyboardEvent) {
+	// 	// If node is focused, hitting enter will toggle the selected state
+	// 	if (e.key === 'Enter') {
+	// 		toggleSelected();
+	// 	} else if (e.key === 'Backspace') {
+	// 		$nodeStore.delete(node.id);
+	// 		$nodeStore = $nodeStore;
+	// 	}
+	// }
 
-	// Initial handler for a touch event on a node
-	function handleNodeTouch(e: TouchEvent) {
+	// Initial handler for a click event on a node
+	function handleNodeClicked(e: MouseEvent | TouchEvent) {
+		// Capture the initial click position
+		$initialClickPosition = get(cursor);
+
 		$graphDOMElement.focus();
-
-		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
-
-		if (e.touches.length > 1) return; // If the user is using more than one finger, don't do anything
-		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
-
-		// If the event target is an input, don't do anything
-		if (tagsToIgnore.has(targetElement.tagName)) return;
-		e.preventDefault();
 
 		// If the node is Node is not currently on top, bring it to the front
 		// Unless the zIndex prop has ben set to infinity
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
+		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
+
+		if (tagsToIgnore.has(targetElement.tagName)) return;
+
+		e.preventDefault();
+
 		// Dispatch our nodeClicked event for developer use
 		dispatch('nodeClicked', { node, e });
 
-		// Capture the initial touch position
-		$initialClickPosition = get(cursor);
-
-		// Handle the node selection logic
-		nodeSelectLogic(e);
-	}
-	// Initial handler for a click event on a node
-	function handleNodeClicked(e: MouseEvent) {
-		// Capture the initial click position
-		$initialClickPosition = get(cursor);
-
-		$graphDOMElement.focus();
-		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
-
-		// Bring node to front regardless of event target
-		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
-
-		if (tagsToIgnore.has(targetElement.tagName)) return;
-		e.preventDefault();
-
 		// If the node or graph is locked, don't do anything
-		if ($locked || $nodeLock) return;
+		if ($locked || $nodeLock) return; // If the node is locked, don't do anything
 
+		if ('touches' in e) {
+			// TypeScript now knows that e is a TouchEvent
+			if (e.touches && e.touches.length > 1) return;
+		} else {
+			// TypeScript now knows that e is a MouseEvent
+			if (e.button === 2 && $editable) {
+				$editing = node;
+			}
+		}
 		// Set our global tracking boolean to true
 		$tracking = true;
 
-		// Right click sets editing node
-		if (e.button === 2 && $editable) {
-			$editing = node;
-		}
 		// Handle selection logic
 		nodeSelectLogic(e);
 	}
@@ -226,14 +213,12 @@
 		nodeStore.delete(id);
 	}
 
-	const nodeConnectEvent = writable<null | MouseEvent>(null);
-	setContext('nodeConnectEvent', nodeConnectEvent);
 	function onMouseUp(e: MouseEvent) {
 		const cursorPosition = get(cursor);
 		const mouseDeltaX = cursorPosition.x - $initialClickPosition.x;
 		const mouseDeltaY = cursorPosition.y - $initialClickPosition.y;
 		const combinedDelta = Math.abs(mouseDeltaX) + Math.abs(mouseDeltaY);
-		if (combinedDelta < 4) dispatch('nodeReleased', { e });
+		if (combinedDelta < 4) dispatch('nodeReleased', { e, node });
 
 		$nodeConnectEvent = e;
 	}
@@ -241,11 +226,11 @@
 	// Custom action to handle Node interactions
 	function grabHandle(node: HTMLElement) {
 		node.addEventListener('mousedown', handleNodeClicked);
-		node.addEventListener('touchstart', handleNodeTouch);
+		node.addEventListener('touchstart', handleNodeClicked);
 		return {
 			destroy() {
 				node.removeEventListener('mousedown', handleNodeClicked);
-				node.removeEventListener('touchstart', handleNodeTouch);
+				node.removeEventListener('touchstart', handleNodeClicked);
 			}
 		};
 	}
@@ -262,8 +247,8 @@
 		style:left="{actualPosition.x}px"
 		style:z-index={$zIndex}
 		{title}
-		style:width={dimensionsProvided || $resized ? $widthStore + 'px' : 'fit-content'}
-		style:height={dimensionsProvided || $resized ? $heightStore + 'px' : 'fit-content'}
+		style:width={fixedSizing ? $widthStore + 'px' : 'fit-content'}
+		style:height={fixedSizing ? $heightStore + 'px' : 'fit-content'}
 		style:transform="rotate({$rotation}deg)"
 		style:--prop-background-color={$bgColor || (isDefault || useDefaults ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
@@ -276,22 +261,27 @@
 			: '0px'}
 		style:--prop-border-width={$borderWidth || (isDefault || useDefaults ? null : '0px')}
 		on:contextmenu|preventDefault|stopPropagation
-		on:keydown|preventDefault|self={handleKeydown}
 		on:mouseup={onMouseUp}
-		bind:clientHeight={$heightStore}
-		bind:clientWidth={$widthStore}
 		use:grabHandle
-		bind:this={$DOMnode}
 		tabIndex={0}
 	>
-		{#if !collapsed}
+		{#if !fixedSizing}
+			<div
+				style:width="fit-content"
+				style:height="fit-content"
+				bind:clientHeight={$heightStore}
+				bind:clientWidth={$widthStore}
+			>
+				<slot {grabHandle} {selected} {destroy} />
+			</div>
+		{:else}
 			<slot {grabHandle} {selected} {destroy} />
-
-			<div id={`anchors-west-${node.id}`} class="anchors left" />
-			<div id={`anchors-east-${node.id}`} class="anchors right" />
-			<div id={`anchors-north-${node.id}`} class="anchors top" />
-			<div id={`anchors-south-${node.id}`} class="anchors bottom" />
 		{/if}
+
+		<div id={`anchors-west-${node.id}`} class="anchors left" />
+		<div id={`anchors-east-${node.id}`} class="anchors right" />
+		<div id={`anchors-north-${node.id}`} class="anchors top" />
+		<div id={`anchors-south-${node.id}`} class="anchors bottom" />
 	</div>
 {/if}
 

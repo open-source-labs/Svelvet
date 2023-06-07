@@ -1,9 +1,11 @@
 <script context="module" lang="ts">
 	import DefaultAnchor from './DefaultAnchor.svelte';
+	import Edge from '../Edge/Edge.svelte';
+	import EdgeContext from '../Edge/EdgeContext.svelte';
 	import { onMount, getContext, onDestroy, afterUpdate } from 'svelte';
 	import { writable, get } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
-	import { createEventDispatcher, beforeUpdate } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
 	import type { Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
 	import type { InputType, NodeKey, OutputStore, InputStore, ConnectingFrom } from '$lib/types';
@@ -11,6 +13,7 @@
 	import type { Writable, Readable } from 'svelte/store';
 
 	let animationFrameId: number;
+
 	export const connectingFrom: Writable<ConnectingFrom | null> = writable(null);
 
 	export function changeAnchorSide(anchorElement: HTMLElement, newSide: Direction, node: Node) {
@@ -93,7 +96,6 @@
 	const dispatch = createEventDispatcher();
 
 	let anchorElement: HTMLDivElement;
-	let anchor: Anchor;
 	let tracking = false;
 	let hovering = false;
 	let previousConnectionCount = 0;
@@ -110,28 +112,22 @@
 	$: connecting = $connectingFrom?.anchor === anchor;
 	$: connectedAnchors = anchor && anchor.connected;
 
-	beforeUpdate(() => {
-		const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
-		if (!anchor) {
-			anchor = createAnchor(
-				graph,
-				node,
-				anchorKey,
-				{ x: 0, y: 0 },
-				{ width: 0, height: 0 },
-				inputsStore || outputStore || null,
-				edge || nodeEdge || graphEdge || null,
-				type,
-				direction,
-				dynamic,
-				key,
-				edgeColor
-			);
-			anchors.add(anchor, anchor.id);
-		}
-
-		anchor.recalculatePosition();
-	});
+	const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
+	const anchor = createAnchor(
+		graph,
+		node,
+		anchorKey,
+		{ x: 0, y: 0 },
+		{ width: 0, height: 0 },
+		inputsStore || outputStore || null,
+		edge || nodeEdge || graphEdge || null,
+		type,
+		direction,
+		dynamic,
+		key,
+		edgeColor
+	);
+	anchors.add(anchor, anchor.id);
 
 	onMount(() => {
 		if (anchorElement) anchor.recalculatePosition();
@@ -548,13 +544,44 @@
 	</slot>
 </div>
 
+{#each Array.from($connectedAnchors) as target}
+	{@const edge = edgeStore.fetch(anchor, target)}
+	{#if edge && edge.source === anchor}
+		{@const CustomEdge = edge.component}
+		<EdgeContext {edge}>
+			<slot name="edge">
+				{#if CustomEdge}
+					<CustomEdge />
+				{:else}
+					<Edge />
+				{/if}
+			</slot>
+		</EdgeContext>
+	{/if}
+{/each}
+
+{#if connecting}
+	{@const edge = edgeStore.get('cursor')}
+	{#if edge}
+		{@const CustomEdge = edge.component}
+		<EdgeContext {edge}>
+			<slot name="edge">
+				{#if CustomEdge}
+					<CustomEdge />
+				{:else}
+					<Edge />
+				{/if}
+			</slot>
+		</EdgeContext>
+	{/if}
+{/if}
+
 <style>
 	* {
 		box-sizing: border-box;
 	}
 	.anchor-wrapper {
 		z-index: 10;
-		/* border: solid 1px black; */
 		width: fit-content;
 		height: fit-content;
 		pointer-events: all;

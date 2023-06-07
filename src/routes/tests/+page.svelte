@@ -2,12 +2,19 @@
 	import { Svelvet, Minimap, Node } from '$lib';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
 	let position = { x: 300, y: 300 };
+	let label = 'test';
 </script>
 
 <body>
 	<div class="wrapper">
 		<Svelvet theme="dark" width={800} height={500} controls title="tests">
-			<Node id="node1" label="test" resizable />
+			<Node
+				id="node1"
+				{label}
+				resizable
+				on:nodeClicked={(e) => (label = e.detail.node.id)}
+				on:nodeReleased={(e) => (label = 'release')}
+			/>
 			<Node
 				on:connection={() => console.log('node2 connected')}
 				on:disconnection={() => console.log('node2 disconnected')}

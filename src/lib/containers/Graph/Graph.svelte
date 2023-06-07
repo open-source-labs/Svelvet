@@ -42,6 +42,7 @@
 	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
 	export let theme = 'light';
 	export let title: string;
+	export let drawer = false;
 
 	// Local constants
 	const dispatch = createEventDispatcher();
@@ -80,6 +81,7 @@
 	let toggleComponent: ComponentType | null = null;
 	let minimapComponent: ComponentType | null = null;
 	let controlsComponent: ComponentType | null = null;
+	let drawerComponent: ComponentType | null = null;
 
 	// Subscriptions
 	$: dimensions = $dimensionsStore;
@@ -97,6 +99,8 @@
 	$: if (minimap && !minimapComponent) loadMinimap();
 
 	$: if (controls && !controlsComponent) loadControls();
+
+	$: if (drawer && !drawerComponent) loadDrawer();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -162,6 +166,10 @@
 		controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	}
 
+	async function loadDrawer() {
+		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+	}
+
 	function updateGraphDimensions() {
 		if (!$graphDOMElement) return;
 		const DOMRect = $graphDOMElement.getBoundingClientRect();
@@ -179,13 +187,6 @@
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		dispatch('edgeDrop', {
-			cursor: get(cursor),
-			source: {
-				node: $connectingFrom?.anchor.node.id.slice(2),
-				anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
-			}
-		});
 		if (creating) {
 			const groupName = generateKey();
 			const groupKey: GroupKey = `${groupName}/${graph.id}`;
@@ -506,8 +507,11 @@
 	{#if toggle}
 		<svelte:component this={toggleComponent} />
 	{/if}
+	{#if drawer}
+		<svelte:component this={drawerComponent} />
+	{/if}
 	<slot name="minimap" />
-
+	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
 	{#if selecting && !disableSelection}

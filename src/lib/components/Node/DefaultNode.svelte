@@ -20,16 +20,15 @@
 	const inputs = node.inputs;
 	const outputs = node.outputs;
 	const resizable = node.resizable;
-	const directionStore = node.direction;
 
 	//Subscriptions
-	$: direction = $directionStore;
+	const direction = get(node.direction);
 
-	let top = get(node.direction) === 'TD' ? true : false;
-	let bottom = get(node.direction) === 'TD' ? true : false;
+	let top = direction === 'TD' ? true : false;
+	let bottom = direction === 'TD' ? true : false;
 
-	let left = get(node.direction) === 'TD' ? false : true;
-	let right = get(node.direction) === 'TD' ? false : true;
+	let left = direction === 'TD' ? false : true;
+	let right = direction === 'TD' ? false : true;
 </script>
 
 <div class:selected class="default-node" style:border-radius="{$borderRadius}px">

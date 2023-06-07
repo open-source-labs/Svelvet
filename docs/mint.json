@@ -11,12 +11,7 @@
 		"light": "#E94646",
 		"dark": "#9F1239"
 	},
-	"topbarLinks": [
-		{
-			"name": "Documentation",
-			"url": "https://mintlify.com/docs"
-		}
-	],
+
 	"topbarCtaButton": {
 		"type": "github",
 		"url": "https://github.com/open-source-labs/Svelvet/"
@@ -49,6 +44,7 @@
 				"components/node",
 				"components/anchor",
 				"components/edge",
+				"components/drawer",
 				"components/group",
 				"components/resizer",
 				"components/minimap",
@@ -62,9 +58,14 @@
 			"pages": [
 				"data-flow/overview",
 				"data-flow/slider",
+				"data-flow/knob",
 				"data-flow/radiogroup",
 				"data-flow/colorpicker"
 			]
+		},
+		{
+			"group": "Examples",
+			"pages": ["examples/database"]
 		}
 	],
 	"footerSocials": {
