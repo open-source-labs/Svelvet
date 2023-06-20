@@ -342,13 +342,9 @@
 	function handleKeyDown(e: KeyboardEvent) {
 		const { key, code } = e;
 		const target = e.target as HTMLElement;
-		// We dont want to prevent users from refreshing the page
-		// Or interacting with inputs
-		if (code === 'KeyR' && e.metaKey) return;
-		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
-		//Otherwise we prevent default keydown behavior
-		e.preventDefault();
+		// We dont want to prevent users from interacting with inputs
+		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
 		if (code === 'KeyA' && e[`${modifier}Key`]) {
 			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
@@ -368,7 +364,11 @@
 			setTimeout(() => {
 				duplicate.set(false);
 			}, 100);
+		} else {
+			return; // Unhandled action: used default handler
 		}
+
+		e.preventDefault();
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
