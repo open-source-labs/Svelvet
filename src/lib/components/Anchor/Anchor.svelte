@@ -435,6 +435,7 @@
 
 	// Destroy the edge and disconnect the anchors/stores
 	function destroy() {
+		// return;
 		edgeStore.delete('cursor');
 
 		// Get all edges connected to this anchor
@@ -589,7 +590,7 @@
 	</slot>
 </div>
 
-{#each Array.from($connectedAnchors) as target}
+{#each Array.from($connectedAnchors) as target (target.id)}
 	{@const edge = edgeStore.fetch(anchor, target)}
 	{#if edge && edge.source === anchor}
 		{@const CustomEdge = edge.component}
