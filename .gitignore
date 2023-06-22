@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*
 .VSCodeCounter
 /.vscode
 .vscode
+.idea
