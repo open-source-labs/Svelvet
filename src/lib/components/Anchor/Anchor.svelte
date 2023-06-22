@@ -217,7 +217,7 @@
 		previousConnectionCount = $connectedAnchors.size;
 	}
 
-	function handleMouseUp(e: MouseEvent) {
+	function handleMouseUp(e: MouseEvent | TouchEvent) {
 		if (connecting) return; // If the anchor initiated the connection, do nothing
 
 		// If the anchor receiving the event has connections
@@ -233,7 +233,7 @@
 		if ($connectingFrom) connectEdge(e);
 	}
 
-	function handleClick(e: MouseEvent) {
+	function handleClick(e: MouseEvent | TouchEvent) {
 		if (locked) return; // Return if the anchor is locked
 
 		// If the Anchor being clicked has connections
@@ -285,7 +285,7 @@
 		edgeStore.add(newEdge, 'cursor');
 	}
 
-	function connectEdge(e: MouseEvent) {
+	function connectEdge(e: MouseEvent | TouchEvent) {
 		// Delete the temporary edge
 		edgeStore.delete('cursor');
 
@@ -528,6 +528,8 @@
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
+	on:touchstart|stopPropagation|preventDefault={handleClick}
+	on:touchend|stopPropagation={handleMouseUp}
 	bind:this={anchorElement}
 >
 	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
