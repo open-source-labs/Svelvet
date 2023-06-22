@@ -217,7 +217,57 @@
 		previousConnectionCount = $connectedAnchors.size;
 	}
 
+	function touchBasedConnection(e: TouchEvent) {
+		edgeStore.delete('cursor');
+
+		const touchPosition = {
+			x: e.changedTouches[0].clientX,
+			y: e.changedTouches[0].clientY
+		};
+
+		// This retrieves the child element at the touch position
+		const otherAnchor = document.elementFromPoint(touchPosition.x, touchPosition.y);
+
+		if (!otherAnchor) return;
+
+		// This retrieves the parent element of the anchor, which has the ID
+		const parentElement = otherAnchor.parentElement;
+
+		if (!parentElement) return;
+
+		const compoundId: AnchorKey = parentElement.id as AnchorKey;
+
+		const nodeId = compoundId.split('/')[1] as NodeKey;
+
+		const connectingAnchor = nodeStore.get(nodeId)?.anchors.get(compoundId);
+
+		if (!connectingAnchor) return;
+
+		edgeStore.delete('cursor');
+
+		attemptConnection(anchor, connectingAnchor, e);
+	}
+
+	function attemptConnection(source: Anchor, target: Anchor, e: MouseEvent | TouchEvent) {
+		const success = connectAnchors(source, target);
+
+		if (success) {
+			connectStores();
+		}
+
+		if (!e.shiftKey) {
+			clearLinking(success);
+		}
+	}
+
 	function handleMouseUp(e: MouseEvent | TouchEvent) {
+		// Touchend events fire on the original element rather than the "curent one"
+		// So we need to check for this case and retieve the anchor to connect to
+		if (e instanceof TouchEvent && connecting) {
+			touchBasedConnection(e);
+			return;
+		}
+
 		if (connecting) return; // If the anchor initiated the connection, do nothing
 
 		// If the anchor receiving the event has connections
@@ -320,14 +370,7 @@
 			target = $connectingFrom.anchor;
 		}
 
-		const success = connectAnchors(source, target);
-		if (success) {
-			connectStores();
-		}
-
-		if (!e.shiftKey) {
-			clearLinking(success);
-		}
+		attemptConnection(source, target, e);
 	}
 
 	// Updates the connected anchors set on source and target
