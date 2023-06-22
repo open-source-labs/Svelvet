@@ -28,7 +28,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"prepare": "husky install"
 	},
 	"exports": {
 		".": {
@@ -51,7 +52,7 @@
 		"eslint": "^8.39.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"husky": "^8.0.3",
+		"husky": "^8.0.0",
 		"jest-dom": "^4.0.0",
 		"jsdom": "^22.1.0",
 		"prettier": "^2.8.8",
