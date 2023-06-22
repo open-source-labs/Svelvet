@@ -53,6 +53,10 @@ export function createNode(userNode: NodeConfig): Node {
 		rotation: writable(rotation || 0),
 		// hideable: writable(true),
 		moving: writable(false),
+		moved: writable({
+			x: 0,
+			y: 0
+		}),
 		resizingWidth: writable(false),
 		resizingHeight: writable(false),
 		rotating: writable(false),
