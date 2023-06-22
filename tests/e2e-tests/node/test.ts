@@ -119,18 +119,10 @@ test('node zIndexes are incremented correctly', async ({ page }) => {
 
 	await node1.click();
 
-	// await expect(node1).toHaveAttribute(
-	// 	'style',
-	// 	'top: 0px; left: 0px; width: 200px; height: 100px; z-index: 3; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD; transform: rotate(0deg);'
-	// );
 	await expect(node1).toHaveCSS('z-index', '3');
 
 	await node2.click();
 	await expect(node2).toHaveCSS('z-index', '4');
-	// await expect(node2).toHaveAttribute(
-	// 	'style',
-	// 	'top: 300px; left: 300px; width: 400px; height: 100px; z-index: 4; background-color: rgb(51, 51, 51); border-radius: 10px; color: rgb(255, 255, 255); --border-color:#111; --border-width:1.5px; --selection-color:#DDD; transform: rotate(0deg);'
-	// );
 });
 
 test('TD prop places inputs on the top', async ({ page }) => {
@@ -143,4 +135,27 @@ test('TD prop places inputs on the top', async ({ page }) => {
 	await expect(inputs).toHaveCSS('top', '0px');
 	await expect(inputs).toHaveCSS('display', 'flex');
 	await expect(inputs).toHaveCSS('position', 'absolute');
+});
+
+test('on:nodeClicked and on:nodeReleased events fire', async ({ page }) => {
+	await page.goto(testRoute);
+
+	const node = page.locator('#N-node1');
+
+	// Check that the label says "test"
+	await expect(node).toHaveText('test');
+
+	// Move mouse to node
+	await node.hover();
+
+	// Mouse down on node
+	await page.mouse.down();
+
+	// Check that the label now has the node id
+	await expect(node).toHaveText('N-node1');
+
+	// Mouse up on node
+	await page.mouse.up();
+
+	await expect(node).toHaveText('release');
 });

@@ -20,11 +20,12 @@
 	const maxWidth = width * buffer;
 	const maxHeight = height * buffer;
 
-	const bounds = graph.bounds;
-	const top = bounds.top;
-	const left = bounds.left;
-	const bottom = bounds.bottom;
-	const right = bounds.right;
+	const graphBounds = graph.bounds.graphBounds;
+	$: bounds = $graphBounds;
+	$: top = bounds.top;
+	$: left = bounds.left;
+	$: right = bounds.right;
+	$: bottom = bounds.bottom;
 
 	const nodes = graph.nodes;
 	const groups = graph.groups;
@@ -38,8 +39,8 @@
 	$: graphWidth = $dimensions.width;
 	$: graphHeight = $dimensions.height;
 
-	$: boundsWidth = $right - $left;
-	$: boundsHeight = $bottom - $top;
+	$: boundsWidth = right - left;
+	$: boundsHeight = bottom - top;
 	$: boundsRatio = boundsWidth / boundsHeight;
 
 	$: minimapRatio = width / height;
@@ -49,8 +50,8 @@
 	$: windowWidth = graphWidth / boundsWidth / $scale;
 	$: windowHeight = graphHeight / boundsHeight / $scale;
 
-	$: windowTop = (window.y - $top) / boundsHeight;
-	$: windowLeft = (window.x - $left) / boundsWidth;
+	$: windowTop = (window.y - top) / boundsHeight;
+	$: windowLeft = (window.x - left) / boundsWidth;
 
 	const e = { clientX: 0, clientY: 0 };
 
@@ -100,8 +101,8 @@
 			{#if node.id !== 'N-editor'}
 				<MiniNode
 					{node}
-					top={$top}
-					left={$left}
+					{top}
+					{left}
 					{nodeColor}
 					hidden={$hidden.has(node)}
 					{toggleHidden}
@@ -111,7 +112,7 @@
 		{/each}
 
 		{#each Array.from($groupBoxes.entries()) as [id, group] (id)}
-			<MiniGroupBox {...group} top={$top} left={$left} groupName={id} />
+			<MiniGroupBox {...group} {top} {left} groupName={id} />
 		{/each}
 	</div>
 

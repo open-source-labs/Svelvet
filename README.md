@@ -8,13 +8,16 @@
 ![GitHub Forks](https://img.shields.io/github/forks/open-source-labs/Svelvet?color=%23fb7182)
 ![NPM Version](https://img.shields.io/npm/v/svelvet?color=%23fb7182&label=version)
 
+<br>
+
 # Infinitely Customizable Node-Based User Interfaces with Svelvet!
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Getting Started](https://svelvet.mintlify.app/getting-started/installation) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@jenlee_35516/svelvet-7-0-build-intuitive-interactive-node-diagrams-in-svelte-cb4e78872ff6) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@rathnaganjigunta/introducing-svelvet-8-new-features-for-a-user-friendly-svelte-component-library-c9b966c5eb75) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
+<br>
 
 ## Version Updates
 
@@ -22,6 +25,18 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details><summary>🚀 v8.0.0 🚀</summary>
+  <ul>
+    <li>feat: added a new drag-and-drop Drawer component that can take custom Nodes, Anchors and Edges as props and add them to the canvas via the UI</li>
+<li>feat: added a new input component, Knob, to the collection of already existing data flow system components that can be composed in custom nodes and customized by users</li>
+<li>docs: updated documentation to include an Example section that features a usecase of Svelvet as a Database Visualization tool</li>
+<li>docs: updated the documentation page on the website to include newest version release</li>
+<li>test: added Unit and Component testing using Vitest and Svelte Testing Library</li>
+<li>refactor: updated website styling: consolidated redundant CSS classes, fixed broken links and styling issues</li>
+<li>chore: updated home page to include newest collaborators</li>
+<li>chore: updated testing suite package versions</li>
+  </ul>
+</details>
 <details><summary>v7.0.0</summary>
 <ul>
     <li>Changed primary API. Developers now pass Node and other exposed components directly as children to Svelvet</li>
@@ -198,17 +213,17 @@ Start by importing the Svelvet and Node components into your application:
 import { Svelvet, Node, Anchor, Edge } from 'svelvet';
 ```
 
-A Svelvet canvas primarily consists of Nodes. You can pass any number of Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
+A **Svelvet** canvas primarily consists of **Nodes**. You can pass any number of Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
 
-Nodes, Edges and Anchors all feature click events, properties and functions to allow developers to fully customize the state of their graphs.
+**Nodes**, **Edges** and **Anchors** all feature click events, properties and functions to allow developers to fully customize the state of their graphs.
 
-When creating custom Nodes, you can position any number of our Anchor components to enable dynamic connections. You can also wrap Nodes in a Group component to limit their boundaries and move them as one. These groups can be created dynamically by Shift + Click and dragging.
+When creating **custom Nodes**, you can position any number of our Anchor components to enable dynamic connections. You can also wrap Nodes in a **Group** component to limit their boundaries and move them as one. These groups can be created dynamically by Shift + Click and dragging.
 
-Finally, you can render our Controls, Minimap, Background and Theme Toggle components via props or named slots. In the latter use case, you can pass props to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
+Finally, you can render our **Controls**, **Minimap**, **Background** and **Theme Toggle** components via props or named slots. In the latter use case, you can pass props to further customize them. The Controls component can wrap your own set of buttons as we expose the zoom/reset/lock actions using a let directive.
 
 Svelvet is focused on dynamic edge connections, but if you'd like to specify edges ahead of time, you can pass an array of connections to any Anchor component. You can also pass a custom Edge component!
 
-For more detailed use cases and examples, please visit svelvet.io.
+For more detailed use cases and examples, please visit our [website](https://svelvet.io).
 
 ```jsx
 <Svelvet width={500} height={500} theme="dark" initialZoom={0.6} minimap>
@@ -220,11 +235,9 @@ For more detailed use cases and examples, please visit svelvet.io.
 </Svelvet>
 ```
 
-Visit our [website](https://svelvet.io) to learn more!
-
 ## Testing
 
-Testing is done with Playwright and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/test) folder. We plan on dramatically expanding test coverage very soon. In order to run the tests use the command:
+Testing is done with Playwright, Vitest, and the Svelte Testing Library. You can find tests in the [/tests](https://github.com/open-source-labs/Svelvet/tree/main/test) folder. We plan on dramatically expanding test coverage very soon. In order to run the tests use the command:
 
 For End-to-End testing
 
@@ -232,8 +245,18 @@ For End-to-End testing
 npx playwright test
 ```
 
+For unit testing
+
+```bash
+npm run test:unit [filename]
+```
+
 ## The Svelvet Team
 
+- Rathna Chinthalapalli • [LinkedIn](https://www.linkedin.com/in/rathnac/) • [Github](https://github.com/rathna-git)
+- Ruxin Zheng • [LinkedIn](https://www.linkedin.com/in/ruxinzhengswe/) • [Github](https://github.com/RuxinZ)
+- Samuel Alvarez • [LinkedIn](https://www.linkedin.com/in/samuelsalvarez/) • [Github](https://github.com/bittermelonsam)
+- Wesley Waters • [LinkedIn](https://www.linkedin.com/in/wesley-w-332882248/) • [Github](https://github.com/Wesley-Waters)
 - Brian Holmes • [LinkedIn](https://www.linkedin.com/in/briangregoryholmes/) • [Github](https://github.com/briangregoryholmes)
 - Britta Ager • [LinkedIn](https://www.linkedin.com/in/britta-ager-84394a129) • [Github](https://github.com/bkager)
 - Thomas Kady • [LinkedIn](https://www.linkedin.com/in/thomas-kady-45725b149) • [Github](https://github.com/thomaskady)
@@ -268,16 +291,16 @@ npx playwright test
 
 ## How to Contribute
 
-Read `src/lib/doc/README.md` for suggestions on how to get started!
+Please refer to the [roadmap](https://svelvet.mintlify.app/roadmap) for the full list of ideas for iteration. <br>
+Some ideas inspired by v8.0.0 include:
 
-The following is a list of features and improvements by ourselves and the larger Svelte community for any open source developer to contribute. If you have any additional ideas, feel free to raise the issue or implement them as well!
+- **Example Showcase:** we've added a new section to the documentation which will contain example sandboxes of features and potential usecases of Svelvet. If you would like to contribute to the showcase with an example of how you’re using Svelvet, reach out to the team with your project via [Github discussion](https://github.com/open-source-labs/Svelvet/discussions/categories/project-showcase).
+- **Additional functionality to the Drawer Component:** we are planning to make updates to address the ablity to 1) take custom Nodes as props, 2) edit and remove nodes that already exisits on the canvas 3) export the canvas as JSON or PDF file.
+- **Additional Data Input Components:** we plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
 
-- Premade node menu with drag & drop abilities
-- Add documentation/video tutorial on how to set up a Svelvet demo
-- Custom error handling
-- Increase test coverage for scalability
-- Checkout the [Roadmap](https://svelvet.mintlify.app/roadmap) for a current list of active projects
-- GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
+- **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon.
+
+GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
 
 ## Credits
 
@@ -285,4 +308,4 @@ Inspired by [React Flow](https://github.com/wbkd/react-flow), Svelvet expands th
 
 ## License
 
-Svelvet is developed under the [MIT license](https://github.com/open-source-labs/Svelvet/blob/main/LICENSE).
+Svelvet is developed under the [MIT license](https://github.com/open-source-labs/Svelvet-website/blob/main/LICENSE).

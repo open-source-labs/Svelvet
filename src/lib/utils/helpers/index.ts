@@ -11,3 +11,4 @@ export * from './buildArcStringKey';
 export * from './constructArcString';
 export * from './rotateVector';
 export * from './buildPath';
+export * from './addProps';

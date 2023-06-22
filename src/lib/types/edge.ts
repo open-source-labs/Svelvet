@@ -27,6 +27,7 @@ export type WritableEdge = {
 	animated: Writable<boolean>;
 	disconnect?: true;
 	component: ComponentType | null;
+	rendered: Writable<boolean>;
 	// raiseEdgeOnSelect?: boolean;
 	// edgesAbove?: boolean;
 };

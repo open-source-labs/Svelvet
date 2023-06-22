@@ -19,7 +19,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 	const dimensions = writable({ top: 0, left: 0, width: 0, height: 0, bottom: 0, right: 0 });
 
 	const scale = writable(zoom);
-
+	const mounted = writable(false);
 	const nodes = createStore<Node, NodeKey>();
 	const bounds = createBoundsStore(nodes, dimensions, scale, translation);
 
@@ -41,6 +41,7 @@ export function createGraph(id: GraphKey, config: GraphConfig): Graph {
 		dimensions,
 		bounds,
 		center,
+		mounted,
 		direction: direction || 'LR',
 		editable: editable || false,
 		edge: edge || null,
