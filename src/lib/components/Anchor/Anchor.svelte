@@ -263,7 +263,7 @@
 	function handleMouseUp(e: MouseEvent | TouchEvent) {
 		// Touchend events fire on the original element rather than the "curent one"
 		// So we need to check for this case and retieve the anchor to connect to
-		if (e instanceof TouchEvent && connecting) {
+		if ('changedTouches' in e && connecting) {
 			touchBasedConnection(e);
 			return;
 		}
