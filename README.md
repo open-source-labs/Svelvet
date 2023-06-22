@@ -210,7 +210,7 @@ yarn add svelvet
 Start by importing the Svelvet and Node components into your application:
 
 ```js
-import { Svelvet, Node, Anchor, Edge } from 'svelvet';
+import { Svelvet, Node, Anchor, Edge, Controls } from 'svelvet';
 ```
 
 A **Svelvet** canvas primarily consists of **Nodes**. You can pass any number of Nodes as children to the Svelvet wrapper. You can use all the standard conditional rendering syntax to populate nodes within the Svelvet component. Basic parameters like color, input and output count, label and more can be specified and feature two-way data binding with passed props. For greater customization, wrap your own custom components in our Node component and pass the whole thing to Svelvet.
