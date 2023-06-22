@@ -102,12 +102,20 @@ Edges also accept callback functions that run in response to click events on the
 <ResponseField name="textColor" type="CSS Color String" default="theme dependent">
 	Color of the label text.
 </ResponseField>
+<ResponseField name="enableHover" type="boolean" default="false">
+	Allows edges to be highlighted when hovering over them.
+</ResponseField>
 
 ## Properties
 
 <ResponseField name="let:path" type="string">
 	The SVG path string used for rendering the edge. Pass to the "d" parameter on your custom path
 	component.
+</ResponseField>
+
+<ResponseField name="let:hovering" type="boolean">
+	True when the cursor is over the Edge element.\
+	<b>Note:</b> You must set ```enableHover``` to true for this value to work.
 </ResponseField>
 
 ## Functions
