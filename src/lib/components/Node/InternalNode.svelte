@@ -215,7 +215,10 @@
 
 	function onMouseUp(e: MouseEvent) {
 		const cursorPosition = get(cursor);
-		node.moved.set({x:(cursorPosition.x - $initialClickPosition.x), y:(cursorPosition.y - $initialClickPosition.y)});
+		node.moved.set({
+			x: cursorPosition.x - $initialClickPosition.x,
+			y: cursorPosition.y - $initialClickPosition.y
+		});
 		dispatch('nodeReleased', { e, node });
 
 		$nodeConnectEvent = e;

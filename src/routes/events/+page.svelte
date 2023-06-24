@@ -2,8 +2,7 @@
 	import { Svelvet, Node, Anchor } from '$lib';
 	import Connector from '../../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
-
-	import { get } from 'svelte/store'
+	import { get } from 'svelte/store';
 
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
@@ -18,9 +17,8 @@
 
 	function nodeReleased(e: CustomEvent) {
 		console.log(e.type);
-		console.log("moved: ", get(e.detail.node.moved));
+		console.log('moved: ', get(e.detail.node.moved));
 	}
-
 </script>
 
 <body>
@@ -32,7 +30,12 @@
 				<div>Height</div>
 			{/each}
 		</Node>
-		<Node inputs={5} position={{ x: 600, y: 600 }} on:nodeClicked="{nodeClicked}" on:nodeReleased="{nodeReleased}" />
+		<Node
+			inputs={5}
+			position={{ x: 600, y: 600 }}
+			on:nodeClicked={nodeClicked}
+			on:nodeReleased={nodeReleased}
+		/>
 		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
 			<div class="anchor">
 				<Anchor nodeConnect />
