@@ -62,7 +62,7 @@
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeConfig[] = [];
 	let customNodes: NodeConfig[] = [];
-	let anchors: any = [];
+	let anchors: AnchorDrawerConfig[][] = [];
 	let dropped_in: boolean;
 
 	// Drag and drop events
@@ -73,10 +73,6 @@
 	const handleDragLeave = (): void => {
 		dropped_in = false;
 	};
-
-	// const handleDragEnd = (): void => {
-	// 	dropped_in = false;
-	// };
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
