@@ -23,7 +23,7 @@
 	let directionValue: HTMLElement;
 
 	// Array of props for pending anchors
-	let anchorsCreated: (AnchorDrawerConfig | object)[] = [];
+	let anchorsCreated: AnchorDrawerConfig[] = [];
 
 	// Creates props and adds to store, returns true if anchor was created
 	export const createAnchorProps = (createAnchors: boolean): boolean => {
