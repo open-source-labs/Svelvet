@@ -206,7 +206,7 @@
 		animationFrameId = requestAnimationFrame(trackPath);
 	}
 
-	function destroy() {
+	export function destroy() {
 		if (source.id === null || target.id === null) return;
 		const edgeKey = edgeStore.match(source, target);
 		edgeStore.delete(edgeKey[0]);

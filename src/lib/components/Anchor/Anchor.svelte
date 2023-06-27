@@ -11,6 +11,7 @@
 	import type { InputType, NodeKey, OutputStore, InputStore, ConnectingFrom } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
+	import Page from '../../../routes/+page.svelte';
 
 	let animationFrameId: number;
 
@@ -290,7 +291,7 @@
 		// And it can't have multiple connections
 		// And there isn't an active connection being made
 		// Then this is a disconnection event
-		if ($connectedAnchors?.size && !multiple && !$connectingFrom) return disconnect();
+		if ($connectedAnchors?.size && !multiple && !$connectingFrom) return disconnectEdge();
 
 		// If there isn't an active connection being made, start a new edge
 		if (!$connectingFrom) return startEdge();
@@ -449,7 +450,7 @@
 	}
 
 	// Disconnect edge and create a new cursor edge
-	function disconnect() {
+	function disconnectEdge() {
 		if (get(anchor.connected).size > 1) return;
 
 		const source = Array.from(get(anchor.connected))[0];
@@ -488,6 +489,17 @@
 		});
 
 		connections = connections.filter((connection) => connection !== null);
+	}
+
+	export function disconnect(target: [string | number, string | number]) {
+		const nodekey: NodeKey = `N-${target[0]}`;
+		const node = nodeStore.get(nodekey);
+		if (!node) return;
+		const targetAnchor = node.anchors.get(`A-${target[1]}/N-${target[0]}`);
+		if (!targetAnchor) return;
+		const edgeKey = edgeStore.match(anchor, targetAnchor);
+		if (!edgeKey) return;
+		edgeStore.delete(edgeKey[0]);
 	}
 
 	const processConnection = (connection: [string | number, string | number] | string | number) => {

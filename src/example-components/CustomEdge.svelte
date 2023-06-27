@@ -3,10 +3,11 @@
 	import type { CSSColorString } from '$lib/types';
 
 	let color: CSSColorString = 'yellow';
+	let edge: Edge;
 </script>
 
-<Edge {color} let:destroy width={4} animate>
-	<button id="destroy-edge" on:click={destroy} slot="label">Custom Label</button>
+<Edge {color} bind:this={edge} width={4} edgeClick={() => edge.destroy()} animate>
+	<button id="destroy-edge" on:click={edge.destroy} slot="label">Custom Label</button>
 </Edge>
 
 <style>
