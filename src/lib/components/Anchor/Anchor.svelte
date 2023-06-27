@@ -11,7 +11,6 @@
 	import type { InputType, NodeKey, OutputStore, InputStore, ConnectingFrom } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
-	import Page from '../../../routes/+page.svelte';
 
 	let animationFrameId: number;
 
