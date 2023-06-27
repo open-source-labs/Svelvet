@@ -193,6 +193,7 @@
 		--default-node-border-radius: 10px;
 
 		--default-node-cursor: grab;
+		--default-node-cursor-blocked: not-allowed;
 		--default-background-cursor: move;
 
 		--default-anchor-border-width: 1px;
