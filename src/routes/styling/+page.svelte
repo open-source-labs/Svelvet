@@ -14,6 +14,7 @@
 		/>
 		<Node --node-color="red" --node-border-radius="40px" id="node2" label="test" />
 		<Node label="what" position={{ x: 10, y: 200 }} inputs={3} TD />
+		<Node label="what" position={{ x: 100, y: 200 }} inputs={2} TD blocked />
 		<ThemeToggle slot="toggle" main="light" alt="custom-theme" />
 	</Svelvet>
 </body>
@@ -27,6 +28,7 @@
 	}
 
 	:root[svelvet-theme='custom-theme'] {
+		--node-cursor-blocked: crosshair;
 		--node-color: hsl(225, 30%, 50%);
 		--node-border-color: hsl(225, 20%, 40%);
 		--node-selection-color: hsl(45, 90%, 60%);
