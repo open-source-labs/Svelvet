@@ -309,7 +309,7 @@
 			on:mouseleave={() => (hovering = false)}
 			bind:this={DOMPath}
 		/>
-		<slot {path} {destroy}>
+		<slot {path} {destroy} {hovering}>
 			<path
 				id={edgeKey}
 				class="edge"
