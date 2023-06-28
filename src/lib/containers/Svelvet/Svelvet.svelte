@@ -136,6 +136,7 @@
 				targetNode: edge.target.node as Node
 			});
 		});
+	}
 
 	/**
 	 * @description Disconnects two nodes
@@ -159,7 +160,6 @@
 		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
-
 	}
 </script>
 
