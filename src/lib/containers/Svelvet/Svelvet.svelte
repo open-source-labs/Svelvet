@@ -7,7 +7,7 @@
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import type { ComponentType } from 'svelte';
 	import type { Graph as GraphType, EdgeStyle, XYPair, SvelvetConnectionEvent } from '$lib/types';
-	import type { NodeConfig, GraphKey, CSSColorString } from '$lib/types';
+	import type { NodeConfig, GraphKey, CSSColorString, NodeKey } from '$lib/types';
 	import type { Node, Anchor } from '$lib/types';
 </script>
 
@@ -136,6 +136,30 @@
 				targetNode: edge.target.node as Node
 			});
 		});
+
+	/**
+	 * @description Disconnects two nodes
+	 * @param source
+	 * @param target
+	 */
+	export function disconnect(
+		source: [string | number, string | number],
+		target: [string | number, string | number]
+	) {
+		const sourceNodeKey: NodeKey = `N-${source[0]}`;
+		const sourceNode = graph.nodes.get(sourceNodeKey);
+		if (!sourceNode) return;
+		const sourceAnchor = sourceNode.anchors.get(`A-${source[1]}/N-${source[0]}`);
+		if (!sourceAnchor) return;
+		const targetNodeKey: NodeKey = `N-${target[0]}`;
+		const targetNode = graph.nodes.get(targetNodeKey);
+		if (!targetNode) return;
+		const targetAnchor = targetNode.anchors.get(`A-${target[1]}/N-${target[0]}`);
+		if (!targetAnchor) return;
+		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
+		if (!edgeKey) return;
+		graph.edges.delete(edgeKey[0]);
+
 	}
 </script>
 

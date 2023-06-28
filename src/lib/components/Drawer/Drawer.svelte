@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { Node, Svelvet, Anchor } from '$lib';
-	import type {
-		SvelvetConfig,
-		NodeConfig,
-		XYPair,
-		EdgeStyle,
-		AnchorDrawerConfig
-	} from '$lib/types';
+	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte';
 	import { anchorPropsStore } from './DrawerAnchor.svelte';
