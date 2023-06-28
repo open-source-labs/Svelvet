@@ -7,7 +7,13 @@
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
 	import { createEventDispatcher } from 'svelte';
 	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
-	import type { Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
+	import type {
+		Anchor,
+		Direction,
+		AnchorKey,
+		CustomWritable,
+		AnchorConnectionEvent
+	} from '$lib/types';
 	import type { InputType, NodeKey, OutputStore, InputStore, ConnectingFrom } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
@@ -93,7 +99,8 @@
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let title = '';
 
-	const dispatch = createEventDispatcher();
+	const dispatchConnection = createEventDispatcher<{ connection: AnchorConnectionEvent }>();
+	const dispatchDisconnection = createEventDispatcher();
 
 	let anchorElement: HTMLDivElement;
 	let tracking = false;
@@ -210,9 +217,17 @@
 	// We track previous connections and fire a correct event accordingly
 	$: if ($connectedAnchors) {
 		if ($connectedAnchors.size < previousConnectionCount) {
-			dispatch('disconnection', { node, anchor });
+			// Need to add additional detail for disconnections here
+			dispatchDisconnection('disconnection', { node, anchor });
 		} else if ($connectedAnchors.size > previousConnectionCount) {
-			dispatch('connection', { node, anchor });
+			const anchorArray = Array.from($connectedAnchors);
+			const lastConnection = anchorArray[anchorArray.length - 1];
+			dispatchConnection('connection', {
+				node,
+				anchor,
+				connectedNode: lastConnection.node,
+				connectedAnchor: lastConnection
+			});
 		}
 		previousConnectionCount = $connectedAnchors.size;
 	}

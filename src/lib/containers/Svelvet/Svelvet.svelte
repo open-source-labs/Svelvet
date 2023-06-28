@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { onMount, setContext } from 'svelte';
+	import { createEventDispatcher, onMount, setContext } from 'svelte';
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import type { ComponentType } from 'svelte';
-	import type { Graph as GraphType, EdgeStyle, XYPair } from '$lib/types';
+	import type { Graph as GraphType, EdgeStyle, XYPair, SvelvetConnectionEvent } from '$lib/types';
 	import type { NodeConfig, GraphKey, CSSColorString } from '$lib/types';
+	import type { Node, Anchor } from '$lib/types';
 </script>
 
 <script lang="ts">
@@ -92,6 +93,11 @@
 	 */
 	export let fixedZoom = false;
 
+	const dispatch = createEventDispatcher<{
+		connection: SvelvetConnectionEvent;
+		disconnection: SvelvetConnectionEvent;
+	}>();
+
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
@@ -117,7 +123,20 @@
 
 	$: backgroundExists = $$slots.background;
 
+	$: edgeStore = graph && graph.edges;
+
 	$: if (graph) graph.transforms.scale.set(zoom);
+
+	$: if (edgeStore) {
+		edgeStore.onEdgeChange((edge, type) => {
+			dispatch(type, {
+				sourceAnchor: edge.source as Anchor,
+				targetAnchor: edge.target as Anchor,
+				sourceNode: edge.source.node as Node,
+				targetNode: edge.target.node as Node
+			});
+		});
+	}
 </script>
 
 {#if graph}

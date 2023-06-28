@@ -1,6 +1,7 @@
 import { derived, writable } from 'svelte/store';
 import type { Graph, Node, GroupBox, GraphKey, GroupKey } from '$lib/types';
-import { createStore, createEdgeStore } from './createStore';
+import { createStore } from './createStore';
+import { createEdgeStore } from './createEdgeStore';
 import { cursorPositionRaw } from '$lib/stores/CursorStore';
 import type { NodeKey } from '$lib/types';
 import { createDerivedCursorStore } from './createDerivedCursoreStore';
