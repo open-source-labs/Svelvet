@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { onMount, setContext } from 'svelte';
+	import { createEventDispatcher, onMount, setContext } from 'svelte';
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import type { ComponentType } from 'svelte';
-	import type { Graph as GraphType, EdgeStyle, XYPair } from '$lib/types';
-	import type { NodeConfig, GraphKey, CSSColorString } from '$lib/types';
+	import type { Graph as GraphType, EdgeStyle, XYPair, SvelvetConnectionEvent } from '$lib/types';
+	import type { NodeConfig, GraphKey, CSSColorString, NodeKey } from '$lib/types';
+	import type { Node, Anchor } from '$lib/types';
 </script>
 
 <script lang="ts">
@@ -92,6 +93,11 @@
 	 */
 	export let fixedZoom = false;
 
+	const dispatch = createEventDispatcher<{
+		connection: SvelvetConnectionEvent;
+		disconnection: SvelvetConnectionEvent;
+	}>();
+
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
@@ -117,7 +123,44 @@
 
 	$: backgroundExists = $$slots.background;
 
+	$: edgeStore = graph && graph.edges;
+
 	$: if (graph) graph.transforms.scale.set(zoom);
+
+	$: if (edgeStore) {
+		edgeStore.onEdgeChange((edge, type) => {
+			dispatch(type, {
+				sourceAnchor: edge.source as Anchor,
+				targetAnchor: edge.target as Anchor,
+				sourceNode: edge.source.node as Node,
+				targetNode: edge.target.node as Node
+			});
+		});
+	}
+
+	/**
+	 * @description Disconnects two nodes
+	 * @param source
+	 * @param target
+	 */
+	export function disconnect(
+		source: [string | number, string | number],
+		target: [string | number, string | number]
+	) {
+		const sourceNodeKey: NodeKey = `N-${source[0]}`;
+		const sourceNode = graph.nodes.get(sourceNodeKey);
+		if (!sourceNode) return;
+		const sourceAnchor = sourceNode.anchors.get(`A-${source[1]}/N-${source[0]}`);
+		if (!sourceAnchor) return;
+		const targetNodeKey: NodeKey = `N-${target[0]}`;
+		const targetNode = graph.nodes.get(targetNodeKey);
+		if (!targetNode) return;
+		const targetAnchor = targetNode.anchors.get(`A-${target[1]}/N-${target[0]}`);
+		if (!targetAnchor) return;
+		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
+		if (!edgeKey) return;
+		graph.edges.delete(edgeKey[0]);
+	}
 </script>
 
 {#if graph}
@@ -169,6 +212,7 @@
 		--default-node-border-radius: 10px;
 
 		--default-node-cursor: grab;
+		--default-node-cursor-blocked: not-allowed;
 		--default-background-cursor: move;
 
 		--default-anchor-border-width: 1px;

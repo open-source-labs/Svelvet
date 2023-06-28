@@ -62,9 +62,6 @@ export interface ActiveKeys {
 
 export type BackgroundStyles = 'lines' | 'dots' | 'none';
 
-export interface ActiveIntervals extends Record<string, NodeJS.Timer | undefined> {
-	[key: string]: NodeJS.Timer | undefined;
-}
 export type CSSDimensionString = PixelValue | PercentValue | EmValue | RemValue | VwValue | VhValue;
 
 export type PixelValue = `${number}px`;

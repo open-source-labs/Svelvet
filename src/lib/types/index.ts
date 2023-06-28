@@ -11,3 +11,4 @@ export * from './props/svelvetProps';
 export * from './props/anchorProps';
 export * from './props/edgeProps';
 export * from './props/nodeProps';
+export * from './events';

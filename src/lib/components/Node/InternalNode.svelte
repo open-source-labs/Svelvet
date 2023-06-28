@@ -359,7 +359,7 @@
 	}
 
 	.locked {
-		cursor: not-allowed;
+		cursor: var(--node-cursor-blocked, var(--default-node-cursor-blocked));
 	}
 	.selected {
 		box-shadow: 0 0 0 var(--final-border-width) var(--final-selection-color),
