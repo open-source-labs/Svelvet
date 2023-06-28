@@ -1,13 +1,25 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node } from '$lib';
+	import type { SvelvetConnectionEvent } from '$lib/types';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
 	let position = { x: 300, y: 300 };
 	let label = 'test';
+
+	function handleConnection(e: CustomEvent<SvelvetConnectionEvent>) {
+		console.log(e.detail);
+	}
 </script>
 
 <body>
 	<div class="wrapper">
-		<Svelvet theme="dark" width={800} height={500} controls title="tests">
+		<Svelvet
+			on:connection={handleConnection}
+			theme="dark"
+			width={800}
+			height={500}
+			controls
+			title="tests"
+		>
 			<Node
 				id="node1"
 				{label}

@@ -122,8 +122,13 @@
 	}
 
 	onMount(() => {
-		DOMnode = document.querySelector(`#${node.id}`) as HTMLElement;
-		if (DOMnode) [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		try {
+			DOMnode = document.querySelector(`#${node.id}`) as HTMLElement;
+			if (DOMnode) [minWidth, minHeight] = calculateFitContentWidth(DOMnode);
+		} catch (e) {
+			// eslint-disable-next-line no-console
+			console.error(e);
+		}
 	});
 
 	function resizeHandler(
