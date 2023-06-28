@@ -143,6 +143,7 @@
 	 * @param source
 	 * @param target
 	 */
+	// Need to rethink this implementation
 	export function disconnect(
 		source: [string | number, string | number],
 		target: [string | number, string | number]

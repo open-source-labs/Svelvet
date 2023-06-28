@@ -519,7 +519,12 @@
 	{/if}
 </section>
 
-<svelte:window on:touchend={onMouseUp} on:mouseup={onMouseUp} on:resize={updateGraphDimensions} />
+<svelte:window
+	on:touchend={onMouseUp}
+	on:mouseup={onMouseUp}
+	on:resize={updateGraphDimensions}
+	on:scroll={updateGraphDimensions}
+/>
 
 <style>
 	/* cyrillic-ext */
