@@ -3,7 +3,6 @@ import { writable, derived, get } from 'svelte/store';
 import type { Writable, Readable } from 'svelte/store';
 import type { CustomWritable, CSSColorString, XYPair } from '$lib/types';
 import type { ComponentType } from 'svelte';
-import { calculateRelativePosition } from '..';
 import { directionVectors } from '$lib/constants';
 
 export function createAnchor(
@@ -38,30 +37,28 @@ export function createAnchor(
 		return { x: $position.x + $offset.x, y: $position.y + $offset.y };
 	});
 	const transforms = graph.transforms;
-	const graphDimensions = graph.dimensions;
+
 	const directionStore = writable(direction || 'self');
 	const recalculatePosition = () => {
 		const anchorElement = document.getElementById(id);
+		const parentNode = document.getElementById(node.id);
 
 		const direction = get(directionStore);
 		const vector = directionVectors[direction];
 
-		if (!anchorElement) return;
+		if (!anchorElement || !parentNode) return;
 		const { x, y, width, height } = anchorElement.getBoundingClientRect();
-		const oldOffset = get(offset);
-		const oldPosition = get(anchorPosition);
+		const { x: parentX, y: parentY } = parentNode.getBoundingClientRect();
 
-		const { scaled, scale } = calculateRelativePosition(graphDimensions, transforms, { x, y });
-		const deltaX = scaled.x - oldPosition.x;
-		const deltaY = scaled.y - oldPosition.y;
+		const scale = get(transforms.scale);
 
 		offset.set({
-			x: oldOffset.x + deltaX + width / scale / 2 + (vector.x * width) / scale / 2,
-			y: oldOffset.y + deltaY + height / scale / 2 + (vector.y * height) / scale / 2
+			x: (x - parentX) / scale + width / scale / 2 + (vector.x * width) / scale / 2,
+			y: (y - parentY) / scale + height / scale / 2 + (vector.y * height) / scale / 2
 		});
 	};
 
-	// Moving s derived from whether or not the parent node is moving or resizing
+	// Moving is derived from whether or not the parent node is moving or resizing
 	const moving = derived(
 		[node.moving, node.resizingWidth, node.resizingHeight, node.rotating],
 		([$moving, $resizingWidth, $resizingHeight, $rotating]) => {
