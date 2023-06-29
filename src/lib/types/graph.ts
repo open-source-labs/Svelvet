@@ -16,26 +16,14 @@ import type {
 	Theme
 } from '.';
 import type { ComponentType } from 'svelte';
+import type { createBoundsStore } from '$lib/utils/creators/createBoundsStore';
 
 export interface Graph {
 	id: GraphKey;
 	nodes: NodeStore;
 	transforms: GraphTransforms;
 	locked: Writable<boolean>;
-	bounds: {
-		graphBounds: Writable<{
-			top: number;
-			left: number;
-			right: number;
-			bottom: number;
-		}>;
-		nodeBounds: Writable<{
-			top: number;
-			left: number;
-			right: number;
-			bottom: number;
-		}>;
-	};
+	bounds: ReturnType<typeof createBoundsStore>;
 	mounted: Writable<boolean>;
 	center: Readable<XYPair>;
 	maxZIndex: Writable<number>;

@@ -4,6 +4,7 @@
 	import { calculateFitView } from '$lib/utils';
 	import type { CSSColorString } from '$lib/types';
 	import { zoomAndTranslate } from '$lib/utils/movers/';
+	import { tracking } from '$lib/stores';
 
 	export let increment = 0.1;
 	export let horizontal = false;
@@ -36,9 +37,11 @@
 	}
 
 	function fitView() {
+		tracking.set(true);
 		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
 		translation.set({ x: x || 0, y: y || 0 });
 		transforms.scale.set(scale || 1);
+		tracking.set(false);
 	}
 
 	function lock() {
@@ -86,29 +89,6 @@
 </nav>
 
 <style>
-	@font-face {
-		font-family: 'Material Symbols Outlined';
-		font-style: normal;
-		font-weight: 400;
-		src: url(../../assets/fonts/materialsymbolsoutlined_v110.woff2) format('woff2');
-	}
-
-	.material-symbols-outlined {
-		font-family: 'Material Symbols Outlined';
-		font-weight: normal;
-		font-style: normal;
-		font-size: 24px;
-		line-height: 1;
-		letter-spacing: normal;
-		text-transform: none;
-		display: inline-block;
-		white-space: nowrap;
-		word-wrap: normal;
-		direction: ltr;
-		-webkit-font-feature-settings: 'liga';
-		-webkit-font-smoothing: antialiased;
-	}
-
 	* {
 		box-sizing: border-box;
 	}
@@ -177,8 +157,12 @@
 
 	span {
 		font-family: 'Material Symbols Outlined';
-		font-size: 1.2rem;
+		font-size: 1.3rem;
 		color: inherit;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
 	}
 	button:last-child {
 		border-bottom: none;
