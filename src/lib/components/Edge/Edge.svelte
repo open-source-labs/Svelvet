@@ -374,8 +374,8 @@
 	.target {
 		pointer-events: stroke;
 		stroke: var(
-		        --prop-target-edge-color,
-		        var(--target-edge-color, var(--default-target-edge-color))
+			--prop-target-edge-color,
+			var(--target-edge-color, var(--default-target-edge-color))
 		);
 		stroke-width: calc(var(--edge-width, var(--default-edge-width)) + 8px);
 		opacity: 0;
