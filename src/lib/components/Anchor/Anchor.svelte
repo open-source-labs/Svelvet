@@ -592,6 +592,8 @@
 <div
 	id={anchor?.id}
 	class="anchor-wrapper"
+	role="button"
+	tabindex="0"
 	class:locked
 	title={title || ''}
 	on:mouseenter={() => (hovering = true)}

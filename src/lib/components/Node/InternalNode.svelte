@@ -94,7 +94,7 @@
 			tracking.set(true);
 			tracking.set(false);
 		}
-		$mounted++;
+		mounted.update((n) => n + 1);
 	});
 
 	onDestroy(() => {
@@ -105,7 +105,7 @@
 			$selectedNodes = $selectedNodes;
 		}
 		// Decrement the store value for mounted nodes
-		$mounted--;
+		mounted.update((n) => n - 1);
 	});
 
 	function toggleSelected() {
@@ -236,11 +236,11 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-non-interactive-element -->
 {#if !hidden}
 	<div
 		{id}
 		class="svelvet-node"
+		role="button"
 		class:selected
 		class:locked={$locked || $nodeLock}
 		style:top="{actualPosition.y}px"
@@ -263,7 +263,7 @@
 		on:contextmenu|preventDefault|stopPropagation
 		on:mouseup={onMouseUp}
 		use:grabHandle
-		tabIndex={0}
+		tabindex={0}
 	>
 		{#if !fixedSizing}
 			<div
