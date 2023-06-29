@@ -27,18 +27,18 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-non-interactive-element -->
-<div class="radio-group" aria-label="radio-group" on:keydown={cycleThroughGroup} tabIndex={0}>
+<div class="radio-group" role="radiogroup" on:keydown={cycleThroughGroup} tabindex={0}>
 	{#each options as label, index}
-		<label
-			class="option-wrapper"
+		<button
 			on:mousedown|stopPropagation={() => {
 				initial = index;
 			}}
 		>
-			<input class="option" type="radio" id={slugify(label)} bind:group={initial} value={index} />
-			<p>{label}</p>
-		</label>
+			<label class="option-wrapper">
+				<input class="option" type="radio" id={slugify(label)} bind:group={initial} value={index} />
+				<p>{label}</p>
+			</label>
+		</button>
 	{/each}
 </div>
 

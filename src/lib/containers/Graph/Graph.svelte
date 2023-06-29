@@ -76,7 +76,6 @@
 	let isMovable = false;
 	let pinching = false;
 	let initialFit = false;
-	let interval: number | undefined = undefined;
 	let graphDimensions: GraphDimensions;
 	let toggleComponent: ComponentType | null = null;
 	let minimapComponent: ComponentType | null = null;
@@ -382,7 +381,6 @@
 		} else if (key === 'Shift') {
 			connectingFrom.set(null);
 		}
-		interval = undefined;
 	}
 
 	function handleScroll(e: WheelEvent) {
@@ -475,6 +473,7 @@
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
+	role="presentation"
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}

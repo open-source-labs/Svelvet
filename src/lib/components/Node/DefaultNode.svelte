@@ -33,10 +33,10 @@
 
 <div class:selected class="default-node" style:border-radius="{$borderRadius}px">
 	{#if dynamic}
-		{#each { length: $inputs } as _, i}
+		{#each { length: $inputs } as _}
 			<Anchor on:connection on:disconnection />
 		{/each}
-		{#each { length: $outputs } as _, i}
+		{#each { length: $outputs } as _}
 			<Anchor on:connection on:disconnection />
 		{/each}
 	{:else}

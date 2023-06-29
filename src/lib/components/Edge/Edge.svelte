@@ -298,6 +298,7 @@
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
 		<path
+			role="presentation"
 			id={edgeKey + '-target'}
 			class="target"
 			class:cursor={edgeKey === 'cursor' || (!edgeClick && !enableHover)}

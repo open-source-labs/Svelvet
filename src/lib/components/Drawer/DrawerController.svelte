@@ -158,7 +158,14 @@
 				</div>
 			</li>
 			<li class="list-item">
-				<div class="defaultNodes" draggable="true" on:dragstart={handleDragStart}>Node</div>
+				<div
+					role="presentation"
+					class="defaultNodes"
+					draggable="true"
+					on:dragstart={handleDragStart}
+				>
+					Node
+				</div>
 			</li>
 		</ul>
 	</slot>

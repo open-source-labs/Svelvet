@@ -3,7 +3,7 @@
 	import { isArrow } from '$lib/types';
 	import { roundNum, calculateRelativeCursor } from '$lib/utils';
 	import { tracking } from '$lib/stores/CursorStore';
-	import type { Graph, Node, CustomWritable } from '$lib/types';
+	import type { Graph, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
 
 	// Props
@@ -82,14 +82,10 @@
 	$: connected = typeof parameterStore.set !== 'function';
 
 	const graph = getContext<Graph>('graph');
-	const node = getContext<Node>('node');
 
 	const groups = graph.groups;
 	const selected = $groups.selected;
 	const activeGroup = graph.activeGroup;
-
-	$: width = node.dimensions.width;
-	$: height = node.dimensions.height;
 
 	// TODO: need to rename these variables
 	let sliderWidth: number; // Width of knob on DOM (relative to scale)
@@ -207,12 +203,15 @@
 	<!-- this div is wrapping the knob section -->
 	<div class="wrapper" style:color={fontColor} bind:this={knobWrapperElement}>
 		<div class="knob-container" bind:offsetWidth={sliderWidth} style:transform={curAngle}>
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<div
 				tabindex={0}
 				id="knob"
 				class="knob"
 				aria-label="knob component"
+				role="slider"
+				aria-valuemin={min}
+				aria-valuemax={max}
+				aria-valuenow={$parameterStore}
 				style:background={knobColor}
 				on:wheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY));

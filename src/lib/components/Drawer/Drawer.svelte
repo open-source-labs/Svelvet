@@ -61,7 +61,7 @@
 
 	// Drag and drop events
 	const handleDragEnter = (): void => {
-		dropped_in = true;
+		if (!dropped_in) dropped_in = true;
 	};
 
 	const handleDragLeave = (): void => {
@@ -95,6 +95,7 @@
 </script>
 
 <div
+	role="presentation"
 	class="drop_zone"
 	on:dragenter={handleDragEnter}
 	on:dragleave={handleDragLeave}
@@ -102,7 +103,7 @@
 	on:drop={handleDrop}
 >
 	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as node, index}
+		{#each defaultNodes as node}
 			<Node {...node} drop="cursor" />
 		{/each}
 
