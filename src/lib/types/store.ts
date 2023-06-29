@@ -1,7 +1,7 @@
 import type { Anchor, Graph, Node, GroupKey } from '$lib/types';
-import type { GroupBox, NodeKey, GraphKey, AnchorKey } from '$lib/types';
+import type { GroupBox, NodeKey, GraphKey, AnchorKey, CustomEdgeKey } from '$lib/types';
 import type { WritableEdge } from './edge';
-import type { CustomEdgeKey, generateOutput } from '$lib/utils/creators/';
+import type { generateOutput } from '$lib/utils/creators/';
 import type { Writable, Readable } from 'svelte/store';
 
 export interface Store<T, K> {
@@ -26,6 +26,9 @@ export interface EdgeStore {
 	update: Writable<Map<CustomEdgeKey, WritableEdge>>['update'];
 	set: Writable<Map<CustomEdgeKey, WritableEdge>>['set'];
 	add: (item: WritableEdge, key: CustomEdgeKey) => void;
+	onEdgeChange: (
+		callback: (edge: WritableEdge, type: 'connection' | 'disconnection') => void
+	) => void;
 }
 
 export type GraphStore = Store<Graph, GraphKey>;

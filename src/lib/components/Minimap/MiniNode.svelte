@@ -19,9 +19,14 @@
 	$: colorIsTransparent = color === 'rgba(0, 0, 0, 0)';
 
 	onMount(() => {
-		const DOMnode = document.querySelector(`#${node.id}`)?.firstChild;
-		if (DOMnode) {
-			color = window.getComputedStyle(DOMnode as Element).backgroundColor as CSSColorString;
+		try {
+			const DOMnode = document.querySelector(`#${node.id}`)?.firstChild;
+			if (DOMnode) {
+				color = window.getComputedStyle(DOMnode as Element).backgroundColor as CSSColorString;
+			}
+		} catch (e) {
+			// eslint-disable-next-line no-console
+			console.error(e);
 		}
 	});
 </script>

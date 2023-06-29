@@ -76,7 +76,6 @@
 	let isMovable = false;
 	let pinching = false;
 	let initialFit = false;
-	let interval: number | undefined = undefined;
 	let graphDimensions: GraphDimensions;
 	let toggleComponent: ComponentType | null = null;
 	let minimapComponent: ComponentType | null = null;
@@ -91,7 +90,6 @@
 
 	$: if (!initialFit && fitView) {
 		fitIntoView();
-		initialFit = true;
 	}
 
 	$: if (toggle && !toggleComponent) loadToggle();
@@ -148,11 +146,14 @@
 
 	async function fitIntoView() {
 		await tick();
+		tracking.set(true);
 		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
 			graph.transforms.scale.set(scale);
 			translation.set({ x, y });
 		}
+		tracking.set(false);
+		initialFit = true;
 	}
 	async function loadMinimap() {
 		minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
@@ -380,7 +381,6 @@
 		} else if (key === 'Shift') {
 			connectingFrom.set(null);
 		}
-		interval = undefined;
 	}
 
 	function handleScroll(e: WheelEvent) {
@@ -473,6 +473,7 @@
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <section
+	role="presentation"
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
@@ -519,58 +520,14 @@
 	{/if}
 </section>
 
-<svelte:window on:touchend={onMouseUp} on:mouseup={onMouseUp} on:resize={updateGraphDimensions} />
+<svelte:window
+	on:touchend={onMouseUp}
+	on:mouseup={onMouseUp}
+	on:resize={updateGraphDimensions}
+	on:scroll={updateGraphDimensions}
+/>
 
 <style>
-	/* cyrillic-ext */
-	@font-face {
-		font-family: 'Rubik';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url(../../assets/fonts/rubik_v26_cyrillic-ext.woff2) format('woff2');
-		unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
-	}
-	/* cyrillic */
-	@font-face {
-		font-family: 'Rubik';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url(../../assets/fonts/rubik_v26_cyrillic.woff2) format('woff2');
-		unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-	}
-	/* hebrew */
-	@font-face {
-		font-family: 'Rubik';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url(../../assets/fonts/rubik_v26_hebrew.woff2) format('woff2');
-		unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
-	}
-	/* latin-ext */
-	@font-face {
-		font-family: 'Rubik';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url(../../assets/fonts/rubik_v26_latin-ext.woff2) format('woff2');
-		unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
-			U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-	}
-	/* latin */
-	@font-face {
-		font-family: 'Rubik';
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url(../../assets/fonts/rubik_v26_latin.woff2) format('woff2');
-		unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
-			U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
-			U+FFFD;
-	}
-
 	.svelvet-wrapper {
 		position: relative;
 		overflow: hidden;

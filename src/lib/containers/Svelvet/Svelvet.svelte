@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { onMount, setContext } from 'svelte';
+	import { createEventDispatcher, onMount, setContext } from 'svelte';
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import type { ComponentType } from 'svelte';
-	import type { Graph as GraphType, EdgeStyle, XYPair } from '$lib/types';
-	import type { NodeConfig, GraphKey, CSSColorString } from '$lib/types';
+	import type { Graph as GraphType, EdgeStyle, XYPair, SvelvetConnectionEvent } from '$lib/types';
+	import type { NodeConfig, GraphKey, CSSColorString, NodeKey } from '$lib/types';
+	import type { Node, Anchor } from '$lib/types';
 </script>
 
 <script lang="ts">
@@ -92,6 +93,11 @@
 	 */
 	export let fixedZoom = false;
 
+	const dispatch = createEventDispatcher<{
+		connection: SvelvetConnectionEvent;
+		disconnection: SvelvetConnectionEvent;
+	}>();
+
 	let graph: GraphType;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
@@ -117,7 +123,45 @@
 
 	$: backgroundExists = $$slots.background;
 
+	$: edgeStore = graph && graph.edges;
+
 	$: if (graph) graph.transforms.scale.set(zoom);
+
+	$: if (edgeStore) {
+		edgeStore.onEdgeChange((edge, type) => {
+			dispatch(type, {
+				sourceAnchor: edge.source as Anchor,
+				targetAnchor: edge.target as Anchor,
+				sourceNode: edge.source.node as Node,
+				targetNode: edge.target.node as Node
+			});
+		});
+	}
+
+	/**
+	 * @description Disconnects two nodes
+	 * @param source
+	 * @param target
+	 */
+	// Need to rethink this implementation
+	export function disconnect(
+		source: [string | number, string | number],
+		target: [string | number, string | number]
+	) {
+		const sourceNodeKey: NodeKey = `N-${source[0]}`;
+		const sourceNode = graph.nodes.get(sourceNodeKey);
+		if (!sourceNode) return;
+		const sourceAnchor = sourceNode.anchors.get(`A-${source[1]}/N-${source[0]}`);
+		if (!sourceAnchor) return;
+		const targetNodeKey: NodeKey = `N-${target[0]}`;
+		const targetNode = graph.nodes.get(targetNodeKey);
+		if (!targetNode) return;
+		const targetAnchor = targetNode.anchors.get(`A-${target[1]}/N-${target[0]}`);
+		if (!targetAnchor) return;
+		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
+		if (!edgeKey) return;
+		graph.edges.delete(edgeKey[0]);
+	}
 </script>
 
 {#if graph}
@@ -169,6 +213,7 @@
 		--default-node-border-radius: 10px;
 
 		--default-node-cursor: grab;
+		--default-node-cursor-blocked: not-allowed;
 		--default-background-cursor: move;
 
 		--default-anchor-border-width: 1px;
@@ -359,5 +404,84 @@
 		--default-drawer-reset-button-text-color: hsl(0, 0%, 20%);
 		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
 		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
+	}
+
+	/* cyrillic-ext */
+	@font-face {
+		font-family: 'Rubik';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('../../assets/fonts/rubik_v26_cyrillic-ext.woff2') format('woff2');
+		unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+	}
+	/* cyrillic */
+	@font-face {
+		font-family: 'Rubik';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('../../assets/fonts/rubik_v26_cyrillic.woff2') format('woff2');
+		unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+	}
+	/* hebrew */
+	@font-face {
+		font-family: 'Rubik';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('../../assets/fonts/rubik_v26_hebrew.woff2') format('woff2');
+		unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+	}
+	/* latin-ext */
+	@font-face {
+		font-family: 'Rubik';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('../../assets/fonts/rubik_v26_latin-ext.woff2') format('woff2');
+		unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+			U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+	}
+	/* latin */
+	@font-face {
+		font-family: 'Rubik';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url('../../assets/fonts/rubik_v26_latin.woff2') format('woff2');
+		unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+			U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+			U+FFFD;
+	}
+
+	@font-face {
+		font-family: 'Material Symbols Outlined';
+		font-style: normal;
+		font-weight: 300;
+		src: local('Material Symbols Outlined'),
+			url('../../assets/fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2') format('woff2');
+	}
+
+	:global(.material-symbols-outlined) {
+		font-family: 'Material Symbols Outlined';
+		font-weight: normal;
+		font-style: normal;
+		font-size: 42px;
+		line-height: 0.8;
+		letter-spacing: normal;
+		text-transform: none;
+		display: inline-block;
+		white-space: nowrap;
+		word-wrap: normal;
+		direction: ltr;
+
+		/* Support for all WebKit browsers. */
+		-webkit-font-smoothing: antialiased;
+		/* Support for Safari and Chrome. */
+		text-rendering: optimizeLegibility;
+
+		/* Support for Firefox. */
+		-moz-osx-font-smoothing: grayscale;
 	}
 </style>

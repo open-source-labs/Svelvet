@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from 'svelte';
+import { SvelteComponent } from 'svelte';
 declare const __propDef: {
 	props: Record<string, never>;
 	events: {
@@ -9,5 +9,5 @@ declare const __propDef: {
 export type PageProps = typeof __propDef.props;
 export type PageEvents = typeof __propDef.events;
 export type PageSlots = typeof __propDef.slots;
-export default class Page extends SvelteComponentTyped<PageProps, PageEvents, PageSlots> {}
+export default class Page extends SvelteComponent<PageProps, PageEvents, PageSlots> {}
 export {};

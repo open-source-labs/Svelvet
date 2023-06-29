@@ -206,7 +206,7 @@
 		animationFrameId = requestAnimationFrame(trackPath);
 	}
 
-	function destroy() {
+	export function destroy() {
 		if (source.id === null || target.id === null) return;
 		const edgeKey = edgeStore.match(source, target);
 		edgeStore.delete(edgeKey[0]);
@@ -298,6 +298,7 @@
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
 		<path
+			role="presentation"
 			id={edgeKey + '-target'}
 			class="target"
 			class:cursor={edgeKey === 'cursor' || (!edgeClick && !enableHover)}
@@ -309,7 +310,7 @@
 			on:mouseleave={() => (hovering = false)}
 			bind:this={DOMPath}
 		/>
-		<slot {path} {destroy}>
+		<slot {path} {destroy} {hovering}>
 			<path
 				id={edgeKey}
 				class="edge"

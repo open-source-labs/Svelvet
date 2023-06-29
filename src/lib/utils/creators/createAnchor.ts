@@ -40,6 +40,7 @@ export function createAnchor(
 	const transforms = graph.transforms;
 	const graphDimensions = graph.dimensions;
 	const directionStore = writable(direction || 'self');
+
 	const recalculatePosition = () => {
 		const anchorElement = document.getElementById(id);
 
@@ -61,7 +62,7 @@ export function createAnchor(
 		});
 	};
 
-	// Moving s derived from whether or not the parent node is moving or resizing
+	// Moving is derived from whether or not the parent node is moving or resizing
 	const moving = derived(
 		[node.moving, node.resizingWidth, node.resizingHeight, node.rotating],
 		([$moving, $resizingWidth, $resizingHeight, $rotating]) => {

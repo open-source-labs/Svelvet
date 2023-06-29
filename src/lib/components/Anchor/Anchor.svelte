@@ -7,7 +7,13 @@
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
 	import { createEventDispatcher } from 'svelte';
 	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
-	import type { Anchor, Direction, AnchorKey, CustomWritable } from '$lib/types';
+	import type {
+		Anchor,
+		Direction,
+		AnchorKey,
+		CustomWritable,
+		AnchorConnectionEvent
+	} from '$lib/types';
 	import type { InputType, NodeKey, OutputStore, InputStore, ConnectingFrom } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import type { Writable, Readable } from 'svelte/store';
@@ -93,7 +99,8 @@
 		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
 	export let title = '';
 
-	const dispatch = createEventDispatcher();
+	const dispatchConnection = createEventDispatcher<{ connection: AnchorConnectionEvent }>();
+	const dispatchDisconnection = createEventDispatcher();
 
 	let anchorElement: HTMLDivElement;
 	let tracking = false;
@@ -210,9 +217,17 @@
 	// We track previous connections and fire a correct event accordingly
 	$: if ($connectedAnchors) {
 		if ($connectedAnchors.size < previousConnectionCount) {
-			dispatch('disconnection', { node, anchor });
+			// Need to add additional detail for disconnections here
+			dispatchDisconnection('disconnection', { node, anchor });
 		} else if ($connectedAnchors.size > previousConnectionCount) {
-			dispatch('connection', { node, anchor });
+			const anchorArray = Array.from($connectedAnchors);
+			const lastConnection = anchorArray[anchorArray.length - 1];
+			dispatchConnection('connection', {
+				node,
+				anchor,
+				connectedNode: lastConnection.node,
+				connectedAnchor: lastConnection
+			});
 		}
 		previousConnectionCount = $connectedAnchors.size;
 	}
@@ -290,7 +305,7 @@
 		// And it can't have multiple connections
 		// And there isn't an active connection being made
 		// Then this is a disconnection event
-		if ($connectedAnchors?.size && !multiple && !$connectingFrom) return disconnect();
+		if ($connectedAnchors?.size && !multiple && !$connectingFrom) return disconnectEdge();
 
 		// If there isn't an active connection being made, start a new edge
 		if (!$connectingFrom) return startEdge();
@@ -449,7 +464,7 @@
 	}
 
 	// Disconnect edge and create a new cursor edge
-	function disconnect() {
+	function disconnectEdge() {
 		if (get(anchor.connected).size > 1) return;
 
 		const source = Array.from(get(anchor.connected))[0];
@@ -488,6 +503,17 @@
 		});
 
 		connections = connections.filter((connection) => connection !== null);
+	}
+
+	export function disconnect(target: [string | number, string | number]) {
+		const nodekey: NodeKey = `N-${target[0]}`;
+		const node = nodeStore.get(nodekey);
+		if (!node) return;
+		const targetAnchor = node.anchors.get(`A-${target[1]}/N-${target[0]}`);
+		if (!targetAnchor) return;
+		const edgeKey = edgeStore.match(anchor, targetAnchor);
+		if (!edgeKey) return;
+		edgeStore.delete(edgeKey[0]);
 	}
 
 	const processConnection = (connection: [string | number, string | number] | string | number) => {
@@ -566,6 +592,8 @@
 <div
 	id={anchor?.id}
 	class="anchor-wrapper"
+	role="button"
+	tabindex="0"
 	class:locked
 	title={title || ''}
 	on:mouseenter={() => (hovering = true)}

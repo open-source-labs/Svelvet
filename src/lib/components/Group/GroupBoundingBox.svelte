@@ -20,6 +20,8 @@
 </script>
 
 <div
+	role="button"
+	tabindex="0"
 	on:contextmenu|stopPropagation|preventDefault
 	on:mousedown|stopPropagation|preventDefault={dispatchClick}
 	class="bounding-box-border"
