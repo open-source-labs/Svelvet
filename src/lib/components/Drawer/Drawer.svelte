@@ -1,15 +1,13 @@
 <script lang="ts">
-	import { Node, Svelvet, Anchor } from '$lib';
+	import { Node, Svelvet, Anchor, Edge } from '$lib';
 	import type {
 		SvelvetConfig,
 		NodeConfig,
 		XYPair,
 		EdgeStyle,
-		AnchorDrawerConfig
 	} from '$lib/types';
 	import type { ComponentType } from 'svelte';
-	import { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte';
-	import { anchorPropsStore } from './DrawerAnchor.svelte';
+	import { defaultNodePropsStore } from './DrawerNode.svelte';
 
 	// Props
 	export let width = 0;
@@ -60,10 +58,9 @@
 	};
 
 	// Array of default and custom nodes, anchors
-	let defaultNodes: NodeConfig[] = [];
-	let customNodes: NodeConfig[] = [];
-	let anchors: AnchorDrawerConfig[][] = [];
+	let defaultNodes: any[] = [];
 	let dropped_in: boolean;
+
 
 	// Drag and drop events
 	const handleDragEnter = (): void => {
@@ -91,8 +88,6 @@
 		target.dispatchEvent(moveEvent);
 
 		defaultNodes = $defaultNodePropsStore;
-		customNodes = $customNodePropsStore;
-		anchors = $anchorPropsStore;
 	};
 </script>
 
@@ -104,19 +99,29 @@
 	on:drop={handleDrop}
 >
 	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as node, index}
-			<Node {...node} drop="cursor" />
+		{#each defaultNodes as {anchors, ...nodeProps}, index}
+			<Node {...nodeProps} drop="cursor">
+				{#if anchors}
+					{#each anchors as anchorProps}
+						<Anchor {...anchorProps}></Anchor>
+					{/each}
+				{/if}
+			</Node>
 		{/each}
 
-		{#each customNodes as customNode, index}
+		<!-- {#each customNodes as customNode, index}
 			<Node {...customNode} drop="cursor">
 				{#each anchors[index] as anchorProp}
 					<div class={anchorProp.direction}>
-						<Anchor {...anchorProp} />
+						<Anchor {...anchorProp}>
+							<slot slot="edge">
+								<Edge animate></Edge>
+							</slot>
+						</Anchor> 
 					</div>
 				{/each}
 			</Node>
-		{/each}
+		{/each} -->
 
 		<slot />
 		<slot name="minimap" slot="minimap" />
