@@ -1,4 +1,5 @@
 import type { CSSColorString, Direction } from '$lib/types';
+import type { ComponentType } from 'svelte';
 
 export interface AnchorDrawerConfig {
 	invisible?: boolean;
@@ -23,5 +24,6 @@ export type AnchorProps = [
 	dynamic: boolean | undefined,
 	anchorEdgeLabel: string | undefined,
 	anchorLocked: boolean | undefined,
-	anchorBgColor: CSSColorString | undefined
+	anchorBgColor: CSSColorString | undefined,
+	edge: ComponentType | undefined
 ];
