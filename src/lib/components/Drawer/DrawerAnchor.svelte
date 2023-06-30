@@ -2,9 +2,10 @@
 	import { writable } from 'svelte/store';
 	import type { CSSColorString, Direction, AnchorProps, AnchorDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
+	import type { ComponentType } from 'svelte';
 
 	// External stores
-	export const anchorPropsStore = writable<(AnchorDrawerConfig | object)[][]>([]);
+	// export const anchorPropsStore = writable<(AnchorDrawerConfig)[][]>([]);
 
 	// Local stores
 	const anchorCounter = writable<number>(0);
@@ -21,15 +22,18 @@
 	let anchorLocked: boolean | undefined;
 	let anchorBgColor: CSSColorString | undefined;
 	let directionValue: HTMLElement;
+	let edgeProps: ComponentType | undefined = undefined;
 
 	// Array of props for pending anchors
 	let anchorsCreated: AnchorDrawerConfig[] = [];
 
 	// Creates props and adds to store, returns true if anchor was created
-	export const createAnchorProps = (createAnchors: boolean): boolean => {
+	export const createAnchorProps = (createAnchors: boolean): AnchorDrawerConfig[] | undefined => {
 		if (direction == '') direction = undefined;
+		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
+		
 		// Object that stores properties for the created anchor
-		const anchorProps: AnchorDrawerConfig | object = {};
+		const anchorProps: AnchorDrawerConfig = {};
 		// Array of property names and values for anchor
 		const anchorPropNames: string[] = [
 			'invisible',
@@ -41,7 +45,8 @@
 			'dynamic',
 			'edgeLabel',
 			'locked',
-			'bgColor'
+			'bgColor',
+			'edge'
 		];
 		const anchorPropsArray: AnchorProps = [
 			invisible,
@@ -53,7 +58,8 @@
 			dynamic,
 			anchorEdgeLabel,
 			anchorLocked,
-			anchorBgColor
+			anchorBgColor,
+			edgeProps
 		];
 
 		// Adds props to anchor if they exist
@@ -61,13 +67,13 @@
 		// If props were created add anchorProps object to store
 		if (Object.keys(anchorProps).length) {
 			if (createAnchors) {
-				anchorPropsStore.update((anchors) => [...anchors, [...anchorsCreated]]);
-				return true;
+		
+				return [...anchorsCreated];
 			}
 			anchorsCreated.push(anchorProps);
-			return true;
+			return [...anchorsCreated];
 		}
-		return false;
+		return;
 	};
 
 	//Button Clicks for Anchors
@@ -131,7 +137,7 @@
 
 	const deleteAnchor = () => {
 		anchorsCreated.pop();
-		if (anchorsCreated.length === 0) anchorCounter.set(anchorsCreated.length);
+		anchorCounter.set(anchorsCreated.length);
 	};
 </script>
 
