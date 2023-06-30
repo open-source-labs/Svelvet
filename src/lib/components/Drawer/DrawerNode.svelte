@@ -1,13 +1,12 @@
 <script context="module" lang="ts">
-	import { writable } from 'svelte/store';
-	import type { NodeConfig, CSSColorString, NodeProps } from '$lib/types';
+	import { writable, get } from 'svelte/store';
+	import type { NodeConfig, CSSColorString, AnchorDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 	import nodeCustomEdge from './DefaultNodeEdge.svelte';
 	import anchorCustomEdge from './CustomNodeEdge.svelte';
 
 	// External stores
 	export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
-	export const customNodePropsStore = writable<Array<NodeConfig>>([]);
 
 	// types for node creation
 	let bgColor: CSSColorString | undefined;
@@ -27,9 +26,9 @@
 	let nodeDirection: string | undefined;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-	export const createNodeProps = (edgeCreated: boolean, anchorCreated: boolean): void => {
+	export const createNodeProps = (edgeCreated: boolean, anchorProps?: AnchorDrawerConfig[]): void => {
 		// Object that stores properties for the created node
-		const nodeProps: NodeConfig = {};
+		const nodeProps: any = {};
 		// Array of property names and values for node
 		const nodePropNames: string[] = [
 			'bgColor',
@@ -47,7 +46,7 @@
 			'LR',
 			'useDefaults'
 		];
-		const nodePropsArray: NodeProps = [
+		const nodePropsArray: any = [
 			bgColor,
 			borderColor,
 			label,
@@ -66,20 +65,20 @@
 
 		// Add props to node if they exist
 		addProps(nodePropNames, nodePropsArray, nodeProps);
-
-		// If props were created add nodeProps object to store
-		if (Object.keys(nodeProps).length) {
-			// If anchor was not created, creates default node
-			if (!anchorCreated) {
-				// If edge was created, adds edge as prop to nodes
-				if (edgeCreated) nodeProps.edge = nodeCustomEdge;
-				defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
-			} else {
-				// If edge was created, adds edge as prop to nodes
-				if (edgeCreated) nodeProps.edge = anchorCustomEdge;
-				customNodePropsStore.update((nodes) => [...nodes, nodeProps]);
-			}
-		}
+		if (anchorProps) nodeProps.anchors = anchorProps;
+		defaultNodePropsStore.update((nodes) => [...nodes, nodeProps])
+		
+		// // If anchor was not created, creates default node
+		// if (!anchorCreated) {
+		// 	// If edge was created, adds edge as prop to nodes
+		// 	if (edgeCreated) nodeProps.edge = nodeCustomEdge;
+		// 	defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+		// } else {
+		// 	// If edge was created, adds edge as prop to nodes
+		// 	if (edgeCreated) nodeProps.edge = anchorCustomEdge;
+		// 	customNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+		// }
+		
 	};
 
 	// Button clicks for defaultNodes
