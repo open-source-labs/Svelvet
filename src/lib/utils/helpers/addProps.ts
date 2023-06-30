@@ -7,9 +7,11 @@
 // 	EdgeDrawerConfig
 // } from '$lib/types';
 
+import type { ComponentType } from "svelte";
+
 export function addProps(
 	propNames: string[],
-	propValues: (string | number | boolean | undefined)[],
+	propValues: (string | number | boolean | ComponentType | undefined)[],
 	propObject: Record<string, any>
 	// propObject: Record<string, string | number | boolean | undefined>
 	// propObject: NodeConfig | AnchorDrawerConfig | EdgeDrawerConfig
