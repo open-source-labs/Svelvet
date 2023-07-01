@@ -100,13 +100,17 @@
 >
 	<Svelvet {...sveltetProps} drawer>
 		{#each defaultNodes as {anchors, ...nodeProps}, index}
-			<Node {...nodeProps} drop="cursor">
-				{#if anchors}
+			{#if anchors}
+				<Node {...nodeProps} drop="cursor">
 					{#each anchors as anchorProps}
-						<Anchor {...anchorProps}></Anchor>
+						<Anchor {...anchorProps}>
+							<!-- edge goes here -->
+						</Anchor>
 					{/each}
-				{/if}
-			</Node>
+				</Node>
+			{:else} 
+				<Node {...nodeProps} drop="cursor"></Node>
+			{/if}	
 		{/each}
 
 		<!-- {#each customNodes as customNode, index}
