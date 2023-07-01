@@ -104,7 +104,7 @@
 				<Node {...nodeProps} drop="cursor">
 					{#each anchors as anchorProps}
 						<Anchor {...anchorProps}>
-							<!-- edge goes here -->
+							<slot slot='edge'><Edge></Edge></slot>
 						</Anchor>
 					{/each}
 				</Node>
