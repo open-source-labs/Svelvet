@@ -5,6 +5,7 @@
 		NodeConfig,
 		XYPair,
 		EdgeStyle,
+		NodeDrawerConfig
 	} from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
@@ -58,7 +59,7 @@
 	};
 
 	// Array of default and custom nodes, anchors
-	let defaultNodes: any[] = [];
+	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in: boolean;
 
 
@@ -99,33 +100,25 @@
 	on:drop={handleDrop}
 >
 	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as {anchors, ...nodeProps}, index}
+		{#each defaultNodes as {anchors, edgeProps, ...nodeProps}, index}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
 					{#each anchors as anchorProps}
-						<Anchor {...anchorProps}>
-							<slot slot='edge'><Edge></Edge></slot>
-						</Anchor>
+						{#if edgeProps}
+							<Anchor {...anchorProps}>
+								<slot slot='edge'>
+									<Edge {...edgeProps}></Edge>
+								</slot>
+							</Anchor>
+						{:else}
+							<Anchor {...anchorProps}/>
+						{/if}
 					{/each}
 				</Node>
 			{:else} 
 				<Node {...nodeProps} drop="cursor"></Node>
 			{/if}	
 		{/each}
-
-		<!-- {#each customNodes as customNode, index}
-			<Node {...customNode} drop="cursor">
-				{#each anchors[index] as anchorProp}
-					<div class={anchorProp.direction}>
-						<Anchor {...anchorProp}>
-							<slot slot="edge">
-								<Edge animate></Edge>
-							</slot>
-						</Anchor> 
-					</div>
-				{/each}
-			</Node>
-		{/each} -->
 
 		<slot />
 		<slot name="minimap" slot="minimap" />
