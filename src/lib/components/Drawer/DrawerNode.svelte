@@ -1,12 +1,10 @@
 <script context="module" lang="ts">
-	import { writable, get } from 'svelte/store';
-	import type { NodeConfig, CSSColorString, AnchorDrawerConfig } from '$lib/types';
+	import { writable } from 'svelte/store';
+	import type { NodeDrawerConfig, AnchorDrawerConfig, EdgeDrawerConfig, CSSColorString, NodeProps } from '$lib/types';
 	import { addProps } from '$lib/utils';
-	import nodeCustomEdge from './DefaultNodeEdge.svelte';
-	import anchorCustomEdge from './CustomNodeEdge.svelte';
 
 	// External stores
-	export const defaultNodePropsStore = writable<Array<NodeConfig>>([]);
+	export const defaultNodePropsStore = writable<Array<NodeDrawerConfig>>([]);
 
 	// types for node creation
 	let bgColor: CSSColorString | undefined;
@@ -26,9 +24,9 @@
 	let nodeDirection: string | undefined;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-	export const createNodeProps = (edgeCreated: boolean, anchorProps?: AnchorDrawerConfig[]): void => {
+	export const createNodeProps = (edgeProps?: EdgeDrawerConfig, anchorProps?: AnchorDrawerConfig[]): void => {
 		// Object that stores properties for the created node
-		const nodeProps: any = {};
+		const nodeProps: NodeDrawerConfig = {};
 		// Array of property names and values for node
 		const nodePropNames: string[] = [
 			'bgColor',
@@ -46,7 +44,7 @@
 			'LR',
 			'useDefaults'
 		];
-		const nodePropsArray: any = [
+		const nodePropsArray: NodeProps = [
 			bgColor,
 			borderColor,
 			label,
@@ -66,23 +64,13 @@
 		// Add props to node if they exist
 		addProps(nodePropNames, nodePropsArray, nodeProps);
 		if (anchorProps) nodeProps.anchors = anchorProps;
+		if (edgeProps) nodeProps.edgeProps = edgeProps;
 		defaultNodePropsStore.update((nodes) => [...nodes, nodeProps])
-		
-		// // If anchor was not created, creates default node
-		// if (!anchorCreated) {
-		// 	// If edge was created, adds edge as prop to nodes
-		// 	if (edgeCreated) nodeProps.edge = nodeCustomEdge;
-		// 	defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
-		// } else {
-		// 	// If edge was created, adds edge as prop to nodes
-		// 	if (edgeCreated) nodeProps.edge = anchorCustomEdge;
-		// 	customNodePropsStore.update((nodes) => [...nodes, nodeProps]);
-		// }
 		
 	};
 
 	// Button clicks for defaultNodes
-	const handleNodeResetButtonClick = (e: any) => {
+	const handleNodeResetButtonClick = (e: Event) => {
 		bgColor = undefined;
 		borderColor = undefined;
 		label = undefined;
@@ -97,26 +85,31 @@
 		TD = undefined;
 		LR = undefined;
 		useDefaults = undefined;
-
-		e.target.reset();
+		
+		const formElement = e.target as HTMLFormElement;
+		formElement.reset();
 	};
 
-	const handleLockedButtonClick = (e: any) => {
-		locked = e.target.checked;
+	const handleLockedButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		locked = target.checked;
 	};
 
-	const handleCenterButtonClick = (e: any) => {
-		center = e.target.checked;
+	const handleCenterButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		center = target.checked;
 	};
 
-	const handleUseDefaultsButtonClick = (e: any) => {
-		useDefaults = e.target.checked;
+	const handleUseDefaultsButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		useDefaults = target.checked;
 	};
 
-	const handleAnchorPositionButton = (e: any) => {
-		if (e.target.value == '') nodeDirection = undefined;
+	const handleAnchorPositionButton = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		if (target.value == '') nodeDirection = undefined;
 		else {
-			nodeDirection = e.target.value;
+			nodeDirection = target.value;
 			if (nodeDirection === 'LR') {
 				LR = true;
 				TD = false;
