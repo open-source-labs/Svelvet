@@ -26,7 +26,7 @@
 
 		// Create props for anchor or edge if values were given
 		const anchorProps = createAnchorProps(true);
-		const edgeCreated = createEdgeProps(false); // Need to fix after anchors are refactored
+		const edgeCreated = createEdgeProps(); 
 		// Create props for node
 		createNodeProps(edgeCreated, anchorProps);
 	};
