@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { Node, Svelvet, Anchor } from '$lib';
-	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle } from '$lib/types';
+	import { Node, Svelvet, Anchor, Edge } from '$lib';
+	import type {
+		SvelvetConfig,
+		NodeConfig,
+		XYPair,
+		EdgeStyle,
+		NodeDrawerConfig
+	} from '$lib/types';
 	import type { ComponentType } from 'svelte';
-	import { defaultNodePropsStore, customNodePropsStore } from './DrawerNode.svelte';
-	import { anchorPropsStore } from './DrawerAnchor.svelte';
+	import { defaultNodePropsStore } from './DrawerNode.svelte';
 
 	// Props
 	export let width = 0;
@@ -54,10 +59,9 @@
 	};
 
 	// Array of default and custom nodes, anchors
-	let defaultNodes: NodeConfig[] = [];
-	let customNodes: NodeConfig[] = [];
-	let anchors: any = [];
+	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in: boolean;
+
 
 	// Drag and drop events
 	const handleDragEnter = (): void => {
@@ -67,10 +71,6 @@
 	const handleDragLeave = (): void => {
 		dropped_in = false;
 	};
-
-	// const handleDragEnd = (): void => {
-	// 	dropped_in = false;
-	// };
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
@@ -89,8 +89,6 @@
 		target.dispatchEvent(moveEvent);
 
 		defaultNodes = $defaultNodePropsStore;
-		customNodes = $customNodePropsStore;
-		anchors = $anchorPropsStore;
 	};
 </script>
 
@@ -103,18 +101,24 @@
 	on:drop={handleDrop}
 >
 	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as node}
-			<Node {...node} drop="cursor" />
-		{/each}
-
-		{#each customNodes as customNode, index}
-			<Node {...customNode} drop="cursor">
-				{#each anchors[index] as anchorProp}
-					<div class={anchorProp.direction}>
-						<Anchor {...anchorProp} />
-					</div>
-				{/each}
-			</Node>
+		{#each defaultNodes as {anchors, edgeProps, ...nodeProps}, index}
+			{#if anchors}
+				<Node {...nodeProps} drop="cursor">
+					{#each anchors as anchorProps}
+						{#if edgeProps}
+							<Anchor {...anchorProps}>
+								<slot slot='edge'>
+									<Edge {...edgeProps}></Edge>
+								</slot>
+							</Anchor>
+						{:else}
+							<Anchor {...anchorProps}/>
+						{/if}
+					{/each}
+				</Node>
+			{:else} 
+				<Node {...nodeProps} drop="cursor"></Node>
+			{/if}	
 		{/each}
 
 		<slot />

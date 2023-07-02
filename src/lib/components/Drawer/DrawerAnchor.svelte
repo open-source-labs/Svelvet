@@ -2,9 +2,7 @@
 	import { writable } from 'svelte/store';
 	import type { CSSColorString, Direction, AnchorProps, AnchorDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
-
-	// External stores
-	export const anchorPropsStore = writable<(AnchorDrawerConfig | object)[][]>([]);
+	import type { ComponentType } from 'svelte';
 
 	// Local stores
 	const anchorCounter = writable<number>(0);
@@ -21,15 +19,18 @@
 	let anchorLocked: boolean | undefined;
 	let anchorBgColor: CSSColorString | undefined;
 	let directionValue: HTMLElement;
+	let edgeProps: ComponentType | undefined = undefined;
 
 	// Array of props for pending anchors
-	let anchorsCreated: (AnchorDrawerConfig | object)[] = [];
+	let anchorsCreated: AnchorDrawerConfig[] = [];
 
 	// Creates props and adds to store, returns true if anchor was created
-	export const createAnchorProps = (createAnchors: boolean): boolean => {
+	export const createAnchorProps = (createAnchors: boolean): AnchorDrawerConfig[] | undefined => {
 		if (direction == '') direction = undefined;
+		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
+		
 		// Object that stores properties for the created anchor
-		const anchorProps: AnchorDrawerConfig | object = {};
+		const anchorProps: AnchorDrawerConfig = {};
 		// Array of property names and values for anchor
 		const anchorPropNames: string[] = [
 			'invisible',
@@ -41,7 +42,8 @@
 			'dynamic',
 			'edgeLabel',
 			'locked',
-			'bgColor'
+			'bgColor',
+			'edge'
 		];
 		const anchorPropsArray: AnchorProps = [
 			invisible,
@@ -53,7 +55,8 @@
 			dynamic,
 			anchorEdgeLabel,
 			anchorLocked,
-			anchorBgColor
+			anchorBgColor,
+			edgeProps
 		];
 
 		// Adds props to anchor if they exist
@@ -61,53 +64,59 @@
 		// If props were created add anchorProps object to store
 		if (Object.keys(anchorProps).length) {
 			if (createAnchors) {
-				anchorPropsStore.update((anchors) => [...anchors, [...anchorsCreated]]);
-				return true;
+				return [...anchorsCreated];
 			}
 			anchorsCreated.push(anchorProps);
-			return true;
+			return [...anchorsCreated];
 		}
-		return false;
+		return;
 	};
 
 	//Button Clicks for Anchors
-	const handleAnchorLockedButtonClick = (e: any) => {
-		// const target = e.target as HTMLButtonElement;
-		anchorLocked = e.target.checked;
+	const handleAnchorLockedButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		anchorLocked = target.checked;
 	};
 
-	const handleInvisibleButtonClick = (e: any) => {
-		invisible = e.target.checked;
+	const handleInvisibleButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		invisible = target.checked;
 	};
 
-	const handleNodeConnectButtonClick = (e: any) => {
-		nodeConnect = e.target.checked;
+	const handleNodeConnectButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		nodeConnect = target.checked;
 	};
 
-	const handleInputButtonClick = (e: any) => {
-		input = e.target.checked;
+	const handleInputButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		input = target.checked;
 	};
 
-	const handleOutputButtonClick = (e: any) => {
-		output = e.target.checked;
+	const handleOutputButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		output = target.checked;
 	};
 
-	const handleMultipleButtonClick = (e: any) => {
-		multiple = e.target.checked;
+	const handleMultipleButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		multiple = target.checked;
 	};
 
-	const handleDynamicButtonClick = (e: any) => {
-		dynamic = e.target.checked;
+	const handleDynamicButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		dynamic = target.checked;
 	};
 
-	const handleDirectionButtonClick = (e: any) => {
-		if (e.target.value == '') direction = undefined;
+	const handleDirectionButtonClick = (e: Event) => {
+		const target = e.target as HTMLSelectElement;
+		if (target.value == '') direction = undefined;
 		else {
-			direction = e.target.value;
+			direction = target.value as Direction | undefined;
 		}
 	};
 
-	const handleAnchorResetButtonClick = (e: any) => {
+	const handleAnchorResetButtonClick = (e: Event) => {
 		invisible = undefined;
 		nodeConnect = undefined;
 		input = undefined;
@@ -121,7 +130,8 @@
 		anchorsCreated = [];
 
 		anchorCounter.set(anchorsCreated.length);
-		if (e) e.target.reset();
+		const formElement = e.target as HTMLFormElement;
+		if (e) formElement.reset();
 	};
 
 	const addAnchor = () => {
@@ -131,7 +141,7 @@
 
 	const deleteAnchor = () => {
 		anchorsCreated.pop();
-		if (anchorsCreated.length === 0) anchorCounter.set(anchorsCreated.length);
+		anchorCounter.set(anchorsCreated.length);
 	};
 </script>
 

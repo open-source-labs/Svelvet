@@ -25,11 +25,10 @@
 		e.dataTransfer.dropEffect = 'move';
 
 		// Create props for anchor or edge if values were given
-		const anchorCreated = createAnchorProps(true);
-		const edgeCreated = createEdgeProps(anchorCreated);
-
+		const anchorProps = createAnchorProps(true);
+		const edgeCreated = createEdgeProps(); 
 		// Create props for node
-		createNodeProps(edgeCreated, anchorCreated);
+		createNodeProps(edgeCreated, anchorProps);
 	};
 
 	const handleDrawer = () => {
