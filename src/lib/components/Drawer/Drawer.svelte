@@ -34,7 +34,7 @@
 	export let toggle = false;
 
 	// Store props in object to be passed to svelvet
-	const sveltetProps: SvelvetConfig = {
+	const svelvetProps: SvelvetConfig = {
 		width,
 		height,
 		minimap,
@@ -100,7 +100,7 @@
 	on:dragover={onDragOver}
 	on:drop={handleDrop}
 >
-	<Svelvet {...sveltetProps} drawer>
+	<Svelvet {...svelvetProps} drawer>
 		{#each defaultNodes as {anchors, edgeProps, ...nodeProps}, index}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
@@ -128,30 +128,3 @@
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
-
-<style>
-	/* Styling for anchor position */
-	.west {
-		transform: translate(-50%);
-		position: absolute;
-		left: 0;
-	}
-
-	.east {
-		transform: translate(50%);
-		position: absolute;
-		right: 0;
-	}
-
-	.north {
-		transform: translate(0, -50%);
-		position: absolute;
-		top: 0;
-	}
-
-	.south {
-		transform: translate(0, 50%);
-		position: absolute;
-		bottom: 0;
-	}
-</style>
