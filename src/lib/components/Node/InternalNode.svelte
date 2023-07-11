@@ -278,10 +278,19 @@
 			<slot {grabHandle} {selected} {destroy} />
 		{/if}
 
-		<div id={`anchors-west-${node.id}`} class="anchors left" />
-		<div id={`anchors-east-${node.id}`} class="anchors right" />
-		<div id={`anchors-north-${node.id}`} class="anchors top" />
-		<div id={`anchors-south-${node.id}`} class="anchors bottom" />
+		<div id={`anchors-west-${node.id}`} class="anchors left">
+			<slot name='west'/>
+		</div>
+		<div id={`anchors-east-${node.id}`} class="anchors right">
+			<slot name='east'/>
+		</div>
+		<div id={`anchors-north-${node.id}`} class="anchors top">
+			<slot name='north'/>
+		</div>
+		<div id={`anchors-south-${node.id}`} class="anchors bottom">
+			<slot name='south'/>
+		</div>
+
 	</div>
 {/if}
 
