@@ -21,11 +21,17 @@
 	let directionValue: HTMLElement;
 	let edgeProps: ComponentType | undefined = undefined;
 
-	// Array of props for pending anchors
-	let anchorsCreated: AnchorDrawerConfig[] = [];
+	// Array of props for pending anchors based on direction
+	let anchorsCreated: { [key:string]: AnchorDrawerConfig[] } = {
+		self: [],
+		left: [],
+		right: [],
+		top: [],
+		bottom: []
+	}
 
 	// Creates props and adds to store, returns true if anchor was created
-	export const createAnchorProps = (createAnchors: boolean): AnchorDrawerConfig[] | undefined => {
+	export const createAnchorProps = (createAnchors: boolean): {[key:string]: AnchorDrawerConfig[]} | undefined => {
 		if (direction == '') direction = undefined;
 		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
 		
@@ -61,13 +67,22 @@
 
 		// Adds props to anchor if they exist
 		addProps(anchorPropNames, anchorPropsArray, anchorProps);
-		// If props were created add anchorProps object to store
+		// If props were, returns a copy of anchorsCreated or adds props to the corresponding direction
 		if (Object.keys(anchorProps).length) {
 			if (createAnchors) {
-				return [...anchorsCreated];
+				return {
+					self: [...anchorsCreated.self],
+					left: [...anchorsCreated.left],
+					right: [...anchorsCreated.right],
+					top: [...anchorsCreated.top],
+					bottom: [...anchorsCreated.bottom],
+				};
 			}
-			anchorsCreated.push(anchorProps);
-			return [...anchorsCreated];
+			if (anchorProps.direction === 'west') anchorsCreated.left.push(anchorProps)
+			else if (anchorProps.direction === 'east') anchorsCreated.right.push(anchorProps)
+			else if (anchorProps.direction === 'north') anchorsCreated.top.push(anchorProps)
+			else if (anchorProps.direction === 'south') anchorsCreated.bottom.push(anchorProps)
+			else anchorsCreated.self.push(anchorProps);
 		}
 		return;
 	};
@@ -127,21 +142,25 @@
 		anchorEdgeLabel = undefined;
 		anchorLocked = undefined;
 		anchorBgColor = undefined;
-		anchorsCreated = [];
+		anchorsCreated.self = [];
+		anchorsCreated.left = [];
+		anchorsCreated.right = [];
+		anchorsCreated.top = [];
+		anchorsCreated.bottom = [];
 
-		anchorCounter.set(anchorsCreated.length);
+		// anchorCounter.set(anchorsCreated.length); need to fix
 		const formElement = e.target as HTMLFormElement;
 		if (e) formElement.reset();
 	};
 
 	const addAnchor = () => {
 		createAnchorProps(false);
-		anchorCounter.set(anchorsCreated.length);
+		// anchorCounter.set(anchorsCreated.length); need to fix
 	};
 
 	const deleteAnchor = () => {
-		anchorsCreated.pop();
-		anchorCounter.set(anchorsCreated.length);
+		// anchorsCreated.pop(); need to fix
+		// anchorCounter.set(anchorsCreated.length); need to fix
 	};
 </script>
 
