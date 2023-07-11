@@ -9,7 +9,7 @@
 	} from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
-
+	
 	// Props
 	export let width = 0;
 	export let height = 0;
@@ -90,6 +90,7 @@
 
 		defaultNodes = $defaultNodePropsStore;
 	};
+
 </script>
 
 <div
@@ -99,22 +100,75 @@
 	on:dragleave={handleDragLeave}
 	on:dragover={onDragOver}
 	on:drop={handleDrop}
+	
 >
 	<Svelvet {...svelvetProps} drawer>
 		{#each defaultNodes as {anchors, edgeProps, ...nodeProps}, index}
-			{#if anchors}
+			{#if anchors}	
 				<Node {...nodeProps} drop="cursor">
-					{#each anchors as anchorProps}
-						{#if edgeProps}
-							<Anchor {...anchorProps}>
-								<slot slot='edge'>
-									<Edge {...edgeProps}></Edge>
-								</slot>
-							</Anchor>
-						{:else}
-							<Anchor {...anchorProps}/>
-						{/if}
-					{/each}
+					<slot slot='west'>
+						{#each anchors.left as leftAnchorProps}
+							{#if edgeProps}
+								<Anchor {...leftAnchorProps}>
+									<slot slot='edge'>
+										<Edge {...edgeProps}></Edge>
+									</slot>
+								</Anchor>
+							{:else}				
+								<Anchor {...leftAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot='east'>
+						{#each anchors.right as rightAnchorProps}
+							{#if edgeProps}
+								<Anchor {...rightAnchorProps}>
+									<slot slot='edge'>
+										<Edge {...edgeProps}></Edge>
+									</slot>
+								</Anchor>
+							{:else}				
+								<Anchor {...rightAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot='north'>
+						{#each anchors.top as topAnchorProps}
+							{#if edgeProps}
+								<Anchor {...topAnchorProps}>
+									<slot slot='edge'>
+										<Edge {...edgeProps}></Edge>
+									</slot>
+								</Anchor>
+							{:else}				
+								<Anchor {...topAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot='south'>
+						{#each anchors.bottom as bottomAnchorProps}
+							{#if edgeProps}
+								<Anchor {...bottomAnchorProps}>
+									<slot slot='edge'>
+										<Edge {...edgeProps}></Edge>
+									</slot>
+								</Anchor>
+							{:else}				
+								<Anchor {...bottomAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					{#each anchors.self as anchorProps}
+							{#if edgeProps}
+								<Anchor {...anchorProps}>
+									<slot slot='edge'>
+										<Edge {...edgeProps}></Edge>
+									</slot>
+								</Anchor>
+							{:else}				
+								<Anchor {...anchorProps} />
+							{/if}
+						{/each}
 				</Node>
 			{:else} 
 				<Node {...nodeProps} drop="cursor"></Node>
