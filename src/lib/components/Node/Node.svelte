@@ -110,6 +110,7 @@
 		const nodeCount = graph.nodes.count() + 1;
 
 		isDefault = !$$slots.default;
+		if($$slots.west || $$slots.east || $$slots.north || $$slots.south) isDefault = false;
 
 		const initialDimensions: InitialDimensions = dimensions
 			? dimensions
@@ -285,7 +286,15 @@
 		let:grabHandle
 	>
 		<slot {selected} {grabHandle} {disconnect} {connect} {node} {destroy}>
-			<DefaultNode {selected} on:connection on:disconnection />
+			{#if isDefault}
+				<DefaultNode {selected} on:connection on:disconnection />
+			{/if}
 		</slot>
+
+		<slot name='west' slot='west'/>
+		<slot name='east' slot='east'/>
+		<slot name='north' slot='north'/>
+		<slot name='south' slot='south'/>
+
 	</InternalNode>
 {/if}
