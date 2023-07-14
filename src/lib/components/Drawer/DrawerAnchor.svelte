@@ -4,8 +4,12 @@
 	import { addProps } from '$lib/utils';
 	import type { ComponentType } from 'svelte';
 
-	// Local stores
-	const anchorCounter = writable<number>(0);
+	// Local stores for anchor counts
+	const leftAnchorCounter = writable<number>(0);
+	const rightAnchorCounter = writable<number>(0);
+	const topAnchorCounter = writable<number>(0);
+	const bottomAnchorCounter = writable<number>(0);
+	const selfAnchorCounter = writable<number>(0);
 
 	// Props for anchor creation
 	let invisible: boolean | undefined;
@@ -22,19 +26,22 @@
 	let edgeProps: ComponentType | undefined = undefined;
 
 	// Array of props for pending anchors based on direction
-	let anchorsCreated: { [key:string]: AnchorDrawerConfig[] } = {
+	let anchorsCreated: { [key: string]: AnchorDrawerConfig[] } = {
 		self: [],
 		left: [],
 		right: [],
 		top: [],
 		bottom: []
-	}
+	};
 
 	// Creates props and adds to store, returns true if anchor was created
-	export const createAnchorProps = (createAnchors: boolean): {[key:string]: AnchorDrawerConfig[]} | undefined => {
+	export const createAnchorProps = (
+		createAnchors: boolean,
+		anchorPosition?: string
+	): { [key: string]: AnchorDrawerConfig[] } | undefined => {
 		if (direction == '') direction = undefined;
 		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
-		
+
 		// Object that stores properties for the created anchor
 		const anchorProps: AnchorDrawerConfig = {};
 		// Array of property names and values for anchor
@@ -75,14 +82,14 @@
 					left: [...anchorsCreated.left],
 					right: [...anchorsCreated.right],
 					top: [...anchorsCreated.top],
-					bottom: [...anchorsCreated.bottom],
+					bottom: [...anchorsCreated.bottom]
 				};
 			}
-			if (anchorProps.direction === 'west') anchorsCreated.left.push(anchorProps)
-			else if (anchorProps.direction === 'east') anchorsCreated.right.push(anchorProps)
-			else if (anchorProps.direction === 'north') anchorsCreated.top.push(anchorProps)
-			else if (anchorProps.direction === 'south') anchorsCreated.bottom.push(anchorProps)
-			else anchorsCreated.self.push(anchorProps);
+			if (anchorPosition === 'addLeftAnchor') anchorsCreated.left.push(anchorProps);
+			else if (anchorPosition === 'addRightAnchor') anchorsCreated.right.push(anchorProps);
+			else if (anchorPosition === 'addTopAnchor') anchorsCreated.top.push(anchorProps);
+			else if (anchorPosition === 'addBottomAnchor') anchorsCreated.bottom.push(anchorProps);
+			else if (anchorPosition === 'addSelfAnchor') anchorsCreated.self.push(anchorProps);
 		}
 		return;
 	};
@@ -142,25 +149,52 @@
 		anchorEdgeLabel = undefined;
 		anchorLocked = undefined;
 		anchorBgColor = undefined;
-		anchorsCreated.self = [];
 		anchorsCreated.left = [];
 		anchorsCreated.right = [];
 		anchorsCreated.top = [];
 		anchorsCreated.bottom = [];
+		anchorsCreated.self = [];
 
-		// anchorCounter.set(anchorsCreated.length); need to fix
+		selfAnchorCounter.set(0);
+		leftAnchorCounter.set(0);
+		rightAnchorCounter.set(0);
+		topAnchorCounter.set(0);
+		bottomAnchorCounter.set(0);
 		const formElement = e.target as HTMLFormElement;
 		if (e) formElement.reset();
 	};
 
-	const addAnchor = () => {
-		createAnchorProps(false);
-		// anchorCounter.set(anchorsCreated.length); need to fix
+	const addAnchor = (e: Event) => {
+		const formEvent = e.target as HTMLFormElement;
+		const addAnchor = formEvent?.parentElement?.id || formEvent?.id;
+		createAnchorProps(false, addAnchor);
+		if (addAnchor === 'addLeftAnchor') leftAnchorCounter.set(anchorsCreated.left.length);
+		else if (addAnchor === 'addRightAnchor') rightAnchorCounter.set(anchorsCreated.right.length);
+		else if (addAnchor === 'addTopAnchor') topAnchorCounter.set(anchorsCreated.top.length);
+		else if (addAnchor === 'addBottomAnchor') bottomAnchorCounter.set(anchorsCreated.bottom.length);
+		else if (addAnchor === 'addSelfAnchor') selfAnchorCounter.set(anchorsCreated.self.length);
 	};
 
-	const deleteAnchor = () => {
-		// anchorsCreated.pop(); need to fix
-		// anchorCounter.set(anchorsCreated.length); need to fix
+	const deleteAnchor = (e: Event) => {
+		const formEvent = e.target as HTMLFormElement;
+		const deleteAnchor = formEvent?.parentElement?.id || formEvent?.id;
+
+		if (deleteAnchor === 'deleteLeftAnchor') {
+			anchorsCreated.left.pop();
+			leftAnchorCounter.set(anchorsCreated.left.length);
+		} else if (deleteAnchor === 'deleteRightAnchor') {
+			anchorsCreated.right.pop();
+			rightAnchorCounter.set(anchorsCreated.right.length);
+		} else if (deleteAnchor === 'deleteTopAnchor') {
+			anchorsCreated.top.pop();
+			topAnchorCounter.set(anchorsCreated.top.length);
+		} else if (deleteAnchor === 'deleteBottomAnchor') {
+			anchorsCreated.bottom.pop();
+			bottomAnchorCounter.set(anchorsCreated.bottom.length);
+		} else if (deleteAnchor === 'deleteSelfAnchor') {
+			anchorsCreated.self.pop();
+			selfAnchorCounter.set(anchorsCreated.self.length);
+		}
 	};
 </script>
 
@@ -250,12 +284,57 @@
 
 			<li class="list-item">
 				<label for="addAnchors"> Add Anchors: </label>
-				<button class="deleteAnchor" type="button" on:click|stopPropagation={deleteAnchor}>
+				<button id="deleteSelfAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
 					<span class="material-symbols-outlined"> arrow_left </span>
 				</button>
-				<span class="list-item counter">{$anchorCounter}</span>
-				<button class="addAnchor" type="button" on:click|stopPropagation={addAnchor}>
+				<span class="list-item counter">{$selfAnchorCounter}</span>
+				<button id="addSelfAnchor" class="addAnchor" type="button" on:click={addAnchor}>
 					<span class="material-symbols-outlined"> arrow_right </span>
+				</button>
+			</li>
+			<li class="list-item anchor-directions">
+				<p>Left</p>
+				<p>Right</p>
+			</li>
+			<li class="list-item anchor-directions">
+				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+					<span class="material-symbols-outlined">arrow_left</span>
+				</button>
+				<span class="list-item couter">{$leftAnchorCounter}</span>
+				<button
+					id="addLeftAnchor"
+					class="addAnchor middle-arrow"
+					type="button"
+					on:click={addAnchor}
+				>
+					<span class="material-symbols-outlined">arrow_right</span>
+				</button>
+				<button id="deleteRightAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+					<span class="material-symbols-outlined">arrow_left</span>
+				</button>
+				<span class="list-item couter">{$rightAnchorCounter}</span>
+				<button id="addRightAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+					<span class="material-symbols-outlined">arrow_right</span>
+				</button>
+			</li>
+			<li class="list-item anchor-directions">
+				<p>Top</p>
+				<p>Bottom</p>
+			</li>
+			<li class="list-item anchor-directions">
+				<button id="deleteTopAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+					<span class="material-symbols-outlined">arrow_left</span>
+				</button>
+				<span class="list-item couter">{$topAnchorCounter}</span>
+				<button id="addTopAnchor" class="addAnchor middle-arrow" type="button" on:click={addAnchor}>
+					<span class="material-symbols-outlined">arrow_right</span>
+				</button>
+				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+					<span class="material-symbols-outlined">arrow_left</span>
+				</button>
+				<span class="list-item couter">{$bottomAnchorCounter}</span>
+				<button id="addBottomAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+					<span class="material-symbols-outlined">arrow_right</span>
 				</button>
 			</li>
 			<li class="list-item">
@@ -321,8 +400,8 @@
 	.deleteAnchor {
 		border: none;
 		cursor: pointer;
-		padding: 5px;
 		border-radius: 8px;
+		padding: 5px;
 		color: var(
 			--prop-drawer-reset-button-text-color,
 			var(--drawer-reset-button-text-color, var(--default-reset-drawer-button-text-color))
@@ -382,5 +461,16 @@
 			--prop-drawer-reset-button-hover-color,
 			var(--drawer-reset-button-hover-color, var(--default-drawer-reset-button-hover-color))
 		);
+	}
+
+	.anchor-directions {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		margin: 0;
+	}
+
+	.middle-arrow {
+		margin-right: 10%;
 	}
 </style>
