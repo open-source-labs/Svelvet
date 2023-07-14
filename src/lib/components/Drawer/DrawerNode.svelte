@@ -1,6 +1,12 @@
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
-	import type { NodeDrawerConfig, AnchorDrawerConfig, EdgeDrawerConfig, CSSColorString, NodeProps } from '$lib/types';
+	import type {
+		NodeDrawerConfig,
+		AnchorDrawerConfig,
+		EdgeDrawerConfig,
+		CSSColorString,
+		NodeProps
+	} from '$lib/types';
 	import { addProps } from '$lib/utils';
 
 	// External stores
@@ -24,7 +30,10 @@
 	let nodeDirection: string | undefined;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
-	export const createNodeProps = (edgeProps?: EdgeDrawerConfig, anchorProps?: {[key:string]: AnchorDrawerConfig[]}): void => {
+	export const createNodeProps = (
+		edgeProps?: EdgeDrawerConfig,
+		anchorProps?: { [key: string]: AnchorDrawerConfig[] }
+	): void => {
 		// Object that stores properties for the created node
 		const nodeProps: NodeDrawerConfig = {};
 		// Array of property names and values for node
@@ -65,8 +74,7 @@
 		addProps(nodePropNames, nodePropsArray, nodeProps);
 		if (anchorProps) nodeProps.anchors = anchorProps;
 		if (edgeProps) nodeProps.edgeProps = edgeProps;
-		defaultNodePropsStore.update((nodes) => [...nodes, nodeProps])
-		
+		defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
 	};
 
 	// Button clicks for defaultNodes
@@ -85,7 +93,7 @@
 		TD = undefined;
 		LR = undefined;
 		useDefaults = undefined;
-		
+
 		const formElement = e.target as HTMLFormElement;
 		formElement.reset();
 	};
