@@ -6,7 +6,14 @@
 	let edge: Edge;
 </script>
 
-<Edge {color} bind:this={edge} width={4} edgeClick={() => edge.destroy()} animate>
+<Edge
+	{color}
+	bind:this={edge}
+	width={4}
+	edgeClick={() => edge.destroy()}
+	labelPosition={0.8}
+	animate
+>
 	<button id="destroy-edge" on:click={edge.destroy} slot="label">Custom Label</button>
 </Edge>
 

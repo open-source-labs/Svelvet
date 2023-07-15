@@ -1,4 +1,4 @@
-import type { AnchorDrawerConfig, EdgeDrawerConfig ,CSSColorString } from '$lib/types';
+import type { AnchorDrawerConfig, EdgeDrawerConfig, CSSColorString } from '$lib/types';
 
 export interface NodeDrawerConfig {
 	bgColor?: CSSColorString;

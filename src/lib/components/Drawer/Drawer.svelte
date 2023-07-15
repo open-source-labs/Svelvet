@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { Node, Svelvet, Anchor, Edge } from '$lib';
-	import type {
-		SvelvetConfig,
-		NodeConfig,
-		XYPair,
-		EdgeStyle,
-		NodeDrawerConfig
-	} from '$lib/types';
+	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
 
@@ -62,7 +56,6 @@
 	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in: boolean;
 
-
 	// Drag and drop events
 	const handleDragEnter = (): void => {
 		if (!dropped_in) dropped_in = true;
@@ -101,24 +94,24 @@
 	on:drop={handleDrop}
 >
 	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as {anchors, edgeProps, ...nodeProps}, index}
+		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }, index}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
 					{#each anchors as anchorProps}
 						{#if edgeProps}
 							<Anchor {...anchorProps}>
-								<slot slot='edge'>
-									<Edge {...edgeProps}></Edge>
+								<slot slot="edge">
+									<Edge {...edgeProps} />
 								</slot>
 							</Anchor>
 						{:else}
-							<Anchor {...anchorProps}/>
+							<Anchor {...anchorProps} />
 						{/if}
 					{/each}
 				</Node>
-			{:else} 
-				<Node {...nodeProps} drop="cursor"></Node>
-			{/if}	
+			{:else}
+				<Node {...nodeProps} drop="cursor" />
+			{/if}
 		{/each}
 
 		<slot />
@@ -131,7 +124,7 @@
 
 <style>
 	/* Styling for anchor position */
-	.west {
+	/* .west {
 		transform: translate(-50%);
 		position: absolute;
 		left: 0;
@@ -153,5 +146,5 @@
 		transform: translate(0, 50%);
 		position: absolute;
 		bottom: 0;
-	}
+	} */
 </style>

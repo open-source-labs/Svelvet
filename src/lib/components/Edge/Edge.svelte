@@ -37,6 +37,12 @@
 	export let label = '';
 	export let enableHover = false;
 	export let edgeClick: null | (() => void) = null;
+	/**
+	 * @default 0.5
+	 * @type number
+	 * @description The position of the label along the edge. 0 is the source, 1 is the target.
+	 */
+	export let labelPosition = 0.5;
 
 	// Styling via props/objects will likely be deprecated
 	export let width: number | null = null;
@@ -67,7 +73,7 @@
 	// Reactive variables
 	let path: string;
 	let DOMPath: SVGPathElement; // The SVG path element used for calculating the midpoint of the curve for labels
-	let pathMidPoint = { x: 0, y: 0 };
+	let labelPoint = { x: 0, y: 0 };
 	let tracking = false; // Boolean that stops/starts tracking the path midpoint
 	let prefersVertical = false;
 	let sourceAbove = false;
@@ -180,7 +186,7 @@
 	onMount(() => {
 		setTimeout(() => {
 			if (DOMPath) {
-				pathMidPoint = calculatePath(DOMPath);
+				labelPoint = calculatePath(DOMPath, labelPosition);
 			}
 		}, 0);
 		moveEdge(edgeElement);
@@ -188,7 +194,7 @@
 
 	afterUpdate(() => {
 		if (DOMPath) {
-			pathMidPoint = calculatePath(DOMPath);
+			labelPoint = calculatePath(DOMPath, labelPosition);
 		}
 	});
 
@@ -201,7 +207,7 @@
 	function trackPath() {
 		if (!tracking) return;
 		if (DOMPath) {
-			pathMidPoint = calculatePath(DOMPath);
+			labelPoint = calculatePath(DOMPath, labelPosition);
 		}
 		animationFrameId = requestAnimationFrame(trackPath);
 	}
@@ -322,7 +328,7 @@
 		</slot>
 
 		{#if renderLabel}
-			<foreignObject x={pathMidPoint.x} y={pathMidPoint.y} width="100%" height="100%">
+			<foreignObject x={labelPoint.x} y={labelPoint.y} width="100%" height="100%">
 				<span class="label-wrapper">
 					<slot name="label">
 						<div

@@ -28,7 +28,7 @@
 	export const createAnchorProps = (createAnchors: boolean): AnchorDrawerConfig[] | undefined => {
 		if (direction == '') direction = undefined;
 		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
-		
+
 		// Object that stores properties for the created anchor
 		const anchorProps: AnchorDrawerConfig = {};
 		// Array of property names and values for anchor
