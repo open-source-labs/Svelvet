@@ -26,9 +26,10 @@
 
 		// Create props for anchor or edge if values were given
 		const anchorProps = createAnchorProps(true);
-		const edgeCreated = createEdgeProps(); 
+		const edgeCreated = createEdgeProps();
+		if (!edgeCreated) return;
 		// Create props for node
-		createNodeProps(edgeCreated, anchorProps);
+		createNodeProps(!!edgeCreated, anchorProps);
 	};
 
 	const handleDrawer = () => {
