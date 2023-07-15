@@ -10,7 +10,7 @@ Visualization and interaction behavior can be customized for Edges by creating y
 
 Edges styling can be fully controlled via CSS by passing the expose "path" variable on an HTML Path Element. Custom labels can also be passed via the "label" slot.
 
-Custom Edges are then passed to the "edge" prop of an Anchor component. Any Edge initiated from that Anchor will render out your custom path and label.
+Custom Edges are then passed as children to the Anchor component or via the "edge" prop of an Anchor component. Any Edge initiated from that Anchor will render out your custom path and label.
 
 Edges can also be passed to the Svelvet and Node components, enabling the ability to set a global Edge style which can be overriden at the [Anchor](/components/anchor) or [Node](/components/node) level.
 
@@ -53,7 +53,9 @@ Edges also accept callback functions that run in response to click events on the
 <Svelvet>
     <Node>
         <div class="my-node">
-            <Anchor edge={MyEdge}/>
+            <Anchor />
+				<MyEdge slot="edge"/>
+			<Anchor />
         </div>
     </Node>
 </Svelvet>
@@ -104,6 +106,10 @@ Edges also accept callback functions that run in response to click events on the
 </ResponseField>
 <ResponseField name="enableHover" type="boolean" default="false">
 	Allows edges to be highlighted when hovering over them.
+</ResponseField>
+<ResponseField name="labelPosition" type="number" default="0.5">
+	Places the label at a certain position along the Edge path. Defaults to middle. Value must be
+	between 0 and 1.
 </ResponseField>
 
 ## Properties
