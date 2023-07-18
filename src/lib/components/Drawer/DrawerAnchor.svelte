@@ -34,13 +34,12 @@
 		bottom: []
 	};
 
-	// Creates props and adds to store, returns true if anchor was created
+	// Creates props and adds to corresponding anchor direction
 	export const createAnchorProps = (
 		createAnchors: boolean,
 		anchorPosition?: string
 	): { [key: string]: AnchorDrawerConfig[] } | undefined => {
 		if (direction == '') direction = undefined;
-		// Adds edgeprops to edge component if edge was created, need to add anchorCreated parameter
 
 		// Object that stores properties for the created anchor
 		const anchorProps: AnchorDrawerConfig = {};
@@ -137,7 +136,7 @@
 			direction = target.value as Direction | undefined;
 		}
 	};
-
+	// Reset props, pending anchors, and counters for position of anchors
 	const handleAnchorResetButtonClick = (e: Event) => {
 		invisible = undefined;
 		nodeConnect = undefined;
@@ -163,35 +162,35 @@
 		const formElement = e.target as HTMLFormElement;
 		if (e) formElement.reset();
 	};
-
+	// Adds anchor based on the id of the button clicked	
 	const addAnchor = (e: Event) => {
 		const formEvent = e.target as HTMLFormElement;
-		const addAnchor = formEvent?.parentElement?.id || formEvent?.id;
-		createAnchorProps(false, addAnchor);
-		if (addAnchor === 'addLeftAnchor') leftAnchorCounter.set(anchorsCreated.left.length);
-		else if (addAnchor === 'addRightAnchor') rightAnchorCounter.set(anchorsCreated.right.length);
-		else if (addAnchor === 'addTopAnchor') topAnchorCounter.set(anchorsCreated.top.length);
-		else if (addAnchor === 'addBottomAnchor') bottomAnchorCounter.set(anchorsCreated.bottom.length);
-		else if (addAnchor === 'addSelfAnchor') selfAnchorCounter.set(anchorsCreated.self.length);
+		const addAnchorID = formEvent?.parentElement?.id || formEvent?.id;
+		createAnchorProps(false, addAnchorID);
+		if (addAnchorID === 'addLeftAnchor') leftAnchorCounter.set(anchorsCreated.left.length);
+		else if (addAnchorID === 'addRightAnchor') rightAnchorCounter.set(anchorsCreated.right.length);
+		else if (addAnchorID === 'addTopAnchor') topAnchorCounter.set(anchorsCreated.top.length);
+		else if (addAnchorID === 'addBottomAnchor') bottomAnchorCounter.set(anchorsCreated.bottom.length);
+		else if (addAnchorID === 'addSelfAnchor') selfAnchorCounter.set(anchorsCreated.self.length);
 	};
-
+	// Deletes anchor based on the id of the button clicked
 	const deleteAnchor = (e: Event) => {
 		const formEvent = e.target as HTMLFormElement;
-		const deleteAnchor = formEvent?.parentElement?.id || formEvent?.id;
+		const deleteAnchorID = formEvent?.parentElement?.id || formEvent?.id;
 
-		if (deleteAnchor === 'deleteLeftAnchor') {
+		if (deleteAnchorID === 'deleteLeftAnchor') {
 			anchorsCreated.left.pop();
 			leftAnchorCounter.set(anchorsCreated.left.length);
-		} else if (deleteAnchor === 'deleteRightAnchor') {
+		} else if (deleteAnchorID === 'deleteRightAnchor') {
 			anchorsCreated.right.pop();
 			rightAnchorCounter.set(anchorsCreated.right.length);
-		} else if (deleteAnchor === 'deleteTopAnchor') {
+		} else if (deleteAnchorID === 'deleteTopAnchor') {
 			anchorsCreated.top.pop();
 			topAnchorCounter.set(anchorsCreated.top.length);
-		} else if (deleteAnchor === 'deleteBottomAnchor') {
+		} else if (deleteAnchorID === 'deleteBottomAnchor') {
 			anchorsCreated.bottom.pop();
 			bottomAnchorCounter.set(anchorsCreated.bottom.length);
-		} else if (deleteAnchor === 'deleteSelfAnchor') {
+		} else if (deleteAnchorID === 'deleteSelfAnchor') {
 			anchorsCreated.self.pop();
 			selfAnchorCounter.set(anchorsCreated.self.length);
 		}
