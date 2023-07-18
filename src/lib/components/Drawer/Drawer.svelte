@@ -97,52 +97,44 @@
 		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
-					<slot slot="west">
+					<slot slot="anchorWest">
 						{#each anchors.left as leftAnchorProps}
 							{#if edgeProps}
 								<Anchor {...leftAnchorProps}>
-									<slot slot="edge">
-										<Edge {...edgeProps} />
-									</slot>
+										<Edge {...edgeProps} slot="edge"/>
 								</Anchor>
 							{:else}
 								<Anchor {...leftAnchorProps} />
 							{/if}
 						{/each}
 					</slot>
-					<slot slot="east">
+					<slot slot="anchorEast">
 						{#each anchors.right as rightAnchorProps}
 							{#if edgeProps}
 								<Anchor {...rightAnchorProps}>
-									<slot slot="edge">
-										<Edge {...edgeProps} />
-									</slot>
+										<Edge {...edgeProps} slot="edge"/>
 								</Anchor>
 							{:else}
 								<Anchor {...rightAnchorProps} />
 							{/if}
 						{/each}
 					</slot>
-					<slot slot="north">
+					<slot slot="anchorNorth">
 						{#each anchors.top as topAnchorProps}
 							{#if edgeProps}
 								<Anchor {...topAnchorProps}>
-									<slot slot="edge">
-										<Edge {...edgeProps} />
-									</slot>
+										<Edge {...edgeProps} slot="edge"/>
 								</Anchor>
 							{:else}
 								<Anchor {...topAnchorProps} />
 							{/if}
 						{/each}
 					</slot>
-					<slot slot="south">
+					<slot slot="anchorSouth">
 						{#each anchors.bottom as bottomAnchorProps}
 							{#if edgeProps}
 								<Anchor {...bottomAnchorProps}>
-									<slot slot="edge">
-										<Edge {...edgeProps} />
-									</slot>
+										<Edge {...edgeProps} slot="edge"/>
 								</Anchor>
 							{:else}
 								<Anchor {...bottomAnchorProps} />
@@ -152,9 +144,7 @@
 					{#each anchors.self as anchorProps}
 						{#if edgeProps}
 							<Anchor {...anchorProps}>
-								<slot slot="edge">
-									<Edge {...edgeProps} />
-								</slot>
+									<Edge {...edgeProps} slot="edge" />
 							</Anchor>
 						{:else}
 							<Anchor {...anchorProps} />
