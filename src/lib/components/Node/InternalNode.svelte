@@ -279,16 +279,16 @@
 		{/if}
 
 		<div id={`anchors-west-${node.id}`} class="anchors left">
-			<slot name='west'/>
+			<slot name='anchorWest'/>
 		</div>
 		<div id={`anchors-east-${node.id}`} class="anchors right">
-			<slot name='east'/>
+			<slot name='anchorEast'/>
 		</div>
 		<div id={`anchors-north-${node.id}`} class="anchors top">
-			<slot name='north'/>
+			<slot name='anchorNorth'/>
 		</div>
 		<div id={`anchors-south-${node.id}`} class="anchors bottom">
-			<slot name='south'/>
+			<slot name='anchorSouth'/>
 		</div>
 
 	</div>
