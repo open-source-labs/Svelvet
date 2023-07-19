@@ -1,5 +1,5 @@
-export function calculatePath(path: SVGPathElement) {
+export function calculatePath(path: SVGPathElement, position: number) {
 	const pathLength = path.getTotalLength();
-	const halfLength = pathLength / 2;
+	const halfLength = pathLength * position;
 	return path.getPointAtLength(halfLength);
 }

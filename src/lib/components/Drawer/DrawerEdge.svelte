@@ -1,11 +1,6 @@
 <script context="module" lang="ts">
-	import { writable } from 'svelte/store';
-	import type { CSSColorString, EdgeProps, EdgeDrawerConfig, AnchorDrawerConfig } from '$lib/types';
+	import type { CSSColorString, EdgeProps, EdgeDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
-
-	// External Stores
-	export const edgeNodeProps = writable<EdgeDrawerConfig | object>({});
-	export const edgeAnchorProps = writable<AnchorDrawerConfig | object>({});
 
 	//types for edge creation
 	let edgeWidth: number | undefined;
@@ -20,10 +15,9 @@
 	// let edgeClick: () => void | null; // Stretch feature
 	let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
-	// Creates props and adds to store, returns true if edge was created
-	export const createEdgeProps = (anchorCreated: boolean): boolean => {
+	export function createEdgeProps() {
 		// Object that stores properties for the created edge
-		const edgeProps: object | EdgeDrawerConfig = {};
+		const edgeProps: EdgeDrawerConfig = {};
 		// Array of property names and values for edge
 		const edgePropsNames: string[] = [
 			'width',
@@ -53,27 +47,21 @@
 		// Add props to edge if they exist
 		addProps(edgePropsNames, edgePropsArray, edgeProps);
 
-		// If props were created add edgeProps object to store correct store
-		if (Object.keys(edgeProps).length) {
-			if (!anchorCreated) {
-				edgeNodeProps.set(edgeProps);
-				return true;
-			} else {
-				edgeAnchorProps.set(edgeProps);
-				return true;
-			}
-		}
-		return false;
+		// Return edgeProps if they were created or undefined
+		if (Object.keys(edgeProps).length) return edgeProps;
+		return;
+	}
+
+	const handleStepButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		step = target.checked;
+	};
+	const handleAnimateButtonClick = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		animate = target.checked;
 	};
 
-	const handleStepButtonClick = (e: any) => {
-		step = e.target.checked;
-	};
-	const handleAnimateButtonClick = (e: any) => {
-		animate = e.target.checked;
-	};
-
-	const handleEdgeResetButtonClick = (e: any) => {
+	const handleEdgeResetButtonClick = (e: Event) => {
 		edgeWidth = undefined;
 		targetColor = undefined;
 		color = undefined;
@@ -85,7 +73,8 @@
 		labelColor = undefined;
 		textColor = undefined;
 		//edgeClick: () => void | null;
-		e.target.reset();
+		const target = e.target as HTMLFormElement;
+		target.reset();
 	};
 </script>
 

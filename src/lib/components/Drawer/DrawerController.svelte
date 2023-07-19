@@ -5,6 +5,7 @@
 	import { createNodeProps } from './DrawerNode.svelte';
 	import { createAnchorProps } from './DrawerAnchor.svelte';
 	import { createEdgeProps } from './DrawerEdge.svelte';
+	import Icon from '$lib/assets/icons/Icon.svelte';
 
 	let isOpen = false;
 	let nodeContainerOpen = false;
@@ -25,11 +26,11 @@
 		e.dataTransfer.dropEffect = 'move';
 
 		// Create props for anchor or edge if values were given
-		const anchorCreated = createAnchorProps(true);
-		const edgeCreated = createEdgeProps(anchorCreated);
-
+		const anchorProps = createAnchorProps(true);
+		const edgeCreated = createEdgeProps();
+		if (!edgeCreated) return;
 		// Create props for node
-		createNodeProps(edgeCreated, anchorCreated);
+		createNodeProps(!!edgeCreated, !!anchorProps);
 	};
 
 	const handleDrawer = () => {
@@ -37,12 +38,10 @@
 			isOpen = true;
 			nav.style.height = 'fit-content';
 			nav.style.width = '300px';
-			drawerBtn.innerHTML = '<span class="material-symbols-outlined">north_west</span>';
 		} else {
 			isOpen = false;
 			nav.style.height = '35px';
 			nav.style.width = '35px';
-			drawerBtn.innerHTML = '<span class="material-symbols-outlined">south_east</span>';
 			anchorContainerOpen = false;
 			edgeContainerOpen = false;
 			nodeContainerOpen = false;
@@ -108,7 +107,7 @@
 			on:click={handleDrawer}
 			aria-label="Open/Close Drawer"
 		>
-			<span class="material-symbols-outlined">south_east</span>
+			<Icon icon={isOpen ? 'south_east' : 'north_west'} />
 		</button>
 		<ul class="drawerContents" bind:this={drawerContents}>
 			<li class="list-item">
@@ -172,7 +171,6 @@
 </nav>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
 	#drawerWrapper {
 		position: absolute;
 		width: 35px;
@@ -255,11 +253,6 @@
 			);
 	}
 
-	span {
-		font-family: 'Material Symbols Outlined';
-		font-size: 1.2rem;
-		color: inherit;
-	}
 	.defaultNodes {
 		margin: auto;
 		margin-top: 15px;
