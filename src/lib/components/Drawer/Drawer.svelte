@@ -101,7 +101,7 @@
 						{#each anchors.left as leftAnchorProps}
 							{#if edgeProps}
 								<Anchor {...leftAnchorProps}>
-										<Edge {...edgeProps} slot="edge"/>
+									<Edge {...edgeProps} slot="edge" />
 								</Anchor>
 							{:else}
 								<Anchor {...leftAnchorProps} />
@@ -112,7 +112,7 @@
 						{#each anchors.right as rightAnchorProps}
 							{#if edgeProps}
 								<Anchor {...rightAnchorProps}>
-										<Edge {...edgeProps} slot="edge"/>
+									<Edge {...edgeProps} slot="edge" />
 								</Anchor>
 							{:else}
 								<Anchor {...rightAnchorProps} />
@@ -123,7 +123,7 @@
 						{#each anchors.top as topAnchorProps}
 							{#if edgeProps}
 								<Anchor {...topAnchorProps}>
-										<Edge {...edgeProps} slot="edge"/>
+									<Edge {...edgeProps} slot="edge" />
 								</Anchor>
 							{:else}
 								<Anchor {...topAnchorProps} />
@@ -134,7 +134,7 @@
 						{#each anchors.bottom as bottomAnchorProps}
 							{#if edgeProps}
 								<Anchor {...bottomAnchorProps}>
-										<Edge {...edgeProps} slot="edge"/>
+									<Edge {...edgeProps} slot="edge" />
 								</Anchor>
 							{:else}
 								<Anchor {...bottomAnchorProps} />
@@ -144,7 +144,7 @@
 					{#each anchors.self as anchorProps}
 						{#if edgeProps}
 							<Anchor {...anchorProps}>
-									<Edge {...edgeProps} slot="edge" />
+								<Edge {...edgeProps} slot="edge" />
 							</Anchor>
 						{:else}
 							<Anchor {...anchorProps} />
@@ -190,4 +190,3 @@
 		bottom: 0;
 	} */
 </style>
-

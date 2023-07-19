@@ -498,7 +498,7 @@
 	}
 
 	function checkDirectConnections() {
-		connections.forEach((connection, index) => {
+		connections.forEach((connection) => {
 			if (!connection) return;
 			processConnection(connection);
 			// if (connected) connections[index] = null;
