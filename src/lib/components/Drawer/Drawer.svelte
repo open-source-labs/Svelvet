@@ -28,7 +28,7 @@
 	export let toggle = false;
 
 	// Store props in object to be passed to svelvet
-	const sveltetProps: SvelvetConfig = {
+	const svelvetProps: SvelvetConfig = {
 		width,
 		height,
 		minimap,
@@ -93,16 +93,58 @@
 	on:dragover={onDragOver}
 	on:drop={handleDrop}
 >
-	<Svelvet {...sveltetProps} drawer>
-		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }, index}
+	<Svelvet {...svelvetProps} drawer>
+		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
-					{#each anchors as anchorProps}
+					<slot slot="anchorWest">
+						{#each anchors.left as leftAnchorProps}
+							{#if edgeProps}
+								<Anchor {...leftAnchorProps}>
+										<Edge {...edgeProps} slot="edge"/>
+								</Anchor>
+							{:else}
+								<Anchor {...leftAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot="anchorEast">
+						{#each anchors.right as rightAnchorProps}
+							{#if edgeProps}
+								<Anchor {...rightAnchorProps}>
+										<Edge {...edgeProps} slot="edge"/>
+								</Anchor>
+							{:else}
+								<Anchor {...rightAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot="anchorNorth">
+						{#each anchors.top as topAnchorProps}
+							{#if edgeProps}
+								<Anchor {...topAnchorProps}>
+										<Edge {...edgeProps} slot="edge"/>
+								</Anchor>
+							{:else}
+								<Anchor {...topAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					<slot slot="anchorSouth">
+						{#each anchors.bottom as bottomAnchorProps}
+							{#if edgeProps}
+								<Anchor {...bottomAnchorProps}>
+										<Edge {...edgeProps} slot="edge"/>
+								</Anchor>
+							{:else}
+								<Anchor {...bottomAnchorProps} />
+							{/if}
+						{/each}
+					</slot>
+					{#each anchors.self as anchorProps}
 						{#if edgeProps}
 							<Anchor {...anchorProps}>
-								<slot slot="edge">
-									<Edge {...edgeProps} />
-								</slot>
+									<Edge {...edgeProps} slot="edge" />
 							</Anchor>
 						{:else}
 							<Anchor {...anchorProps} />
@@ -148,3 +190,4 @@
 		bottom: 0;
 	} */
 </style>
+
