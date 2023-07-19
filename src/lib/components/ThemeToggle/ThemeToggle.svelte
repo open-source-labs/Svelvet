@@ -1,10 +1,23 @@
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
 	import { onMount } from 'svelte';
-	import Icon from '$lib/assets/icons/Icon.svelte';
 
 	export let main = 'light';
 	export let alt = 'dark';
+	/**
+	 * @deprecated
+	 * @default 'light_mode'
+	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
+	 * @link https://fonts.google.com/icons
+	 */
+	export let mainIcon = 'light_mode';
+	/**
+	 * @deprecated
+	 * @default 'dark_mode'
+	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
+	 *  @link https://fonts.google.com/icons
+	 */
+	export let altIcon = 'dark_mode';
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
@@ -34,11 +47,19 @@
 	class:NW={corner === 'NW'}
 >
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<Icon icon={current === main ? 'light_mode' : 'dark_mode'} />
+		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
 	</button>
 </div>
 
 <style>
+	@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
+
+	span {
+		font-family: 'Material Symbols Outlined';
+		font-size: 1.2rem;
+		color: inherit;
+	}
+
 	* {
 		box-sizing: border-box;
 	}
@@ -95,6 +116,11 @@
 		justify-content: center;
 		padding: 0.2rem 0;
 		border-bottom: solid 1px rgb(190, 188, 188);
+		color: inherit;
+	}
+	span {
+		font-family: 'Material Symbols Outlined';
+		font-size: 1.2rem;
 		color: inherit;
 	}
 	button:last-child {
