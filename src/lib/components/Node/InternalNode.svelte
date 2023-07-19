@@ -315,6 +315,7 @@
 		color: var(--prop-text-color, var(--text-color, var(--default-text-color)));
 		box-shadow: 0 0 0 var(--final-border-width) var(--final-border-color),
 			var(--default-node-shadow);
+		font-family: 'Roboto', sans-serif;
 	}
 	.anchors {
 		/* outline: solid 1px red; */
