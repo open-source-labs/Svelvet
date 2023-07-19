@@ -3,6 +3,7 @@
 	import type { CSSColorString, Direction, AnchorProps, AnchorDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 	import type { ComponentType } from 'svelte';
+	import Icon from '$lib/assets/icons/Icon.svelte';
 
 	// Local stores
 	const anchorCounter = writable<number>(0);
@@ -232,11 +233,11 @@
 			<li class="list-item">
 				<label for="addAnchors"> Add Anchors: </label>
 				<button class="deleteAnchor" type="button" on:click|stopPropagation={deleteAnchor}>
-					<span class="material-symbols-outlined"> arrow_left </span>
+					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item counter">{$anchorCounter}</span>
 				<button class="addAnchor" type="button" on:click|stopPropagation={addAnchor}>
-					<span class="material-symbols-outlined"> arrow_right </span>
+					<Icon icon="arrow_right" />
 				</button>
 			</li>
 			<li class="list-item">

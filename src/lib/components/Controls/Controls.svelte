@@ -5,6 +5,7 @@
 	import type { CSSColorString } from '$lib/types';
 	import { zoomAndTranslate } from '$lib/utils/movers/';
 	import { tracking } from '$lib/stores';
+	import Icon from '$lib/assets/icons/Icon.svelte';
 
 	export let increment = 0.1;
 	export let horizontal = false;
@@ -67,22 +68,20 @@
 		>
 			{#if $hidden.size > 0}
 				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
-					<span class="material-symbols-outlined">visibility_off</span>
+					<Icon icon="visibility_off" />
 				</button>
 			{/if}
 			<button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
-				<span class="material-symbols-outlined"> zoom_in </span>
+				<Icon icon="zoom_in" />
 			</button>
 			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
-				<span class="material-symbols-outlined"> zoom_out </span>
+				<Icon icon="zoom_out" />
 			</button>
 			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={fitView}>
-				<span class="material-symbols-outlined"> filter_center_focus</span>
+				<Icon icon="filter_center_focus" />
 			</button>
 			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
-				<span class="material-symbols-outlined">
-					{$locked ? 'lock_open' : 'lock'}
-				</span>
+				<Icon icon={$locked ? 'lock_open' : 'lock'} />
 			</button>
 		</div>
 	</slot>
@@ -155,15 +154,6 @@
 		border-bottom: none;
 	}
 
-	span {
-		font-family: 'Material Symbols Outlined';
-		font-size: 1.3rem;
-		color: inherit;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-	}
 	button:last-child {
 		border-bottom: none;
 	}
