@@ -144,6 +144,7 @@
 			if (anchor.type === 'output') acc++;
 			return acc;
 		}, 0);
+
 		if ($nodeLevelConnections?.length && !input) {
 			const remainingConnections: Connections = [];
 			let first: number | null = null;
@@ -177,11 +178,12 @@
 
 	$: if (dynamic && anchorElement) changeAnchorSide(anchorElement, $dynamicDirection, node);
 
-	$: if (!input && $anchorsMounted && $anchorsMounted === node.anchors.count()) {
-		const poppedConnections = $nodeLevelConnections?.pop();
-		if (poppedConnections) connections.push(poppedConnections);
-		connections = connections;
-	}
+	// $: if (!input && $anchorsMounted && $anchorsMounted === node.anchors.count()) {
+	// 	console.log('Popping');
+	// 	const poppedConnections = $nodeLevelConnections?.pop();
+	// 	if (poppedConnections) connections.push(poppedConnections);
+	// 	connections = connections;
+	// }
 
 	$: if ($mounted === nodeStore.count() && connections.length) {
 		checkDirectConnections();
@@ -498,11 +500,11 @@
 	function checkDirectConnections() {
 		connections.forEach((connection, index) => {
 			if (!connection) return;
-			const connected = processConnection(connection);
-			if (connected) connections[index] = null;
+			processConnection(connection);
+			// if (connected) connections[index] = null;
 		});
 
-		connections = connections.filter((connection) => connection !== null);
+		// connections = connections.filter((connection) => connection !== null);
 	}
 
 	export function disconnect(target: [string | number, string | number]) {
