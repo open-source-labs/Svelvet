@@ -431,12 +431,12 @@
 		);
 	}
 
-	.counter {
+	/* .counter {
 		display: inline-block;
 		width: 15px;
 		margin: 0 10px;
 		font-size: 18px;
-	}
+	} */
 
 	.anchorResetBtn {
 		color: var(
