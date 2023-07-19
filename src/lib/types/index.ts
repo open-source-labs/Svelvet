@@ -7,6 +7,7 @@ export * from './store';
 export * from './context';
 export * from './edge';
 export * from './anchor';
+export * from './events';
 export * from './drawer/svelvetProps';
 export * from './drawer/anchorProps';
 export * from './drawer/edgeProps';

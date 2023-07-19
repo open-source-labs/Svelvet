@@ -163,3 +163,31 @@
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
+
+<style>
+	/* Styling for anchor position */
+	/* .west {
+		transform: translate(-50%);
+		position: absolute;
+		left: 0;
+	}
+
+	.east {
+		transform: translate(50%);
+		position: absolute;
+		right: 0;
+	}
+
+	.north {
+		transform: translate(0, -50%);
+		position: absolute;
+		top: 0;
+	}
+
+	.south {
+		transform: translate(0, 50%);
+		position: absolute;
+		bottom: 0;
+	} */
+</style>
+

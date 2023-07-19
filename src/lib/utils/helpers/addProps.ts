@@ -7,7 +7,7 @@
 // 	EdgeDrawerConfig
 // } from '$lib/types';
 
-import type { ComponentType } from "svelte";
+import type { ComponentType } from 'svelte';
 
 export function addProps(
 	propNames: string[],

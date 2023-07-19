@@ -15,7 +15,7 @@
 	// let edgeClick: () => void | null; // Stretch feature
 	let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
-	export const createEdgeProps = (): EdgeDrawerConfig | undefined => {
+	export function createEdgeProps() {
 		// Object that stores properties for the created edge
 		const edgeProps: EdgeDrawerConfig = {};
 		// Array of property names and values for edge
@@ -50,7 +50,7 @@
 		// Return edgeProps if they were created or undefined
 		if (Object.keys(edgeProps).length) return edgeProps;
 		return;
-	};
+	}
 
 	const handleStepButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;

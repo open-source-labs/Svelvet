@@ -23,7 +23,7 @@ Second, you can wrap your own custom components with our Node component and use 
 
 function handleClick(e: CustomEvent) {
 const { detail } = e;
-detail.node.set.bgColor('red');
+detail.node.bgColor.set('red');
 }
 
 </script>
@@ -154,14 +154,6 @@ detail.node.set.bgColor('red');
 <ResponseField name="on:nodeReleased">
 	Fires when when a mouse up event occurs on the Node. Does not fire if the Node has been dragged
 	and then released.
-</ResponseField>
-
-<ResponseField name="on:connection">
-	Fires whenever an Anmchor on the Node is connected.
-</ResponseField>
-
-<ResponseField name="on:disconnection">
-	Fires whenever an Anchor on the Node is disconnected.
 </ResponseField>
 
 <ResponseField name="on:duplicate">
