@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
-	import type { CSSColorString, Direction, AnchorProps, AnchorDrawerConfig } from '$lib/types';
+	import type { CSSColorString, Direction, AnchorDrawerConfig, AnchorProps } from '$lib/types';
 	import { addProps } from '$lib/utils';
 	import type { ComponentType } from 'svelte';
 	import Icon from '$lib/assets/icons/Icon.svelte';
@@ -284,11 +284,11 @@
 
 			<li class="list-item">
 				<label for="addAnchors"> Add Anchors: </label>
-				<button class="deleteAnchor" type="button" on:click|stopPropagation={deleteAnchor}>
+				<button id="deleteSelfAnchor" class="deleteAnchor" type="button" on:click|stopPropagation={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
-				<span class="list-item counter">{$anchorCounter}</span>
-				<button class="addAnchor" type="button" on:click|stopPropagation={addAnchor}>
+				<span class="list-item counter">{$selfAnchorCounter}</span>
+				<button id="addSelfAnchor" class="addAnchor" type="button" on:click|stopPropagation={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
@@ -298,23 +298,23 @@
 			</li>
 			<li class="list-item anchor-directions">
 				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
-					<span class="material-symbols-outlined">arrow_left</span>
+					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$leftAnchorCounter}</span>
 				<button
 					id="addLeftAnchor"
-					class="addAnchor middle-arrow"
+					class="addAnchor"
 					type="button"
 					on:click={addAnchor}
 				>
-					<span class="material-symbols-outlined">arrow_right</span>
+				<Icon icon="arrow_right" />
 				</button>
 				<button id="deleteRightAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
-					<span class="material-symbols-outlined">arrow_left</span>
+					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$rightAnchorCounter}</span>
 				<button id="addRightAnchor" class="addAnchor" type="button" on:click={addAnchor}>
-					<span class="material-symbols-outlined">arrow_right</span>
+					<Icon icon="arrow_right" />
 				</button>
 			</li>
 			<li class="list-item anchor-directions">
@@ -323,18 +323,18 @@
 			</li>
 			<li class="list-item anchor-directions">
 				<button id="deleteTopAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
-					<span class="material-symbols-outlined">arrow_left</span>
+					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$topAnchorCounter}</span>
-				<button id="addTopAnchor" class="addAnchor middle-arrow" type="button" on:click={addAnchor}>
-					<span class="material-symbols-outlined">arrow_right</span>
+				<button id="addTopAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+					<Icon icon="arrow_right" />
 				</button>
 				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
-					<span class="material-symbols-outlined">arrow_left</span>
+					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$bottomAnchorCounter}</span>
 				<button id="addBottomAnchor" class="addAnchor" type="button" on:click={addAnchor}>
-					<span class="material-symbols-outlined">arrow_right</span>
+					<Icon icon="arrow_right" />
 				</button>
 			</li>
 			<li class="list-item">
@@ -434,6 +434,7 @@
 		width: 15px;
 		margin: 0 10px;
 		font-size: 18px;
+		
 	}
 
 	.anchorResetBtn {
@@ -466,11 +467,7 @@
 	.anchor-directions {
 		display: flex;
 		justify-content: space-around;
-		align-items: center;
 		margin: 0;
 	}
-
-	.middle-arrow {
-		margin-right: 10%;
-	}
+	
 </style>
