@@ -171,7 +171,8 @@
 		if (addAnchorID === 'addLeftAnchor') leftAnchorCounter.set(anchorsCreated.left.length);
 		else if (addAnchorID === 'addRightAnchor') rightAnchorCounter.set(anchorsCreated.right.length);
 		else if (addAnchorID === 'addTopAnchor') topAnchorCounter.set(anchorsCreated.top.length);
-		else if (addAnchorID === 'addBottomAnchor') bottomAnchorCounter.set(anchorsCreated.bottom.length);
+		else if (addAnchorID === 'addBottomAnchor')
+			bottomAnchorCounter.set(anchorsCreated.bottom.length);
 		else if (addAnchorID === 'addSelfAnchor') selfAnchorCounter.set(anchorsCreated.self.length);
 	};
 	// Deletes anchor based on the id of the button clicked
@@ -284,21 +285,11 @@
 
 			<li class="list-item">
 				<label for="addAnchors"> Add Anchors: </label>
-				<button
-					id="deleteSelfAnchor"
-					class="deleteAnchor"
-					type="button"
-					on:click|stopPropagation={deleteAnchor}
-				>
+				<button id="deleteSelfAnchor" class="deleteAnchor" type="button" on:click|stopPropagation={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item counter">{$selfAnchorCounter}</span>
-				<button
-					id="addSelfAnchor"
-					class="addAnchor"
-					type="button"
-					on:click|stopPropagation={addAnchor}
-				>
+				<button id="addSelfAnchor" class="addAnchor" type="button" on:click|stopPropagation={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
@@ -307,38 +298,18 @@
 				<p>Right</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button 
-					id="deleteLeftAnchor" 
-					class="deleteAnchor" 
-					type="button" 
-					on:click={deleteAnchor}
-				>
+				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$leftAnchorCounter}</span>
-				<button 
-					id="addLeftAnchor" 
-					class="addAnchor" 
-					type="button" 
-					on:click={addAnchor}
-				>
+				<button id="addLeftAnchor" class="addAnchor" type="button" on:click={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button 
-					id="deleteRightAnchor" 
-					class="deleteAnchor" 
-					type="button" 
-					on:click={deleteAnchor}
-				>
+				<button id="deleteRightAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$rightAnchorCounter}</span>
-				<button 
-					id="addRightAnchor" 
-					class="addAnchor" 
-					type="button" 
-					on:click={addAnchor}
-				>
+				<button id="addRightAnchor" class="addAnchor" type="button" on:click={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
@@ -347,38 +318,18 @@
 				<p>Bottom</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button 
-					id="deleteTopAnchor" 
-					class="deleteAnchor" 
-					type="button" 
-					on:click={deleteAnchor}
-				>
+				<button id="deleteTopAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$topAnchorCounter}</span>
-				<button 
-					id="addTopAnchor" 
-					class="addAnchor" 
-					type="button" 
-					on:click={addAnchor}
-					>
+				<button id="addTopAnchor" class="addAnchor" type="button" on:click={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button 
-					id="deleteBottomAnchor" 
-					class="deleteAnchor" 
-					type="button" 
-					on:click={deleteAnchor}
-				>
+				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$bottomAnchorCounter}</span>
-				<button 
-					id="addBottomAnchor" 
-					class="addAnchor" 
-					type="button" 
-					on:click={addAnchor}
-				>
+				<button id="addBottomAnchor" class="addAnchor" type="button" on:click={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
