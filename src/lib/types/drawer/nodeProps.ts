@@ -16,7 +16,7 @@ export interface NodeDrawerConfig {
 	LR?: boolean;
 	useDefaults?: boolean;
 	nodeDirection?: string;
-	anchors?: {[key:string]: AnchorDrawerConfig[]};
+	anchors?: { [key: string]: AnchorDrawerConfig[] };
 	edgeProps?: EdgeDrawerConfig;
 }
 

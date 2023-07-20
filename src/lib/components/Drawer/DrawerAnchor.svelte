@@ -171,8 +171,7 @@
 		if (addAnchorID === 'addLeftAnchor') leftAnchorCounter.set(anchorsCreated.left.length);
 		else if (addAnchorID === 'addRightAnchor') rightAnchorCounter.set(anchorsCreated.right.length);
 		else if (addAnchorID === 'addTopAnchor') topAnchorCounter.set(anchorsCreated.top.length);
-		else if (addAnchorID === 'addBottomAnchor')
-			bottomAnchorCounter.set(anchorsCreated.bottom.length);
+		else if (addAnchorID === 'addBottomAnchor') bottomAnchorCounter.set(anchorsCreated.bottom.length);
 		else if (addAnchorID === 'addSelfAnchor') selfAnchorCounter.set(anchorsCreated.self.length);
 	};
 	// Deletes anchor based on the id of the button clicked
@@ -430,7 +429,7 @@
 		width: 15px;
 		margin: 0 10px;
 		font-size: 18px;
-	}
+	} 
 
 	.anchorResetBtn {
 		color: var(
