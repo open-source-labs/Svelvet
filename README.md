@@ -195,7 +195,7 @@ Shout out to our contributors! Here's what's new:
 
 ## Installation
 
-Svelvet is available as both an npm and a yarn package. You can install it by running one of the two commands:
+Svelvet is available as both an npm and a yarn package. You can install it by running one of the three commands:
 
 ```bash
 npm install svelvet
@@ -203,6 +203,10 @@ npm install svelvet
 
 ```bash
 yarn add svelvet
+```
+
+```bash
+pnpm add svelvet
 ```
 
 ## Quick Start
@@ -280,7 +284,7 @@ npm run test:unit [filename]
 - Johnny Tran • [LinkedIn](https://www.linkedin.com/in/tranpjohnny/) • [Github](https://github.com/JTraan)
 - Samee Vohra • [LinkedIn](https://www.linkedin.com/in/sameev/) • [Github](https://github.com/sameev)
 - Abhi Gullapalli • [LinkedIn](https://www.linkedin.com/in/viswa-gullapalli-442802253/) • [Github](https://github.com/aubertlone)
-- Ian Hnizdo • [LinkedIn](https://www.linkedin.com/in/ian-hnizdo/) • [Github]()
+- Ian Hnizdo • [LinkedIn](https://www.linkedin.com/in/ian-hnizdo/) • [Github](<>)
 - Mauricio Castro • [LinkedIn](https://www.linkedin.com/in/mauricioacastro/) • [Github](https://github.com/sher85)
 - Ryan Potter • [LinkedIn](https://www.linkedin.com/in/ryan-potter-0105b6100) • [Github](https://github.com/rpotter0811)
 - Emma Ferguson • [LinkedIn](https://www.linkedin.com/in/emma-ferguson-33858725a/) • [Github](https://github.com/emmanotly)
@@ -295,7 +299,9 @@ Please refer to the [roadmap](https://svelvet.mintlify.app/roadmap) for the full
 Some ideas inspired by v8.0.0 include:
 
 - **Example Showcase:** we've added a new section to the documentation which will contain example sandboxes of features and potential usecases of Svelvet. If you would like to contribute to the showcase with an example of how you’re using Svelvet, reach out to the team with your project via [Github discussion](https://github.com/open-source-labs/Svelvet/discussions/categories/project-showcase).
+
 - **Additional functionality to the Drawer Component:** we are planning to make updates to address the ablity to 1) take custom Nodes as props, 2) edit and remove nodes that already exisits on the canvas 3) export the canvas as JSON or PDF file.
+
 - **Additional Data Input Components:** we plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
 
 - **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon.
