@@ -92,7 +92,7 @@ Shout out to our contributors! Here's what's new:
   <li>Added custom classes for edges to allow for uniform styling</li>
   <li>Added click event for edges that execute a user-defined callback</li>
   <li>Added functionality to edit edges by right-clicking on a node to bring up a modal</li>
-  <li>Added feature to expand and collapse tree nodes. 
+  <li>Added feature to expand and collapse tree nodes.</li>
   <li>Updated documentation page on website to include new features</li>
   <li>Updated home page to include newest collaborators</li>
   <li>Solved github issue #s: </li>
