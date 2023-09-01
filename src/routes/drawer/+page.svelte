@@ -327,6 +327,7 @@
 	};
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	id="drop_zone"
 	on:dragenter={handleDragEnter}
@@ -354,6 +355,7 @@
 		<h2>Nodes</h2>
 		<ul>
 			<li class="list-item">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					class="defaultNodes"
 					draggable="true"

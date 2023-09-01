@@ -124,6 +124,7 @@
 	};
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class={dropZoneClass}
 	on:dragover={onDragOver}
@@ -174,6 +175,7 @@
 				Centered: <input type="checkbox" bind:value={center} on:change={handleCenterButtonClick} />
 			</li>
 			<li class="list-item">
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div id="createNode" draggable="true" on:dragstart={onDragStart}>Node</div>
 			</li>
 			<li>
