@@ -7,6 +7,7 @@
 	export let position: Writable<XYPair>;
 	export let color: Writable<CSSColorString>;
 	export let groupName: string;
+	export let locked: Writable<boolean>;
 
 	const { width, height } = dimensions;
 
@@ -23,14 +24,17 @@
 	role="button"
 	tabindex="0"
 	on:contextmenu|stopPropagation|preventDefault
-	on:mousedown|stopPropagation|preventDefault={dispatchClick}
+	on:mousedown|stopPropagation|preventDefault={() => {
+		!$locked && dispatchClick();
+	}}
 	class="bounding-box-border"
+	class:locked={$locked}
 	{id}
 	style:top={`${$position.y}px`}
 	style:left={`${$position.x}px`}
 	style:width={`${$width}px`}
 	style:height={`${$height}px`}
-	style="border: solid 4px {$color};"
+	style="border: 4px solid {$color};"
 >
 	<div class="bounding-box" style:background-color={$color} />
 </div>
@@ -47,7 +51,10 @@
 		position: absolute;
 		overflow: hidden;
 		border-radius: 10px;
-		pointer-events: auto;
 		z-index: -4;
+		pointer-events: auto;
+	}
+	.locked {
+		pointer-events: none !important;
 	}
 </style>

@@ -9,6 +9,7 @@
 	export let position: XYPair;
 	export let color: CSSColorString = getRandomColor();
 	export let groupName: string | number;
+	export let locked = false;
 
 	const graph = getContext<Graph>('graph');
 	const groupKey: GroupKey = `${groupName}/${graph.id}`;
@@ -22,7 +23,8 @@
 		dimensions: { width: writable(width), height: writable(height) },
 		position: writablePosition,
 		color: writable(color),
-		moving: writable(false)
+		moving: writable(false),
+		locked: writable(locked)
 	};
 	graph.groupBoxes.add(groupBox, groupKey);
 	graph.groups.update((groups) => {

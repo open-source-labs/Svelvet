@@ -9,5 +9,12 @@
 </script>
 
 {#each Array.from($groupBoxes) as [id, group] (id)}
-	<GroupBoundingBox on:groupClick {...group} groupName={id} />
+	<GroupBoundingBox
+		on:groupClick
+		dimensions={group.dimensions}
+		position={group.position}
+		color={group.color}
+		groupName={id}
+		locked={group.locked}
+	/>
 {/each}
