@@ -29,4 +29,10 @@ test('slider functionality transmits data', async ({ page }) => {
 	await outputNum.hover();
 	await page.mouse.up();
 	await expect(outputNum).toHaveText('100');
+
+	// can double click to type new value
+	await page.locator('#slider-input').dblclick();
+	await page.keyboard.press('Digit5');
+	await page.keyboard.press('Enter');
+	await expect(outputNum).toHaveText('5');
 });
