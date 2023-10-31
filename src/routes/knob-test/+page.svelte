@@ -19,9 +19,9 @@
 
 <body>
 	<Svelvet minimap>
-		<Volume />
+		<!-- <Volume /> -->
 		<Treble />
-		<Bass />
+		<!-- <Bass /> -->
 		<Audio />
 		<ThemeToggle main="light" alt="dark" slot="toggle" />
 	</Svelvet>
