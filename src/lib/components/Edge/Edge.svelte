@@ -5,7 +5,7 @@
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
 	import { get } from 'svelte/store';
-	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
+	import type { CSSColorString, Direction, EdgeStyle, EndStyle, Graph } from '$lib/types';
 	import type { WritableEdge } from '$lib/types';
 
 	let animationFrameId: number;
@@ -26,6 +26,7 @@
 <script lang="ts">
 	const edgeStore = getContext<Graph['edges']>('edgeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
+	const endStyles = getContext<Array<EndStyle>>('endStyles');
 	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
 	const edgesAboveNode = getContext('edgesAboveNode');
 
@@ -33,6 +34,8 @@
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
+	export let start = endStyles[0];
+	export let end = endStyles[1];
 	export let animate = false;
 	export let label = '';
 	export let enableHover = false;
@@ -303,6 +306,20 @@
 
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
+		<!-- store arrows in defs -->
+		<defs>
+			<marker
+				id="end-arrow"
+				viewBox="0 0 15 15"
+				markerWidth="15"
+				markerHeight="10"
+				refX="12.5"
+				refY="5"
+				orient="auto"
+			>
+				<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
+			</marker>
+		</defs>
 		<path
 			role="presentation"
 			id={edgeKey + '-target'}
@@ -317,11 +334,14 @@
 			bind:this={DOMPath}
 		/>
 		<slot {path} {destroy} {hovering}>
+			<!-- add marker-end -->
 			<path
 				id={edgeKey}
 				class="edge"
 				class:animate
 				d={path}
+				marker-end={end === 'arrow' ? 'url(#end-arrow)' : ''}
+				marker-start={start === 'arrow' ? 'url(#end-arrow)' : ''}
 				style:--prop-edge-color={finalColor}
 				style:--prop-stroke-width={width ? width + 'px' : null}
 			/>
@@ -346,6 +366,10 @@
 {/if}
 
 <style>
+	.arrow {
+		fill: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
+	}
+
 	.edge {
 		stroke: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
 		stroke-width: var(--prop-stroke-width, var(--edge-width, var(--default-edge-width)));
