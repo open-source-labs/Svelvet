@@ -330,7 +330,7 @@
 		{#if renderLabel}
 			<foreignObject x={labelPoint.x} y={labelPoint.y} width="100%" height="100%">
 				<span class="label-wrapper">
-					<slot name="label">
+					<slot name="label" {destroy} {hovering}>
 						<div
 							class="default-label"
 							style:--prop-label-color={labelColor}
