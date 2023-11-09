@@ -306,7 +306,6 @@
 
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
-		<!-- store arrows in defs -->
 		<defs>
 			<marker
 				id="end-arrow"
@@ -318,6 +317,17 @@
 				orient="auto"
 			>
 				<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
+			</marker>
+			<marker
+				id="start-arrow"
+				viewBox="0 0 15 15"
+				markerWidth="15"
+				markerHeight="10"
+				refX="0"
+				refY="5"
+				orient="auto"
+			>
+				<polygon class="arrow" points="0 5, 15 0, 15 10" style:--prop-edge-color={finalColor} />
 			</marker>
 		</defs>
 		<path
@@ -334,15 +344,14 @@
 			bind:this={DOMPath}
 		/>
 		<slot {path} {destroy} {hovering}>
-			<!-- add marker-end -->
 			<path
 				id={edgeKey}
 				class="edge"
 				class:animate
 				d={path}
-				marker-end={end === 'arrow' ? 'url(#end-arrow)' : ''}
-				marker-start={start === 'arrow' ? 'url(#end-arrow)' : ''}
 				style:--prop-edge-color={finalColor}
+				marker-end={end === 'arrow' ? 'url(#end-arrow)' : ''}
+				marker-start={start === 'arrow' ? 'url(#start-arrow)' : ''}
 				style:--prop-stroke-width={width ? width + 'px' : null}
 			/>
 		</slot>
@@ -367,7 +376,7 @@
 
 <style>
 	.arrow {
-		fill: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
+		fill: var(--prop-edge-color, var(--edge-color, var(--default-edge-color))) !important;
 	}
 
 	.edge {
