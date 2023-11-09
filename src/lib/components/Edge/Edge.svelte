@@ -126,7 +126,7 @@
 
 	// The full SVG path string
 	$: if (!step || edgeKey === 'cursor' || $edgeType === 'bezier') {
-		path = `M ${sourceX}, ${sourceY} ${!straight && controlPointString} ${targetX}, ${targetY}`;
+		path = `M ${sourceX}, ${sourceY} ${!straight ? controlPointString : ''} ${targetX}, ${targetY}`;
 	}
 
 	// We only want to recalculate the path midpoints if the source or target is moving
