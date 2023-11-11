@@ -308,7 +308,7 @@
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
 		<defs>
 			<marker
-				id="end-arrow"
+				id={edgeKey + '-end-arrow'}
 				viewBox="0 0 15 15"
 				markerWidth="15"
 				markerHeight="10"
@@ -319,7 +319,7 @@
 				<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
 			</marker>
 			<marker
-				id="start-arrow"
+				id={edgeKey + '-start-arrow'}
 				viewBox="0 0 15 15"
 				markerWidth="15"
 				markerHeight="10"
@@ -350,8 +350,8 @@
 				class:animate
 				d={path}
 				style:--prop-edge-color={finalColor}
-				marker-end={end === 'arrow' ? 'url(#end-arrow)' : ''}
-				marker-start={start === 'arrow' ? 'url(#start-arrow)' : ''}
+				marker-end={end === 'arrow' ? `url(#${edgeKey + '-end-arrow'})` : ''}
+				marker-start={start === 'arrow' ? `url(#${edgeKey + '-start-arrow'})` : ''}
 				style:--prop-stroke-width={width ? width + 'px' : null}
 			/>
 		</slot>
