@@ -5,6 +5,7 @@ type LayerNode = {
 	children: Array<string>;
 	parents: Array<string>;
 	layer: number;
+	label?: string;
 	type?: string;
 	propsId?: string;
 	ignore?: boolean;
@@ -94,6 +95,7 @@ function layerAssignment(flowChart: FlowChart): [LayerTracker, number] {
 		if (!layerTracker[depth]) layerTracker[depth] = [];
 		const newNode: LayerNode = {
 			id: nodeId,
+			label: data.content,
 			children: [],
 			parents: [],
 			layer: depth,
@@ -118,6 +120,7 @@ function populateGhostNodes(layerTracker: LayerTracker, flowChart: FlowChart) {
 				for (let i = startLayer; i <= endLayer; i++) {
 					const ghostNode: LayerNode = {
 						id: `GHOST_${child.node.id}_${ghostNodeIncrement}`,
+						label: '',
 						children: [],
 						parents: [],
 						layer: i,
