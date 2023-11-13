@@ -3,43 +3,43 @@ import { expect, test } from '@playwright/test';
 const testRoute = '/resizer-test';
 
 test('node rotates correctly', async ({ page }) => {
-    await page.goto(testRoute);
+	await page.goto(testRoute);
 
-    const node1 = await page.locator('#N-node1');
-    const node2 = await page.locator('#N-node2');
+	const node1 = await page.locator('#N-node1');
+	const node2 = await page.locator('#N-node2');
 
-    await node1.dragTo(node2, {
-        sourcePosition: { x: 0, y: 0 },
-        targetPosition: { x: 0, y: 0 }
-    });
-    await expect(node1).toHaveCSS('transform', 'matrix(-1.83697e-16, -1, 1, -1.83697e-16, 0, 0)');
-})
+	await node1.dragTo(node2, {
+		sourcePosition: { x: 0, y: 0 },
+		targetPosition: { x: 0, y: 0 }
+	});
+	await expect(node1).toHaveCSS('transform', 'matrix(-1.83697e-16, -1, 1, -1.83697e-16, 0, 0)');
+});
 
 test('node can be horizontally adjusted correctly', async ({ page }) => {
-    await page.goto(testRoute);
+	await page.goto(testRoute);
 
-    const node1 = await page.locator('#N-node1');
+	const node1 = await page.locator('#N-node1');
 
-    await node1.dragTo(node1, {
-        sourcePosition: { x: 0, y: 50 },
-        targetPosition: { x: 100, y: 50}
-    })
-    await expect(node1).toHaveCSS('left', '400px');
-    await expect(node1).toHaveCSS('width', '100px');
-})
+	await node1.dragTo(node1, {
+		sourcePosition: { x: 0, y: 50 },
+		targetPosition: { x: 100, y: 50 }
+	});
+	await expect(node1).toHaveCSS('left', '400px');
+	await expect(node1).toHaveCSS('width', '100px');
+});
 
 test('node can be vertically adjusted correctly', async ({ page }) => {
-    await page.goto(testRoute);
+	await page.goto(testRoute);
 
-    const node1 = await page.locator('#N-node1');
+	const node1 = await page.locator('#N-node1');
 
-    await node1.dragTo(node1, {
-        sourcePosition: { x: 100, y: 100 },
-        targetPosition: { x: 100, y: 50}
-    })
-    await expect(node1).toHaveCSS('bottom', '250px');
-    await expect(node1).toHaveCSS('height', '50px');
-})
+	await node1.dragTo(node1, {
+		sourcePosition: { x: 100, y: 100 },
+		targetPosition: { x: 100, y: 50 }
+	});
+	await expect(node1).toHaveCSS('bottom', '250px');
+	await expect(node1).toHaveCSS('height', '50px');
+});
 
 // The following commented test is designed to test the functionality of the resizer 'both' feature.
 // Essentially, you can click the bottom-right corner of the node that contains the resizer and drag.
