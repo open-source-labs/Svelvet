@@ -12,6 +12,7 @@ import type {
 import type { PixelValue, RemValue } from '.';
 import type { ComponentType } from 'svelte';
 export type EdgeStyle = 'straight' | 'step' | 'bezier';
+export type EndStyle = 'arrow' | null;
 
 // With writable properties
 export type WritableEdge = {
@@ -31,6 +32,8 @@ export type WritableEdge = {
 	rendered: Writable<boolean>;
 	// raiseEdgeOnSelect?: boolean;
 	// edgesAbove?: boolean;
+	start: EndStyle;
+	end: EndStyle;
 };
 
 interface CursorNode {
@@ -86,6 +89,8 @@ export interface EdgeConfig {
 	disconnect?: true;
 	raiseEdges?: boolean;
 	edgesAbove?: boolean;
+	start?: EndStyle;
+	end?: EndStyle;
 }
 
 export interface EdgeLabelConfig {

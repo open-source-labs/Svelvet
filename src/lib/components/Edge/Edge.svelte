@@ -5,7 +5,7 @@
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
 	import { get } from 'svelte/store';
-	import type { CSSColorString, Direction, EdgeStyle, Graph } from '$lib/types';
+	import type { CSSColorString, Direction, EdgeStyle, EndStyle, Graph } from '$lib/types';
 	import type { WritableEdge } from '$lib/types';
 
 	let animationFrameId: number;
@@ -26,6 +26,7 @@
 <script lang="ts">
 	const edgeStore = getContext<Graph['edges']>('edgeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
+	const endStyles = getContext<Array<EndStyle>>('endStyles');
 	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
 	const edgesAboveNode = getContext('edgesAboveNode');
 
@@ -33,6 +34,8 @@
 	export let edge: WritableEdge = getContext<WritableEdge>('edge');
 	export let straight = edgeStyle === 'straight';
 	export let step = edgeStyle === 'step';
+	export let start = endStyles[0];
+	export let end = endStyles[1];
 	export let animate = false;
 	export let label = '';
 	export let enableHover = false;
@@ -303,6 +306,32 @@
 
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
+		{#if start || end}
+			<defs>
+				<marker
+					id={edgeKey + '-end-arrow'}
+					viewBox="0 0 15 15"
+					markerWidth="15"
+					markerHeight="10"
+					refX="12.5"
+					refY="5"
+					orient="auto"
+				>
+					<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
+				</marker>
+				<marker
+					id={edgeKey + '-start-arrow'}
+					viewBox="0 0 15 15"
+					markerWidth="15"
+					markerHeight="10"
+					refX="0"
+					refY="5"
+					orient="auto"
+				>
+					<polygon class="arrow" points="0 5, 15 0, 15 10" style:--prop-edge-color={finalColor} />
+				</marker>
+			</defs>
+		{/if}
 		<path
 			role="presentation"
 			id={edgeKey + '-target'}
@@ -323,6 +352,8 @@
 				class:animate
 				d={path}
 				style:--prop-edge-color={finalColor}
+				marker-end={end === 'arrow' ? `url(#${edgeKey + '-end-arrow'})` : ''}
+				marker-start={start === 'arrow' ? `url(#${edgeKey + '-start-arrow'})` : ''}
 				style:--prop-stroke-width={width ? width + 'px' : null}
 			/>
 		</slot>
@@ -346,6 +377,10 @@
 {/if}
 
 <style>
+	.arrow {
+		fill: var(--prop-edge-color, var(--edge-color, var(--default-edge-color))) !important;
+	}
+
 	.edge {
 		stroke: var(--prop-edge-color, var(--edge-color, var(--default-edge-color)));
 		stroke-width: var(--prop-stroke-width, var(--edge-width, var(--default-edge-width)));
