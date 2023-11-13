@@ -306,30 +306,32 @@
 
 {#if source && target}
 	<svg class="edges-wrapper" style:z-index={zIndex} bind:this={edgeElement}>
-		<defs>
-			<marker
-				id={edgeKey + '-end-arrow'}
-				viewBox="0 0 15 15"
-				markerWidth="15"
-				markerHeight="10"
-				refX="12.5"
-				refY="5"
-				orient="auto"
-			>
-				<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
-			</marker>
-			<marker
-				id={edgeKey + '-start-arrow'}
-				viewBox="0 0 15 15"
-				markerWidth="15"
-				markerHeight="10"
-				refX="0"
-				refY="5"
-				orient="auto"
-			>
-				<polygon class="arrow" points="0 5, 15 0, 15 10" style:--prop-edge-color={finalColor} />
-			</marker>
-		</defs>
+		{#if start || end}
+			<defs>
+				<marker
+					id={edgeKey + '-end-arrow'}
+					viewBox="0 0 15 15"
+					markerWidth="15"
+					markerHeight="10"
+					refX="12.5"
+					refY="5"
+					orient="auto"
+				>
+					<polygon class="arrow" points="0 0, 15 5, 0 10" style:--prop-edge-color={finalColor} />
+				</marker>
+				<marker
+					id={edgeKey + '-start-arrow'}
+					viewBox="0 0 15 15"
+					markerWidth="15"
+					markerHeight="10"
+					refX="0"
+					refY="5"
+					orient="auto"
+				>
+					<polygon class="arrow" points="0 5, 15 0, 15 10" style:--prop-edge-color={finalColor} />
+				</marker>
+			</defs>
+		{/if}
 		<path
 			role="presentation"
 			id={edgeKey + '-target'}
