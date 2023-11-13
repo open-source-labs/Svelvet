@@ -165,7 +165,7 @@
 	$: node && node.connections.set(connections);
 
 	onDestroy(() => {
-			graph.nodes.delete(node.id);
+		graph.nodes.delete(node.id);
 	});
 
 	function connect(connections: number | string | [number | string, number | string]) {

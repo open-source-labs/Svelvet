@@ -26,14 +26,8 @@
 	}
 
 	function deleteNode() {
-		console.log('graphnodes', graph.nodes);
-		console.log('edit id', editing.id);
-		console.log('editing', graph.editing);
-
 		graph.nodes.delete(editing.id); //uncommenting this gets rid of the duplication error, however now the nodes are still physically there
-
 		graph.editing.set(null);
-		console.log('getAll', graph.nodes.getAll());
 	}
 	//troubleshooting notes -- each time created, new instance of N (n-1.n-2.n-3)  -- n1 red,n2 green, n3 blue --> delete them all, recreate nodes has n1 as Red,Blue n2 as Green,Blue, n3 as Blue,Blue and then when you go a 4th time you finally just get one blue
 	//seems like every new instance of N1,N2,N3 are carrying over data/nodes from its previous occurence, the node ID is not reset
