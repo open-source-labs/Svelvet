@@ -126,7 +126,7 @@
 
 	// The full SVG path string
 	$: if (!step || edgeKey === 'cursor' || $edgeType === 'bezier') {
-		path = `M ${sourceX}, ${sourceY} ${!straight && controlPointString} ${targetX}, ${targetY}`;
+		path = `M ${sourceX}, ${sourceY} ${!straight ? controlPointString : ''} ${targetX}, ${targetY}`;
 	}
 
 	// We only want to recalculate the path midpoints if the source or target is moving
@@ -330,7 +330,7 @@
 		{#if renderLabel}
 			<foreignObject x={labelPoint.x} y={labelPoint.y} width="100%" height="100%">
 				<span class="label-wrapper">
-					<slot name="label">
+					<slot name="label" {destroy} {hovering}>
 						<div
 							class="default-label"
 							style:--prop-label-color={labelColor}
