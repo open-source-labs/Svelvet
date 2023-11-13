@@ -31,7 +31,7 @@
 	 */
 	export let zoom = 1;
 	export let TD = false;
-	export let editable = false;
+	export let editable = true;
 	export let locked = false;
 	export let width = 0;
 	export let height = 0;
