@@ -49,6 +49,7 @@
 	const graphEdge = getContext<ComponentType>('graphEdge');
 	const nodeConnectEvent = getContext<Writable<null | MouseEvent>>('nodeConnectEvent');
 	const anchorsMounted = getContext<Writable<number>>('anchorsMounted');
+	const flowChart = getContext<object>('flowchart') || undefined;
 
 	export let bgColor: CSSColorString | null = null;
 	export let id: string | number = 0;
@@ -401,6 +402,26 @@
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
+
+		// get edge style from flowchart if edge is defined in flowchart
+		if (flowChart) {
+			// check if source is in flowchart and target is a child of the source
+			const sourceId: string = source.node.id.slice(2);
+			const sourceInFlowchart = flowChart.nodeList[sourceId]; // type flowchart node obj
+			// if source is in flowchart
+			if (sourceInFlowchart) {
+				const targetId: string = target.node.id.slice(2);
+				const targetInSourceChildren = sourceInFlowchart.children.filter(
+					(child) => child.node.id === targetId
+				)[0];
+				// check to see if target is its child
+				if (targetInSourceChildren) {
+					// configure the edge with data defined in the flowchart
+					const edgeData = targetInSourceChildren;
+					edgeConfig.label = { text: edgeData.content };
+				}
+			}
+		}
 
 		if (edgeStyle) edgeConfig.type = edgeStyle;
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);

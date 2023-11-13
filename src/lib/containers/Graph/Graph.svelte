@@ -29,6 +29,7 @@
 	export let controls = false;
 	export let toggle = false;
 	export let fixedZoom = false;
+	export let pannable = true;
 	export let disableSelection = false;
 	export let ZOOM_INCREMENT = 0.1;
 	export let PAN_INCREMENT = 50;
@@ -269,6 +270,7 @@
 	}
 
 	function onMouseDown(e: MouseEvent) {
+		if (!pannable && !(e.shiftKey || e.metaKey)) return;
 		if (e.button === 2) return;
 		if ($graphDOMElement) $graphDOMElement.focus();
 
@@ -479,6 +481,7 @@
 	{title}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
+	style:cursor={pannable ? 'move' : 'default'}
 	on:wheel|preventDefault={handleScroll}
 	on:mousedown|preventDefault|self={onMouseDown}
 	on:touchend|preventDefault={onTouchEnd}
