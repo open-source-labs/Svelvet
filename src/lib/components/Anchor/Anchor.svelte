@@ -6,7 +6,15 @@
 	import { writable, get } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
 	import { createEventDispatcher } from 'svelte';
-	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
+	import type {
+		Graph,
+		Node,
+		Connections,
+		CSSColorString,
+		EdgeStyle,
+		EndStyle,
+		EdgeConfig
+	} from '$lib/types';
 	import type {
 		Anchor,
 		Direction,
@@ -89,6 +97,7 @@
 	 */
 	export let nodeConnect = false;
 	export let edgeStyle: EdgeStyle | null = null;
+	export let endStyles: Array<EndStyle> = [null, null];
 	/**
 	 * @default 'false'
 	 * @description When `true`, the default Anchor will not be rendered. It is not necessary to set this to true
@@ -347,6 +356,8 @@
 
 		if (disconnect) edgeConfig.disconnect = true;
 		if (edgeStyle) edgeConfig.type = edgeStyle;
+		if (endStyles[0]) edgeConfig.start = endStyles[0];
+		if (endStyles[1]) edgeConfig.start = endStyles[1];
 		// Create a temporary edge to track the cursor
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		// Add the edge to the store
@@ -424,6 +435,8 @@
 		}
 
 		if (edgeStyle) edgeConfig.type = edgeStyle;
+		if (endStyles[0]) edgeConfig.start = endStyles[0];
+		if (endStyles[1]) edgeConfig.start = endStyles[1];
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		if (!source.node || !target.node) return false;
 		edgeStore.add(newEdge, new Set([source, target, source.node, target.node]));

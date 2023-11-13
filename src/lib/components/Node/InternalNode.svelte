@@ -141,7 +141,6 @@
 		if ($zIndex !== $maxZIndex && $zIndex !== Infinity) $zIndex = ++$maxZIndex;
 
 		const targetElement = e.target as HTMLElement; // Cast e.target to HTMLElement
-
 		if (tagsToIgnore.has(targetElement.tagName)) return;
 
 		e.preventDefault();
