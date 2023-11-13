@@ -37,7 +37,7 @@
 	 */
 	export let zoom = 1;
 	export let TD = false;
-	export let editable = false;
+	export let editable = true;
 	export let locked = false;
 	export let width = 0;
 	export let height = 0;
@@ -99,6 +99,11 @@
 	 * @description Prevents the graph scale/zoom from changing.
 	 */
 	export let fixedZoom = false;
+	/**
+	 * @default true
+	 * @description Prevents the graph from panning on click if false
+	 */
+	export let pannable = true;
 
 	const dispatch = createEventDispatcher<{
 		connection: SvelvetConnectionEvent;
@@ -182,6 +187,7 @@
 		{graph}
 		{fitView}
 		{fixedZoom}
+		{pannable}
 		{theme}
 		{drawer}
 		{controls}
