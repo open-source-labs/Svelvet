@@ -1,6 +1,14 @@
 import type { Node, NodeArray, FlowChart, Edge } from '$lib/types/parser';
 
-type Shape = 'round' | 'stadium' | 'subroutine' | 'cylindrical' | 'circle' | 'rhombus' | 'hexagon';
+type Shape =
+	| 'round'
+	| 'square'
+	| 'stadium'
+	| 'subroutine'
+	| 'cylindrical'
+	| 'circle'
+	| 'rhombus'
+	| 'hexagon';
 type EdgeShape = 'straight' | 'bezier';
 type OpenBracket = '(' | '[' | '{';
 type CloseBracket = ')' | '}' | ']';
@@ -17,6 +25,7 @@ type BracketRef = Record<OpenBracket, CloseBracket>;
 
 const shapeRef: ShapeRef = {
 	'(': 'round',
+	'[': 'square',
 	'([': 'stadium',
 	'[[': 'subroutine',
 	'[(': 'cylindrical',
@@ -92,27 +101,23 @@ const parseLine = (line: string) => {
 
 const nodeParser = (node: string) => {
 	node = node.trim();
-	let id = '';
+	const id = node[0];
+	const body = node.slice(1);
+	let label = '';
 	let shape = '';
+	const type = 'Default';
 	const data: Node['data'] = { shape: '' };
 	const bracketStack: Array<OpenBracket> = [];
-	const elements = node.split('|');
-	const label = elements[0];
-	let type = elements[1];
-	const props = elements[2];
 
-	for (let i = 0; i < label.length; i++) {
-		if (isOpenBracket(label[i])) bracketStack.push(label[i] as OpenBracket);
-		else if (bracketRef[bracketStack[bracketStack.length - 1]] === label[i]) {
+	for (let i = 0; i < body.length; i++) {
+		if (isOpenBracket(body[i])) bracketStack.push(body[i] as OpenBracket);
+		else if (bracketRef[bracketStack[bracketStack.length - 1]] === body[i]) {
 			shape = shapeRef[bracketStack.join('')];
 			break;
-		} else id += label[i];
+		} else label += body[i];
 	}
-	if (!shape) shape = 'default';
 	data.shape = shape;
-	if (!type) type = 'Default';
-	if (!props) data.content = id;
-	else data.props = props;
+	data.content = label;
 	return { id, data, type, children: [], parents: [], depth: 0, nesting: 0 };
 };
 

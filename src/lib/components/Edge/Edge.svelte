@@ -408,7 +408,6 @@
 		justify-content: center;
 		align-items: center;
 		width: fit-content;
-		height: 100px;
 		font-size: 1rem;
 		height: 1.5rem;
 		border-radius: 5px;
