@@ -5,11 +5,11 @@
 <Edge
 	let:path
 	end="arrow"
-	start="arrow"
-	color="red"
+	color="green"
 	step={true}
-	width={3}
+	width={2}
 	animate={true}
-	label="red"
-	labelColor="red"
+	label="New Arrows!"
+	labelColor="green"
+	textColor="white"
 />

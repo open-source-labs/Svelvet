@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { CustomWritable } from '$lib/types';
+	import type { CSSColorString } from '$lib/types';
 
 	export let parameterStore: CustomWritable<boolean>;
+	export let color: CSSColorString | null = 'limegreen';
 
 	const handleKeyToggle = (event: KeyboardEvent) => {
 		event.stopPropagation();
@@ -29,7 +31,7 @@
 			on:click|stopPropagation={handleClickToggle}
 			bind:checked={$parameterStore}
 		/>
-		<span class="slider round" />
+		<span class="slider round" style:--prop-toggle-color={color} />
 	</label>
 </div>
 
@@ -73,11 +75,11 @@
 	}
 
 	input:checked + .slider {
-		background-color: #2196f3;
+		background-color: var(--prop-toggle-color);
 	}
 
 	input:focus + .slider {
-		box-shadow: 0 0 1px #2196f3;
+		box-shadow: 0 0 1px var(--prop-toggle-color);
 	}
 
 	input:checked + .slider:before {
