@@ -27,7 +27,6 @@
 
 	function deleteNode() {
 		graph.nodes.delete(editing.id); //uncommenting this gets rid of the duplication error, however now the nodes are still physically there
-
 		graph.editing.set(null);
 	}
 	//troubleshooting notes -- each time created, new instance of N (n-1.n-2.n-3)  -- n1 red,n2 green, n3 blue --> delete them all, recreate nodes has n1 as Red,Blue n2 as Green,Blue, n3 as Blue,Blue and then when you go a 4th time you finally just get one blue
