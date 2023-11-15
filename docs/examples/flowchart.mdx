@@ -37,7 +37,7 @@ The Mermaid property in the Svelvet component is designed for creating intricate
 
 Here's a sample string to start with:
 
-```HTML Mermaid.svelte
+```js Mermaid.svelte
 const mermaidStr = `A[Flowchart Time!] --> B[Choice of Tool]
   B --> |Ye Olde Static Flowchart| C[Back to the Stone Age]
   B --> |Svelvet's Flowchart Component| D[Smooth interactivity]
@@ -45,12 +45,12 @@ const mermaidStr = `A[Flowchart Time!] --> B[Choice of Tool]
   D --> F[Unparalleled customization]`;
 ```
 
-Key Steps for Creating Your Flowchart:
+### Key Steps for Creating Your Flowchart:
 
-No Need for 'graph' Keyword: Unlike regular Mermaid syntax, you don't need to start your string with “graph”. In Svelvet, we automatically understand that you're making a flowchart.
+1. **No Need for 'graph' Keyword:** Unlike regular Mermaid syntax, you don't need to start your string with “graph”. In Svelvet, we automatically understand that you're making a flowchart.
 
-Creating Nodes: Start by giving your node an ID, like ‘A’, and then add a label in brackets. For example, A[Your Label Here]. While Mermaid usually uses different bracket styles for various shapes, Svelvet keeps it simple for now, so no shape variations just yet.
+2. **Creating Nodes:** Start by giving your node an ID, like ‘A’, and then add a label in brackets. For example, A[Your Label Here]. While Mermaid usually uses different bracket styles for various shapes, Svelvet keeps it simple for now, so no shape variations just yet.
 
-Drawing Connections (Edges): To connect two nodes, use dashes and an arrow. For example, A --> B. This creates a line (or Edge, as we call it in Svelvet) from node A to node B. Once you've set up a node, you can easily refer to it elsewhere in your flowchart using its ID.
+3. **Drawing Connections (Edges):** To connect two nodes, use dashes and an arrow. For example, A --> B. This creates a line (or Edge, as we call it in Svelvet) from node A to node B. Once you've set up a node, you can easily refer to it elsewhere in your flowchart using its ID.
 
-Labeling Edges: Want to add a label to your connection? Just wrap your text in vertical bars and place it between two nodes. Like this: A --> |This is a label| B.
+4. **Labeling Edges:** Want to add a label to your connection? Just wrap your text in vertical bars and place it between two nodes. Like this: A --> |This is a label| B.
