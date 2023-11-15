@@ -22,7 +22,9 @@ export function createEdge(
 		color: config?.color || writable(null),
 		width: writable(config?.width || 0),
 		animated: writable(config?.animated || false),
-		rendered: writable(false)
+		rendered: writable(false),
+		start: config?.start || null,
+		end: config?.end || null
 	};
 	// if (config?.raiseEdges) writableEdge.raiseEdgeOnSelect = true;
 	// if (config?.edgesAbove) writableEdge.edgesAbove = true;
