@@ -1,19 +1,13 @@
 <script lang="ts">
 	import { Svelvet } from '$lib';
 
-	const mermaidStr = `A[Start] --> B[Wake Up]
-  B --> C[Do you want to get up yet?]
-  C --> |Yes| D[Up and at 'em]
-  C --> |No| E[Go back to sleep]`;
+	const mermaidStr = `A[Flowchart Time!] --> B[Choice of Tool]
+    B --> |Ye Olde Static Flowchart| C[Back to the Stone Age]
+    B --> |Svelvet's Flowchart Component| D[Smooth interactivity]
+    D --> E[Effortless styling]
+    D --> F[Unparalleled customization]`;
 </script>
 
 <body>
-	<Svelvet
-		theme="dark"
-		width={800}
-		height={800}
-		title="flowchart-v2"
-		controls
-		mermaid={mermaidStr}
-	/>
+	<Svelvet theme="dark" width={800} height={800} title="flowchart" controls mermaid={mermaidStr} />
 </body>
