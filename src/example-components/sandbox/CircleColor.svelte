@@ -3,6 +3,7 @@
 	import ColorAnchor from './ColorAnchor.svelte';
 	import { generateInput, generateOutput, Resizer, ColorPicker, Node, Anchor } from '$lib';
 	import type { CSSColorString } from '$lib';
+	import CustomEdge from './CustomEdge.svelte';
 
 	type Inputs = {
 		color: CSSColorString;
@@ -26,22 +27,23 @@
 		<div class="node-body">
 			<ColorPicker parameterStore={$inputs.color} />
 		</div>
-		<div class="output-anchors">
-			<Anchor
-				connections={[['output', 'color']]}
-				let:linked
-				let:connecting
-				outputStore={output}
-				output
-				edgeStyle="bezier"
-				edgeColor={output}
-				edgeLabel="Dynamic Edges"
-				locked
-			>
-				<ColorAnchor color={output} {connecting} {linked} />
-			</Anchor>
-		</div>
 	</NodeWrapper>
+	<div class="output-anchors">
+		<Anchor
+			connections={[['output', 'color']]}
+			let:linked
+			let:connecting
+			outputStore={output}
+			output
+			edgeColor={output}
+			edgeLabel="Dynamic Edges"
+			edgeStyle="bezier"
+			edge={CustomEdge}
+			locked
+		>
+			<ColorAnchor color={output} {connecting} {linked} />
+		</Anchor>
+	</div>
 	<Resizer rotation />
 </Node>
 
