@@ -65,7 +65,7 @@
 		},
 		{
 			"group": "Examples",
-			"pages": ["examples/database"]
+			"pages": ["examples/database", "examples/flowchart"]
 		}
 	],
 	"footerSocials": {
