@@ -269,7 +269,7 @@ npm run test:unit [filename]
 - Henry Sweat • [LinkedIn](https://www.linkedin.com/in/henry-sweat/) • [Github](https://github.com/henry-sweat)
 - Jeremy David • [LinkedIn](https://www.linkedin.com/in/jeremy-david-66jc/) • [Github](https://github.com/Jdave1125)
 - John Costello • [LinkedIn](https://www.linkedin.com/in/johnlcostello/) • [Github](https://github.com/johnlcos)
-- Spencer Huey • [LinkedIn](www.linkedin.com/in/spencerhuey) • [Github](https://github.com/hueylew1s)
+- Spencer Huey • [LinkedIn](https://www.linkedin.com/in/spencerhuey/) • [Github](https://github.com/hueylew1s)
 - Rathna Chinthalapalli • [LinkedIn](https://www.linkedin.com/in/rathnac/) • [Github](https://github.com/rathna-git)
 - Ruxin Zheng • [LinkedIn](https://www.linkedin.com/in/ruxinzhengswe/) • [Github](https://github.com/RuxinZ)
 - Samuel Alvarez • [LinkedIn](https://www.linkedin.com/in/samuelsalvarez/) • [Github](https://github.com/bittermelonsam)
