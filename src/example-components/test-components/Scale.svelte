@@ -1,33 +1,90 @@
 <script lang="ts">
-	import NodeWrapper from './NodeWrapper.svelte';
-	import { generateInput, generateOutput, Slider, Node, Resizer } from '$lib';
+	import Visualizer from './Visualizer.svelte';
+	import CustomAnchor from './CustomAnchor.svelte';
+	import ColorAnchor from './ColorAnchor.svelte';
+	import { Node, Anchor } from '$lib';
+	import { generateInput, generateOutput, type CSSColorString } from '$lib';
 
 	type Inputs = {
-		num: number;
+		strokeWidth: number;
+		dashCount: number;
+		scale: number;
+		animation: number;
+		color: CSSColorString;
+		noise: number;
 	};
 
 	const initialData = {
-		num: 56 - Math.random() * 4
+		strokeWidth: 2,
+		dashCount: 10,
+		scale: 5,
+		animation: 0,
+		color: 'red' as CSSColorString,
+		noise: 1
 	};
+	const processor = (inputs: Inputs) => inputs;
 	const inputs = generateInput(initialData);
-	const procesor = (inputs: Inputs) => inputs.num;
-	const output = generateOutput(inputs, procesor);
+	const output = generateOutput(inputs, processor);
 </script>
 
-<Node useDefaults id="numCircles" position={{ x: 40, y: 268 }} let:selected>
-	<NodeWrapper title="Scale" outputStore={output} key="scale">
-		<div class="node-body">
-			<Slider min={25} max={90} step={1} parameterStore={$inputs.num} />
+<Node useDefaults id="output" position={{ x: 560, y: 30 }} let:selected locked>
+	<div class="node" class:selected>
+		<Visualizer {...$output} />
+		<div class="input-anchors">
+			{#each Object.keys(initialData) as key}
+				{#if key === 'color'}
+					<Anchor id={key} let:connecting let:linked inputsStore={inputs} {key} input locked>
+						<ColorAnchor color={$inputs[key]} {connecting} {linked} />
+					</Anchor>
+				{:else if key === 'animation'}
+					<Anchor
+						id={key}
+						on:disconnection={() => {
+							if ($inputs && typeof $inputs.animation.set === 'function') {
+								$inputs.animation.set(0);
+							}
+						}}
+						let:hovering
+						let:connecting
+						let:linked
+						inputsStore={inputs}
+						{key}
+						input
+					>
+						<CustomAnchor {hovering} {connecting} {linked} />
+					</Anchor>
+				{:else}
+					<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
+						<CustomAnchor {hovering} {connecting} {linked} />
+					</Anchor>
+				{/if}
+			{/each}
 		</div>
-	</NodeWrapper>
-	<Resizer width height />
+	</div>
 </Node>
 
 <style>
-	.node-body {
+	.node {
+		box-sizing: border-box;
+		width: 400px;
+		height: 400px;
+		border-radius: 8px;
+		position: relative;
+		pointer-events: auto;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
+		padding: 10px;
+		gap: 10px;
+	}
+
+	.selected {
+		border: solid 2px white;
+	}
+	.input-anchors {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		left: -24px;
 	}
 </style>
