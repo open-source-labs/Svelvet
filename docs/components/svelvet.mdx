@@ -13,10 +13,9 @@ Svelvet is the wrapping parent component that renders out nodes and edges. It is
   import { Node, Svelvet, Minimap, Controls } from 'svelvet';
 </script>
 
-<Svelvet id="my-canvas" width="{500}" height="{500}" TD minimap locked>
+<Svelvet id="my-canvas" width="{500}" height="{500}" TD minimap controls locked>
   <Node />
   <Node id="alpha" bgColor="red" label="Default Node" />
-  <Controls />
 </Svelvet>
 ```
 
@@ -50,10 +49,21 @@ Svelvet is the wrapping parent component that renders out nodes and edges. It is
 <ResponseField name="edgeStyle" type="bezier | step | straight" default="bezier">
 	Enum representing the global edge style for the canvas. Overriden when passing custom Edges.
 </ResponseField>
+<ResponseField name="endStyles" type="['arrow' | null , 'arrow' | null]" default="[null , null]">
+	Enum representing the global end styles for the canvas. First element in array will be applied to
+	the start of the edge, second element in array will be applied to the end of the edge. Overriden
+	when passing custom Edges.
+</ResponseField>
 <ResponseField name="snapTo" type="number" default="1">
 	Pixel value at default scale that Nodes should snap to when being moved.
 </ResponseField>
-<ResponseField name="editable" type="boolean" default="false">
+<ResponseField name="fixedZoom" type="boolean" default="false">
+	Prevents zooming on the canvas.
+</ResponseField>
+<ResponseField name="pannable" type="boolean" default="false">
+	Prevents panning on the canvas.
+</ResponseField>
+<ResponseField name="editable" type="boolean" default="true">
 	Allows the Node properties to be edited via CTRL+click.
 </ResponseField>
 <ResponseField name="fitView" type="boolean" default="false">

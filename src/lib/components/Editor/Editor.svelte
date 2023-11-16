@@ -2,8 +2,8 @@
 	import Slider from '../data/Slider/Slider.svelte';
 	import TextField from '../data/TextField/TextField.svelte';
 	import type { Graph } from '$lib/types';
-	import type { Writable } from 'svelte/store';
-
+	import { writable, type Writable } from 'svelte/store';
+	import { Resizer } from '$lib';
 	import { getContext, setContext } from 'svelte';
 
 	import type { CSSColorString, Node as SvelvetNode } from '$lib/types';
@@ -15,26 +15,71 @@
 	setContext<Writable<string | null>>('textStore', editing.label);
 	setContext<Writable<CSSColorString | null>>('colorStore', editing.bgColor);
 
+	let editorPosition = { x: 150, y: 50 };
+	let resizeOptions = { width: 10, height: 10 };
 	$: cursor = graph.cursor;
 
+	function handleContextMenu(event: MouseEvent) {
+		event.preventDefault();
+		editorPosition = { x: event.clientX, y: event.clientY };
+		graph.editing.set(editing);
+	}
+
 	function deleteNode() {
-		graph.nodes.delete(editing.id);
+		graph.nodes.delete(editing.id); //uncommenting this gets rid of the duplication error, however now the nodes are still physically there
 		graph.editing.set(null);
+	}
+	//troubleshooting notes -- each time created, new instance of N (n-1.n-2.n-3)  -- n1 red,n2 green, n3 blue --> delete them all, recreate nodes has n1 as Red,Blue n2 as Green,Blue, n3 as Blue,Blue and then when you go a 4th time you finally just get one blue
+	//seems like every new instance of N1,N2,N3 are carrying over data/nodes from its previous occurence, the node ID is not reset
+
+	function resizeNode() {
+		const nodeId = editing.id;
+		const node = graph.nodes.get(nodeId);
+
+		// Check if the node exists
+		if (node) {
+			// Get the current width and height values from writable stores
+			const currentWidth = node.dimensions.width;
+			const currentHeight = node.dimensions.height;
+
+			// Open a prompt for users to input width and height, using the current values as placeholders
+			const newWidth = prompt(
+				'Enter new width (for example:250):',
+				currentWidth ? currentWidth.toString() : ''
+			);
+			const newHeight = prompt(
+				'Enter new height (for example:200):',
+				currentHeight ? currentHeight.toString() : ''
+			);
+
+			// Check if the user clicked Cancel or didn't input values
+			if (newWidth === null || newHeight === null) {
+				return;
+			}
+
+			// Update the node's dimensions using the set method of writable
+			node.dimensions.width.set(parseInt(newWidth, 10) || 0);
+			node.dimensions.height.set(parseInt(newHeight, 10) || 0);
+
+			// Optionally, you can also update the Resizer properties if needed
+			node.resizingWidth.set(true);
+			node.resizingHeight.set(true);
+		}
 	}
 </script>
 
-<Node
-	let:grabHandle
-	zIndex={Infinity}
-	position={{ x: $cursor.x, y: $cursor.y }}
-	bgColor="white"
-	id="editor"
->
-	<div use:grabHandle class="editor">
-		<button on:click={() => graph.editing.set(null)}>X</button>
-		<Slider parameterStore={editing.dimensions.width} max={1000} />
+<Node zIndex={Infinity} position={editorPosition} bgColor="white" id="editor">
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+
+	<div on:contextmenu={handleContextMenu} class="editor">
+		<span style="color:white; font-size:45px">Editor</span>
+		<button on:click={() => graph.editing.set(null)} style="position:absolute; top:10px;right:10px;"
+			>X</button
+		>
+		<!-- <Slider parameterStore={editing.dimensions.width} max={1000} label="" /> -->
 		<TextField placeholder={'Node Label'} />
 		<button on:click={deleteNode}>Delete Node</button>
+		<button on:click={resizeNode}>Resize Node</button>
 	</div>
 </Node>
 
@@ -67,8 +112,9 @@
 	}
 
 	.editor {
-		background-color: rgb(31, 30, 30);
-		width: 200px;
-		height: 300px;
+		background-color: rgb(108, 233, 35);
+		width: 250px;
+		height: 200px;
+		justify-content: space-evenly;
 	}
 </style>

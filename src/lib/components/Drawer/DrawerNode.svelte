@@ -141,7 +141,7 @@
 				<label for="borderColor">Border: </label>
 				<input id="borderColor" class="colorWheel" type="color" bind:value={borderColor} />
 			</li>
-			<li class="list-item">
+			<!-- <li class="list-item">
 				<label for="useDefaults">useDefaults: </label>
 				<input
 					id="useDefaults"
@@ -149,7 +149,7 @@
 					bind:value={useDefaults}
 					on:change={handleUseDefaultsButtonClick}
 				/>
-			</li>
+			</li> -->
 
 			<li class="list-item">
 				<label for="dimensions">Dimensions:</label>

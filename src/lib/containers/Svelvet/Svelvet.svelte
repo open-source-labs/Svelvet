@@ -6,7 +6,13 @@
 	import { graphStore } from '$lib/stores';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
 	import type { ComponentType } from 'svelte';
-	import type { Graph as GraphType, EdgeStyle, XYPair, SvelvetConnectionEvent } from '$lib/types';
+	import type {
+		Graph as GraphType,
+		EdgeStyle,
+		EndStyle,
+		XYPair,
+		SvelvetConnectionEvent
+	} from '$lib/types';
 	import type { NodeConfig, GraphKey, CSSColorString, NodeKey } from '$lib/types';
 	import type { Node, Anchor } from '$lib/types';
 </script>
@@ -31,7 +37,7 @@
 	 */
 	export let zoom = 1;
 	export let TD = false;
-	export let editable = false;
+	export let editable = true;
 	export let locked = false;
 	export let width = 0;
 	export let height = 0;
@@ -52,6 +58,7 @@
 	 */
 	export let selectionColor: CSSColorString = 'lightblue';
 	export let edgeStyle: EdgeStyle = 'bezier';
+	export let endStyles: Array<EndStyle> = [null, null];
 	export let edge: ComponentType | null = null;
 	/**
 	 * @default false
@@ -92,6 +99,11 @@
 	 * @description Prevents the graph scale/zoom from changing.
 	 */
 	export let fixedZoom = false;
+	/**
+	 * @default true
+	 * @description Prevents the graph from panning on click if false
+	 */
+	export let pannable = true;
 
 	const dispatch = createEventDispatcher<{
 		connection: SvelvetConnectionEvent;
@@ -103,6 +115,7 @@
 
 	setContext('snapTo', snapTo);
 	setContext('edgeStyle', edgeStyle);
+	setContext('endStyles', endStyles);
 	setContext('graphEdge', edge);
 	setContext('raiseEdgesOnSelect', raiseEdgesOnSelect);
 	setContext('edgesAboveNode', edgesAboveNode);
@@ -174,6 +187,7 @@
 		{graph}
 		{fitView}
 		{fixedZoom}
+		{pannable}
 		{theme}
 		{drawer}
 		{controls}

@@ -19,11 +19,11 @@ While the Svelvet component can now fill the size of its wrapping container, we 
 ### Additional Data Input Components
 
 We plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
-We've released the [Knob](../data-flow/knob) component in version `8.0.0`.
+We've released the [Toggle](../data-flow/toggle) component in version `9.0.0`.
 
-### Additional Functionality to Drawer Component
+### Drawer Component Maintenance
 
-A [Drawer](../components/drawer) component has been released in version `8.0.0`. Updates to address the ability to take custom Nodes as props, edit and remove nodes that already exist on the canvas, and exporting of the canvas coming soon in future updates.
+A [Drawer](../components/drawer) component was released in version `8.0.0`. There is some general work that needs to be done on this component to improve its reliability and consistency.
 
 ### Edge Drop Callback
 
@@ -51,7 +51,7 @@ Currently, when Nodes are rotated, their positioning updates in an unintuitive m
 
 ### Extensive Test Coverage
 
-We expect to have full E2E and unit test coverage relatively soon.
+Test coverage is fairly comprehensive, covering most components. The exception to this is testing on the [Drawer](../components/drawer) component.
 
 ### Example Showcase
 

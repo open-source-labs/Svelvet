@@ -83,17 +83,23 @@ Edges also accept callback functions that run in response to click events on the
 	Color of the edge path.
 </ResponseField>
 <ResponseField name="straight" type="boolean" default="false">
-	Boolean controlling curvate of edge path. Renders edge using "step" logic.
+	Boolean controlling curvate of edge path. Renders edge as straight line.
 </ResponseField>
 
 <ResponseField name="step" type="boolean" default="false">
-	Boolean controlling curvate of edge path. Renders edge as straight line.
+	Boolean controlling curvate of edge path. Renders edge using "step" logic.
 </ResponseField>
 <ResponseField name="cornerRadius" type="number" default="8">
 	Radius of corners when rendering out a step path. Set to 0 for hard corners.
 </ResponseField>
 <ResponseField name="animate" type="boolean" default="false">
 	Renders edge path as a dashed, moving line.
+</ResponseField>
+<ResponseField name="start" type="'arrow' | null" default="null">
+	Adds an arrow to the start of the edge path.
+</ResponseField>
+<ResponseField name="end" type="'arrow' | null" default="null">
+	Adds an arrow to the end of the edge path.
 </ResponseField>
 <ResponseField name="label" type="string">
 	Label text.
