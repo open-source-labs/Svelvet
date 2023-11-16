@@ -60,7 +60,7 @@
 	export let TD = false;
 	export let LR = false;
 	export let zIndex = 1;
-	export let editable = false;
+	export let editable = true;
 	export let locked = false;
 	export let rotation = 0;
 	export let edge: ComponentType | null = null;

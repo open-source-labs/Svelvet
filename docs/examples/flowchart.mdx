@@ -1,0 +1,56 @@
+---
+title: 'Flowchart'
+sidebarTitle: 'Flowchart'
+description: 'Effortlessly transform Mermaid syntax into interactive flowcharts using this powerful property on the Svelvet component.'
+---
+
+## Description
+
+The Flowchart component, leveraging the simplicity of [Mermaid](https://mermaid.js.org/syntax/flowchart.html) syntax, allows for the creation of detailed, node-based flowcharts from plain text descriptions. By assigning a Mermaid string to the 'mermaid' property of the [Svelvet](https://svelvet.mintlify.app/components/svelvet) component, users can effortlessly convert their text-based flowcharts into dynamic, interactive diagrams. The Flowchart component ensures a smooth, user-friendly interface, making it ideal for both novice and experienced designers seeking to visualize complex processes or data flows.
+
+```HTML App.svelte
+<script>
+	import { Svelvet } from 'svelvet';
+
+	const mermaidStr = `A[Flowchart Time!] --> B[Choice of Tool]
+    B --> |Ye Olde Static Flowchart| C[Back to the Stone Age]
+    B --> |Svelvet's Flowchart Component| D[Smooth interactivity]
+    D --> E[Effortless styling]
+    D --> F[Unparalleled customization]`;
+</script>
+
+<body>
+	<Svelvet theme="dark" width={800} height={800} controls mermaid={mermaidStr} />
+</body>
+```
+
+<iframe
+	src="https://stackblitz.com/edit/flowchart-sandbox?embed=1&file=src/App.svelte&hideExplorer=1&hideNavigation=1&view=preview"
+	style={{ width: '100%', height: '800px', border: '0', borderRadius: '15px' }}
+></iframe>
+
+Checkout the sandbox [here](https://stackblitz.com/edit/flowchart-sandbox?file=src%2FApp.svelte).
+
+## Creating a Flowchart with the Svelvet Component
+
+The Mermaid property in the Svelvet component is designed for creating intricate flowcharts with ease. It accepts a string formatted in Mermaid syntax, a user-friendly way to define flowcharts through text. In this section, we'll explore an example that illustrates how Svelvet processes a Mermaid string, showcasing the functionalities you can leverage and the current limitations to be aware of.
+
+Here's a sample string to start with:
+
+```js Mermaid.svelte
+const mermaidStr = `A[Flowchart Time!] --> B[Choice of Tool]
+  B --> |Ye Olde Static Flowchart| C[Back to the Stone Age]
+  B --> |Svelvet's Flowchart Component| D[Smooth interactivity]
+  D --> E[Effortless styling]
+  D --> F[Unparalleled customization]`;
+```
+
+### Key Steps for Creating Your Flowchart:
+
+1. **No Need for 'graph' Keyword:** Unlike regular Mermaid syntax, you don't need to start your string with “graph”. In Svelvet, we automatically understand that you're making a flowchart.
+
+2. **Creating Nodes:** Start by giving your node an ID, like ‘A’, and then add a label in brackets. For example, A[Your Label Here]. While Mermaid usually uses different bracket styles for various shapes, Svelvet keeps it simple for now, so no shape variations just yet.
+
+3. **Drawing Connections (Edges):** To connect two nodes, use dashes and an arrow. For example, A --> B. This creates a line (or Edge, as we call it in Svelvet) from node A to node B. Once you've set up a node, you can easily refer to it elsewhere in your flowchart using its ID.
+
+4. **Labeling Edges:** Want to add a label to your connection? Just wrap your text in vertical bars and place it between two nodes. Like this: A --> |This is a label| B.

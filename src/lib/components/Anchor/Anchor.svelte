@@ -6,7 +6,15 @@
 	import { writable, get } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
 	import { createEventDispatcher } from 'svelte';
-	import type { Graph, Node, Connections, CSSColorString, EdgeStyle, EdgeConfig } from '$lib/types';
+	import type {
+		Graph,
+		Node,
+		Connections,
+		CSSColorString,
+		EdgeStyle,
+		EndStyle,
+		EdgeConfig
+	} from '$lib/types';
 	import type {
 		Anchor,
 		Direction,
@@ -49,6 +57,7 @@
 	const graphEdge = getContext<ComponentType>('graphEdge');
 	const nodeConnectEvent = getContext<Writable<null | MouseEvent>>('nodeConnectEvent');
 	const anchorsMounted = getContext<Writable<number>>('anchorsMounted');
+	const flowChart = getContext<object>('flowchart') || undefined;
 
 	export let bgColor: CSSColorString | null = null;
 	export let id: string | number = 0;
@@ -88,6 +97,7 @@
 	 */
 	export let nodeConnect = false;
 	export let edgeStyle: EdgeStyle | null = null;
+	export let endStyles: Array<EndStyle> = [null, null];
 	/**
 	 * @default 'false'
 	 * @description When `true`, the default Anchor will not be rendered. It is not necessary to set this to true
@@ -346,6 +356,8 @@
 
 		if (disconnect) edgeConfig.disconnect = true;
 		if (edgeStyle) edgeConfig.type = edgeStyle;
+		if (endStyles[0]) edgeConfig.start = endStyles[0];
+		if (endStyles[1]) edgeConfig.start = endStyles[1];
 		// Create a temporary edge to track the cursor
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		// Add the edge to the store
@@ -402,7 +414,29 @@
 			label: { text: edgeLabel }
 		};
 
+		// get edge style from flowchart if edge is defined in flowchart
+		if (flowChart) {
+			// check if source is in flowchart and target is a child of the source
+			const sourceId: string = source.node.id.slice(2);
+			const sourceInFlowchart = flowChart.nodeList[sourceId]; // type flowchart node obj
+			// if source is in flowchart
+			if (sourceInFlowchart) {
+				const targetId: string = target.node.id.slice(2);
+				const targetInSourceChildren = sourceInFlowchart.children.filter(
+					(child) => child.node.id === targetId
+				)[0];
+				// check to see if target is its child
+				if (targetInSourceChildren) {
+					// configure the edge with data defined in the flowchart
+					const edgeData = targetInSourceChildren;
+					edgeConfig.label = { text: edgeData.content };
+				}
+			}
+		}
+
 		if (edgeStyle) edgeConfig.type = edgeStyle;
+		if (endStyles[0]) edgeConfig.start = endStyles[0];
+		if (endStyles[1]) edgeConfig.start = endStyles[1];
 		const newEdge = createEdge({ source, target }, source?.edge || null, edgeConfig);
 		if (!source.node || !target.node) return false;
 		edgeStore.add(newEdge, new Set([source, target, source.node, target.node]));
