@@ -60,12 +60,13 @@
 				"data-flow/slider",
 				"data-flow/knob",
 				"data-flow/radiogroup",
-				"data-flow/colorpicker"
+				"data-flow/colorpicker",
+				"data-flow/toggle"
 			]
 		},
 		{
 			"group": "Examples",
-			"pages": ["examples/database", "examples/flowchart"]
+			"pages": ["examples/database", "examples/flowchart", "examples/shapes"]
 		}
 	],
 	"footerSocials": {
