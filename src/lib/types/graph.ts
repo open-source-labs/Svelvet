@@ -87,6 +87,7 @@ export interface GroupBox {
 	position: Writable<XYPair>;
 	color: Writable<CSSColorString>;
 	moving: Writable<boolean>;
+	locked: Writable<boolean>;
 }
 
 export interface Group {
