@@ -428,7 +428,7 @@
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
-		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 1;
+		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
 		const startOffset = leftRight ? $translation.x : $translation.y;
 		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
