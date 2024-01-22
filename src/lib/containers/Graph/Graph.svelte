@@ -445,8 +445,8 @@
 					});
 				} else {
 					const delta = {
-						x: leftRight ? direction * 2 : 0,
-						y: leftRight ? 0 : direction * 2
+						x: leftRight ? -direction * 2 : 0,
+						y: leftRight ? 0 : -direction * 2
 					};
 					Array.from($selected).forEach((node) => {
 						const currentPosition = get(node.position);
