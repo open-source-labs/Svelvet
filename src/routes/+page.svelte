@@ -3,6 +3,8 @@
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import TextField from '$lib/components/data/TextField/TextField.svelte';
+	// Controls is not used on the canvas itself, but is part of the HUD of the dev homepage
+	// maybe not needed here
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
@@ -14,6 +16,7 @@
 
 <body>
 	<Svelvet minimap title="test" controls>
+		<!-- buttons on lower level node -->
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />
@@ -21,14 +24,17 @@
 				<div>Height</div>
 			{/each}
 		</Node>
+		<!-- text field -->
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
 			<TextField placeholder="name" />
 		</Node>
+		<!-- blue node -->
 		<Node let:selected dimensions={{ width: 400, height: 100 }}>
 			<div class="node" class:selected>
 				<Resizer width height rotation />
 			</div>
 		</Node>
+		<!-- top gray node -->
 		<Node useDefaults dimensions={{ width: 400, height: 300 }} position={{ x: 100, y: 300 }}>
 			<div class="anchor">
 				<Anchor nodeConnect />

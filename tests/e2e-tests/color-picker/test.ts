@@ -33,4 +33,4 @@ test('should change color of the anchor when moved', async ({ page }) => {
 	expect(updatedColor).not.toBe(defaultColor);
 });
 
-//console logs here are showing that the acnhor color is indeeed changing
+//console logs here are showing that the anchor color is indeed changing
