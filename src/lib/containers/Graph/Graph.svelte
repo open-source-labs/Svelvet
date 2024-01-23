@@ -367,11 +367,24 @@
 			setTimeout(() => {
 				duplicate.set(false);
 			}, 100);
+		} else if (key === 'Tab' && e.altKey) {
+			selectNextNode();
 		} else {
 			return; // Unhandled action: used default handler
 		}
 
 		e.preventDefault();
+	}
+
+	//This function handles selecting nodes while using tab
+	function selectNextNode() {
+		const nodes = graph.nodes.getAll();
+
+		const currentIndex = nodes.findIndex((node) => $selected.has(node));
+		const nextIndex = currentIndex + 1;
+
+		$selected.delete(nodes[currentIndex]);
+		$selected.add(nodes[nextIndex]);
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
@@ -425,6 +438,7 @@
 		translation.set(newTranslation);
 	}
 
+	//handles movement of camera in the canvas and the nodes
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
@@ -437,6 +451,7 @@
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
 
+				//movement of camera when no nodes are selected
 				if ($selected.size === 0) {
 					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 					translation.set({
@@ -444,6 +459,7 @@
 						y: leftRight ? $translation.y : movement
 					});
 				} else {
+					//movement of nodes when selected
 					const delta = {
 						x: leftRight ? -direction * 2 : 0,
 						y: leftRight ? 0 : -direction * 2
