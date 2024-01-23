@@ -13,5 +13,5 @@ vite.config.ts.timestamp-*
 /.vscode
 .vscode
 .idea
-svelvet-file-tree
+svelvet-file-tree.txt
 script.txt
