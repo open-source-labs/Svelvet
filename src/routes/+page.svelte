@@ -1,9 +1,16 @@
 <script lang="ts">
-	import { Svelvet, Node, Anchor, Resizer } from '$lib';
+	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import TextField from '$lib/components/data/TextField/TextField.svelte';
 	import Controls from '$lib/components/Controls/Controls.svelte';
+	import Drawer from '$lib/components/Drawer/Drawer.svelte';
+	import CircleColor from '../example-components/sandbox/CircleColor.svelte';
+	import DashCount from '../example-components/sandbox/DashCount.svelte';
+	import Noise from '../example-components/sandbox/Noise.svelte';
+	import Scale from '../example-components/sandbox/Scale.svelte';
+	import Thickness from '../example-components/sandbox/Thickness.svelte';
+	import Output from '../example-components/sandbox/Output.svelte'
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -14,6 +21,20 @@
 
 <body>
 	<Svelvet minimap title="test" controls>
+		<Group
+			position={{ x: -150, y: -100 }}
+			width={600}
+			height={700}
+			color="goldenrod"
+			groupName="parameters"
+		>
+			<Thickness />
+			<Noise />
+			<Scale />
+			<CircleColor />
+			<DashCount />
+		</Group>
+		<Output />
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />

@@ -373,6 +373,8 @@
 			theme = theme === 'light' ? 'dark' : 'light';
 		} else if (key === 'd') {
 			drawer = !drawer;
+		} else if (key === 'm') {
+			minimap = !minimap;
 		} else {
 			return; // Unhandled action: used default handler
 		}
