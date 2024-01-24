@@ -1,19 +1,28 @@
 import type { Graph } from '$lib/types';
 
+// added interface for more strict check of a svelte store
+interface StoreLike {
+	subscribe: (callback: (value: any) => void) => () => void;
+}
+
 // Function to check if a value is a Svelte store
-function isStore(value) {
+// value must adhere to StoreLike interface
+function isStore(value: StoreLike): boolean {
 	return value && typeof value.subscribe === 'function';
 }
 
 // Function to traverse a nested object and extract the data
-function traverse(obj) {
-	const output = {};
+// looks like this function should traverse a svelte store
+function traverse(obj: Record<string, any>) {
+	// added type object with string indexing
+	const output: Record<string, any> = {};
 
 	for (const key in obj) {
 		const value = obj[key];
 		if (isStore(value)) {
 			let storeValue;
-			value.subscribe(($value) => {
+			// subscribe method should be found in a svelte store
+			value.subscribe(($value: any) => {
 				storeValue = $value;
 			})();
 			output[key] =
@@ -24,12 +33,12 @@ function traverse(obj) {
 			output[key] = value;
 		}
 	}
-
 	return output;
 }
 
 // Custom replacer function for JSON.stringify()
-function domRectReplacer(key, value) {
+// change key to be intentionally not used
+function domRectReplacer(_key: string, value: any) {
 	if (value instanceof DOMRectReadOnly) {
 		return {
 			x: value.x,
@@ -43,12 +52,15 @@ function domRectReplacer(key, value) {
 
 // Function to get JSON stringified data from nested Svelte store
 export function getJSONState(store: Graph) {
+	// eslint-disable-next-line no-console
+	console.log(store);
 	const data = traverse(store);
 	const raw = JSON.stringify(data, domRectReplacer);
-
 	// const object = JSON.parse(raw);
 	// const node: Node = createNode(object.nodes['N-1']);
 	// store.nodes.add(node, 'N-TEST');
 	localStorage.setItem('state', raw);
+	// eslint-disable-next-line no-console
+	console.log(raw);
 	return raw;
 }

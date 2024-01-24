@@ -16,6 +16,8 @@
 	import type { ComponentType } from 'svelte';
 	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
+	// new import
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 
 	let animationFrameId: number;
 	// new additions
@@ -494,6 +496,7 @@
 			activeIntervals[key] = interval;
 		}
 	}
+	// new definitions for Radio Group test
 	let options = ['option 1', 'option 2', 'option 3'];
 	let parameterStore = writable('default value');
 </script>
@@ -520,13 +523,18 @@
 	<GraphRenderer {isMovable}>
 		<!-- trying to add a quick save button -->
 		<!-- added an alert function in its place for now -->
-		<button on:click={() => alert('hi')}>SAVE STATE</button>
+		<!-- <button on:click={() => alert('hi')}>SAVE STATE</button> -->
+		<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button>
+		<button on:click={() => alert('hi')}>ALERT</button> -->
+		<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
+		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button>
+
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
 		<slot />
 		<!-- added radio group for example purposes -->
-		<RadioGroup {options} {parameterStore} />
+		<!-- <RadioGroup {options} {parameterStore} /> -->
 	</GraphRenderer>
 	{#if backgroundExists}
 		<slot name="background" />
@@ -578,5 +586,9 @@
 	.svelvet-wrapper:focus {
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
+	}
+	/* testing */
+	button {
+		cursor: pointer;
 	}
 </style>

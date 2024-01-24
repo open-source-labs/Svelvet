@@ -6,6 +6,11 @@
 	// Controls is not used on the canvas itself, but is part of the HUD of the dev homepage
 	// maybe not needed here
 	import Controls from '$lib/components/Controls/Controls.svelte';
+	// added getJSONState function
+	import { getJSONState } from '$lib/utils/savers/saveStore';	
+	// added Graph interface import
+	import type { Graph } from '$lib/types';
+	import graph from '$lib/containers/Graph/Graph.svelte'
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -15,14 +20,18 @@
 </script>
 
 <body>
+	<button on:click={() => alert('hi')}>ALERTe</button>
 	<Svelvet minimap title="test" controls>
 		<!-- buttons on lower level node -->
 		<Connector />
+		<button on:click={() => alert('hi')}>ALERTe</button>
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />
 			{#each { length: widthCount } as item}
 				<div>Height</div>
 			{/each}
+			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
+			<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
 		</Node>
 		<!-- text field -->
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
