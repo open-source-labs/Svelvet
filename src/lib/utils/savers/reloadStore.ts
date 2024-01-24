@@ -1,6 +1,12 @@
-import { createGraph, createNode } from '../creators';
-import type { AnchorKey, GraphKey, NodeConfig } from '$lib/types';
-import { createAnchor } from '../creators/createAnchor';
+import { createGraph, createNode, createAnchor, createEdge } from '../creators';
+import type { AnchorKey, GraphKey, NodeConfig, NodeKey, CustomEdgeKey, Anchor } from '$lib/types';
+import type { ComponentType } from 'svelte';
+
+// added interface for createEdge function
+interface EdgeDataType {
+    connection: { source: Anchor; target: Anchor };
+    component: ComponentType | null;
+}
 
 // store parameter is supposed to be Graph interface?
 // store should be passed in as JSON string
@@ -21,22 +27,32 @@ export function reloadStore(store: string) {
 		const newNode = createNode(nodeProps);
 		// change nodeProps.anchors to newNode.anchors as Object.entries argument
 		Object.entries(newNode.anchors).forEach(([id, anchor]) => {
+			// added all arguments that createAnchor function expects to receive
 			const newAnchor = createAnchor(
 				graph,
 				newNode,
 				id as AnchorKey,
 				anchor.position,
 				{ width: 0, height: 0 },
-				anchor.input,
+				anchor.store,
+				anchor.edge,
+				anchor.type,
+				// anchor.input,
 				anchor.direction,
-				anchor.dynamic
+				anchor.dynamic,
+				anchor.key,
+				anchor.edgeColor
 			);
-			newNode.anchors.add(newAnchor, id);
+			newNode.anchors.add(newAnchor, id as AnchorKey);
 		});
-		graph.nodes.add(newNode, id);
+		graph.nodes.add(newNode, id as NodeKey);
 	});
 	Object.entries(object.edges).forEach(([id, edge]) => {
-		graph.edges.add(edge, id);
-	});
+		const edgeData = edge as EdgeDataType;
+		const newEdge = createEdge(edgeData.connection, edgeData.component);
+        graph.edges.add(newEdge, id as CustomEdgeKey);
+    });
 	return graph;
 }
+
+
