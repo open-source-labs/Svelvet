@@ -369,6 +369,10 @@
 			}, 100);
 		} else if (key === 'Tab' && e.altKey) {
 			selectNextNode();
+		} else if (key === 'l') {
+			theme = theme === 'light' ? 'dark' : 'light';
+		} else if (key === 'd') {
+			drawer = !drawer;
 		} else {
 			return; // Unhandled action: used default handler
 		}
@@ -376,7 +380,7 @@
 		e.preventDefault();
 	}
 
-	//This function handles selecting nodes while using tab
+	//This function handles selecting nodes
 	function selectNextNode() {
 		const nodes = graph.nodes.getAll();
 
