@@ -59,7 +59,7 @@
 		{#each { length: totalNodes } as node}
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
-		
+
 		<ThemeToggle slot="toggle" />
 	</Svelvet>
 </body>
