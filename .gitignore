@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 /.vscode
 .vscode
 .idea
+script.txt
