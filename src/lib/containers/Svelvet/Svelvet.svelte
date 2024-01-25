@@ -110,7 +110,8 @@
 		disconnection: SvelvetConnectionEvent;
 	}>();
 
-	let graph: GraphType;
+	// let graph: GraphType;
+	let graph: GraphType | null = null;
 	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
 
 	setContext('snapTo', snapTo);
@@ -119,7 +120,10 @@
 	setContext('graphEdge', edge);
 	setContext('raiseEdgesOnSelect', raiseEdgesOnSelect);
 	setContext('edgesAboveNode', edgesAboveNode);
+	setContext('graph', graph);
 
+	// function to load a graph from local storage
+	// occurs after Svelvet renders
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
 		if (stateObject) {
@@ -132,6 +136,10 @@
 
 			graphStore.add(graph, graphKey);
 		}
+		// setContext('graph', graph)
+		// added console.log
+		console.log('Graph after onMount:', graph);
+		// graphStore.set(graph);
 	});
 
 	$: backgroundExists = $$slots.background;
@@ -161,6 +169,8 @@
 		source: [string | number, string | number],
 		target: [string | number, string | number]
 	) {
+		// added console.log
+		console.log('Graph before disconnect:', graph);
 		const sourceNodeKey: NodeKey = `N-${source[0]}`;
 		const sourceNode = graph.nodes.get(sourceNodeKey);
 		if (!sourceNode) return;
@@ -175,9 +185,15 @@
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
 	}
+	// console.log(graph after it changes)
+	$: if (graph) {
+    console.log('Graph updated:', graph);
+	}
+
 </script>
 
 {#if graph}
+	
 	<Graph
 		{width}
 		{height}

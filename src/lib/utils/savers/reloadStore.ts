@@ -8,17 +8,27 @@ interface EdgeDataType {
     component: ComponentType | null;
 }
 
+
+
 // store parameter is supposed to be Graph interface?
 // store should be passed in as JSON string
 export function reloadStore(store: string) {
+	
 	// turns JSON string to JS object
 	// variable to store previous graph
 	// of type Graph
 	const object = JSON.parse(store);
-	// createas new graph
+	// create new graph
+
+	// Check if transforms and scale are present and valid
+	const hasValidTransforms = object.transforms && typeof object.transforms === 'object';
+	const hasValidScale = hasValidTransforms && typeof object.transforms.scale === 'number';
+	const defaultScaleValue = 1; // Example default scale
+
 	const graph = createGraph(object.id as GraphKey, {
 		...object,
-		initialZoom: object.transforms.scale
+		// initialZoom: object.transforms.scale
+		initialZoom: hasValidScale ? object.transforms.scale : defaultScaleValue
 	});
 	// convert Graph.nodes into array, iterate over it
 	Object.entries(object.nodes).forEach(([id, node]) => {

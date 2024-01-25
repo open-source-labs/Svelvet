@@ -71,6 +71,8 @@ function domRectReplacer(_key: string, value: any) {
 	return value;
 }
 
+
+
 // Function to get JSON stringified data from nested Svelte store
 export function getJSONState(store: any) {
 	// eslint-disable-next-line no-console
@@ -78,7 +80,6 @@ export function getJSONState(store: any) {
 	const data = traverse(store);
 	const raw = JSON.stringify(data, domRectReplacer);
 	// const raw = JSON.stringify(data);
-
 	// const object = JSON.parse(raw);
 	// const node: Node = createNode(object.nodes['N-1']);
 	// store.nodes.add(node, 'N-TEST');
