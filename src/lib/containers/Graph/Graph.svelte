@@ -375,6 +375,11 @@
 			drawer = !drawer;
 		} else if (key === 'm') {
 			minimap = !minimap;
+		} else if (key === 'c') {
+			controls = !controls;
+		} else if (key === 'e') {
+    		const node = Array.from($selected)[0];
+			graph.editing.set(node);
 		} else {
 			return; // Unhandled action: used default handler
 		}

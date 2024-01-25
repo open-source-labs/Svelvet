@@ -26,8 +26,7 @@
 			width={600}
 			height={700}
 			color="goldenrod"
-			groupName="parameters"
-		>
+			groupName="parameters" >
 			<Thickness />
 			<Noise />
 			<Scale />
