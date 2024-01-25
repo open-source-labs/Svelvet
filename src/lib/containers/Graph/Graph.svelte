@@ -501,6 +501,7 @@
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
+	tabindex={0}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	style:cursor={pannable ? 'move' : 'default'}
@@ -511,7 +512,6 @@
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	bind:this={$graphDOMElement}
-	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
 		{#if $editing}

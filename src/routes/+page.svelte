@@ -10,7 +10,7 @@
 	import Noise from '../example-components/sandbox/Noise.svelte';
 	import Scale from '../example-components/sandbox/Scale.svelte';
 	import Thickness from '../example-components/sandbox/Thickness.svelte';
-	import Output from '../example-components/sandbox/Output.svelte'
+	import Output from '../example-components/sandbox/Output.svelte';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -59,6 +59,7 @@
 		{#each { length: totalNodes } as node}
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
+		
 		<ThemeToggle slot="toggle" />
 	</Svelvet>
 </body>
