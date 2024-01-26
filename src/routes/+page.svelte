@@ -7,7 +7,7 @@
 	// maybe not needed here
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	// added getJSONState function
-	import { getJSONState } from '$lib/utils/savers/saveStore';	
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 	// added Graph interface import
 	import type { Graph } from '$lib/types';
 	// added getContext import
@@ -21,19 +21,19 @@
 	let totalNodes = 0;
 	let widthCount = 1;
 	let graph: any;
-	graphStore.subscribe(graphMap => {
-        // Assuming you want to log the graph with a specific key
-        // This key should be known or determined based on your application logic
-        const graphKey = "G-1"; // Example key
-        graph = graphMap.get(graphKey);
-    });
+	graphStore.subscribe((graphMap) => {
+		// Assuming you want to log the graph with a specific key
+		// This key should be known or determined based on your application logic
+		const graphKey = 'G-1'; // Example key
+		graph = graphMap.get(graphKey);
+	});
 	function logCurrentGraphState() {
-        if (graph) {
-            console.log('Current Graph State:', graph);
-        } else {
-            console.log('No current graph found');
-        }
-    }
+		if (graph) {
+			console.log('Current Graph State:', graph);
+		} else {
+			console.log('No current graph found');
+		}
+	}
 </script>
 
 <body>
@@ -48,13 +48,15 @@
 				<div>Height</div>
 			{/each}
 			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
-			<button style="cursor: pointer;" on:click={() => {
-				// const graph = getContext('graph');
-				console.log('Graph on user interaction:', graph);
-				getJSONState(graph)
-				}}>SAVE STATE</button>
+			<button
+				style="cursor: pointer;"
+				on:click={() => {
+					// const graph = getContext('graph');
+					console.log('Graph on user interaction:', graph);
+					getJSONState(graph);
+				}}>SAVE STATE</button
+			>
 			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
-
 		</Node>
 		<!-- text field -->
 		<Node inputs={5} position={{ x: 600, y: 600 }}>

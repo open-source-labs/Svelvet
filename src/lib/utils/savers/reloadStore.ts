@@ -4,16 +4,13 @@ import type { ComponentType } from 'svelte';
 
 // added interface for createEdge function
 interface EdgeDataType {
-    connection: { source: Anchor; target: Anchor };
-    component: ComponentType | null;
+	connection: { source: Anchor; target: Anchor };
+	component: ComponentType | null;
 }
-
-
 
 // store parameter is supposed to be Graph interface?
 // store should be passed in as JSON string
 export function reloadStore(store: string) {
-	
 	// turns JSON string to JS object
 	// variable to store previous graph
 	// of type Graph
@@ -32,7 +29,7 @@ export function reloadStore(store: string) {
 	});
 	// convert Graph.nodes into array, iterate over it
 	Object.entries(object.nodes).forEach(([id, node]) => {
-		// 
+		//
 		const nodeProps: NodeConfig = node as NodeConfig;
 		const newNode = createNode(nodeProps);
 		// change nodeProps.anchors to newNode.anchors as Object.entries argument
@@ -60,9 +57,7 @@ export function reloadStore(store: string) {
 	Object.entries(object.edges).forEach(([id, edge]) => {
 		const edgeData = edge as EdgeDataType;
 		const newEdge = createEdge(edgeData.connection, edgeData.component);
-        graph.edges.add(newEdge, id as CustomEdgeKey);
-    });
+		graph.edges.add(newEdge, id as CustomEdgeKey);
+	});
 	return graph;
 }
-
-

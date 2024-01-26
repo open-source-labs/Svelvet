@@ -187,13 +187,11 @@
 	}
 	// console.log(graph after it changes)
 	$: if (graph) {
-    console.log('Graph updated:', graph);
+		console.log('Graph updated:', graph);
 	}
-
 </script>
 
 {#if graph}
-	
 	<Graph
 		{width}
 		{height}
