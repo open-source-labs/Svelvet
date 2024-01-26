@@ -16,12 +16,16 @@
 	import type { ComponentType } from 'svelte';
 	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
+	// new import
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 
 	let animationFrameId: number;
+	// new additions
+	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
 </script>
 
 <script lang="ts">
-	// Props
+	// defining props that the Graph component expects when it is used, type annotations added
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
@@ -45,16 +49,20 @@
 	export let title: string;
 	export let drawer = false;
 
-	// Local constants
+	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
+	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
 	const activeIntervals: ActiveIntervals = {};
 
-	// Local stores
+	// creates a Svelte writable store named duplicate. This store probably holds a boolean value to track whether some duplication functionality is active or not.
 	const duplicate = writable(false);
+	// another writable store, which seems to be used to track if the component has mounted or to count certain actions after mounting.
 	const mounted = writable(0);
+	// is a writable store to hold a reference to the graph's DOM element. This is useful for direct DOM manipulations or access.
 	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
 
 	// External stores
+	// These are Svelte stores that are likely passed as part of the graph prop or accessed directly from it. They represent various aspects of the graph's state, such as its current cursor position, scale, dimensions, and more
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
 	const dimensionsStore = graph.dimensions;
@@ -68,6 +76,7 @@
 	const nodeBounds = graph.bounds.nodeBounds;
 
 	// Reactive variables
+	// These are standard JavaScript variables that are reactive, meaning Svelte will re-run any reactive statements or parts of the DOM that depend on these variables whenever their values change.
 	let initialDistance = 0;
 	let initialScale = 1;
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
@@ -84,21 +93,22 @@
 	let drawerComponent: ComponentType | null = null;
 
 	// Subscriptions
+	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
 	$: dimensions = $dimensionsStore;
 
 	// Update the svelvet-theme attribute everytime the theme changes
 	$: if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
-
+	// camera view adjustment
 	$: if (!initialFit && fitView) {
 		fitIntoView();
 	}
-
+	// load the theme toggle
 	$: if (toggle && !toggleComponent) loadToggle();
-
+	// load the minimap
 	$: if (minimap && !minimapComponent) loadMinimap();
-
+	// load the controls interface
 	$: if (controls && !controlsComponent) loadControls();
-
+	// load the drawer
 	$: if (drawer && !drawerComponent) loadDrawer();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
@@ -486,6 +496,9 @@
 			activeIntervals[key] = interval;
 		}
 	}
+	// new definitions for Radio Group test
+	let options = ['option 1', 'option 2', 'option 3'];
+	let parameterStore = writable('default value');
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
@@ -508,10 +521,20 @@
 	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
+		<!-- trying to add a quick save button -->
+		<!-- added an alert function in its place for now -->
+		<!-- <button on:click={() => alert('hi')}>SAVE STATE</button> -->
+		<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button>
+		<button on:click={() => alert('hi')}>ALERT</button> -->
+		<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
+		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button>
+
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
 		<slot />
+		<!-- added radio group for example purposes -->
+		<!-- <RadioGroup {options} {parameterStore} /> -->
 	</GraphRenderer>
 	{#if backgroundExists}
 		<slot name="background" />
@@ -563,5 +586,9 @@
 	.svelvet-wrapper:focus {
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
+	}
+	/* testing */
+	button {
+		cursor: pointer;
 	}
 </style>
