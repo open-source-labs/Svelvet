@@ -11,7 +11,6 @@ import type { Graph } from '$lib/types';
 //     return store;
 // }
 
-
 // added interface for more strict check of a svelte store
 interface StoreLike {
 	subscribe: (callback: (value: any) => void) => () => void;
@@ -34,24 +33,22 @@ function traverse(obj: Record<string, any>) {
 	for (const key in obj) {
 		const value = obj[key];
 		// eslint-disable-next-line no-console
-        console.log(`Key: ${key}, Value:`, value);
+		console.log(`Key: ${key}, Value:`, value);
 
-        if (isStore(value)) {
-            let storeValue;
-            value.subscribe(($value: any) => {
-                storeValue = $value;
+		if (isStore(value)) {
+			let storeValue;
+			value.subscribe(($value: any) => {
+				storeValue = $value;
 				// eslint-disable-next-line no-console
-                console.log(`Store value for ${key}:`, storeValue);
-            })();
-            output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
-
-
-        } else if (typeof value === 'object') {
-            output[key] = traverse(value);
-        } else {
-            output[key] = value;
-        }
-    }
+				console.log(`Store value for ${key}:`, storeValue);
+			})();
+			output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
+		} else if (typeof value === 'object') {
+			output[key] = traverse(value);
+		} else {
+			output[key] = value;
+		}
+	}
 	// eslint-disable-next-line no-console
 	console.log('output:', output);
 	return output;
@@ -71,8 +68,6 @@ function domRectReplacer(_key: string, value: any) {
 	return value;
 }
 
-
-
 // Function to get JSON stringified data from nested Svelte store
 export function getJSONState(store: any) {
 	// eslint-disable-next-line no-console
@@ -88,7 +83,6 @@ export function getJSONState(store: any) {
 	console.log('raw:', raw);
 	return raw;
 }
-
 
 // const mockStore = createMockStore();
 // getJSONState(mockStore);

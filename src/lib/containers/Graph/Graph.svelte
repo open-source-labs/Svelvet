@@ -379,6 +379,17 @@
 			}, 100);
 		} else if (key === 'Tab' && e.altKey) {
 			selectNextNode();
+		} else if (key === 'l') {
+			theme = theme === 'light' ? 'dark' : 'light';
+		} else if (key === 'd') {
+			drawer = !drawer;
+		} else if (key === 'm') {
+			minimap = !minimap;
+		} else if (key === 'c') {
+			controls = !controls;
+		} else if (key === 'e') {
+			const node = Array.from($selected)[0];
+			graph.editing.set(node);
 		} else {
 			return; // Unhandled action: used default handler
 		}
@@ -386,7 +397,7 @@
 		e.preventDefault();
 	}
 
-	//This function handles selecting nodes while using tab
+	//This function handles selecting nodes
 	function selectNextNode() {
 		const nodes = graph.nodes.getAll();
 
@@ -508,6 +519,7 @@
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
+	tabindex={0}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	style:cursor={pannable ? 'move' : 'default'}
@@ -518,7 +530,6 @@
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	bind:this={$graphDOMElement}
-	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
 		<!-- trying to add a quick save button -->
