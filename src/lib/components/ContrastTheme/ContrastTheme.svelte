@@ -3,8 +3,8 @@
 	import { onMount } from 'svelte';
 
 
-    export let contrastThemes = ['light', 'contrast1', 'contrast2']
-	export let corner = 'NW';
+    export let contrastThemes = ['light', 'dark', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale']
+	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
 
@@ -26,10 +26,7 @@
 	class="contrast-wrapper"
 	style:--prop-theme-toggle-color={bgColor}
 	style:--prop-theme-toggle-text-color={iconColor}
-	class:SW={corner === 'SW'}
 	class:NE={corner === 'NE'}
-	class:SE={corner === 'SE'}
-	class:NW={corner === 'NW'}
 >
 
     <select on:change={changeTheme}>
@@ -40,24 +37,9 @@
 </div>
 
 <style>
-	.NW {
-		left: 10px;
-		top: 10px;
-	}
-
 	.NE {
-		right: 10px;
+		right: 40px;
 		top: 10px;
-	}
-
-	.SE {
-		right: 10px;
-		bottom: 10px;
-	}
-
-	.SW {
-		left: 10px;
-		bottom: 10px;
 	}
 	.contrast-wrapper {
 		position: absolute;
@@ -92,5 +74,8 @@
 		justify-content: center;
 		padding: 0.2rem 0;
 		color: inherit;
+        height: 1.6rem;
     }
+
+
 </style>
