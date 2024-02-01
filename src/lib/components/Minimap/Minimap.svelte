@@ -91,6 +91,7 @@
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 >
+	
 	<div
 		class="node-wrapper"
 		style:width="{boundsWidth}px"

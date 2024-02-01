@@ -48,6 +48,7 @@
 	export let theme = 'light';
 	export let title: string;
 	export let drawer = false;
+	export let contrast = false;
 
 	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
@@ -91,6 +92,7 @@
 	let minimapComponent: ComponentType | null = null;
 	let controlsComponent: ComponentType | null = null;
 	let drawerComponent: ComponentType | null = null;
+	let contrastComponent: ComponentType | null = null;
 
 	// Subscriptions
 	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
@@ -110,6 +112,8 @@
 	$: if (controls && !controlsComponent) loadControls();
 	// load the drawer
 	$: if (drawer && !drawerComponent) loadDrawer();
+	//load the contrast options
+	$: if (contrast && !contrastComponent) loadContrast();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -180,6 +184,10 @@
 
 	async function loadDrawer() {
 		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+	}
+
+	async function loadContrast() {
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte')).default;
 	}
 
 	function updateGraphDimensions() {
@@ -514,6 +522,7 @@
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+
 <section
 	role="presentation"
 	id={graph.id}
@@ -547,6 +556,7 @@
 		<!-- added radio group for example purposes -->
 		<!-- <RadioGroup {options} {parameterStore} /> -->
 	</GraphRenderer>
+	
 	{#if backgroundExists}
 		<slot name="background" />
 	{:else}
@@ -564,10 +574,14 @@
 	{#if drawer}
 		<svelte:component this={drawerComponent} />
 	{/if}
+	{#if contrast}
+		<svelte:component this={contrastComponent} />
+	{/if}
 	<slot name="minimap" />
 	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
+	<slot name="contrast" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}

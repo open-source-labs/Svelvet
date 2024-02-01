@@ -4,6 +4,7 @@
 
 	export let main = 'light';
 	export let alt = 'dark';
+	// export let highContrast = 'highContrast';
 	/**
 	 * @deprecated
 	 * @default 'light_mode'
@@ -26,10 +27,18 @@
 
 	function toggleTheme() {
 		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
-		if (!currentTheme) return;
-		const newTheme = currentTheme === main ? alt : main;
+		let newTheme;
+		if (!currentTheme || currentTheme === main) {
+			newTheme = alt;
+		} 
+		// else if (currentTheme === alt) {
+		// 	newTheme = highContrast;
+		// } 
+		else {
+			newTheme = main;
+		}
 		current = newTheme;
-		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
+		document.documentElement.setAttribute('svelvet-theme', newTheme);
 	}
 
 	onMount(() => {
@@ -46,6 +55,7 @@
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 >
+
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
 		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
 	</button>

@@ -45,6 +45,7 @@
 	export let controls = false;
 	export let toggle = false;
 	export let drawer = false;
+	export let contrast = false;
 	/**
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
@@ -210,6 +211,7 @@
 		{trackpadPan}
 		{modifier}
 		{title}
+		{contrast}
 		on:edgeDrop
 	>
 		{#if mermaid.length}
@@ -221,6 +223,7 @@
 		<slot name="background" slot="background" />
 		<slot name="toggle" slot="toggle" />
 		<slot name="drawer" slot="drawer" />
+		<slot name="contrast" slot="contrast" />
 	</Graph>
 {:else}
 	<div
@@ -432,5 +435,15 @@
 		--default-drawer-reset-button-text-color: hsl(0, 0%, 20%);
 		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
 		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
+	}
+	:root[svelvet-theme='contrast1'] {
+		--default-background-color: black;
+		--default-text-color: white;
+		--default-primary-color: blue;
+	}
+	:root[svelvet-theme='contrast2'] {
+		--default-background-color: black;
+		--default-text-color: white;
+		--default-primary-color: orange;
 	}
 </style>

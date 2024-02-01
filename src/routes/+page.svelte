@@ -21,6 +21,7 @@
 	import { getContext } from 'svelte';
 	// added graphStore import
 	import { graphStore } from '$lib/stores';
+	import ContrastTheme from '$lib/components/ContrastTheme/ContrastTheme.svelte';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -101,6 +102,7 @@
 		{/each}
 
 		<ThemeToggle slot="toggle" />
+		<ContrastTheme slot="contrast"/>
 	</Svelvet>
 </body>
 
