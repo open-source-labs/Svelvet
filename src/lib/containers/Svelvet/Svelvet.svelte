@@ -126,6 +126,7 @@
 	// occurs after Svelvet renders
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
+		console.log('stateObject during onMount:', stateObject);
 		if (stateObject) {
 			graph = reloadStore(stateObject);
 			graphStore.add(graph, graph.id);
@@ -187,13 +188,11 @@
 	}
 	// console.log(graph after it changes)
 	$: if (graph) {
-    console.log('Graph updated:', graph);
+		console.log('Graph updated:', graph);
 	}
-
 </script>
 
 {#if graph}
-	
 	<Graph
 		{width}
 		{height}

@@ -1,16 +1,8 @@
 import type { Graph } from '$lib/types';
+import { get } from 'svelte/store';
+import type { WritableNode } from '$lib/types';
+import type { Node } from '$lib/types';
 // import { writable } from 'svelte/store';
-
-// function createMockStore() {
-//     const store = writable({
-//         someProperty: "test value",
-//         anotherProperty: 123,
-//         nestedStore: writable({ nestedKey: "nested value" }),
-//         // Add more properties as needed to mimic the structure of your Graph store
-//     });
-//     return store;
-// }
-
 
 // added interface for more strict check of a svelte store
 interface StoreLike {
@@ -23,6 +15,7 @@ function isStore(value: StoreLike): boolean {
 	return value && typeof value.subscribe === 'function';
 }
 
+// *******old traverse function*******
 // Function to traverse a nested object and extract the data
 // looks like this function should traverse a svelte store
 function traverse(obj: Record<string, any>) {
@@ -34,28 +27,92 @@ function traverse(obj: Record<string, any>) {
 	for (const key in obj) {
 		const value = obj[key];
 		// eslint-disable-next-line no-console
-        console.log(`Key: ${key}, Value:`, value);
+		console.log(`Key: ${key}, Value:`, value);
 
-        if (isStore(value)) {
-            let storeValue;
-            value.subscribe(($value: any) => {
-                storeValue = $value;
+		if (isStore(value)) {
+			let storeValue;
+			value.subscribe(($value: any) => {
+				storeValue = $value;
 				// eslint-disable-next-line no-console
-                console.log(`Store value for ${key}:`, storeValue);
-            })();
-            output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
-
-
-        } else if (typeof value === 'object') {
-            output[key] = traverse(value);
-        } else {
-            output[key] = value;
-        }
-    }
+				console.log(`Store value for ${key}:`, storeValue);
+			})();
+			output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
+		} else if (typeof value === 'object') {
+			output[key] = traverse(value);
+		} else {
+			output[key] = value;
+		}
+	}
 	// eslint-disable-next-line no-console
 	console.log('output:', output);
 	return output;
 }
+
+// function extractNodeState(node: Node): Record<string, any> {
+//     // Initialize an object to hold the extracted node state
+//     const nodeState: Record<string, any> = {};
+
+//     // Iterate over the keys of the Node interface
+//     Object.keys(node).forEach(key => {
+//         const value = node[key];
+
+//         // Check if the value is a Svelte store
+//         if (value && typeof value.subscribe === 'function') {
+//             // Extract the current value of the store
+//             nodeState[key] = get(value);
+//         } else {
+//             // Directly copy non-store values
+//             nodeState[key] = value;
+//         }
+//     });
+
+//     // Special handling for anchors or other complex properties
+//     // For example, if anchors need to be serialized differently
+//     // nodeState.anchors = serializeAnchors(node.anchors);
+
+//     return nodeState;
+// }
+
+// // Example usage for a single node
+// // const serializedNode = extractNodeState(node);
+
+// // For extracting states of all nodes in a collection
+// function extractAllNodeStates(nodes: Record<string, WritableNode>): Record<string, any> {
+//     const allNodesState: Record<string, any> = {};
+
+//     Object.entries(nodes).forEach(([nodeId, nodeWritable]) => {
+//         const node = get(nodeWritable); // Assuming nodes are also managed as Svelte Writable
+//         allNodesState[nodeId] = extractNodeState(node);
+//     });
+
+//     return allNodesState;
+// }
+
+// Adjusted traverse function to handle node serialization
+// function traverse(obj: Record<string, any>) {
+//     const output: Record<string, any> = {};
+
+//     for (const key in obj) {
+//         const value = obj[key];
+
+//         if (isStore(value)) {
+//             let storeValue;
+//             value.subscribe(($value: any) => {
+//                 storeValue = $value;
+//             })();
+//             output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
+//         } else if (key === 'nodes') { // Specific handling for nodes
+//             output[key] = extractAllNodeStates(value);
+//         } else if (typeof value === 'object') {
+//             output[key] = traverse(value);
+//         } else {
+//             output[key] = value;
+//         }
+//     }
+//     return output;
+// }
+
+// Existing getJSONState function...
 
 // Custom replacer function for JSON.stringify()
 // change key to be intentionally not used
@@ -70,8 +127,6 @@ function domRectReplacer(_key: string, value: any) {
 	}
 	return value;
 }
-
-
 
 // Function to get JSON stringified data from nested Svelte store
 export function getJSONState(store: any) {
@@ -88,7 +143,6 @@ export function getJSONState(store: any) {
 	console.log('raw:', raw);
 	return raw;
 }
-
 
 // const mockStore = createMockStore();
 // getJSONState(mockStore);
