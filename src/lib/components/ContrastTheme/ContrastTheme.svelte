@@ -1,32 +1,41 @@
 <script lang="ts">
-	import type { CSSColorString } from '$lib/types';
-	import { onMount } from 'svelte';
+    import type { CSSColorString } from '$lib/types';
+    import { onMount } from 'svelte';
 
+    export let contrastThemes = ['High-Contrast', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink', 'Custom'];
+    export let corner = 'NE';
+    export let bgColor: CSSColorString | null = null;
+    export let iconColor: CSSColorString | null = null;
 
-    export let contrastThemes = ['High-Contrast', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink']
-	export let corner = 'NE';
-	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
+    let current = contrastThemes[0];
+    let isCustomTheme = false;
 
-	let current = contrastThemes[0];
+    function changeTheme(event: { target: { value: any; }; }) {
+        const selectedTheme = event.target.value;
 
-	function changeTheme(event: { target: { value: any; }; }) {
-		const newTheme = event.target.value;
-		current = newTheme;
-		document.documentElement.setAttribute('svelvet-theme', newTheme);
-	}
+        if (selectedTheme === 'Custom') {
+            isCustomTheme = true;
+        } else {
+            isCustomTheme = false;
+            current = selectedTheme;
+            document.documentElement.setAttribute('svelvet-theme', selectedTheme);
+        }
+    }
 
-	onMount(() => {
-		document.documentElement.setAttribute('svelvet-theme', contrastThemes[0]);
-	});
+    function updateCustomTheme() {
+        document.documentElement.style.setProperty('--prop-theme-toggle-color', bgColor);
+        document.documentElement.style.setProperty('--prop-theme-toggle-text-color', iconColor);
+    }
+
+    onMount(() => {
+        document.documentElement.setAttribute('svelvet-theme', contrastThemes[0]);
+    });
 </script>
 
-
 <div
-	class="contrast-wrapper"
-	style:--prop-theme-toggle-color={bgColor}
-	style:--prop-theme-toggle-text-color={iconColor}
-	class:NE={corner === 'NE'}
+    class="contrast-wrapper"
+    class:NE={corner === 'NE'}
+    on:input={updateCustomTheme}
 >
 
     <label for="themeSelector" class="visually-hidden" aria-hidden="true">Select Theme:</label>
@@ -35,6 +44,17 @@
             <option value={contrast} aria-selected={current === contrast}>{contrast}</option>
         {/each}
     </select>
+
+    {#if isCustomTheme}
+        <div>
+            <label for="customBgColor">Custom Background Color:</label>
+            <input type="color" id="customBgColor" bind:value={bgColor} />
+        </div>
+        <div>
+            <label for="customIconColor">Custom Icon Color:</label>
+            <input type="color" id="customIconColor" bind:value={iconColor} />
+        </div>
+    {/if}
 </div>
 
 <style>

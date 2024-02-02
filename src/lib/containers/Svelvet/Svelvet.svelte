@@ -513,7 +513,7 @@
 		--default-label-color: #000000;
 		--default-label-text-color: #FFFF00;
 
-		--plugin-border: #FFFF00;
+		--plugin-border: #000000;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
@@ -569,7 +569,7 @@
 		--default-label-color: #FFFF00;
 		--default-label-text-color: #000000;
 
-		--plugin-border: #000000;
+		--plugin-border: #FFFF00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
@@ -625,7 +625,7 @@
 		--default-label-color: #00FF00;
 		--default-label-text-color: #000000;
 
-		--plugin-border: #000000;
+		--plugin-border: #00FF00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
@@ -681,7 +681,7 @@
 		--default-label-color: #FFFF00;
 		--default-label-text-color: #0000FF;
 
-		--plugin-border: #0000FF;
+		--plugin-border: #FFFF00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
@@ -737,7 +737,7 @@
 		--default-label-color: #0000FF;
 		--default-label-text-color: #FFFF00;
 
-		--plugin-border: #FFFF00;
+		--plugin-border: #0000FF;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
