@@ -3,14 +3,14 @@
 	import { onMount } from 'svelte';
 
 
-    export let contrastThemes = ['light', 'dark', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale']
+    export let contrastThemes = ['High-Contrast', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink']
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
 
 	let current = contrastThemes[0];
 
-	function changeTheme(event) {
+	function changeTheme(event: { target: { value: any; }; }) {
 		const newTheme = event.target.value;
 		current = newTheme;
 		document.documentElement.setAttribute('svelvet-theme', newTheme);
@@ -29,9 +29,10 @@
 	class:NE={corner === 'NE'}
 >
 
-    <select on:change={changeTheme}>
+    <label for="themeSelector" class="visually-hidden" aria-hidden="true">Select Theme:</label>
+    <select id="themeSelector" on:change={changeTheme} aria-live="polite" aria-label="Select Theme">
         {#each contrastThemes as contrast (contrast)}
-            <option value={contrast}>{contrast}</option>
+            <option value={contrast} aria-selected={current === contrast}>{contrast}</option>
         {/each}
     </select>
 </div>
@@ -77,5 +78,15 @@
         height: 1.6rem;
     }
 
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        border: 0;
+    }
 
 </style>
