@@ -4,7 +4,7 @@ import type { WritableNode } from '$lib/types';
 import type { Node } from '$lib/types';
 // import { writable } from 'svelte/store';
 
-// added interface for more strict check of a svelte store
+// interface for more strict check of a svelte store
 interface StoreLike {
 	subscribe: (callback: (value: any) => void) => () => void;
 }
@@ -66,17 +66,13 @@ function traverse(obj: Record<string, any>) {
 //         }
 //     });
 
-//     // Special handling for anchors or other complex properties
-//     // For example, if anchors need to be serialized differently
-//     // nodeState.anchors = serializeAnchors(node.anchors);
-
 //     return nodeState;
 // }
 
-// // Example usage for a single node
-// // const serializedNode = extractNodeState(node);
+// Example usage for a single node
+// const serializedNode = extractNodeState(node);
 
-// // For extracting states of all nodes in a collection
+// For extracting states of all nodes in a collection
 // function extractAllNodeStates(nodes: Record<string, WritableNode>): Record<string, any> {
 //     const allNodesState: Record<string, any> = {};
 
@@ -85,7 +81,7 @@ function traverse(obj: Record<string, any>) {
 //         allNodesState[nodeId] = extractNodeState(node);
 //     });
 
-//     return allNodesState;
+// return allNodesState;
 // }
 
 // Adjusted traverse function to handle node serialization
