@@ -1,11 +1,18 @@
 <script lang="ts">
-	import { Svelvet, Node, Anchor, Resizer } from '$lib';
+	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import TextField from '$lib/components/data/TextField/TextField.svelte';
 	// Controls is not used on the canvas itself, but is part of the HUD of the dev homepage
 	// maybe not needed here
 	import Controls from '$lib/components/Controls/Controls.svelte';
+	import Drawer from '$lib/components/Drawer/Drawer.svelte';
+	import CircleColor from '../example-components/sandbox/CircleColor.svelte';
+	import DashCount from '../example-components/sandbox/DashCount.svelte';
+	import Noise from '../example-components/sandbox/Noise.svelte';
+	import Scale from '../example-components/sandbox/Scale.svelte';
+	import Thickness from '../example-components/sandbox/Thickness.svelte';
+	import Output from '../example-components/sandbox/Output.svelte';
 	// added getJSONState function
 	import { getJSONState } from '$lib/utils/savers/saveStore';
 	// added Graph interface import
@@ -39,6 +46,20 @@
 <body>
 	<button on:click={() => alert('hi')}>ALERTe</button>
 	<Svelvet minimap title="test" controls>
+		<Group
+			position={{ x: -150, y: -100 }}
+			width={600}
+			height={700}
+			color="goldenrod"
+			groupName="parameters"
+		>
+			<Thickness />
+			<Noise />
+			<Scale />
+			<CircleColor />
+			<DashCount />
+		</Group>
+		<Output />
 		<!-- buttons on lower level node -->
 		<Connector />
 		<button on:click={() => alert('hi')}>ALERTe</button>
@@ -78,6 +99,7 @@
 		{#each { length: totalNodes } as node}
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
+
 		<ThemeToggle slot="toggle" />
 	</Svelvet>
 </body>
