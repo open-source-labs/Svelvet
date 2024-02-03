@@ -20,8 +20,6 @@
 	import { getJSONState } from '$lib/utils/savers/saveStore';
 
 	let animationFrameId: number;
-	// new additions
-	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
 </script>
 
 <script lang="ts">
@@ -516,9 +514,9 @@
 			activeIntervals[key] = interval;
 		}
 	}
-	// new definitions for Radio Group test
-	let options = ['option 1', 'option 2', 'option 3'];
-	let parameterStore = writable('default value');
+	// // new definitions for Radio Group test
+	// let options = ['option 1', 'option 2', 'option 3'];
+	// let parameterStore = writable('default value');
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
@@ -529,7 +527,6 @@
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
-	tabindex={0}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	style:cursor={pannable ? 'move' : 'default'}
@@ -540,6 +537,7 @@
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	bind:this={$graphDOMElement}
+	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
 		<!-- trying to add a quick save button -->
@@ -547,8 +545,7 @@
 		<!-- <button on:click={() => alert('hi')}>SAVE STATE</button> -->
 		<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button>
 		<button on:click={() => alert('hi')}>ALERT</button> -->
-		<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
-		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button>
+		<!-- <button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 
 		{#if $editing}
 			<Editor editing={$editing} />
@@ -612,9 +609,5 @@
 	.svelvet-wrapper:focus {
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
-	}
-	/* testing */
-	button {
-		cursor: pointer;
 	}
 </style>

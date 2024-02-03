@@ -63,7 +63,6 @@
 		<Output />
 		<!-- buttons on lower level node -->
 		<Connector />
-		<button on:click={() => alert('hi')}>ALERTe</button>
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />
 			{#each { length: widthCount } as item}
