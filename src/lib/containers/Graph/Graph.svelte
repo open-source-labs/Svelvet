@@ -187,7 +187,8 @@
 	}
 
 	async function loadContrast() {
-		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte')).default;
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
+			.default;
 	}
 
 	function updateGraphDimensions() {
@@ -556,7 +557,7 @@
 		<!-- added radio group for example purposes -->
 		<!-- <RadioGroup {options} {parameterStore} /> -->
 	</GraphRenderer>
-	
+
 	{#if backgroundExists}
 		<slot name="background" />
 	{:else}

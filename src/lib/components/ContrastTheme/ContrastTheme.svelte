@@ -1,60 +1,66 @@
 <script lang="ts">
-    import type { CSSColorString } from '$lib/types';
-    import { onMount } from 'svelte';
+	import type { CSSColorString } from '$lib/types';
+	import { onMount } from 'svelte';
 
-    export let contrastThemes = ['High-Contrast', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Black/Green', 'Blue/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink', 'Custom'];
-    export let corner = 'NE';
-    export let bgColor: CSSColorString | null = null;
-    export let iconColor: CSSColorString | null = null;
+	export let contrastThemes = [
+		'High-Contrast',
+		'Black/White',
+		'Yellow/Black',
+		'Black/Yellow',
+		'Black/Green',
+		'Blue/Yellow',
+		'Yellow/Blue',
+		'Grayscale',
+		'Black/Pink',
+		'Custom'
+	];
+	export let corner = 'NE';
+	export let bgColor: CSSColorString | null = null;
+	export let iconColor: CSSColorString | null = null;
 
-    let current = contrastThemes[0];
-    let isCustomTheme = false;
+	let current = contrastThemes[0];
+	let isCustomTheme = false;
 
-    function changeTheme(event: { target: { value: any; }; }) {
-        const selectedTheme = event.target.value;
+	function changeTheme(event: { target: { value: any } }) {
+		const selectedTheme = event.target.value;
 
-        if (selectedTheme === 'Custom') {
-            isCustomTheme = true;
-        } else {
-            isCustomTheme = false;
-            current = selectedTheme;
-            document.documentElement.setAttribute('svelvet-theme', selectedTheme);
-        }
-    }
+		if (selectedTheme === 'Custom') {
+			isCustomTheme = true;
+		} else {
+			isCustomTheme = false;
+			current = selectedTheme;
+			document.documentElement.setAttribute('svelvet-theme', selectedTheme);
+		}
+	}
 
-    function updateCustomTheme() {
-        document.documentElement.style.setProperty('--prop-theme-toggle-color', bgColor);
-        document.documentElement.style.setProperty('--prop-theme-toggle-text-color', iconColor);
-    }
+	function updateCustomTheme() {
+		document.documentElement.style.setProperty('--prop-theme-toggle-color', bgColor);
+		document.documentElement.style.setProperty('--prop-theme-toggle-text-color', iconColor);
+	}
 
-    onMount(() => {
-        document.documentElement.setAttribute('svelvet-theme', contrastThemes[0]);
-    });
+	onMount(() => {
+		document.documentElement.setAttribute('svelvet-theme', contrastThemes[0]);
+	});
 </script>
 
-<div
-    class="contrast-wrapper"
-    class:NE={corner === 'NE'}
-    on:input={updateCustomTheme}
->
+<div class="contrast-wrapper" class:NE={corner === 'NE'} on:input={updateCustomTheme}>
+	<label for="themeSelector" class="visually-hidden" aria-hidden="true">Select Theme:</label>
+	<select id="themeSelector" on:change={changeTheme} aria-live="polite" aria-label="Select Theme">
+		{#each contrastThemes as contrast (contrast)}
+			<option value={contrast} aria-selected={current === contrast}>{contrast}</option>
+		{/each}
+	</select>
 
-    <label for="themeSelector" class="visually-hidden" aria-hidden="true">Select Theme:</label>
-    <select id="themeSelector" on:change={changeTheme} aria-live="polite" aria-label="Select Theme">
-        {#each contrastThemes as contrast (contrast)}
-            <option value={contrast} aria-selected={current === contrast}>{contrast}</option>
-        {/each}
-    </select>
-
-    {#if isCustomTheme}
-        <div>
-            <label for="customBgColor">Custom Background Color:</label>
-            <input type="color" id="customBgColor" bind:value={bgColor} />
-        </div>
-        <div>
-            <label for="customIconColor">Custom Icon Color:</label>
-            <input type="color" id="customIconColor" bind:value={iconColor} />
-        </div>
-    {/if}
+	{#if isCustomTheme}
+		<div>
+			<label for="customBgColor">Custom Background Color:</label>
+			<input type="color" id="customBgColor" bind:value={bgColor} />
+		</div>
+		<div>
+			<label for="customIconColor">Custom Icon Color:</label>
+			<input type="color" id="customIconColor" bind:value={iconColor} />
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -85,7 +91,7 @@
 		);
 	}
 
-    select {
+	select {
 		margin: 0;
 		padding: 0;
 		border: none;
@@ -95,18 +101,17 @@
 		justify-content: center;
 		padding: 0.2rem 0;
 		color: inherit;
-        height: 1.6rem;
-    }
+		height: 1.6rem;
+	}
 
-    .visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0,0,0,0);
-        border: 0;
-    }
-
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		border: 0;
+	}
 </style>

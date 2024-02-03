@@ -30,10 +30,10 @@
 		let newTheme;
 		if (!currentTheme || currentTheme === main) {
 			newTheme = alt;
-		} 
+		}
 		// else if (currentTheme === alt) {
 		// 	newTheme = highContrast;
-		// } 
+		// }
 		else {
 			newTheme = main;
 		}
@@ -55,7 +55,6 @@
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 >
-
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
 		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
 	</button>

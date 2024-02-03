@@ -437,352 +437,352 @@
 		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
 	}
 	:root[svelvet-theme='Black/White'] {
-		--default-node-color: #FFFFFF;
-		--default-node-border-color: #FFFFFF;
+		--default-node-color: #ffffff;
+		--default-node-border-color: #ffffff;
 		--default-node-selection-color: #000000;
 		--default-text-color: #000000;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
 		--default-background-color: #000000;
-		--default-dot-color: #FFFFFF;
+		--default-dot-color: #ffffff;
 
 		--default-accent-color: #000000;
-		--default-primary-color: #FFFFFF;
+		--default-primary-color: #ffffff;
 
-		--default-selection-box-color: #FFFFFF;
+		--default-selection-box-color: #ffffff;
 
-		--default-edge-color: #FFFFFF;
+		--default-edge-color: #ffffff;
 		--default-target-edge-color: #000000;
 		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #FFFFFF;
+		--default-label-color: #ffffff;
 		--default-label-text-color: #000000;
 
-		--plugin-border: #FFFFFF;
+		--plugin-border: #ffffff;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #FFFFFF;
+		--default-anchor-color: #ffffff;
 		--default-anchor-border-color: #000000;
 
-		--default-anchor-connected: #FFFFFF;
+		--default-anchor-connected: #ffffff;
 		--default-anchor-connected-border: #000000;
 
-		--default-anchor-connecting: #FFFFFF;
+		--default-anchor-connecting: #ffffff;
 		--default-anchor-connecting-border: #000000;
 
-		--default-anchor-hovering: #FFFFFF;
+		--default-anchor-hovering: #ffffff;
 		--default-anchor-hovering-border: #000000;
 
 		--default-minimap-background-color: #000000;
-		--default-minimap-node-color: #FFFFFF;
+		--default-minimap-node-color: #ffffff;
 
 		--default-controls-background-color: #000000;
-		--default-controls-text-color: #FFFFFF;
+		--default-controls-text-color: #ffffff;
 
-		--default-theme-toggle-text-color: #FFFFFF;
+		--default-theme-toggle-text-color: #ffffff;
 		--default-theme-toggle-color: #000000;
 
-		--default-drawer-button-color: #FFFFFF;
+		--default-drawer-button-color: #ffffff;
 		--default-drawer-button-text-color: #000000;
 
-		--default-drawer-reset-button-color: #FFFFFF;
+		--default-drawer-reset-button-color: #ffffff;
 		--default-drawer-reset-button-text-color: #000000;
-		--default-drawer-reset-button-hover-color: #E0E0E0;
+		--default-drawer-reset-button-hover-color: #e0e0e0;
 		--default-drawer-reset-button-hover-text-color: #000000;
 	}
 
 	:root[svelvet-theme='Yellow/Black'] {
-		--default-node-color: #FFFF00;
+		--default-node-color: #ffff00;
 		--default-node-border-color: #000000;
 		--default-node-selection-color: #000000;
 		--default-text-color: #000000;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
-		--default-background-color: #FFFF00;
+		--default-background-color: #ffff00;
 		--default-dot-color: #000000;
 
 		--default-accent-color: #000000;
-		--default-primary-color: #FFFF00;
+		--default-primary-color: #ffff00;
 
 		--default-selection-box-color: #000000;
 
 		--default-edge-color: #000000;
-		--default-target-edge-color: #FFFF00;
+		--default-target-edge-color: #ffff00;
 		--default-edge-shadow: var(--shadow-elevation-medium);
 		--default-label-color: #000000;
-		--default-label-text-color: #FFFF00;
+		--default-label-text-color: #ffff00;
 
 		--plugin-border: #000000;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #FFFF00;
+		--default-anchor-color: #ffff00;
 		--default-anchor-border-color: #000000;
 
-		--default-anchor-connected: #FFFF00;
+		--default-anchor-connected: #ffff00;
 		--default-anchor-connected-border: #000000;
 
-		--default-anchor-connecting: #FFFF00;
+		--default-anchor-connecting: #ffff00;
 		--default-anchor-connecting-border: #000000;
 
-		--default-anchor-hovering: #FFFF00;
+		--default-anchor-hovering: #ffff00;
 		--default-anchor-hovering-border: #000000;
 
-		--default-minimap-background-color: #FFFF00;
+		--default-minimap-background-color: #ffff00;
 		--default-minimap-node-color: #000000;
 
-		--default-controls-background-color: #FFFF00;
+		--default-controls-background-color: #ffff00;
 		--default-controls-text-color: #000000;
 
 		--default-theme-toggle-text-color: #000000;
-		--default-theme-toggle-color: #FFFF00;
+		--default-theme-toggle-color: #ffff00;
 
-		--default-drawer-button-color: #FFFF00;
+		--default-drawer-button-color: #ffff00;
 		--default-drawer-button-text-color: #000000;
 
-		--default-drawer-reset-button-color: #FFFF00;
+		--default-drawer-reset-button-color: #ffff00;
 		--default-drawer-reset-button-text-color: #000000;
 		--default-drawer-reset-button-hover-color: #000000;
-		--default-drawer-reset-button-hover-text-color: #FFFF00;
+		--default-drawer-reset-button-hover-text-color: #ffff00;
 	}
 
 	:root[svelvet-theme='Black/Yellow'] {
 		--default-node-color: #000000;
-		--default-node-border-color: #FFFF00;
-		--default-node-selection-color: #FFFF00;
-		--default-text-color: #FFFF00;
+		--default-node-border-color: #ffff00;
+		--default-node-selection-color: #ffff00;
+		--default-text-color: #ffff00;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
 		--default-background-color: #000000;
-		--default-dot-color: #FFFF00;
+		--default-dot-color: #ffff00;
 
-		--default-accent-color: #FFFF00;
+		--default-accent-color: #ffff00;
 		--default-primary-color: #000000;
 
-		--default-selection-box-color: #FFFF00;
+		--default-selection-box-color: #ffff00;
 
-		--default-edge-color: #FFFF00;
+		--default-edge-color: #ffff00;
 		--default-target-edge-color: #000000;
 		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #FFFF00;
+		--default-label-color: #ffff00;
 		--default-label-text-color: #000000;
 
-		--plugin-border: #FFFF00;
+		--plugin-border: #ffff00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #FFFF00;
+		--default-anchor-color: #ffff00;
 		--default-anchor-border-color: #000000;
 
-		--default-anchor-connected: #FFFF00;
+		--default-anchor-connected: #ffff00;
 		--default-anchor-connected-border: #000000;
 
-		--default-anchor-connecting: #FFFF00;
+		--default-anchor-connecting: #ffff00;
 		--default-anchor-connecting-border: #000000;
 
-		--default-anchor-hovering: #FFFF00;
+		--default-anchor-hovering: #ffff00;
 		--default-anchor-hovering-border: #000000;
 
 		--default-minimap-background-color: #000000;
-		--default-minimap-node-color: #FFFF00;
+		--default-minimap-node-color: #ffff00;
 
 		--default-controls-background-color: #000000;
-		--default-controls-text-color: #FFFF00;
+		--default-controls-text-color: #ffff00;
 
-		--default-theme-toggle-text-color: #FFFF00;
+		--default-theme-toggle-text-color: #ffff00;
 		--default-theme-toggle-color: #000000;
 
 		--default-drawer-button-color: #000000;
-		--default-drawer-button-text-color: #FFFF00;
+		--default-drawer-button-text-color: #ffff00;
 
 		--default-drawer-reset-button-color: #000000;
-		--default-drawer-reset-button-text-color: #FFFF00;
-		--default-drawer-reset-button-hover-color: #FFFF00;
+		--default-drawer-reset-button-text-color: #ffff00;
+		--default-drawer-reset-button-hover-color: #ffff00;
 		--default-drawer-reset-button-hover-text-color: #000000;
 	}
 
 	:root[svelvet-theme='Black/Green'] {
 		--default-node-color: #000000;
-		--default-node-border-color: #00FF00;
-		--default-node-selection-color: #00FF00;
-		--default-text-color: #00FF00;
+		--default-node-border-color: #00ff00;
+		--default-node-selection-color: #00ff00;
+		--default-text-color: #00ff00;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
 		--default-background-color: #000000;
-		--default-dot-color: #00FF00;
+		--default-dot-color: #00ff00;
 
-		--default-accent-color: #00FF00;
+		--default-accent-color: #00ff00;
 		--default-primary-color: #000000;
 
-		--default-selection-box-color: #00FF00;
+		--default-selection-box-color: #00ff00;
 
-		--default-edge-color: #00FF00;
+		--default-edge-color: #00ff00;
 		--default-target-edge-color: #000000;
 		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #00FF00;
+		--default-label-color: #00ff00;
 		--default-label-text-color: #000000;
 
-		--plugin-border: #00FF00;
+		--plugin-border: #00ff00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #00FF00;
+		--default-anchor-color: #00ff00;
 		--default-anchor-border-color: #000000;
 
-		--default-anchor-connected: #00FF00;
+		--default-anchor-connected: #00ff00;
 		--default-anchor-connected-border: #000000;
 
-		--default-anchor-connecting: #00FF00;
+		--default-anchor-connecting: #00ff00;
 		--default-anchor-connecting-border: #000000;
 
-		--default-anchor-hovering: #00FF00;
+		--default-anchor-hovering: #00ff00;
 		--default-anchor-hovering-border: #000000;
 
 		--default-minimap-background-color: #000000;
-		--default-minimap-node-color: #00FF00;
+		--default-minimap-node-color: #00ff00;
 
 		--default-controls-background-color: #000000;
-		--default-controls-text-color: #00FF00;
+		--default-controls-text-color: #00ff00;
 
-		--default-theme-toggle-text-color: #00FF00;
+		--default-theme-toggle-text-color: #00ff00;
 		--default-theme-toggle-color: #000000;
 
 		--default-drawer-button-color: #000000;
-		--default-drawer-button-text-color: #00FF00;
+		--default-drawer-button-text-color: #00ff00;
 
 		--default-drawer-reset-button-color: #000000;
-		--default-drawer-reset-button-text-color: #00FF00;
-		--default-drawer-reset-button-hover-color: #00FF00;
+		--default-drawer-reset-button-text-color: #00ff00;
+		--default-drawer-reset-button-hover-color: #00ff00;
 		--default-drawer-reset-button-hover-text-color: #000000;
 	}
 
 	:root[svelvet-theme='Blue/Yellow'] {
-		--default-node-color: #0000FF;
-		--default-node-border-color: #FFFF00;
-		--default-node-selection-color: #FFFF00;
-		--default-text-color: #FFFF00;
+		--default-node-color: #0000ff;
+		--default-node-border-color: #ffff00;
+		--default-node-selection-color: #ffff00;
+		--default-text-color: #ffff00;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
-		--default-background-color: #0000FF;
-		--default-dot-color: #FFFF00;
+		--default-background-color: #0000ff;
+		--default-dot-color: #ffff00;
 
-		--default-accent-color: #FFFF00;
-		--default-primary-color: #0000FF;
+		--default-accent-color: #ffff00;
+		--default-primary-color: #0000ff;
 
-		--default-selection-box-color: #FFFF00;
+		--default-selection-box-color: #ffff00;
 
-		--default-edge-color: #FFFF00;
-		--default-target-edge-color: #0000FF;
+		--default-edge-color: #ffff00;
+		--default-target-edge-color: #0000ff;
 		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #FFFF00;
-		--default-label-text-color: #0000FF;
+		--default-label-color: #ffff00;
+		--default-label-text-color: #0000ff;
 
-		--plugin-border: #FFFF00;
+		--plugin-border: #ffff00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #FFFF00;
-		--default-anchor-border-color: #0000FF;
+		--default-anchor-color: #ffff00;
+		--default-anchor-border-color: #0000ff;
 
-		--default-anchor-connected: #FFFF00;
-		--default-anchor-connected-border: #0000FF;
+		--default-anchor-connected: #ffff00;
+		--default-anchor-connected-border: #0000ff;
 
-		--default-anchor-connecting: #FFFF00;
-		--default-anchor-connecting-border: #0000FF;
+		--default-anchor-connecting: #ffff00;
+		--default-anchor-connecting-border: #0000ff;
 
-		--default-anchor-hovering: #FFFF00;
-		--default-anchor-hovering-border: #0000FF;
+		--default-anchor-hovering: #ffff00;
+		--default-anchor-hovering-border: #0000ff;
 
-		--default-minimap-background-color: #0000FF;
-		--default-minimap-node-color: #FFFF00;
+		--default-minimap-background-color: #0000ff;
+		--default-minimap-node-color: #ffff00;
 
-		--default-controls-background-color: #0000FF;
-		--default-controls-text-color: #FFFF00;
+		--default-controls-background-color: #0000ff;
+		--default-controls-text-color: #ffff00;
 
-		--default-theme-toggle-text-color: #FFFF00;
-		--default-theme-toggle-color: #0000FF;
+		--default-theme-toggle-text-color: #ffff00;
+		--default-theme-toggle-color: #0000ff;
 
-		--default-drawer-button-color: #0000FF;
-		--default-drawer-button-text-color: #FFFF00;
+		--default-drawer-button-color: #0000ff;
+		--default-drawer-button-text-color: #ffff00;
 
-		--default-drawer-reset-button-color: #0000FF;
-		--default-drawer-reset-button-text-color: #FFFF00;
-		--default-drawer-reset-button-hover-color: #FFFF00;
-		--default-drawer-reset-button-hover-text-color: #0000FF;
+		--default-drawer-reset-button-color: #0000ff;
+		--default-drawer-reset-button-text-color: #ffff00;
+		--default-drawer-reset-button-hover-color: #ffff00;
+		--default-drawer-reset-button-hover-text-color: #0000ff;
 	}
 
 	:root[svelvet-theme='Yellow/Blue'] {
-		--default-node-color: #FFFF00;
-		--default-node-border-color: #0000FF;
-		--default-node-selection-color: #0000FF;
-		--default-text-color: #0000FF;
+		--default-node-color: #ffff00;
+		--default-node-border-color: #0000ff;
+		--default-node-selection-color: #0000ff;
+		--default-text-color: #0000ff;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
-		--default-background-color: #FFFF00;
-		--default-dot-color: #0000FF;
+		--default-background-color: #ffff00;
+		--default-dot-color: #0000ff;
 
-		--default-accent-color: #0000FF;
-		--default-primary-color: #FFFF00;
+		--default-accent-color: #0000ff;
+		--default-primary-color: #ffff00;
 
-		--default-selection-box-color: #0000FF;
+		--default-selection-box-color: #0000ff;
 
-		--default-edge-color: #0000FF;
-		--default-target-edge-color: #FFFF00;
+		--default-edge-color: #0000ff;
+		--default-target-edge-color: #ffff00;
 		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #0000FF;
-		--default-label-text-color: #FFFF00;
+		--default-label-color: #0000ff;
+		--default-label-text-color: #ffff00;
 
-		--plugin-border: #0000FF;
+		--plugin-border: #0000ff;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #0000FF;
-		--default-anchor-border-color: #FFFF00;
+		--default-anchor-color: #0000ff;
+		--default-anchor-border-color: #ffff00;
 
-		--default-anchor-connected: #0000FF;
-		--default-anchor-connected-border: #FFFF00;
+		--default-anchor-connected: #0000ff;
+		--default-anchor-connected-border: #ffff00;
 
-		--default-anchor-connecting: #0000FF;
-		--default-anchor-connecting-border: #FFFF00;
+		--default-anchor-connecting: #0000ff;
+		--default-anchor-connecting-border: #ffff00;
 
-		--default-anchor-hovering: #0000FF;
-		--default-anchor-hovering-border: #FFFF00;
+		--default-anchor-hovering: #0000ff;
+		--default-anchor-hovering-border: #ffff00;
 
-		--default-minimap-background-color: #FFFF00;
-		--default-minimap-node-color: #0000FF;
+		--default-minimap-background-color: #ffff00;
+		--default-minimap-node-color: #0000ff;
 
-		--default-controls-background-color: #FFFF00;
-		--default-controls-text-color: #0000FF;
+		--default-controls-background-color: #ffff00;
+		--default-controls-text-color: #0000ff;
 
-		--default-theme-toggle-text-color: #0000FF;
-		--default-theme-toggle-color: #FFFF00;
+		--default-theme-toggle-text-color: #0000ff;
+		--default-theme-toggle-color: #ffff00;
 
-		--default-drawer-button-color: #FFFF00;
-		--default-drawer-button-text-color: #0000FF;
+		--default-drawer-button-color: #ffff00;
+		--default-drawer-button-text-color: #0000ff;
 
-		--default-drawer-reset-button-color: #FFFF00;
-		--default-drawer-reset-button-text-color: #0000FF;
-		--default-drawer-reset-button-hover-color: #0000FF;
-		--default-drawer-reset-button-hover-text-color: #FFFF00;
+		--default-drawer-reset-button-color: #ffff00;
+		--default-drawer-reset-button-text-color: #0000ff;
+		--default-drawer-reset-button-hover-color: #0000ff;
+		--default-drawer-reset-button-hover-text-color: #ffff00;
 	}
 
 	:root[svelvet-theme='Grayscale'] {
 		--default-node-color: #666666;
 		--default-node-border-color: #f2f2f2;
 		--default-node-selection-color: #333333;
-		--default-text-color: #f2f2f2; 
+		--default-text-color: #f2f2f2;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
-		--default-background-color: #333333; 
+		--default-background-color: #333333;
 		--default-dot-color: #999999;
 
-		--default-accent-color: #333333; 
+		--default-accent-color: #333333;
 		--default-primary-color: #999999;
 
 		--default-selection-box-color: #f2f2f2;
@@ -810,14 +810,14 @@
 		--default-anchor-hovering: #999999;
 		--default-anchor-hovering-border: #f2f2f2;
 
-		--default-minimap-background-color: #333333; 
+		--default-minimap-background-color: #333333;
 		--default-minimap-node-color: #666666;
 
-		--default-controls-background-color: #333333; 
+		--default-controls-background-color: #333333;
 		--default-controls-text-color: #f2f2f2;
 
 		--default-theme-toggle-text-color: #f2f2f2;
-		--default-theme-toggle-color: #333333; 
+		--default-theme-toggle-color: #333333;
 
 		--default-drawer-button-color: #999999;
 		--default-drawer-button-text-color: #f2f2f2;
@@ -825,65 +825,62 @@
 		--default-drawer-reset-button-color: #999999;
 		--default-drawer-reset-button-text-color: #f2f2f2;
 		--default-drawer-reset-button-hover-color: #f2f2f2;
-		--default-drawer-reset-button-hover-text-color: #333333; 
+		--default-drawer-reset-button-hover-text-color: #333333;
 	}
 
 	:root[svelvet-theme='Black/Pink'] {
 		--default-node-color: #000000;
-		--default-node-border-color: #FF69B4;
+		--default-node-border-color: #ff69b4;
 		--default-node-selection-color: #333333;
-		--default-text-color: #FF69B4;
+		--default-text-color: #ff69b4;
 		--default-node-shadow: var(--shadow-elevation-medium);
 
 		--default-background-color: #000000;
-		--default-dot-color: #FF69B4;
+		--default-dot-color: #ff69b4;
 
 		--default-accent-color: #333333;
-		--default-primary-color: #FF69B4;
+		--default-primary-color: #ff69b4;
 
-		--default-selection-box-color: #FF69B4;
+		--default-selection-box-color: #ff69b4;
 
-		--default-edge-color: #FF69B4;
+		--default-edge-color: #ff69b4;
 		--default-target-edge-color: #000000;
 		--default-edge-shadow: var(--shadow-elevation-medium);
 		--default-label-color: #000000;
-		--default-label-text-color: #FF69B4;
+		--default-label-text-color: #ff69b4;
 
-		--plugin-border: #FF69B4;
+		--plugin-border: #ff69b4;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
 		--default-theme-toggle-border: var(--plugin-border);
 
-		--default-anchor-color: #FF69B4;
+		--default-anchor-color: #ff69b4;
 		--default-anchor-border-color: #000000;
 
-		--default-anchor-connected: #FF69B4;
+		--default-anchor-connected: #ff69b4;
 		--default-anchor-connected-border: #000000;
 
-		--default-anchor-connecting: #FF69B4;
+		--default-anchor-connecting: #ff69b4;
 		--default-anchor-connecting-border: #333333;
 
-		--default-anchor-hovering: #FF69B4;
+		--default-anchor-hovering: #ff69b4;
 		--default-anchor-hovering-border: #333333;
 
 		--default-minimap-background-color: #000000;
 		--default-minimap-node-color: #333333;
 
 		--default-controls-background-color: #000000;
-		--default-controls-text-color: #FF69B4;
+		--default-controls-text-color: #ff69b4;
 
-		--default-theme-toggle-text-color: #FF69B4;
+		--default-theme-toggle-text-color: #ff69b4;
 		--default-theme-toggle-color: #000000;
 
-		--default-drawer-button-color: #FF69B4;
+		--default-drawer-button-color: #ff69b4;
 		--default-drawer-button-text-color: #000000;
 
-		--default-drawer-reset-button-color: #FF69B4;
+		--default-drawer-reset-button-color: #ff69b4;
 		--default-drawer-reset-button-text-color: #000000;
 		--default-drawer-reset-button-hover-color: #000000;
-		--default-drawer-reset-button-hover-text-color: #FF69B4;
+		--default-drawer-reset-button-hover-text-color: #ff69b4;
 	}
-
-
-
 </style>

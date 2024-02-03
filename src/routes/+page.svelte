@@ -102,7 +102,7 @@
 		{/each}
 
 		<ThemeToggle slot="toggle" />
-		<ContrastTheme slot="contrast"/>
+		<ContrastTheme slot="contrast" />
 	</Svelvet>
 </body>
 
