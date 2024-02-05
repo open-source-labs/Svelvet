@@ -133,30 +133,28 @@
 		justify-content: center;
 		align-items: center;
 		font-weight: bold;
-		font-size: 14px; 
+		font-size: 14px;
 		letter-spacing: 1px;
 	}
 
-	input[type="color"] {
+	input[type='color'] {
 		border: none;
 		padding: 0;
 		width: 100%;
 		height: 30px;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 		transition: transform 0.3s ease-in-out;
-		background: linear-gradient(to right, #ff9966, #ff5e62);
 	}
 
-	input[type="color"]::-webkit-color-swatch-wrapper {
+	input[type='color']::-webkit-color-swatch-wrapper {
 		padding: 0;
 	}
 
-	input[type="color"]::-webkit-color-swatch {
+	input[type='color']::-webkit-color-swatch {
 		border: none;
 	}
 
-	input[type="color"]:hover {
+	input[type='color']:hover {
 		transform: scale(1.05);
 	}
-
 </style>
