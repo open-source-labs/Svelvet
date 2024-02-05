@@ -16,7 +16,9 @@
 	];
 	export let corner = 'NE';
 	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
+	export let textColor: CSSColorString | null = null;
+	export let nodeColor: CSSColorString | null = null;
+	export let edgeColor: CSSColorString | null = null;
 
 	let current = contrastThemes[0];
 	let isCustomTheme = false;
@@ -34,8 +36,10 @@
 	}
 
 	function updateCustomTheme() {
-		document.documentElement.style.setProperty('--prop-theme-toggle-color', bgColor);
-		document.documentElement.style.setProperty('--prop-theme-toggle-text-color', iconColor);
+		document.documentElement.style.setProperty('--default-background-color', bgColor);
+		document.documentElement.style.setProperty('--default-text-color', textColor);
+		document.documentElement.style.setProperty('--default-node-color', nodeColor);
+		document.documentElement.style.setProperty('--default-edge-color', edgeColor);
 	}
 
 	onMount(() => {
@@ -53,12 +57,20 @@
 
 	{#if isCustomTheme}
 		<div>
-			<label for="customBgColor">Custom Background Color:</label>
+			<label for="customBgColor">BackGround</label>
 			<input type="color" id="customBgColor" bind:value={bgColor} />
 		</div>
 		<div>
-			<label for="customIconColor">Custom Icon Color:</label>
-			<input type="color" id="customIconColor" bind:value={iconColor} />
+			<label for="customTextColor">Text</label>
+			<input type="color" id="customTextColor" bind:value={textColor} />
+		</div>
+		<div>
+			<label for="customTextColor">Node</label>
+			<input type="color" id="customNodeColor" bind:value={nodeColor} />
+		</div>
+		<div>
+			<label for="customTextColor">Edge</label>
+			<input type="color" id="customEdgeColor" bind:value={edgeColor} />
 		</div>
 	{/if}
 </div>
@@ -114,4 +126,37 @@
 		clip: rect(0, 0, 0, 0);
 		border: 0;
 	}
+
+	label {
+		margin-bottom: 0.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		font-size: 14px; 
+		letter-spacing: 1px;
+	}
+
+	input[type="color"] {
+		border: none;
+		padding: 0;
+		width: 100%;
+		height: 30px;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+		transition: transform 0.3s ease-in-out;
+		background: linear-gradient(to right, #ff9966, #ff5e62);
+	}
+
+	input[type="color"]::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+
+	input[type="color"]::-webkit-color-swatch {
+		border: none;
+	}
+
+	input[type="color"]:hover {
+		transform: scale(1.05);
+	}
+
 </style>

@@ -384,7 +384,7 @@
 			setTimeout(() => {
 				duplicate.set(false);
 			}, 100);
-		} else if (key === 'Tab' && e.altKey) {
+		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
 			selectNextNode();
 		} else if (key === 'l') {
 			theme = theme === 'light' ? 'dark' : 'light';
