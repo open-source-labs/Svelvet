@@ -6,7 +6,7 @@ const config: PlaywrightTestConfig = {
 		port: 4173
 	},
 	testDir: 'tests/e2e-tests',
-	testMatch: '**/*.spec.ts'
+	testMatch: '**/*.ts',
 };
 
 export default config;

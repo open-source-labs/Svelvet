@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "9.0.0",
+	"version": "10.0.0",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -42,14 +42,13 @@
 		"dist"
 	],
 	"devDependencies": {
-		"@playwright/test": "^1.41.1",
+		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.1.0",
 		"@testing-library/svelte": "^4.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.60.0",
 		"@typescript-eslint/parser": "^5.60.0",
-		"axe-playwright": "^2.0.1",
 		"eslint": "^8.43.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte": "^2.32.0",

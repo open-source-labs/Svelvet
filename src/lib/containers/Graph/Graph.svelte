@@ -537,8 +537,8 @@
 		<!-- <button on:click={() => alert('hi')}>SAVE STATE</button> -->
 		<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button>
 		<button on:click={() => alert('hi')}>ALERT</button> -->
-		<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
-		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button>
+		<!-- <button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
+		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button> -->
 
 		{#if $editing}
 			<Editor editing={$editing} />
