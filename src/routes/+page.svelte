@@ -44,7 +44,7 @@
 </script>
 
 <body>
-	<button on:click={() => alert('hi')}>ALERTe</button>
+	<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 	<Svelvet minimap title="test" controls>
 		<Group
 			position={{ x: -150, y: -100 }}
