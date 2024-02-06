@@ -140,7 +140,7 @@
 		// setContext('graph', graph)
 		// added console.log
 		console.log('Graph after onMount:', graph);
-		// graphStore.set(graph);
+		// graphStore.set(graph); 
 	});
 
 	$: backgroundExists = $$slots.background;
@@ -188,7 +188,7 @@
 	}
 	// console.log(graph after it changes)
 	$: if (graph) {
-		console.log('Graph updated:', graph);
+		// console.log('Graph updated:', graph);
 	}
 </script>
 

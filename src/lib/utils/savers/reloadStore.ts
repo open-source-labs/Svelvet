@@ -2,6 +2,8 @@ import { createGraph, createNode, createAnchor, createEdge } from '../creators';
 import type { AnchorKey, GraphKey, NodeConfig, NodeKey, CustomEdgeKey, Anchor } from '$lib/types';
 import type { ComponentType } from 'svelte';
 import type { Graph } from '$lib/types/graph';
+// possible use case: flatted library for circular references in JSON string
+import { parse } from 'flatted';
 
 // added interface for createEdge function
 // interface EdgeDataType {
@@ -70,6 +72,9 @@ import type { Graph } from '$lib/types/graph';
 export function reloadStore(store: string): Graph {
 	// Parse the JSON string back into an object
 	const object = JSON.parse(store);
+	// const object = parse(store);
+	// eslint-disable-next-line no-console
+	console.log('RECONSTRUCTED GRAPH FROM FLATTEN.PARSE:', object);
 
 	// Initialize the graph with basic configuration, including properties that are not managed as Svelte stores
 	const graph = createGraph(object.id, {
@@ -85,6 +90,6 @@ export function reloadStore(store: string): Graph {
 
 	// No need to call `.set` on `transforms.scale` and `transforms.translation` if they're initialized directly within `createGraph`
 	// eslint-disable-next-line no-console
-	console.log('reconstructed graph:', graph);
+	// console.log('reconstructed graph:', graph);
 	return graph;
 }

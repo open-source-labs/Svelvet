@@ -16,12 +16,6 @@
 	import type { ComponentType } from 'svelte';
 	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
-	// new import
-	import { getJSONState } from '$lib/utils/savers/saveStore';
-
-	let animationFrameId: number;
-	// new additions
-	import RadioGroup from '$lib/components/data/RadioGroup/RadioGroup.svelte';
 </script>
 
 <script lang="ts">
@@ -48,6 +42,8 @@
 	export let theme = 'light';
 	export let title: string;
 	export let drawer = false;
+
+	let animationFrameId: number;
 
 	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
@@ -532,20 +528,10 @@
 	bind:this={$graphDOMElement}
 >
 	<GraphRenderer {isMovable}>
-		<!-- trying to add a quick save button -->
-		<!-- added an alert function in its place for now -->
-		<!-- <button on:click={() => alert('hi')}>SAVE STATE</button> -->
-		<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button>
-		<button on:click={() => alert('hi')}>ALERT</button> -->
-		<button style="cursor: pointer;" on:click={() => getJSONState(graph)}>SAVE STATE</button>
-		<button style="cursor: pointer;" on:click={() => alert('hi')}>ALERT</button>
-
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
 		<slot />
-		<!-- added radio group for example purposes -->
-		<!-- <RadioGroup {options} {parameterStore} /> -->
 	</GraphRenderer>
 	{#if backgroundExists}
 		<slot name="background" />
