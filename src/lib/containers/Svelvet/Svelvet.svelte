@@ -183,7 +183,6 @@
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
 	}
-	
 </script>
 
 {#if graph}
