@@ -100,22 +100,23 @@
 
 	let currentComponent = 'Node'; // Add this line
 
-const handleKeyPress = (e: KeyboardEvent) => {
-	if (e.key === 'D') {
-		handleDrawer();
-	} else if (e.key === 'T' && isOpen) { // Only toggle components if the drawer is open
-		if (currentComponent === 'Node') {
-			handleAnchorContainer();
-			currentComponent = 'Anchor';
-		} else if (currentComponent === 'Anchor') {
-			handleEdgeContainer();
-			currentComponent = 'Edge';
-		} else if (currentComponent === 'Edge') {
-			handleNodeContainer();
-			currentComponent = 'Node';
+	const handleKeyPress = (e: KeyboardEvent) => {
+		if (e.key === 'D') {
+			handleDrawer();
+		} else if (e.key === 'T' && isOpen) {
+			// Only toggle components if the drawer is open
+			if (currentComponent === 'Node') {
+				handleAnchorContainer();
+				currentComponent = 'Anchor';
+			} else if (currentComponent === 'Anchor') {
+				handleEdgeContainer();
+				currentComponent = 'Edge';
+			} else if (currentComponent === 'Edge') {
+				handleNodeContainer();
+				currentComponent = 'Node';
+			}
 		}
-	}
-};
+	};
 
 	// Add the event listener when the component mounts
 	onMount(() => {

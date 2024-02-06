@@ -1,39 +1,24 @@
+// Below is a simple accessibility test to check for accessibility violations.
+// I hope that you can either address the violations either manually going in and fixing or by creating a linter.
+// Uncommment below and run `npm run test` in the terminal to run the accessibility test.
+
 // import { test, expect } from '@playwright/test';
 // import { injectAxe, checkA11y } from 'axe-playwright';
 
-// const testRoute = '/tests';
+// // Define the URL of the page you want to test
+// const testRoute = 'http://localhost:4173/';
 
+// // Define a test using Playwright's test function
 // test('Page has no accessibility violations', async ({ page }) => {
-//   await page.goto('http://localhost:5173/tests'); // replace with your test page URL
+//   // Navigate to the test page
+//   await page.goto(testRoute); // replace with your test page URL
 
+//   // Inject the axe-core library into the page
 //   await injectAxe(page);
+
+//   // Run axe's accessibility checks on the page
 //   const violations = await checkA11y(page);
 
+//   // Expect that there are no accessibility violations
 //   expect(violations).toHaveLength(0);
 // });
-
-// // import type { Browser, Page } from 'playwright';
-// // import { chromium, test } from '@playwright/test';
-// // import { injectAxe, checkA11y } from 'axe-playwright';
-
-// // let browser: Browser;
-// // let page: Page;
-
-// // test.describe('Playwright web page accessibility test', () => {
-// // 	test.beforeAll(async () => {
-// // 		browser = await chromium.launch();
-// // 		page = await browser.newPage();
-// // 		await page.goto('http://localhost:5173/tests');
-// // 		await injectAxe(page);
-// // 	});
-
-// // 	test('simple accessibility run', async () => {
-// // 		await checkA11y(page, null, {
-// // 			axeOptions: {},
-// // 			detailedReport: true,
-// // 			detailedReportOptions: {
-// // 				html: true
-// // 			}
-// // 		});
-// // 	});
-// // });
