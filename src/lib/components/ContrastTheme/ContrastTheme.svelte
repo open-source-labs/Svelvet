@@ -46,7 +46,6 @@
 		document.documentElement.style.setProperty('--default-node-color', nodeColor);
 		document.documentElement.style.setProperty('--default-edge-color', edgeColor);
 	}
-
 </script>
 
 <div class="contrast-wrapper" class:NE={corner === 'NE'} on:input={updateCustomTheme}>
