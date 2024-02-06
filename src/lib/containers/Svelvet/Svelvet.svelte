@@ -138,7 +138,6 @@
 		}
 		// setContext('graph', graph)
 		// added console.log
-		console.log('Graph after onMount:', graph);
 		// graphStore.set(graph);
 	});
 
@@ -169,8 +168,6 @@
 		source: [string | number, string | number],
 		target: [string | number, string | number]
 	) {
-		// added console.log
-		console.log('Graph before disconnect:', graph);
 		const sourceNodeKey: NodeKey = `N-${source[0]}`;
 		const sourceNode = graph.nodes.get(sourceNodeKey);
 		if (!sourceNode) return;
@@ -185,10 +182,7 @@
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
 	}
-	// console.log(graph after it changes)
-	$: if (graph) {
-		console.log('Graph updated:', graph);
-	}
+	
 </script>
 
 {#if graph}
