@@ -126,6 +126,7 @@
 	// occurs after Svelvet renders
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
+		console.log('stateObject during onMount:', stateObject);
 		if (stateObject) {
 			graph = reloadStore(stateObject);
 			graphStore.add(graph, graph.id);
@@ -138,7 +139,9 @@
 		}
 		// setContext('graph', graph)
 		// added console.log
-		// graphStore.set(graph);
+
+		console.log('Graph after onMount:', graph);
+		// graphStore.set(graph); 
 	});
 
 	$: backgroundExists = $$slots.background;
@@ -182,7 +185,7 @@
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
 	}
-	
+
 </script>
 
 {#if graph}

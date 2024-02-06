@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
+	import { getJSONState } from '$lib/utils/savers/saveStore';
 	import { onMount } from 'svelte';
+	import { graphStore } from '$lib/stores';
+	import { get } from 'svelte/store';
 
 	export let main = 'light';
 	export let alt = 'dark';
@@ -30,11 +33,39 @@
 		const newTheme = currentTheme === main ? alt : main;
 		current = newTheme;
 		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
+
+		// Save the current theme to Local Storage
+		localStorage.setItem('currentTheme', newTheme); 
 	}
 
 	onMount(() => {
-		document.documentElement.setAttribute('svelvet-theme', main);
+    const savedTheme = localStorage.getItem('currentTheme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('svelvet-theme', savedTheme);
+      current = savedTheme;
+    } else {
+      // If no theme is saved in Local Storage, set the default theme (main) as the initial theme
+      document.documentElement.setAttribute('svelvet-theme', main);
+      current = main;
+    }
+  });
+
+  let graph: any;
+
+  graphStore.subscribe((graphMap) => {
+		const graphKey = 'G-1'; 
+		graph = graphMap.get(graphKey);
+		// console.log('Graph from store:', graph);
 	});
+	function logCurrentGraphState() {
+    const currentGraphMap = get(graphStore);
+    const graph = currentGraphMap.get('G-1');
+    if (graph) {
+        console.log('Current Graph State:', graph);
+    } else {
+        console.log('No current graph found');
+    }
+}
 </script>
 
 <div
@@ -49,6 +80,8 @@
 	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
 		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
 	</button>
+
+	<button class="save-button NW" on:click={() => {getJSONState(graph)}}>Save</button>
 </div>
 
 <style>
@@ -129,4 +162,12 @@
 	button:hover {
 		cursor: pointer;
 	}
+	.save-button {
+    top: 10px; /* Adjust the top position as needed */
+    left: 10px; /* Adjust the left position as needed */
+    background-color: var(--save-button-bg-color, var(--default-save-button-bg-color));
+    color: var(--save-button-text-color, var(--default-save-button-text-color));
+    border: solid 1px var(--save-button-border-color, var(--default-save-button-border-color));
+    cursor: pointer;
+  }
 </style>

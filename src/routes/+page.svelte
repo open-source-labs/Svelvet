@@ -21,6 +21,7 @@
 	import { getContext } from 'svelte';
 	// added graphStore import
 	import { graphStore } from '$lib/stores';
+	import { get } from 'svelte/store';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
 		totalNodes++;
@@ -28,41 +29,29 @@
 	let totalNodes = 0;
 	let widthCount = 1;
 	let graph: any;
+	
 	graphStore.subscribe((graphMap) => {
-		// Assuming you want to log the graph with a specific key
-		// This key should be known or determined based on your application logic
-		const graphKey = 'G-1'; // Example key
+		const graphKey = 'G-1'; 
 		graph = graphMap.get(graphKey);
+		// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
-		if (graph) {
-			console.log('Current Graph State:', graph);
-		} else {
-			console.log('No current graph found');
-		}
-	}
+    const currentGraphMap = get(graphStore);
+    const graph = currentGraphMap.get('G-1');
+    if (graph) {
+        console.log('Current Graph State:', graph);
+    } else {
+        console.log('No current graph found');
+    }
+}
+
+
 </script>
 
 <body>
-	<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 	<Svelvet minimap title="test" controls>
-		<Group
-			position={{ x: -150, y: -100 }}
-			width={600}
-			height={700}
-			color="goldenrod"
-			groupName="parameters"
-		>
-			<Thickness />
-			<Noise />
-			<Scale />
-			<CircleColor />
-			<DashCount />
-		</Group>
-		<Output />
 		<!-- buttons on lower level node -->
 		<Connector />
-		<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />
 			{#each { length: widthCount } as item}
@@ -73,9 +62,10 @@
 				style="cursor: pointer;"
 				on:click={() =>
 					// const graph = getContext('graph');
-					// console.log('Graph on user interaction:', graph);
-					getJSONState(graph)}>SAVE STATE</button
-			>
+					console.log('Graph on user interaction:', graph);
+					getJSONState(graph);
+				}}>SAVE STATE</button>
+
 			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
 		<!-- text field -->

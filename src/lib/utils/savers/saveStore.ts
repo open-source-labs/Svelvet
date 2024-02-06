@@ -1,58 +1,109 @@
 import type { Graph } from '$lib/types';
-// import { writable } from 'svelte/store';
+import { get } from 'svelte/store';
+import type { WritableNode } from '$lib/types';
+import type { Node } from '$lib/types';
+import { writable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
+// possible use case: flatted library for circular references in JSON string
+import { stringify } from 'flatted';
 
-// function createMockStore() {
-//     const store = writable({
-//         someProperty: "test value",
-//         anotherProperty: 123,
-//         nestedStore: writable({ nestedKey: "nested value" }),
-//         // Add more properties as needed to mimic the structure of your Graph store
-//     });
-//     return store;
-// }
-
-// added interface for more strict check of a svelte store
-interface StoreLike {
-	subscribe: (callback: (value: any) => void) => () => void;
+function isSvelteStore(value: any): value is Readable<any> {
+    return value && typeof value.subscribe === 'function';
 }
 
-// Function to check if a value is a Svelte store
-// value must adhere to StoreLike interface
-function isStore(value: StoreLike): boolean {
-	return value && typeof value.subscribe === 'function';
-}
-
+// *******old traverse function*******
 // Function to traverse a nested object and extract the data
 // looks like this function should traverse a svelte store
-function traverse(obj: Record<string, any>) {
-	// eslint-disable-next-line no-console
-	console.log('obj:', obj);
-	// added type object with string indexing
-	const output: Record<string, any> = {};
+function traverse(obj: Record<string, any>, depth = 0) { // Added depth parameter for better clarity in logs
+    // eslint-disable-next-line no-console
+    console.log(`--- Traverse activated at depth ${depth} ---`);
 
-	for (const key in obj) {
-		const value = obj[key];
+    const output: Record<string, any> = {};
+    for (const key in obj) {
+        const value = obj[key];
+
+        // Log for entering a specific property
 		// eslint-disable-next-line no-console
-		console.log(`Key: ${key}, Value:`, value);
+        console.log(`Entering key: ${key} at depth ${depth}`);
 
-		if (isStore(value)) {
-			let storeValue;
-			value.subscribe(($value: any) => {
-				storeValue = $value;
+		if (key === 'nodes' && typeof value === 'object' && value.getAll) {
+			// eslint-disable-next-line no-console
+            console.log('nodes prop found!');
+			// eslint-disable-next-line no-console
+            console.log('NODES ARRAY: ', value.getAll());
+			// traverse the nodes array
+			const nodesArray = value.getAll();
+
+            output[key] = nodesArray;
+			// eslint-disable-next-line no-console
+            console.log('TRAVERSE CACHE AFTER FINDING NODES PROP:', output);
+
+			traverse(nodesArray, depth + 1);
+
+        } 
+
+		// if (key === 'nodes' && typeof value === 'object' && value.getAll) {
+		// 	// eslint-disable-next-line no-console
+		// 	console.log('nodes prop found!');
+		// 	const nodesArray = value.getAll(); // Correctly obtaining the array of nodes
+		// 	// eslint-disable-next-line no-consol
+		// 	console.log('NODES ARRAY: ', nodesArray);
+		
+		// 	// Process each node to handle anchors or any other properties
+		// 	const processedNodes = nodesArray.map(node => {
+		// 		// Example: Process anchors within each node
+		// 		if (node.anchors && typeof node.anchors.getAll === 'function') {
+		// 			const anchorsArray = node.anchors.getAll(); // Obtain the anchors array
+		// 			// eslint-disable-next-line no-console
+		// 			console.log('ANCHORS ARRAY:', anchorsArray);
+		// 			node.anchors = anchorsArray; // Assign the processed anchors array back to the node
+		// 		}
+		// 		return node; // Return the processed node
+		// 	});
+		
+		// 	output[key] = processedNodes; // Ensure this assignment maintains the expected structure
+		// 	// eslint-disable-next-line no-console
+		// 	console.log('TRAVERSE CACHE AFTER FINDING NODES PROP:', output);
+		// }
+		
+		
+		else if (isSvelteStore(value)){
 				// eslint-disable-next-line no-console
-				console.log(`Store value for ${key}:`, storeValue);
-			})();
-			output[key] = typeof storeValue === 'object' ? traverse(storeValue) : storeValue;
-		} else if (typeof value === 'object') {
-			output[key] = traverse(value);
-		} else {
-			output[key] = value;
-		}
-	}
+				console.log(`The current prop, ${value}, is a Svelte store at key: ${key}`);
+					const storeValue = get(value);
+				if (typeof storeValue === 'object' && storeValue !== null) {
+					// eslint-disable-next-line no-console
+					console.log(`Retraversing storeValue at key: ${key}, depth: ${depth + 1}`);
+					output[key] = traverse(storeValue, depth + 1); // Pass depth + 1 for the next level
+				}
+		} 
+		
+		else if (typeof value === 'object') {
+			// eslint-disable-next-line no-console
+            console.log(`prop ${key} is a regular object at depth ${depth}`);
+            output[key] = traverse(value, depth + 1); // Pass depth + 1 for the next level
+        } 
+		
+		else {
+			// eslint-disable-next-line no-console
+            console.log(`prop ${key} is a regular value at depth ${depth}`);
+            output[key] = value;
+        }
+
+        // Log for exiting a specific property
+		// eslint-disable-next-line no-console
+        console.log(`Exiting key: ${key} at depth ${depth}`);
+    }
+
+    // Log for completing traversal at a specific depth
 	// eslint-disable-next-line no-console
-	console.log('output:', output);
-	return output;
+    console.log(`--- Traverse complete at depth ${depth} ---`);
+	// eslint-disable-next-line no-console
+    console.log(`Final output at depth ${depth}:`, output);
+
+    return output;
 }
+
 
 // Custom replacer function for JSON.stringify()
 // change key to be intentionally not used
@@ -70,19 +121,24 @@ function domRectReplacer(_key: string, value: any) {
 
 // Function to get JSON stringified data from nested Svelte store
 export function getJSONState(store: any) {
+
 	// eslint-disable-next-line no-console
-	console.log('store:', store);
+	console.log('graph state object:', store)
+	// eslint-disable-next-line no-console
+	console.log('nodes object before traverse: ', store.nodes.getAll())
+
 	const data = traverse(store);
+
+	// eslint-disable-next-line no-console
+	console.log('Nodes after traverse:', data.nodes);
+	// eslint-disable-next-line no-console
+	// console.log('Graph state object after traverse:', data)
+
+	// const raw = stringify(data, domRectReplacer);
 	const raw = JSON.stringify(data, domRectReplacer);
-	// const raw = JSON.stringify(data);
-	// const object = JSON.parse(raw);
-	// const node: Node = createNode(object.nodes['N-1']);
-	// store.nodes.add(node, 'N-TEST');
+
 	localStorage.setItem('state', raw);
 	// eslint-disable-next-line no-console
 	console.log('raw:', raw);
 	return raw;
 }
-
-// const mockStore = createMockStore();
-// getJSONState(mockStore);
