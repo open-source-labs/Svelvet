@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
-	import { onMount } from 'svelte';
 
 	export let contrastThemes = [
 		'Change Theme',
@@ -38,6 +37,7 @@
 			document.documentElement.setAttribute('svelvet-theme', selectedTheme);
 			updateCustomTheme();
 		}
+		localStorage.setItem('currentTheme', current);
 	}
 
 	function updateCustomTheme() {
@@ -47,9 +47,6 @@
 		document.documentElement.style.setProperty('--default-edge-color', edgeColor);
 	}
 
-	onMount(() => {
-		document.documentElement.setAttribute('svelvet-theme', contrastThemes[0]);
-	});
 </script>
 
 <div class="contrast-wrapper" class:NE={corner === 'NE'} on:input={updateCustomTheme}>
@@ -93,7 +90,7 @@
 
 <style>
 	.NE {
-		right: 40px;
+		right: 52px;
 		top: 10px;
 	}
 	.contrast-wrapper {
