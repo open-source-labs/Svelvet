@@ -12,7 +12,12 @@ test('node rotates correctly', async ({ page }) => {
 		sourcePosition: { x: 0, y: 0 },
 		targetPosition: { x: 0, y: 0 }
 	});
-	await expect(node1).toHaveCSS('transform', 'matrix(-1.83697e-16, -1, 1, -1.83697e-16, 0, 0)');
+
+	// The previous test results consistently received the below matrix value
+	// await expect(node1).toHaveCSS('transform', 'matrix(-1.83697e-16, -1, 1, -1.83697e-16, 0, 0)');
+
+	// After our changes we consistently receive the below matrix value
+	await expect(node1).toHaveCSS('transform', 'matrix(0, -1, 1, 0, 0, 0)');
 });
 
 test('node can be horizontally adjusted correctly', async ({ page }) => {

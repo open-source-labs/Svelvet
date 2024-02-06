@@ -45,7 +45,7 @@
 </script>
 
 <body>
-	<button on:click={() => alert('hi')}>ALERTe</button>
+	<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 	<Svelvet minimap title="test" controls>
 		<Group
 			position={{ x: -150, y: -100 }}
@@ -63,6 +63,7 @@
 		<Output />
 		<!-- buttons on lower level node -->
 		<Connector />
+		<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button on:click={() => widthCount++} />
 			{#each { length: widthCount } as item}
@@ -71,11 +72,10 @@
 			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 			<button
 				style="cursor: pointer;"
-				on:click={() => {
+				on:click={() =>
 					// const graph = getContext('graph');
-					console.log('Graph on user interaction:', graph);
-					getJSONState(graph);
-				}}>SAVE STATE</button
+					// console.log('Graph on user interaction:', graph);
+					getJSONState(graph)}>SAVE STATE</button
 			>
 			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
