@@ -6,6 +6,7 @@
 	import { createAnchorProps } from './DrawerAnchor.svelte';
 	import { createEdgeProps } from './DrawerEdge.svelte';
 	import Icon from '$lib/assets/icons/Icon.svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let isOpen = false;
 	let nodeContainerOpen = false;
@@ -96,6 +97,35 @@
 			anchorBtn.style.borderBottom = 'none';
 		}
 	};
+
+	let currentComponent = 'Node'; // Add this line
+
+const handleKeyPress = (e: KeyboardEvent) => {
+	if (e.key === 'D') {
+		handleDrawer();
+	} else if (e.key === 'T' && isOpen) { // Only toggle components if the drawer is open
+		if (currentComponent === 'Node') {
+			handleAnchorContainer();
+			currentComponent = 'Anchor';
+		} else if (currentComponent === 'Anchor') {
+			handleEdgeContainer();
+			currentComponent = 'Edge';
+		} else if (currentComponent === 'Edge') {
+			handleNodeContainer();
+			currentComponent = 'Node';
+		}
+	}
+};
+
+	// Add the event listener when the component mounts
+	onMount(() => {
+		window.addEventListener('keydown', handleKeyPress);
+	});
+
+	// Remove the event listener when the component unmounts
+	onDestroy(() => {
+		window.removeEventListener('keydown', handleKeyPress);
+	});
 </script>
 
 <nav id="drawerWrapper" bind:this={nav}>
