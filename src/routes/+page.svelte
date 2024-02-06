@@ -21,6 +21,7 @@
 	import { getContext } from 'svelte';
 	// added graphStore import
 	import { graphStore } from '$lib/stores';
+	import ContrastTheme from '$lib/components/ContrastTheme/ContrastTheme.svelte';
 	import { get } from 'svelte/store';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
@@ -29,23 +30,21 @@
 	let totalNodes = 0;
 	let widthCount = 1;
 	let graph: any;
-	
+
 	graphStore.subscribe((graphMap) => {
-		const graphKey = 'G-1'; 
+		const graphKey = 'G-1';
 		graph = graphMap.get(graphKey);
 		// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
-    const currentGraphMap = get(graphStore);
-    const graph = currentGraphMap.get('G-1');
-    if (graph) {
-        console.log('Current Graph State:', graph);
-    } else {
-        console.log('No current graph found');
-    }
-}
-
-
+		const currentGraphMap = get(graphStore);
+		const graph = currentGraphMap.get('G-1');
+		if (graph) {
+			console.log('Current Graph State:', graph);
+		} else {
+			console.log('No current graph found');
+		}
+	}
 </script>
 
 <body>
@@ -60,11 +59,12 @@
 			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 			<button
 				style="cursor: pointer;"
-				on:click={() =>
+				on:click={() => {
 					// const graph = getContext('graph');
 					console.log('Graph on user interaction:', graph);
 					getJSONState(graph);
-				}}>SAVE STATE</button>
+				}}>SAVE STATE</button
+			>
 
 			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
@@ -90,6 +90,7 @@
 		{/each}
 
 		<ThemeToggle slot="toggle" />
+		<ContrastTheme slot="contrast" />
 	</Svelvet>
 </body>
 

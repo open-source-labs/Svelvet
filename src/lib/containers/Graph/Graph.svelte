@@ -42,6 +42,7 @@
 	export let theme = 'light';
 	export let title: string;
 	export let drawer = false;
+	export let contrast = false;
 
 	let animationFrameId: number;
 
@@ -87,6 +88,7 @@
 	let minimapComponent: ComponentType | null = null;
 	let controlsComponent: ComponentType | null = null;
 	let drawerComponent: ComponentType | null = null;
+	let contrastComponent: ComponentType | null = null;
 
 	// Subscriptions
 	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
@@ -106,6 +108,8 @@
 	$: if (controls && !controlsComponent) loadControls();
 	// load the drawer
 	$: if (drawer && !drawerComponent) loadDrawer();
+	//load the contrast options
+	$: if (contrast && !contrastComponent) loadContrast();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -176,6 +180,11 @@
 
 	async function loadDrawer() {
 		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+	}
+
+	async function loadContrast() {
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
+			.default;
 	}
 
 	function updateGraphDimensions() {
@@ -373,7 +382,7 @@
 			setTimeout(() => {
 				duplicate.set(false);
 			}, 100);
-		} else if (key === 'Tab' && e.altKey) {
+		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
 			selectNextNode();
 		} else if (key === 'l') {
 			theme = theme === 'light' ? 'dark' : 'light';
@@ -503,19 +512,19 @@
 			activeIntervals[key] = interval;
 		}
 	}
-	// new definitions for Radio Group test
-	let options = ['option 1', 'option 2', 'option 3'];
-	let parameterStore = writable('default value');
+	// // new definitions for Radio Group test
+	// let options = ['option 1', 'option 2', 'option 3'];
+	// let parameterStore = writable('default value');
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+
 <section
 	role="presentation"
 	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
-	tabindex={0}
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	style:cursor={pannable ? 'move' : 'default'}
@@ -526,14 +535,15 @@
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
 	bind:this={$graphDOMElement}
+	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
-
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
 		<slot />
 	</GraphRenderer>
+
 	{#if backgroundExists}
 		<slot name="background" />
 	{:else}
@@ -551,10 +561,14 @@
 	{#if drawer}
 		<svelte:component this={drawerComponent} />
 	{/if}
+	{#if contrast}
+		<svelte:component this={contrastComponent} />
+	{/if}
 	<slot name="minimap" />
 	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
+	<slot name="contrast" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
@@ -585,5 +599,4 @@
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
 	}
-	
 </style>
