@@ -60,11 +60,12 @@
 			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 			<button
 				style="cursor: pointer;"
-				on:click={() => {
+				on:click={() =>
 					// const graph = getContext('graph');
 					console.log('Graph on user interaction:', graph);
 					getJSONState(graph);
 				}}>SAVE STATE</button>
+
 			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
 		<!-- text field -->

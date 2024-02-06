@@ -528,6 +528,7 @@
 	bind:this={$graphDOMElement}
 >
 	<GraphRenderer {isMovable}>
+
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
@@ -584,8 +585,5 @@
 		outline: none;
 		box-shadow: 0 0 0 2px rgb(59, 102, 232);
 	}
-	/* testing */
-	button {
-		cursor: pointer;
-	}
+	
 </style>
