@@ -7,7 +7,8 @@ const config: PlaywrightTestConfig = {
 	},
 	testDir: 'tests/e2e-tests',
 	testMatch: '**/*.ts',
-	retries: 2,
+	retries: 1,
+	workers: 1,
 };
 
 export default config;
