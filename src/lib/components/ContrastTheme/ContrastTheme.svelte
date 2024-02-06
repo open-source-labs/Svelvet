@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	export let contrastThemes = [
-		'High-Contrast',
+		'Change Theme',
 		'Black/White',
 		'Yellow/Black',
 		'Black/Yellow',
@@ -30,8 +30,13 @@
 			isCustomTheme = true;
 		} else {
 			isCustomTheme = false;
+			bgColor = null;
+			textColor = null;
+			nodeColor = null;
+			edgeColor = null;
 			current = selectedTheme;
 			document.documentElement.setAttribute('svelvet-theme', selectedTheme);
+			updateCustomTheme();
 		}
 	}
 
@@ -72,6 +77,15 @@
 			<label for="customTextColor">Edge</label>
 			<input type="color" id="customEdgeColor" bind:value={edgeColor} />
 		</div>
+		<button on:click={() => {
+			isCustomTheme = false;
+			current = contrastThemes[0];
+			document.documentElement.setAttribute('svelvet-theme', current);
+			let themeSelector = document.getElementById('themeSelector')
+			if (themeSelector) {
+				themeSelector.value = current;
+			}
+		}}>Close</button>
 	{/if}
 </div>
 
@@ -157,4 +171,19 @@
 	input[type='color']:hover {
 		transform: scale(1.05);
 	}
+	
+	button {
+        background-color: #ffffff;
+        border: none;
+        color: #333;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #e0e0e0;
+    }
 </style>
