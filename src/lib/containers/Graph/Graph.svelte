@@ -16,12 +16,10 @@
 	import type { ComponentType } from 'svelte';
 	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
-
-	let animationFrameId: number;
 </script>
 
 <script lang="ts">
-	// Props
+	// defining props that the Graph component expects when it is used, type annotations added
 	export let graph: Graph;
 	export let width: number;
 	export let height: number;
@@ -44,17 +42,24 @@
 	export let theme = 'light';
 	export let title: string;
 	export let drawer = false;
+	export let contrast = false;
 
-	// Local constants
+	let animationFrameId: number;
+
+	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
+	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
 	const activeIntervals: ActiveIntervals = {};
 
-	// Local stores
+	// creates a Svelte writable store named duplicate. This store probably holds a boolean value to track whether some duplication functionality is active or not.
 	const duplicate = writable(false);
+	// another writable store, which seems to be used to track if the component has mounted or to count certain actions after mounting.
 	const mounted = writable(0);
+	// is a writable store to hold a reference to the graph's DOM element. This is useful for direct DOM manipulations or access.
 	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
 
 	// External stores
+	// These are Svelte stores that are likely passed as part of the graph prop or accessed directly from it. They represent various aspects of the graph's state, such as its current cursor position, scale, dimensions, and more
 	const cursor = graph.cursor;
 	const scale = graph.transforms.scale;
 	const dimensionsStore = graph.dimensions;
@@ -68,6 +73,7 @@
 	const nodeBounds = graph.bounds.nodeBounds;
 
 	// Reactive variables
+	// These are standard JavaScript variables that are reactive, meaning Svelte will re-run any reactive statements or parts of the DOM that depend on these variables whenever their values change.
 	let initialDistance = 0;
 	let initialScale = 1;
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
@@ -82,24 +88,28 @@
 	let minimapComponent: ComponentType | null = null;
 	let controlsComponent: ComponentType | null = null;
 	let drawerComponent: ComponentType | null = null;
+	let contrastComponent: ComponentType | null = null;
 
 	// Subscriptions
+	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
 	$: dimensions = $dimensionsStore;
 
 	// Update the svelvet-theme attribute everytime the theme changes
 	$: if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
-
+	// camera view adjustment
 	$: if (!initialFit && fitView) {
 		fitIntoView();
 	}
-
+	// load the theme toggle
 	$: if (toggle && !toggleComponent) loadToggle();
-
+	// load the minimap
 	$: if (minimap && !minimapComponent) loadMinimap();
-
+	// load the controls interface
 	$: if (controls && !controlsComponent) loadControls();
-
+	// load the drawer
 	$: if (drawer && !drawerComponent) loadDrawer();
+	//load the contrast options
+	$: if (contrast && !contrastComponent) loadContrast();
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -170,6 +180,11 @@
 
 	async function loadDrawer() {
 		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+	}
+
+	async function loadContrast() {
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
+			.default;
 	}
 
 	function updateGraphDimensions() {
@@ -367,11 +382,35 @@
 			setTimeout(() => {
 				duplicate.set(false);
 			}, 100);
+		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
+			selectNextNode();
+		} else if (key === 'l') {
+			theme = theme === 'light' ? 'dark' : 'light';
+		} else if (key === 'd') {
+			drawer = !drawer;
+		} else if (key === 'm') {
+			minimap = !minimap;
+		} else if (key === 'c') {
+			controls = !controls;
+		} else if (key === 'e') {
+			const node = Array.from($selected)[0];
+			graph.editing.set(node);
 		} else {
 			return; // Unhandled action: used default handler
 		}
 
 		e.preventDefault();
+	}
+
+	//This function handles selecting nodes
+	function selectNextNode() {
+		const nodes = graph.nodes.getAll();
+
+		const currentIndex = nodes.findIndex((node) => $selected.has(node));
+		const nextIndex = currentIndex + 1;
+
+		$selected.delete(nodes[currentIndex]);
+		$selected.add(nodes[nextIndex]);
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
@@ -425,10 +464,11 @@
 		translation.set(newTranslation);
 	}
 
+	//handles movement of camera in the canvas and the nodes
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
-		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 1;
+		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
 		const startOffset = leftRight ? $translation.x : $translation.y;
 		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
@@ -437,6 +477,7 @@
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
 
+				//movement of camera when no nodes are selected
 				if ($selected.size === 0) {
 					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 					translation.set({
@@ -444,9 +485,10 @@
 						y: leftRight ? $translation.y : movement
 					});
 				} else {
+					//movement of nodes when selected
 					const delta = {
-						x: leftRight ? direction * 2 : 0,
-						y: leftRight ? 0 : direction * 2
+						x: leftRight ? -direction * 2 : 0,
+						y: leftRight ? 0 : -direction * 2
 					};
 					Array.from($selected).forEach((node) => {
 						const currentPosition = get(node.position);
@@ -470,10 +512,14 @@
 			activeIntervals[key] = interval;
 		}
 	}
+	// // new definitions for Radio Group test
+	// let options = ['option 1', 'option 2', 'option 3'];
+	// let parameterStore = writable('default value');
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+
 <section
 	role="presentation"
 	id={graph.id}
@@ -497,6 +543,7 @@
 		{/if}
 		<slot />
 	</GraphRenderer>
+
 	{#if backgroundExists}
 		<slot name="background" />
 	{:else}
@@ -514,10 +561,14 @@
 	{#if drawer}
 		<svelte:component this={drawerComponent} />
 	{/if}
+	{#if contrast}
+		<svelte:component this={contrastComponent} />
+	{/if}
 	<slot name="minimap" />
 	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
+	<slot name="contrast" />
 	{#if selecting && !disableSelection}
 		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
 	{/if}
