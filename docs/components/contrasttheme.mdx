@@ -1,0 +1,38 @@
+---
+title: 'Contrast Theme'
+sidebarTitle: 'Contrast Theme'
+description: 'Optional Component that allows users with visual impairments to customize the theme'
+---
+
+## Description
+
+To render the Theme Toggle component, simply pass the contrast prop to the Svelvet component. This will generate a select menu offering 8 preset themes tailored for individuals with diverse visual conditions, featuring common color combinations. Additionally, the component includes a custom option, empowering users to tailor the theme according to their specific requirements.
+
+<Note>When passing the component to Svelvet, you must specify slot="contrast"</Note>
+
+```HTML
+<script lang="ts">
+	import { Svelvet, Node, ContrastTheme } from 'svelvet';
+
+</script>
+
+<body>
+    <Svelvet width={400} height={400}>
+        <Node />
+        <ThemeToggle slot="contrast" />
+    </Svelvet>
+</body>
+```
+
+<ResponseField name="bgColor" type="CSS Color String" default="theme dependent">
+	Color of background.
+</ResponseField>
+<ResponseField name="textColor" type="CSS Color String" default="theme dependent">
+	Color of text.
+</ResponseField>
+<ResponseField name="nodeColor" type="CSS Color String" default="theme dependent">
+	Color of node.
+</ResponseField>
+<ResponseField name="edgeColor" type="CSS Color String" default="theme dependent">
+	Color of edge.
+</ResponseField>

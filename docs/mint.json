@@ -50,7 +50,8 @@
 				"components/minimap",
 				"components/controls",
 				"components/background",
-				"components/themetoggle"
+				"components/themetoggle",
+				"components/contrasttheme"
 			]
 		},
 		{
