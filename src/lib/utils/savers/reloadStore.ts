@@ -74,7 +74,7 @@ export function reloadStore(store: string): Graph {
 	const object = JSON.parse(store);
 	// const object = parse(store);
 	// eslint-disable-next-line no-console
-	console.log('RECONSTRUCTED GRAPH FROM FLATTEN.PARSE:', object);
+	console.log('RECONSTRUCTED GRAPH:', object);
 
 	// Initialize the graph with basic configuration, including properties that are not managed as Svelte stores
 	const graph = createGraph(object.id, {

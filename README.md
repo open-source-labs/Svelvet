@@ -31,12 +31,12 @@ Shout out to our contributors! Here's what's new:
 - **Features**:
 
   - **Accessibility Enhancement**: Now users can navigate the canvas using the keyboard.
-    - Press ```'l'``` to turn on light/dark mode.
-    - Press ```'d'``` to show drawer component, and ```'D'``` to open/close drawer component.
-    - Press ```Option + Tab || Ctrl + Tab``` for Node selection.
-    - Press ```'m'``` to toggle the minimap component.
-    - Press ```'c'``` to toggle control component.
-    - Press ```'e'``` to bring up editor component.
+    - Press `'l'` to turn on light/dark mode.
+    - Press `'d'` to show drawer component, and `'D'` to open/close drawer component.
+    - Press `Option + Tab || Ctrl + Tab` for Node selection.
+    - Press `'m'` to toggle the minimap component.
+    - Press `'c'` to toggle control component.
+    - Press `'e'` to bring up editor component.
   - **Persistent Canvas State**: Added the ability to save the state persistently to local storage.
   - **High Contrast Mode**: Introduced a new high contrast accessibility component tailored for the visually impaired.
 
