@@ -287,6 +287,7 @@ npm run test:unit [filename]
 ```
 
 ## The Svelvet Team
+
 - Mason Lee • [LinkedIn](https://www.linkedin.com/in/maysonlee/) • [Github](https://github.com/mayson124)
 - Isaac Bocage • [LinkedIn](https://www.linkedin.com/in/isaac-bocage-15711715a/) • [Github](https://github.com/isaacb0)
 - Julian Bos • [LinkedIn](https://www.linkedin.com/in/julian-bos-2ab287145/) • [Github](https://github.com/Julianb12)
@@ -342,7 +343,7 @@ Some ideas inspired by v10.0.0 include:
 
 - **Additional Data Input Components:** we plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
 
-- **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon. Especially the newly added features in contrast themes. 
+- **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon. Especially the newly added features in contrast themes.
 
 - **Accessibility Linter:** We aim to ensure our components are accessible and compliant with accessibility standards. Implementation of an accessibility linter would streamline the process of identifying and rectifying accessibility issues within our components.
 
