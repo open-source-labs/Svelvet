@@ -25,6 +25,25 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details>
+<summary>🛸 v10.0.0 🛸</summary>
+
+- **Features**:
+  - **Accessibility Enhancement**: Now users can navigate the canvas using the keyboard.
+  - **Persistent Canvas State**: Added the ability to save the state persistently to local storage.
+  - **High Contrast Mode**: Introduced a new high contrast accessibility component tailored for the visually impaired.
+
+- **Refactoring**:
+  - **Improved Keyboard Accessibility**: Enhanced the keyboard accessibility of the drawer component through refactoring.
+
+- **Documentation**:
+  - **Updated Guidance**: Documentation now includes instructions on utilizing keyboard accessibility features.
+
+- **Miscellaneous**:
+  - **Test Enhancements**: Added comprehensive testing for drawer components.
+  - **Maintenance**: Updated Playwright tests and configuration for improved stability.
+
+</details>
 <details><summary>🚀 v9.0.0 🚀</summary>
   <ul>
     <li>feat: migrated Svelvet library from Svelte 3 to Svelte 4</li>
