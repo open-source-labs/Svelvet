@@ -10,7 +10,7 @@ What we're working on and thinking about.
 
 ### Persistent Canvas state
 
-We will be exposing functions that can be used to capture and restore the state of the canvas including node positions, dimensions and data flow state. We may also expose a boolean that can be set on the Svelvet component to automatically save canvas state to local storage.
+saveStore.ts and reloadStore.ts lay the foundation for the save feature. They work together to get the state object of the canvas byt turning it into a JSON string for storage and then parsing it into a JSON object for reconstruction. But they need further development as they only save the camera position and theme. Specifically, the traverse function in saveStore.ts needs to properly detect and expand each element inside the canvas (graph) state object. A good place to start on this would be addressing the anchors and edges property of the graph's state object. Use the "nodes" property on this object for reference on how this data should be unraveled and stored. Additionally, the createGraph function is used in reloadStore.ts to render a graph onMount of the Svelvet component according to the state object that was saved last in local storage on the user's browser. This implementation is simplified, however, so it only recreates the graph from partially saved data.
 
 ### Improving Window Resize Logic
 
