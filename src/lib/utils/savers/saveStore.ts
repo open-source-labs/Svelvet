@@ -5,7 +5,6 @@ import type { Node } from '$lib/types';
 import { writable } from 'svelte/store';
 import type { Readable } from 'svelte/store';
 
-
 function isSvelteStore(value: any): value is Readable<any> {
 	return value && typeof value.subscribe === 'function';
 }

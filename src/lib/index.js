@@ -37,7 +37,7 @@ export {
 	generateInput,
 	generateOutput,
 	getViewportCenter,
-	ContrastTheme,
+	ContrastTheme
 };
 
 export * from './types';

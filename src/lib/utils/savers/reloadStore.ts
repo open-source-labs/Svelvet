@@ -3,7 +3,6 @@ import type { AnchorKey, GraphKey, NodeConfig, NodeKey, CustomEdgeKey, Anchor } 
 import type { ComponentType } from 'svelte';
 import type { Graph } from '$lib/types/graph';
 
-
 // added interface for createEdge function
 // interface EdgeDataType {
 //     connection: { source: Anchor; target: Anchor };
