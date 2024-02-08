@@ -2,8 +2,6 @@ import { createGraph, createNode, createAnchor, createEdge } from '../creators';
 import type { AnchorKey, GraphKey, NodeConfig, NodeKey, CustomEdgeKey, Anchor } from '$lib/types';
 import type { ComponentType } from 'svelte';
 import type { Graph } from '$lib/types/graph';
-// possible use case: flatted library for circular references in JSON string
-import { parse } from 'flatted';
 
 // added interface for createEdge function
 // interface EdgeDataType {

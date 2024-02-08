@@ -4,8 +4,6 @@ import type { WritableNode } from '$lib/types';
 import type { Node } from '$lib/types';
 import { writable } from 'svelte/store';
 import type { Readable } from 'svelte/store';
-// possible use case: flatted library for circular references in JSON string
-import { stringify } from 'flatted';
 
 function isSvelteStore(value: any): value is Readable<any> {
 	return value && typeof value.subscribe === 'function';

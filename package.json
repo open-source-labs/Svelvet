@@ -74,8 +74,5 @@
 	},
 	"peerDependencies": {
 		"svelte": ">=3.59.2 || ^4.0.0"
-	},
-	"dependencies": {
-		"flatten": "^1.0.3"
 	}
 }
