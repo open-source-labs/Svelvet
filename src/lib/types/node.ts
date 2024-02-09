@@ -9,6 +9,7 @@ export interface Node {
 	position: Writable<XYPair>;
 
 	moving: Writable<boolean>;
+	moved: Writable<XYPair>;
 	label: Writable<string>; // Primary label for default node
 	dimensions: Dimensions;
 	inputs: Writable<number>; //Number of default input anchors to render

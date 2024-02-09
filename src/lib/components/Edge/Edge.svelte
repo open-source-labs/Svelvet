@@ -39,6 +39,7 @@
 	export let animate = false;
 	export let label = '';
 	export let enableHover = false;
+	export let enableDestroyOnClick = false;
 	export let edgeClick: null | (() => void) = null;
 	/**
 	 * @default 0.5
@@ -340,12 +341,17 @@
 			style:cursor={edgeClick || hovering ? 'pointer' : 'move'}
 			style:--prop-target-edge-color={edgeClick || hovering ? targetColor || null : 'transparent'}
 			d={path}
-			on:mousedown={edgeClick}
+			on:mousedown={() => {
+				edgeClick(edge);
+				if (enableDestroyOnClick) {
+					destroy();
+				}
+			}}
 			on:mouseenter={() => (hovering = true)}
 			on:mouseleave={() => (hovering = false)}
 			bind:this={DOMPath}
 		/>
-		<slot {path} {destroy} {hovering}>
+		<slot {path} {destroy} {hovering} {edge}>
 			<path
 				id={edgeKey}
 				class="edge"
@@ -408,15 +414,15 @@
 
 	.target {
 		pointer-events: stroke;
-		stroke: none;
-		stroke-width: calc(var(--edge-width, var(--default-edge-width)) + 8px);
-	}
-
-	.target:hover {
 		stroke: var(
 			--prop-target-edge-color,
 			var(--target-edge-color, var(--default-target-edge-color))
 		);
+		stroke-width: calc(var(--edge-width, var(--default-edge-width)) + 8px);
+		opacity: 0;
+	}
+
+	.target:hover {
 		opacity: 50%;
 	}
 
