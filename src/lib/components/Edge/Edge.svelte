@@ -4,26 +4,15 @@
 	import { directionVectors, stepBuffer } from '$lib/constants';
 	import { buildPath, rotateVector } from '$lib/utils/helpers';
 	import { buildArcStringKey, constructArcString } from '$lib/utils/helpers';
-	import { get } from 'svelte/store';
+	import { get, type Writable } from 'svelte/store';
 	import type { CSSColorString, Direction, EdgeStyle, EndStyle, Graph } from '$lib/types';
 	import type { WritableEdge } from '$lib/types';
 
 	let animationFrameId: number;
-
-	function moveEdge(edgeElement: SVGElement) {
-		const parentNode = edgeElement.parentNode;
-		if (!parentNode) return;
-		// Remove the anchor from its current container
-		parentNode.removeChild(edgeElement);
-
-		// Add the anchor to the new container
-		const newContainer = document.querySelector(`.svelvet-graph-wrapper`);
-		if (!newContainer) return;
-		newContainer.appendChild(edgeElement);
-	}
 </script>
 
 <script lang="ts">
+	const graphDOMElement = getContext<Writable<HTMLElement | null>>('graphDOMElement');
 	const edgeStore = getContext<Graph['edges']>('edgeStore');
 	const edgeStyle = getContext<EdgeStyle>('edgeStyle');
 	const endStyles = getContext<Array<EndStyle>>('endStyles');
@@ -186,6 +175,19 @@
 	}
 	edge.rendered.set(true);
 	// Lifecycle methods
+	function moveEdge(edgeElement: SVGElement) {
+		const parentNode = edgeElement.parentNode;
+		if (!parentNode) return;
+		// Remove the anchor from its current container
+		parentNode.removeChild(edgeElement);
+
+		// Add the anchor to the new container
+		if (!$graphDOMElement) return;
+		const newContainer = $graphDOMElement.querySelector(`.svelvet-graph-wrapper`);
+		if (!newContainer) return;
+		newContainer.appendChild(edgeElement);
+	}
+
 	onMount(() => {
 		setTimeout(() => {
 			if (DOMPath) {
