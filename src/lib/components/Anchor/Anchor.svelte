@@ -63,6 +63,8 @@
 	export let id: string | number = 0;
 	export let input = false;
 	export let output = false;
+	export let dataType: string | string[] | undefined = undefined;
+
 	/**
 	 * @default dependent on `input` and `output` props
 	 * @description When `true`, the Anchor will accept multiple connections. This is set to true by default
@@ -142,7 +144,8 @@
 		direction,
 		dynamic,
 		key,
-		edgeColor
+		edgeColor,
+		dataType
 	);
 	anchors.add(anchor, anchor.id);
 
@@ -402,6 +405,14 @@
 		attemptConnection(source, target, e);
 	}
 
+	// Check if the data types of the source and target anchors are compatible
+	function matchDataTypes(source: Anchor, target: Anchor): boolean {
+		if (!source.dataType || !target.dataType) return true;
+		const sourceDataType = Array.isArray(source.dataType) ? source.dataType : [source.dataType];
+		const targetDataType = Array.isArray(target.dataType) ? target.dataType : [target.dataType];
+		return sourceDataType.some((type) => targetDataType.includes(type));
+	}
+
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
 	function connectAnchors(source: Anchor, target: Anchor) {
@@ -409,6 +420,9 @@
 		if (source === target) return false;
 		// Don't connect if the anchors are already connected
 		if (get(source.connected).has(anchor)) return false;
+		// Don't connect if not compatible data types
+		if (!matchDataTypes(source, target)) return false;
+
 		const edgeConfig: EdgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }

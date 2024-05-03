@@ -35,6 +35,8 @@ export interface Anchor {
 		| ReturnType<typeof generateOutput>
 		| null;
 	node: Node;
+	// Data Type to check connection compatibility
+	dataType: string | string[] | null;
 }
 
 export type Direction = 'north' | 'south' | 'east' | 'west' | 'self';
