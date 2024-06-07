@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { graphStore } from '$lib/stores';
 	import { get } from 'svelte/store';
+	import { createEventDispatcher } from "svelte";
 
 	export let main = 'light';
 	export let alt = 'dark';
@@ -26,6 +27,7 @@
 	export let bgColor: CSSColorString | null = null;
 	export let iconColor: CSSColorString | null = null;
 
+	const dispatch = createEventDispatcher();
 	let current = main;
 
 	function toggleTheme() {
@@ -45,6 +47,8 @@
 
 		// Save the current theme to Local Storage
 		localStorage.setItem('currentTheme', newTheme);
+		// Dispatch theme change event
+		dispatch("themeChange", { theme: newTheme });
 	}
 
 	onMount(() => {
