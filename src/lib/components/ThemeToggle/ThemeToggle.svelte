@@ -62,13 +62,13 @@
 	let graph: any;
 
 	graphStore.subscribe((graphMap) => {
-		const graphKey = 'G-1';
+		const graphKey = 'G-G-1';
 		graph = graphMap.get(graphKey);
 		// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
 		const currentGraphMap = get(graphStore);
-		const graph = currentGraphMap.get('G-1');
+		const graph = currentGraphMap.get('G-G-1');
 		// if (graph) {
 		// 	console.log('Current Graph State:', graph);
 		// } else {
