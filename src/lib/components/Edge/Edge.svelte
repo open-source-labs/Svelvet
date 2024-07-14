@@ -8,19 +8,25 @@
 	import type { CSSColorString, Direction, EdgeStyle, EndStyle, Graph } from '$lib/types';
 	import type { WritableEdge } from '$lib/types';
 
+	export let containerId;
+
 	let animationFrameId: number;
 
-	function moveEdge(edgeElement: SVGElement) {
+	function moveEdge(edgeElement: SVGElement, containerId: string) {
 		const parentNode = edgeElement.parentNode;
 		if (!parentNode) return;
 		// Remove the anchor from its current container
 		parentNode.removeChild(edgeElement);
 
 		// Add the anchor to the new container
-		const newContainer = document.querySelector(`.svelvet-graph-wrapper`);
+		const newContainer = document.querySelector(`.svelvet-graph-wrapper[data-id='${containerId}']`);
 		if (!newContainer) return;
 		newContainer.appendChild(edgeElement);
 	}
+
+	onDestroy(() => {
+		cancelAnimationFrame(animationFrameId);
+	});
 </script>
 
 <script lang="ts">
