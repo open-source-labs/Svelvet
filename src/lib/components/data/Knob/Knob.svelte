@@ -32,7 +32,7 @@
 		sliderWidth: 0,
 		rotating: false,
 		previousValue: $props.parameterStore,
-		curAngle: `rotate(${((($props.parameterStore as number) - $props.min) / ($props.max - $props.min)) * ($props.maxDegree - $props.minDegree) + $props.minDegree}deg`
+		curAngle: `rotate(${((($props.parameterStore as number) - $props.min) / ($props.max - $props.minDegree)) * ($props.maxDegree - $props.minDegree) + $props.minDegree}deg`
 	};
 
 	const graph = getContext<Graph>('graph');

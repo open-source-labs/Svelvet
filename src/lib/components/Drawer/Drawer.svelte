@@ -3,6 +3,7 @@
 	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
+	import { writable } from 'svelte/store';
 
 	// Props
 	$props = {
@@ -55,18 +56,16 @@
 	};
 
 	// Array of default and custom nodes, anchors
-	$state = {
-		defaultNodes: [],
-		dropped_in: false
-	};
+	const defaultNodes = writable([]);
+	const dropped_in = writable(false);
 
 	// Drag and drop events
 	const handleDragEnter = (): void => {
-		if (!$state.dropped_in) $state.dropped_in = true;
+		if (!dropped_in) dropped_in.set(true);
 	};
 
 	const handleDragLeave = (): void => {
-		$state.dropped_in = false;
+		dropped_in.set(false);
 	};
 
 	const onDragOver = (e: DragEvent): boolean => {
@@ -85,7 +84,7 @@
 		const target = e.target as HTMLElement;
 		target.dispatchEvent(moveEvent);
 
-		$state.defaultNodes = $defaultNodePropsStore;
+		defaultNodes.set($defaultNodePropsStore);
 	};
 </script>
 
@@ -98,59 +97,59 @@
 	ondrop={handleDrop}
 >
 	<Svelvet {...svelvetProps} drawer>
-			{@render $state.defaultNodes as { anchors, edgeProps, ...nodeProps }}
-				{#if anchors}
-					<Node {...nodeProps} drop="cursor">
-						{@render anchors.left as leftAnchorProps}
-							{#if edgeProps}
-								<Anchor {...leftAnchorProps}>
-									<Edge {...edgeProps} />
-								</Anchor>
-							{:else}
-								<Anchor {...leftAnchorProps} />
-							{/if}
-						{/render}
-						{@render anchors.right as rightAnchorProps}
-							{#if edgeProps}
-								<Anchor {...rightAnchorProps}>
-									<Edge {...edgeProps} />
-								</Anchor>
-							{:else}
-								<Anchor {...rightAnchorProps} />
-							{/if}
-						{/render}
-						{@render anchors.top as topAnchorProps}
-							{#if edgeProps}
-								<Anchor {...topAnchorProps}>
-									<Edge {...edgeProps} />
-								</Anchor>
-							{:else}
-								<Anchor {...topAnchorProps} />
-							{/if}
-						{/render}
-						{@render anchors.bottom as bottomAnchorProps}
-							{#if edgeProps}
-								<Anchor {...bottomAnchorProps}>
-									<Edge {...edgeProps} />
-								</Anchor>
-							{:else}
-								<Anchor {...bottomAnchorProps} />
-							{/if}
-						{/render}
-						{@render anchors.self as anchorProps}
-							{#if edgeProps}
-								<Anchor {...anchorProps}>
-									<Edge {...edgeProps} />
-								</Anchor>
-							{:else}
-								<Anchor {...anchorProps} />
-							{/if}
-						{/render}
-					</Node>
-				{:else}
-					<Node {...nodeProps} drop="cursor" />
-				{/if}
-			{/render}
+		{#each $defaultNodes as { anchors, edgeProps, ...nodeProps }}
+			{#if anchors}
+				<Node {...nodeProps} drop="cursor">
+					{#each anchors.left as leftAnchorProps}
+						{#if edgeProps}
+							<Anchor {...leftAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...leftAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.right as rightAnchorProps}
+						{#if edgeProps}
+							<Anchor {...rightAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...rightAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.top as topAnchorProps}
+						{#if edgeProps}
+							<Anchor {...topAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...topAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.bottom as bottomAnchorProps}
+						{#if edgeProps}
+							<Anchor {...bottomAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...bottomAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.self as anchorProps}
+						{#if edgeProps}
+							<Anchor {...anchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...anchorProps} />
+						{/if}
+					{/each}
+				</Node>
+			{:else}
+				<Node {...nodeProps} drop="cursor" />
+			{/if}
+		{/each}
 
 		{@render children}
 		{@render $props.minimap as minimap}
