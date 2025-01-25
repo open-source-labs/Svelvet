@@ -1,13 +1,14 @@
 import { Surreal } from 'surrealdb.js';
 
 export class SurrealConnection {
-	private static instance: Surreal;
+	private static instance: Surreal | undefined;
 	private static config = {
 		url: 'ws://localhost:8000',
-		user: 'root',
-		pass: 'root',
+		username: 'root',
+		password: 'root',
 		namespace: 'test',
-		database: 'test'
+		database: 'test',
+		scope: 'global'
 	};
 
 	private constructor() {}
@@ -18,10 +19,14 @@ export class SurrealConnection {
 			try {
 				await this.instance.connect(this.config.url);
 				await this.instance.signin({
-					user: this.config.user,
-					pass: this.config.pass
+					username: this.config.username,
+					password: this.config.password,
+					scope: this.config.scope
 				});
-				await this.instance.use(this.config.namespace, this.config.database);
+				await this.instance.use({
+					namespace: this.config.namespace,
+					database: this.config.database
+				});
 			} catch (error) {
 				throw new Error(`Database connection failed: ${error}`);
 			}

@@ -1,7 +1,7 @@
 import { Surreal } from 'surrealdb.js';
 
 export class SurrealManager {
-	private static instance: Surreal;
+	private static instance: Surreal | undefined;
 
 	static async connect(
 		config = {
@@ -13,7 +13,10 @@ export class SurrealManager {
 		if (!this.instance) {
 			this.instance = new Surreal();
 			await this.instance.connect(config.url);
-			await this.instance.use(config.namespace, config.database);
+			await this.instance.use({
+				namespace: config.namespace,
+				database: config.database
+			});
 		}
 		return this.instance;
 	}
