@@ -5,52 +5,29 @@
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
 	import { writable } from 'svelte/store';
 
-	export let width: number;
-	export let height: number;
-	export let minimap: boolean;
-	export let translation: XYPair;
-	export let controls: boolean;
-	export let edge: ComponentType;
-	export let edgeStyle: EdgeStyle;
-	export let snapTo: number;
-	export let editable: boolean;
-	export let fitView: boolean;
-	export let locked: boolean;
-	export let zoom: number;
-	export let theme: string;
-	export let mermaid: string;
-	export let mermaidConfig: object;
-	export let TD: boolean;
-	export let disableSelection: boolean;
-	export let raiseEdgesOnSelect: boolean;
-	export let modifier: string;
-	export let trackpadPan: boolean;
-	export let toggle: boolean;
-	export let position: string; // New customization option for position
-
 	$props = {
-		width,
-		height,
-		minimap,
-		translation,
-		controls,
-		edge,
-		edgeStyle,
-		snapTo,
-		editable,
-		fitView,
-		locked,
-		zoom,
-		theme,
-		mermaid,
-		mermaidConfig,
-		TD,
-		disableSelection,
-		raiseEdgesOnSelect,
-		modifier,
-		trackpadPan,
-		toggle,
-		position // New customization option for position
+		width: null,
+		height: null,
+		minimap: false,
+		translation: null,
+		controls: false,
+		edge: null,
+		edgeStyle: null,
+		snapTo: 0,
+		editable: false,
+		fitView: false,
+		locked: false,
+		zoom: 0,
+		theme: '',
+		mermaid: '',
+		mermaidConfig: {},
+		TD: false,
+		disableSelection: false,
+		raiseEdgesOnSelect: false,
+		modifier: '',
+		trackpadPan: false,
+		toggle: false,
+		position: '' // New customization option for position
 	};
 
 	$state = {
@@ -93,10 +70,10 @@
 <div
 	role="presentation"
 	class="drop_zone"
-	ondragenter={handleDragEnter}
-	ondragleave={handleDragLeave}
-	ondragover={onDragOver}
-	ondrop={handleDrop}
+	onmouseenter={handleDragEnter}
+	onmouseleave={handleDragLeave}
+	onmousemove={onDragOver}
+	onmouseup={handleDrop}
 	style:width={$props.width ? $props.width + 'px' : '100%'} // Apply width customization
 	style:height={$props.height ? $props.height + 'px' : '100%'} // Apply height customization
 	style:position={$props.position ? $props.position : 'relative'} // Apply position customization

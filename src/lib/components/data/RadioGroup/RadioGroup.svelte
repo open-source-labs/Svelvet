@@ -34,7 +34,7 @@
 <div class="radio-group" role="radiogroup" onkeydown={cycleThroughGroup} tabindex={0}>
 	{#each $props.options as label, index}
 		<button
-			onmousedown|stopPropagation={() => {
+			onmousedown={() => {
 				$state.initial = index;
 			}}
 			aria-checked={$state.initial === index}

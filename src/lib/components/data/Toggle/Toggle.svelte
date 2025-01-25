@@ -23,7 +23,7 @@
 <div
 	class="toggle-wrapper"
 	role="switch"
-	onkeydown|stopPropagation={handleKeyToggle}
+	onkeydown={handleKeyToggle}
 	tabindex={0}
 	aria-checked={$state.parameterStore}
 	aria-label="Toggle Switch"
@@ -31,7 +31,7 @@
 	<label class="switch">
 		<input
 			type="checkbox"
-			onclick|stopPropagation={handleClickToggle}
+			onclick={handleClickToggle}
 			bind:checked={$state.parameterStore}
 		/>
 		<span class="slider round" style:--prop-toggle-color={color} />

@@ -1,14 +1,18 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
 	import { getContext } from 'svelte';
-	export let placeholder: string;
+	import type { Writable } from 'svelte/store';
+
+	$props = {
+		placeholder: ''
+	};
+
 	const textStore = getContext<Writable<string>>('textStore');
 </script>
 
 <input
-	on:keydown|stopPropagation
-	on:click|stopPropagation
-	on:mousedown|stopPropagation
+	onkeydown={event => event.stopPropagation()}
+	onclick={event => event.stopPropagation()}
+	onmousedown={event => event.stopPropagation()}
 	{placeholder}
 	type="text"
 	bind:value={$textStore}
