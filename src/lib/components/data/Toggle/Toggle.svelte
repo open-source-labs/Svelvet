@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { useState } from 'svelte';
-
 	$props = {
 		parameterStore: null,
 		color: 'limegreen'
 	};
 
-	const [parameterStore, setParameterStore] = useState($props.parameterStore);
+	$state = {
+		parameterStore: $props.parameterStore
+	};
 
 	const handleKeyToggle = (event: KeyboardEvent) => {
 		event.stopPropagation();
 		if (event.key === 'Enter') {
-			setParameterStore(!parameterStore);
+			$state.parameterStore = !$state.parameterStore;
 		}
 	};
 	const handleClickToggle = (event: MouseEvent) => {
 		event.stopPropagation();
-		setParameterStore(!parameterStore);
+		$state.parameterStore = !$state.parameterStore;
 	};
 </script>
 
@@ -25,14 +25,14 @@
 	role="switch"
 	onkeydown|stopPropagation={handleKeyToggle}
 	tabindex={0}
-	aria-checked={parameterStore}
+	aria-checked={$state.parameterStore}
 	aria-label="Toggle Switch"
 >
 	<label class="switch">
 		<input
 			type="checkbox"
 			onclick|stopPropagation={handleClickToggle}
-			bind:checked={parameterStore}
+			bind:checked={$state.parameterStore}
 		/>
 		<span class="slider round" style:--prop-toggle-color={color} />
 	</label>

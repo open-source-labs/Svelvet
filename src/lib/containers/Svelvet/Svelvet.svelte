@@ -90,7 +90,7 @@
 	});
 
 	$effect(() => {
-		$state.backgroundExists = $$slots.background;
+		$state.backgroundExists = $$snippets.background;
 	});
 
 	$effect(() => {
@@ -169,13 +169,12 @@
 		{#if $props.mermaid.length}
 			<FlowChart mermaid={$props.mermaid} mermaidConfig={$props.mermaidConfig} />
 		{/if}
-		<slot />
-		<slot name="minimap" slot="minimap" />
-		<slot name="controls" slot="controls" />
-		<slot name="background" slot="background" />
-		<slot name="toggle" slot="toggle" />
-		<slot name="drawer" slot="drawer" />
-		<slot name="contrast" slot="contrast" />
+			{@render children}
+			{@render $props.minimap as minimap}
+			{@render $props.controls as controls}
+			{@render $props.toggle as toggle}
+			{@render $props.drawer as drawer}
+			{@render $props.contrast as contrast}
 	</Graph>
 {:else}
 	<div
@@ -525,13 +524,13 @@
 		--plugin-border: #ffff00;
 		--default-controls-border: var(--plugin-border);
 		--default-minimap-border: var(--plugin-border);
-		--default-theme-toggle-border: var(--plugin-border);
+		--default-theme-toggle-border: var (--plugin-border);
 
 		--default-anchor-color: #ffff00;
 		--default-anchor-border-color: #0000ff;
 
 		--default-anchor-connected: #ffff00;
-		--default-anchor-connected-border: #0000ff;
+			--default-anchor-connected-border: #0000ff;
 
 		--default-anchor-connecting: #ffff00;
 		--default-anchor-connecting-border: #0000ff;
