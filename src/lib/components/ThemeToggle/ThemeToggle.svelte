@@ -5,43 +5,31 @@
 	import { graphStore } from '$lib/stores';
 	import { get } from 'svelte/store';
 
-	export let main = 'light';
-	export let alt = 'dark';
-	// export let highContrast = 'highContrast';
-	/**
-	 * @deprecated
-	 * @default 'light_mode'
-	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
-	 * @link https://fonts.google.com/icons
-	 */
-	export let mainIcon = 'light_mode';
-	/**
-	 * @deprecated
-	 * @default 'dark_mode'
-	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
-	 *  @link https://fonts.google.com/icons
-	 */
-	export let altIcon = 'dark_mode';
-	export let corner = 'NE';
-	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
+	$props = {
+		main: 'light',
+		alt: 'dark',
+		mainIcon: 'light_mode',
+		altIcon: 'dark_mode',
+		corner: 'NE',
+		bgColor: null,
+		iconColor: null
+	};
 
-	let current = main;
+	$state = {
+		current: $props.main
+	};
 
 	function toggleTheme() {
 		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
 		let newTheme;
-		if (!currentTheme || currentTheme === main) {
-			newTheme = alt;
+		if (!currentTheme || currentTheme === $props.main) {
+			newTheme = $props.alt;
+			$state.current = $props.alt;
+		} else {
+			newTheme = $props.main;
+			$state.current = $props.main;
 		}
-		// else if (currentTheme === alt) {
-		// 	newTheme = highContrast;
-		// }
-		else {
-			newTheme = main;
-		}
-		current = newTheme;
-		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
+		document.documentElement.setAttribute('svelvet-theme', newTheme);
 
 		// Save the current theme to Local Storage
 		localStorage.setItem('currentTheme', newTheme);
@@ -51,11 +39,11 @@
 		const savedTheme = localStorage.getItem('currentTheme');
 		if (savedTheme) {
 			document.documentElement.setAttribute('svelvet-theme', savedTheme);
-			current = savedTheme;
+			$state.current = savedTheme;
 		} else {
 			// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
-			document.documentElement.setAttribute('svelvet-theme', main);
-			current = main;
+			document.documentElement.setAttribute('svelvet-theme', $props.main);
+			$state.current = $props.main;
 		}
 	});
 
@@ -79,20 +67,20 @@
 
 <div
 	class="controls-wrapper"
-	style:--prop-theme-toggle-color={bgColor}
-	style:--prop-theme-toggle-text-color={iconColor}
-	class:SW={corner === 'SW'}
-	class:NE={corner === 'NE'}
-	class:SE={corner === 'SE'}
-	class:NW={corner === 'NW'}
+	style:--prop-theme-toggle-color={$props.bgColor}
+	style:--prop-theme-toggle-text-color={$props.iconColor}
+	class:SW={$props.corner === 'SW'}
+	class:NE={$props.corner === 'NE'}
+	class:SE={$props.corner === 'SE'}
+	class:NW={$props.corner === 'NW'}
 >
-	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
+	<button onclick={toggleTheme} ontouchstart={toggleTheme}>
+		<span class="material-symbols-outlined">{$state.current === $props.main ? $props.altIcon : $props.mainIcon}</span>
 	</button>
 
 	<button
 		class="save-button NW"
-		on:click={() => {
+		onclick={() => {
 			getJSONState(graph);
 		}}>Save</button
 	>

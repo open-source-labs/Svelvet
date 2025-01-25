@@ -4,24 +4,26 @@
 	import { writable } from 'svelte/store';
 	import { getRandomColor } from '$lib/utils';
 
-	export let width: number;
-	export let height: number;
-	export let position: XYPair;
-	export let color: CSSColorString = getRandomColor();
-	export let groupName: string | number;
+	$props = {
+		width: 0,
+		height: 0,
+		position: null,
+		color: getRandomColor(),
+		groupName: ''
+	};
 
 	const graph = getContext<Graph>('graph');
-	const groupKey: GroupKey = `${groupName}/${graph.id}`;
+	const groupKey: GroupKey = `${$props.groupName}/${graph.id}`;
 
 	setContext('group', groupKey);
 
-	const writablePosition = writable(position);
+	const writablePosition = writable($props.position);
 
 	const groupBox: GroupBox = {
 		group: writable(groupKey),
-		dimensions: { width: writable(width), height: writable(height) },
+		dimensions: { width: writable($props.width), height: writable($props.height) },
 		position: writablePosition,
-		color: writable(color),
+		color: writable($props.color),
 		moving: writable(false)
 	};
 	graph.groupBoxes.add(groupBox, groupKey);

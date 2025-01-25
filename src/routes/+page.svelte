@@ -25,15 +25,17 @@
 	import { get } from 'svelte/store';
 	function addAndConnect(connect: (connections: string | number) => void) {
 		connect(totalNodes + 4);
-		totalNodes++;
+		$state.totalNodes++;
 	}
-	let totalNodes = 0;
-	let widthCount = 1;
-	let graph: any;
+	$state = {
+		totalNodes: 0,
+		widthCount: 1,
+		graph: null
+	};
 
 	graphStore.subscribe((graphMap) => {
 		const graphKey = 'G-1';
-		graph = graphMap.get(graphKey);
+		$state.graph = graphMap.get(graphKey);
 		// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
@@ -52,21 +54,21 @@
 		<!-- buttons on lower level node -->
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
-			<button on:click={() => widthCount++} />
-			{#each { length: widthCount } as item}
+			<button onclick={() => $state.widthCount++} />
+			{#each { length: $state.widthCount } as item}
 				<div>Height</div>
 			{/each}
 			<!-- <button on:click={() => alert('hi')}>ALERTe</button> -->
 			<button
 				style="cursor: pointer;"
-				on:click={() => {
+				onclick={() => {
 					// const graph = getContext('graph');
-					console.log('Graph on user interaction:', graph);
-					getJSONState(graph);
+					console.log('Graph on user interaction:', $state.graph);
+					getJSONState($state.graph);
 				}}>SAVE STATE</button
 			>
 
-			<button on:click={logCurrentGraphState}>Log Current Graph State</button>
+			<button onclick={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
 		<!-- text field -->
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
@@ -85,7 +87,7 @@
 			</div>
 			<Anchor nodeConnect />
 		</Node>
-		{#each { length: totalNodes } as node}
+		{#each { length: $state.totalNodes } as node}
 			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 

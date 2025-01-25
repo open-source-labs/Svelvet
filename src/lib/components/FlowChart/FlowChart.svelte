@@ -5,9 +5,11 @@
 	import { onMount, getContext, setContext } from 'svelte';
 	import { flowChartDrawer } from '$lib/utils/drawers/flowchartDrawer';
 	import { flowChartParser } from '$lib/utils/helpers/parser';
-	export let mermaid = '';
-	export let mermaidConfig: Record<string, NodeConfig> = {};
-	const flowChart: FlowChart = flowChartParser(mermaid);
+	$props = {
+		mermaid: '',
+		mermaidConfig: {}
+	};
+	const flowChart: FlowChart = flowChartParser($props.mermaid);
 
 	setContext('flowchart', flowChart);
 
@@ -17,22 +19,24 @@
 	const MIN_X_SPACE = 100;
 	const MIN_Y_SPACE = 100;
 
-	let nodeList: Record<NodeKey, NodeType>;
+	$state = {
+		nodeList: {} as Record<NodeKey, NodeType>
+	};
 
 	onMount(() => {
-		graph.nodes.subscribe((nodes) => (nodeList = Object.fromEntries(nodes)));
+		graph.nodes.subscribe((nodes) => ($state.nodeList = Object.fromEntries(nodes)));
 		let y = 0;
 		for (const row of grid) {
 			let x = 0;
 			let maxHeight = -Infinity;
 			for (const node of row) {
 				if (!node.ignore) {
-					nodeList[`N-${node.id}`].position.update(() => {
+					$state.nodeList[`N-${node.id}`].position.update(() => {
 						return { x, y };
 					});
 
-					nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
-					nodeList[`N-${node.id}`].dimensions.height.subscribe(
+					$state.nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
+					$state.nodeList[`N-${node.id}`].dimensions.height.subscribe(
 						(height: number) => (maxHeight = Math.max(maxHeight, height))
 					);
 				}
@@ -50,7 +54,7 @@
 				label={node.label}
 				id={node.id}
 				TD={true}
-				{...mermaidConfig[node.id]}
+				{...$props.mermaidConfig[node.id]}
 				connections={node.children.map((id) => [id, '1'])}
 			/>
 		{/if}
