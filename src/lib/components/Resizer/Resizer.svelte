@@ -1,13 +1,11 @@
-<script context="module" lang="ts">
+<script lang="ts">
 	import { calculateFitContentWidth } from '$lib/utils';
 	import { beforeUpdate, getContext, onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { initialClickPosition, resizing } from '$lib/stores';
 	import type { Graph, Node } from '$lib/types';
 	import type { Writable } from 'svelte/store';
-</script>
 
-<script lang="ts">
 	const graph = getContext<Graph>('graph');
 	const node = getContext<Node>('node');
 	const resized = getContext<Writable<boolean>>('resized');
