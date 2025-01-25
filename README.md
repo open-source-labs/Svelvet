@@ -12,7 +12,7 @@
 
 # Infinitely Customizable Node-Based User Interfaces with Svelvet!
 
-Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
+Svelfivet is a lightweight fork of the Svelvet library upgrade to Svelte 5.0 it is an intuitive library for building interactive node-based user interfaces and diagrams.
 
 [⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@julianb1212_35672/svelvet-10-0-new-features-for-accessibility-and-improved-performance-3caaab9e54e9) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
