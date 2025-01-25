@@ -200,6 +200,40 @@
 			selfAnchorCounter.set(anchorsCreated.self.length);
 		}
 	};
+
+	// Validation for anchor properties
+	const validateAnchorProps = () => {
+		if ($state.invisible !== undefined && typeof $state.invisible !== 'boolean') {
+			throw new Error('Invalid value for invisible property');
+		}
+		if ($state.nodeConnect !== undefined && typeof $state.nodeConnect !== 'boolean') {
+			throw new Error('Invalid value for nodeConnect property');
+		}
+		if ($state.input !== undefined && typeof $state.input !== 'boolean') {
+			throw new Error('Invalid value for input property');
+		}
+		if ($state.output !== undefined && typeof $state.output !== 'boolean') {
+			throw new Error('Invalid value for output property');
+		}
+		if ($state.multiple !== undefined && typeof $state.multiple !== 'boolean') {
+			throw new Error('Invalid value for multiple property');
+		}
+		if ($state.direction !== undefined && !['north', 'south', 'east', 'west', 'self'].includes($state.direction)) {
+			throw new Error('Invalid value for direction property');
+		}
+		if ($state.dynamic !== undefined && typeof $state.dynamic !== 'boolean') {
+			throw new Error('Invalid value for dynamic property');
+		}
+		if ($state.anchorEdgeLabel !== undefined && typeof $state.anchorEdgeLabel !== 'string') {
+			throw new Error('Invalid value for anchorEdgeLabel property');
+		}
+		if ($state.anchorLocked !== undefined && typeof $state.anchorLocked !== 'boolean') {
+			throw new Error('Invalid value for anchorLocked property');
+		}
+		if ($state.anchorBgColor !== undefined && typeof $state.anchorBgColor !== 'string') {
+			throw new Error('Invalid value for anchorBgColor property');
+		}
+	};
 </script>
 
 <div id="anchorContainer">

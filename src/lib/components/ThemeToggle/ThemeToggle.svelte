@@ -22,32 +22,40 @@
 	};
 
 	function toggleTheme() {
-		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
-		let newTheme;
-		if (!currentTheme || currentTheme === $props.main) {
-			newTheme = $props.alt;
-			$state.current = $props.alt;
-		} else {
-			newTheme = $props.main;
-			$state.current = $props.main;
+		try {
+			const currentTheme = document.documentElement.getAttribute('svelvet-theme');
+			let newTheme;
+			if (!currentTheme || currentTheme === $props.main) {
+				newTheme = $props.alt;
+				$state.current = $props.alt;
+			} else {
+				newTheme = $props.main;
+				$state.current = $props.main;
+			}
+			document.documentElement.setAttribute('svelvet-theme', newTheme);
+
+			// Save the current theme to Local Storage
+			localStorage.setItem('currentTheme', newTheme);
+
+			if ($props.onToggleTheme) $props.onToggleTheme(newTheme);
+		} catch (error) {
+			console.error('Error toggling theme:', error);
 		}
-		document.documentElement.setAttribute('svelvet-theme', newTheme);
-
-		// Save the current theme to Local Storage
-		localStorage.setItem('currentTheme', newTheme);
-
-		if ($props.onToggleTheme) $props.onToggleTheme(newTheme);
 	}
 
 	onMount(() => {
-		const savedTheme = localStorage.getItem('currentTheme');
-		if (savedTheme) {
-			document.documentElement.setAttribute('svelvet-theme', savedTheme);
-			$state.current = savedTheme;
-		} else {
-			// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
-			document.documentElement.setAttribute('svelvet-theme', $props.main);
-			$state.current = $props.main;
+		try {
+			const savedTheme = localStorage.getItem('currentTheme');
+			if (savedTheme) {
+				document.documentElement.setAttribute('svelvet-theme', savedTheme);
+				$state.current = savedTheme;
+			} else {
+				// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
+				document.documentElement.setAttribute('svelvet-theme', $props.main);
+				$state.current = $props.main;
+			}
+		} catch (error) {
+			console.error('Error setting initial theme:', error);
 		}
 	});
 
@@ -56,16 +64,20 @@
 	graphStore.subscribe((graphMap) => {
 		const graphKey = 'G-1';
 		graph = graphMap.get(graphKey);
-		// console.log('Graph from store:', graph);
+			// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
-		const currentGraphMap = get(graphStore);
-		const graph = currentGraphMap.get('G-1');
-		// if (graph) {
-		// 	console.log('Current Graph State:', graph);
-		// } else {
-		// 	console.log('No current graph found');
-		// }
+		try {
+			const currentGraphMap = get(graphStore);
+			const graph = currentGraphMap.get('G-1');
+			// if (graph) {
+			// 	console.log('Current Graph State:', graph);
+			// } else {
+			// 	console.log('No current graph found');
+			// }
+		} catch (error) {
+			console.error('Error logging current graph state:', error);
+		}
 	}
 </script>
 
@@ -85,8 +97,12 @@
 	<button
 		class="save-button NW"
 		onclick={() => {
-			getJSONState(graph);
-			if ($props.onSave) $props.onSave();
+			try {
+				getJSONState(graph);
+				if ($props.onSave) $props.onSave();
+			} catch (error) {
+				console.error('Error saving graph state:', error);
+			}
 		}}>Save</button
 	>
 </div>

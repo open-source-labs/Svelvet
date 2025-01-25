@@ -8,23 +8,25 @@
 	import Icon from '$lib/assets/icons/Icon.svelte';
 	import { onMount, onDestroy } from 'svelte';
 
+	// State variables to manage the drawer and its components
 	$state = {
-		isOpen: false,
-		nodeContainerOpen: false,
-		edgeContainerOpen: false,
-		anchorContainerOpen: false,
-		nav: null,
-		drawerBtn: null,
-		nodeBtn: null,
-		edgeBtn: null,
-		anchorBtn: null,
-		drawerContents: null,
-		nodeContainer: null,
-		anchorContainer: null,
-		edgeContainer: null,
-		currentComponent: 'Node'
+		isOpen: false, // Indicates if the drawer is open or closed
+		nodeContainerOpen: false, // Indicates if the node container is open
+		edgeContainerOpen: false, // Indicates if the edge container is open
+		anchorContainerOpen: false, // Indicates if the anchor container is open
+		nav: null, // Reference to the navigation element
+		drawerBtn: null, // Reference to the drawer button element
+		nodeBtn: null, // Reference to the node button element
+		edgeBtn: null, // Reference to the edge button element
+		anchorBtn: null, // Reference to the anchor button element
+		drawerContents: null, // Reference to the drawer contents element
+		nodeContainer: null, // Reference to the node container element
+		anchorContainer: null, // Reference to the anchor container element
+		edgeContainer: null, // Reference to the edge container element
+		currentComponent: 'Node' // Indicates the current component being displayed
 	};
 
+	// Handle the drag start event for creating node props
 	const handleDragStart = (e: DragEvent) => {
 		if (!e.dataTransfer) return;
 		e.dataTransfer.dropEffect = 'move';
@@ -36,6 +38,7 @@
 		createNodeProps(edgeCreated, anchorProps);
 	};
 
+	// Toggle the drawer open or closed
 	const handleDrawer = () => {
 		if (!$state.isOpen) {
 			$state.isOpen = true;
@@ -58,6 +61,7 @@
 		}
 	};
 
+	// Toggle the node container open or closed
 	const handleNodeContainer = () => {
 		if (!$state.nodeContainerOpen) {
 			$state.nodeContainerOpen = true;
@@ -72,6 +76,8 @@
 			$state.anchorBtn.style.borderBottom = 'none';
 		}
 	};
+
+	// Toggle the anchor container open or closed
 	const handleAnchorContainer = () => {
 		if (!$state.anchorContainerOpen) {
 			$state.anchorContainerOpen = true;
@@ -86,6 +92,8 @@
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
 		}
 	};
+
+	// Toggle the edge container open or closed
 	const handleEdgeContainer = () => {
 		if (!$state.edgeContainerOpen) {
 			$state.edgeContainerOpen = true;
@@ -101,6 +109,7 @@
 		}
 	};
 
+	// Handle key press events for toggling the drawer and components
 	const handleKeyPress = (e: KeyboardEvent) => {
 		if (e.key === 'D') {
 			handleDrawer();

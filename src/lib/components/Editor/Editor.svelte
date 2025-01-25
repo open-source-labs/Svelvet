@@ -32,36 +32,44 @@
 	}
 
 	function deleteNode() {
-		$graph.nodes.delete($props.editing.id);
-		$graph.editing.set(null);
+		try {
+			$graph.nodes.delete($props.editing.id);
+			$graph.editing.set(null);
+		} catch (error) {
+			console.error('Error deleting node:', error);
+		}
 	}
 
 	function resizeNode() {
-		const nodeId = $props.editing.id;
-		const node = $graph.nodes.get(nodeId);
+		try {
+			const nodeId = $props.editing.id;
+			const node = $graph.nodes.get(nodeId);
 
-		if (node) {
-			const currentWidth = node.dimensions.width;
-			const currentHeight = node.dimensions.height;
+			if (node) {
+				const currentWidth = node.dimensions.width;
+				const currentHeight = node.dimensions.height;
 
-			const newWidth = prompt(
-				'Enter new width (for example:250):',
-				currentWidth ? currentWidth.toString() : ''
-			);
-			const newHeight = prompt(
-				'Enter new height (for example:200):',
-				currentHeight ? currentHeight.toString() : ''
-			);
+				const newWidth = prompt(
+					'Enter new width (for example:250):',
+					currentWidth ? currentWidth.toString() : ''
+				);
+				const newHeight = prompt(
+					'Enter new height (for example:200):',
+					currentHeight ? currentHeight.toString() : ''
+				);
 
-			if (newWidth === null || newHeight === null) {
-				return;
+				if (newWidth === null || newHeight === null) {
+					return;
+				}
+
+				node.dimensions.width.set(parseInt(newWidth, 10) || 0);
+				node.dimensions.height.set(parseInt(newHeight, 10) || 0);
+
+				node.resizingWidth.set(true);
+				node.resizingHeight.set(true);
 			}
-
-			node.dimensions.width.set(parseInt(newWidth, 10) || 0);
-			node.dimensions.height.set(parseInt(newHeight, 10) || 0);
-
-			node.resizingWidth.set(true);
-			node.resizingHeight.set(true);
+		} catch (error) {
+			console.error('Error resizing node:', error);
 		}
 	}
 </script>

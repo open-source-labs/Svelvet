@@ -71,16 +71,20 @@
 	};
 
 	const handleDrop = (e: MouseEvent): void => {
-		e.stopPropagation();
-		const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		const target = e.target as HTMLElement;
-		target.dispatchEvent(moveEvent);
+		try {
+			e.stopPropagation();
+			const moveEvent = new MouseEvent('mousemove', {
+				clientX: e.clientX,
+				clientY: e.clientY,
+				bubbles: true
+			});
+			const target = e.target as HTMLElement;
+			target.dispatchEvent(moveEvent);
 
-		$state.defaultNodes = $defaultNodePropsStore;
+			$state.defaultNodes = $defaultNodePropsStore;
+		} catch (error) {
+			console.error('Error handling drop event:', error);
+		}
 	};
 </script>
 

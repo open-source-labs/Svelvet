@@ -12,13 +12,17 @@
 		groupName: ''
 	};
 
+	// Get the graph context
 	const graph = getContext<Graph>('graph');
 	const groupKey: GroupKey = `${$props.groupName}/${graph.id}`;
 
+	// Set the group context
 	setContext('group', groupKey);
 
+	// Create a writable store for the position
 	const writablePosition = writable($props.position);
 
+	// Create a group box object
 	const groupBox: GroupBox = {
 		group: writable(groupKey),
 		dimensions: { width: writable($props.width), height: writable($props.height) },
@@ -26,7 +30,11 @@
 		color: writable($props.color),
 		moving: writable(false)
 	};
+
+	// Add the group box to the graph's group boxes
 	graph.groupBoxes.add(groupBox, groupKey);
+
+	// Update the graph's groups with the new group
 	graph.groups.update((groups) => {
 		const newGroup: Group = {
 			parent: writable(groupBox),
