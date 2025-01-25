@@ -1,12 +1,23 @@
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
 
-	export let output: boolean;
-	export let input: boolean;
-	export let connecting: boolean;
-	export let connected: boolean;
-	export let hovering: boolean;
-	export let bgColor: CSSColorString | null;
+	interface Props {
+		output: boolean;
+		input: boolean;
+		connecting: boolean;
+		connected: boolean;
+		hovering: boolean;
+		bgColor: CSSColorString | null;
+	}
+
+	let {
+		output,
+		input,
+		connecting,
+		connected,
+		hovering,
+		bgColor
+	}: Props = $props();
 </script>
 
 <div
@@ -17,7 +28,7 @@
 	class:connecting
 	class:hovering
 	style:--prop-anchor-color={bgColor}
-/>
+></div>
 
 <style>
 	* {

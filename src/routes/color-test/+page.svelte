@@ -31,8 +31,8 @@
 
 		<Anchor
 			connections={[['output', 'color']]}
-			let:linked
-			let:connecting
+			
+			
 			outputStore={output}
 			output
 			edgeColor={output}
@@ -41,8 +41,10 @@
 			edge={CustomEdge}
 			locked
 		>
-			<ColorAnchor color={output} {connecting} linked />
-		</Anchor>
+			{#snippet children({ linked, connecting })}
+						<ColorAnchor color={output} {connecting} linked />
+								{/snippet}
+				</Anchor>
 	</Node>
 	<!-- <Drawer height={750}/> -->
 	<!-- Bind the node's color to the variable -->

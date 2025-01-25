@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { DOT_WIDTH, GRID_SCALE } from '$lib/constants';
 	import { getContext } from 'svelte';
 	import type { Graph, CSSColorString } from '$lib/types';
@@ -6,19 +8,34 @@
 
 	const graph = getContext<Graph>('graph');
 
-	// Props
-	export let style: BackgroundStyles = 'dots';
-	export let gridWidth = GRID_SCALE; // Distance between dots when scale = 1
-	export let dotSize = DOT_WIDTH; // Dot size when scale = 1
-	export let bgColor: CSSColorString | null = null;
-	export let dotColor: CSSColorString | null = null;
-	export let opacityThreshold = 3; // Scale after which the opacity of grid is reduced
-	export let majorGrid = 0;
-	/**
+	
+	
+	interface Props {
+		// Props
+		style?: BackgroundStyles;
+		gridWidth?: any; // Distance between dots when scale = 1
+		dotSize?: any; // Dot size when scale = 1
+		bgColor?: CSSColorString | null;
+		dotColor?: CSSColorString | null;
+		opacityThreshold?: number; // Scale after which the opacity of grid is reduced
+		majorGrid?: number;
+		/**
 	 * @default 0.4
 	 * @description The minimum opacity of the background grid
 	 */
-	export let minOpacity = 0.4;
+		minOpacity?: number;
+	}
+
+	let {
+		style = 'dots',
+		gridWidth = GRID_SCALE,
+		dotSize = DOT_WIDTH,
+		bgColor = null,
+		dotColor = null,
+		opacityThreshold = 3,
+		majorGrid = 0,
+		minOpacity = 0.4
+	}: Props = $props();
 
 	// External stores
 	const transforms = graph.transforms;
@@ -26,25 +43,25 @@
 	const translationStore = transforms.translation;
 
 	// Reactive variables
-	let backgroundWrapper: HTMLDivElement;
-	let svgWidth;
-	let svgHeight;
-	let backgroundOffsetX: number;
-	let backgroundOffsetY: number;
-	let gridOpacity = 1;
-	let majorGridOpacity = 1;
+	let backgroundWrapper: HTMLDivElement = $state();
+	let svgWidth = $state();
+	let svgHeight = $state();
+	let backgroundOffsetX: number = $state();
+	let backgroundOffsetY: number = $state();
+	let gridOpacity = $state(1);
+	let majorGridOpacity = $state(1);
 
 	//Subscriptions
-	$: graphTranslation = $translationStore;
-	$: scale = $scaleStore;
+	let graphTranslation = $derived($translationStore);
+	let scale = $derived($scaleStore);
 
 	// Reactive declarations
-	$: gridScale = scale * gridWidth; // Update grid scale when scale changes
-	$: radius = (scale * dotSize) / 2; // Update dot radius when scale changes
-	$: dotCenterCoordinate = gridScale / 2; // Place dot in the center of the grid
+	let gridScale = $derived(scale * gridWidth); // Update grid scale when scale changes
+	let radius = $derived((scale * dotSize) / 2); // Update dot radius when scale changes
+	let dotCenterCoordinate = $derived(gridScale / 2); // Place dot in the center of the grid
 
 	// Update background offset when scale or offset changes
-	$: {
+	run(() => {
 		svgWidth = backgroundWrapper?.offsetWidth || 0;
 		svgHeight = backgroundWrapper?.offsetHeight || 0;
 		backgroundOffsetX = ((svgWidth + radius) * (1 - scale)) / 2 + graphTranslation.x;
@@ -52,7 +69,7 @@
 		gridOpacity = scale > opacityThreshold ? 1 : scale / opacityThreshold + minOpacity;
 		majorGridOpacity =
 			scale > opacityThreshold / 3 ? 1 : scale / (opacityThreshold / 3) + minOpacity;
-	}
+	});
 </script>
 
 <!-- BACKGROUND COMPONENT START -->

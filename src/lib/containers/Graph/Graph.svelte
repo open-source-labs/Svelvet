@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: `{@render ...}` tags can only contain call expressions
+https://svelte.dev/e/render_tag_invalid_expression -->
 <script context="module" lang="ts">
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Background from '../Background/Background.svelte';

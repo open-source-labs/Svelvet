@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script context="module" lang="ts">
 	import InternalNode from './InternalNode.svelte';
 	import DefaultNode from './DefaultNode.svelte';
@@ -136,7 +138,7 @@
 		const adjustedConnections = Array.isArray(connections) ? connections : [connections];
 
 		adjustedConnections.forEach((connection) => {
-			const [nodeId, anchorId] = Array.isArray(connection) ? connection : [connection, null];
+			const [nodeId, anchorId] = Array.isArray(connection) ? [connection[0], connection[1]] : [connection, null];
 			const nodeKey: NodeKey = `N-${nodeId}`;
 			const otherNode = graph.nodes.get(nodeKey);
 			if (!otherNode) return;

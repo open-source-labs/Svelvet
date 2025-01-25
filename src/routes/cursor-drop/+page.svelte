@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { stopPropagation } from 'svelte/legacy';
+
 	import { getContext, onMount, setContext } from 'svelte';
 	import { Node, Svelvet, Anchor } from '$lib';
 	//import Graph from '$lib/containers/Graph/Graph.svelte';
@@ -7,7 +9,7 @@
 
 	const graph = getContext<Graph>('graph');
 
-	let dropZoneClass = 'inactive';
+	let dropZoneClass = $state('inactive');
 	let NODE_BG_TYPE = 'nodebg';
 	let NODE_HEIGHT_DIMENSIONS_TYPE = 'nodeHeight';
 	let NODE_WIDTH_DIMENSIONS_TYPE = 'nodeWidth';
@@ -19,21 +21,21 @@
 	let NODE_OUTPUTS = 'outputs';
 
 	// types for node creation
-	let bgColor: CSSColorString = '#F2F2F2';
-	let borderColor: CSSColorString = '#DEDEDE';
-	let width: number = 200;
-	let height: number = 100;
-	let nodeTD: boolean = false;
-	let nodeLR: boolean = false;
-	let inputs: number = 1;
-	let outputs: number = 1;
-	let borderWidth: number = 1;
-	let label: string = '';
-	let locked: boolean = false;
-	let center: boolean = false;
+	let bgColor: CSSColorString = $state('#F2F2F2');
+	let borderColor: CSSColorString = $state('#DEDEDE');
+	let width: number = $state(200);
+	let height: number = $state(100);
+	let nodeTD: boolean = $state(false);
+	let nodeLR: boolean = $state(false);
+	let inputs: number = $state(1);
+	let outputs: number = $state(1);
+	let borderWidth: number = $state(1);
+	let label: string = $state('');
+	let locked: boolean = $state(false);
+	let center: boolean = $state(false);
 	let direction: 'LR' | 'TD' | undefined;
 
-	let nodes: NodeConfig[] = [];
+	let nodes: NodeConfig[] = $state([]);
 	const onDragStart = (e: any) => {
 		// e.dataTransfer.setData(NODE_BG_TYPE, nodeBackgroundColor);
 		//e.dataTransfer.setData(NODE_BORDER_TYPE, nodeBorderColor);
@@ -126,10 +128,10 @@
 
 <div
 	class={dropZoneClass}
-	on:dragover={onDragOver}
-	on:dragenter={onDragEnter}
-	on:dragleave={onDragLeave}
-	on:drop={onDrop}
+	ondragover={onDragOver}
+	ondragenter={onDragEnter}
+	ondragleave={onDragLeave}
+	ondrop={onDrop}
 >
 	<Svelvet height={800} zoom={0.75} minimap controls>
 		{#each nodes as node (node.id)}
@@ -163,21 +165,21 @@
 			<li class="list-item">
 				<h3>Anchor Position:</h3>
 				<label for="#td">TD: </label>
-				<input id="td" type="checkbox" bind:value={nodeTD} on:change={setPositionTD} />
+				<input id="td" type="checkbox" bind:value={nodeTD} onchange={setPositionTD} />
 				<label for="#lr">LR: </label>
-				<input id="lr" type="checkbox" bind:value={nodeLR} on:change={setPositionLR} />
+				<input id="lr" type="checkbox" bind:value={nodeLR} onchange={setPositionLR} />
 			</li>
 			<li class="list-item">
-				Locked: <input type="checkbox" bind:value={locked} on:change={handleLockedButtonClick} />
+				Locked: <input type="checkbox" bind:value={locked} onchange={handleLockedButtonClick} />
 			</li>
 			<li class="list-item">
-				Centered: <input type="checkbox" bind:value={center} on:change={handleCenterButtonClick} />
+				Centered: <input type="checkbox" bind:value={center} onchange={handleCenterButtonClick} />
 			</li>
 			<li class="list-item">
-				<div id="createNode" draggable="true" on:dragstart={onDragStart}>Node</div>
+				<div id="createNode" draggable="true" ondragstart={onDragStart}>Node</div>
 			</li>
 			<li>
-				<button on:click|stopPropagation={handleClick}>Reset</button>
+				<button onclick={stopPropagation(handleClick)}>Reset</button>
 			</li>
 		</ul>
 	</div>

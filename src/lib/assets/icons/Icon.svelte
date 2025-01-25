@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import arrow_left from '$lib/assets/icons/arrow_left.svelte';
 	import arrow_right from '$lib/assets/icons/arrow_right.svelte';
 	import dark_mode from '$lib/assets/icons/dark_mode.svelte';
@@ -14,8 +14,12 @@
 </script>
 
 <script lang="ts">
-	export let width = 16;
-	export let icon: keyof typeof icons;
+	interface Props {
+		width?: number;
+		icon: keyof typeof icons;
+	}
+
+	let { width = 16, icon }: Props = $props();
 
 	const icons = {
 		arrow_left,
@@ -31,10 +35,12 @@
 		zoom_out,
 		visibility_off
 	};
+
+	const SvelteComponent = $derived(icons[icon]);
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" height={width} viewBox="0 -960 960 960" {width}>
-	<svelte:component this={icons[icon]} />
+	<SvelteComponent />
 </svg>
 
 <style>

@@ -1,4 +1,9 @@
-<script context="module" lang="ts">
+<script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
+</script>
+
+<script module lang="ts">
 	import type { CSSColorString, EdgeProps, EdgeDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 
@@ -114,7 +119,7 @@
 
 <div id="edgeContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form on:submit|preventDefault={handleEdgeResetButtonClick}>
+	<form onsubmit={preventDefault(handleEdgeResetButtonClick)}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="color">Background: </label>
@@ -134,12 +139,12 @@
 					id="animate"
 					type="checkbox"
 					bind:value={animate}
-					on:change={handleAnimateButtonClick}
+					onchange={handleAnimateButtonClick}
 				/>
 			</li>
 			<li class="list-item">
 				<label for="step">Step: </label>
-				<input id="step" type="checkbox" bind:value={step} on:change={handleStepButtonClick} />
+				<input id="step" type="checkbox" bind:value={step} onchange={handleStepButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="cornerRadius">Corner Radius:</label>

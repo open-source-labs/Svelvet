@@ -14,12 +14,14 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 40, y: 158 }} let:selected>
-	<NodeWrapper title="Dash Count" outputStore={output} key="dashCount">
-		<div class="node-body">
-			<Slider min={0} fixed={0} max={30} step={1} parameterStore={$inputs.length} />
-		</div>
-	</NodeWrapper>
+<Node useDefaults position={{ x: 40, y: 158 }} >
+	{#snippet children({ selected })}
+		<NodeWrapper title="Dash Count" outputStore={output} key="dashCount">
+			<div class="node-body">
+				<Slider min={0} fixed={0} max={30} step={1} parameterStore={$inputs.length} />
+			</div>
+		</NodeWrapper>
+	{/snippet}
 </Node>
 
 <style>

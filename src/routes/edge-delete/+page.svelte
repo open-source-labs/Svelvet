@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node, Anchor, Background } from '$lib';
 
-	let graph: Svelvet;
-	let anchor: Anchor;
+	let graph: Svelvet = $state();
+	let anchor: Anchor = $state();
 </script>
 
-<svelte:window on:keydown={() => anchor.disconnect([5, 5])} />
+<svelte:window onkeydown={() => anchor.disconnect([5, 5])} />
 
 <body>
 	<Svelvet fitView bind:this={graph}>
@@ -41,7 +41,9 @@
 			connections={[2, 3, '4', [5, '1'], 6, ['custom', 'custom']]}
 		/>
 
-		<Background style="dots" majorGrid={4} slot="background" />
+		{#snippet background()}
+				<Background style="dots" majorGrid={4}  />
+			{/snippet}
 	</Svelvet>
 </body>
 

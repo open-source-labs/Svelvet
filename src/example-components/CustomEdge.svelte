@@ -3,7 +3,7 @@
 	import type { CSSColorString } from '$lib/types';
 
 	let color: CSSColorString = 'yellow';
-	let edge: Edge;
+	let edge: Edge = $state();
 </script>
 
 <Edge
@@ -14,7 +14,9 @@
 	labelPosition={0.8}
 	animate
 >
-	<button id="destroy-edge" on:click={edge.destroy} slot="label">Custom Label</button>
+	{#snippet label()}
+		<button id="destroy-edge" onclick={edge.destroy} >Custom Label</button>
+	{/snippet}
 </Edge>
 
 <style>

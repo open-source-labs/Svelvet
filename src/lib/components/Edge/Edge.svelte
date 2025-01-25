@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script context="module" lang="ts">
 	import { calculateStepPath, calculateRadius, calculatePath } from '$lib/utils/calculators';
 	import { onMount, onDestroy, getContext, afterUpdate } from 'svelte';
@@ -303,6 +305,19 @@
 			: raiseEdgesOnSelect === 'target'
 			? $targetZIndex - 1
 			: 0;
+
+	// Add checks for edge cases when moving edges
+	$effect(() => {
+		if (sourceX === targetX && sourceY === targetY) {
+			$state.path = '';
+		}
+		if (sourceX < 0 || sourceY < 0 || targetX < 0 || targetY < 0) {
+			$state.path = '';
+		}
+		if (sourceX > window.innerWidth || sourceY > window.innerHeight || targetX > window.innerWidth || targetY > window.innerHeight) {
+			$state.path = '';
+		}
+	});
 </script>
 
 {#if source && target}

@@ -5,6 +5,8 @@
 <body>
 	<Svelvet width={500} height={500}>
 		<Node />
-		<ThemeToggle slot="toggle" />
+		{#snippet toggle()}
+				<ThemeToggle  />
+			{/snippet}
 	</Svelvet>
 </body>

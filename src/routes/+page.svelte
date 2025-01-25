@@ -47,7 +47,7 @@
 
 <body>
 	<Svelvet minimap title="test" controls>
-		{@render Connector /}
+			<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button onclick={() => $state.widthCount++} />
 			{#each { length: $state.widthCount } as item}
@@ -63,7 +63,7 @@
 			<button onclick={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
-			{@render TextField placeholder="name" /}
+				<TextField placeholder="name" />
 		</Node>
 		<Node $props={{ selected }} dimensions={{ width: 400, height: 100 }}>
 			<div class="node" class:selected>
@@ -80,7 +80,7 @@
 			<Node $props={{ connect }} useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 		<ThemeToggle slot="toggle" />
-		{@render ContrastTheme slot="contrast" /}
+			<ContrastTheme slot="contrast" />
 	</Svelvet>
 </body>
 

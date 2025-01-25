@@ -1,33 +1,33 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 	import { cursorPositionRaw } from '$lib/stores/CursorStore';
 	import type { CSSColorString, Graph, Node, NodeDOMBounds, NodeKey } from '$lib/types';
 
-	export let graph: Graph;
-	export let anchor: { x: number; y: number; top: number; left: number };
-	export let adding = false;
-	export let creating = false;
-	export let color: CSSColorString | null = null;
+	interface Props {
+		graph: Graph;
+		anchor: { x: number; y: number; top: number; left: number };
+		adding?: boolean;
+		creating?: boolean;
+		color?: CSSColorString | null;
+	}
+
+	let {
+		graph,
+		anchor,
+		adding = false,
+		creating = false,
+		color = null
+	}: Props = $props();
 
 	const { groups } = graph;
 
 	let nodes: Array<NodeDOMBounds>;
-	let box: HTMLDivElement;
+	let box: HTMLDivElement = $state();
 
-	$: selectedNodes = $groups.selected.nodes;
-	$: height = $cursorPositionRaw.y - anchor.y - anchor.top;
-	$: width = $cursorPositionRaw.x - anchor.x - anchor.left;
-	$: top = Math.min(anchor.y, anchor.y + height);
-	$: left = Math.min(anchor.x, anchor.x + width);
 
-	$: CSStop = `${top}px`;
-	$: CSSleft = `${left}px`;
-	$: CSSheight = `${Math.abs(height)}px`;
-	$: CSSwidth = `${Math.abs(width)}px`;
 
-	$: if (width || height) {
-		selectNodes();
-	}
 
 	onMount(updateNodes);
 
@@ -67,6 +67,20 @@
 		}
 		$selectedNodes = $selectedNodes;
 	}
+	let selectedNodes = $derived($groups.selected.nodes);
+	let height = $derived($cursorPositionRaw.y - anchor.y - anchor.top);
+	let width = $derived($cursorPositionRaw.x - anchor.x - anchor.left);
+	let top = $derived(Math.min(anchor.y, anchor.y + height));
+	let left = $derived(Math.min(anchor.x, anchor.x + width));
+	let CSStop = $derived(`${top}px`);
+	let CSSleft = $derived(`${left}px`);
+	let CSSheight = $derived(`${Math.abs(height)}px`);
+	let CSSwidth = $derived(`${Math.abs(width)}px`);
+	run(() => {
+		if (width || height) {
+			selectNodes();
+		}
+	});
 </script>
 
 <div
@@ -78,7 +92,7 @@
 	style:left={CSSleft}
 	class:creating
 >
-	<div class:creating bind:this={box} class="selection-box" />
+	<div class:creating bind:this={box} class="selection-box"></div>
 </div>
 
 <style>

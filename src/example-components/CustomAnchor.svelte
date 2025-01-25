@@ -1,10 +1,14 @@
 <script lang="ts">
-	export let linked: boolean;
-	export let connecting: boolean;
-	export let hovering: boolean;
+	interface Props {
+		linked: boolean;
+		connecting: boolean;
+		hovering: boolean;
+	}
+
+	let { linked, connecting, hovering }: Props = $props();
 </script>
 
-<div class:linked class:hovering class:connecting class="my-anchor" />
+<div class:linked class:hovering class:connecting class="my-anchor"></div>
 
 <style>
 	.my-anchor {
