@@ -61,7 +61,7 @@
 	class:NW={$props.corner === 'NW'}
 	aria-label="navigation"
 >
-	<slot {zoomIn} {zoomOut} {fitView} {lock} {unhideAll}>
+	{@render zoomIn, zoomOut, fitView, lock, unhideAll}
 		<div
 			class="controls-wrapper"
 			class:horizontal
@@ -86,7 +86,7 @@
 				<Icon icon={$locked ? 'lock_open' : 'lock'} />
 			</button>
 		</div>
-	</slot>
+	{/render}
 </nav>
 
 <style>

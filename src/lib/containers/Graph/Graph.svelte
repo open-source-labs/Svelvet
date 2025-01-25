@@ -559,11 +559,11 @@
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
-		<slot />
+		 {@render $props.children}
 	</GraphRenderer>
 
 	{#if $props.backgroundExists}
-		<slot name="background" />
+		{@render $props.background}
 	{:else}
 		<Background />
 	{/if}
@@ -582,11 +582,11 @@
 	{#if $props.contrast}
 		<svelte:component this={$state.contrastComponent} />
 	{/if}
-	<slot name="minimap" />
-	<slot name="drawer" />
-	<slot name="controls" />
-	<slot name="toggle" />
-	<slot name="contrast" />
+	{@render $props.minimap}
+	{@render $props.drawer}
+	{@render $props.controls}
+	{@render $props.toggle}
+	{@render $props.contrast}
 	{#if $state.selecting && !$props.disableSelection}
 		<SelectionBox {creating} {anchor} graph={$props.graph} {adding} color={$props.selectionColor} />
 	{/if}

@@ -111,7 +111,7 @@
 	$derived edgeLabel = edge.label?.text;
 	$derived finalColor = color || $edgeColor || null;
 	$derived labelText = label || $edgeLabel || '';
-	$derived renderLabel = labelText || $$slots.label;
+	$derived renderLabel = labelText || $$snippets.label;
 
 	$derived sourcePosition = $sourcePositionStore;
 	$derived targetPosition = $targetPositionStore;
@@ -366,7 +366,7 @@
 			onmouseleave={() => ($state.hovering = false)}
 			bind:this={$state.DOMPath}
 		/>
-		<slot {path} {destroy} {hovering}>
+			{@render linked={$connectedAnchors?.size >= 1} {hovering} {connecting}}
 			<path
 				id={edgeKey}
 				class="edge"
@@ -377,12 +377,12 @@
 				marker-start={start === 'arrow' ? `url(#${edgeKey + '-start-arrow'})` : ''}
 				style:--prop-stroke-width={width ? width + 'px' : null}
 			/>
-		</slot>
+		{@/render}
 
 		{#if renderLabel}
 			<foreignObject x={$state.labelPoint.x} y={$state.labelPoint.y} width="100%" height="100%">
 				<span class="label-wrapper">
-					<slot name="label" {destroy} {hovering}>
+						{@render name="label"}
 						<div
 							class="default-label"
 							style:--prop-label-color={labelColor}
@@ -390,7 +390,7 @@
 						>
 							{labelText}
 						</div>
-					</slot>
+					{@/render}
 				</span>
 			</foreignObject>
 		{/if}

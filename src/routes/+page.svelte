@@ -51,8 +51,7 @@
 
 <body>
 	<Svelvet minimap title="test" controls>
-		<!-- buttons on lower level node -->
-		<Connector />
+		 {@render Connector /}
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button onclick={() => $state.widthCount++} />
 			{#each { length: $state.widthCount } as item}
@@ -72,10 +71,10 @@
 		</Node>
 		<!-- text field -->
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
-			<TextField placeholder="name" />
+			 {@render TextField placeholder="name" /}
 		</Node>
 		<!-- blue node -->
-		<Node let:selected dimensions={{ width: 400, height: 100 }}>
+		<Node $props={{ selected }} dimensions={{ width: 400, height: 100 }}>
 			<div class="node" class:selected>
 				<Resizer width height rotation />
 			</div>
@@ -88,11 +87,11 @@
 			<Anchor nodeConnect />
 		</Node>
 		{#each { length: $state.totalNodes } as node}
-			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
+			<Node $props={{ connect }} useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 
 		<ThemeToggle slot="toggle" />
-		<ContrastTheme slot="contrast" />
+		 {@render ContrastTheme slot="contrast" /}
 	</Svelvet>
 </body>
 

@@ -275,23 +275,35 @@
 				bind:clientHeight={$heightStore}
 				bind:clientWidth={$widthStore}
 			>
-				<slot {grabHandle} {selected} {destroy} />
+					{@render name="default"}
+					<slot {grabHandle} {selected} {destroy} />
+				{@/render}
 			</div>
 		{:else}
-			<slot {grabHandle} {selected} {destroy} />
+				{@render name="default"}
+				<slot {grabHandle} {selected} {destroy} />
+			{@/render}
 		{/if}
 
 		<div id={`anchors-west-${node.id}`} class="anchors left">
+			{@render name="anchorWest"}
 			<slot name="anchorWest" />
+		{@/render}
 		</div>
 		<div id={`anchors-east-${node.id}`} class="anchors right">
+			{@render name="anchorEast"}
 			<slot name="anchorEast" />
+		{@/render}
 		</div>
 		<div id={`anchors-north-${node.id}`} class="anchors top">
+			{@render name="anchorNorth"}
 			<slot name="anchorNorth" />
+		{@/render}
 		</div>
 		<div id={`anchors-south-${node.id}`} class="anchors bottom">
+			{@render name="anchorSouth"}
 			<slot name="anchorSouth" />
+		{@/render}
 		</div>
 	</div>
 {/if}
