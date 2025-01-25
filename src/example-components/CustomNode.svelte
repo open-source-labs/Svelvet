@@ -5,7 +5,7 @@
 	const parameter = writable(10);
 </script>
 
-<Node  >
+<Node>
 	{#snippet children({ grabHandle, selected })}
 		<div class="node" use:grabHandle class:selected>
 			<Slider parameterStore={parameter} />
