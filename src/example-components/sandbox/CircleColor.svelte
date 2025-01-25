@@ -17,34 +17,38 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults rotation={-5} position={{ x: 50, y: 400 }} let:selected>
-	<p class="note" id="custom">
-		Built In
-		<br />
-		Components
-	</p>
-	<NodeWrapper title="Color">
-		<div class="node-body">
-			<ColorPicker parameterStore={$inputs.color} />
+<Node useDefaults rotation={-5} position={{ x: 50, y: 400 }} >
+	{#snippet children({ selected })}
+		<p class="note" id="custom">
+			Built In
+			<br />
+			Components
+		</p>
+		<NodeWrapper title="Color">
+			<div class="node-body">
+				<ColorPicker parameterStore={$inputs.color} />
+			</div>
+		</NodeWrapper>
+		<div class="output-anchors">
+			<Anchor
+				connections={[['output', 'color']]}
+				
+				
+				outputStore={output}
+				output
+				edgeColor={output}
+				edgeLabel="Dynamic Edges"
+				edgeStyle="bezier"
+				edge={CustomEdge}
+				locked
+			>
+				{#snippet children({ linked, connecting })}
+						<ColorAnchor color={output} {connecting} {linked} />
+									{/snippet}
+				</Anchor>
 		</div>
-	</NodeWrapper>
-	<div class="output-anchors">
-		<Anchor
-			connections={[['output', 'color']]}
-			let:linked
-			let:connecting
-			outputStore={output}
-			output
-			edgeColor={output}
-			edgeLabel="Dynamic Edges"
-			edgeStyle="bezier"
-			edge={CustomEdge}
-			locked
-		>
-			<ColorAnchor color={output} {connecting} {linked} />
-		</Anchor>
-	</div>
-	<Resizer rotation />
+		<Resizer rotation />
+	{/snippet}
 </Node>
 
 <style>

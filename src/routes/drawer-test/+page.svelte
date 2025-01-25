@@ -4,5 +4,7 @@
 </script>
 
 <Drawer height={1200} zoom={0.7} controls>
-	<ThemeToggle main="light" alt="dark" slot="toggle" />
+	{#snippet toggle()}
+		<ThemeToggle main="light" alt="dark"  />
+	{/snippet}
 </Drawer>

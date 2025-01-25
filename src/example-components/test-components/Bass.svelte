@@ -16,19 +16,21 @@
 	const output = generateOutput(inputs, procesor);
 </script>
 
-<Node useDefaults position={{ x: 110, y: 50 }} let:selected>
-	<NodeWrapper title="Bass" outputStore={output} key="bass">
-		<div class="node-body">
-			<Knob
-				fixed={0}
-				min={0}
-				max={20}
-				step={2}
-				minDegree={30}
-				maxDegree={330}
-				parameterStore={$inputs.data}
-			/>
-		</div>
-	</NodeWrapper>
-	<Resizer width height rotation />
+<Node useDefaults position={{ x: 110, y: 50 }} >
+	{#snippet children({ selected })}
+		<NodeWrapper title="Bass" outputStore={output} key="bass">
+			<div class="node-body">
+				<Knob
+					fixed={0}
+					min={0}
+					max={20}
+					step={2}
+					minDegree={30}
+					maxDegree={330}
+					parameterStore={$inputs.data}
+				/>
+			</div>
+		</NodeWrapper>
+		<Resizer width height rotation />
+	{/snippet}
 </Node>

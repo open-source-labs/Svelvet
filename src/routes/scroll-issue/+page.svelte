@@ -43,7 +43,9 @@
 			connections={[2, 3, '4', [5, '1'], 6, ['custom', 'custom']]}
 		/>
 
-		<Background style="dots" majorGrid={4} slot="background" />
+		{#snippet background()}
+				<Background style="dots" majorGrid={4}  />
+			{/snippet}
 	</Svelvet>
 </body>
 

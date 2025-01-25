@@ -19,19 +19,23 @@
 	const output = generateOutput(inputs, processor);
 </script>
 
-<Node useDefaults id="output" position={{ x: 560, y: 650 }} let:selected locked>
-	<div class="node" class:selected>
-		<p class="output-value">Bass: {$output.bass}</p>
-		<p class="output-value">Treble: {$output.treble}</p>
-		<p class="output-value">Volume: {$output.volume}</p>
-		<div class="input-anchors">
-			{#each Object.keys(initialData) as key}
-				<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
-					<CustomAnchor {hovering} {connecting} {linked} />
-				</Anchor>
-			{/each}
+<Node useDefaults id="output" position={{ x: 560, y: 650 }}  locked>
+	{#snippet children({ selected })}
+		<div class="node" class:selected>
+			<p class="output-value">Bass: {$output.bass}</p>
+			<p class="output-value">Treble: {$output.treble}</p>
+			<p class="output-value">Volume: {$output.volume}</p>
+			<div class="input-anchors">
+				{#each Object.keys(initialData) as key}
+					<Anchor id={key}    inputsStore={inputs} {key} input>
+						{#snippet children({ hovering, connecting, linked })}
+										<CustomAnchor {hovering} {connecting} {linked} />
+															{/snippet}
+								</Anchor>
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/snippet}
 </Node>
 
 <style>

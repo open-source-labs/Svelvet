@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run, stopPropagation, preventDefault } from 'svelte/legacy';
+
 	import { initialClickPosition } from '$lib/stores/CursorStore';
 	import { getContext } from 'svelte';
 	import { isArrow } from '$lib/types';
@@ -7,18 +9,32 @@
 	import type { Graph, Node, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
 
-	// Props
-	export let parameterStore: CustomWritable<number>;
-	export let min = 0;
-	export let max = 100;
-	export let step = 1;
-	export let label = 'Value';
-	export let fixed = 2;
-	export let fontColor: CSSColorString | null = null;
-	export let barColor: CSSColorString | null = null;
-	export let bgColor: CSSColorString | null = null;
+	
+	interface Props {
+		// Props
+		parameterStore: CustomWritable<number>;
+		min?: number;
+		max?: number;
+		step?: number;
+		label?: string;
+		fixed?: number;
+		fontColor?: CSSColorString | null;
+		barColor?: CSSColorString | null;
+		bgColor?: CSSColorString | null;
+	}
 
-	$: connected = typeof parameterStore.set !== 'function';
+	let {
+		parameterStore,
+		min = 0,
+		max = 100,
+		step = 1,
+		label = 'Value',
+		fixed = 2,
+		fontColor = null,
+		barColor = null,
+		bgColor = null
+	}: Props = $props();
+
 
 	let graph = getContext<Graph>('graph');
 	let node = getContext<Node>('node');
@@ -27,22 +43,14 @@
 	const selected = $groups.selected;
 	const activeGroup = graph.activeGroup;
 
-	$: width = node.dimensions.width;
 
-	let sliderWidth: number; // Width of slider on DOM (relative to scale)
-	let sliderElement: HTMLInputElement;
-	let sliding = false; // Whether the slider is currently being dragged
-	let previousX = 0; // Represents previous cursor position
+	let sliderWidth: number = $state(); // Width of slider on DOM (relative to scale)
+	let sliderElement: HTMLInputElement = $state();
+	let sliding = $state(false); // Whether the slider is currently being dragged
+	let previousX = $state(0); // Represents previous cursor position
 	let pixelsMoved = 0; // Number of pixels moved during slide
 
-	// Grab cursor from store
-	$: cursor = graph.cursor;
 
-	$: if (sliding) {
-		const deltaX = $cursor.x - previousX;
-		calculateSlide(deltaX);
-		previousX = $cursor.x;
-	}
 
 	// Begin sliding on mousedown
 	function startSlide(e: MouseEvent) {
@@ -134,22 +142,51 @@
 		sliderElement.blur();
 	}
 
-	$: percentageSlid = ((($parameterStore as number) - min) / (max - min)) * 100;
-	$: CSSpercentage = `${percentageSlid}%`;
 
-	$: sliderStyle = `linear-gradient(
+
+	// Add validation for input values to ensure they are within the min and max range
+	function validateInputValue() {
+		if ($parameterStore < min) {
+			$parameterStore = min;
+		} else if ($parameterStore > max) {
+			$parameterStore = max;
+		}
+	}
+
+	let connected = $derived(typeof parameterStore.set !== 'function');
+	let width = $derived(node.dimensions.width);
+	// Grab cursor from store
+	let cursor = $derived(graph.cursor);
+	run(() => {
+		if (sliding) {
+			const deltaX = $cursor.x - previousX;
+			calculateSlide(deltaX);
+			previousX = $cursor.x;
+		}
+	});
+	let percentageSlid = $derived(((($parameterStore as number) - min) / (max - min)) * 100);
+	let CSSpercentage = $derived(`${percentageSlid}%`);
+	let sliderStyle = $derived(`linear-gradient(
 			90deg,
 			${barColor || 'var(--primary-color, var(--default-primary-color))'} ${CSSpercentage},
 			${bgColor || 'var(--accent-color, var(--default-accent-color))'} ${CSSpercentage}
-		)`;
+		)`);
+	// Handle edge cases for sliding and input value changes
+	run(() => {
+		if ($parameterStore < min) {
+			$parameterStore = min;
+		} else if ($parameterStore > max) {
+			$parameterStore = max;
+		}
+	});
 </script>
 
 {#if !connected}
 	<div class="wrapper" style:color={fontColor}>
 		<button
 			class="button"
-			on:touchstart|stopPropagation={() => updateValue(-1)}
-			on:mousedown|stopPropagation={() => updateValue(-1)}>−</button
+			ontouchstart={stopPropagation(() => updateValue(-1))}
+			onmousedown={stopPropagation(() => updateValue(-1))}>−</button
 		>
 		<div class="slider" bind:offsetWidth={sliderWidth}>
 			<label for="slider-input" class="input-label">{label}</label>
@@ -162,10 +199,10 @@
 				type="text"
 				value={$parameterStore.toFixed(fixed)}
 				aria-label={label}
-				on:wheel|stopPropagation|preventDefault={(event) => {
+				onwheel={stopPropagation(preventDefault((event) => {
 					updateValue(Math.sign(event.deltaY), step);
-				}}
-				on:keydown|stopPropagation={(e) => {
+				}))}
+				onkeydown={stopPropagation((e) => {
 					const { key } = e;
 
 					if (isArrow(key)) {
@@ -174,15 +211,16 @@
 					}
 
 					if (key === 'Enter') validateInput();
-				}}
+				})}
 				use:slideable
 				bind:this={sliderElement}
+				oninput={validateInputValue}
 			/>
 		</div>
 		<button
 			class="button"
-			on:touchstart|stopPropagation={() => updateValue(1)}
-			on:mousedown|stopPropagation={() => updateValue(1)}>+</button
+			ontouchstart={stopPropagation(() => updateValue(1))}
+			onmousedown={stopPropagation(() => updateValue(1))}>+</button
 		>
 	</div>
 {:else}

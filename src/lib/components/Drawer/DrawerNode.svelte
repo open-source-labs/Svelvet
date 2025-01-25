@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import { writable } from 'svelte/store';
 	import type {
 		NodeDrawerConfig,
@@ -127,11 +127,60 @@
 			}
 		}
 	};
+
+	// Validation for node properties
+	const validateNodeProps = () => {
+		if (bgColor !== undefined && typeof bgColor !== 'string') {
+			throw new Error('Invalid value for bgColor property');
+		}
+		if (borderColor !== undefined && typeof borderColor !== 'string') {
+			throw new Error('Invalid value for borderColor property');
+		}
+		if (label !== undefined && typeof label !== 'string') {
+			throw new Error('Invalid value for label property');
+		}
+		if (width !== undefined && typeof width !== 'number') {
+			throw new Error('Invalid value for width property');
+		}
+		if (height !== undefined && typeof height !== 'number') {
+			throw new Error('Invalid value for height property');
+		}
+		if (locked !== undefined && typeof locked !== 'boolean') {
+			throw new Error('Invalid value for locked property');
+		}
+		if (center !== undefined && typeof center !== 'boolean') {
+			throw new Error('Invalid value for center property');
+		}
+		if (inputs !== undefined && typeof inputs !== 'number') {
+			throw new Error('Invalid value for inputs property');
+		}
+		if (outputs !== undefined && typeof outputs !== 'number') {
+			throw new Error('Invalid value for outputs property');
+		}
+		if (rotation !== undefined && typeof rotation !== 'number') {
+			throw new Error('Invalid value for rotation property');
+		}
+		if (zIndex !== undefined && typeof zIndex !== 'number') {
+			throw new Error('Invalid value for zIndex property');
+		}
+		if (TD !== undefined && typeof TD !== 'boolean') {
+			throw new Error('Invalid value for TD property');
+		}
+		if (LR !== undefined && typeof LR !== 'boolean') {
+			throw new Error('Invalid value for LR property');
+		}
+		if (useDefaults !== undefined && typeof useDefaults !== 'boolean') {
+			throw new Error('Invalid value for useDefaults property');
+		}
+		if (nodeDirection !== undefined && typeof nodeDirection !== 'string') {
+			throw new Error('Invalid value for nodeDirection property');
+		}
+	};
 </script>
 
 <div id="nodeContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form on:submit|preventDefault={handleNodeResetButtonClick}>
+	<form onreset={handleNodeResetButtonClick}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="bgColor">Background: </label>
@@ -147,7 +196,7 @@
 					id="useDefaults"
 					type="checkbox"
 					bind:value={useDefaults}
-					on:change={handleUseDefaultsButtonClick}
+					onchange={handleUseDefaultsButtonClick}
 				/>
 			</li> -->
 
@@ -162,7 +211,7 @@
 			</li>
 			<li class="list-item">
 				<label for="locked">Locked: </label>
-				<input id="label" type="checkbox" bind:value={locked} on:change={handleLockedButtonClick} />
+				<input id="label" type="checkbox" bind:value={locked} onchange={handleLockedButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="centered">Centered: </label>
@@ -170,7 +219,7 @@
 					id="centered"
 					type="checkbox"
 					bind:value={center}
-					on:change={handleCenterButtonClick}
+					onchange={handleCenterButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -199,7 +248,7 @@
 				<select
 					id="anchorPosition"
 					bind:value={nodeDirection}
-					on:change={handleAnchorPositionButton}
+					onchange={handleAnchorPositionButton}
 				>
 					<option value="">-</option>
 					<option value="LR">LR</option>

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Svelvet, Minimap, Node, Anchor } from '$lib';
 
-	let childrenHidden = true;
+	let childrenHidden = $state(true);
 </script>
 
 <body>
 	<div class="wrapper">
 		<Svelvet TD theme="dark" width={800} height={500} zoom={0.5} controls title="tests" minimap>
 			<Node connections={[2, 3]} useDefaults width={200} height={100}>
-				<button on:click={() => (childrenHidden = !childrenHidden)}>Hide Children</button>
+				<button onclick={() => (childrenHidden = !childrenHidden)}>Hide Children</button>
 				<Anchor output />
 			</Node>
 			{#if childrenHidden}
@@ -16,7 +16,9 @@
 				<Node position={{ x: -100, y: 300 }} connections={[4]} />
 				<Node position={{ x: -100, y: 500 }} />
 			{/if}
-			<Minimap slot="minimap" />
+			<!-- @migration-task: migrate this slot by hand, `minimap` would shadow a prop on the parent component -->
+	<!-- @migration-task: migrate this slot by hand, `minimap` would shadow a prop on the parent component -->
+	<Minimap slot="minimap" />
 		</Svelvet>
 	</div>
 </body>

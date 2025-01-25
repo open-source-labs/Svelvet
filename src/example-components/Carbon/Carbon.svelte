@@ -3,20 +3,22 @@
 	import Table from './Table.svelte';
 </script>
 
-<Node useDefaults id="node-a" position={{ x: 10, y: 100 }} let:selected>
-	<div class="node">
-		<div class="header">
-			<h1>Table 1</h1>
+<Node useDefaults id="node-a" position={{ x: 10, y: 100 }} >
+	{#snippet children({ selected })}
+		<div class="node">
+			<div class="header">
+				<h1>Table 1</h1>
+			</div>
+			<Table />
+			<div class="input-anchors">
+				<Anchor />
+			</div>
+			<div class="output-anchors">
+				<Anchor />
+			</div>
 		</div>
-		<Table />
-		<div class="input-anchors">
-			<Anchor />
-		</div>
-		<div class="output-anchors">
-			<Anchor />
-		</div>
-	</div>
-	<Resizer width height />
+		<Resizer width height />
+	{/snippet}
 </Node>
 
 <style>

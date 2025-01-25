@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
 	import DrawerNode from './DrawerNode.svelte';
 	import DrawerAnchor from './DrawerAnchor.svelte';
@@ -8,20 +12,25 @@
 	import Icon from '$lib/assets/icons/Icon.svelte';
 	import { onMount, onDestroy } from 'svelte';
 
-	let isOpen = false;
-	let nodeContainerOpen = false;
-	let edgeContainerOpen = false;
-	let anchorContainerOpen = false;
-	let nav: HTMLElement;
-	let drawerBtn: HTMLElement;
-	let nodeBtn: HTMLElement;
-	let edgeBtn: HTMLElement;
-	let anchorBtn: HTMLElement;
-	let drawerContents: HTMLElement;
-	let nodeContainer: HTMLElement;
-	let anchorContainer: HTMLElement;
-	let edgeContainer: HTMLElement;
+	// State variables to manage the drawer and its components
+	$state = {
+		isOpen: false, // Indicates if the drawer is open or closed
+		nodeContainerOpen: false, // Indicates if the node container is open
+		edgeContainerOpen: false, // Indicates if the edge container is open
+		anchorContainerOpen: false, // Indicates if the anchor container is open
+		nav: null, // Reference to the navigation element
+		drawerBtn: null, // Reference to the drawer button element
+		nodeBtn: null, // Reference to the node button element
+		edgeBtn: null, // Reference to the edge button element
+		anchorBtn: null, // Reference to the anchor button element
+		drawerContents: null, // Reference to the drawer contents element
+		nodeContainer: null, // Reference to the node container element
+		anchorContainer: null, // Reference to the anchor container element
+		edgeContainer: null, // Reference to the edge container element
+		currentComponent: 'Node' // Indicates the current component being displayed
+	};
 
+	// Handle the drag start event for creating node props
 	const handleDragStart = (e: DragEvent) => {
 		if (!e.dataTransfer) return;
 		e.dataTransfer.dropEffect = 'move';
@@ -33,87 +42,92 @@
 		createNodeProps(edgeCreated, anchorProps);
 	};
 
+	// Toggle the drawer open or closed
 	const handleDrawer = () => {
-		if (!isOpen) {
-			isOpen = true;
-			nav.style.height = 'fit-content';
-			nav.style.width = '300px';
+		if (!$state.isOpen) {
+			$state.isOpen = true;
+			$state.nav.style.height = 'fit-content';
+			$state.nav.style.width = '300px';
 		} else {
-			isOpen = false;
-			nav.style.height = '35px';
-			nav.style.width = '35px';
-			anchorContainerOpen = false;
-			edgeContainerOpen = false;
-			nodeContainerOpen = false;
-			nodeContainer.style.display = 'block';
-			edgeContainer.style.display = 'none';
-			anchorContainer.style.display = 'none';
-			nodeBtn.style.borderBottom =
+			$state.isOpen = false;
+			$state.nav.style.height = '35px';
+			$state.nav.style.width = '35px';
+			$state.anchorContainerOpen = false;
+			$state.edgeContainerOpen = false;
+			$state.nodeContainerOpen = false;
+			$state.nodeContainer.style.display = 'block';
+			$state.edgeContainer.style.display = 'none';
+			$state.anchorContainer.style.display = 'none';
+			$state.nodeBtn.style.borderBottom =
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
-			edgeBtn.style.borderBottom = 'none';
-			anchorBtn.style.borderBottom = 'none';
+			$state.edgeBtn.style.borderBottom = 'none';
+			$state.anchorBtn.style.borderBottom = 'none';
 		}
 	};
 
+	// Toggle the node container open or closed
 	const handleNodeContainer = () => {
-		if (!nodeContainerOpen) {
-			nodeContainerOpen = true;
-			anchorContainerOpen = false;
-			edgeContainerOpen = false;
-			nodeContainer.style.display = 'block';
-			edgeContainer.style.display = 'none';
-			anchorContainer.style.display = 'none';
-			nodeBtn.style.borderBottom =
+		if (!$state.nodeContainerOpen) {
+			$state.nodeContainerOpen = true;
+			$state.anchorContainerOpen = false;
+			$state.edgeContainerOpen = false;
+			$state.nodeContainer.style.display = 'block';
+			$state.edgeContainer.style.display = 'none';
+			$state.anchorContainer.style.display = 'none';
+			$state.nodeBtn.style.borderBottom =
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
-			edgeBtn.style.borderBottom = 'none';
-			anchorBtn.style.borderBottom = 'none';
+			$state.edgeBtn.style.borderBottom = 'none';
+			$state.anchorBtn.style.borderBottom = 'none';
 		}
 	};
+
+	// Toggle the anchor container open or closed
 	const handleAnchorContainer = () => {
-		if (!anchorContainerOpen) {
-			anchorContainerOpen = true;
-			edgeContainerOpen = false;
-			nodeContainerOpen = false;
-			anchorContainer.style.display = 'block';
-			edgeContainer.style.display = 'none';
-			nodeContainer.style.display = 'none';
-			nodeBtn.style.borderBottom = 'none';
-			edgeBtn.style.borderBottom = 'none';
-			anchorBtn.style.borderBottom =
+		if (!$state.anchorContainerOpen) {
+			$state.anchorContainerOpen = true;
+			$state.edgeContainerOpen = false;
+			$state.nodeContainerOpen = false;
+			$state.anchorContainer.style.display = 'block';
+			$state.edgeContainer.style.display = 'none';
+			$state.nodeContainer.style.display = 'none';
+			$state.nodeBtn.style.borderBottom = 'none';
+			$state.edgeBtn.style.borderBottom = 'none';
+			$state.anchorBtn.style.borderBottom =
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
 		}
 	};
+
+	// Toggle the edge container open or closed
 	const handleEdgeContainer = () => {
-		if (!edgeContainerOpen) {
-			edgeContainerOpen = true;
-			nodeContainerOpen = false;
-			anchorContainerOpen = false;
-			edgeContainer.style.display = 'block';
-			anchorContainer.style.display = 'none';
-			nodeContainer.style.display = 'none';
-			nodeBtn.style.borderBottom = 'none';
-			edgeBtn.style.borderBottom =
+		if (!$state.edgeContainerOpen) {
+			$state.edgeContainerOpen = true;
+			$state.nodeContainerOpen = false;
+			$state.anchorContainerOpen = false;
+			$state.edgeContainer.style.display = 'block';
+			$state.anchorContainer.style.display = 'none';
+			$state.nodeContainer.style.display = 'none';
+			$state.nodeBtn.style.borderBottom = 'none';
+			$state.edgeBtn.style.borderBottom =
 				'3px solid var(--prop-drawer-button-text-color,var(--drawer-button-text-color, var(--default-drawer-button-text-color)))';
-			anchorBtn.style.borderBottom = 'none';
+			$state.anchorBtn.style.borderBottom = 'none';
 		}
 	};
 
-	let currentComponent = 'Node'; // Add this line
-
+	// Handle key press events for toggling the drawer and components
 	const handleKeyPress = (e: KeyboardEvent) => {
 		if (e.key === 'D') {
 			handleDrawer();
-		} else if (e.key === 'T' && isOpen) {
+		} else if (e.key === 'T' && $state.isOpen) {
 			// Only toggle components if the drawer is open
-			if (currentComponent === 'Node') {
+			if ($state.currentComponent === 'Node') {
 				handleAnchorContainer();
-				currentComponent = 'Anchor';
-			} else if (currentComponent === 'Anchor') {
+				$state.currentComponent = 'Anchor';
+			} else if ($state.currentComponent === 'Anchor') {
 				handleEdgeContainer();
-				currentComponent = 'Edge';
-			} else if (currentComponent === 'Edge') {
+				$state.currentComponent = 'Edge';
+			} else if ($state.currentComponent === 'Edge') {
 				handleNodeContainer();
-				currentComponent = 'Node';
+				$state.currentComponent = 'Node';
 			}
 		}
 	};
@@ -129,39 +143,39 @@
 	});
 </script>
 
-<nav id="drawerWrapper" bind:this={nav}>
+<nav id="drawerWrapper" bind:this={$state.nav}>
 	<slot>
 		<button
 			class="drawerBtn"
-			bind:this={drawerBtn}
-			on:click={handleDrawer}
+			bind:this={$state.drawerBtn}
+			onclick={handleDrawer}
 			aria-label="Open/Close Drawer"
 		>
-			<Icon icon={isOpen ? 'south_east' : 'north_west'} />
+			<Icon icon={$state.isOpen ? 'south_east' : 'north_west'} />
 		</button>
-		<ul class="drawerContents" bind:this={drawerContents}>
+		<ul class="drawerContents" bind:this={$state.drawerContents}>
 			<li class="list-item">
 				<div class="menu">
 					<button
 						class="dropdown"
-						bind:this={nodeBtn}
-						on:click={handleNodeContainer}
+						bind:this={$state.nodeBtn}
+						onclick={handleNodeContainer}
 						aria-label="Component"
 					>
 						Node
 					</button>
 					<button
 						class="dropdown"
-						bind:this={anchorBtn}
-						on:click={handleAnchorContainer}
+						bind:this={$state.anchorBtn}
+						onclick={handleAnchorContainer}
 						aria-label="Component"
 					>
 						Anchor
 					</button>
 					<button
 						class="dropdown"
-						bind:this={edgeBtn}
-						on:click={handleEdgeContainer}
+						bind:this={$state.edgeBtn}
+						onclick={handleEdgeContainer}
 						aria-label="Component"
 					>
 						Edge
@@ -170,19 +184,19 @@
 			</li>
 			<!-- Handle Node Dropdown -->
 			<li class="list-item">
-				<div class="propsContainer nodeContainer" bind:this={nodeContainer}>
+				<div class="propsContainer nodeContainer" bind:this={$state.nodeContainer}>
 					<DrawerNode />
 				</div>
 			</li>
 			<!-- Handle Anchor Dropdown -->
 			<li class="list-item">
-				<div class="propsContainer anchorContainer" bind:this={anchorContainer}>
+				<div class="propsContainer anchorContainer" bind:this={$state.anchorContainer}>
 					<DrawerAnchor />
 				</div>
 			</li>
 			<!-- Handle Edge Dropdown -->
 			<li class="list-item">
-				<div class="propsContainer edgeContainer" bind:this={edgeContainer}>
+				<div class="propsContainer edgeContainer" bind:this={$state.edgeContainer}>
 					<DrawerEdge />
 				</div>
 			</li>
@@ -191,7 +205,7 @@
 					role="presentation"
 					class="defaultNodes"
 					draggable="true"
-					on:dragstart={handleDragStart}
+					ondragstart={handleDragStart}
 				>
 					Node
 				</div>

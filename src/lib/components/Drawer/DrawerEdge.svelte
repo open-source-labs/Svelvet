@@ -1,4 +1,9 @@
-<script context="module" lang="ts">
+<script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
+</script>
+
+<script module lang="ts">
 	import type { CSSColorString, EdgeProps, EdgeDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 
@@ -12,7 +17,7 @@
 	let edgeLabel: string | undefined;
 	let labelColor: CSSColorString | undefined;
 	let textColor: CSSColorString | undefined;
-	// let edgeClick: () => void | null; // Stretch feature
+	// let edgeClick: () => void | null; // Stretch feature, needs edgeClick to function
 	let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
 	export function createEdgeProps() {
@@ -76,11 +81,45 @@
 		const target = e.target as HTMLFormElement;
 		target.reset();
 	};
+
+	// Validation for edge properties
+	const validateEdgeProps = () => {
+		if (edgeWidth !== undefined && typeof edgeWidth !== 'number') {
+			throw new Error('Invalid value for edgeWidth property');
+		}
+		if (color !== undefined && typeof color !== 'string') {
+			throw new Error('Invalid value for color property');
+		}
+		if (straight !== undefined && typeof straight !== 'boolean') {
+			throw new Error('Invalid value for straight property');
+		}
+		if (step !== undefined && typeof step !== 'boolean') {
+			throw new Error('Invalid value for step property');
+		}
+		if (cornerRadius !== undefined && typeof cornerRadius !== 'number') {
+			throw new Error('Invalid value for cornerRadius property');
+		}
+		if (animate !== undefined && typeof animate !== 'boolean') {
+			throw new Error('Invalid value for animate property');
+		}
+		if (edgeLabel !== undefined && typeof edgeLabel !== 'string') {
+			throw new Error('Invalid value for edgeLabel property');
+		}
+		if (labelColor !== undefined && typeof labelColor !== 'string') {
+			throw new Error('Invalid value for labelColor property');
+		}
+		if (textColor !== undefined && typeof textColor !== 'string') {
+			throw new Error('Invalid value for textColor property');
+		}
+		if (targetColor !== undefined && typeof targetColor !== 'string') {
+			throw new Error('Invalid value for targetColor property');
+		}
+	};
 </script>
 
 <div id="edgeContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form on:submit|preventDefault={handleEdgeResetButtonClick}>
+	<form onsubmit={preventDefault(handleEdgeResetButtonClick)}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="color">Background: </label>
@@ -100,12 +139,12 @@
 					id="animate"
 					type="checkbox"
 					bind:value={animate}
-					on:change={handleAnimateButtonClick}
+					onchange={handleAnimateButtonClick}
 				/>
 			</li>
 			<li class="list-item">
 				<label for="step">Step: </label>
-				<input id="step" type="checkbox" bind:value={step} on:change={handleStepButtonClick} />
+				<input id="step" type="checkbox" bind:value={step} onchange={handleStepButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="cornerRadius">Corner Radius:</label>

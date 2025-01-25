@@ -10,7 +10,9 @@
 		<Svelvet TD theme="dark" width={800} height={500} zoom={0.5} controls title="tests" minimap>
 			<Node connections={[2, 3]} useDefaults width={200} height={100}>
 				<Anchor output>
-					<Edge slot="edge" color="yellow" label="Hello" />
+					{#snippet edge()}
+										<Edge  color="yellow" label="Hello" />
+									{/snippet}
 				</Anchor>
 			</Node>
 		</Svelvet>

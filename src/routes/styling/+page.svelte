@@ -15,7 +15,9 @@
 		<Node --node-color="red" --node-border-radius="40px" id="node2" label="test" />
 		<Node label="what" position={{ x: 10, y: 200 }} inputs={3} TD />
 		<Node label="what" position={{ x: 100, y: 200 }} inputs={2} TD blocked />
-		<ThemeToggle slot="toggle" main="light" alt="custom-theme" />
+		{#snippet toggle()}
+				<ThemeToggle  main="light" alt="custom-theme" />
+			{/snippet}
 	</Svelvet>
 </body>
 

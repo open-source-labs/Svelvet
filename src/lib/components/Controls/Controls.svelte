@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import type { Graph } from '$lib/types';
 	import { getContext } from 'svelte';
@@ -7,12 +11,6 @@
 	import { tracking } from '$lib/stores';
 	import Icon from '$lib/assets/icons/Icon.svelte';
 
-	export let increment = 0.1;
-	export let horizontal = false;
-	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
-	export let corner = 'SW';
-
 	const transforms = getContext<Graph['transforms']>('transforms');
 	const dimensions = getContext<Graph['dimensions']>('dimensions');
 	const locked = getContext<Graph['locked']>('locked');
@@ -21,70 +19,105 @@
 
 	const { translation } = transforms;
 
-	const hidden = $groups.hidden.nodes;
+	$props = {
+		increment: 0.1,
+		horizontal: false,
+		bgColor: null,
+		iconColor: null,
+		corner: 'SW',
+		onZoomIn: null,
+		onZoomOut: null,
+		onFitView: null,
+		onLock: null,
+		onUnhideAll: null
+	};
 
-	const nodeBounds = bounds.nodeBounds;
+	$derived hidden = $groups.hidden.nodes;
 
 	function unhideAll() {
-		hidden.set(new Set());
+		try {
+			$hidden = new Set();
+			if ($props.onUnhideAll) $props.onUnhideAll();
+		} catch (error) {
+			console.error('Error in unhideAll:', error);
+		}
 	}
 
 	function zoomIn() {
-		zoomAndTranslate(-1, dimensions, transforms, increment);
+		try {
+			zoomAndTranslate(-1, dimensions, transforms, $props.increment);
+			if ($props.onZoomIn) $props.onZoomIn();
+		} catch (error) {
+			console.error('Error in zoomIn:', error);
+		}
 	}
 
 	function zoomOut() {
-		zoomAndTranslate(1, dimensions, transforms, increment);
+		try {
+			zoomAndTranslate(1, dimensions, transforms, $props.increment);
+			if ($props.onZoomOut) $props.onZoomOut();
+		} catch (error) {
+			console.error('Error in zoomOut:', error);
+		}
 	}
 
 	function fitView() {
-		tracking.set(true);
-		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
-		translation.set({ x: x || 0, y: y || 0 });
-		transforms.scale.set(scale || 1);
-		tracking.set(false);
+		try {
+			tracking.set(true);
+			const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
+			translation.set({ x: x || 0, y: y || 0 });
+			transforms.scale.set(scale || 1);
+			tracking.set(false);
+			if ($props.onFitView) $props.onFitView();
+		} catch (error) {
+			console.error('Error in fitView:', error);
+		}
 	}
 
 	function lock() {
-		// Toggle lock boolean
-		$locked = !$locked;
+		try {
+			$locked = !$locked;
+			if ($props.onLock) $props.onLock();
+		} catch (error) {
+			console.error('Error in lock:', error);
+		}
 	}
 </script>
 
 <nav
 	class="graph-controls"
-	class:SW={corner === 'SW'}
-	class:NE={corner === 'NE'}
-	class:SE={corner === 'SE'}
-	class:NW={corner === 'NW'}
+	class:SW={$props.corner === 'SW'}
+	class:NE={$props.corner === 'NE'}
+	class:SE={$props.corner === 'SE'}
+	class:NW={$props.corner === 'NW'}
 	aria-label="navigation"
 >
-	<slot {zoomIn} {zoomOut} {fitView} {lock} {unhideAll}>
+	{@render zoomIn, zoomOut, fitView, lock, unhideAll}
 		<div
 			class="controls-wrapper"
 			class:horizontal
-			style:--prop-controls-background-color={bgColor}
-			style:--prop-controls-text-color={iconColor}
+			style:--prop-controls-background-color={$props.bgColor}
+			style:--prop-controls-text-color={$props.iconColor}
 		>
 			{#if $hidden.size > 0}
-				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
+				<button class="unhide" onclick={unhideAll}>
 					<Icon icon="visibility_off" />
 				</button>
 			{/if}
-			<button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
+			<button class="zoom-in" onclick={zoomIn}>
 				<Icon icon="zoom_in" />
 			</button>
-			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
+			<button class="zoom-out" onclick={zoomOut}>
 				<Icon icon="zoom_out" />
 			</button>
-			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={fitView}>
+			<button class="reset" onclick={fitView}>
 				<Icon icon="filter_center_focus" />
 			</button>
-			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
+			<button class="lock" onclick={lock}>
 				<Icon icon={$locked ? 'lock_open' : 'lock'} />
 			</button>
 		</div>
-	</slot>
+	{/render}
 </nav>
 
 <style>

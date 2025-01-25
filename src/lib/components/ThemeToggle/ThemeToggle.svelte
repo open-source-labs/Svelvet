@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
 	import { getJSONState } from '$lib/utils/savers/saveStore';
@@ -5,57 +9,72 @@
 	import { graphStore } from '$lib/stores';
 	import { get } from 'svelte/store';
 
-	export let main = 'light';
-	export let alt = 'dark';
-	// export let highContrast = 'highContrast';
-	/**
-	 * @deprecated
-	 * @default 'light_mode'
-	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
-	 * @link https://fonts.google.com/icons
-	 */
-	export let mainIcon = 'light_mode';
-	/**
-	 * @deprecated
-	 * @default 'dark_mode'
-	 * @description (Do not use. Will be deprecated in the next major release.) This prop accepts a string that corresponds to the the name of an icon from the Material Icons library.
-	 *  @link https://fonts.google.com/icons
-	 */
-	export let altIcon = 'dark_mode';
-	export let corner = 'NE';
-	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
+	$props = {
+		main: 'light',
+		alt: 'dark',
+		mainIcon: 'light_mode',
+		altIcon: 'dark_mode',
+		corner: 'NE',
+		bgColor: null,
+		iconColor: null,
+		onToggleTheme: null,
+		onSave: null,
+		themeOptions: ['light', 'dark', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink']
+	};
 
-	let current = main;
+	$state = {
+		current: $props.main
+	};
 
 	function toggleTheme() {
-		const currentTheme = document.documentElement.getAttribute('svelvet-theme');
-		let newTheme;
-		if (!currentTheme || currentTheme === main) {
-			newTheme = alt;
-		}
-		// else if (currentTheme === alt) {
-		// 	newTheme = highContrast;
-		// }
-		else {
-			newTheme = main;
-		}
-		current = newTheme;
-		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
+		try {
+			const currentTheme = document.documentElement.getAttribute('svelvet-theme');
+			let newTheme;
+			if (!currentTheme || currentTheme === $props.main) {
+				newTheme = $props.alt;
+				$state.current = $props.alt;
+			} else {
+				newTheme = $props.main;
+				$state.current = $props.main;
+			}
+			document.documentElement.setAttribute('svelvet-theme', newTheme);
 
-		// Save the current theme to Local Storage
-		localStorage.setItem('currentTheme', newTheme);
+			// Save the current theme to Local Storage
+			localStorage.setItem('currentTheme', newTheme);
+
+			if ($props.onToggleTheme) $props.onToggleTheme(newTheme);
+		} catch (error) {
+			console.error('Error toggling theme:', error);
+		}
+	}
+
+	function setTheme(theme: string) {
+		try {
+			document.documentElement.setAttribute('svelvet-theme', theme);
+			$state.current = theme;
+
+			// Save the current theme to Local Storage
+			localStorage.setItem('currentTheme', theme);
+
+			if ($props.onToggleTheme) $props.onToggleTheme(theme);
+		} catch (error) {
+			console.error('Error setting theme:', error);
+		}
 	}
 
 	onMount(() => {
-		const savedTheme = localStorage.getItem('currentTheme');
-		if (savedTheme) {
-			document.documentElement.setAttribute('svelvet-theme', savedTheme);
-			current = savedTheme;
-		} else {
-			// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
-			document.documentElement.setAttribute('svelvet-theme', main);
-			current = main;
+		try {
+			const savedTheme = localStorage.getItem('currentTheme');
+			if (savedTheme) {
+				document.documentElement.setAttribute('svelvet-theme', savedTheme);
+				$state.current = savedTheme;
+			} else {
+				// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
+				document.documentElement.setAttribute('svelvet-theme', $props.main);
+				$state.current = $props.main;
+			}
+		} catch (error) {
+			console.error('Error setting initial theme:', error);
 		}
 	});
 
@@ -64,38 +83,56 @@
 	graphStore.subscribe((graphMap) => {
 		const graphKey = 'G-1';
 		graph = graphMap.get(graphKey);
-		// console.log('Graph from store:', graph);
+			// console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
-		const currentGraphMap = get(graphStore);
-		const graph = currentGraphMap.get('G-1');
-		// if (graph) {
-		// 	console.log('Current Graph State:', graph);
-		// } else {
-		// 	console.log('No current graph found');
-		// }
+		try {
+			const currentGraphMap = get(graphStore);
+			const graph = currentGraphMap.get('G-1');
+			// if (graph) {
+			// 	console.log('Current Graph State:', graph);
+			// } else {
+			// 	console.log('No current graph found');
+			// }
+		} catch (error) {
+			console.error('Error logging current graph state:', error);
+		}
 	}
 </script>
 
 <div
 	class="controls-wrapper"
-	style:--prop-theme-toggle-color={bgColor}
-	style:--prop-theme-toggle-text-color={iconColor}
-	class:SW={corner === 'SW'}
-	class:NE={corner === 'NE'}
-	class:SE={corner === 'SE'}
-	class:NW={corner === 'NW'}
+	style:--prop-theme-toggle-color={$props.bgColor}
+	style:--prop-theme-toggle-text-color={$props.iconColor}
+	class:SW={$props.corner === 'SW'}
+	class:NE={$props.corner === 'NE'}
+	class:SE={$props.corner === 'SE'}
+	class:NW={$props.corner === 'NW'}
 >
-	<button on:mousedown|stopPropagation={toggleTheme} on:touchstart|stopPropagation={toggleTheme}>
-		<span class="material-symbols-outlined">{current === main ? altIcon : mainIcon}</span>
+	<button onclick={toggleTheme} ontouchstart={toggleTheme}>
+		<span class="material-symbols-outlined">{$state.current === $props.main ? $props.altIcon : $props.mainIcon}</span>
 	</button>
 
 	<button
 		class="save-button NW"
-		on:click={() => {
-			getJSONState(graph);
+		onclick={() => {
+			try {
+				getJSONState(graph);
+				if ($props.onSave) $props.onSave();
+			} catch (error) {
+				console.error('Error saving graph state:', error);
+			}
 		}}>Save</button
 	>
+
+	<select
+		class="theme-selector"
+		onchange={(e) => setTheme((e.target as HTMLSelectElement).value)}
+	>
+		{#each $props.themeOptions as themeOption}
+			<option value={themeOption} selected={themeOption === $state.current}>{themeOption}</option>
+		{/each}
+	</select>
 </div>
 
 <style>
@@ -183,5 +220,13 @@
 		color: var(--save-button-text-color, var(--default-save-button-text-color));
 		border: solid 1px var(--save-button-border-color, var(--default-save-button-border-color));
 		cursor: pointer;
+	}
+	.theme-selector {
+		margin-top: 10px;
+		padding: 5px;
+		border-radius: 4px;
+		border: 1px solid var(--theme-toggle-border, var(--default-theme-toggle-border));
+		background-color: var(--theme-toggle-color, var(--default-theme-toggle-color));
+		color: var(--theme-toggle-text-color, var(--default-theme-toggle-text-color));
 	}
 </style>

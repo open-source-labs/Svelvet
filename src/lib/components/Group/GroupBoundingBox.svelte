@@ -1,16 +1,28 @@
 <script lang="ts">
+	import { createBubbler, preventDefault, stopPropagation } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import type { CSSColorString, Dimensions, XYPair } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
 
-	export let dimensions: Dimensions;
-	export let position: Writable<XYPair>;
-	export let color: Writable<CSSColorString>;
-	export let groupName: string;
+	interface Props {
+		dimensions: Dimensions;
+		position: Writable<XYPair>;
+		color: Writable<CSSColorString>;
+		groupName: string;
+	}
+
+	let {
+		dimensions,
+		position,
+		color,
+		groupName
+	}: Props = $props();
 
 	const { width, height } = dimensions;
 
-	$: id = `${groupName}-bounding-box`;
+	let id = $derived(`${groupName}-bounding-box`);
 
 	const dispatch = createEventDispatcher();
 
@@ -22,8 +34,8 @@
 <div
 	role="button"
 	tabindex="0"
-	on:contextmenu|stopPropagation|preventDefault
-	on:mousedown|stopPropagation|preventDefault={dispatchClick}
+	oncontextmenu={stopPropagation(preventDefault(bubble('contextmenu')))}
+	onmousedown={stopPropagation(preventDefault(dispatchClick))}
 	class="bounding-box-border"
 	{id}
 	style:top={`${$position.y}px`}
@@ -32,7 +44,7 @@
 	style:height={`${$height}px`}
 	style="border: solid 4px {$color};"
 >
-	<div class="bounding-box" style:background-color={$color} />
+	<div class="bounding-box" style:background-color={$color}></div>
 </div>
 
 <style>

@@ -1,14 +1,22 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
 	import type { CustomWritable } from '$lib/types';
 
-	export let options: Array<string>;
-	export let parameterStore: CustomWritable<string>;
+	$props = {
+		options: [],
+		parameterStore: null
+	};
 
-	// Local state for radio group selection
-	let initial = 0;
+	$state = {
+		initial: 0
+	};
 
-	// We want to update the store with the text value, not the index
-	$: $parameterStore = options[initial];
+	$effect(() => {
+		$props.parameterStore = $props.options[$state.initial];
+	});
 
 	const slugify = (str = '') => str.toLowerCase().replace(/ /g, '-').replace(/./g, '');
 
@@ -20,22 +28,25 @@
 		if (key !== 'Tab') event.preventDefault();
 		event.stopPropagation();
 		if (key === 'ArrowRight' || key === 'ArrowDown') {
-			initial = (initial + 1) % options.length;
+			$state.initial = ($state.initial + 1) % $props.options.length;
 		} else if (key === 'ArrowLeft' || key === 'ArrowUp') {
-			initial = (initial - 1 + options.length) % options.length;
+			$state.initial = ($state.initial - 1 + $props.options.length) % $props.options.length;
 		}
 	}
 </script>
 
-<div class="radio-group" role="radiogroup" on:keydown={cycleThroughGroup} tabindex={0}>
-	{#each options as label, index}
+<div class="radio-group" role="radiogroup" onkeydown={cycleThroughGroup} tabindex={0}>
+	{#each $props.options as label, index}
 		<button
-			on:mousedown|stopPropagation={() => {
-				initial = index;
+			onmousedown={() => {
+				$state.initial = index;
 			}}
+			aria-checked={$state.initial === index}
+			aria-label={label}
+			role="radio"
 		>
 			<label class="option-wrapper">
-				<input class="option" type="radio" id={slugify(label)} bind:group={initial} value={index} />
+				<input class="option" type="radio" id={slugify(label)} bind:group={$state.initial} value={index} />
 				<p>{label}</p>
 			</label>
 		</button>

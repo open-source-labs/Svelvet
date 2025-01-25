@@ -1,57 +1,59 @@
 <script lang="ts">
+	import { stopPropagation } from 'svelte/legacy';
+
 	import { Node, Svelvet, Anchor, Edge } from '$lib';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import type { NodeConfig, CSSColorString, Direction } from '$lib/types';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
 	import { addProps } from '$lib/utils';
 
-	let defaultNodes: NodeConfig[] = [];
-	let customNodes: NodeConfig[] = [];
+	let defaultNodes: NodeConfig[] = $state([]);
+	let customNodes: NodeConfig[] = $state([]);
 	let anchors: any[] = [];
 	let edges: any[] = [];
 	let customEdge: any;
 	let dropped_in: boolean;
 
 	// types for node creation
-	let bgColor: CSSColorString | undefined;
-	let borderColor: CSSColorString | undefined;
-	let label: string | undefined;
-	let width: number = 200;
-	let height: number = 100;
-	let nodeDirection: string | undefined;
-	let inputs: number | undefined;
-	let outputs: number | undefined;
-	let locked: boolean | undefined;
-	let center: boolean | undefined;
-	let rotation: number | undefined;
-	let zIndex: number | undefined;
+	let bgColor: CSSColorString | undefined = $state();
+	let borderColor: CSSColorString | undefined = $state();
+	let label: string | undefined = $state();
+	let width: number = $state(200);
+	let height: number = $state(100);
+	let nodeDirection: string | undefined = $state();
+	let inputs: number | undefined = $state();
+	let outputs: number | undefined = $state();
+	let locked: boolean | undefined = $state();
+	let center: boolean | undefined = $state();
+	let rotation: number | undefined = $state();
+	let zIndex: number | undefined = $state();
 	let TD: boolean | undefined;
 	let LR: boolean | undefined;
-	let useDefaults: boolean | undefined;
+	let useDefaults: boolean | undefined = $state();
 
 	// types for anchor creation
-	let invisible: boolean | undefined;
-	let nodeConnect: boolean | undefined;
-	let input: boolean | undefined;
-	let output: boolean | undefined;
-	let multiple: boolean | undefined;
-	let direction: Direction | undefined;
-	let dynamic: boolean | undefined;
-	let anchorEdgeLabel: string | undefined;
-	let anchorLocked: boolean | undefined;
-	let anchorBgColor: CSSColorString | undefined;
+	let invisible: boolean | undefined = $state();
+	let nodeConnect: boolean | undefined = $state();
+	let input: boolean | undefined = $state();
+	let output: boolean | undefined = $state();
+	let multiple: boolean | undefined = $state();
+	let direction: Direction | undefined = $state();
+	let dynamic: boolean | undefined = $state();
+	let anchorEdgeLabel: string | undefined = $state();
+	let anchorLocked: boolean | undefined = $state();
+	let anchorBgColor: CSSColorString | undefined = $state();
 
 	//types for edge creation
-	let edgeWidth: number | undefined;
-	let targetColor: CSSColorString | undefined;
-	let color: CSSColorString | undefined;
-	let straight: boolean | undefined;
-	let step: boolean | undefined;
-	let cornerRadius: number | undefined;
-	let animate: boolean | undefined;
-	let edgeLabel: string | undefined;
-	let labelColor: CSSColorString | undefined;
-	let textColor: CSSColorString | undefined;
+	let edgeWidth: number | undefined = $state();
+	let targetColor: CSSColorString | undefined = $state();
+	let color: CSSColorString | undefined = $state();
+	let straight: boolean | undefined = $state();
+	let step: boolean | undefined = $state();
+	let cornerRadius: number | undefined = $state();
+	let animate: boolean | undefined = $state();
+	let edgeLabel: string | undefined = $state();
+	let labelColor: CSSColorString | undefined = $state();
+	let textColor: CSSColorString | undefined = $state();
 	let edgeClick: () => void | null; // Stretch feature
 
 	// Drag and drop events
@@ -329,10 +331,10 @@
 
 <div
 	id="drop_zone"
-	on:dragenter={handleDragEnter}
-	on:dragleave={handleDragLeave}
-	on:drop={handleDragDrop}
-	on:dragover={onDragOver}
+	ondragenter={handleDragEnter}
+	ondragleave={handleDragLeave}
+	ondrop={handleDragDrop}
+	ondragover={onDragOver}
 >
 	<Svelvet height={600} zoom={0.7} minimap controls>
 		{#each defaultNodes as node}
@@ -345,7 +347,9 @@
 				</Anchor>
 			</Node>
 		{/each}
-		<ThemeToggle main="light" alt="dark" slot="toggle" />
+		{#snippet toggle()}
+				<ThemeToggle main="light" alt="dark"  />
+			{/snippet}
 	</Svelvet>
 </div>
 
@@ -357,8 +361,8 @@
 				<div
 					class="defaultNodes"
 					draggable="true"
-					on:dragstart={handleDragStart}
-					on:dragend={handleDragEnd}
+					ondragstart={handleDragStart}
+					ondragend={handleDragEnd}
 				>
 					Node
 				</div>
@@ -377,7 +381,7 @@
 					id="useDefaults"
 					type="checkbox"
 					bind:value={useDefaults}
-					on:change={handleUseDefaultsButtonClick}
+					onchange={handleUseDefaultsButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -408,7 +412,7 @@
 				<select
 					id="anchorPosition"
 					bind:value={nodeDirection}
-					on:change={handleAnchorPositionButton}
+					onchange={handleAnchorPositionButton}
 				>
 					<option value="">-</option>
 					<option value="LR">LR</option>
@@ -416,7 +420,7 @@
 				</select>
 			</li>
 			<li class="list-item">
-				<button class="nodeResetBtn btn" on:click|stopPropagation={handleNodeResetButtonClick}
+				<button class="nodeResetBtn btn" onclick={stopPropagation(handleNodeResetButtonClick)}
 					>Reset</button
 				>
 			</li>
@@ -425,7 +429,7 @@
 			</li>
 			<li class="list-item">
 				<label for="locked">Locked: </label>
-				<input id="label" type="checkbox" bind:value={locked} on:change={handleLockedButtonClick} />
+				<input id="label" type="checkbox" bind:value={locked} onchange={handleLockedButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="centered">Centered: </label>
@@ -433,7 +437,7 @@
 					id="centered"
 					type="checkbox"
 					bind:value={center}
-					on:change={handleCenterButtonClick}
+					onchange={handleCenterButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -464,7 +468,7 @@
 							id="invisible"
 							type="checkbox"
 							bind:value={invisible}
-							on:change={handleInvisibleButtonClick}
+							onchange={handleInvisibleButtonClick}
 						/>
 					</li>
 					<li class="list-item">
@@ -473,7 +477,7 @@
 							id="nodeConnect"
 							type="checkbox"
 							bind:value={nodeConnect}
-							on:change={handleNodeConnectButtonClick}
+							onchange={handleNodeConnectButtonClick}
 						/>
 					</li>
 					<li class="list-item">
@@ -482,7 +486,7 @@
 							id="input"
 							type="checkbox"
 							bind:value={input}
-							on:change={handleInputButtonClick}
+							onchange={handleInputButtonClick}
 						/>
 					</li>
 					<li class="list-item">
@@ -491,7 +495,7 @@
 							id="output"
 							type="checkbox"
 							bind:value={output}
-							on:change={handleOutputButtonClick}
+							onchange={handleOutputButtonClick}
 						/>
 					</li>
 					<li class="list-item">
@@ -500,12 +504,12 @@
 							id="multiple"
 							type="checkbox"
 							bind:value={multiple}
-							on:change={handleMultipleButtonClick}
+							onchange={handleMultipleButtonClick}
 						/>
 					</li>
 					<li class="list-item">
 						<label for="direction">Direction: </label>
-						<select id="direction" bind:value={direction} on:change={handleDirectionButtonClick}>
+						<select id="direction" bind:value={direction} onchange={handleDirectionButtonClick}>
 							<option value="">-</option>
 							<option value="north">North</option>
 							<option value="south">South</option>
@@ -520,7 +524,7 @@
 							id="dynamic"
 							type="checkbox"
 							bind:value={dynamic}
-							on:change={handleDynamicButtonClick}
+							onchange={handleDynamicButtonClick}
 						/>
 					</li>
 					<li class="list-item">
@@ -534,13 +538,13 @@
 							id="anchorLocked"
 							type="checkbox"
 							bind:value={anchorLocked}
-							on:change={handleAnchorLockedButtonClick}
+							onchange={handleAnchorLockedButtonClick}
 						/>
 					</li>
 					<li class="list-item">
 						<button
 							class="anchorResetBtn btn"
-							on:click|stopPropagation={handleAnchorResetButtonClick}>Reset</button
+							onclick={stopPropagation(handleAnchorResetButtonClick)}>Reset</button
 						>
 					</li>
 				</ul>
@@ -578,12 +582,12 @@
 							id="straight"
 							type="checkbox"
 							bind:value={straight}
-							on:change={handleStraightButtonClick}
+							onchange={handleStraightButtonClick}
 						/>
 					</li>
 					<li class="list-item">
 						<label for="step">Step : </label>
-						<input id="step" type="checkbox" bind:value={step} on:change={handleStepButtonClick} />
+						<input id="step" type="checkbox" bind:value={step} onchange={handleStepButtonClick} />
 					</li>
 					<li class="list-item">
 						<label for="animate">Animate : </label>
@@ -591,7 +595,7 @@
 							id="animate"
 							type="checkbox"
 							bind:value={animate}
-							on:change={handleAnimateButtonClick}
+							onchange={handleAnimateButtonClick}
 						/>
 					</li>
 
@@ -600,7 +604,7 @@
 						<input id="edgeLabel" type="text" bind:value={edgeLabel} />
 					</li>
 					<li class="list-item">
-						<button class="edgeResetBtn btn" on:click|stopPropagation={handleEdgeResetButtonClick}
+						<button class="edgeResetBtn btn" onclick={stopPropagation(handleEdgeResetButtonClick)}
 							>Reset</button
 						>
 					</li>

@@ -2,8 +2,8 @@
 	import { Svelvet, Minimap, Node } from '$lib';
 	import type { SvelvetConnectionEvent } from '$lib/types';
 	import CustomEdge from '../../example-components/CustomEdge.svelte';
-	let position = { x: 300, y: 300 };
-	let label = 'test';
+	let position = $state({ x: 300, y: 300 });
+	let label = $state('test');
 
 	function handleConnection(e: CustomEvent<SvelvetConnectionEvent>) {
 		console.log(e.detail);
@@ -37,7 +37,9 @@
 				edge={CustomEdge}
 			/>
 			<Node label="what" position={{ x: 10, y: 200 }} inputs={3} TD />
-			<Minimap slot="minimap" />
+			{#snippet minimap()}
+						<Minimap  />
+					{/snippet}
 		</Svelvet>
 	</div>
 </body>

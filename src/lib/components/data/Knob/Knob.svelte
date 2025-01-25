@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { isArrow } from '$lib/types';
@@ -6,80 +10,29 @@
 	import type { Graph, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
 
-	// Props
-	/**
-	 * @default 60
-	 * @description Minimum angle allowed when interacting with the knob rotation.
-	 */
-	export let minDegree = 60;
-	/**
-	 * @default 300
-	 * @description Maximum angle allowed when interacting with the knob rotation.
-	 */
-	export let maxDegree = 300;
-	/**
-	 * @default 'No default value'
-	 * @description This is the store that contains the output value of the knob.
-	 * The initial value should be passed as a property when creating the component.
-	 */
-	export let parameterStore: CustomWritable<number>;
-	/**
-	 * @default 0
-	 * @description Minimum allowable output value of parameterStore.
-	 */
-	export let min = 0;
-	/**
-	 * @default 100
-	 * @description Maximum allowable output value of parameterStore.
-	 */
-	export let max = 100;
-	/**
-	 * @default 0
-	 * @description Recommendation to set step to a value that is a factor of the set the range (max - min).
-	 */
-	export let step = 1;
-	/**
-	 * @default 'Value'
-	 * @description Label for the knob compoent.
-	 */
-	export let label = 'Value';
-	/**
-	 * @default 0
-	 * @description Precision in decimal places for the output value.
-	 */
-	export let fixed = 0;
-	/**
-	 * @default null
-	 * @description Text color.
-	 */
-	export let fontColor: CSSColorString | null = null;
-	/**
-	 * @default 'lightblue'
-	 * @description Knob background color.
-	 */
-	export let knobColor: CSSColorString | null = 'lightblue';
-	/**
-	 * @default 'white'
-	 * @description Color for the output value displayed at the center of the knob.
-	 */
-	export let knobValueColor: CSSColorString | null = 'white';
-	/**
-	 * @default '#666565'
-	 * @description Color for indicator symbol displaying the current rotational position of the knob.
-	 */
-	export let indicatorColor: CSSColorString | null = '#666565';
+	$props = {
+		minDegree: 60,
+		maxDegree: 300,
+		parameterStore: null,
+		min: 0,
+		max: 100,
+		step: 1,
+		label: 'Value',
+		fixed: 0,
+		fontColor: null,
+		knobColor: 'lightblue',
+		knobValueColor: 'white',
+		indicatorColor: '#666565'
+	};
 
-	$parameterStore =
-		$parameterStore < min
-			? min
-			: $parameterStore > max
-			? max
-			: Math.floor(($parameterStore - min) / step) * step + min;
-
-	$: currentDegree =
-		((($parameterStore as number) - min) / (max - min)) * (maxDegree - minDegree) + minDegree;
-
-	$: connected = typeof parameterStore.set !== 'function';
+	$state = {
+		currentDegree: ((($props.parameterStore as number) - $props.min) / ($props.max - $props.min)) * ($props.maxDegree - $props.minDegree) + $props.minDegree,
+		connected: typeof $props.parameterStore.set !== 'function',
+		sliderWidth: 0,
+		rotating: false,
+		previousValue: $props.parameterStore,
+		curAngle: `rotate(${((($props.parameterStore as number) - $props.min) / ($props.max - $props.minDegree)) * ($props.maxDegree - $props.minDegree) + $props.minDegree}deg`
+	};
 
 	const graph = getContext<Graph>('graph');
 
@@ -87,34 +40,25 @@
 	const selected = $groups.selected;
 	const activeGroup = graph.activeGroup;
 
-	// TODO: need to rename these variables
-	let sliderWidth: number; // Width of knob on DOM (relative to scale)
 	let knobWrapperElement: HTMLDivElement;
 	let knobElement: HTMLDivElement;
-	let rotating = false;
 
-	// Grab cursor from store
-	$: cursor = graph.cursor;
+	$derived cursor = graph.cursor;
+	$derived scale = graph.transforms.scale;
+	$derived translation = graph.transforms.translation;
 
-	//Grab scale/zoom value of graph
-	$: scale = graph.transforms.scale;
+	$effect(() => {
+		if ($state.rotating) {
+			calculateNewAngle($cursor.x, $cursor.y);
+		}
+	});
 
-	$: translation = graph.transforms.translation;
-
-	// when the knob is rotating
-	$: if (rotating) {
-		calculateNewAngle($cursor.x, $cursor.y); // need to pass these arguments to trigger updates
-	}
-
-	// Begin rotating on mousedown
 	function startRotate(e: MouseEvent) {
 		e.stopPropagation();
 		e.preventDefault();
 		window.addEventListener('mouseup', stopRotate, { once: true });
-		rotating = true;
+		$state.rotating = true;
 	}
-
-	let previousValue = $parameterStore;
 
 	function startTouchRotate(e: TouchEvent) {
 		$activeGroup = null;
@@ -123,16 +67,16 @@
 		e.stopPropagation();
 		e.preventDefault();
 		window.addEventListener('touchend', stopRotate, { once: true });
-		rotating = true;
+		$state.rotating = true;
 	}
 
 	function stopRotate() {
-		if (previousValue === $parameterStore) {
+		if ($state.previousValue === $props.parameterStore) {
 			knobElement.focus();
 		} else {
-			previousValue = $parameterStore;
+			$state.previousValue = $props.parameterStore;
 		}
-		rotating = false;
+		$state.rotating = false;
 		window.removeEventListener('mouseup', stopRotate);
 	}
 
@@ -146,34 +90,26 @@
 		};
 	}
 
-	// Update the value based on the direction and increment
-	function updateValue(delta: number, increment = ((maxDegree - minDegree) / (max - min)) * step) {
-		// ADD SETTIMEOUT FOR SCROLL TO SLOW DOWN KNOB INPUT UPDATES
-		currentDegree = roundNum(
-			Math.max(minDegree, Math.min(currentDegree + delta * increment, maxDegree)),
+	function updateValue(delta: number, increment = (($props.maxDegree - $props.minDegree) / ($props.max - $props.min)) * $props.step) {
+		$state.currentDegree = roundNum(
+			Math.max($props.minDegree, Math.min($state.currentDegree + delta * increment, $props.maxDegree)),
 			3
 		);
-		$parameterStore =
-			((clamp(currentDegree) - minDegree) / (maxDegree - minDegree)) * (max - min) + min;
+		$props.parameterStore =
+			((clamp($state.currentDegree) - $props.minDegree) / ($props.maxDegree - $props.minDegree)) * ($props.max - $props.min) + $props.min;
 	}
 
-	$: curAngle = `rotate(${currentDegree}deg`;
-
 	export function clamp(num: number): number {
-		const increment = ((maxDegree - minDegree) / (max - min)) * step;
-		const degreeRoundToStep = Math.round((num - minDegree) / increment) * increment + minDegree;
-		const degree = Math.min(Math.max(degreeRoundToStep, minDegree), maxDegree);
-		//this is a band-aid solution
-		//currentDegree should be updating when parameterStore updates within calculateNewAngle
-		currentDegree = degree;
+		const increment = (($props.maxDegree - $props.minDegree) / ($props.max - $props.min)) * $props.step;
+		const degreeRoundToStep = Math.round((num - $props.minDegree) / increment) * increment + $props.minDegree;
+		const degree = Math.min(Math.max(degreeRoundToStep, $props.minDegree), $props.maxDegree);
+		$state.currentDegree = degree;
 		return degree;
 	}
 
-	// need to pass cursorX and cursorY to trigger updates
 	function calculateNewAngle(cursorX: number, cursorY: number): void {
 		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
 		const e = { clientX: cursorX, clientY: cursorY };
-		// X and Y are the position relative to the target element's left and top
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
 		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
@@ -187,36 +123,30 @@
 				? 270 + Math.atan(-relativeY / relativeX) * (180 / Math.PI)
 				: relativeX < 0 && relativeY < 0
 				? 90 - Math.atan(-relativeY / -relativeX) * (180 / Math.PI)
-				: currentDegree;
-		// caculate the new parameterstore based on clamp(angle)
-		// a round-off error (see wiki: 'https://en.wikipedia.org/wiki/Round-off_error')
-		// occurs for particular values depending on their angle due to
-		// a computer's limited precision of floating-point number representation.
-		// To circumvent this issue, toFixed is used to adjust output to desired accuracy
-		$parameterStore = Number(
-			(((clamp(angle) - minDegree) / (maxDegree - minDegree)) * (max - min) + min).toFixed(fixed)
+				: $state.currentDegree;
+		$props.parameterStore = Number(
+			(((clamp(angle) - $props.minDegree) / ($props.maxDegree - $props.minDegree)) * ($props.max - $props.min) + $props.min).toFixed($props.fixed)
 		);
 	}
 </script>
 
-{#if !connected}
-	<!-- this div is wrapping the knob section -->
-	<div class="wrapper" style:color={fontColor} bind:this={knobWrapperElement}>
-		<div class="knob-container" bind:offsetWidth={sliderWidth} style:transform={curAngle}>
+{#if !$state.connected}
+	<div class="wrapper" style:color={$props.fontColor} bind:this={knobWrapperElement}>
+		<div class="knob-container" bind:offsetWidth={$state.sliderWidth} style:transform={$state.curAngle}>
 			<div
 				tabindex={0}
 				id="knob"
 				class="knob"
 				aria-label="knob component"
 				role="slider"
-				aria-valuemin={min}
-				aria-valuemax={max}
-				aria-valuenow={$parameterStore}
-				style:background={knobColor}
-				on:wheel|stopPropagation|preventDefault={(event) => {
+				aria-valuemin={$props.min}
+				aria-valuemax={$props.max}
+				aria-valuenow={$props.parameterStore}
+				style:background={$props.knobColor}
+				onwheel|stopPropagation|preventDefault={(event) => {
 					updateValue(Math.sign(event.deltaY));
 				}}
-				on:keydown|stopPropagation={(e) => {
+				onkeydown|stopPropagation={(e) => {
 					const { key } = e;
 
 					if (isArrow(key)) {
@@ -227,17 +157,17 @@
 				use:rotatable
 				bind:this={knobElement}
 			/>
-			<div class="indicator" style:background={indicatorColor} />
+			<div class="indicator" style:background={$props.indicatorColor} />
 		</div>
-		<div class="knob-value" style:color={knobValueColor}>
-			{$parameterStore.toFixed(fixed)}
+		<div class="knob-value" style:color={$props.knobValueColor}>
+			{$props.parameterStore.toFixed($props.fixed)}
 		</div>
 	</div>
 {:else}
 	<div class="wrapper connected">
-		<div class="knob connected" style:--percentage="10%" aria-label={label}>
-			<p>{label}</p>
-			<p>{currentDegree}</p>
+		<div class="knob connected" style:--percentage="10%" aria-label={$props.label}>
+			<p>{$props.label}</p>
+			<p>{$state.currentDegree}</p>
 		</div>
 	</div>
 {/if}

@@ -23,7 +23,9 @@
 		<Treble />
 		<!-- <Bass /> -->
 		<Audio />
-		<ThemeToggle main="light" alt="dark" slot="toggle" />
+		{#snippet toggle()}
+				<ThemeToggle main="light" alt="dark"  />
+			{/snippet}
 	</Svelvet>
 </body>
 

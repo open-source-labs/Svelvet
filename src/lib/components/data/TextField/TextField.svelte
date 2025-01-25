@@ -1,15 +1,23 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
 	import { getContext } from 'svelte';
-	export let placeholder: string;
+	import type { Writable } from 'svelte/store';
+    import { createBubbler, stopPropagation } from 'svelte/legacy';
+    import { getContext } from 'svelte';
+	
+    const bubble = createBubbler();
+    $props = {
+		placeholder: ''
+	}
+    let { placeholder }: Props = $props();
+
 	const textStore = getContext<Writable<string>>('textStore');
 </script>
 
 <input
-	on:keydown|stopPropagation
-	on:click|stopPropagation
-	on:mousedown|stopPropagation
-	{placeholder}
+	onkeydown={event => event.stopPropagation()}
+	onclick={event => event.stopPropagation()}
+	onmousedown={event => event.stopPropagation()}
+{placeholder}
 	type="text"
 	bind:value={$textStore}
 />

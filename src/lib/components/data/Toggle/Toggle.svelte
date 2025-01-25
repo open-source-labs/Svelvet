@@ -1,35 +1,42 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
-	import type { CustomWritable } from '$lib/types';
-	import type { CSSColorString } from '$lib/types';
+	$props = {
+		parameterStore: null,
+		color: 'limegreen'
+	};
 
-	export let parameterStore: CustomWritable<boolean>;
-	export let color: CSSColorString | null = 'limegreen';
+	$state = {
+		parameterStore: $props.parameterStore
+	};
 
 	const handleKeyToggle = (event: KeyboardEvent) => {
 		event.stopPropagation();
 		if (event.key === 'Enter') {
-			$parameterStore = !$parameterStore;
+			$state.parameterStore = !$state.parameterStore;
 		}
 	};
 	const handleClickToggle = (event: MouseEvent) => {
 		event.stopPropagation();
-		$parameterStore = !$parameterStore;
+		$state.parameterStore = !$state.parameterStore;
 	};
 </script>
 
 <div
 	class="toggle-wrapper"
 	role="switch"
-	on:keydown|stopPropagation={handleKeyToggle}
+	onkeydown={handleKeyToggle}
 	tabindex={0}
-	aria-checked={$parameterStore}
+	aria-checked={$state.parameterStore}
 	aria-label="Toggle Switch"
 >
 	<label class="switch">
 		<input
 			type="checkbox"
-			on:click|stopPropagation={handleClickToggle}
-			bind:checked={$parameterStore}
+			onclick={handleClickToggle}
+			bind:checked={$state.parameterStore}
 		/>
 		<span class="slider round" style:--prop-toggle-color={color} />
 	</label>

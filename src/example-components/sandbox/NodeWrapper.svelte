@@ -2,34 +2,47 @@
 	import { Anchor, generateOutput } from '$lib';
 	import CustomAnchor from './CustomAnchor.svelte';
 
-	export let title: string;
-	export let outputStore: ReturnType<typeof generateOutput> | null = null;
-	export let key = '';
-	export let destroy: null | (() => void) = null;
+	interface Props {
+		title: string;
+		outputStore?: ReturnType<typeof generateOutput> | null;
+		key?: string;
+		destroy?: null | (() => void);
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		title,
+		outputStore = null,
+		key = '',
+		destroy = null,
+		children
+	}: Props = $props();
 </script>
 
 <div class="node">
 	<div class="header">
 		<h1>{title}</h1>
 		{#if destroy}
-			<button class="destroy" on:click={destroy}>X</button>
+			<button class="destroy" onclick={destroy}>X</button>
 		{/if}
 	</div>
-	<slot />
+	{@render children?.()}
 </div>
 {#if outputStore && key}
 	<div class="output-anchors">
 		<Anchor
 			id={key}
 			connections={[['output', key]]}
-			let:linked
-			let:connecting
-			let:hovering
+			
+			
+			
 			{outputStore}
 			output
 		>
-			<CustomAnchor {hovering} {connecting} {linked} />
-		</Anchor>
+			{#snippet children({ linked, connecting, hovering })}
+						<CustomAnchor {hovering} {connecting} {linked} />
+								{/snippet}
+				</Anchor>
 	</div>
 {/if}
 

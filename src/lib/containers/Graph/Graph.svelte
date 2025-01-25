@@ -1,10 +1,14 @@
+<!-- @migration-task Error while migrating Svelte code: `{@render ...}` tags can only contain call expressions
+https://svelte.dev/e/render_tag_invalid_expression -->
+<!-- @migration-task Error while migrating Svelte code: `{@render ...}` tags can only contain call expressions
+https://svelte.dev/e/render_tag_invalid_expression -->
 <script context="module" lang="ts">
 	import SelectionBox from '$lib/components/SelectionBox/SelectionBox.svelte';
 	import Background from '../Background/Background.svelte';
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { connectingFrom } from '$lib/components/Anchor/Anchor.svelte';
-	import { onMount, setContext, createEventDispatcher, tick } from 'svelte';
+	import { onMount, setContext, tick } from 'svelte';
 	import { isArrow } from '$lib/types';
 	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
@@ -19,99 +23,102 @@
 </script>
 
 <script lang="ts">
-	// defining props that the Graph component expects when it is used, type annotations added
 	export let graph: Graph;
-	export let width: number;
-	export let height: number;
-	export let minimap = false;
-	export let controls = false;
-	export let toggle = false;
-	export let fixedZoom = false;
-	export let pannable = true;
-	export let disableSelection = false;
-	export let ZOOM_INCREMENT = 0.1;
-	export let PAN_INCREMENT = 50;
-	export let PAN_TIME = 250;
-	export let MAX_SCALE = 3;
-	export let MIN_SCALE = 0.2;
-	export let selectionColor: CSSColorString;
-	export let backgroundExists: boolean;
-	export let fitView: boolean | 'resize' = false;
-	export let trackpadPan: boolean;
-	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
-	export let theme = 'light';
-	export let title: string;
-	export let drawer = false;
-	export let contrast = false;
+	export let width: number = 0;
+	export let height: number = 0;
+	export let minimap: boolean = false;
+	export let controls: boolean = false;
+	export let toggle: boolean = false;
+	export let fixedZoom: boolean = false;
+	export let pannable: boolean = true;
+	export let disableSelection: boolean = false;
+	export let ZOOM_INCREMENT: number = 0.1;
+	export let PAN_INCREMENT: number = 50;
+	export let PAN_TIME: number = 250;
+	export let MAX_SCALE: number = 3;
+	export let MIN_SCALE: number = 0.2;
+	export let selectionColor: CSSColorString | null = null;
+	export let backgroundExists: boolean = false;
+	export let fitView: boolean = false;
+	export let trackpadPan: boolean = false;
+	export let modifier: string = 'meta';
+	export let theme: string = 'light';
+	export let title: string = '';
+	export let drawer: boolean = false;
+	export let contrast: boolean = false;
 
-	let animationFrameId: number;
-
-	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
-	const dispatch = createEventDispatcher();
-	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
-	const activeIntervals: ActiveIntervals = {};
-
-	// creates a Svelte writable store named duplicate. This store probably holds a boolean value to track whether some duplication functionality is active or not.
-	const duplicate = writable(false);
-	// another writable store, which seems to be used to track if the component has mounted or to count certain actions after mounting.
-	const mounted = writable(0);
-	// is a writable store to hold a reference to the graph's DOM element. This is useful for direct DOM manipulations or access.
-	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
-
-	// External stores
-	// These are Svelte stores that are likely passed as part of the graph prop or accessed directly from it. They represent various aspects of the graph's state, such as its current cursor position, scale, dimensions, and more
-	const cursor = graph.cursor;
-	const scale = graph.transforms.scale;
-	const dimensionsStore = graph.dimensions;
-	const translation = graph.transforms.translation;
-	const groups = graph.groups;
-	const groupBoxes = graph.groupBoxes;
-	const selected = $groups.selected.nodes;
-	const activeGroup = graph.activeGroup;
-	const initialNodePositions = graph.initialNodePositions;
-	const editing = graph.editing;
-	const nodeBounds = graph.bounds.nodeBounds;
-
-	// Reactive variables
-	// These are standard JavaScript variables that are reactive, meaning Svelte will re-run any reactive statements or parts of the DOM that depend on these variables whenever their values change.
-	let initialDistance = 0;
-	let initialScale = 1;
+	let animationFrameId: number = 0;
+	let initialDistance: number = 0;
+	let initialScale: number = 1;
 	let anchor = { x: 0, y: 0, top: 0, left: 0 };
-	let selecting = false;
-	let creating = false;
-	let adding = false;
-	let isMovable = false;
-	let pinching = false;
-	let initialFit = false;
-	let graphDimensions: GraphDimensions;
+	let selecting: boolean = false;
+	let creating: boolean = false;
+	let adding: boolean = false;
+	let isMovable: boolean = false;
+	let pinching: boolean = false;
+	let initialFit: boolean = false;
+	let graphDimensions: GraphDimensions | null = null;
 	let toggleComponent: ComponentType | null = null;
 	let minimapComponent: ComponentType | null = null;
 	let controlsComponent: ComponentType | null = null;
 	let drawerComponent: ComponentType | null = null;
 	let contrastComponent: ComponentType | null = null;
 
-	// Subscriptions
-	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
-	$: dimensions = $dimensionsStore;
+	const dispatch = (eventName, detail) => {
+		const event = new CustomEvent(eventName, { detail });
+		dispatchEvent(event);
+	};
 
-	// Update the svelvet-theme attribute everytime the theme changes
-	$: if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
-	// camera view adjustment
-	$: if (!initialFit && fitView) {
-		fitIntoView();
+	const activeIntervals: ActiveIntervals = {};
+
+	const duplicate = writable(false);
+	const mounted = writable(0);
+	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
+
+	const cursor = graph.cursor;
+	const scale = graph.transforms.scale;
+	const dimensionsStore = graph.dimensions;
+	const translation = graph.transforms.translation;
+	const groups = graph.groups;
+	const groupBoxes = graph.groupBoxes;
+	const selected = groups.selected.nodes;
+	const activeGroup = graph.activeGroup;
+	const initialNodePositions = graph.initialNodePositions;
+	const editing = graph.editing;
+	const nodeBounds = graph.bounds.nodeBounds;
+
+	$: dimensions = dimensionsStore;
+
+	$: {
+		if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
 	}
-	// load the theme toggle
-	$: if (toggle && !toggleComponent) loadToggle();
-	// load the minimap
-	$: if (minimap && !minimapComponent) loadMinimap();
-	// load the controls interface
-	$: if (controls && !controlsComponent) loadControls();
-	// load the drawer
-	$: if (drawer && !drawerComponent) loadDrawer();
-	//load the contrast options
-	$: if (contrast && !contrastComponent) loadContrast();
 
-	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
+	$: {
+		if (!initialFit && fitView) {
+			fitIntoView();
+		}
+	}
+
+	$: {
+		if (toggle && !toggleComponent) loadToggle();
+	}
+
+	$: {
+		if (minimap && !minimapComponent) loadMinimap();
+	}
+
+	$: {
+		if (controls && !controlsComponent) loadControls();
+	}
+
+	$: {
+		if (drawer && !drawerComponent) loadDrawer();
+	}
+
+	$: {
+		if (contrast && !contrastComponent) loadContrast();
+	}
+
 	const cursorAnchor: CursorAnchor = {
 		id: null,
 		position: graph.cursor,
@@ -119,7 +126,7 @@
 		connected: writable(new Set()),
 		dynamic: writable(false),
 		edge: null,
-		edgeColor: writable(null),
+			edgeColor: writable(null),
 		direction: writable('self'),
 		inputKey: null,
 		type: 'output',
@@ -135,8 +142,6 @@
 		}
 	};
 
-	// This is an experiment to see if there's a benefit
-	// to selectively splitting up the contexts into smaller pieces
 	setContext('graphDOMElement', graphDOMElement);
 	setContext('cursorAnchor', cursorAnchor);
 	setContext('duplicate', duplicate);
@@ -150,7 +155,6 @@
 	setContext('nodeStore', graph.nodes);
 	setContext('mounted', mounted);
 
-	// Lifecycle methods
 	onMount(() => {
 		updateGraphDimensions();
 	});
@@ -158,7 +162,7 @@
 	async function fitIntoView() {
 		await tick();
 		tracking.set(true);
-		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
+		const { x, y, scale } = calculateFitView(graphDimensions, nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
 			graph.transforms.scale.set(scale);
 			translation.set({ x, y });
@@ -166,6 +170,7 @@
 		tracking.set(false);
 		initialFit = true;
 	}
+
 	async function loadMinimap() {
 		minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
 	}
@@ -183,13 +188,12 @@
 	}
 
 	async function loadContrast() {
-		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
-			.default;
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte')).default;
 	}
 
 	function updateGraphDimensions() {
-		if (!$graphDOMElement) return;
-		const DOMRect = $graphDOMElement.getBoundingClientRect();
+		if (!graphDOMElement) return;
+		const DOMRect = graphDOMElement.getBoundingClientRect();
 		graphDimensions = {
 			top: DOMRect.top,
 			left: DOMRect.left,
@@ -204,321 +208,346 @@
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		if (creating) {
-			const groupName = generateKey();
-			const groupKey: GroupKey = `${groupName}/${graph.id}`;
-			const cursorPosition = get(cursor);
-			const width = cursorPosition.x - $initialClickPosition.x;
-			const height = cursorPosition.y - $initialClickPosition.y;
-			const top = Math.min($initialClickPosition.y, $initialClickPosition.y + height);
-			const left = Math.min($initialClickPosition.x, $initialClickPosition.x + width);
+		try {
+			if (creating) {
+				const groupName = generateKey();
+				const groupKey: GroupKey = `${groupName}/${graph.id}`;
+				const cursorPosition = get(cursor);
+				const width = cursorPosition.x - initialClickPosition.x;
+				const height = cursorPosition.y - initialClickPosition.y;
+				const top = Math.min(initialClickPosition.y, initialClickPosition.y + height);
+				const left = Math.min(initialClickPosition.x, initialClickPosition.x + width);
 
-			const dimensions = {
-				width: writable(Math.abs(width)),
-				height: writable(Math.abs(height))
-			};
-			const position = writable({
-				x: left,
-				y: top
-			});
-
-			const groupBox: GroupBox = {
-				group: writable(groupKey),
-				dimensions,
-				position,
-				color: writable(getRandomColor()),
-				moving: writable(false)
-			};
-
-			groupBoxes.add(groupBox, groupKey);
-
-			Array.from($selected).forEach((node) => {
-				node.group.set(groupKey);
-			});
-
-			groups.update((groups) => {
-				const newGroup: Group = {
-					parent: writable(groupBox),
-					nodes: writable(new Set([...$selected, groupBox]))
+				const dimensions = {
+					width: writable(Math.abs(width)),
+					height: writable(Math.abs(height))
 				};
-				groups[groupKey] = newGroup;
-				return groups;
-			});
-
-			$selected = new Set();
-
-			creating = false;
-			selecting = false;
-		}
-
-		// Set moving boolean on active group to false
-		if ($activeGroup) {
-			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
-			nodeGroupArray.forEach((node) => node.moving.set(false));
-		}
-		const cursorEdge = graph.edges.get('cursor');
-
-		if (cursorEdge) {
-			graph.edges.delete('cursor');
-			if (!cursorEdge.disconnect)
-				dispatch('edgeDrop', {
-					cursor: get(cursor),
-					source: {
-						node: $connectingFrom?.anchor.node.id.slice(2),
-						anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
-					}
+				const position = writable({
+					x: left,
+					y: top
 				});
-		}
-		$activeGroup = null;
-		$initialClickPosition = { x: 0, y: 0 };
-		$initialNodePositions = [];
-		selecting = false;
-		isMovable = false;
-		$tracking = false;
 
-		if (!e.shiftKey) {
-			connectingFrom.set(null);
-		}
+				const groupBox: GroupBox = {
+					group: writable(groupKey),
+					dimensions,
+					position,
+					color: writable(getRandomColor()),
+					moving: writable(false)
+				};
 
-		anchor.y = 0;
-		anchor.x = 0;
+				groupBoxes.add(groupBox, groupKey);
+
+				Array.from(selected).forEach((node) => {
+					node.group.set(groupKey);
+				});
+
+				groups.update((groups) => {
+					const newGroup: Group = {
+						parent: writable(groupBox),
+						nodes: writable(new Set([...selected, groupBox]))
+					};
+					groups[groupKey] = newGroup;
+					return groups;
+				});
+
+				selected = new Set();
+
+				creating = false;
+				selecting = false;
+			}
+
+			if (activeGroup) {
+				const nodeGroupArray = Array.from(get(groups[activeGroup].nodes));
+				nodeGroupArray.forEach((node) => node.moving.set(false));
+			}
+			const cursorEdge = graph.edges.get('cursor');
+
+			if (cursorEdge) {
+				graph.edges.delete('cursor');
+				if (!cursorEdge.disconnect)
+					dispatch('edgeDrop', {
+						cursor: get(cursor),
+						source: {
+							node: connectingFrom?.anchor.node.id.slice(2),
+							anchor: connectingFrom?.anchor.id.split('/')[0].slice(2)
+						}
+					});
+			}
+			activeGroup = null;
+			initialClickPosition = { x: 0, y: 0 };
+			initialNodePositions = [];
+			selecting = false;
+			isMovable = false;
+			tracking = false;
+
+			if (!e.shiftKey) {
+				connectingFrom.set(null);
+			}
+
+			anchor.y = 0;
+			anchor.x = 0;
+		} catch (error) {
+			console.error('Error handling mouse up event:', error);
+		}
 	}
 
 	function onMouseDown(e: MouseEvent) {
-		if (!pannable && !(e.shiftKey || e.metaKey)) return;
-		if (e.button === 2) return;
-		if ($graphDOMElement) $graphDOMElement.focus();
+		try {
+			if (!pannable && !(e.shiftKey || e.metaKey)) return;
+			if (e.button === 2) return;
+			if (graphDOMElement) graphDOMElement.focus();
 
-		const { clientX, clientY } = e;
+			const { clientX, clientY } = e;
 
-		$initialClickPosition = get(cursor);
+			initialClickPosition = get(cursor);
 
-		if (e.shiftKey || e.metaKey) {
-			e.preventDefault();
-			selecting = true;
-			const { top, left } = dimensions;
-			anchor.y = clientY - top;
-			anchor.x = clientX - left;
-			anchor.top = top;
-			anchor.left = left;
-			if (e.shiftKey && e.metaKey) {
-				creating = true;
+			if (e.shiftKey || e.metaKey) {
+				e.preventDefault();
+				selecting = true;
+				const { top, left } = dimensions;
+				anchor.y = clientY - top;
+				anchor.x = clientX - left;
+				anchor.top = top;
+				anchor.left = left;
+				if (e.shiftKey && e.metaKey) {
+					creating = true;
+				} else {
+					creating = false;
+				}
+
+				if (e.metaKey && !e.shiftKey) {
+					adding = true;
+				} else {
+					adding = false;
+				}
 			} else {
-				creating = false;
+				isMovable = true;
+				selected = new Set();
+				selected = selected;
 			}
-
-			if (e.metaKey && !e.shiftKey) {
-				adding = true;
-			} else {
-				adding = false;
-			}
-		} else {
-			isMovable = true;
-			$selected = new Set();
-			$selected = $selected;
+		} catch (error) {
+			console.error('Error handling mouse down event:', error);
 		}
 	}
 
 	function onTouchStart(e: TouchEvent) {
-		$selected = new Set();
-		$selected = $selected;
+		try {
+			selected = new Set();
+			selected = selected;
 
-		$initialClickPosition = get(cursor);
+			initialClickPosition = get(cursor);
 
-		isMovable = true;
-		if (e.touches.length === 2) {
-			startPinching();
-			initialDistance = $touchDistance;
-			initialScale = $scale;
+			isMovable = true;
+			if (e.touches.length === 2) {
+				startPinching();
+				initialDistance = touchDistance;
+				initialScale = scale;
+			}
+		} catch (error) {
+			console.error('Error handling touch start event:', error);
 		}
 	}
 
 	function onTouchEnd() {
-		isMovable = false;
-		pinching = false;
+		try {
+			isMovable = false;
+			pinching = false;
+		} catch (error) {
+			console.error('Error handling touch end event:', error);
+		}
 	}
 
 	function startPinching() {
-		if (!pinching) {
-			pinching = true;
-			animationFrameId = requestAnimationFrame(handlePinch);
+		try {
+			if (!pinching) {
+				pinching = true;
+				animationFrameId = requestAnimationFrame(handlePinch);
+			}
+		} catch (error) {
+			console.error('Error starting pinch:', error);
 		}
 	}
 
 	function handlePinch() {
-		if (!pinching) {
-			cancelAnimationFrame(animationFrameId);
-			return;
-		}
+		try {
+			if (!pinching) {
+				cancelAnimationFrame(animationFrameId);
+				return;
+			}
 
-		const newDistance = $touchDistance;
-		const scaleFactor = newDistance / initialDistance;
-		$scale = initialScale * scaleFactor;
-		animationFrameId = requestAnimationFrame(handlePinch);
+			const newDistance = touchDistance;
+			const scaleFactor = newDistance / initialDistance;
+			scale = initialScale * scaleFactor;
+			animationFrameId = requestAnimationFrame(handlePinch);
+		} catch (error) {
+			console.error('Error handling pinch:', error);
+		}
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		const { key, code } = e;
-		const target = e.target as HTMLElement;
+		try {
+			const { key, code } = e;
+			const target = e.target as HTMLElement;
 
-		// We dont want to prevent users from interacting with inputs
-		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
+			if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
-		if (code === 'KeyA' && e[`${modifier}Key`]) {
-			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
-			$selected = new Set(unlockedNodes);
-		} else if (isArrow(key)) {
-			handleArrowKey(key as Arrow, e);
-		} else if (key === '=') {
-			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
-		} else if (key === '-') {
-			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
-		} else if (key === '0') {
-			fitIntoView();
-		} else if (key === 'Control') {
-			$groups['selected'].nodes.set(new Set());
-		} else if (code === 'KeyD' && e[`${modifier}Key`]) {
-			duplicate.set(true);
-			setTimeout(() => {
-				duplicate.set(false);
-			}, 100);
-		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
-			selectNextNode();
-		} else if (key === 'l') {
-			theme = theme === 'light' ? 'dark' : 'light';
-		} else if (key === 'd') {
-			drawer = !drawer;
-		} else if (key === 'm') {
-			minimap = !minimap;
-		} else if (key === 'c') {
-			controls = !controls;
-		} else if (key === 'e') {
-			const node = Array.from($selected)[0];
-			graph.editing.set(node);
-		} else {
-			return; // Unhandled action: used default handler
+			if (code === 'KeyA' && e[`${modifier}Key`]) {
+				const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
+				selected = new Set(unlockedNodes);
+			} else if (isArrow(key)) {
+				handleArrowKey(key as Arrow, e);
+			} else if (key === '=') {
+				zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			} else if (key === '-') {
+				zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			} else if (key === '0') {
+				fitIntoView();
+			} else if (key === 'Control') {
+				groups['selected'].nodes.set(new Set());
+			} else if (code === 'KeyD' && e[`${modifier}Key`]) {
+				duplicate.set(true);
+				setTimeout(() => {
+					duplicate.set(false);
+				}, 100);
+			} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
+				selectNextNode();
+			} else if (key === 'l') {
+				theme = theme === 'light' ? 'dark' : 'light';
+			} else if (key === 'd') {
+				drawer = !drawer;
+			} else if (key === 'm') {
+				minimap = !minimap;
+			} else if (key === 'c') {
+				controls = !controls;
+			} else if (key === 'e') {
+				const node = Array.from(selected)[0];
+				graph.editing.set(node);
+			} else {
+				return;
+			}
+
+			e.preventDefault();
+		} catch (error) {
+			console.error('Error handling key down event:', error);
 		}
-
-		e.preventDefault();
 	}
 
-	//This function handles selecting nodes
 	function selectNextNode() {
-		const nodes = graph.nodes.getAll();
+		try {
+			const nodes = graph.nodes.getAll();
 
-		const currentIndex = nodes.findIndex((node) => $selected.has(node));
-		const nextIndex = currentIndex + 1;
+			const currentIndex = nodes.findIndex((node) => selected.has(node));
+			const nextIndex = currentIndex + 1;
 
-		$selected.delete(nodes[currentIndex]);
-		$selected.add(nodes[nextIndex]);
+			selected.delete(nodes[currentIndex]);
+			selected.add(nodes[nextIndex]);
+		} catch (error) {
+			console.error('Error selecting next node:', error);
+		}
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
-		const { key } = e;
+		try {
+			const { key } = e;
 
-		if (isArrow(key)) {
-			clearInterval(activeIntervals[key]);
-			delete activeIntervals[key];
-		} else if (key === 'Shift') {
-			connectingFrom.set(null);
+			if (isArrow(key)) {
+				clearInterval(activeIntervals[key]);
+				delete activeIntervals[key];
+			} else if (key === 'Shift') {
+				connectingFrom.set(null);
+			}
+		} catch (error) {
+			console.error('Error handling key up event:', error);
 		}
 	}
 
 	function handleScroll(e: WheelEvent) {
-		if (fixedZoom) return;
-		const multiplier = e.shiftKey ? 0.15 : 1;
-		const { clientX, clientY, deltaY } = e;
-		const currentTranslation = $translation;
-		const pointerPosition = { x: clientX, y: clientY };
+		try {
+			if (fixedZoom) return;
+			const multiplier = e.shiftKey ? 0.15 : 1;
+			const { clientX, clientY, deltaY } = e;
+			const currentTranslation = translation;
+			const pointerPosition = { x: clientX, y: clientY };
 
-		// Check if deltaY has decimal places
-		// If it does, it means the user is using a trackpad
-		// If trackpadPan is enabled or the meta key is pressed
-		// Pan the graph instead of zooming
-		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
-			$translation = {
-				x: ($translation.x -= e.deltaX),
-				y: ($translation.y -= e.deltaY)
-			};
+			if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+				translation = {
+					x: (translation.x -= e.deltaX),
+					y: (translation.y -= e.deltaY)
+				};
 
-			return;
+				return;
+			}
+
+			if ((scale >= MAX_SCALE && deltaY < 0) || (scale <= MIN_SCALE && deltaY > 0)) return;
+
+			const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
+			const newScale = calculateZoom(scale, Math.sign(deltaY), scrollAdjustment);
+
+			const newTranslation = calculateTranslation(
+				scale,
+				newScale,
+				currentTranslation,
+				pointerPosition,
+				graphDimensions
+			);
+
+			scale.set(newScale);
+			translation.set(newTranslation);
+		} catch (error) {
+			console.error('Error handling scroll event:', error);
 		}
-
-		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
-
-		// Calculate the scale adjustment
-		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
-		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
-
-		// Calculate the translation adjustment
-		const newTranslation = calculateTranslation(
-			$scale,
-			newScale,
-			currentTranslation,
-			pointerPosition,
-			graphDimensions
-		);
-
-		// Apply transforms
-		scale.set(newScale);
-		translation.set(newTranslation);
 	}
 
-	//handles movement of camera in the canvas and the nodes
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
-		const multiplier = e.shiftKey ? 2 : 1;
-		const start = performance.now();
-		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
-		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
-		const startOffset = leftRight ? $translation.x : $translation.y;
-		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
+		try {
+			const multiplier = e.shiftKey ? 2 : 1;
+			const start = performance.now();
+			const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
+			const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
+			const startOffset = leftRight ? translation.x : translation.y;
+			const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
-		if (!activeIntervals[key]) {
-			let interval = setInterval(() => {
-				const time = performance.now() - start;
+			if (!activeIntervals[key]) {
+				let interval = setInterval(() => {
+					const time = performance.now() - start;
 
-				//movement of camera when no nodes are selected
-				if ($selected.size === 0) {
-					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					translation.set({
-						x: leftRight ? movement : $translation.x,
-						y: leftRight ? $translation.y : movement
-					});
-				} else {
-					//movement of nodes when selected
-					const delta = {
-						x: leftRight ? -direction * 2 : 0,
-						y: leftRight ? 0 : -direction * 2
-					};
-					Array.from($selected).forEach((node) => {
-						const currentPosition = get(node.position);
-						let groupBox: GroupBox | undefined;
-						const groupName = get(node.group);
+					if (selected.size === 0) {
+						const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
+						translation.set({
+							x: leftRight ? movement : translation.x,
+							y: leftRight ? translation.y : movement
+						});
+					} else {
+						const delta = {
+							x: leftRight ? -direction * 2 : 0,
+							y: leftRight ? 0 : -direction * 2
+						};
+						Array.from(selected).forEach((node) => {
+							const currentPosition = get(node.position);
+							let groupBox: GroupBox | undefined;
+							const groupName = get(node.group);
 
-						const groupBoxes = get(graph.groupBoxes);
+							const groupBoxes = get(graph.groupBoxes);
 
-						if (groupName) groupBox = groupBoxes.get(groupName);
-						if (groupBox) {
-							const nodeWidth = get(node.dimensions.width);
-							const nodeHeight = get(node.dimensions.height);
-							const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
-							moveElementWithBounds(currentPosition, delta, node.position, bounds);
-						} else {
-							moveElement(currentPosition, delta, node.position);
-						}
-					});
-				}
-			}, 2);
-			activeIntervals[key] = interval;
+							if (groupName) groupBox = groupBoxes.get(groupName);
+							if (groupBox) {
+								const nodeWidth = get(node.dimensions.width);
+								const nodeHeight = get(node.dimensions.height);
+								const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
+								moveElementWithBounds(currentPosition, delta, node.position, bounds);
+							} else {
+								moveElement(currentPosition, delta, node.position);
+							}
+						});
+					}
+				}, 2);
+				activeIntervals[key] = interval;
+			}
+		} catch (error) {
+			console.error('Error handling arrow key event:', error);
 		}
 	}
-	// // new definitions for Radio Group test
-	// let options = ['option 1', 'option 2', 'option 3'];
-	// let parameterStore = writable('default value');
 </script>
-
-<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 
 <section
 	role="presentation"
@@ -528,24 +557,24 @@
 	style:width={width ? width + 'px' : '100%'}
 	style:height={height ? height + 'px' : '100%'}
 	style:cursor={pannable ? 'move' : 'default'}
-	on:wheel|preventDefault={handleScroll}
-	on:mousedown|preventDefault|self={onMouseDown}
-	on:touchend|preventDefault={onTouchEnd}
-	on:touchstart|preventDefault|self={onTouchStart}
-	on:keydown={handleKeyDown}
-	on:keyup={handleKeyUp}
-	bind:this={$graphDOMElement}
+	onwheel={handleScroll}
+	onmousedown={onMouseDown}
+	ontouchend={onMouseUp}
+	ontouchstart={onTouchStart}
+	onkeydown={handleKeyDown}
+	onkeyup={handleKeyUp}
+	bind:this={graphDOMElement}
 	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
-		<slot />
+		{@render children}
 	</GraphRenderer>
 
 	{#if backgroundExists}
-		<slot name="background" />
+		{@render background}
 	{:else}
 		<Background />
 	{/if}
@@ -564,21 +593,21 @@
 	{#if contrast}
 		<svelte:component this={contrastComponent} />
 	{/if}
-	<slot name="minimap" />
-	<slot name="drawer" />
-	<slot name="controls" />
-	<slot name="toggle" />
-	<slot name="contrast" />
+	{@render minimap}
+	{@render drawer}
+	{@render controls}
+	{@render toggle}
+	{@render contrast}
 	{#if selecting && !disableSelection}
-		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
+		<SelectionBox {creating} {anchor} graph={graph} {adding} color={selectionColor} />
 	{/if}
 </section>
 
 <svelte:window
-	on:touchend={onMouseUp}
-	on:mouseup={onMouseUp}
-	on:resize={updateGraphDimensions}
-	on:scroll={updateGraphDimensions}
+	ontouchend={onMouseUp}
+	onmouseup={onMouseUp}
+	onresize={updateGraphDimensions}
+	onscroll={updateGraphDimensions}
 />
 
 <style>

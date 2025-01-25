@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import GroupBoxRenderer from '$lib/renderers/GroupBoxRenderer/GroupBoxRenderer.svelte';
 	import ZoomPanWrapper from '$lib/containers/ZoomPanWrapper/ZoomPanWrapper.svelte';
@@ -9,16 +13,26 @@
 	const graph = getContext<Graph>('graph');
 	const snapTo = getContext<number>('snapTo');
 
-	export let isMovable: boolean;
+	$props = {
+		isMovable: false
+	};
 
 	const activeGroup = graph.activeGroup;
 	const groups = graph.groups;
 	const initialNodePositions = graph.initialNodePositions;
 	const cursor = graph.cursor;
 
-	$: if ($activeGroup && $tracking) {
-		moveNodes(graph, snapTo);
-	}
+	$derived activeGroup = graph.activeGroup;
+	$derived tracking = tracking;
+	$derived cursor = cursor;
+	$derived initialNodePositions = initialNodePositions;
+	$derived groups = groups;
+
+	$effect(() => {
+		if ($activeGroup && $tracking) {
+			moveNodes(graph, snapTo);
+		}
+	});
 
 	function handleGroupClicked(event: CustomEvent) {
 		$tracking = true;
@@ -29,7 +43,7 @@
 	}
 </script>
 
-<ZoomPanWrapper {isMovable}>
+<ZoomPanWrapper {...$props}>
 	<slot />
-	<GroupBoxRenderer on:groupClick={handleGroupClicked} />
+	<GroupBoxRenderer ongroupclick={handleGroupClicked} />
 </ZoomPanWrapper>

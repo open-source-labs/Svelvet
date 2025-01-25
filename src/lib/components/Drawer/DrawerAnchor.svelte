@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
 	import type { CSSColorString, Direction, AnchorDrawerConfig, AnchorProps } from '$lib/types';
@@ -13,18 +17,20 @@
 	const selfAnchorCounter = writable<number>(0);
 
 	// Props for anchor creation
-	let invisible: boolean | undefined;
-	let nodeConnect: boolean | undefined;
-	let input: boolean | undefined;
-	let output: boolean | undefined;
-	let multiple: boolean | undefined;
-	let direction: Direction | undefined | '';
-	let dynamic: boolean | undefined;
-	let anchorEdgeLabel: string | undefined;
-	let anchorLocked: boolean | undefined;
-	let anchorBgColor: CSSColorString | undefined;
-	let directionValue: HTMLElement;
-	let edgeProps: ComponentType | undefined = undefined;
+	$state = {
+		invisible: undefined,
+		nodeConnect: undefined,
+		input: undefined,
+		output: undefined,
+		multiple: undefined,
+		direction: undefined,
+		dynamic: undefined,
+		anchorEdgeLabel: undefined,
+		anchorLocked: undefined,
+		anchorBgColor: undefined,
+		directionValue: undefined,
+		edgeProps: undefined
+	};
 
 	// Array of props for pending anchors based on direction
 	let anchorsCreated: { [key: string]: AnchorDrawerConfig[] } = {
@@ -40,7 +46,7 @@
 		createAnchors: boolean,
 		anchorPosition?: string
 	): { [key: string]: AnchorDrawerConfig[] } | undefined => {
-		if (direction == '') direction = undefined;
+		if ($state.direction == '') $state.direction = undefined;
 
 		// Object that stores properties for the created anchor
 		const anchorProps: AnchorDrawerConfig = {};
@@ -59,17 +65,17 @@
 			'edge'
 		];
 		const anchorPropsArray: AnchorProps = [
-			invisible,
-			nodeConnect,
-			input,
-			output,
-			multiple,
-			direction,
-			dynamic,
-			anchorEdgeLabel,
-			anchorLocked,
-			anchorBgColor,
-			edgeProps
+			$state.invisible,
+			$state.nodeConnect,
+			$state.input,
+			$state.output,
+			$state.multiple,
+			$state.direction,
+			$state.dynamic,
+			$state.anchorEdgeLabel,
+			$state.anchorLocked,
+			$state.anchorBgColor,
+			$state.edgeProps
 		];
 
 		// Adds props to anchor if they exist
@@ -88,7 +94,8 @@
 			if (anchorPosition === 'addLeftAnchor') anchorsCreated.left.push(anchorProps);
 			else if (anchorPosition === 'addRightAnchor') anchorsCreated.right.push(anchorProps);
 			else if (anchorPosition === 'addTopAnchor') anchorsCreated.top.push(anchorProps);
-			else if (anchorPosition === 'addBottomAnchor') anchorsCreated.bottom.push(anchorProps);
+			else if (anchorPosition === 'addBottomAnchor')
+				anchorsCreated.bottom.push(anchorProps);
 			else if (anchorPosition === 'addSelfAnchor') anchorsCreated.self.push(anchorProps);
 		}
 		return;
@@ -97,58 +104,58 @@
 	//Button Clicks for Anchors
 	const handleAnchorLockedButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		anchorLocked = target.checked;
+		 $state.anchorLocked = target.checked;
 	};
 
 	const handleInvisibleButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		invisible = target.checked;
+		$state.invisible = target.checked;
 	};
 
 	const handleNodeConnectButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		nodeConnect = target.checked;
+		$state.nodeConnect = target.checked;
 	};
 
 	const handleInputButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		input = target.checked;
+		$state.input = target.checked;
 	};
 
 	const handleOutputButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		output = target.checked;
+		$state.output = target.checked;
 	};
 
 	const handleMultipleButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		multiple = target.checked;
+		$state.multiple = target.checked;
 	};
 
 	const handleDynamicButtonClick = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		dynamic = target.checked;
+		$state.dynamic = target.checked;
 	};
 
 	const handleDirectionButtonClick = (e: Event) => {
 		const target = e.target as HTMLSelectElement;
-		if (target.value == '') direction = undefined;
+		if (target.value == '') $state.direction = undefined;
 		else {
-			direction = target.value as Direction | undefined;
+			$state.direction = target.value as Direction | undefined;
 		}
 	};
 	// Reset props, pending anchors, and counters for position of anchors
 	const handleAnchorResetButtonClick = (e: Event) => {
-		invisible = undefined;
-		nodeConnect = undefined;
-		input = undefined;
-		output = undefined;
-		multiple = undefined;
-		direction = undefined;
-		dynamic = undefined;
-		anchorEdgeLabel = undefined;
-		anchorLocked = undefined;
-		anchorBgColor = undefined;
+		$state.invisible = undefined;
+		$state.nodeConnect = undefined;
+		$state.input = undefined;
+		$state.output = undefined;
+		$state.multiple = undefined;
+		$state.direction = undefined;
+		$state.dynamic = undefined;
+		$state.anchorEdgeLabel = undefined;
+		$state.anchorLocked = undefined;
+		$state.anchorBgColor = undefined;
 		anchorsCreated.left = [];
 		anchorsCreated.right = [];
 		anchorsCreated.top = [];
@@ -197,23 +204,57 @@
 			selfAnchorCounter.set(anchorsCreated.self.length);
 		}
 	};
+
+	// Validation for anchor properties
+	const validateAnchorProps = () => {
+		if ($state.invisible !== undefined && typeof $state.invisible !== 'boolean') {
+			throw new Error('Invalid value for invisible property');
+		}
+		if ($state.nodeConnect !== undefined && typeof $state.nodeConnect !== 'boolean') {
+			throw new Error('Invalid value for nodeConnect property');
+		}
+		if ($state.input !== undefined && typeof $state.input !== 'boolean') {
+			throw new Error('Invalid value for input property');
+		}
+		if ($state.output !== undefined && typeof $state.output !== 'boolean') {
+			throw new Error('Invalid value for output property');
+		}
+		if ($state.multiple !== undefined && typeof $state.multiple !== 'boolean') {
+			throw new Error('Invalid value for multiple property');
+		}
+		if ($state.direction !== undefined && !['north', 'south', 'east', 'west', 'self'].includes($state.direction)) {
+			throw new Error('Invalid value for direction property');
+		}
+		if ($state.dynamic !== undefined && typeof $state.dynamic !== 'boolean') {
+			throw new Error('Invalid value for dynamic property');
+		}
+		if ($state.anchorEdgeLabel !== undefined && typeof $state.anchorEdgeLabel !== 'string') {
+			throw new Error('Invalid value for anchorEdgeLabel property');
+		}
+		if ($state.anchorLocked !== undefined && typeof $state.anchorLocked !== 'boolean') {
+			throw new Error('Invalid value for anchorLocked property');
+		}
+		if ($state.anchorBgColor !== undefined && typeof $state.anchorBgColor !== 'string') {
+			throw new Error('Invalid value for anchorBgColor property');
+		}
+	};
 </script>
 
 <div id="anchorContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form on:submit|preventDefault={handleAnchorResetButtonClick}>
+	<form onreset={handleAnchorResetButtonClick}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="anchorBgColor">Background: </label>
-				<input id="anchorBgColor" class="colorWheel" type="color" bind:value={anchorBgColor} />
+				<input id="anchorBgColor" class="colorWheel" type="color" bind:value={$state.anchorBgColor} />
 			</li>
 			<li class="list-item">
 				<label for="invisible">Invisible: </label>
 				<input
 					id="invisible"
 					type="checkbox"
-					bind:value={invisible}
-					on:change={handleInvisibleButtonClick}
+					bind:value={$state.invisible}
+					onchange={handleInvisibleButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -221,21 +262,21 @@
 				<input
 					id="nodeConnect"
 					type="checkbox"
-					bind:value={nodeConnect}
-					on:change={handleNodeConnectButtonClick}
+					bind:value={$state.nodeConnect}
+					onchange={handleNodeConnectButtonClick}
 				/>
 			</li>
 			<li class="list-item">
 				<label for="input">Input: </label>
-				<input id="input" type="checkbox" bind:value={input} on:change={handleInputButtonClick} />
+				<input id="input" type="checkbox" bind:value={$state.input} onchange={handleInputButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="output">Output: </label>
 				<input
 					id="output"
 					type="checkbox"
-					bind:value={output}
-					on:change={handleOutputButtonClick}
+					bind:value={$state.output}
+					onchange={handleOutputButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -243,17 +284,17 @@
 				<input
 					id="multiple"
 					type="checkbox"
-					bind:value={multiple}
-					on:change={handleMultipleButtonClick}
+					bind:value={$state.multiple}
+					onchange={handleMultipleButtonClick}
 				/>
 			</li>
 			<li class="list-item">
 				<label for="direction">Direction: </label>
 				<select
 					id="direction"
-					bind:this={directionValue}
-					bind:value={direction}
-					on:change={handleDirectionButtonClick}
+					bind:this={$state.directionValue}
+					bind:value={$state.direction}
+					onchange={handleDirectionButtonClick}
 				>
 					<option value="">-</option>
 					<option value="north">North</option>
@@ -268,8 +309,8 @@
 				<input
 					id="dynamic"
 					type="checkbox"
-					bind:value={dynamic}
-					on:change={handleDynamicButtonClick}
+					bind:value={$state.dynamic}
+					onchange={handleDynamicButtonClick}
 				/>
 			</li>
 
@@ -278,8 +319,8 @@
 				<input
 					id="anchorLocked"
 					type="checkbox"
-					bind:value={anchorLocked}
-					on:change={handleAnchorLockedButtonClick}
+					bind:value={$state.anchorLocked}
+					onchange={handleAnchorLockedButtonClick}
 				/>
 			</li>
 
@@ -289,7 +330,7 @@
 					id="deleteSelfAnchor"
 					class="deleteAnchor"
 					type="button"
-					on:click|stopPropagation={deleteAnchor}
+					onclick={deleteAnchor}
 				>
 					<Icon icon="arrow_left" />
 				</button>
@@ -298,7 +339,7 @@
 					id="addSelfAnchor"
 					class="addAnchor"
 					type="button"
-					on:click|stopPropagation={addAnchor}
+					onclick={addAnchor}
 				>
 					<Icon icon="arrow_right" />
 				</button>
@@ -308,18 +349,18 @@
 				<p>Right</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$leftAnchorCounter}</span>
-				<button id="addLeftAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+				<button id="addLeftAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button id="deleteRightAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+				<button id="deleteRightAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$rightAnchorCounter}</span>
-				<button id="addRightAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+				<button id="addRightAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
@@ -328,18 +369,18 @@
 				<p>Bottom</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button id="deleteTopAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+				<button id="deleteTopAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$topAnchorCounter}</span>
-				<button id="addTopAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+				<button id="addTopAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" on:click={deleteAnchor}>
+				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$bottomAnchorCounter}</span>
-				<button id="addBottomAnchor" class="addAnchor" type="button" on:click={addAnchor}>
+				<button id="addBottomAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
