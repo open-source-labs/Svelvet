@@ -25,7 +25,7 @@ https://svelte.dev/e/rune_missing_parentheses -->
 <div
 	class="toggle-wrapper"
 	role="switch"
-	onkeydown|stopPropagation={handleKeyToggle}
+	onkeydown={handleKeyToggle}
 	tabindex={0}
 	aria-checked={$state.parameterStore}
 	aria-label="Toggle Switch"
@@ -33,7 +33,7 @@ https://svelte.dev/e/rune_missing_parentheses -->
 	<label class="switch">
 		<input
 			type="checkbox"
-			onclick|stopPropagation={handleClickToggle}
+			onclick={handleClickToggle}
 			bind:checked={$state.parameterStore}
 		/>
 		<span class="slider round" style:--prop-toggle-color={color} />
