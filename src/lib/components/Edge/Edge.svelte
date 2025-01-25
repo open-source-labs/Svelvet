@@ -30,7 +30,6 @@
 	const raiseEdgesOnSelect = getContext('raiseEdgesOnSelect');
 	const edgesAboveNode = getContext('edgesAboveNode');
 
-	// Props
 	$props = {
 		edge: getContext<WritableEdge>('edge'),
 		straight: edgeStyle === 'straight',
@@ -50,25 +49,6 @@
 		targetColor: null
 	};
 
-	// External stores
-	const source = edge.source;
-	const target = edge.target;
-	const sourceDirection = source.direction;
-	const targetDirection = target.direction;
-	const sourceRotation = source.rotation;
-	const targetRotation = target.rotation;
-	const sourcePositionStore = source.position;
-	const targetPositionStore = target.position;
-	const sourceDynamic = source.dynamic;
-	const targetDynamic = target.dynamic;
-	const sourceMoving = source.moving;
-	const targetMoving = target.moving;
-	const sourceNodePositionStore = source.node?.position;
-	const targetNodePositionStore = target.node?.position;
-	const edgeType = edge.type;
-	const edgeKey = edge.id;
-
-	// Reactive variables
 	$state = {
 		path: '',
 		DOMPath: null,

@@ -388,6 +388,7 @@
 		--default-drawer-reset-button-hover-color: hsl(0, 0%, 30%);
 		--default-drawer-reset-button-hover-text-color: hsl(0, 0%, 100%);
 	}
+
 	:root[svelvet-theme='Black/White'] {
 		--default-node-color: #ffffff;
 		--default-node-border-color: #ffffff;

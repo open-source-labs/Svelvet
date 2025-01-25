@@ -1,21 +1,22 @@
 <script lang="ts">
-	import type { CustomWritable } from '$lib/types';
-	import type { CSSColorString } from '$lib/types';
+	import { useState } from 'svelte';
 
 	$props = {
 		parameterStore: null,
 		color: 'limegreen'
 	};
 
+	const [parameterStore, setParameterStore] = useState($props.parameterStore);
+
 	const handleKeyToggle = (event: KeyboardEvent) => {
 		event.stopPropagation();
 		if (event.key === 'Enter') {
-			$state.parameterStore = !$state.parameterStore;
+			setParameterStore(!parameterStore);
 		}
 	};
 	const handleClickToggle = (event: MouseEvent) => {
 		event.stopPropagation();
-		$state.parameterStore = !$state.parameterStore;
+		setParameterStore(!parameterStore);
 	};
 </script>
 
@@ -24,14 +25,14 @@
 	role="switch"
 	onkeydown|stopPropagation={handleKeyToggle}
 	tabindex={0}
-	aria-checked={$state.parameterStore}
+	aria-checked={parameterStore}
 	aria-label="Toggle Switch"
 >
 	<label class="switch">
 		<input
 			type="checkbox"
 			onclick|stopPropagation={handleClickToggle}
-			bind:checked={$state.parameterStore}
+			bind:checked={parameterStore}
 		/>
 		<span class="slider round" style:--prop-toggle-color={color} />
 	</label>

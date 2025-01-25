@@ -19,7 +19,6 @@
 </script>
 
 <script lang="ts">
-	// defining props that the Graph component expects when it is used, type annotations added
 	$props = {
 		graph: null,
 		width: 0,
@@ -65,23 +64,17 @@
 		contrastComponent: null
 	};
 
-	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = (eventName, detail) => {
 		const event = new CustomEvent(eventName, { detail });
 		dispatchEvent(event);
 	};
-	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
+
 	const activeIntervals: ActiveIntervals = {};
 
-	// creates a Svelte writable store named duplicate. This store probably holds a boolean value to track whether some duplication functionality is active or not.
 	const duplicate = writable(false);
-	// another writable store, which seems to be used to track if the component has mounted or to count certain actions after mounting.
 	const mounted = writable(0);
-	// is a writable store to hold a reference to the graph's DOM element. This is useful for direct DOM manipulations or access.
 	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
 
-	// External stores
-	// These are Svelte stores that are likely passed as part of the graph prop or accessed directly from it. They represent various aspects of the graph's state, such as its current cursor position, scale, dimensions, and more
 	const cursor = $props.graph.cursor;
 	const scale = $props.graph.transforms.scale;
 	const dimensionsStore = $props.graph.dimensions;
@@ -94,42 +87,38 @@
 	const editing = $props.graph.editing;
 	const nodeBounds = $props.graph.bounds.nodeBounds;
 
-	// Subscriptions
-	// This is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
 	$derived dimensions = $dimensionsStore;
 
-	// Update the svelvet-theme attribute everytime the theme changes
 	$effect(() => {
 		if ($props.theme) document.documentElement.setAttribute('svelvet-theme', $props.theme);
 	});
-	// camera view adjustment
+
 	$effect(() => {
 		if (!$state.initialFit && $props.fitView) {
 			fitIntoView();
 		}
 	});
-	// load the theme toggle
+
 	$effect(() => {
 		if ($props.toggle && !$state.toggleComponent) loadToggle();
 	});
-	// load the minimap
+
 	$effect(() => {
 		if ($props.minimap && !$state.minimapComponent) loadMinimap();
 	});
-	// load the controls interface
+
 	$effect(() => {
 		if ($props.controls && !$state.controlsComponent) loadControls();
 	});
-	// load the drawer
+
 	$effect(() => {
 		if ($props.drawer && !$state.drawerComponent) loadDrawer();
 	});
-	//load the contrast options
+
 	$effect(() => {
 		if ($props.contrast && !$state.contrastComponent) loadContrast();
 	});
 
-	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
 		id: null,
 		position: $props.graph.cursor,
@@ -137,7 +126,7 @@
 		connected: writable(new Set()),
 		dynamic: writable(false),
 		edge: null,
-			edgeColor: writable(null),
+		edgeColor: writable(null),
 		direction: writable('self'),
 		inputKey: null,
 		type: 'output',
@@ -153,8 +142,6 @@
 		}
 	};
 
-	// This is an experiment to see if there's a benefit
-	// to selectively splitting up the contexts into smaller pieces
 	setContext('graphDOMElement', graphDOMElement);
 	setContext('cursorAnchor', cursorAnchor);
 	setContext('duplicate', duplicate);
@@ -168,7 +155,6 @@
 	setContext('nodeStore', $props.graph.nodes);
 	setContext('mounted', mounted);
 
-	// Lifecycle methods
 	onMount(() => {
 		updateGraphDimensions();
 	});
@@ -269,7 +255,6 @@
 			$state.selecting = false;
 		}
 
-		// Set moving boolean on active group to false
 		if ($activeGroup) {
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
 			nodeGroupArray.forEach((node) => node.moving.set(false));
@@ -379,7 +364,6 @@
 		const { key, code } = e;
 		const target = e.target as HTMLElement;
 
-		// We dont want to prevent users from interacting with inputs
 		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
 		if (code === 'KeyA' && e[`${$props.modifier}Key`]) {
@@ -414,13 +398,12 @@
 			const node = Array.from($selected)[0];
 			$props.graph.editing.set(node);
 		} else {
-			return; // Unhandled action: used default handler
+			return;
 		}
 
 		e.preventDefault();
 	}
 
-	//This function handles selecting nodes
 	function selectNextNode() {
 		const nodes = $props.graph.nodes.getAll();
 
@@ -449,10 +432,6 @@
 		const currentTranslation = $translation;
 		const pointerPosition = { x: clientX, y: clientY };
 
-		// Check if deltaY has decimal places
-		// If it does, it means the user is using a trackpad
-		// If trackpadPan is enabled or the meta key is pressed
-		// Pan the graph instead of zooming
 		if (($props.trackpadPan || e.metaKey) && deltaY % 1 === 0) {
 			$translation = {
 				x: ($translation.x -= e.deltaX),
@@ -464,11 +443,9 @@
 
 		if (($scale >= $props.MAX_SCALE && deltaY < 0) || ($scale <= $props.MIN_SCALE && deltaY > 0)) return;
 
-		// Calculate the scale adjustment
 		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
 		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
 
-		// Calculate the translation adjustment
 		const newTranslation = calculateTranslation(
 			$scale,
 			newScale,
@@ -477,12 +454,10 @@
 			$state.graphDimensions
 		);
 
-		// Apply transforms
 		scale.set(newScale);
 		translation.set(newTranslation);
 	}
 
-	//handles movement of camera in the canvas and the nodes
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
 		const start = performance.now();
@@ -495,7 +470,6 @@
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
 
-				//movement of camera when no nodes are selected
 				if ($selected.size === 0) {
 					const movement = startOffset + (endOffset - startOffset) * (time / $props.PAN_TIME);
 					translation.set({
@@ -503,7 +477,6 @@
 						y: leftRight ? $translation.y : movement
 					});
 				} else {
-					//movement of nodes when selected
 					const delta = {
 						x: leftRight ? -direction * 2 : 0,
 						y: leftRight ? 0 : -direction * 2
@@ -530,13 +503,7 @@
 			activeIntervals[key] = interval;
 		}
 	}
-	// // new definitions for Radio Group test
-	// let options = ['option 1', 'option 2', 'option 3'];
-	// let parameterStore = writable('default value');
 </script>
-
-<!-- <button onclick={() => getJSONState(graph)}>SAVE STATE</button> -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 
 <section
 	role="presentation"
@@ -559,7 +526,7 @@
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
-		 {@render $props.children}
+		{@render $props.children}
 	</GraphRenderer>
 
 	{#if $props.backgroundExists}

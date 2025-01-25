@@ -5,10 +5,12 @@
 	import { onMount, getContext, setContext } from 'svelte';
 	import { flowChartDrawer } from '$lib/utils/drawers/flowchartDrawer';
 	import { flowChartParser } from '$lib/utils/helpers/parser';
+
 	$props = {
 		mermaid: '',
 		mermaidConfig: {}
 	};
+
 	const flowChart: FlowChart = flowChartParser($props.mermaid);
 
 	setContext('flowchart', flowChart);
