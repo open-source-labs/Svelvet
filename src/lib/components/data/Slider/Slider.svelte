@@ -142,6 +142,22 @@
 			${barColor || 'var(--primary-color, var(--default-primary-color))'} ${CSSpercentage},
 			${bgColor || 'var(--accent-color, var(--default-accent-color))'} ${CSSpercentage}
 		)`;
+
+	// Add validation for input values to ensure they are within the min and max range
+	function validateInputValue() {
+		if ($parameterStore < min) {
+			$parameterStore = min;
+		} else if ($parameterStore > max) {
+			$parameterStore = max;
+		}
+	}
+
+	// Handle edge cases for sliding and input value changes
+	$: if ($parameterStore < min) {
+		$parameterStore = min;
+	} else if ($parameterStore > max) {
+		$parameterStore = max;
+	}
 </script>
 
 {#if !connected}
@@ -177,6 +193,7 @@
 				}}
 				use:slideable
 				bind:this={sliderElement}
+				on:input={validateInputValue}
 			/>
 		</div>
 		<button

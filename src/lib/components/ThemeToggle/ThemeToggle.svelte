@@ -14,7 +14,8 @@
 		bgColor: null,
 		iconColor: null,
 		onToggleTheme: null,
-		onSave: null
+		onSave: null,
+		themeOptions: ['light', 'dark', 'Black/White', 'Yellow/Black', 'Black/Yellow', 'Yellow/Blue', 'Grayscale', 'Black/Pink']
 	};
 
 	$state = {
@@ -40,6 +41,20 @@
 			if ($props.onToggleTheme) $props.onToggleTheme(newTheme);
 		} catch (error) {
 			console.error('Error toggling theme:', error);
+		}
+	}
+
+	function setTheme(theme: string) {
+		try {
+			document.documentElement.setAttribute('svelvet-theme', theme);
+			$state.current = theme;
+
+			// Save the current theme to Local Storage
+			localStorage.setItem('currentTheme', theme);
+
+			if ($props.onToggleTheme) $props.onToggleTheme(theme);
+		} catch (error) {
+			console.error('Error setting theme:', error);
 		}
 	}
 
@@ -105,6 +120,15 @@
 			}
 		}}>Save</button
 	>
+
+	<select
+		class="theme-selector"
+		onchange={(e) => setTheme((e.target as HTMLSelectElement).value)}
+	>
+		{#each $props.themeOptions as themeOption}
+			<option value={themeOption} selected={themeOption === $state.current}>{themeOption}</option>
+		{/each}
+	</select>
 </div>
 
 <style>
@@ -192,5 +216,13 @@
 		color: var(--save-button-text-color, var(--default-save-button-text-color));
 		border: solid 1px var(--save-button-border-color, var(--default-save-button-border-color));
 		cursor: pointer;
+	}
+	.theme-selector {
+		margin-top: 10px;
+		padding: 5px;
+		border-radius: 4px;
+		border: 1px solid var(--theme-toggle-border, var(--default-theme-toggle-border));
+		background-color: var(--theme-toggle-color, var(--default-theme-toggle-color));
+		color: var(--theme-toggle-text-color, var(--default-theme-toggle-text-color));
 	}
 </style>

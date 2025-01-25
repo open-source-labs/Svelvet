@@ -37,6 +37,9 @@
 			onmousedown|stopPropagation={() => {
 				$state.initial = index;
 			}}
+			aria-checked={$state.initial === index}
+			aria-label={label}
+			role="radio"
 		>
 			<label class="option-wrapper">
 				<input class="option" type="radio" id={slugify(label)} bind:group={$state.initial} value={index} />
