@@ -33,14 +33,18 @@
 			let maxHeight = -Infinity;
 			for (const node of row) {
 				if (!node.ignore) {
-					$state.nodeList[`N-${node.id}`].position.update(() => {
-						return { x, y };
-					});
+					try {
+						$state.nodeList[`N-${node.id}`].position.update(() => {
+							return { x, y };
+						});
 
-					$state.nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
-					$state.nodeList[`N-${node.id}`].dimensions.height.subscribe(
-						(height: number) => (maxHeight = Math.max(maxHeight, height))
-					);
+						$state.nodeList[`N-${node.id}`].dimensions.width.subscribe((width: number) => (x += width));
+						$state.nodeList[`N-${node.id}`].dimensions.height.subscribe(
+							(height: number) => (maxHeight = Math.max(maxHeight, height))
+						);
+					} catch (error) {
+						console.error(`Error positioning node ${node.id}:`, error);
+					}
 				}
 				x += MIN_X_SPACE;
 			}

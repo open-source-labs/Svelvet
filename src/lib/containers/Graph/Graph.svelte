@@ -204,299 +204,343 @@
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		if (creating) {
-			const groupName = generateKey();
-			const groupKey: GroupKey = `${groupName}/${graph.id}`;
-			const cursorPosition = get(cursor);
-			const width = cursorPosition.x - initialClickPosition.x;
-			const height = cursorPosition.y - initialClickPosition.y;
-			const top = Math.min(initialClickPosition.y, initialClickPosition.y + height);
-			const left = Math.min(initialClickPosition.x, initialClickPosition.x + width);
+		try {
+			if (creating) {
+				const groupName = generateKey();
+				const groupKey: GroupKey = `${groupName}/${graph.id}`;
+				const cursorPosition = get(cursor);
+				const width = cursorPosition.x - initialClickPosition.x;
+				const height = cursorPosition.y - initialClickPosition.y;
+				const top = Math.min(initialClickPosition.y, initialClickPosition.y + height);
+				const left = Math.min(initialClickPosition.x, initialClickPosition.x + width);
 
-			const dimensions = {
-				width: writable(Math.abs(width)),
-				height: writable(Math.abs(height))
-			};
-			const position = writable({
-				x: left,
-				y: top
-			});
-
-			const groupBox: GroupBox = {
-				group: writable(groupKey),
-				dimensions,
-				position,
-				color: writable(getRandomColor()),
-				moving: writable(false)
-			};
-
-			groupBoxes.add(groupBox, groupKey);
-
-			Array.from(selected).forEach((node) => {
-				node.group.set(groupKey);
-			});
-
-			groups.update((groups) => {
-				const newGroup: Group = {
-					parent: writable(groupBox),
-					nodes: writable(new Set([...selected, groupBox]))
+				const dimensions = {
+					width: writable(Math.abs(width)),
+					height: writable(Math.abs(height))
 				};
-				groups[groupKey] = newGroup;
-				return groups;
-			});
-
-			selected = new Set();
-
-			creating = false;
-			selecting = false;
-		}
-
-		if (activeGroup) {
-			const nodeGroupArray = Array.from(get(groups[activeGroup].nodes));
-			nodeGroupArray.forEach((node) => node.moving.set(false));
-		}
-		const cursorEdge = graph.edges.get('cursor');
-
-		if (cursorEdge) {
-			graph.edges.delete('cursor');
-			if (!cursorEdge.disconnect)
-				dispatch('edgeDrop', {
-					cursor: get(cursor),
-					source: {
-						node: connectingFrom?.anchor.node.id.slice(2),
-						anchor: connectingFrom?.anchor.id.split('/')[0].slice(2)
-					}
+				const position = writable({
+					x: left,
+					y: top
 				});
-		}
-		activeGroup = null;
-		initialClickPosition = { x: 0, y: 0 };
-		initialNodePositions = [];
-		selecting = false;
-		isMovable = false;
-		tracking = false;
 
-		if (!e.shiftKey) {
-			connectingFrom.set(null);
-		}
+				const groupBox: GroupBox = {
+					group: writable(groupKey),
+					dimensions,
+					position,
+					color: writable(getRandomColor()),
+					moving: writable(false)
+				};
 
-		anchor.y = 0;
-		anchor.x = 0;
+				groupBoxes.add(groupBox, groupKey);
+
+				Array.from(selected).forEach((node) => {
+					node.group.set(groupKey);
+				});
+
+				groups.update((groups) => {
+					const newGroup: Group = {
+						parent: writable(groupBox),
+						nodes: writable(new Set([...selected, groupBox]))
+					};
+					groups[groupKey] = newGroup;
+					return groups;
+				});
+
+				selected = new Set();
+
+				creating = false;
+				selecting = false;
+			}
+
+			if (activeGroup) {
+				const nodeGroupArray = Array.from(get(groups[activeGroup].nodes));
+				nodeGroupArray.forEach((node) => node.moving.set(false));
+			}
+			const cursorEdge = graph.edges.get('cursor');
+
+			if (cursorEdge) {
+				graph.edges.delete('cursor');
+				if (!cursorEdge.disconnect)
+					dispatch('edgeDrop', {
+						cursor: get(cursor),
+						source: {
+							node: connectingFrom?.anchor.node.id.slice(2),
+							anchor: connectingFrom?.anchor.id.split('/')[0].slice(2)
+						}
+					});
+			}
+			activeGroup = null;
+			initialClickPosition = { x: 0, y: 0 };
+			initialNodePositions = [];
+			selecting = false;
+			isMovable = false;
+			tracking = false;
+
+			if (!e.shiftKey) {
+				connectingFrom.set(null);
+			}
+
+			anchor.y = 0;
+			anchor.x = 0;
+		} catch (error) {
+			console.error('Error handling mouse up event:', error);
+		}
 	}
 
 	function onMouseDown(e: MouseEvent) {
-		if (!pannable && !(e.shiftKey || e.metaKey)) return;
-		if (e.button === 2) return;
-		if (graphDOMElement) graphDOMElement.focus();
+		try {
+			if (!pannable && !(e.shiftKey || e.metaKey)) return;
+			if (e.button === 2) return;
+			if (graphDOMElement) graphDOMElement.focus();
 
-		const { clientX, clientY } = e;
+			const { clientX, clientY } = e;
 
-		initialClickPosition = get(cursor);
+			initialClickPosition = get(cursor);
 
-		if (e.shiftKey || e.metaKey) {
-			e.preventDefault();
-			selecting = true;
-			const { top, left } = dimensions;
-			anchor.y = clientY - top;
-			anchor.x = clientX - left;
-			anchor.top = top;
-			anchor.left = left;
-			if (e.shiftKey && e.metaKey) {
-				creating = true;
+			if (e.shiftKey || e.metaKey) {
+				e.preventDefault();
+				selecting = true;
+				const { top, left } = dimensions;
+				anchor.y = clientY - top;
+				anchor.x = clientX - left;
+				anchor.top = top;
+				anchor.left = left;
+				if (e.shiftKey && e.metaKey) {
+					creating = true;
+				} else {
+					creating = false;
+				}
+
+				if (e.metaKey && !e.shiftKey) {
+					adding = true;
+				} else {
+					adding = false;
+				}
 			} else {
-				creating = false;
+				isMovable = true;
+				selected = new Set();
+				selected = selected;
 			}
-
-			if (e.metaKey && !e.shiftKey) {
-				adding = true;
-			} else {
-				adding = false;
-			}
-		} else {
-			isMovable = true;
-			selected = new Set();
-			selected = selected;
+		} catch (error) {
+			console.error('Error handling mouse down event:', error);
 		}
 	}
 
 	function onTouchStart(e: TouchEvent) {
-		selected = new Set();
-		selected = selected;
+		try {
+			selected = new Set();
+			selected = selected;
 
-		initialClickPosition = get(cursor);
+			initialClickPosition = get(cursor);
 
-		isMovable = true;
-		if (e.touches.length === 2) {
-			startPinching();
-			initialDistance = touchDistance;
-			initialScale = scale;
+			isMovable = true;
+			if (e.touches.length === 2) {
+				startPinching();
+				initialDistance = touchDistance;
+				initialScale = scale;
+			}
+		} catch (error) {
+			console.error('Error handling touch start event:', error);
 		}
 	}
 
 	function onTouchEnd() {
-		isMovable = false;
-		pinching = false;
+		try {
+			isMovable = false;
+			pinching = false;
+		} catch (error) {
+			console.error('Error handling touch end event:', error);
+		}
 	}
 
 	function startPinching() {
-		if (!pinching) {
-			pinching = true;
-			animationFrameId = requestAnimationFrame(handlePinch);
+		try {
+			if (!pinching) {
+				pinching = true;
+				animationFrameId = requestAnimationFrame(handlePinch);
+			}
+		} catch (error) {
+			console.error('Error starting pinch:', error);
 		}
 	}
 
 	function handlePinch() {
-		if (!pinching) {
-			cancelAnimationFrame(animationFrameId);
-			return;
-		}
+		try {
+			if (!pinching) {
+				cancelAnimationFrame(animationFrameId);
+				return;
+			}
 
-		const newDistance = touchDistance;
-		const scaleFactor = newDistance / initialDistance;
-		scale = initialScale * scaleFactor;
-		animationFrameId = requestAnimationFrame(handlePinch);
+			const newDistance = touchDistance;
+			const scaleFactor = newDistance / initialDistance;
+			scale = initialScale * scaleFactor;
+			animationFrameId = requestAnimationFrame(handlePinch);
+		} catch (error) {
+			console.error('Error handling pinch:', error);
+		}
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		const { key, code } = e;
-		const target = e.target as HTMLElement;
+		try {
+			const { key, code } = e;
+			const target = e.target as HTMLElement;
 
-		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
+			if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
-		if (code === 'KeyA' && e[`${modifier}Key`]) {
-			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
-			selected = new Set(unlockedNodes);
-		} else if (isArrow(key)) {
-			handleArrowKey(key as Arrow, e);
-		} else if (key === '=') {
-			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
-		} else if (key === '-') {
-			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
-		} else if (key === '0') {
-			fitIntoView();
-		} else if (key === 'Control') {
-			groups['selected'].nodes.set(new Set());
-		} else if (code === 'KeyD' && e[`${modifier}Key`]) {
-			duplicate.set(true);
-			setTimeout(() => {
-				duplicate.set(false);
-			}, 100);
-		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
-			selectNextNode();
-		} else if (key === 'l') {
-			theme = theme === 'light' ? 'dark' : 'light';
-		} else if (key === 'd') {
-			drawer = !drawer;
-		} else if (key === 'm') {
-			minimap = !minimap;
-		} else if (key === 'c') {
-			controls = !controls;
-		} else if (key === 'e') {
-			const node = Array.from(selected)[0];
-			graph.editing.set(node);
-		} else {
-			return;
+			if (code === 'KeyA' && e[`${modifier}Key`]) {
+				const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
+				selected = new Set(unlockedNodes);
+			} else if (isArrow(key)) {
+				handleArrowKey(key as Arrow, e);
+			} else if (key === '=') {
+				zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			} else if (key === '-') {
+				zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			} else if (key === '0') {
+				fitIntoView();
+			} else if (key === 'Control') {
+				groups['selected'].nodes.set(new Set());
+			} else if (code === 'KeyD' && e[`${modifier}Key`]) {
+				duplicate.set(true);
+				setTimeout(() => {
+					duplicate.set(false);
+				}, 100);
+			} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
+				selectNextNode();
+			} else if (key === 'l') {
+				theme = theme === 'light' ? 'dark' : 'light';
+			} else if (key === 'd') {
+				drawer = !drawer;
+			} else if (key === 'm') {
+				minimap = !minimap;
+			} else if (key === 'c') {
+				controls = !controls;
+			} else if (key === 'e') {
+				const node = Array.from(selected)[0];
+				graph.editing.set(node);
+			} else {
+				return;
+			}
+
+			e.preventDefault();
+		} catch (error) {
+			console.error('Error handling key down event:', error);
 		}
-
-		e.preventDefault();
 	}
 
 	function selectNextNode() {
-		const nodes = graph.nodes.getAll();
+		try {
+			const nodes = graph.nodes.getAll();
 
-		const currentIndex = nodes.findIndex((node) => selected.has(node));
-		const nextIndex = currentIndex + 1;
+			const currentIndex = nodes.findIndex((node) => selected.has(node));
+			const nextIndex = currentIndex + 1;
 
-		selected.delete(nodes[currentIndex]);
-		selected.add(nodes[nextIndex]);
+			selected.delete(nodes[currentIndex]);
+			selected.add(nodes[nextIndex]);
+		} catch (error) {
+			console.error('Error selecting next node:', error);
+		}
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
-		const { key } = e;
+		try {
+			const { key } = e;
 
-		if (isArrow(key)) {
-			clearInterval(activeIntervals[key]);
-			delete activeIntervals[key];
-		} else if (key === 'Shift') {
-			connectingFrom.set(null);
+			if (isArrow(key)) {
+				clearInterval(activeIntervals[key]);
+				delete activeIntervals[key];
+			} else if (key === 'Shift') {
+				connectingFrom.set(null);
+			}
+		} catch (error) {
+			console.error('Error handling key up event:', error);
 		}
 	}
 
 	function handleScroll(e: WheelEvent) {
-		if (fixedZoom) return;
-		const multiplier = e.shiftKey ? 0.15 : 1;
-		const { clientX, clientY, deltaY } = e;
-		const currentTranslation = translation;
-		const pointerPosition = { x: clientX, y: clientY };
+		try {
+			if (fixedZoom) return;
+			const multiplier = e.shiftKey ? 0.15 : 1;
+			const { clientX, clientY, deltaY } = e;
+			const currentTranslation = translation;
+			const pointerPosition = { x: clientX, y: clientY };
 
-		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
-			translation = {
-				x: (translation.x -= e.deltaX),
-				y: (translation.y -= e.deltaY)
-			};
+			if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+				translation = {
+					x: (translation.x -= e.deltaX),
+					y: (translation.y -= e.deltaY)
+				};
 
-			return;
+				return;
+			}
+
+			if ((scale >= MAX_SCALE && deltaY < 0) || (scale <= MIN_SCALE && deltaY > 0)) return;
+
+			const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
+			const newScale = calculateZoom(scale, Math.sign(deltaY), scrollAdjustment);
+
+			const newTranslation = calculateTranslation(
+				scale,
+				newScale,
+				currentTranslation,
+				pointerPosition,
+				graphDimensions
+			);
+
+			scale.set(newScale);
+			translation.set(newTranslation);
+		} catch (error) {
+			console.error('Error handling scroll event:', error);
 		}
-
-		if ((scale >= MAX_SCALE && deltaY < 0) || (scale <= MIN_SCALE && deltaY > 0)) return;
-
-		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
-		const newScale = calculateZoom(scale, Math.sign(deltaY), scrollAdjustment);
-
-		const newTranslation = calculateTranslation(
-			scale,
-			newScale,
-			currentTranslation,
-			pointerPosition,
-			graphDimensions
-		);
-
-		scale.set(newScale);
-		translation.set(newTranslation);
 	}
 
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
-		const multiplier = e.shiftKey ? 2 : 1;
-		const start = performance.now();
-		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
-		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
-		const startOffset = leftRight ? translation.x : translation.y;
-		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
+		try {
+			const multiplier = e.shiftKey ? 2 : 1;
+			const start = performance.now();
+			const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
+			const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
+			const startOffset = leftRight ? translation.x : translation.y;
+			const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
-		if (!activeIntervals[key]) {
-			let interval = setInterval(() => {
-				const time = performance.now() - start;
+			if (!activeIntervals[key]) {
+				let interval = setInterval(() => {
+					const time = performance.now() - start;
 
-				if (selected.size === 0) {
-					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
-					translation.set({
-						x: leftRight ? movement : translation.x,
-						y: leftRight ? translation.y : movement
-					});
-				} else {
-					const delta = {
-						x: leftRight ? -direction * 2 : 0,
-						y: leftRight ? 0 : -direction * 2
-					};
-					Array.from(selected).forEach((node) => {
-						const currentPosition = get(node.position);
-						let groupBox: GroupBox | undefined;
-						const groupName = get(node.group);
+					if (selected.size === 0) {
+						const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
+						translation.set({
+							x: leftRight ? movement : translation.x,
+							y: leftRight ? translation.y : movement
+						});
+					} else {
+						const delta = {
+							x: leftRight ? -direction * 2 : 0,
+							y: leftRight ? 0 : -direction * 2
+						};
+						Array.from(selected).forEach((node) => {
+							const currentPosition = get(node.position);
+							let groupBox: GroupBox | undefined;
+							const groupName = get(node.group);
 
-						const groupBoxes = get(graph.groupBoxes);
+							const groupBoxes = get(graph.groupBoxes);
 
-						if (groupName) groupBox = groupBoxes.get(groupName);
-						if (groupBox) {
-							const nodeWidth = get(node.dimensions.width);
-							const nodeHeight = get(node.dimensions.height);
-							const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
-							moveElementWithBounds(currentPosition, delta, node.position, bounds);
-						} else {
-							moveElement(currentPosition, delta, node.position);
-						}
-					});
-				}
-			}, 2);
-			activeIntervals[key] = interval;
+							if (groupName) groupBox = groupBoxes.get(groupName);
+							if (groupBox) {
+								const nodeWidth = get(node.dimensions.width);
+								const nodeHeight = get(node.dimensions.height);
+								const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
+								moveElementWithBounds(currentPosition, delta, node.position, bounds);
+							} else {
+								moveElement(currentPosition, delta, node.position);
+							}
+						});
+					}
+				}, 2);
+				activeIntervals[key] = interval;
+			}
+		} catch (error) {
+			console.error('Error handling arrow key event:', error);
 		}
 	}
 </script>

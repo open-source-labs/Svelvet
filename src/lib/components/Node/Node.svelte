@@ -243,6 +243,57 @@
 			$state.node.outputs.set($props.outputs);
 		}
 	});
+
+	// Validation for node properties
+	const validateNodeProps = () => {
+		if ($props.bgColor !== null && typeof $props.bgColor !== 'string') {
+			throw new Error('Invalid value for bgColor property');
+		}
+		if ($props.borderColor !== null && typeof $props.borderColor !== 'string') {
+			throw new Error('Invalid value for borderColor property');
+		}
+		if ($props.label !== null && typeof $props.label !== 'string') {
+			throw new Error('Invalid value for label property');
+		}
+		if ($props.width !== null && typeof $props.width !== 'number') {
+			throw new Error('Invalid value for width property');
+		}
+		if ($props.height !== null && typeof $props.height !== 'number') {
+			throw new Error('Invalid value for height property');
+		}
+		if ($props.locked !== null && typeof $props.locked !== 'boolean') {
+			throw new Error('Invalid value for locked property');
+		}
+		if ($props.center !== null && typeof $props.center !== 'boolean') {
+			throw new Error('Invalid value for center property');
+		}
+		if ($props.inputs !== null && typeof $props.inputs !== 'number') {
+			throw new Error('Invalid value for inputs property');
+		}
+		if ($props.outputs !== null && typeof $props.outputs !== 'number') {
+			throw new Error('Invalid value for outputs property');
+		}
+		if ($props.rotation !== null && typeof $props.rotation !== 'number') {
+			throw new Error('Invalid value for rotation property');
+		}
+		if ($props.zIndex !== null && typeof $props.zIndex !== 'number') {
+			throw new Error('Invalid value for zIndex property');
+		}
+		if ($props.TD !== null && typeof $props.TD !== 'boolean') {
+			throw new Error('Invalid value for TD property');
+		}
+		if ($props.LR !== null && typeof $props.LR !== 'boolean') {
+			throw new Error('Invalid value for LR property');
+		}
+		if ($props.useDefaults !== null && typeof $props.useDefaults !== 'boolean') {
+			throw new Error('Invalid value for useDefaults property');
+		}
+		if ($props.nodeDirection !== null && typeof $props.nodeDirection !== 'string') {
+			throw new Error('Invalid value for nodeDirection property');
+		}
+	};
+
+	validateNodeProps();
 </script>
 
 {#if $state.node && $nodes.get($state.node.id)}

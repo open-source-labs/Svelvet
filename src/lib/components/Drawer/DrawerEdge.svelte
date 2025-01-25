@@ -12,7 +12,7 @@
 	let edgeLabel: string | undefined;
 	let labelColor: CSSColorString | undefined;
 	let textColor: CSSColorString | undefined;
-	// let edgeClick: () => void | null; // Stretch feature
+	// let edgeClick: () => void | null; // Stretch feature, needs edgeClick to function
 	let targetColor: CSSColorString | undefined; // Stretch feature, needs edgeClick to function
 
 	export function createEdgeProps() {
@@ -75,6 +75,40 @@
 		//edgeClick: () => void | null;
 		const target = e.target as HTMLFormElement;
 		target.reset();
+	};
+
+	// Validation for edge properties
+	const validateEdgeProps = () => {
+		if (edgeWidth !== undefined && typeof edgeWidth !== 'number') {
+			throw new Error('Invalid value for edgeWidth property');
+		}
+		if (color !== undefined && typeof color !== 'string') {
+			throw new Error('Invalid value for color property');
+		}
+		if (straight !== undefined && typeof straight !== 'boolean') {
+			throw new Error('Invalid value for straight property');
+		}
+		if (step !== undefined && typeof step !== 'boolean') {
+			throw new Error('Invalid value for step property');
+		}
+		if (cornerRadius !== undefined && typeof cornerRadius !== 'number') {
+			throw new Error('Invalid value for cornerRadius property');
+		}
+		if (animate !== undefined && typeof animate !== 'boolean') {
+			throw new Error('Invalid value for animate property');
+		}
+		if (edgeLabel !== undefined && typeof edgeLabel !== 'string') {
+			throw new Error('Invalid value for edgeLabel property');
+		}
+		if (labelColor !== undefined && typeof labelColor !== 'string') {
+			throw new Error('Invalid value for labelColor property');
+		}
+		if (textColor !== undefined && typeof textColor !== 'string') {
+			throw new Error('Invalid value for textColor property');
+		}
+		if (targetColor !== undefined && typeof targetColor !== 'string') {
+			throw new Error('Invalid value for targetColor property');
+		}
 	};
 </script>
 

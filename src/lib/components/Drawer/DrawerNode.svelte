@@ -127,6 +127,55 @@
 			}
 		}
 	};
+
+	// Validation for node properties
+	const validateNodeProps = () => {
+		if (bgColor !== undefined && typeof bgColor !== 'string') {
+			throw new Error('Invalid value for bgColor property');
+		}
+		if (borderColor !== undefined && typeof borderColor !== 'string') {
+			throw new Error('Invalid value for borderColor property');
+		}
+		if (label !== undefined && typeof label !== 'string') {
+			throw new Error('Invalid value for label property');
+		}
+		if (width !== undefined && typeof width !== 'number') {
+			throw new Error('Invalid value for width property');
+		}
+		if (height !== undefined && typeof height !== 'number') {
+			throw new Error('Invalid value for height property');
+		}
+		if (locked !== undefined && typeof locked !== 'boolean') {
+			throw new Error('Invalid value for locked property');
+		}
+		if (center !== undefined && typeof center !== 'boolean') {
+			throw new Error('Invalid value for center property');
+		}
+		if (inputs !== undefined && typeof inputs !== 'number') {
+			throw new Error('Invalid value for inputs property');
+		}
+		if (outputs !== undefined && typeof outputs !== 'number') {
+			throw new Error('Invalid value for outputs property');
+		}
+		if (rotation !== undefined && typeof rotation !== 'number') {
+			throw new Error('Invalid value for rotation property');
+		}
+		if (zIndex !== undefined && typeof zIndex !== 'number') {
+			throw new Error('Invalid value for zIndex property');
+		}
+		if (TD !== undefined && typeof TD !== 'boolean') {
+			throw new Error('Invalid value for TD property');
+		}
+		if (LR !== undefined && typeof LR !== 'boolean') {
+			throw new Error('Invalid value for LR property');
+		}
+		if (useDefaults !== undefined && typeof useDefaults !== 'boolean') {
+			throw new Error('Invalid value for useDefaults property');
+		}
+		if (nodeDirection !== undefined && typeof nodeDirection !== 'string') {
+			throw new Error('Invalid value for nodeDirection property');
+		}
+	};
 </script>
 
 <div id="nodeContainer">

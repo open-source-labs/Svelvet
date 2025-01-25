@@ -86,12 +86,16 @@
 	$derived scaledBoundsHeight = boundsHeight * boundsScale;
 
 	function toggleHidden(node: Node) {
-		if ($hidden.has(node)) {
-			$hidden.delete(node);
-		} else {
-			$hidden.add(node);
+		try {
+			if ($hidden.has(node)) {
+				$hidden.delete(node);
+			} else {
+				$hidden.add(node);
+			}
+			$hidden = $hidden;
+		} catch (error) {
+			console.error('Error toggling node visibility:', error);
 		}
-		$hidden = $hidden;
 	}
 </script>
 
