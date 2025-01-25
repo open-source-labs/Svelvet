@@ -201,6 +201,22 @@
 			}
 		};
 	}
+
+	// Handle edge cases for node selection and movement
+	$effect(() => {
+		if ($position.x < 0) {
+			$position.x = 0;
+		}
+		if ($position.y < 0) {
+			$position.y = 0;
+		}
+		if ($position.x > window.innerWidth - $widthStore) {
+			$position.x = window.innerWidth - $widthStore;
+		}
+		if ($position.y > window.innerHeight - $heightStore) {
+			$position.y = window.innerHeight - $heightStore;
+		}
+	});
 </script>
 
 {#if !$state.hidden}
