@@ -1,78 +1,78 @@
 {
-	"name": "svelvet",
-	"version": "10.0.2",
-	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
-	"keywords": [
-		"svelte",
-		"svelvet",
-		"typescript"
-	],
-	"authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Henry, Horacio, Ian, Jeffrey, Jen, Jeremy, John, Johnny, Justin, Mauricio, Michael, Rachel, Rathna, Ruxin, Ryan, Sam, Samee, Spencer, Taylor, Thomas, Timmy, Tony, Von, Walter, Wesley, Isaac, Julian, Mayson, Solomon",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/open-source-labs/Svelvet/issues"
-	},
-	"homepage": "https://github.com/open-source-labs/Svelvet",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/open-source-labs/Svelvet.git"
-	},
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build && npm run package",
-		"preview": "vite preview",
-		"package": "svelte-kit sync && svelte-package && publint",
-		"prepublishOnly": "yarn format && yarn lint && yarn test && yarn test:unit && npm run package",
-		"test": "playwright test",
-		"test:unit": "vitest run --environment jsdom",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write .",
-		"prepare": "husky install"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
-		},
-		"./package.json": "./package.json"
-	},
-	"files": [
-		"dist"
-	],
-	"devDependencies": {
-		"@playwright/test": "^1.41.2",
-		"@sveltejs/adapter-auto": "^2.1.0",
-		"@sveltejs/kit": "^1.20.4",
-		"@sveltejs/package": "^2.1.0",
-		"@testing-library/svelte": "^4.0.2",
-		"@typescript-eslint/eslint-plugin": "^5.60.0",
-		"@typescript-eslint/parser": "^5.60.0",
-		"axe-playwright": "^2.0.1",
-		"eslint": "^8.43.0",
-		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-svelte": "^2.32.0",
-		"husky": "^8.0.3",
-		"jest-dom": "^4.0.0",
-		"jsdom": "^22.1.0",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
-		"publint": "^0.1.12",
-		"svelte-check": "^3.4.3",
-		"tslib": "^2.5.3",
-		"typescript": "^5.1.6",
-		"vite": "^4.3.9",
-		"vitest": "^0.32.2"
-	},
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"type": "module",
-	"main": "svelte.config.js",
-	"directories": {
-		"test": "tests"
-	},
-	"peerDependencies": {
-		"svelte": ">=3.59.2 || ^4.0.0"
-	}
+  "name": "svelvet",
+  "version": "11.0.0",
+  "description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
+  "keywords": [
+    "svelte",
+    "svelvet",
+    "typescript"
+  ],
+  "authors": "Aaron, Abhi, Alexander, Ali, Andrew, Anu, Brian, Britta, Christopher, Damian, David, Dillon, Emma, Ernesto, Henry, Horacio, Ian, Jeffrey, Jen, Jeremy, John, Johnny, Justin, Mauricio, Michael, Rachel, Rathna, Ruxin, Ryan, Sam, Samee, Spencer, Taylor, Thomas, Timmy, Tony, Von, Walter, Wesley, Isaac, Julian, Mayson, Solomon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-source-labs/Svelvet/issues"
+  },
+  "homepage": "https://github.com/open-source-labs/Svelvet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-source-labs/Svelvet.git"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && npm run package",
+    "preview": "vite preview",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepublishOnly": "yarn format && yarn lint && yarn test && yarn test:unit && npm run package",
+    "test": "playwright test",
+    "test:unit": "vitest run --environment jsdom",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "prettier --plugin-search-dir . --check . && eslint .",
+    "format": "prettier --plugin-search-dir . --write .",
+    "prepare": "husky install"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "@sveltejs/adapter-auto": "^2.2.1",
+    "@sveltejs/kit": "^2.6.0",
+    "@sveltejs/package": "^2.2.1",
+    "@testing-library/svelte": "^5.1.2",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "axe-playwright": "^3.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-svelte": "^2.40.0",
+    "husky": "^8.0.3",
+    "jest-dom": "^6.1.0",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.2.0",
+    "prettier-plugin-svelte": "^3.1.0",
+    "publint": "^0.1.18",
+    "svelte-check": "^3.7.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.2",
+    "vite": "^5.2.2",
+    "vitest": "^0.35.0"
+  },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "main": "svelte.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  }
 }
