@@ -340,7 +340,7 @@ https://svelte.dev/e/js_parse_error -->
 	function createCursorEdge(source, target, disconnect = false) {
 		const edgeConfig = {
 			color: edgeColor,
-			label: { text: edgeLabel }
+			label: edgeLabel
 		};
 
 		if (disconnect) edgeConfig.disconnect = true;
@@ -400,7 +400,7 @@ https://svelte.dev/e/js_parse_error -->
 		if (get(source.connected).has(anchor)) return false;
 		const edgeConfig = {
 			color: edgeColor,
-			label: { text: edgeLabel }
+			label: edgeLabel
 		};
 
 		// get edge style from flowchart if edge is defined in flowchart
@@ -418,7 +418,7 @@ https://svelte.dev/e/js_parse_error -->
 				if (targetInSourceChildren) {
 					// configure the edge with data defined in the flowchart
 					const edgeData = targetInSourceChildren;
-					edgeConfig.label = { text: edgeData.content };
+					edgeConfig.label = edgeData.content;
 				}
 			}
 		}
@@ -621,10 +621,10 @@ https://svelte.dev/e/js_parse_error -->
 	title={title || ''}
 	onmouseenter={() => ( $state.hovering = true)}
 	onmouseleave={() => ( $state.hovering = false)}
-	onmousedown|stopPropagation|preventDefault={handleClick}
-	onmouseup|stopPropagation={handleMouseUp}
-	ontouchstart|stopPropagation|preventDefault={handleClick}
-	ontouchend|stopPropagation={handleMouseUp}
+	onclick={handleClick}
+	onmouseup={handleMouseUp}
+	ontouchstart={handleClick}
+	ontouchend={handleMouseUp}
 	bind:this={anchorElement}
 >
 	{@render linked={$connectedAnchors?.size >= 1} {hovering} {connecting}}

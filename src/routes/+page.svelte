@@ -1,7 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Unexpected token
-https://svelte.dev/e/js_parse_error -->
-<!-- @migration-task Error while migrating Svelte code: Unexpected token
-https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
 	import Connector from '../example-components/Connector.svelte';
@@ -51,7 +47,7 @@ https://svelte.dev/e/js_parse_error -->
 
 <body>
 	<Svelvet minimap title="test" controls>
-		{@render Connector /}
+			<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
 			<button onclick={() => $state.widthCount++} />
 			{#each { length: $state.widthCount } as item}
@@ -67,7 +63,7 @@ https://svelte.dev/e/js_parse_error -->
 			<button onclick={logCurrentGraphState}>Log Current Graph State</button>
 		</Node>
 		<Node inputs={5} position={{ x: 600, y: 600 }}>
-			{@render TextField placeholder="name" /}
+				<TextField placeholder="name" />
 		</Node>
 		<Node $props={{ selected }} dimensions={{ width: 400, height: 100 }}>
 			<div class="node" class:selected>
@@ -84,7 +80,7 @@ https://svelte.dev/e/js_parse_error -->
 			<Node $props={{ connect }} useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
 		{/each}
 		<ThemeToggle slot="toggle" />
-		{@render ContrastTheme slot="contrast" /}
+			<ContrastTheme slot="contrast" />
 	</Svelvet>
 </body>
 
