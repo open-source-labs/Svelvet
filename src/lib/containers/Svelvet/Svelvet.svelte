@@ -146,35 +146,14 @@
 
 {#if $state.graph}
 	<Graph
-		{width}
-		{height}
-		{toggle}
-		{backgroundExists}
-		{minimap}
+		{...$props}
 		graph={$state.graph}
-		{fitView}
-		{fixedZoom}
-		{pannable}
-		{theme}
-		{drawer}
-		{controls}
-		{selectionColor}
-		{disableSelection}
-		{trackpadPan}
-		{modifier}
-		{title}
-		{contrast}
-		onedgeDrop
+		on:edgeDrop
 	>
 		{#if $props.mermaid.length}
-			<FlowChart mermaid={$props.mermaid} mermaidConfig={$props.mermaidConfig} />
+			<FlowChart {...$props} />
 		{/if}
 			{@render children}
-			{@render $props.minimap as minimap}
-			{@render $props.controls as controls}
-			{@render $props.toggle as toggle}
-			{@render $props.drawer as drawer}
-			{@render $props.contrast as contrast}
 	</Graph>
 {:else}
 	<div
