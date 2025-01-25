@@ -623,7 +623,7 @@
 	ontouchend|stopPropagation={handleMouseUp}
 	bind:this={anchorElement}
 >
-	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>
+	{@render linked={$connectedAnchors?.size >= 1} {hovering} {connecting}}
 		{#if !invisible}
 			<DefaultAnchor
 				{output}
@@ -634,7 +634,6 @@
 				connected={$connectedAnchors?.size >= 1}
 			/>
 		{/if}
-	</slot>
 </div>
 
 {#each Array.from($connectedAnchors) as target (target.id)}
@@ -642,13 +641,12 @@
 	{#if edge && edge.source === anchor}
 		{@const CustomEdge = edge.component}
 		<EdgeContext {edge}>
-			<slot name="edge">
+			{@render name="edge"}
 				{#if CustomEdge}
 					<CustomEdge />
 				{:else}
 					<Edge />
 				{/if}
-			</slot>
 		</EdgeContext>
 	{/if}
 {/each}
@@ -658,13 +656,12 @@
 	{#if edge}
 		{@const CustomEdge = edge.component}
 		<EdgeContext {edge}>
-			<slot name="edge">
+			{@render name="edge"}
 				{#if CustomEdge}
 					<CustomEdge />
 				{:else}
 					<Edge />
 				{/if}
-			</slot>
 		</EdgeContext>
 	{/if}
 {/if}
