@@ -6,11 +6,6 @@
 	import type { Graph, CustomWritable } from '$lib/types';
 	import type { CSSColorString } from '$lib/types';
 
-	// Props
-	/**
-	 * @default 60
-	 * @description Minimum angle allowed when interacting with the knob rotation.
-	 */
 	$props = {
 		minDegree: 60,
 		maxDegree: 300,
@@ -44,26 +39,21 @@
 	let knobWrapperElement: HTMLDivElement;
 	let knobElement: HTMLDivElement;
 
-	// Grab cursor from store
 	$derived cursor = graph.cursor;
-
-	//Grab scale/zoom value of graph
 	$derived scale = graph.transforms.scale;
-
 	$derived translation = graph.transforms.translation;
 
 	$effect(() => {
 		if ($state.rotating) {
-			calculateNewAngle($cursor.x, $cursor.y); // need to pass these arguments to trigger updates
+			calculateNewAngle($cursor.x, $cursor.y);
 		}
 	});
 
-	// Begin rotating on mousedown
 	function startRotate(e: MouseEvent) {
 		e.stopPropagation();
 		e.preventDefault();
 		window.addEventListener('mouseup', stopRotate, { once: true });
-		 $state.rotating = true;
+		$state.rotating = true;
 	}
 
 	function startTouchRotate(e: TouchEvent) {
@@ -73,16 +63,16 @@
 		e.stopPropagation();
 		e.preventDefault();
 		window.addEventListener('touchend', stopRotate, { once: true });
-		 $state.rotating = true;
+		$state.rotating = true;
 	}
 
 	function stopRotate() {
-		if ( $state.previousValue === $props.parameterStore) {
+		if ($state.previousValue === $props.parameterStore) {
 			knobElement.focus();
 		} else {
-			 $state.previousValue = $props.parameterStore;
+			$state.previousValue = $props.parameterStore;
 		}
-		 $state.rotating = false;
+		$state.rotating = false;
 		window.removeEventListener('mouseup', stopRotate);
 	}
 
@@ -96,32 +86,26 @@
 		};
 	}
 
-	// Update the value based on the direction and increment
-	function updateValue(delta: number, increment = (( $props.maxDegree -  $props.minDegree) / ( $props.max -  $props.min)) *  $props.step) {
-		// ADD SETTIMEOUT FOR SCROLL TO SLOW DOWN KNOB INPUT UPDATES
-		 $state.currentDegree = roundNum(
-			Math.max( $props.minDegree, Math.min( $state.currentDegree + delta * increment,  $props.maxDegree)),
+	function updateValue(delta: number, increment = (($props.maxDegree - $props.minDegree) / ($props.max - $props.min)) * $props.step) {
+		$state.currentDegree = roundNum(
+			Math.max($props.minDegree, Math.min($state.currentDegree + delta * increment, $props.maxDegree)),
 			3
 		);
 		$props.parameterStore =
-			((clamp( $state.currentDegree) -  $props.minDegree) / ( $props.maxDegree -  $props.minDegree)) * ( $props.max -  $props.min) +  $props.min;
+			((clamp($state.currentDegree) - $props.minDegree) / ($props.maxDegree - $props.minDegree)) * ($props.max - $props.min) + $props.min;
 	}
 
 	export function clamp(num: number): number {
-		const increment = (( $props.maxDegree -  $props.minDegree) / ( $props.max -  $props.min)) *  $props.step;
-		const degreeRoundToStep = Math.round((num -  $props.minDegree) / increment) * increment +  $props.minDegree;
-		const degree = Math.min(Math.max(degreeRoundToStep,  $props.minDegree),  $props.maxDegree);
-		//this is a band-aid solution
-		//currentDegree should be updating when parameterStore updates within calculateNewAngle
-		 $state.currentDegree = degree;
+		const increment = (($props.maxDegree - $props.minDegree) / ($props.max - $props.min)) * $props.step;
+		const degreeRoundToStep = Math.round((num - $props.minDegree) / increment) * increment + $props.minDegree;
+		const degree = Math.min(Math.max(degreeRoundToStep, $props.minDegree), $props.maxDegree);
+		$state.currentDegree = degree;
 		return degree;
 	}
 
-	// need to pass cursorX and cursorY to trigger updates
 	function calculateNewAngle(cursorX: number, cursorY: number): void {
 		const { top, left, width, height } = knobWrapperElement.getBoundingClientRect();
 		const e = { clientX: cursorX, clientY: cursorY };
-		// X and Y are the position relative to the target element's left and top
 		const { x, y } = calculateRelativeCursor(e, top, left, width, height, $scale, $translation);
 		const relativeX = x + (2 * $translation.x) / $scale - width / 2;
 		const relativeY = height / 2 - (y + (2 * $translation.y) / $scale);
@@ -135,20 +119,14 @@
 				? 270 + Math.atan(-relativeY / relativeX) * (180 / Math.PI)
 				: relativeX < 0 && relativeY < 0
 				? 90 - Math.atan(-relativeY / -relativeX) * (180 / Math.PI)
-				:  $state.currentDegree;
-		// caculate the new parameterstore based on clamp(angle)
-		// a round-off error (see wiki: 'https://en.wikipedia.org/wiki/Round-off_error')
-		// occurs for particular values depending on their angle due to
-		// a computer's limited precision of floating-point number representation.
-		// To circumvent this issue, toFixed is used to adjust output to desired accuracy
+				: $state.currentDegree;
 		$props.parameterStore = Number(
-			(((clamp(angle) -  $props.minDegree) / ( $props.maxDegree -  $props.minDegree)) * ( $props.max -  $props.min) +  $props.min).toFixed( $props.fixed)
+			(((clamp(angle) - $props.minDegree) / ($props.maxDegree - $props.minDegree)) * ($props.max - $props.min) + $props.min).toFixed($props.fixed)
 		);
 	}
 </script>
 
 {#if !$state.connected}
-	<!-- this div is wrapping the knob section -->
 	<div class="wrapper" style:color={$props.fontColor} bind:this={knobWrapperElement}>
 		<div class="knob-container" bind:offsetWidth={$state.sliderWidth} style:transform={$state.curAngle}>
 			<div

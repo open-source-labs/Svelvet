@@ -63,8 +63,8 @@
 
 		const nodeCount = graph.nodes.count() + 1;
 
-		$state.isDefault = !$$slots.default;
-		if ($$slots.anchorWest || $$slots.anchorEast || $$slots.anchorNorth || $$slots.anchorSouth)
+		$state.isDefault = !$$snippets.default;
+		if ($$snippets.anchorWest || $$snippets.anchorEast || $$snippets.anchorNorth || $$snippets.anchorSouth)
 			$state.isDefault = false;
 
 		const initialDimensions: InitialDimensions = $props.dimensions
@@ -270,15 +270,32 @@
 		let:selected
 		let:grabHandle
 	>
-		<slot {selected} {grabHandle} {disconnect} {connect} node={$state.node} {destroy}>
-			{#if $state.isDefault}
-				<DefaultNode {selected} on:connection on:disconnection />
-			{/if}
-		</slot>
+			{@render name="default"}
+			<slot {selected} {grabHandle} {disconnect} {connect} node={$state.node} {destroy}>
+				{#if $state.isDefault}
+					<DefaultNode {selected} on:connection on:disconnection />
+				{/if}
+			</slot>
+		{@/render}
 
-		<slot name="anchorWest" slot="anchorWest" />
-		<slot name="anchorEast" slot="anchorEast" />
-		<slot name="anchorNorth" slot="anchorNorth" />
-		<slot name="anchorSouth" slot="anchorSouth" />
+		<div id={`anchors-west-${node.id}`} class="anchors left">
+			{@render name="anchorWest"}
+			<slot name="anchorWest" />
+		{@/render}
+		</div>
+		<div id={`anchors-east-${node.id}`} class="anchors right">
+			{@render name="anchorEast"}
+			<slot name="anchorEast" />
+		{@/render}
+		</div>
+		<div id={`anchors-north-${node.id}`} class="anchors top">
+			{@render name="anchorNorth"}
+			<slot name="anchorNorth" />
+		{@/render}
+		</div>
+		<div id={`anchors-south-${node.id}`} class="anchors bottom">
+			{@render name="anchorSouth"}
+			<slot name="anchorSouth" />
+		{@/render}
 	</InternalNode>
 {/if}
