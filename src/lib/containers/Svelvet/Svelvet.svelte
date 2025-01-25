@@ -1,5 +1,7 @@
 <!-- @migration-task Error while migrating Svelte code: `{@render ...}` tags can only contain call expressions
 https://svelte.dev/e/render_tag_invalid_expression -->
+<!-- @migration-task Error while migrating Svelte code: `{@render ...}` tags can only contain call expressions
+https://svelte.dev/e/render_tag_invalid_expression -->
 <script context="module" lang="ts">
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';

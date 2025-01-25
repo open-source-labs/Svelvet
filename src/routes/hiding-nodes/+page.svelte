@@ -17,6 +17,7 @@
 				<Node position={{ x: -100, y: 500 }} />
 			{/if}
 			<!-- @migration-task: migrate this slot by hand, `minimap` would shadow a prop on the parent component -->
+	<!-- @migration-task: migrate this slot by hand, `minimap` would shadow a prop on the parent component -->
 	<Minimap slot="minimap" />
 		</Svelvet>
 	</div>

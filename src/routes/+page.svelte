@@ -1,5 +1,7 @@
 <!-- @migration-task Error while migrating Svelte code: Unexpected token
 https://svelte.dev/e/js_parse_error -->
+<!-- @migration-task Error while migrating Svelte code: Unexpected token
+https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
 	import Connector from '../example-components/Connector.svelte';

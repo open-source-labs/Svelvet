@@ -1,5 +1,7 @@
 <!-- @migration-task Error while migrating Svelte code: Expected token >
 https://svelte.dev/e/expected_token -->
+<!-- @migration-task Error while migrating Svelte code: Expected token >
+https://svelte.dev/e/expected_token -->
 <script lang="ts">
 	import { Node, Svelvet, Anchor, Edge } from '$lib';
 	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
