@@ -19,50 +19,46 @@
 </script>
 
 <script lang="ts">
-	$props = {
-		graph: null,
-		width: 0,
-		height: 0,
-		minimap: false,
-		controls: false,
-		toggle: false,
-		fixedZoom: false,
-		pannable: true,
-		disableSelection: false,
-		ZOOM_INCREMENT: 0.1,
-		PAN_INCREMENT: 50,
-		PAN_TIME: 250,
-		MAX_SCALE: 3,
-		MIN_SCALE: 0.2,
-		selectionColor: null,
-		backgroundExists: false,
-		fitView: false,
-		trackpadPan: false,
-		modifier: 'meta',
-		theme: 'light',
-		title: '',
-		drawer: false,
-		contrast: false
-	};
+	export let graph: Graph;
+	export let width: number = 0;
+	export let height: number = 0;
+	export let minimap: boolean = false;
+	export let controls: boolean = false;
+	export let toggle: boolean = false;
+	export let fixedZoom: boolean = false;
+	export let pannable: boolean = true;
+	export let disableSelection: boolean = false;
+	export let ZOOM_INCREMENT: number = 0.1;
+	export let PAN_INCREMENT: number = 50;
+	export let PAN_TIME: number = 250;
+	export let MAX_SCALE: number = 3;
+	export let MIN_SCALE: number = 0.2;
+	export let selectionColor: CSSColorString | null = null;
+	export let backgroundExists: boolean = false;
+	export let fitView: boolean = false;
+	export let trackpadPan: boolean = false;
+	export let modifier: string = 'meta';
+	export let theme: string = 'light';
+	export let title: string = '';
+	export let drawer: boolean = false;
+	export let contrast: boolean = false;
 
-	$state = {
-		animationFrameId: 0,
-		initialDistance: 0,
-		initialScale: 1,
-		anchor: { x: 0, y: 0, top: 0, left: 0 },
-		selecting: false,
-		creating: false,
-		adding: false,
-		isMovable: false,
-		pinching: false,
-		initialFit: false,
-		graphDimensions: null,
-		toggleComponent: null,
-		minimapComponent: null,
-		controlsComponent: null,
-		drawerComponent: null,
-		contrastComponent: null
-	};
+	let animationFrameId: number = 0;
+	let initialDistance: number = 0;
+	let initialScale: number = 1;
+	let anchor = { x: 0, y: 0, top: 0, left: 0 };
+	let selecting: boolean = false;
+	let creating: boolean = false;
+	let adding: boolean = false;
+	let isMovable: boolean = false;
+	let pinching: boolean = false;
+	let initialFit: boolean = false;
+	let graphDimensions: GraphDimensions | null = null;
+	let toggleComponent: ComponentType | null = null;
+	let minimapComponent: ComponentType | null = null;
+	let controlsComponent: ComponentType | null = null;
+	let drawerComponent: ComponentType | null = null;
+	let contrastComponent: ComponentType | null = null;
 
 	const dispatch = (eventName, detail) => {
 		const event = new CustomEvent(eventName, { detail });
@@ -75,58 +71,58 @@
 	const mounted = writable(0);
 	const graphDOMElement: Writable<HTMLElement | null> = writable(null);
 
-	const cursor = $props.graph.cursor;
-	const scale = $props.graph.transforms.scale;
-	const dimensionsStore = $props.graph.dimensions;
-	const translation = $props.graph.transforms.translation;
-	const groups = $props.graph.groups;
-	const groupBoxes = $props.graph.groupBoxes;
-	const selected = $groups.selected.nodes;
-	const activeGroup = $props.graph.activeGroup;
-	const initialNodePositions = $props.graph.initialNodePositions;
-	const editing = $props.graph.editing;
-	const nodeBounds = $props.graph.bounds.nodeBounds;
+	const cursor = graph.cursor;
+	const scale = graph.transforms.scale;
+	const dimensionsStore = graph.dimensions;
+	const translation = graph.transforms.translation;
+	const groups = graph.groups;
+	const groupBoxes = graph.groupBoxes;
+	const selected = groups.selected.nodes;
+	const activeGroup = graph.activeGroup;
+	const initialNodePositions = graph.initialNodePositions;
+	const editing = graph.editing;
+	const nodeBounds = graph.bounds.nodeBounds;
 
-	$derived dimensions = $dimensionsStore;
+	$: dimensions = dimensionsStore;
 
-	$effect(() => {
-		if ($props.theme) document.documentElement.setAttribute('svelvet-theme', $props.theme);
-	});
+	$: {
+		if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
+	}
 
-	$effect(() => {
-		if (!$state.initialFit && $props.fitView) {
+	$: {
+		if (!initialFit && fitView) {
 			fitIntoView();
 		}
-	});
+	}
 
-	$effect(() => {
-		if ($props.toggle && !$state.toggleComponent) loadToggle();
-	});
+	$: {
+		if (toggle && !toggleComponent) loadToggle();
+	}
 
-	$effect(() => {
-		if ($props.minimap && !$state.minimapComponent) loadMinimap();
-	});
+	$: {
+		if (minimap && !minimapComponent) loadMinimap();
+	}
 
-	$effect(() => {
-		if ($props.controls && !$state.controlsComponent) loadControls();
-	});
+	$: {
+		if (controls && !controlsComponent) loadControls();
+	}
 
-	$effect(() => {
-		if ($props.drawer && !$state.drawerComponent) loadDrawer();
-	});
+	$: {
+		if (drawer && !drawerComponent) loadDrawer();
+	}
 
-	$effect(() => {
-		if ($props.contrast && !$state.contrastComponent) loadContrast();
-	});
+	$: {
+		if (contrast && !contrastComponent) loadContrast();
+	}
 
 	const cursorAnchor: CursorAnchor = {
 		id: null,
-		position: $props.graph.cursor,
+		position: graph.cursor,
 		offset: writable({ x: 0, y: 0 }),
 		connected: writable(new Set()),
 		dynamic: writable(false),
 		edge: null,
-		edgeColor: writable(null),
+			edgeColor: writable(null),
 		direction: writable('self'),
 		inputKey: null,
 		type: 'output',
@@ -137,7 +133,7 @@
 		node: {
 			zIndex: writable(Infinity),
 			rotating: writable(false),
-			position: $props.graph.cursor,
+			position: graph.cursor,
 			dimensions: { width: writable(0), height: writable(0) }
 		}
 	};
@@ -145,14 +141,14 @@
 	setContext('graphDOMElement', graphDOMElement);
 	setContext('cursorAnchor', cursorAnchor);
 	setContext('duplicate', duplicate);
-	setContext('graph', $props.graph);
-	setContext('transforms', $props.graph.transforms);
-	setContext('dimensions', $props.graph.dimensions);
-	setContext('locked', $props.graph.locked);
-	setContext('groups', $props.graph.groups);
-	setContext('bounds', $props.graph.bounds);
-	setContext('edgeStore', $props.graph.edges);
-	setContext('nodeStore', $props.graph.nodes);
+	setContext('graph', graph);
+	setContext('transforms', graph.transforms);
+	setContext('dimensions', graph.dimensions);
+	setContext('locked', graph.locked);
+	setContext('groups', graph.groups);
+	setContext('bounds', graph.bounds);
+	setContext('edgeStore', graph.edges);
+	setContext('nodeStore', graph.nodes);
 	setContext('mounted', mounted);
 
 	onMount(() => {
@@ -162,39 +158,39 @@
 	async function fitIntoView() {
 		await tick();
 		tracking.set(true);
-		const { x, y, scale } = calculateFitView($state.graphDimensions, $nodeBounds);
+		const { x, y, scale } = calculateFitView(graphDimensions, nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
-			$props.graph.transforms.scale.set(scale);
+			graph.transforms.scale.set(scale);
 			translation.set({ x, y });
 		}
 		tracking.set(false);
-		$state.initialFit = true;
+		initialFit = true;
 	}
+
 	async function loadMinimap() {
-		$state.minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
 	}
 
 	async function loadToggle() {
-		$state.toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
 	}
 
 	async function loadControls() {
-		$state.controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+		controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	}
 
 	async function loadDrawer() {
-		$state.drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
 	}
 
 	async function loadContrast() {
-		$state.contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
-			.default;
+		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte')).default;
 	}
 
 	function updateGraphDimensions() {
-		if (! $graphDOMElement) return;
-		const DOMRect = $graphDOMElement.getBoundingClientRect();
-		$state.graphDimensions = {
+		if (!graphDOMElement) return;
+		const DOMRect = graphDOMElement.getBoundingClientRect();
+		graphDimensions = {
 			top: DOMRect.top,
 			left: DOMRect.left,
 			bottom: DOMRect.bottom,
@@ -203,19 +199,19 @@
 			height: DOMRect.height
 		};
 
-		$props.graph.dimensions.set($state.graphDimensions);
-		if ($props.fitView === 'resize') fitIntoView();
+		graph.dimensions.set(graphDimensions);
+		if (fitView === 'resize') fitIntoView();
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		if ($state.creating) {
+		if (creating) {
 			const groupName = generateKey();
-			const groupKey: GroupKey = `${groupName}/${$props.graph.id}`;
+			const groupKey: GroupKey = `${groupName}/${graph.id}`;
 			const cursorPosition = get(cursor);
-			const width = cursorPosition.x - $initialClickPosition.x;
-			const height = cursorPosition.y - $initialClickPosition.y;
-			const top = Math.min($initialClickPosition.y, $initialClickPosition.y + height);
-			const left = Math.min($initialClickPosition.x, $initialClickPosition.x + width);
+			const width = cursorPosition.x - initialClickPosition.x;
+			const height = cursorPosition.y - initialClickPosition.y;
+			const top = Math.min(initialClickPosition.y, initialClickPosition.y + height);
+			const left = Math.min(initialClickPosition.x, initialClickPosition.x + width);
 
 			const dimensions = {
 				width: writable(Math.abs(width)),
@@ -236,128 +232,128 @@
 
 			groupBoxes.add(groupBox, groupKey);
 
-			Array.from($selected).forEach((node) => {
+			Array.from(selected).forEach((node) => {
 				node.group.set(groupKey);
 			});
 
 			groups.update((groups) => {
 				const newGroup: Group = {
 					parent: writable(groupBox),
-					nodes: writable(new Set([...$selected, groupBox]))
+					nodes: writable(new Set([...selected, groupBox]))
 				};
 				groups[groupKey] = newGroup;
 				return groups;
 			});
 
-			$selected = new Set();
+			selected = new Set();
 
-			$state.creating = false;
-			$state.selecting = false;
+			creating = false;
+			selecting = false;
 		}
 
-		if ($activeGroup) {
-			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
+		if (activeGroup) {
+			const nodeGroupArray = Array.from(get(groups[activeGroup].nodes));
 			nodeGroupArray.forEach((node) => node.moving.set(false));
 		}
-		const cursorEdge = $props.graph.edges.get('cursor');
+		const cursorEdge = graph.edges.get('cursor');
 
 		if (cursorEdge) {
-			$props.graph.edges.delete('cursor');
+			graph.edges.delete('cursor');
 			if (!cursorEdge.disconnect)
 				dispatch('edgeDrop', {
 					cursor: get(cursor),
 					source: {
-						node: $connectingFrom?.anchor.node.id.slice(2),
-						anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
+						node: connectingFrom?.anchor.node.id.slice(2),
+						anchor: connectingFrom?.anchor.id.split('/')[0].slice(2)
 					}
 				});
 		}
-		$activeGroup = null;
-		$initialClickPosition = { x: 0, y: 0 };
-		$initialNodePositions = [];
-		$state.selecting = false;
-		$state.isMovable = false;
-		$tracking = false;
+		activeGroup = null;
+		initialClickPosition = { x: 0, y: 0 };
+		initialNodePositions = [];
+		selecting = false;
+		isMovable = false;
+		tracking = false;
 
 		if (!e.shiftKey) {
 			connectingFrom.set(null);
 		}
 
-		$state.anchor.y = 0;
-		$state.anchor.x = 0;
+		anchor.y = 0;
+		anchor.x = 0;
 	}
 
 	function onMouseDown(e: MouseEvent) {
-		if (!$props.pannable && !(e.shiftKey || e.metaKey)) return;
+		if (!pannable && !(e.shiftKey || e.metaKey)) return;
 		if (e.button === 2) return;
-		if ($graphDOMElement) $graphDOMElement.focus();
+		if (graphDOMElement) graphDOMElement.focus();
 
 		const { clientX, clientY } = e;
 
-		$initialClickPosition = get(cursor);
+		initialClickPosition = get(cursor);
 
 		if (e.shiftKey || e.metaKey) {
 			e.preventDefault();
-			$state.selecting = true;
-			const { top, left } = $state.dimensions;
-			$state.anchor.y = clientY - top;
-			$state.anchor.x = clientX - left;
-			$state.anchor.top = top;
-			$state.anchor.left = left;
+			selecting = true;
+			const { top, left } = dimensions;
+			anchor.y = clientY - top;
+			anchor.x = clientX - left;
+			anchor.top = top;
+			anchor.left = left;
 			if (e.shiftKey && e.metaKey) {
-				$state.creating = true;
+				creating = true;
 			} else {
-				$state.creating = false;
+				creating = false;
 			}
 
 			if (e.metaKey && !e.shiftKey) {
-				$state.adding = true;
+				adding = true;
 			} else {
-				$state.adding = false;
+				adding = false;
 			}
 		} else {
-			$state.isMovable = true;
-			$selected = new Set();
-			$selected = $selected;
+			isMovable = true;
+			selected = new Set();
+			selected = selected;
 		}
 	}
 
 	function onTouchStart(e: TouchEvent) {
-		$selected = new Set();
-		$selected = $selected;
+		selected = new Set();
+		selected = selected;
 
-		$initialClickPosition = get(cursor);
+		initialClickPosition = get(cursor);
 
-		$state.isMovable = true;
+		isMovable = true;
 		if (e.touches.length === 2) {
 			startPinching();
-			$state.initialDistance = $touchDistance;
-			$state.initialScale = $scale;
+			initialDistance = touchDistance;
+			initialScale = scale;
 		}
 	}
 
 	function onTouchEnd() {
-		$state.isMovable = false;
-		$state.pinching = false;
+		isMovable = false;
+		pinching = false;
 	}
 
 	function startPinching() {
-		if (!$state.pinching) {
-			$state.pinching = true;
-			$state.animationFrameId = requestAnimationFrame(handlePinch);
+		if (!pinching) {
+			pinching = true;
+			animationFrameId = requestAnimationFrame(handlePinch);
 		}
 	}
 
 	function handlePinch() {
-		if (!$state.pinching) {
-			cancelAnimationFrame($state.animationFrameId);
+		if (!pinching) {
+			cancelAnimationFrame(animationFrameId);
 			return;
 		}
 
-		const newDistance = $touchDistance;
-		const scaleFactor = newDistance / $state.initialDistance;
-		$scale = $state.initialScale * scaleFactor;
-		$state.animationFrameId = requestAnimationFrame(handlePinch);
+		const newDistance = touchDistance;
+		const scaleFactor = newDistance / initialDistance;
+		scale = initialScale * scaleFactor;
+		animationFrameId = requestAnimationFrame(handlePinch);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -366,20 +362,20 @@
 
 		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
-		if (code === 'KeyA' && e[`${$props.modifier}Key`]) {
-			const unlockedNodes = $props.graph.nodes.getAll().filter((node) => !get(node.locked));
-			$selected = new Set(unlockedNodes);
+		if (code === 'KeyA' && e[`${modifier}Key`]) {
+			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
+			selected = new Set(unlockedNodes);
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
 		} else if (key === '=') {
-			zoomAndTranslate(-1, $props.graph.dimensions, $props.graph.transforms, $props.ZOOM_INCREMENT);
+			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '-') {
-			zoomAndTranslate(1, $props.graph.dimensions, $props.graph.transforms, $props.ZOOM_INCREMENT);
+			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
 		} else if (key === '0') {
 			fitIntoView();
 		} else if (key === 'Control') {
-			$groups['selected'].nodes.set(new Set());
-		} else if (code === 'KeyD' && e[`${$props.modifier}Key`]) {
+			groups['selected'].nodes.set(new Set());
+		} else if (code === 'KeyD' && e[`${modifier}Key`]) {
 			duplicate.set(true);
 			setTimeout(() => {
 				duplicate.set(false);
@@ -387,16 +383,16 @@
 		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
 			selectNextNode();
 		} else if (key === 'l') {
-			$props.theme = $props.theme === 'light' ? 'dark' : 'light';
+			theme = theme === 'light' ? 'dark' : 'light';
 		} else if (key === 'd') {
-			$props.drawer = !$props.drawer;
+			drawer = !drawer;
 		} else if (key === 'm') {
-			$props.minimap = !$props.minimap;
+			minimap = !minimap;
 		} else if (key === 'c') {
-			$props.controls = !$props.controls;
+			controls = !controls;
 		} else if (key === 'e') {
-			const node = Array.from($selected)[0];
-			$props.graph.editing.set(node);
+			const node = Array.from(selected)[0];
+			graph.editing.set(node);
 		} else {
 			return;
 		}
@@ -405,13 +401,13 @@
 	}
 
 	function selectNextNode() {
-		const nodes = $props.graph.nodes.getAll();
+		const nodes = graph.nodes.getAll();
 
-		const currentIndex = nodes.findIndex((node) => $selected.has(node));
+		const currentIndex = nodes.findIndex((node) => selected.has(node));
 		const nextIndex = currentIndex + 1;
 
-		$selected.delete(nodes[currentIndex]);
-		$selected.add(nodes[nextIndex]);
+		selected.delete(nodes[currentIndex]);
+		selected.add(nodes[nextIndex]);
 	}
 
 	function handleKeyUp(e: KeyboardEvent) {
@@ -426,32 +422,32 @@
 	}
 
 	function handleScroll(e: WheelEvent) {
-		if ($props.fixedZoom) return;
+		if (fixedZoom) return;
 		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
-		const currentTranslation = $translation;
+		const currentTranslation = translation;
 		const pointerPosition = { x: clientX, y: clientY };
 
-		if (($props.trackpadPan || e.metaKey) && deltaY % 1 === 0) {
-			$translation = {
-				x: ($translation.x -= e.deltaX),
-				y: ($translation.y -= e.deltaY)
+		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+			translation = {
+				x: (translation.x -= e.deltaX),
+				y: (translation.y -= e.deltaY)
 			};
 
 			return;
 		}
 
-		if (($scale >= $props.MAX_SCALE && deltaY < 0) || ($scale <= $props.MIN_SCALE && deltaY > 0)) return;
+		if ((scale >= MAX_SCALE && deltaY < 0) || (scale <= MIN_SCALE && deltaY > 0)) return;
 
 		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
-		const newScale = calculateZoom($scale, Math.sign(deltaY), scrollAdjustment);
+		const newScale = calculateZoom(scale, Math.sign(deltaY), scrollAdjustment);
 
 		const newTranslation = calculateTranslation(
-			$scale,
+			scale,
 			newScale,
 			currentTranslation,
 			pointerPosition,
-			$state.graphDimensions
+			graphDimensions
 		);
 
 		scale.set(newScale);
@@ -463,30 +459,30 @@
 		const start = performance.now();
 		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
-		const startOffset = leftRight ? $translation.x : $translation.y;
-		const endOffset = startOffset + direction * $props.PAN_INCREMENT * multiplier;
+		const startOffset = leftRight ? translation.x : translation.y;
+		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
 		if (!activeIntervals[key]) {
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
 
-				if ($selected.size === 0) {
-					const movement = startOffset + (endOffset - startOffset) * (time / $props.PAN_TIME);
+				if (selected.size === 0) {
+					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
 					translation.set({
-						x: leftRight ? movement : $translation.x,
-						y: leftRight ? $translation.y : movement
+						x: leftRight ? movement : translation.x,
+						y: leftRight ? translation.y : movement
 					});
 				} else {
 					const delta = {
 						x: leftRight ? -direction * 2 : 0,
 						y: leftRight ? 0 : -direction * 2
 					};
-					Array.from($selected).forEach((node) => {
+					Array.from(selected).forEach((node) => {
 						const currentPosition = get(node.position);
 						let groupBox: GroupBox | undefined;
 						const groupName = get(node.group);
 
-						const groupBoxes = get($props.graph.groupBoxes);
+						const groupBoxes = get(graph.groupBoxes);
 
 						if (groupName) groupBox = groupBoxes.get(groupName);
 						if (groupBox) {
@@ -507,55 +503,55 @@
 
 <section
 	role="presentation"
-	id={$props.graph.id}
+	id={graph.id}
 	class="svelvet-wrapper"
 	{title}
-	style:width={$props.width ? $props.width + 'px' : '100%'}
-	style:height={$props.height ? $props.height + 'px' : '100%'}
-	style:cursor={$props.pannable ? 'move' : 'default'}
+	style:width={width ? width + 'px' : '100%'}
+	style:height={height ? height + 'px' : '100%'}
+	style:cursor={pannable ? 'move' : 'default'}
 	onwheel={handleScroll}
 	onmousedown={onMouseDown}
 	ontouchend={onMouseUp}
 	ontouchstart={onTouchStart}
 	onkeydown={handleKeyDown}
 	onkeyup={handleKeyUp}
-	bind:this={$graphDOMElement}
+	bind:this={graphDOMElement}
 	tabindex={0}
 >
 	<GraphRenderer {isMovable}>
 		{#if $editing}
 			<Editor editing={$editing} />
 		{/if}
-		{@render $props.children}
+		{@render children}
 	</GraphRenderer>
 
-	{#if $props.backgroundExists}
-		{@render $props.background}
+	{#if backgroundExists}
+		{@render background}
 	{:else}
 		<Background />
 	{/if}
-	{#if $props.minimap}
-		<svelte:component this={$state.minimapComponent} />
+	{#if minimap}
+		<svelte:component this={minimapComponent} />
 	{/if}
-	{#if $props.controls}
-		<svelte:component this={$state.controlsComponent} />
+	{#if controls}
+		<svelte:component this={controlsComponent} />
 	{/if}
-	{#if $props.toggle}
-		<svelte:component this={$state.toggleComponent} />
+	{#if toggle}
+		<svelte:component this={toggleComponent} />
 	{/if}
-	{#if $props.drawer}
-		<svelte:component this={$state.drawerComponent} />
+	{#if drawer}
+		<svelte:component this={drawerComponent} />
 	{/if}
-	{#if $props.contrast}
-		<svelte:component this={$state.contrastComponent} />
+	{#if contrast}
+		<svelte:component this={contrastComponent} />
 	{/if}
-	{@render $props.minimap}
-	{@render $props.drawer}
-	{@render $props.controls}
-	{@render $props.toggle}
-	{@render $props.contrast}
-	{#if $state.selecting && !$props.disableSelection}
-		<SelectionBox {creating} {anchor} graph={$props.graph} {adding} color={$props.selectionColor} />
+	{@render minimap}
+	{@render drawer}
+	{@render controls}
+	{@render toggle}
+	{@render contrast}
+	{#if selecting && !disableSelection}
+		<SelectionBox {creating} {anchor} graph={graph} {adding} color={selectionColor} />
 	{/if}
 </section>
 
