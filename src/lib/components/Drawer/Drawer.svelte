@@ -26,6 +26,7 @@
 	export let modifier: string;
 	export let trackpadPan: boolean;
 	export let toggle: boolean;
+	export let position: string; // New customization option for position
 
 	$props = {
 		width,
@@ -48,7 +49,8 @@
 		raiseEdgesOnSelect,
 		modifier,
 		trackpadPan,
-		toggle
+		toggle,
+		position // New customization option for position
 	};
 
 	$state = {
@@ -95,6 +97,9 @@
 	ondragleave={handleDragLeave}
 	ondragover={onDragOver}
 	ondrop={handleDrop}
+	style:width={$props.width ? $props.width + 'px' : '100%'} // Apply width customization
+	style:height={$props.height ? $props.height + 'px' : '100%'} // Apply height customization
+	style:position={$props.position ? $props.position : 'relative'} // Apply position customization
 >
 	<Svelvet {...$state.svelvetProps} drawer>
 		{#each $state.defaultNodes as { anchors, edgeProps, ...nodeProps }}

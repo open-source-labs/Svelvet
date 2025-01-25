@@ -31,32 +31,52 @@
 	$derived hidden = $groups.hidden.nodes;
 
 	function unhideAll() {
-		$hidden = new Set();
-		if ($props.onUnhideAll) $props.onUnhideAll();
+		try {
+			$hidden = new Set();
+			if ($props.onUnhideAll) $props.onUnhideAll();
+		} catch (error) {
+			console.error('Error in unhideAll:', error);
+		}
 	}
 
 	function zoomIn() {
-		zoomAndTranslate(-1, dimensions, transforms, $props.increment);
-		if ($props.onZoomIn) $props.onZoomIn();
+		try {
+			zoomAndTranslate(-1, dimensions, transforms, $props.increment);
+			if ($props.onZoomIn) $props.onZoomIn();
+		} catch (error) {
+			console.error('Error in zoomIn:', error);
+		}
 	}
 
 	function zoomOut() {
-		zoomAndTranslate(1, dimensions, transforms, $props.increment);
-		if ($props.onZoomOut) $props.onZoomOut();
+		try {
+			zoomAndTranslate(1, dimensions, transforms, $props.increment);
+			if ($props.onZoomOut) $props.onZoomOut();
+		} catch (error) {
+			console.error('Error in zoomOut:', error);
+		}
 	}
 
 	function fitView() {
-		tracking.set(true);
-		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
-		translation.set({ x: x || 0, y: y || 0 });
-		transforms.scale.set(scale || 1);
-		tracking.set(false);
-		if ($props.onFitView) $props.onFitView();
+		try {
+			tracking.set(true);
+			const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
+			translation.set({ x: x || 0, y: y || 0 });
+			transforms.scale.set(scale || 1);
+			tracking.set(false);
+			if ($props.onFitView) $props.onFitView();
+		} catch (error) {
+			console.error('Error in fitView:', error);
+		}
 	}
 
 	function lock() {
-		$locked = !$locked;
-		if ($props.onLock) $props.onLock();
+		try {
+			$locked = !$locked;
+			if ($props.onLock) $props.onLock();
+		} catch (error) {
+			console.error('Error in lock:', error);
+		}
 	}
 </script>
 
