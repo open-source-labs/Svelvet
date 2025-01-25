@@ -11,36 +11,43 @@
 	const translation = transforms.translation;
 	const cursor = graph.cursor;
 
-	export let isMovable: boolean;
-	let animationFrameId: number;
-	let moving = false;
+	$props = {
+		isMovable: false
+	};
+
+	$state = {
+		animationFrameId: 0,
+		moving: false
+	};
 
 	$: graphTranslation = $translation;
 
 	// Reactive statement to update the transform attribute of the wrapper
 	$: transform = `translate(${graphTranslation.x}px, ${graphTranslation.y}px) scale(${$scale})`;
 
-	$: if (isMovable && !moving) {
-		moving = true;
-		animationFrameId = requestAnimationFrame(translate);
-	} else if (!isMovable || !moving) {
-		moving = false;
-		cancelAnimationFrame(animationFrameId);
-	}
+	$effect(() => {
+		if ($props.isMovable && !$state.moving) {
+			$state.moving = true;
+			$state.animationFrameId = requestAnimationFrame(translate);
+		} else if (!$props.isMovable || !$state.moving) {
+			$state.moving = false;
+			cancelAnimationFrame($state.animationFrameId);
+		}
+	});
 
 	function translate() {
 		$translation = updateTranslation(get(initialClickPosition), $cursor, transforms);
-		animationFrameId = requestAnimationFrame(translate);
+		$state.animationFrameId = requestAnimationFrame(translate);
 	}
 </script>
 
 <div
-	on:contextmenu|preventDefault|self
-	on:click|preventDefault|self
-	on:touchstart|preventDefault|self
-	style:transform
-	class="svelvet-graph-wrapper"
 	role="presentation"
+	class="svelvet-graph-wrapper"
+	style:transform
+	oncontextmenu={event => event.preventDefault()}
+	onclick={event => event.preventDefault()}
+	ontouchstart={event => event.preventDefault()}
 >
 	<slot />
 </div>

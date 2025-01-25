@@ -120,7 +120,7 @@
 					{left}
 					{nodeColor}
 					hidden={$hidden.has(node)}
-					{toggleHidden}
+					toggleHidden={toggleHidden}
 					{hideable}
 				/>
 			{/if}

@@ -227,7 +227,7 @@
 			? null
 			: '0px'}
 		style:--prop-border-width={$borderWidth || (isDefault || useDefaults ? null : '0px')}
-		oncontextmenu|preventDefault|stopPropagation
+		oncontextmenu={e => { e.preventDefault(); e.stopPropagation(); }}
 		onmouseup={onMouseUp}
 		onmousedown={handleNodeClicked}
 		ontouchstart={handleNodeClicked}

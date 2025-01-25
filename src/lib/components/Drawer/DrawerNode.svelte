@@ -131,7 +131,7 @@
 
 <div id="nodeContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form on:submit|preventDefault={handleNodeResetButtonClick}>
+	<form onreset={handleNodeResetButtonClick}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="bgColor">Background: </label>
@@ -147,7 +147,7 @@
 					id="useDefaults"
 					type="checkbox"
 					bind:value={useDefaults}
-					on:change={handleUseDefaultsButtonClick}
+					onchange={handleUseDefaultsButtonClick}
 				/>
 			</li> -->
 
@@ -162,7 +162,7 @@
 			</li>
 			<li class="list-item">
 				<label for="locked">Locked: </label>
-				<input id="label" type="checkbox" bind:value={locked} on:change={handleLockedButtonClick} />
+				<input id="label" type="checkbox" bind:value={locked} onchange={handleLockedButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="centered">Centered: </label>
@@ -170,7 +170,7 @@
 					id="centered"
 					type="checkbox"
 					bind:value={center}
-					on:change={handleCenterButtonClick}
+					onchange={handleCenterButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -199,7 +199,7 @@
 				<select
 					id="anchorPosition"
 					bind:value={nodeDirection}
-					on:change={handleAnchorPositionButton}
+					onchange={handleAnchorPositionButton}
 				>
 					<option value="">-</option>
 					<option value="LR">LR</option>

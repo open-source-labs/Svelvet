@@ -513,10 +513,10 @@
 	style:width={$props.width ? $props.width + 'px' : '100%'}
 	style:height={$props.height ? $props.height + 'px' : '100%'}
 	style:cursor={$props.pannable ? 'move' : 'default'}
-	onwheel|preventDefault={handleScroll}
-	onmousedown|preventDefault|self={onMouseDown}
-	ontouchend|preventDefault={onMouseUp}
-	ontouchstart|preventDefault|self={onTouchStart}
+	onwheel={handleScroll}
+	onmousedown={onMouseDown}
+	ontouchend={onMouseUp}
+	ontouchstart={onTouchStart}
 	onkeydown={handleKeyDown}
 	onkeyup={handleKeyUp}
 	bind:this={$graphDOMElement}
