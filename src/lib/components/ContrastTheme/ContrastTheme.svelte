@@ -75,7 +75,7 @@
 		</div>
 		<div>
 			<label for="customTextColor">Edge</label>
-			<input type="color" id="customEdgeColor" bind:value={$props.edgeColor} />
+			<input type="color" id="customEdgeColor} />
 		</div>
 		<button
 			onclick={() => {

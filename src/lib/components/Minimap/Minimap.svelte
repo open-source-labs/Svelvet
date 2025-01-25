@@ -6,44 +6,71 @@
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
 
+	const graph = getContext<Graph>('graph');
+	const width = 100;
+	const height = width;
+	const buffer = 0.9;
+	const maxWidth = width * buffer;
+	const maxHeight = height * buffer;
+	const graphBounds = graph.bounds.graphBounds;
+	const nodes = graph.nodes;
+	const groups = graph.groups;
+	const transforms = graph.transforms;
+	const dimensions = graph.dimensions;
+	const hidden = groups.hidden.nodes;
+	const scale = transforms.scale;
+	const translation = transforms.translation;
+	const groupBoxes = graph.groupBoxes;
+	let e = { clientX: 0, clientY: 0 };
+
+	$props = {
+		width,
+		height,
+		mapColor: null,
+		nodeColor: null,
+		borderColor: null,
+		corner: 'SE',
+		hideable: false
+	};
+
 	$state = {
-		graph: getContext<Graph>('graph'),
-		width: 100,
-		height: width,
+		graph,
+		width,
+		height,
 		mapColor: null,
 		nodeColor: null,
 		borderColor: null,
 		corner: 'SE',
 		hideable: false,
-		buffer: 0.9,
-		maxWidth: width * buffer,
-		maxHeight: height * buffer,
-		graphBounds: graph.bounds.graphBounds,
-		nodes: graph.nodes,
-		groups: graph.groups,
-		transforms: graph.transforms,
-		dimensions: graph.dimensions,
-		hidden: $groups.hidden.nodes,
-		scale: transforms.scale,
-		translation: transforms.translation,
-		groupBoxes: graph.groupBoxes,
-		e: { clientX: 0, clientY: 0 }
+		buffer,
+		maxWidth,
+		maxHeight,
+		graphBounds,
+		nodes,
+		groups,
+		transforms,
+		dimensions,
+		hidden,
+		scale,
+		translation,
+		groupBoxes,
+		e
 	};
 
-	$derived bounds = $graphBounds;
+	$derived bounds = graphBounds;
 	$derived top = bounds.top;
 	$derived left = bounds.left;
 	$derived right = bounds.right;
 	$derived bottom = bounds.bottom;
-	$derived graphWidth = $dimensions.width;
-	$derived graphHeight = $dimensions.height;
+	$derived graphWidth = dimensions.width;
+	$derived graphHeight = dimensions.height;
 	$derived boundsWidth = right - left;
 	$derived boundsHeight = bottom - top;
 	$derived boundsRatio = boundsWidth / boundsHeight;
 	$derived minimapRatio = width / height;
-	$derived window = calculateRelativeCursor(e, 0, 0, graphWidth, graphHeight, $scale, $translation);
-	$derived windowWidth = graphWidth / boundsWidth / $scale;
-	$derived windowHeight = graphHeight / boundsHeight / $scale;
+	$derived window = calculateRelativeCursor(e, 0, 0, graphWidth, graphHeight, scale, translation);
+	$derived windowWidth = graphWidth / boundsWidth / scale;
+	$derived windowHeight = graphHeight / boundsHeight / scale;
 	$derived windowTop = (window.y - top) / boundsHeight;
 	$derived windowLeft = (window.x - left) / boundsWidth;
 	$derived windowStyle = `
@@ -58,23 +85,13 @@
 	$derived scaledBoundsWidth = boundsWidth * boundsScale;
 	$derived scaledBoundsHeight = boundsHeight * boundsScale;
 
-	$props = {
-		width,
-		height,
-		mapColor,
-		nodeColor,
-		borderColor,
-		corner,
-		hideable
-	};
-
 	function toggleHidden(node: Node) {
 		if ($hidden.has(node)) {
 			$hidden.delete(node);
 		} else {
 			$hidden.add(node);
 		}
-		 $hidden = $hidden;
+		$hidden = $hidden;
 	}
 </script>
 

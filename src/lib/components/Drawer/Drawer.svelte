@@ -3,64 +3,58 @@
 	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
+	import { writable } from 'svelte/store';
 
-	// Props
-	$props = {
-		width: 0,
-		height: 0,
-		minimap: false,
-		translation: { x: 0, y: 0 },
-		controls: false,
-		edge: null,
-		edgeStyle: 'bezier',
-		snapTo: 0,
-		editable: false,
-		fitView: false,
-		locked: false,
-		zoom: 1,
-		theme: 'light',
-		mermaid: '',
-		mermaidConfig: {},
-		TD: false,
-		disableSelection: false,
-		raiseEdgesOnSelect: false,
-		modifier: 'meta',
-		trackpadPan: false,
-		toggle: false
-	};
+	export let width: number;
+	export let height: number;
+	export let minimap: boolean;
+	export let translation: XYPair;
+	export let controls: boolean;
+	export let edge: ComponentType;
+	export let edgeStyle: EdgeStyle;
+	export let snapTo: number;
+	export let editable: boolean;
+	export let fitView: boolean;
+	export let locked: boolean;
+	export let zoom: number;
+	export let theme: string;
+	export let mermaid: string;
+	export let mermaidConfig: object;
+	export let TD: boolean;
+	export let disableSelection: boolean;
+	export let raiseEdgesOnSelect: boolean;
+	export let modifier: string;
+	export let trackpadPan: boolean;
+	export let toggle: boolean;
 
-	// Store props in object to be passed to svelvet
-	const svelvetProps: SvelvetConfig = {
-		width: $props.width,
-		height: $props.height,
-		minimap: $props.minimap,
-		translation: $props.translation,
-		controls: $props.controls,
-		edge: $props.edge,
-		edgeStyle: $props.edgeStyle,
-		snapTo: $props.snapTo,
-		editable: $props.editable,
-		fitView: $props.fitView,
-		locked: $props.locked,
-		zoom: $props.zoom,
-		theme: $props.theme,
-		mermaid: $props.mermaid,
-		mermaidConfig: $props.mermaidConfig,
-		TD: $props.TD,
-		disableSelection: $props.disableSelection,
-		raiseEdgesOnSelect: $props.raiseEdgesOnSelect,
-		modifier: $props.modifier,
-		trackpadPan: $props.trackpadPan,
-		toggle: $props.toggle
-	};
-
-	// Array of default and custom nodes, anchors
 	$state = {
+		svelvetProps: {
+			width,
+			height,
+			minimap,
+			translation,
+			controls,
+			edge,
+			edgeStyle,
+			snapTo,
+			editable,
+			fitView,
+			locked,
+			zoom,
+			theme,
+			mermaid,
+			mermaidConfig,
+			TD,
+			disableSelection,
+			raiseEdgesOnSelect,
+			modifier,
+			trackpadPan,
+			toggle
+		},
 		defaultNodes: [],
 		dropped_in: false
 	};
 
-	// Drag and drop events
 	const handleDragEnter = (): void => {
 		if (!$state.dropped_in) $state.dropped_in = true;
 	};
@@ -76,7 +70,6 @@
 
 	const handleDrop = (e: MouseEvent): void => {
 		e.stopPropagation();
-		//Issue click event
 		const moveEvent = new MouseEvent('mousemove', {
 			clientX: e.clientX,
 			clientY: e.clientY,
@@ -97,58 +90,50 @@
 	ondragover={onDragOver}
 	ondrop={handleDrop}
 >
-	<Svelvet {...svelvetProps} drawer>
+	<Svelvet {...$state.svelvetProps} drawer>
 		{#each $state.defaultNodes as { anchors, edgeProps, ...nodeProps }}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
-					<slot slot="anchorWest">
-						{#each anchors.left as leftAnchorProps}
-							{#if edgeProps}
-								<Anchor {...leftAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...leftAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorEast">
-						{#each anchors.right as rightAnchorProps}
-							{#if edgeProps}
-								<Anchor {...rightAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...rightAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorNorth">
-						{#each anchors.top as topAnchorProps}
-							{#if edgeProps}
-								<Anchor {...topAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...topAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorSouth">
-						{#each anchors.bottom as bottomAnchorProps}
-							{#if edgeProps}
-								<Anchor {...bottomAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...bottomAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
+					{#each anchors.left as leftAnchorProps}
+						{#if edgeProps}
+							<Anchor {...leftAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...leftAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.right as rightAnchorProps}
+						{#if edgeProps}
+							<Anchor {...rightAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...rightAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.top as topAnchorProps}
+						{#if edgeProps}
+							<Anchor {...topAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...topAnchorProps} />
+						{/if}
+					{/each}
+					{#each anchors.bottom as bottomAnchorProps}
+						{#if edgeProps}
+							<Anchor {...bottomAnchorProps}>
+								<Edge {...edgeProps} />
+							</Anchor>
+						{:else}
+							<Anchor {...bottomAnchorProps} />
+						{/if}
+					{/each}
 					{#each anchors.self as anchorProps}
 						{#if edgeProps}
 							<Anchor {...anchorProps}>
-								<Edge {...edgeProps} slot="edge" />
+								<Edge {...edgeProps} />
 							</Anchor>
 						{:else}
 							<Anchor {...anchorProps} />
@@ -160,10 +145,9 @@
 			{/if}
 		{/each}
 
-		<slot />
-		<slot name="minimap" slot="minimap" />
-		<slot name="controls" slot="controls" />
-		<!-- <slot name="background" slot='background'></slot>  -->
-		<slot name="toggle" slot="toggle" />
+		{@render children}
+		{@render $props.minimap as minimap}
+		{@render $props.controls as controls}
+		{@render $props.toggle as toggle}
 	</Svelvet>
 </div>

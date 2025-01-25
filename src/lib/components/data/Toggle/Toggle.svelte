@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { CustomWritable } from '$lib/types';
-	import type { CSSColorString } from '$lib/types';
-
 	$props = {
 		parameterStore: null,
 		color: 'limegreen'
+	};
+
+	$state = {
+		parameterStore: $props.parameterStore
 	};
 
 	const handleKeyToggle = (event: KeyboardEvent) => {
