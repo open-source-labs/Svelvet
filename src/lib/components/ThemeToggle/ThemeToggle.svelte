@@ -12,7 +12,9 @@
 		altIcon: 'dark_mode',
 		corner: 'NE',
 		bgColor: null,
-		iconColor: null
+		iconColor: null,
+		onToggleTheme: null,
+		onSave: null
 	};
 
 	$state = {
@@ -33,6 +35,8 @@
 
 		// Save the current theme to Local Storage
 		localStorage.setItem('currentTheme', newTheme);
+
+		if ($props.onToggleTheme) $props.onToggleTheme(newTheme);
 	}
 
 	onMount(() => {
@@ -82,6 +86,7 @@
 		class="save-button NW"
 		onclick={() => {
 			getJSONState(graph);
+			if ($props.onSave) $props.onSave();
 		}}>Save</button
 	>
 </div>

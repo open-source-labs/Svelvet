@@ -12,7 +12,12 @@
 		horizontal: false,
 		bgColor: null,
 		iconColor: null,
-		corner: 'SW'
+		corner: 'SW',
+		onZoomIn: null,
+		onZoomOut: null,
+		onFitView: null,
+		onLock: null,
+		onUnhideAll: null
 	};
 
 	const transforms = getContext<Graph['transforms']>('transforms');
@@ -29,14 +34,17 @@
 
 	function unhideAll() {
 		hidden.set(new Set());
+		if ($props.onUnhideAll) $props.onUnhideAll();
 	}
 
 	function zoomIn() {
 		zoomAndTranslate(-1, dimensions, transforms, $props.increment);
+		if ($props.onZoomIn) $props.onZoomIn();
 	}
 
 	function zoomOut() {
 		zoomAndTranslate(1, dimensions, transforms, $props.increment);
+		if ($props.onZoomOut) $props.onZoomOut();
 	}
 
 	function fitView() {
@@ -45,11 +53,13 @@
 		translation.set({ x: x || 0, y: y || 0 });
 		transforms.scale.set(scale || 1);
 		tracking.set(false);
+		if ($props.onFitView) $props.onFitView();
 	}
 
 	function lock() {
 		// Toggle lock boolean
 		$locked = !$locked;
+		if ($props.onLock) $props.onLock();
 	}
 </script>
 
