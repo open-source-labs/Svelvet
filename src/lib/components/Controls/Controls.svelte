@@ -7,6 +7,14 @@
 	import { tracking } from '$lib/stores';
 	import Icon from '$lib/assets/icons/Icon.svelte';
 
+	const transforms = getContext<Graph['transforms']>('transforms');
+	const dimensions = getContext<Graph['dimensions']>('dimensions');
+	const locked = getContext<Graph['locked']>('locked');
+	const groups = getContext<Graph['groups']>('groups');
+	const bounds = getContext<Graph['bounds']>('bounds');
+
+	const { translation } = transforms;
+
 	$props = {
 		increment: 0.1,
 		horizontal: false,
@@ -20,20 +28,10 @@
 		onUnhideAll: null
 	};
 
-	const transforms = getContext<Graph['transforms']>('transforms');
-	const dimensions = getContext<Graph['dimensions']>('dimensions');
-	const locked = getContext<Graph['locked']>('locked');
-	const groups = getContext<Graph['groups']>('groups');
-	const bounds = getContext<Graph['bounds']>('bounds');
-
-	const { translation } = transforms;
-
 	$derived hidden = $groups.hidden.nodes;
 
-	const nodeBounds = bounds.nodeBounds;
-
 	function unhideAll() {
-		hidden.set(new Set());
+		$hidden = new Set();
 		if ($props.onUnhideAll) $props.onUnhideAll();
 	}
 
@@ -57,7 +55,6 @@
 	}
 
 	function lock() {
-		// Toggle lock boolean
 		$locked = !$locked;
 		if ($props.onLock) $props.onLock();
 	}
