@@ -5,64 +5,68 @@
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
 
 	// Props
-	export let width = 0;
-	export let height = 0;
-	export let minimap = false;
-	export let translation: XYPair = { x: 0, y: 0 };
-	export let controls = false;
-	export let edge: ComponentType | null = null;
-	export let edgeStyle: EdgeStyle = 'bezier';
-	export let snapTo = 0;
-	export let editable = false;
-	export let fitView: boolean | 'resize' = false;
-	export let locked = false;
-	export let zoom = 1;
-	export let theme = 'light';
-	export let mermaid = '';
-	export let mermaidConfig: Record<string, NodeConfig> = {};
-	export let TD = false;
-	export let disableSelection = false;
-	export let raiseEdgesOnSelect: boolean | 'source' | 'target' = false;
-	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
-	export let trackpadPan = false;
-	export let toggle = false;
+	$props = {
+		width: 0,
+		height: 0,
+		minimap: false,
+		translation: { x: 0, y: 0 },
+		controls: false,
+		edge: null,
+		edgeStyle: 'bezier',
+		snapTo: 0,
+		editable: false,
+		fitView: false,
+		locked: false,
+		zoom: 1,
+		theme: 'light',
+		mermaid: '',
+		mermaidConfig: {},
+		TD: false,
+		disableSelection: false,
+		raiseEdgesOnSelect: false,
+		modifier: 'meta',
+		trackpadPan: false,
+		toggle: false
+	};
 
 	// Store props in object to be passed to svelvet
 	const svelvetProps: SvelvetConfig = {
-		width,
-		height,
-		minimap,
-		translation,
-		controls,
-		edge,
-		edgeStyle,
-		snapTo,
-		editable,
-		fitView,
-		locked,
-		zoom,
-		theme,
-		mermaid,
-		mermaidConfig,
-		TD,
-		disableSelection,
-		raiseEdgesOnSelect,
-		modifier,
-		trackpadPan,
-		toggle
+		width: $props.width,
+		height: $props.height,
+		minimap: $props.minimap,
+		translation: $props.translation,
+		controls: $props.controls,
+		edge: $props.edge,
+		edgeStyle: $props.edgeStyle,
+		snapTo: $props.snapTo,
+		editable: $props.editable,
+		fitView: $props.fitView,
+		locked: $props.locked,
+		zoom: $props.zoom,
+		theme: $props.theme,
+		mermaid: $props.mermaid,
+		mermaidConfig: $props.mermaidConfig,
+		TD: $props.TD,
+		disableSelection: $props.disableSelection,
+		raiseEdgesOnSelect: $props.raiseEdgesOnSelect,
+		modifier: $props.modifier,
+		trackpadPan: $props.trackpadPan,
+		toggle: $props.toggle
 	};
 
 	// Array of default and custom nodes, anchors
-	let defaultNodes: NodeDrawerConfig[] = [];
-	let dropped_in: boolean;
+	$state = {
+		defaultNodes: [],
+		dropped_in: false
+	};
 
 	// Drag and drop events
 	const handleDragEnter = (): void => {
-		if (!dropped_in) dropped_in = true;
+		if (!$state.dropped_in) $state.dropped_in = true;
 	};
 
 	const handleDragLeave = (): void => {
-		dropped_in = false;
+		$state.dropped_in = false;
 	};
 
 	const onDragOver = (e: DragEvent): boolean => {
@@ -81,20 +85,20 @@
 		const target = e.target as HTMLElement;
 		target.dispatchEvent(moveEvent);
 
-		defaultNodes = $defaultNodePropsStore;
+		$state.defaultNodes = $defaultNodePropsStore;
 	};
 </script>
 
 <div
 	role="presentation"
 	class="drop_zone"
-	on:dragenter={handleDragEnter}
-	on:dragleave={handleDragLeave}
-	on:dragover={onDragOver}
-	on:drop={handleDrop}
+	ondragenter={handleDragEnter}
+	ondragleave={handleDragLeave}
+	ondragover={onDragOver}
+	ondrop={handleDrop}
 >
 	<Svelvet {...svelvetProps} drawer>
-		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
+		{#each $state.defaultNodes as { anchors, edgeProps, ...nodeProps }}
 			{#if anchors}
 				<Node {...nodeProps} drop="cursor">
 					<slot slot="anchorWest">

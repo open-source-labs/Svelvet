@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
-	import { createEventDispatcher, onMount, setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { createGraph } from '$lib/utils/';
 	import { graphStore } from '$lib/stores';
 	import { reloadStore } from '$lib/utils/savers/reloadStore';
@@ -19,148 +19,104 @@
 
 <script lang="ts">
 	// Props
-	export let mermaid = '';
-	/**
-	 * @default light
-	 * @description This prop is used to interface with custom style blocks created using CSS. You can create any number of
-	 * themes with the following selector `:root[svelvet-theme="your-theme"]` and then pass the name of your theme
-	 * to this prop to apply it to the graph. Please see the docs for the CSS variables options. Svelvet reserves the "light" and "dark" themes for
-	 * internal use.
-	 */
-	export let theme = 'light';
-	export let id: number | string = 0;
-	export let snapTo = 0;
-	/**
-	 * @default 1
-	 * @description Sets initial zoom level of the graph. This value
-	 * features two way binding, so changing it will update the zoom.
-	 */
-	export let zoom = 1;
-	export let TD = false;
-	export let editable = true;
-	export let locked = false;
-	export let width = 0;
-	export let height = 0;
-	export let minimap = false;
-	export let controls = false;
-	export let toggle = false;
-	export let drawer = false;
-	export let contrast = false;
-	/**
-	 * @default `false`
-	 * @description When `true`, the graph will automatically adjust translation
-	 * and scale to fit all nodes within the viewport. When set to `resize`, this
-	 * will continuously happen as the viewport changes size. This value is reactive.
-	 */
-	export let fitView: boolean | 'resize' = false;
-	/**
-	 * @default 'lightblue'
-	 * @description Color of the box used to select/group nodes
-	 */
-	export let selectionColor: CSSColorString = 'lightblue';
-	export let edgeStyle: EdgeStyle = 'bezier';
-	export let endStyles: Array<EndStyle> = [null, null];
-	export let edge: ComponentType | null = null;
-	/**
-	 * @default false
-	 * @description Boolean controlling whether or not Shift + Click enables the selection of multiple components.
-	 * This feature is enabled by default.
-	 */
-	export let disableSelection = false;
-	export let mermaidConfig: Record<string, NodeConfig> = {};
-	/**
-	 * @default { x: 0, y: 0 }
-	 * @type { x: number, y: number }
-	 * @description The initial translation of the graph. This value
-	 * does not currently feature two way binding
-	 */
-	export let translation: XYPair = { x: 0, y: 0 };
-	export let trackpadPan = false;
-	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta' = 'meta';
-	/**
-	 * @default false
-	 * @description When a Node is selected, this prop controls whether the
-	 * z-index of a connected edge should be raised.
-	 * Setting to `true` raises the edge regardless of
-	 * if the source or target is selected.
-	 */
-	export let raiseEdgesOnSelect: boolean | 'source' | 'target' = false;
-	/**
-	 * @default false
-	 * @description Sets whether edges should, by default,
-	 * be placed above or below connected Nodes. Can be set
-	 * to `all` to force Edges above all nodes. Otherwise,
-	 * true essentially turns on `raiseEdgesOnSelect`, but places the
-	 * edges at higher z-Index than the Node.
-	 */
-	export let edgesAboveNode: boolean | 'all' = false;
-	export let title = '';
-	/**
-	 * @default false
-	 * @description Prevents the graph scale/zoom from changing.
-	 */
-	export let fixedZoom = false;
-	/**
-	 * @default true
-	 * @description Prevents the graph from panning on click if false
-	 */
-	export let pannable = true;
+	$props = {
+		mermaid: '',
+		theme: 'light',
+		id: 0,
+		snapTo: 0,
+		zoom: 1,
+		TD: false,
+		editable: true,
+		locked: false,
+		width: 0,
+		height: 0,
+		minimap: false,
+		controls: false,
+		toggle: false,
+		drawer: false,
+		contrast: false,
+		fitView: false,
+		selectionColor: 'lightblue',
+		edgeStyle: 'bezier',
+		endStyles: [null, null],
+		edge: null,
+		disableSelection: false,
+		mermaidConfig: {},
+		translation: { x: 0, y: 0 },
+		trackpadPan: false,
+		modifier: 'meta',
+		raiseEdgesOnSelect: false,
+		edgesAboveNode: false,
+		title: '',
+		fixedZoom: false,
+		pannable: true
+	};
 
-	const dispatch = createEventDispatcher<{
-		connection: SvelvetConnectionEvent;
-		disconnection: SvelvetConnectionEvent;
-	}>();
+	$state = {
+		graph: null,
+		direction: $props.TD ? 'TD' : 'LR',
+		backgroundExists: false,
+		edgeStore: null
+	};
 
-	// let graph: GraphType;
-	let graph: GraphType | null = null;
-	let direction: 'TD' | 'LR' = TD ? 'TD' : 'LR';
-
-	setContext('snapTo', snapTo);
-	setContext('edgeStyle', edgeStyle);
-	setContext('endStyles', endStyles);
-	setContext('graphEdge', edge);
-	setContext('raiseEdgesOnSelect', raiseEdgesOnSelect);
-	setContext('edgesAboveNode', edgesAboveNode);
-	setContext('graph', graph);
+	setContext('snapTo', $props.snapTo);
+	setContext('edgeStyle', $props.edgeStyle);
+	setContext('endStyles', $props.endStyles);
+	setContext('graphEdge', $props.edge);
+	setContext('raiseEdgesOnSelect', $props.raiseEdgesOnSelect);
+	setContext('edgesAboveNode', $props.edgesAboveNode);
+	setContext('graph', $state.graph);
 
 	// function to load a graph from local storage
 	// occurs after Svelvet renders
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
-		// console.log('stateObject during onMount:', stateObject);
 		if (stateObject) {
-			graph = reloadStore(stateObject);
-			graphStore.add(graph, graph.id);
+			$state.graph = reloadStore(stateObject);
+			graphStore.add($state.graph, $state.graph.id);
 		} else {
-			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
+			let graphKey: GraphKey = `G-${$props.id || graphStore.count() + 1}`;
 
-			graph = createGraph(graphKey, { zoom, direction, editable, locked, translation });
+			$state.graph = createGraph(graphKey, {
+				zoom: $props.zoom,
+				direction: $state.direction,
+				editable: $props.editable,
+				locked: $props.locked,
+				translation: $props.translation
+			});
 
-			graphStore.add(graph, graphKey);
+			graphStore.add($state.graph, graphKey);
 		}
-		// setContext('graph', graph)
-		// added console.log
-
-		// console.log('Graph after onMount:', graph);
-		// graphStore.set(graph);
 	});
 
-	$: backgroundExists = $$slots.background;
+	$effect(() => {
+		$state.backgroundExists = $$slots.background;
+	});
 
-	$: edgeStore = graph && graph.edges;
+	$effect(() => {
+		$state.edgeStore = $state.graph && $state.graph.edges;
+	});
 
-	$: if (graph) graph.transforms.scale.set(zoom);
+	$effect(() => {
+		if ($state.graph) $state.graph.transforms.scale.set($props.zoom);
+	});
 
-	$: if (edgeStore) {
-		edgeStore.onEdgeChange((edge, type) => {
-			dispatch(type, {
-				sourceAnchor: edge.source as Anchor,
-				targetAnchor: edge.target as Anchor,
-				sourceNode: edge.source.node as Node,
-				targetNode: edge.target.node as Node
+	$effect(() => {
+		if ($state.edgeStore) {
+			$state.edgeStore.onEdgeChange((edge, type) => {
+				dispatchEvent(
+					new CustomEvent(type, {
+						detail: {
+							sourceAnchor: edge.source as Anchor,
+							targetAnchor: edge.target as Anchor,
+							sourceNode: edge.source.node as Node,
+							targetNode: edge.target.node as Node
+						}
+					})
+				);
 			});
-		});
-	}
+		}
+	});
 
 	/**
 	 * @description Disconnects two nodes
@@ -173,29 +129,29 @@
 		target: [string | number, string | number]
 	) {
 		const sourceNodeKey: NodeKey = `N-${source[0]}`;
-		const sourceNode = graph.nodes.get(sourceNodeKey);
+		const sourceNode = $state.graph.nodes.get(sourceNodeKey);
 		if (!sourceNode) return;
 		const sourceAnchor = sourceNode.anchors.get(`A-${source[1]}/N-${source[0]}`);
 		if (!sourceAnchor) return;
 		const targetNodeKey: NodeKey = `N-${target[0]}`;
-		const targetNode = graph.nodes.get(targetNodeKey);
+		const targetNode = $state.graph.nodes.get(targetNodeKey);
 		if (!targetNode) return;
 		const targetAnchor = targetNode.anchors.get(`A-${target[1]}/N-${target[0]}`);
 		if (!targetAnchor) return;
-		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
+		const edgeKey = $state.graph.edges.match(sourceAnchor, targetAnchor);
 		if (!edgeKey) return;
-		graph.edges.delete(edgeKey[0]);
+		$state.graph.edges.delete(edgeKey[0]);
 	}
 </script>
 
-{#if graph}
+{#if $state.graph}
 	<Graph
 		{width}
 		{height}
 		{toggle}
 		{backgroundExists}
 		{minimap}
-		{graph}
+		graph={$state.graph}
 		{fitView}
 		{fixedZoom}
 		{pannable}
@@ -208,10 +164,10 @@
 		{modifier}
 		{title}
 		{contrast}
-		on:edgeDrop
+		onedgeDrop
 	>
-		{#if mermaid.length}
-			<FlowChart {mermaid} {mermaidConfig} />
+		{#if $props.mermaid.length}
+			<FlowChart mermaid={$props.mermaid} mermaidConfig={$props.mermaidConfig} />
 		{/if}
 		<slot />
 		<slot name="minimap" slot="minimap" />
@@ -224,8 +180,8 @@
 {:else}
 	<div
 		class="svelvet-temp"
-		style:width={width ? width + 'px' : '100%'}
-		style:height={height ? height + 'px' : '100%'}
+		style:width={$props.width ? $props.width + 'px' : '100%'}
+		style:height={$props.height ? $props.height + 'px' : '100%'}
 	/>
 {/if}
 
@@ -561,121 +517,9 @@
 
 		--default-edge-color: #ffff00;
 		--default-target-edge-color: #000000;
-		--default-edge-shadow: var(--shadow-elevation-medium);
+		--default-edge-shadow: var (--shadow-elevation-medium);
 		--default-label-color: #ffff00;
 		--default-label-text-color: #000000;
-
-		--plugin-border: #ffff00;
-		--default-controls-border: var(--plugin-border);
-		--default-minimap-border: var(--plugin-border);
-		--default-theme-toggle-border: var(--plugin-border);
-
-		--default-anchor-color: #ffff00;
-		--default-anchor-border-color: #000000;
-
-		--default-anchor-connected: #ffff00;
-		--default-anchor-connected-border: #000000;
-
-		--default-anchor-connecting: #ffff00;
-		--default-anchor-connecting-border: #000000;
-
-		--default-anchor-hovering: #ffff00;
-		--default-anchor-hovering-border: #000000;
-
-		--default-minimap-background-color: #000000;
-		--default-minimap-node-color: #ffff00;
-
-		--default-controls-background-color: #000000;
-		--default-controls-text-color: #ffff00;
-
-		--default-theme-toggle-text-color: #ffff00;
-		--default-theme-toggle-color: #000000;
-
-		--default-drawer-button-color: #000000;
-		--default-drawer-button-text-color: #ffff00;
-
-		--default-drawer-reset-button-color: #000000;
-		--default-drawer-reset-button-text-color: #ffff00;
-		--default-drawer-reset-button-hover-color: #ffff00;
-		--default-drawer-reset-button-hover-text-color: #000000;
-	}
-
-	:root[svelvet-theme='Black/Green'] {
-		--default-node-color: #000000;
-		--default-node-border-color: #00ff00;
-		--default-node-selection-color: #00ff00;
-		--default-text-color: #00ff00;
-		--default-node-shadow: var(--shadow-elevation-medium);
-
-		--default-background-color: #000000;
-		--default-dot-color: #00ff00;
-
-		--default-accent-color: #00ff00;
-		--default-primary-color: #000000;
-
-		--default-selection-box-color: #00ff00;
-
-		--default-edge-color: #00ff00;
-		--default-target-edge-color: #000000;
-		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #00ff00;
-		--default-label-text-color: #000000;
-
-		--plugin-border: #00ff00;
-		--default-controls-border: var(--plugin-border);
-		--default-minimap-border: var(--plugin-border);
-		--default-theme-toggle-border: var(--plugin-border);
-
-		--default-anchor-color: #00ff00;
-		--default-anchor-border-color: #000000;
-
-		--default-anchor-connected: #00ff00;
-		--default-anchor-connected-border: #000000;
-
-		--default-anchor-connecting: #00ff00;
-		--default-anchor-connecting-border: #000000;
-
-		--default-anchor-hovering: #00ff00;
-		--default-anchor-hovering-border: #000000;
-
-		--default-minimap-background-color: #000000;
-		--default-minimap-node-color: #00ff00;
-
-		--default-controls-background-color: #000000;
-		--default-controls-text-color: #00ff00;
-
-		--default-theme-toggle-text-color: #00ff00;
-		--default-theme-toggle-color: #000000;
-
-		--default-drawer-button-color: #000000;
-		--default-drawer-button-text-color: #00ff00;
-
-		--default-drawer-reset-button-color: #000000;
-		--default-drawer-reset-button-text-color: #00ff00;
-		--default-drawer-reset-button-hover-color: #00ff00;
-		--default-drawer-reset-button-hover-text-color: #000000;
-	}
-
-	:root[svelvet-theme='Blue/Yellow'] {
-		--default-node-color: #0000ff;
-		--default-node-border-color: #ffff00;
-		--default-node-selection-color: #ffff00;
-		--default-text-color: #ffff00;
-		--default-node-shadow: var(--shadow-elevation-medium);
-
-		--default-background-color: #0000ff;
-		--default-dot-color: #ffff00;
-
-		--default-accent-color: #ffff00;
-		--default-primary-color: #0000ff;
-
-		--default-selection-box-color: #ffff00;
-
-		--default-edge-color: #ffff00;
-		--default-target-edge-color: #0000ff;
-		--default-edge-shadow: var(--shadow-elevation-medium);
-		--default-label-color: #ffff00;
-		--default-label-text-color: #0000ff;
 
 		--plugin-border: #ffff00;
 		--default-controls-border: var(--plugin-border);

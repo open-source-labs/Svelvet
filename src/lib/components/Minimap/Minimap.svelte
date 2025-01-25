@@ -6,69 +6,67 @@
 	import type { Node } from '$lib/types';
 	import { calculateRelativeCursor } from '$lib/utils';
 
-	let graph: Graph = getContext<Graph>('graph');
+	$state = {
+		graph: getContext<Graph>('graph'),
+		width: 100,
+		height: width,
+		mapColor: null,
+		nodeColor: null,
+		borderColor: null,
+		corner: 'SE',
+		hideable: false,
+		buffer: 0.9,
+		maxWidth: width * buffer,
+		maxHeight: height * buffer,
+		graphBounds: graph.bounds.graphBounds,
+		nodes: graph.nodes,
+		groups: graph.groups,
+		transforms: graph.transforms,
+		dimensions: graph.dimensions,
+		hidden: $groups.hidden.nodes,
+		scale: transforms.scale,
+		translation: transforms.translation,
+		groupBoxes: graph.groupBoxes,
+		e: { clientX: 0, clientY: 0 }
+	};
 
-	export let width = 100;
-	export let height = width;
-	export let mapColor: CSSColorString | null = null;
-	export let nodeColor: CSSColorString | null = null;
-	export let borderColor: CSSColorString | null = null;
-	export let corner: Corner = 'SE';
-	export let hideable = false;
-
-	const buffer = 0.9;
-	const maxWidth = width * buffer;
-	const maxHeight = height * buffer;
-
-	const graphBounds = graph.bounds.graphBounds;
-	$: bounds = $graphBounds;
-	$: top = bounds.top;
-	$: left = bounds.left;
-	$: right = bounds.right;
-	$: bottom = bounds.bottom;
-
-	const nodes = graph.nodes;
-	const groups = graph.groups;
-	const transforms = graph.transforms;
-	const dimensions = graph.dimensions;
-	const hidden = $groups.hidden.nodes;
-	const scale = transforms.scale;
-	const translation = transforms.translation;
-	const groupBoxes = graph.groupBoxes;
-
-	$: graphWidth = $dimensions.width;
-	$: graphHeight = $dimensions.height;
-
-	$: boundsWidth = right - left;
-	$: boundsHeight = bottom - top;
-	$: boundsRatio = boundsWidth / boundsHeight;
-
-	$: minimapRatio = width / height;
-
-	$: window = calculateRelativeCursor(e, 0, 0, graphWidth, graphHeight, $scale, $translation);
-
-	$: windowWidth = graphWidth / boundsWidth / $scale;
-	$: windowHeight = graphHeight / boundsHeight / $scale;
-
-	$: windowTop = (window.y - top) / boundsHeight;
-	$: windowLeft = (window.x - left) / boundsWidth;
-
-	const e = { clientX: 0, clientY: 0 };
-
-	$: windowStyle = `
+	$derived bounds = $graphBounds;
+	$derived top = bounds.top;
+	$derived left = bounds.left;
+	$derived right = bounds.right;
+	$derived bottom = bounds.bottom;
+	$derived graphWidth = $dimensions.width;
+	$derived graphHeight = $dimensions.height;
+	$derived boundsWidth = right - left;
+	$derived boundsHeight = bottom - top;
+	$derived boundsRatio = boundsWidth / boundsHeight;
+	$derived minimapRatio = width / height;
+	$derived window = calculateRelativeCursor(e, 0, 0, graphWidth, graphHeight, $scale, $translation);
+	$derived windowWidth = graphWidth / boundsWidth / $scale;
+	$derived windowHeight = graphHeight / boundsHeight / $scale;
+	$derived windowTop = (window.y - top) / boundsHeight;
+	$derived windowLeft = (window.x - left) / boundsWidth;
+	$derived windowStyle = `
 		top: ${windowTopPx + windowTop * scaledBoundsHeight}px;
 		left: ${windowLeftPx + windowLeft * scaledBoundsWidth}px;
 		width: ${windowWidth * scaledBoundsWidth}px;
 		height: ${windowHeight * scaledBoundsHeight}px;`;
+	$derived landscape = boundsRatio >= minimapRatio;
+	$derived boundsScale = landscape ? maxWidth / boundsWidth : maxHeight / boundsHeight;
+	$derived windowLeftPx = (width - scaledBoundsWidth) / 2;
+	$derived windowTopPx = (height - scaledBoundsHeight) / 2;
+	$derived scaledBoundsWidth = boundsWidth * boundsScale;
+	$derived scaledBoundsHeight = boundsHeight * boundsScale;
 
-	$: landscape = boundsRatio >= minimapRatio;
-	$: boundsScale = landscape ? maxWidth / boundsWidth : maxHeight / boundsHeight;
-
-	$: windowLeftPx = (width - scaledBoundsWidth) / 2;
-	$: windowTopPx = (height - scaledBoundsHeight) / 2;
-
-	$: scaledBoundsWidth = boundsWidth * boundsScale;
-	$: scaledBoundsHeight = boundsHeight * boundsScale;
+	$props = {
+		width,
+		height,
+		mapColor,
+		nodeColor,
+		borderColor,
+		corner,
+		hideable
+	};
 
 	function toggleHidden(node: Node) {
 		if ($hidden.has(node)) {
@@ -76,7 +74,7 @@
 		} else {
 			$hidden.add(node);
 		}
-		$hidden = $hidden;
+		 $hidden = $hidden;
 	}
 </script>
 

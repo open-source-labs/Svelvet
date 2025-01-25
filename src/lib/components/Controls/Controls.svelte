@@ -7,11 +7,13 @@
 	import { tracking } from '$lib/stores';
 	import Icon from '$lib/assets/icons/Icon.svelte';
 
-	export let increment = 0.1;
-	export let horizontal = false;
-	export let bgColor: CSSColorString | null = null;
-	export let iconColor: CSSColorString | null = null;
-	export let corner = 'SW';
+	$props = {
+		increment: 0.1,
+		horizontal: false,
+		bgColor: null,
+		iconColor: null,
+		corner: 'SW'
+	};
 
 	const transforms = getContext<Graph['transforms']>('transforms');
 	const dimensions = getContext<Graph['dimensions']>('dimensions');
@@ -21,7 +23,7 @@
 
 	const { translation } = transforms;
 
-	const hidden = $groups.hidden.nodes;
+	$derived hidden = $groups.hidden.nodes;
 
 	const nodeBounds = bounds.nodeBounds;
 
@@ -30,11 +32,11 @@
 	}
 
 	function zoomIn() {
-		zoomAndTranslate(-1, dimensions, transforms, increment);
+		zoomAndTranslate(-1, dimensions, transforms, $props.increment);
 	}
 
 	function zoomOut() {
-		zoomAndTranslate(1, dimensions, transforms, increment);
+		zoomAndTranslate(1, dimensions, transforms, $props.increment);
 	}
 
 	function fitView() {
@@ -53,34 +55,34 @@
 
 <nav
 	class="graph-controls"
-	class:SW={corner === 'SW'}
-	class:NE={corner === 'NE'}
-	class:SE={corner === 'SE'}
-	class:NW={corner === 'NW'}
+	class:SW={$props.corner === 'SW'}
+	class:NE={$props.corner === 'NE'}
+	class:SE={$props.corner === 'SE'}
+	class:NW={$props.corner === 'NW'}
 	aria-label="navigation"
 >
 	<slot {zoomIn} {zoomOut} {fitView} {lock} {unhideAll}>
 		<div
 			class="controls-wrapper"
 			class:horizontal
-			style:--prop-controls-background-color={bgColor}
-			style:--prop-controls-text-color={iconColor}
+			style:--prop-controls-background-color={$props.bgColor}
+			style:--prop-controls-text-color={$props.iconColor}
 		>
 			{#if $hidden.size > 0}
-				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
+				<button class="unhide" onclick={unhideAll}>
 					<Icon icon="visibility_off" />
 				</button>
 			{/if}
-			<button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
+			<button class="zoom-in" onclick={zoomIn}>
 				<Icon icon="zoom_in" />
 			</button>
-			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
+			<button class="zoom-out" onclick={zoomOut}>
 				<Icon icon="zoom_out" />
 			</button>
-			<button class="reset" on:mousedown|stopPropagation={fitView} on:touchstart={fitView}>
+			<button class="reset" onclick={fitView}>
 				<Icon icon="filter_center_focus" />
 			</button>
-			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
+			<button class="lock" onclick={lock}>
 				<Icon icon={$locked ? 'lock_open' : 'lock'} />
 			</button>
 		</div>

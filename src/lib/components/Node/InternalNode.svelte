@@ -2,7 +2,6 @@
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup } from '$lib/utils';
 	import { getContext, onDestroy, onMount, setContext } from 'svelte';
-	import { createEventDispatcher } from 'svelte';
 	import { get, writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import type { Node, Graph } from '$lib/types';
@@ -16,24 +15,29 @@
 	const duplicate = getContext<Writable<boolean>>('duplicate');
 	const graphDOMElement = getContext<Writable<HTMLElement>>('graphDOMElement');
 
-	const dispatch = createEventDispatcher();
+	const dispatch = (eventName, detail) => {
+		const event = new CustomEvent(eventName, { detail });
+		dispatchEvent(event);
+	};
 
 	// Props
-	export let node: Node;
-	export let isDefault: boolean;
-	export let useDefaults: boolean;
-	export let center: boolean;
-	export let nodeStore: Graph['nodes'];
-	export let locked: Graph['locked'];
-	export let groups: Graph['groups'];
-	export let maxZIndex: Graph['maxZIndex'];
-	export let centerPoint: Graph['center'];
-	export let cursor: Graph['cursor'];
-	export let initialNodePositions: Graph['initialNodePositions'];
-	export let activeGroup: Graph['activeGroup'];
-	export let editing: Graph['editing'];
-	export let dimensionsProvided = false;
-	export let title: string;
+	$props = {
+		node: null,
+		isDefault: false,
+		useDefaults: false,
+		center: false,
+		nodeStore: null,
+		locked: null,
+		groups: null,
+		maxZIndex: null,
+		centerPoint: null,
+		cursor: null,
+		initialNodePositions: null,
+		activeGroup: null,
+		editing: null,
+		dimensionsProvided: false,
+		title: ''
+	};
 
 	// Local stores
 	const anchorsMounted = writable(0);
@@ -61,21 +65,20 @@
 	const resized = writable(false);
 
 	// Reactive variables
-	// let collapsed = false; //not being used
-
-	// Subscriptions
-	$: actualPosition = $position;
-
-	// Reactive declarations
-	$: selected = $selectedNodes.has(node); // Used as class directive
-	$: hidden = $hiddenNodes.has(node); // Used as class directive
-	$: fixedSizing = dimensionsProvided || $resized;
+	$state = {
+		actualPosition: $position,
+		selected: $selectedNodes.has(node),
+		hidden: $hiddenNodes.has(node),
+		fixedSizing: dimensionsProvided || $resized
+	};
 
 	// If the node is selected and the duplicate key pair is pressed
 	// Dispatch the duplicate event
-	$: if (selected && $duplicate) {
-		dispatch('duplicate', node);
-	}
+	$effect(() => {
+		if ($state.selected && $duplicate) {
+			dispatch('duplicate', node);
+		}
+	});
 
 	setContext<Node>('node', node);
 	setContext<Writable<number>>('anchorsMounted', anchorsMounted);
@@ -100,7 +103,7 @@
 	onDestroy(() => {
 		// Remove the node from the selected nodes group
 		// If it is selected
-		if (selected) {
+		if ($state.selected) {
 			$selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		}
@@ -109,7 +112,7 @@
 	});
 
 	function toggleSelected() {
-		if (selected) {
+		if ($state.selected) {
 			if (node) $selectedNodes.delete(node);
 			$selectedNodes = $selectedNodes;
 		} else {
@@ -190,11 +193,11 @@
 		}
 
 		// If you click on a node that is already selected
-		if (!e.shiftKey && selected) {
+		if (!e.shiftKey && $state.selected) {
 			$activeGroup = 'selected';
 		} else {
 			// If you click on a new node outside of the current group, clear the group
-			if (!e.shiftKey && !selected && !e.shiftKey) {
+			if (!e.shiftKey && !$state.selected && !e.shiftKey) {
 				$selectedNodes.clear();
 				$selectedNodes = $selectedNodes;
 			}
@@ -235,19 +238,19 @@
 	}
 </script>
 
-{#if !hidden}
+{#if !$state.hidden}
 	<div
 		{id}
 		class="svelvet-node"
 		role="button"
-		class:selected
+		class:selected={$state.selected}
 		class:locked={$locked || $nodeLock}
 		style:top="{actualPosition.y}px"
 		style:left="{actualPosition.x}px"
 		style:z-index={$zIndex}
 		{title}
-		style:width={fixedSizing ? $widthStore + 'px' : 'fit-content'}
-		style:height={fixedSizing ? $heightStore + 'px' : 'fit-content'}
+		style:width={$state.fixedSizing ? $widthStore + 'px' : 'fit-content'}
+		style:height={$state.fixedSizing ? $heightStore + 'px' : 'fit-content'}
 		style:transform="rotate({$rotation}deg)"
 		style:--prop-background-color={$bgColor || (isDefault || useDefaults ? null : 'transparent')}
 		style:--prop-text-color={$textColor}
@@ -259,12 +262,13 @@
 			? null
 			: '0px'}
 		style:--prop-border-width={$borderWidth || (isDefault || useDefaults ? null : '0px')}
-		on:contextmenu|preventDefault|stopPropagation
-		on:mouseup={onMouseUp}
-		use:grabHandle
+		oncontextmenu|preventDefault|stopPropagation
+		onmouseup={onMouseUp}
+		onmousedown={handleNodeClicked}
+		ontouchstart={handleNodeClicked}
 		tabindex={0}
 	>
-		{#if !fixedSizing}
+		{#if !$state.fixedSizing}
 			<div
 				style:width="fit-content"
 				style:height="fit-content"

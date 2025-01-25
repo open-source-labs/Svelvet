@@ -17,20 +17,22 @@
 
 	const rotation = node.rotation;
 	const cursor = graph.cursor;
-	$: cursorX = $cursor.x;
-	$: cursorY = $cursor.y;
+	$derived cursorX = $cursor.x;
+	$derived cursorY = $cursor.y;
 
-	export let size = 200;
-	export let parameterStore: CustomWritable<CSSColorString>;
+	$props = {
+		size: 200,
+		parameterStore: null
+	};
 
-	let { pickerX, pickerY } = colorToPickerXY($parameterStore, size);
-
-	let picker: HTMLDivElement;
-	let picking = false;
-	let wheel = true;
-
-	let wheelTop = 0;
-	let wheelLeft = 0;
+	$state = {
+		pickerX: colorToPickerXY($props.parameterStore, $props.size).pickerX,
+		pickerY: colorToPickerXY($props.parameterStore, $props.size).pickerY,
+		picking: false,
+		wheel: true,
+		wheelTop: 0,
+		wheelLeft: 0
+	};
 
 	const updatePosition = () => {
 		if (!picker) return;
@@ -51,47 +53,50 @@
 			translation
 		);
 
-		wheelTop = scaled.y;
-		wheelLeft = scaled.x;
+		$state.wheelTop = scaled.y;
+		$state.wheelLeft = scaled.x;
 	};
 
-	$: if (picking) {
-		const offsetX = cursorX - wheelLeft;
-		const offsetY = cursorY - wheelTop;
-		const radius = size / 2;
-		const dx = offsetX - radius;
-		const dy = offsetY - radius;
+	$effect(() => {
+		if ($state.picking) {
+			const offsetX = $cursorX - $state.wheelLeft;
+			const offsetY = $cursorY - $state.wheelTop;
+			const radius = $props.size / 2;
+			const dx = offsetX - radius;
+			const dy = offsetY - radius;
 
-		const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
-		const normalizedDistance = Math.min(distanceFromCenter, radius);
-		const angle = Math.atan2(dy, dx);
+			const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+			const normalizedDistance = Math.min(distanceFromCenter, radius);
+			const angle = Math.atan2(dy, dx);
 
-		const nodeRotationInRadians = $rotation * (Math.PI / 180);
-		const rotatedAngle = angle - nodeRotationInRadians;
+			const nodeRotationInRadians = $rotation * (Math.PI / 180);
+			const rotatedAngle = angle - nodeRotationInRadians;
 
-		const rotatedHue = (((rotatedAngle + Math.PI) / (2 * Math.PI)) * 360) % 360;
-		const adjustedHue =
-			rotatedHue >= 0 ? (rotatedHue > 360 ? 360 - rotatedHue : rotatedHue) : 360 + rotatedHue;
-		const saturation = roundNum((normalizedDistance / radius) * 100);
-		const pickedColor: CSSColorString = `hsl(${roundNum(adjustedHue)}, ${saturation}%, ${
-			50 + (100 - saturation) / 2
-		}%)`;
-		const picker = colorToPickerXY(pickedColor, size);
-		pickerX = picker.pickerX;
-		pickerY = picker.pickerY;
-		$parameterStore = pickedColor;
-	}
+			const rotatedHue = (((rotatedAngle + Math.PI) / (2 * Math.PI)) * 360) % 360;
+			const adjustedHue =
+				rotatedHue >= 0 ? (rotatedHue > 360 ? 360 - rotatedHue : rotatedHue) : 360 + rotatedHue;
+			const saturation = roundNum((normalizedDistance / radius) * 100);
+			const pickedColor: CSSColorString = `hsl(${roundNum(adjustedHue)}, ${saturation}%, ${
+				50 + (100 - saturation) / 2
+			}%)`;
+			const picker = colorToPickerXY(pickedColor, $props.size);
+			$state.pickerX = picker.pickerX;
+			$state.pickerY = picker.pickerY;
+			$props.parameterStore = pickedColor;
+		}
+	});
+
 	function downUp(node: HTMLDivElement) {
 		function onMouseDown(e: MouseEvent) {
 			e.stopPropagation();
 			e.preventDefault();
 			updatePosition();
-			picking = true;
+			$state.picking = true;
 			window.addEventListener('mouseup', onMouseUp);
 		}
 
 		function onMouseUp() {
-			picking = false;
+			$state.picking = false;
 			window.removeEventListener('mouseup', onMouseUp);
 		}
 
@@ -103,6 +108,7 @@
 			}
 		};
 	}
+
 	function colorToPickerXY(
 		color: CSSColorString,
 		size: number
@@ -181,14 +187,14 @@
 
 <div class="wrapper">
 	<div
-		class:picking
-		class:wheel
+		class:picking={$state.picking}
+		class:wheel={$state.wheel}
 		bind:this={picker}
 		use:downUp
-		style:width={size ? `${size}px` : '100%'}
+		style:width={$props.size ? `${$props.size}px` : '100%'}
 		style:aspect-ratio={1 / 1}
 	>
-		<div class="cursor" style:top="{pickerY}px" style:left="{pickerX}px" />
+		<div class="cursor" style:top="{$state.pickerY}px" style:left="{$state.pickerX}px" />
 	</div>
 </div>
 
@@ -213,12 +219,4 @@
 		cursor: crosshair;
 		position: relative;
 	}
-
-	/* .line {
-		position: relative;
-		width: 200px;
-		height: 30px;
-		border-radius: 6px;
-		background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
-	} */
 </style>

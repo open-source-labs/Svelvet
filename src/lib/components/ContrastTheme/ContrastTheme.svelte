@@ -1,86 +1,90 @@
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
 
-	export let contrastThemes = [
-		'Change Theme',
-		'Black/White',
-		'Yellow/Black',
-		'Black/Yellow',
-		'Black/Green',
-		'Blue/Yellow',
-		'Yellow/Blue',
-		'Grayscale',
-		'Black/Pink',
-		'Custom'
-	];
-	export let corner = 'NE';
-	export let bgColor: CSSColorString | null = null;
-	export let textColor: CSSColorString | null = null;
-	export let nodeColor: CSSColorString | null = null;
-	export let edgeColor: CSSColorString | null = null;
+	$props = {
+		contrastThemes: [
+			'Change Theme',
+			'Black/White',
+			'Yellow/Black',
+			'Black/Yellow',
+			'Black/Green',
+			'Blue/Yellow',
+			'Yellow/Blue',
+			'Grayscale',
+			'Black/Pink',
+			'Custom'
+		],
+		corner: 'NE',
+		bgColor: null,
+		textColor: null,
+		nodeColor: null,
+		edgeColor: null
+	};
 
-	let current = contrastThemes[0];
-	let isCustomTheme = false;
+	$state = {
+		current: $props.contrastThemes[0],
+		isCustomTheme: false
+	};
 
 	function changeTheme(event: { target: { value: any } }) {
 		const selectedTheme = event.target.value;
 
 		if (selectedTheme === 'Custom') {
-			isCustomTheme = true;
+			$state.isCustomTheme = true;
 		} else {
-			isCustomTheme = false;
-			bgColor = null;
-			textColor = null;
-			nodeColor = null;
-			edgeColor = null;
-			current = selectedTheme;
+			$state.isCustomTheme = false;
+			$props.bgColor = null;
+			$props.textColor = null;
+			$props.nodeColor = null;
+			$props.edgeColor = null;
+			$state.current = selectedTheme;
 			document.documentElement.setAttribute('svelvet-theme', selectedTheme);
 			updateCustomTheme();
 		}
-		localStorage.setItem('currentTheme', current);
+		localStorage.setItem('currentTheme', $state.current);
 	}
 
 	function updateCustomTheme() {
-		document.documentElement.style.setProperty('--default-background-color', bgColor);
-		document.documentElement.style.setProperty('--default-text-color', textColor);
-		document.documentElement.style.setProperty('--default-node-color', nodeColor);
-		document.documentElement.style.setProperty('--default-edge-color', edgeColor);
+		document.documentElement.style.setProperty('--default-background-color', $props.bgColor);
+		document.documentElement.style.setProperty('--default-text-color', $props.textColor);
+		document.documentElement.style.setProperty('--default-node-color', $props.nodeColor);
+		document.documentElement.style.setProperty('--default-edge-color', $props.edgeColor);
 	}
 </script>
 
-<div class="contrast-wrapper" class:NE={corner === 'NE'} on:input={updateCustomTheme}>
+<div class="contrast-wrapper" class:NE={$props.corner === 'NE'} oninput={updateCustomTheme}>
 	<label for="themeSelector" class="visually-hidden" aria-hidden="true">Select Theme:</label>
-	<select id="themeSelector" on:change={changeTheme} aria-live="polite" aria-label="Select Theme">
-		{#each contrastThemes as contrast (contrast)}
-			<option value={contrast} aria-selected={current === contrast}>{contrast}</option>
+	<select id="themeSelector" onchange={changeTheme} aria-live="polite" aria-label="Select Theme">
+		{#each $props.contrastThemes as contrast (contrast)}
+			<option value={contrast} aria-selected={$state.current === contrast}>{contrast}</option>
 		{/each}
 	</select>
 
-	{#if isCustomTheme}
+	{#if $state.isCustomTheme}
 		<div>
 			<label for="customBgColor">BackGround</label>
-			<input type="color" id="customBgColor" bind:value={bgColor} />
+			<input type="color" id="customBgColor" bind:value={$props.bgColor} />
 		</div>
 		<div>
 			<label for="customTextColor">Text</label>
-			<input type="color" id="customTextColor" bind:value={textColor} />
+			<input type="color" id="customTextColor" bind:value={$props.textColor} />
 		</div>
 		<div>
 			<label for="customTextColor">Node</label>
-			<input type="color" id="customNodeColor" bind:value={nodeColor} />
+			<input type="color" id="customNodeColor" bind:value={$props.nodeColor} />
 		</div>
 		<div>
 			<label for="customTextColor">Edge</label>
-			<input type="color" id="customEdgeColor" bind:value={edgeColor} />
+			<input type="color" id="customEdgeColor" bind:value={$props.edgeColor} />
 		</div>
 		<button
-			on:click={() => {
-				isCustomTheme = false;
-				current = contrastThemes[0];
-				document.documentElement.setAttribute('svelvet-theme', current);
+			onclick={() => {
+				$state.isCustomTheme = false;
+				$state.current = $props.contrastThemes[0];
+				document.documentElement.setAttribute('svelvet-theme', $state.current);
 				let themeSelector = document.getElementById('themeSelector');
 				if (themeSelector) {
-					themeSelector.value = current;
+					themeSelector.value = $state.current;
 				}
 			}}>Close</button
 		>

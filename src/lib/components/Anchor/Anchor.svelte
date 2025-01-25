@@ -5,7 +5,6 @@
 	import { onMount, getContext, onDestroy, afterUpdate } from 'svelte';
 	import { writable, get } from 'svelte/store';
 	import { createEdge, createAnchor, generateOutput } from '$lib/utils/creators';
-	import { createEventDispatcher } from 'svelte';
 	import type {
 		Graph,
 		Node,
@@ -59,65 +58,47 @@
 	const anchorsMounted = getContext<Writable<number>>('anchorsMounted');
 	const flowChart = getContext<object>('flowchart') || undefined;
 
-	export let bgColor: CSSColorString | null = null;
-	export let id: string | number = 0;
-	export let input = false;
-	export let output = false;
-	/**
-	 * @default dependent on `input` and `output` props
-	 * @description When `true`, the Anchor will accept multiple connections. This is set to true by default
-	 * for output anchors or anchors that have not specified an input/output prop.
-	 */
-	export let multiple = output ? true : input ? false : true;
-	/**
-	 * @default 'false'
-	 * @description When `true`, the Anchor will dynamically change its direction
-	 * based on the relative positioning of connected Nodes
-	 */
-	export let dynamic = nodeDynamic || false;
-	export let edge: ComponentType | null = null;
-	export let inputsStore: InputStore | null = null;
-	export let key: string | number | null = null;
-	export let outputStore: OutputStore | null = null;
-	export let connections: Connections = [];
-	export let edgeColor:
-		| Writable<CSSColorString | null>
-		| CustomWritable<CSSColorString>
-		| Readable<CSSColorString> = writable(null);
-	export let edgeLabel = '';
-	/**
-	 * @default 'false'
-	 * @description When `true`, connections and disconnections are not allowed. Updates the cursor on hover.
-	 */
-	export let locked = false;
-	/**
-	 * @default 'false'
-	 * @description When `true`, mouse up events on the parent Node will trigger connections to this Anchor. If this value
-	 * is true for multiple Anchors, connections will be assigned in order, unless an Anchor is set to accept multiple connections.
-	 */
-	export let nodeConnect = false;
-	export let edgeStyle: EdgeStyle | null = null;
-	export let endStyles: Array<EndStyle> = [null, null];
-	/**
-	 * @default 'false'
-	 * @description When `true`, the default Anchor will not be rendered. It is not necessary to set this to true
-	 * when passing custom Anchors as children. It likely only makes sense to use this
-	 * in combination with the  `nodeConnect` prop.
-	 */
-	export let invisible = false;
-	export let direction: Direction =
-		graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east';
-	export let title = '';
+	$props = {
+		bgColor: null,
+		id: 0,
+		input: false,
+		output: false,
+		multiple: output ? true : input ? false : true,
+		dynamic: nodeDynamic || false,
+		edge: null,
+		inputsStore: null,
+		key: null,
+		outputStore: null,
+		connections: [],
+		edgeColor: writable(null),
+		edgeLabel: '',
+		locked: false,
+		nodeConnect: false,
+		edgeStyle: null,
+		endStyles: [null, null],
+		invisible: false,
+		direction: graphDirection === 'TD' ? (input ? 'north' : 'south') : input ? 'west' : 'east',
+		title: ''
+	};
 
-	const dispatchConnection = createEventDispatcher<{ connection: AnchorConnectionEvent }>();
-	const dispatchDisconnection = createEventDispatcher();
+	const dispatchConnection = (event: CustomEvent<{ connection: AnchorConnectionEvent }>) => {
+		const customEvent = new CustomEvent('connection', { detail: event.detail });
+		dispatchEvent(customEvent);
+	};
 
-	let anchorElement: HTMLDivElement;
-	let tracking = false;
-	let hovering = false;
-	let previousConnectionCount = 0;
-	let type: InputType = input === output ? null : input ? 'input' : 'output';
-	let assignedConnections: Connections = [];
+	const dispatchDisconnection = (event: CustomEvent) => {
+		const customEvent = new CustomEvent('disconnection', { detail: event.detail });
+		dispatchEvent(customEvent);
+	};
+
+	let anchorElement;
+	$state = {
+		tracking: false,
+		hovering: false,
+		previousConnectionCount: 0,
+		type: input === output ? null : input ? 'input' : 'output',
+		assignedConnections: []
+	};
 
 	const nodeEdge = node.edge;
 	const anchors = node.anchors;
@@ -126,8 +107,8 @@
 	const rotating = node.rotating;
 	const nodeLevelConnections = node.connections;
 
-	$: connecting = $connectingFrom?.anchor === anchor;
-	$: connectedAnchors = anchor && anchor.connected;
+	$derived connecting = $connectingFrom?.anchor === anchor;
+	$derived connectedAnchors = anchor && anchor.connected;
 
 	const anchorKey: AnchorKey = `A-${id || anchors.count() + 1}/${node.id}`;
 	const anchor = createAnchor(
@@ -156,14 +137,14 @@
 		}, 0);
 
 		if ($nodeLevelConnections?.length && !input) {
-			const remainingConnections: Connections = [];
-			let first: number | null = null;
+			const remainingConnections = [];
+			let first = null;
 			$nodeLevelConnections.forEach((connection, i) => {
 				if (!connection) return;
 				if (first === null) first = i;
 
 				if ((i - first) % outputCount === 0) {
-					assignedConnections.push(connection);
+					 $state.assignedConnections.push(connection);
 					remainingConnections.push(null);
 				} else {
 					remainingConnections.push(connection);
@@ -184,67 +165,71 @@
 		cancelAnimationFrame(animationFrameId);
 	});
 
-	$: dynamicDirection = anchor?.direction;
+	$derived dynamicDirection = anchor?.direction;
 
-	$: if (dynamic && anchorElement) changeAnchorSide(anchorElement, $dynamicDirection, node);
+	$effect(() => {
+		if (dynamic && anchorElement) changeAnchorSide(anchorElement, $dynamicDirection, node);
+	});
 
-	// $: if (!input && $anchorsMounted && $anchorsMounted === node.anchors.count()) {
-	// 	console.log('Popping');
-	// 	const poppedConnections = $nodeLevelConnections?.pop();
-	// 	if (poppedConnections) connections.push(poppedConnections);
-	// 	connections = connections;
-	// }
-
-	$: if ($mounted === nodeStore.count() && connections.length) {
-		checkDirectConnections();
-	}
-
-	$: if (nodeConnect && $nodeConnectEvent) {
-		handleMouseUp($nodeConnectEvent);
-	}
-
-	// If the user has specifcied connections, we check once all nodes have mounted
-	$: if ($mounted === nodeStore.count() && assignedConnections.length) {
-		checkNodeLevelConnections();
-	}
-
-	// If an anchor is added to the store, we update all anchor positions
-	$: if (anchorElement) {
-		$anchors;
-		$connectedAnchors;
-		$dynamicDirection;
-		anchor.recalculatePosition();
-	}
-
-	// If the parent node is resizing, we actively track the position of the anchor
-	$: if (!tracking && ($resizingWidth || $resizingHeight || $rotating)) {
-		tracking = true;
-		trackPosition();
-	} else if (!$resizingWidth && !$resizingHeight && tracking && !$rotating) {
-		tracking = false;
-		cancelAnimationFrame(animationFrameId);
-	}
-
-	// This fires the connection/disconnection events
-	// We track previous connections and fire a correct event accordingly
-	$: if ($connectedAnchors) {
-		if ($connectedAnchors.size < previousConnectionCount) {
-			// Need to add additional detail for disconnections here
-			dispatchDisconnection('disconnection', { node, anchor });
-		} else if ($connectedAnchors.size > previousConnectionCount) {
-			const anchorArray = Array.from($connectedAnchors);
-			const lastConnection = anchorArray[anchorArray.length - 1];
-			dispatchConnection('connection', {
-				node,
-				anchor,
-				connectedNode: lastConnection.node,
-				connectedAnchor: lastConnection
-			});
+	$effect(() => {
+		if ($mounted === nodeStore.count() && connections.length) {
+			checkDirectConnections();
 		}
-		previousConnectionCount = $connectedAnchors.size;
-	}
+	});
 
-	function touchBasedConnection(e: TouchEvent) {
+	$effect(() => {
+		if (nodeConnect && $nodeConnectEvent) {
+			handleMouseUp($nodeConnectEvent);
+		}
+	});
+
+	$effect(() => {
+		if ($mounted === nodeStore.count() && $state.assignedConnections.length) {
+			checkNodeLevelConnections();
+		}
+	});
+
+	$effect(() => {
+		if (anchorElement) {
+			$anchors;
+			$connectedAnchors;
+			$dynamicDirection;
+			anchor.recalculatePosition();
+		}
+	});
+
+	$effect(() => {
+		if (! $state.tracking && ($resizingWidth || $resizingHeight || $rotating)) {
+			 $state.tracking = true;
+			trackPosition();
+		} else if (!$resizingWidth && !$resizingHeight &&  $state.tracking && !$rotating) {
+			 $state.tracking = false;
+			cancelAnimationFrame(animationFrameId);
+		}
+	});
+
+	$effect(() => {
+		if ($connectedAnchors) {
+			if ($connectedAnchors.size <  $state.previousConnectionCount) {
+				// Need to add additional detail for disconnections here
+				dispatchDisconnection(new CustomEvent('disconnection', { detail: { node, anchor } }));
+			} else if ($connectedAnchors.size >  $state.previousConnectionCount) {
+				const anchorArray = Array.from($connectedAnchors);
+				const lastConnection = anchorArray[anchorArray.length - 1];
+				dispatchConnection(new CustomEvent('connection', {
+					detail: {
+						node,
+						anchor,
+						connectedNode: lastConnection.node,
+						connectedAnchor: lastConnection
+					}
+				}));
+			}
+			 $state.previousConnectionCount = $connectedAnchors.size;
+		}
+	});
+
+	function touchBasedConnection(e) {
 		edgeStore.delete('cursor');
 
 		const touchPosition = {
@@ -262,9 +247,9 @@
 
 		if (!parentElement) return;
 
-		const compoundId: AnchorKey = parentElement.id as AnchorKey;
+		const compoundId = parentElement.id;
 
-		const nodeId = compoundId.split('/')[1] as NodeKey;
+		const nodeId = compoundId.split('/')[1];
 
 		const connectingAnchor = nodeStore.get(nodeId)?.anchors.get(compoundId);
 
@@ -275,7 +260,7 @@
 		attemptConnection(anchor, connectingAnchor, e);
 	}
 
-	function attemptConnection(source: Anchor, target: Anchor, e: MouseEvent | TouchEvent) {
+	function attemptConnection(source, target, e) {
 		const success = connectAnchors(source, target);
 
 		if (success) {
@@ -287,7 +272,7 @@
 		}
 	}
 
-	function handleMouseUp(e: MouseEvent | TouchEvent) {
+	function handleMouseUp(e) {
 		// Touchend events fire on the original element rather than the "curent one"
 		// So we need to check for this case and retieve the anchor to connect to
 		if ('changedTouches' in e && connecting) {
@@ -310,7 +295,7 @@
 		if ($connectingFrom) connectEdge(e);
 	}
 
-	function handleClick(e: MouseEvent | TouchEvent) {
+	function handleClick(e) {
 		if (locked) return; // Return if the anchor is locked
 
 		// If the Anchor being clicked has connections
@@ -348,8 +333,8 @@
 		}
 	}
 
-	function createCursorEdge(source: Anchor, target: Anchor, disconnect = false) {
-		const edgeConfig: EdgeConfig = {
+	function createCursorEdge(source, target, disconnect = false) {
+		const edgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
@@ -364,7 +349,7 @@
 		edgeStore.add(newEdge, 'cursor');
 	}
 
-	function connectEdge(e: MouseEvent | TouchEvent) {
+	function connectEdge(e) {
 		// Delete the temporary edge
 		edgeStore.delete('cursor');
 
@@ -380,8 +365,8 @@
 		anchor.recalculatePosition();
 
 		// Create edge
-		let source: Anchor;
-		let target: Anchor;
+		let source;
+		let target;
 
 		if (input === output) {
 			if (connectingType === 'input') {
@@ -404,12 +389,12 @@
 
 	// Updates the connected anchors set on source and target
 	// Creates the edge and add it to the store
-	function connectAnchors(source: Anchor, target: Anchor) {
+	function connectAnchors(source, target) {
 		// Don't connect an anchor to itself
 		if (source === target) return false;
 		// Don't connect if the anchors are already connected
 		if (get(source.connected).has(anchor)) return false;
-		const edgeConfig: EdgeConfig = {
+		const edgeConfig = {
 			color: edgeColor,
 			label: { text: edgeLabel }
 		};
@@ -417,11 +402,11 @@
 		// get edge style from flowchart if edge is defined in flowchart
 		if (flowChart) {
 			// check if source is in flowchart and target is a child of the source
-			const sourceId: string = source.node.id.slice(2);
+			const sourceId = source.node.id.slice(2);
 			const sourceInFlowchart = flowChart.nodeList[sourceId]; // type flowchart node obj
 			// if source is in flowchart
 			if (sourceInFlowchart) {
-				const targetId: string = target.node.id.slice(2);
+				const targetId = target.node.id.slice(2);
 				const targetInSourceChildren = sourceInFlowchart.children.filter(
 					(child) => child.node.id === targetId
 				)[0];
@@ -470,7 +455,7 @@
 			$inputsStore[key] = writable(get($inputsStore[key]));
 	}
 
-	function clearLinking(connectionMade: boolean) {
+	function clearLinking(connectionMade) {
 		if (connectionMade || !$nodeConnectEvent) {
 			$connectingFrom = null;
 			$nodeConnectEvent = null;
@@ -479,7 +464,7 @@
 
 	// This just repeatedly calls updatePosition until cancelled
 	function trackPosition() {
-		if (!tracking) return;
+		if (! $state.tracking) return;
 		if (anchorElement) anchor.recalculatePosition();
 		animationFrameId = requestAnimationFrame(trackPosition);
 	}
@@ -512,9 +497,7 @@
 		if (source.type === 'output') {
 			createCursorEdge(source, cursorAnchor, true);
 			disconnectStore();
-			const store: ReturnType<typeof generateOutput> = source.store as ReturnType<
-				typeof generateOutput
-			>;
+			const store = source.store;
 			$connectingFrom = { anchor: source, store, key: null };
 		} else {
 			createCursorEdge(source, cursorAnchor, true);
@@ -523,12 +506,12 @@
 	}
 
 	function checkNodeLevelConnections() {
-		assignedConnections.forEach((connection, index) => {
+		 $state.assignedConnections.forEach((connection, index) => {
 			if (!connection) return;
 			const connected = processConnection(connection);
 			if (connected) connections[index] = null;
 		});
-		assignedConnections = assignedConnections.filter((connection) => connection !== null);
+		 $state.assignedConnections =  $state.assignedConnections.filter((connection) => connection !== null);
 	}
 
 	function checkDirectConnections() {
@@ -541,8 +524,8 @@
 		// connections = connections.filter((connection) => connection !== null);
 	}
 
-	export function disconnect(target: [string | number, string | number]) {
-		const nodekey: NodeKey = `N-${target[0]}`;
+	export function disconnect(target) {
+		const nodekey = `N-${target[0]}`;
 		const node = nodeStore.get(nodekey);
 		if (!node) return;
 		const targetAnchor = node.anchors.get(`A-${target[1]}/N-${target[0]}`);
@@ -552,10 +535,10 @@
 		edgeStore.delete(edgeKey[0]);
 	}
 
-	const processConnection = (connection: [string | number, string | number] | string | number) => {
-		let nodeId: string;
-		let anchorId: string | null;
-		let anchorToConnect: Anchor | null = null;
+	const processConnection = (connection) => {
+		let nodeId;
+		let anchorId;
+		let anchorToConnect = null;
 
 		if (Array.isArray(connection)) {
 			nodeId = connection[0].toString();
@@ -566,7 +549,7 @@
 		}
 
 		//Convert to node key used in store/DOM
-		const nodekey: NodeKey = `N-${nodeId}`;
+		const nodekey = `N-${nodeId}`;
 		// Look up node in store
 		const nodeToConnect = nodeStore.get(nodekey);
 		if (!nodeToConnect) {
@@ -581,7 +564,7 @@
 			if (!anchors.length) {
 				return false;
 			}
-			anchorToConnect = anchors.reduce<Anchor | null>((a, b) => {
+			anchorToConnect = anchors.reduce((a, b) => {
 				if (!a && b.type === 'output') return null;
 				if (b.type === 'output') return a;
 				if (!a) return b;
@@ -590,7 +573,7 @@
 			}, null);
 		} else {
 			// Create anchor key
-			const anchorKey: AnchorKey = `A-${anchorId}/${nodekey}`;
+			const anchorKey = `A-${anchorId}/${nodekey}`;
 			// Look up anchor in store
 			anchorToConnect = nodeToConnect.anchors.get(anchorKey) || null;
 		}
@@ -632,12 +615,12 @@
 	tabindex="0"
 	class:locked
 	title={title || ''}
-	on:mouseenter={() => (hovering = true)}
-	on:mouseleave={() => (hovering = false)}
-	on:mousedown|stopPropagation|preventDefault={handleClick}
-	on:mouseup|stopPropagation={handleMouseUp}
-	on:touchstart|stopPropagation|preventDefault={handleClick}
-	on:touchend|stopPropagation={handleMouseUp}
+	onmouseenter={() => ( $state.hovering = true)}
+	onmouseleave={() => ( $state.hovering = false)}
+	onmousedown|stopPropagation|preventDefault={handleClick}
+	onmouseup|stopPropagation={handleMouseUp}
+	ontouchstart|stopPropagation|preventDefault={handleClick}
+	ontouchend|stopPropagation={handleMouseUp}
 	bind:this={anchorElement}
 >
 	<slot linked={$connectedAnchors?.size >= 1} {hovering} {connecting}>

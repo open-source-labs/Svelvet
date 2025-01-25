@@ -4,7 +4,7 @@
 	import GraphRenderer from '../../renderers/GraphRenderer/GraphRenderer.svelte';
 	import Editor from '$lib/components/Editor/Editor.svelte';
 	import { connectingFrom } from '$lib/components/Anchor/Anchor.svelte';
-	import { onMount, setContext, createEventDispatcher, tick } from 'svelte';
+	import { onMount, setContext, tick } from 'svelte';
 	import { isArrow } from '$lib/types';
 	import { moveElementWithBounds, calculateRelativeBounds } from '$lib/utils/movers';
 	import { touchDistance, initialClickPosition, tracking } from '$lib/stores/CursorStore';
@@ -20,34 +20,56 @@
 
 <script lang="ts">
 	// defining props that the Graph component expects when it is used, type annotations added
-	export let graph: Graph;
-	export let width: number;
-	export let height: number;
-	export let minimap = false;
-	export let controls = false;
-	export let toggle = false;
-	export let fixedZoom = false;
-	export let pannable = true;
-	export let disableSelection = false;
-	export let ZOOM_INCREMENT = 0.1;
-	export let PAN_INCREMENT = 50;
-	export let PAN_TIME = 250;
-	export let MAX_SCALE = 3;
-	export let MIN_SCALE = 0.2;
-	export let selectionColor: CSSColorString;
-	export let backgroundExists: boolean;
-	export let fitView: boolean | 'resize' = false;
-	export let trackpadPan: boolean;
-	export let modifier: 'alt' | 'ctrl' | 'shift' | 'meta';
-	export let theme = 'light';
-	export let title: string;
-	export let drawer = false;
-	export let contrast = false;
+	$props = {
+		graph: null,
+		width: 0,
+		height: 0,
+		minimap: false,
+		controls: false,
+		toggle: false,
+		fixedZoom: false,
+		pannable: true,
+		disableSelection: false,
+		ZOOM_INCREMENT: 0.1,
+		PAN_INCREMENT: 50,
+		PAN_TIME: 250,
+		MAX_SCALE: 3,
+		MIN_SCALE: 0.2,
+		selectionColor: null,
+		backgroundExists: false,
+		fitView: false,
+		trackpadPan: false,
+		modifier: 'meta',
+		theme: 'light',
+		title: '',
+		drawer: false,
+		contrast: false
+	};
 
-	let animationFrameId: number;
+	$state = {
+		animationFrameId: 0,
+		initialDistance: 0,
+		initialScale: 1,
+		anchor: { x: 0, y: 0, top: 0, left: 0 },
+		selecting: false,
+		creating: false,
+		adding: false,
+		isMovable: false,
+		pinching: false,
+		initialFit: false,
+		graphDimensions: null,
+		toggleComponent: null,
+		minimapComponent: null,
+		controlsComponent: null,
+		drawerComponent: null,
+		contrastComponent: null
+	};
 
 	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
-	const dispatch = createEventDispatcher();
+	const dispatch = (eventName, detail) => {
+		const event = new CustomEvent(eventName, { detail });
+		dispatchEvent(event);
+	};
 	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
 	const activeIntervals: ActiveIntervals = {};
 
@@ -60,66 +82,62 @@
 
 	// External stores
 	// These are Svelte stores that are likely passed as part of the graph prop or accessed directly from it. They represent various aspects of the graph's state, such as its current cursor position, scale, dimensions, and more
-	const cursor = graph.cursor;
-	const scale = graph.transforms.scale;
-	const dimensionsStore = graph.dimensions;
-	const translation = graph.transforms.translation;
-	const groups = graph.groups;
-	const groupBoxes = graph.groupBoxes;
+	const cursor = $props.graph.cursor;
+	const scale = $props.graph.transforms.scale;
+	const dimensionsStore = $props.graph.dimensions;
+	const translation = $props.graph.transforms.translation;
+	const groups = $props.graph.groups;
+	const groupBoxes = $props.graph.groupBoxes;
 	const selected = $groups.selected.nodes;
-	const activeGroup = graph.activeGroup;
-	const initialNodePositions = graph.initialNodePositions;
-	const editing = graph.editing;
-	const nodeBounds = graph.bounds.nodeBounds;
-
-	// Reactive variables
-	// These are standard JavaScript variables that are reactive, meaning Svelte will re-run any reactive statements or parts of the DOM that depend on these variables whenever their values change.
-	let initialDistance = 0;
-	let initialScale = 1;
-	let anchor = { x: 0, y: 0, top: 0, left: 0 };
-	let selecting = false;
-	let creating = false;
-	let adding = false;
-	let isMovable = false;
-	let pinching = false;
-	let initialFit = false;
-	let graphDimensions: GraphDimensions;
-	let toggleComponent: ComponentType | null = null;
-	let minimapComponent: ComponentType | null = null;
-	let controlsComponent: ComponentType | null = null;
-	let drawerComponent: ComponentType | null = null;
-	let contrastComponent: ComponentType | null = null;
+	const activeGroup = $props.graph.activeGroup;
+	const initialNodePositions = $props.graph.initialNodePositions;
+	const editing = $props.graph.editing;
+	const nodeBounds = $props.graph.bounds.nodeBounds;
 
 	// Subscriptions
-	// This line is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
-	$: dimensions = $dimensionsStore;
+	// This is a Svelte reactive statement, denoted by $:. It creates a reactivity relationship between dimensions and dimensionsStore.
+	$derived dimensions = $dimensionsStore;
 
 	// Update the svelvet-theme attribute everytime the theme changes
-	$: if (theme) document.documentElement.setAttribute('svelvet-theme', theme);
+	$effect(() => {
+		if ($props.theme) document.documentElement.setAttribute('svelvet-theme', $props.theme);
+	});
 	// camera view adjustment
-	$: if (!initialFit && fitView) {
-		fitIntoView();
-	}
+	$effect(() => {
+		if (!$state.initialFit && $props.fitView) {
+			fitIntoView();
+		}
+	});
 	// load the theme toggle
-	$: if (toggle && !toggleComponent) loadToggle();
+	$effect(() => {
+		if ($props.toggle && !$state.toggleComponent) loadToggle();
+	});
 	// load the minimap
-	$: if (minimap && !minimapComponent) loadMinimap();
+	$effect(() => {
+		if ($props.minimap && !$state.minimapComponent) loadMinimap();
+	});
 	// load the controls interface
-	$: if (controls && !controlsComponent) loadControls();
+	$effect(() => {
+		if ($props.controls && !$state.controlsComponent) loadControls();
+	});
 	// load the drawer
-	$: if (drawer && !drawerComponent) loadDrawer();
+	$effect(() => {
+		if ($props.drawer && !$state.drawerComponent) loadDrawer();
+	});
 	//load the contrast options
-	$: if (contrast && !contrastComponent) loadContrast();
+	$effect(() => {
+		if ($props.contrast && !$state.contrastComponent) loadContrast();
+	});
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
 		id: null,
-		position: graph.cursor,
+		position: $props.graph.cursor,
 		offset: writable({ x: 0, y: 0 }),
 		connected: writable(new Set()),
 		dynamic: writable(false),
 		edge: null,
-		edgeColor: writable(null),
+			edgeColor: writable(null),
 		direction: writable('self'),
 		inputKey: null,
 		type: 'output',
@@ -130,7 +148,7 @@
 		node: {
 			zIndex: writable(Infinity),
 			rotating: writable(false),
-			position: graph.cursor,
+			position: $props.graph.cursor,
 			dimensions: { width: writable(0), height: writable(0) }
 		}
 	};
@@ -140,14 +158,14 @@
 	setContext('graphDOMElement', graphDOMElement);
 	setContext('cursorAnchor', cursorAnchor);
 	setContext('duplicate', duplicate);
-	setContext('graph', graph);
-	setContext('transforms', graph.transforms);
-	setContext('dimensions', graph.dimensions);
-	setContext('locked', graph.locked);
-	setContext('groups', graph.groups);
-	setContext('bounds', graph.bounds);
-	setContext('edgeStore', graph.edges);
-	setContext('nodeStore', graph.nodes);
+	setContext('graph', $props.graph);
+	setContext('transforms', $props.graph.transforms);
+	setContext('dimensions', $props.graph.dimensions);
+	setContext('locked', $props.graph.locked);
+	setContext('groups', $props.graph.groups);
+	setContext('bounds', $props.graph.bounds);
+	setContext('edgeStore', $props.graph.edges);
+	setContext('nodeStore', $props.graph.nodes);
 	setContext('mounted', mounted);
 
 	// Lifecycle methods
@@ -158,39 +176,39 @@
 	async function fitIntoView() {
 		await tick();
 		tracking.set(true);
-		const { x, y, scale } = calculateFitView(graphDimensions, $nodeBounds);
+		const { x, y, scale } = calculateFitView($state.graphDimensions, $nodeBounds);
 		if (x !== null && y !== null && scale !== null) {
-			graph.transforms.scale.set(scale);
+			$props.graph.transforms.scale.set(scale);
 			translation.set({ x, y });
 		}
 		tracking.set(false);
-		initialFit = true;
+		$state.initialFit = true;
 	}
 	async function loadMinimap() {
-		minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
+		$state.minimapComponent = (await import('$lib/components/Minimap/Minimap.svelte')).default;
 	}
 
 	async function loadToggle() {
-		toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
+		$state.toggleComponent = (await import('$lib/components/ThemeToggle/ThemeToggle.svelte')).default;
 	}
 
 	async function loadControls() {
-		controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
+		$state.controlsComponent = (await import('$lib/components/Controls/Controls.svelte')).default;
 	}
 
 	async function loadDrawer() {
-		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
+		$state.drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
 	}
 
 	async function loadContrast() {
-		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
+		$state.contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
 			.default;
 	}
 
 	function updateGraphDimensions() {
-		if (!$graphDOMElement) return;
+		if (! $graphDOMElement) return;
 		const DOMRect = $graphDOMElement.getBoundingClientRect();
-		graphDimensions = {
+		$state.graphDimensions = {
 			top: DOMRect.top,
 			left: DOMRect.left,
 			bottom: DOMRect.bottom,
@@ -199,14 +217,14 @@
 			height: DOMRect.height
 		};
 
-		graph.dimensions.set(graphDimensions);
-		if (fitView === 'resize') fitIntoView();
+		$props.graph.dimensions.set($state.graphDimensions);
+		if ($props.fitView === 'resize') fitIntoView();
 	}
 
 	function onMouseUp(e: MouseEvent | TouchEvent) {
-		if (creating) {
+		if ($state.creating) {
 			const groupName = generateKey();
-			const groupKey: GroupKey = `${groupName}/${graph.id}`;
+			const groupKey: GroupKey = `${groupName}/${$props.graph.id}`;
 			const cursorPosition = get(cursor);
 			const width = cursorPosition.x - $initialClickPosition.x;
 			const height = cursorPosition.y - $initialClickPosition.y;
@@ -247,8 +265,8 @@
 
 			$selected = new Set();
 
-			creating = false;
-			selecting = false;
+			$state.creating = false;
+			$state.selecting = false;
 		}
 
 		// Set moving boolean on active group to false
@@ -256,10 +274,10 @@
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
 			nodeGroupArray.forEach((node) => node.moving.set(false));
 		}
-		const cursorEdge = graph.edges.get('cursor');
+		const cursorEdge = $props.graph.edges.get('cursor');
 
 		if (cursorEdge) {
-			graph.edges.delete('cursor');
+			$props.graph.edges.delete('cursor');
 			if (!cursorEdge.disconnect)
 				dispatch('edgeDrop', {
 					cursor: get(cursor),
@@ -272,20 +290,20 @@
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
-		selecting = false;
-		isMovable = false;
+		$state.selecting = false;
+		$state.isMovable = false;
 		$tracking = false;
 
 		if (!e.shiftKey) {
 			connectingFrom.set(null);
 		}
 
-		anchor.y = 0;
-		anchor.x = 0;
+		$state.anchor.y = 0;
+		$state.anchor.x = 0;
 	}
 
 	function onMouseDown(e: MouseEvent) {
-		if (!pannable && !(e.shiftKey || e.metaKey)) return;
+		if (!$props.pannable && !(e.shiftKey || e.metaKey)) return;
 		if (e.button === 2) return;
 		if ($graphDOMElement) $graphDOMElement.focus();
 
@@ -295,25 +313,25 @@
 
 		if (e.shiftKey || e.metaKey) {
 			e.preventDefault();
-			selecting = true;
-			const { top, left } = dimensions;
-			anchor.y = clientY - top;
-			anchor.x = clientX - left;
-			anchor.top = top;
-			anchor.left = left;
+			$state.selecting = true;
+			const { top, left } = $state.dimensions;
+			$state.anchor.y = clientY - top;
+			$state.anchor.x = clientX - left;
+			$state.anchor.top = top;
+			$state.anchor.left = left;
 			if (e.shiftKey && e.metaKey) {
-				creating = true;
+				$state.creating = true;
 			} else {
-				creating = false;
+				$state.creating = false;
 			}
 
 			if (e.metaKey && !e.shiftKey) {
-				adding = true;
+				$state.adding = true;
 			} else {
-				adding = false;
+				$state.adding = false;
 			}
 		} else {
-			isMovable = true;
+			$state.isMovable = true;
 			$selected = new Set();
 			$selected = $selected;
 		}
@@ -325,36 +343,36 @@
 
 		$initialClickPosition = get(cursor);
 
-		isMovable = true;
+		$state.isMovable = true;
 		if (e.touches.length === 2) {
 			startPinching();
-			initialDistance = $touchDistance;
-			initialScale = $scale;
+			$state.initialDistance = $touchDistance;
+			$state.initialScale = $scale;
 		}
 	}
 
 	function onTouchEnd() {
-		isMovable = false;
-		pinching = false;
+		$state.isMovable = false;
+		$state.pinching = false;
 	}
 
 	function startPinching() {
-		if (!pinching) {
-			pinching = true;
-			animationFrameId = requestAnimationFrame(handlePinch);
+		if (!$state.pinching) {
+			$state.pinching = true;
+			$state.animationFrameId = requestAnimationFrame(handlePinch);
 		}
 	}
 
 	function handlePinch() {
-		if (!pinching) {
-			cancelAnimationFrame(animationFrameId);
+		if (!$state.pinching) {
+			cancelAnimationFrame($state.animationFrameId);
 			return;
 		}
 
 		const newDistance = $touchDistance;
-		const scaleFactor = newDistance / initialDistance;
-		$scale = initialScale * scaleFactor;
-		animationFrameId = requestAnimationFrame(handlePinch);
+		const scaleFactor = newDistance / $state.initialDistance;
+		$scale = $state.initialScale * scaleFactor;
+		$state.animationFrameId = requestAnimationFrame(handlePinch);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -364,20 +382,20 @@
 		// We dont want to prevent users from interacting with inputs
 		if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 
-		if (code === 'KeyA' && e[`${modifier}Key`]) {
-			const unlockedNodes = graph.nodes.getAll().filter((node) => !get(node.locked));
+		if (code === 'KeyA' && e[`${$props.modifier}Key`]) {
+			const unlockedNodes = $props.graph.nodes.getAll().filter((node) => !get(node.locked));
 			$selected = new Set(unlockedNodes);
 		} else if (isArrow(key)) {
 			handleArrowKey(key as Arrow, e);
 		} else if (key === '=') {
-			zoomAndTranslate(-1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			zoomAndTranslate(-1, $props.graph.dimensions, $props.graph.transforms, $props.ZOOM_INCREMENT);
 		} else if (key === '-') {
-			zoomAndTranslate(1, graph.dimensions, graph.transforms, ZOOM_INCREMENT);
+			zoomAndTranslate(1, $props.graph.dimensions, $props.graph.transforms, $props.ZOOM_INCREMENT);
 		} else if (key === '0') {
 			fitIntoView();
 		} else if (key === 'Control') {
 			$groups['selected'].nodes.set(new Set());
-		} else if (code === 'KeyD' && e[`${modifier}Key`]) {
+		} else if (code === 'KeyD' && e[`${$props.modifier}Key`]) {
 			duplicate.set(true);
 			setTimeout(() => {
 				duplicate.set(false);
@@ -385,16 +403,16 @@
 		} else if (key === 'Tab' && (e.altKey || e.ctrlKey)) {
 			selectNextNode();
 		} else if (key === 'l') {
-			theme = theme === 'light' ? 'dark' : 'light';
+			$props.theme = $props.theme === 'light' ? 'dark' : 'light';
 		} else if (key === 'd') {
-			drawer = !drawer;
+			$props.drawer = !$props.drawer;
 		} else if (key === 'm') {
-			minimap = !minimap;
+			$props.minimap = !$props.minimap;
 		} else if (key === 'c') {
-			controls = !controls;
+			$props.controls = !$props.controls;
 		} else if (key === 'e') {
 			const node = Array.from($selected)[0];
-			graph.editing.set(node);
+			$props.graph.editing.set(node);
 		} else {
 			return; // Unhandled action: used default handler
 		}
@@ -404,7 +422,7 @@
 
 	//This function handles selecting nodes
 	function selectNextNode() {
-		const nodes = graph.nodes.getAll();
+		const nodes = $props.graph.nodes.getAll();
 
 		const currentIndex = nodes.findIndex((node) => $selected.has(node));
 		const nextIndex = currentIndex + 1;
@@ -425,7 +443,7 @@
 	}
 
 	function handleScroll(e: WheelEvent) {
-		if (fixedZoom) return;
+		if ($props.fixedZoom) return;
 		const multiplier = e.shiftKey ? 0.15 : 1;
 		const { clientX, clientY, deltaY } = e;
 		const currentTranslation = $translation;
@@ -435,7 +453,7 @@
 		// If it does, it means the user is using a trackpad
 		// If trackpadPan is enabled or the meta key is pressed
 		// Pan the graph instead of zooming
-		if ((trackpadPan || e.metaKey) && deltaY % 1 === 0) {
+		if (($props.trackpadPan || e.metaKey) && deltaY % 1 === 0) {
 			$translation = {
 				x: ($translation.x -= e.deltaX),
 				y: ($translation.y -= e.deltaY)
@@ -444,7 +462,7 @@
 			return;
 		}
 
-		if (($scale >= MAX_SCALE && deltaY < 0) || ($scale <= MIN_SCALE && deltaY > 0)) return;
+		if (($scale >= $props.MAX_SCALE && deltaY < 0) || ($scale <= $props.MIN_SCALE && deltaY > 0)) return;
 
 		// Calculate the scale adjustment
 		const scrollAdjustment = Math.min(0.009 * multiplier * Math.abs(deltaY), 0.08);
@@ -456,7 +474,7 @@
 			newScale,
 			currentTranslation,
 			pointerPosition,
-			graphDimensions
+			$state.graphDimensions
 		);
 
 		// Apply transforms
@@ -471,7 +489,7 @@
 		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
 		const startOffset = leftRight ? $translation.x : $translation.y;
-		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
+		const endOffset = startOffset + direction * $props.PAN_INCREMENT * multiplier;
 
 		if (!activeIntervals[key]) {
 			let interval = setInterval(() => {
@@ -479,7 +497,7 @@
 
 				//movement of camera when no nodes are selected
 				if ($selected.size === 0) {
-					const movement = startOffset + (endOffset - startOffset) * (time / PAN_TIME);
+					const movement = startOffset + (endOffset - startOffset) * (time / $props.PAN_TIME);
 					translation.set({
 						x: leftRight ? movement : $translation.x,
 						y: leftRight ? $translation.y : movement
@@ -495,7 +513,7 @@
 						let groupBox: GroupBox | undefined;
 						const groupName = get(node.group);
 
-						const groupBoxes = get(graph.groupBoxes);
+						const groupBoxes = get($props.graph.groupBoxes);
 
 						if (groupName) groupBox = groupBoxes.get(groupName);
 						if (groupBox) {
@@ -517,23 +535,23 @@
 	// let parameterStore = writable('default value');
 </script>
 
-<!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
+<!-- <button onclick={() => getJSONState(graph)}>SAVE STATE</button> -->
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 
 <section
 	role="presentation"
-	id={graph.id}
+	id={$props.graph.id}
 	class="svelvet-wrapper"
 	{title}
-	style:width={width ? width + 'px' : '100%'}
-	style:height={height ? height + 'px' : '100%'}
-	style:cursor={pannable ? 'move' : 'default'}
-	on:wheel|preventDefault={handleScroll}
-	on:mousedown|preventDefault|self={onMouseDown}
-	on:touchend|preventDefault={onTouchEnd}
-	on:touchstart|preventDefault|self={onTouchStart}
-	on:keydown={handleKeyDown}
-	on:keyup={handleKeyUp}
+	style:width={$props.width ? $props.width + 'px' : '100%'}
+	style:height={$props.height ? $props.height + 'px' : '100%'}
+	style:cursor={$props.pannable ? 'move' : 'default'}
+	onwheel|preventDefault={handleScroll}
+	onmousedown|preventDefault|self={onMouseDown}
+	ontouchend|preventDefault={onMouseUp}
+	ontouchstart|preventDefault|self={onTouchStart}
+	onkeydown={handleKeyDown}
+	onkeyup={handleKeyUp}
 	bind:this={$graphDOMElement}
 	tabindex={0}
 >
@@ -544,41 +562,41 @@
 		<slot />
 	</GraphRenderer>
 
-	{#if backgroundExists}
+	{#if $props.backgroundExists}
 		<slot name="background" />
 	{:else}
 		<Background />
 	{/if}
-	{#if minimap}
-		<svelte:component this={minimapComponent} />
+	{#if $props.minimap}
+		<svelte:component this={$state.minimapComponent} />
 	{/if}
-	{#if controls}
-		<svelte:component this={controlsComponent} />
+	{#if $props.controls}
+		<svelte:component this={$state.controlsComponent} />
 	{/if}
-	{#if toggle}
-		<svelte:component this={toggleComponent} />
+	{#if $props.toggle}
+		<svelte:component this={$state.toggleComponent} />
 	{/if}
-	{#if drawer}
-		<svelte:component this={drawerComponent} />
+	{#if $props.drawer}
+		<svelte:component this={$state.drawerComponent} />
 	{/if}
-	{#if contrast}
-		<svelte:component this={contrastComponent} />
+	{#if $props.contrast}
+		<svelte:component this={$state.contrastComponent} />
 	{/if}
 	<slot name="minimap" />
 	<slot name="drawer" />
 	<slot name="controls" />
 	<slot name="toggle" />
 	<slot name="contrast" />
-	{#if selecting && !disableSelection}
-		<SelectionBox {creating} {anchor} {graph} {adding} color={selectionColor} />
+	{#if $state.selecting && !$props.disableSelection}
+		<SelectionBox {creating} {anchor} graph={$props.graph} {adding} color={$props.selectionColor} />
 	{/if}
 </section>
 
 <svelte:window
-	on:touchend={onMouseUp}
-	on:mouseup={onMouseUp}
-	on:resize={updateGraphDimensions}
-	on:scroll={updateGraphDimensions}
+	ontouchend={onMouseUp}
+	onmouseup={onMouseUp}
+	onresize={updateGraphDimensions}
+	onscroll={updateGraphDimensions}
 />
 
 <style>
