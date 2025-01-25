@@ -27,40 +27,48 @@
 	const output = generateOutput(inputs, processor);
 </script>
 
-<Node useDefaults id="output" position={{ x: 560, y: 30 }} let:selected locked>
-	<div class="node" class:selected>
-		<Visualizer {...$output} />
-		<div class="input-anchors">
-			{#each Object.keys(initialData) as key}
-				{#if key === 'color'}
-					<Anchor id={key} let:connecting let:linked inputsStore={inputs} {key} input locked>
-						<ColorAnchor color={$inputs[key]} {connecting} {linked} />
-					</Anchor>
-				{:else if key === 'animation'}
-					<Anchor
-						id={key}
-						on:disconnection={() => {
-							if ($inputs && typeof $inputs.animation.set === 'function') {
-								$inputs.animation.set(0);
-							}
-						}}
-						let:hovering
-						let:connecting
-						let:linked
-						inputsStore={inputs}
-						{key}
-						input
-					>
-						<CustomAnchor {hovering} {connecting} {linked} />
-					</Anchor>
-				{:else}
-					<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
-						<CustomAnchor {hovering} {connecting} {linked} />
-					</Anchor>
-				{/if}
-			{/each}
+<Node useDefaults id="output" position={{ x: 560, y: 30 }}  locked>
+	{#snippet children({ selected })}
+		<div class="node" class:selected>
+			<Visualizer {...$output} />
+			<div class="input-anchors">
+				{#each Object.keys(initialData) as key}
+					{#if key === 'color'}
+						<Anchor id={key}   inputsStore={inputs} {key} input locked>
+							{#snippet children({ connecting, linked })}
+												<ColorAnchor color={$inputs[key]} {connecting} {linked} />
+																		{/snippet}
+										</Anchor>
+					{:else if key === 'animation'}
+						<Anchor
+							id={key}
+							on:disconnection={() => {
+								if ($inputs && typeof $inputs.animation.set === 'function') {
+									$inputs.animation.set(0);
+								}
+							}}
+							
+							
+							
+							inputsStore={inputs}
+							{key}
+							input
+						>
+							{#snippet children({ hovering, connecting, linked })}
+														<CustomAnchor {hovering} {connecting} {linked} />
+																				{/snippet}
+												</Anchor>
+					{:else}
+						<Anchor id={key}    inputsStore={inputs} {key} input>
+							{#snippet children({ hovering, connecting, linked })}
+														<CustomAnchor {hovering} {connecting} {linked} />
+																				{/snippet}
+												</Anchor>
+					{/if}
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/snippet}
 </Node>
 
 <style>

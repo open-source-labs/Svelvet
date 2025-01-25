@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Identifier 'anchorsMounted' has already been declared
+https://svelte.dev/e/js_parse_error -->
 <script context="module" lang="ts">
 	import { initialClickPosition, tracking } from '$lib/stores';
 	import { captureGroup } from '$lib/utils';

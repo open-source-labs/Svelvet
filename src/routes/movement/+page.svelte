@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Svelvet, Node, Anchor } from '$lib';
 
-	let position = { x: 300, y: 300 };
-	$: console.log(position);
+	let position = $state({ x: 300, y: 300 });
+	run(() => {
+		console.log(position);
+	});
 </script>
 
 <body>
@@ -11,7 +15,7 @@
 			<div class="node-body">
 				<p>{JSON.stringify(position)}</p>
 				<button
-					on:click={() => {
+					onclick={() => {
 						position = { x: 100, y: 100 };
 					}}>Move</button
 				>

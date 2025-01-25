@@ -2,13 +2,24 @@
 	import type { CSSColorString, Dimensions, XYPair } from '$lib/types';
 	import type { Writable } from 'svelte/store';
 
-	export let dimensions: Dimensions;
-	export let position: Writable<XYPair>;
-	export let color: Writable<CSSColorString>;
-	export let groupName: string;
 
-	export let top: number;
-	export let left: number;
+	interface Props {
+		dimensions: Dimensions;
+		position: Writable<XYPair>;
+		color: Writable<CSSColorString>;
+		groupName: string;
+		top: number;
+		left: number;
+	}
+
+	let {
+		dimensions,
+		position,
+		color,
+		groupName,
+		top,
+		left
+	}: Props = $props();
 
 	const { width, height } = dimensions;
 </script>
@@ -22,7 +33,7 @@
 	style:height={`${$height}px`}
 	style="border: solid 4px {$color};"
 	style:background-color={$color}
-/>
+></div>
 
 <style>
 	.mini-bounding-box {

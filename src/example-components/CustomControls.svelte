@@ -1,8 +1,12 @@
 <script>
+	import { stopPropagation } from 'svelte/legacy';
+
 	import { Controls } from '$lib';
 </script>
 
-<Controls let:zoomIn let:zoomOut let:fitView let:unhideAll corner="SW">
-	<button on:click|stopPropagation={zoomIn}>ZOOMER</button>
-	<button on:click|stopPropagation={zoomOut}>UN ZOOMER</button>
+<Controls     corner="SW">
+	{#snippet children({ zoomIn, zoomOut, fitView, unhideAll })}
+		<button onclick={stopPropagation(zoomIn)}>ZOOMER</button>
+		<button onclick={stopPropagation(zoomOut)}>UN ZOOMER</button>
+	{/snippet}
 </Controls>

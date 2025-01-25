@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Unterminated regular expression
+https://svelte.dev/e/js_parse_error -->
 <script lang="ts">
 	import type { CSSColorString } from '$lib/types';
 

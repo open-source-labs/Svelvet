@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onDestroy } from 'svelte';
 	import CustomAnchor from './CustomAnchor.svelte';
 	import ColorAnchor from './ColorAnchor.svelte';
@@ -8,9 +10,9 @@
 	let audioContext: any;
 	let audioBuffer: any;
 	let audioSource: any;
-	let bassFilter: any;
-	let trebleFilter: any;
-	let gainNode: any;
+	let bassFilter: any = $state();
+	let trebleFilter: any = $state();
+	let gainNode: any = $state();
 
 	let song: string =
 		'https://otnmsonvlxvlokpdgsky.supabase.co/storage/v1/object/public/ape-escape-time-station/What%20is%20Love.mp3?t=2023-05-18T05%3A01%3A32.321Z';
@@ -43,12 +45,18 @@
 
 	// Create the gain node for volume control
 	gainNode = audioContext.createGain();
-	$: gainNode.gain.value = $output.volume;
+	run(() => {
+		gainNode.gain.value = $output.volume;
+	});
 
 	// Set the bass and treble levels
-	$: bassFilter.gain.value = $output.bass;
+	run(() => {
+		bassFilter.gain.value = $output.bass;
+	});
 
-	$: trebleFilter.gain.value = $output.treble;
+	run(() => {
+		trebleFilter.gain.value = $output.treble;
+	});
 	console.log($output.treble);
 
 	// Connect the audio source to the filters and gain node
@@ -87,39 +95,43 @@
 	}
 </script>
 
-<Node useDefaults id="output" position={{ x: 550, y: 300 }} let:selected>
-	<div class="contentWrapper">
-		<div class="node" class:selected>
-			<button on:click={() => loadAudio(song)}>Load Audio</button>
-			<button on:click={play}>Play</button>
-			<button on:click={stop}>Stop</button>
-		</div>
-		<div class="audio_controls">
-			<div class="col input-anchors">
-				{#each Object.keys(initialData) as key}
-					<Anchor id={key} let:hovering let:connecting let:linked inputsStore={inputs} {key} input>
-						<CustomAnchor {hovering} {connecting} {linked} />
-					</Anchor>
-				{/each}
+<Node useDefaults id="output" position={{ x: 550, y: 300 }} >
+	{#snippet children({ selected })}
+		<div class="contentWrapper">
+			<div class="node" class:selected>
+				<button onclick={() => loadAudio(song)}>Load Audio</button>
+				<button onclick={play}>Play</button>
+				<button onclick={stop}>Stop</button>
 			</div>
-			<div class="col col_2">
-				<div id="bass-level">
-					Bass:
-					<span>{bassFilter.gain.value} dB</span>
+			<div class="audio_controls">
+				<div class="col input-anchors">
+					{#each Object.keys(initialData) as key}
+						<Anchor id={key}    inputsStore={inputs} {key} input>
+							{#snippet children({ hovering, connecting, linked })}
+												<CustomAnchor {hovering} {connecting} {linked} />
+																		{/snippet}
+										</Anchor>
+					{/each}
 				</div>
+				<div class="col col_2">
+					<div id="bass-level">
+						Bass:
+						<span>{bassFilter.gain.value} dB</span>
+					</div>
 
-				<div id="treble-level">
-					Treble:
-					<span>{trebleFilter.gain.value} dB</span>
-				</div>
+					<div id="treble-level">
+						Treble:
+						<span>{trebleFilter.gain.value} dB</span>
+					</div>
 
-				<div id="volume-level">
-					Volume:
-					<span>{$output.volume.toFixed()}%</span>
+					<div id="volume-level">
+						Volume:
+						<span>{$output.volume.toFixed()}%</span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{/snippet}
 </Node>
 
 <style>

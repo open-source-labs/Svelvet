@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
 	import type { CustomWritable } from '$lib/types';
 

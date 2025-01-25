@@ -2,21 +2,33 @@
 	import type { CSSColorString, Node } from '$lib/types';
 	import { onMount } from 'svelte';
 
-	export let node: Node;
-	export let hidden = false;
-	export let toggleHidden: (node: Node) => void;
-	export let top: number;
-	export let left: number;
-	export let nodeColor: CSSColorString | null = null;
-	export let hideable: boolean;
+	interface Props {
+		node: Node;
+		hidden?: boolean;
+		toggleHidden: (node: Node) => void;
+		top: number;
+		left: number;
+		nodeColor?: CSSColorString | null;
+		hideable: boolean;
+	}
+
+	let {
+		node,
+		hidden = false,
+		toggleHidden,
+		top,
+		left,
+		nodeColor = null,
+		hideable
+	}: Props = $props();
 
 	const { position, dimensions, bgColor, borderRadius, rotation } = node;
 	const { width, height } = dimensions;
-	$: nodePosition = $position;
-	$: nodeRotation = $rotation;
-	$: zIndex = node.zIndex;
-	let color: CSSColorString | null = null;
-	$: colorIsTransparent = color === 'rgba(0, 0, 0, 0)';
+	let nodePosition = $derived($position);
+	let nodeRotation = $derived($rotation);
+	let zIndex = $derived(node.zIndex);
+	let color: CSSColorString | null = $state(null);
+	let colorIsTransparent = $derived(color === 'rgba(0, 0, 0, 0)');
 
 	onMount(() => {
 		try {
@@ -32,7 +44,7 @@
 </script>
 
 <button
-	on:click={() => {
+	onclick={() => {
 		if (!hideable) return;
 		toggleHidden(node);
 	}}
@@ -47,7 +59,7 @@
 	style:top="{nodePosition.y - top}px"
 	style:left="{nodePosition.x - left}px"
 	class:hideable
-/>
+></button>
 
 <style>
 	* {

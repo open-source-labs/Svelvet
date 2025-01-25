@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use rune without parentheses
+https://svelte.dev/e/rune_missing_parentheses -->
 <script lang="ts">
 	import { setContext, getContext } from 'svelte';
 	import type { Group, Graph, GroupBox, XYPair, CSSColorString, GroupKey } from '$lib/types';

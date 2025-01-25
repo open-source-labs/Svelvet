@@ -1,12 +1,16 @@
 <script lang="ts">
 	import type { CSSColorString, CustomWritable } from '$lib';
 
-	export let linked: boolean = false;
-	export let connecting: boolean = false;
-	export let color: CustomWritable<CSSColorString>;
+	interface Props {
+		linked?: boolean;
+		connecting?: boolean;
+		color: CustomWritable<CSSColorString>;
+	}
+
+	let { linked = false, connecting = false, color }: Props = $props();
 </script>
 
-<div style:--color={$color} class:linked class:connecting class="my-anchor" />
+<div style:--color={$color} class:linked class:connecting class="my-anchor"></div>
 
 <style>
 	.my-anchor {

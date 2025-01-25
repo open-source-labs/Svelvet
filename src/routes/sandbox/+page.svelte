@@ -28,7 +28,9 @@
 		<Output />
 		<span id="state" class="note"> Stateful Anchors</span>
 		<span id="groups" class="note">Group Boxes</span>
-		<ThemeToggle main="dark" alt="light" slot="toggle" />
+		{#snippet toggle()}
+				<ThemeToggle main="dark" alt="light"  />
+			{/snippet}
 	</Svelvet>
 </body>
 

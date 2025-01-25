@@ -1,14 +1,21 @@
 <script lang="ts">
+	import { createBubbler, stopPropagation } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import type { Writable } from 'svelte/store';
 	import { getContext } from 'svelte';
-	export let placeholder: string;
+	interface Props {
+		placeholder: string;
+	}
+
+	let { placeholder }: Props = $props();
 	const textStore = getContext<Writable<string>>('textStore');
 </script>
 
 <input
-	on:keydown|stopPropagation
-	on:click|stopPropagation
-	on:mousedown|stopPropagation
+	onkeydown={stopPropagation(bubble('keydown'))}
+	onclick={stopPropagation(bubble('click'))}
+	onmousedown={stopPropagation(bubble('mousedown'))}
 	{placeholder}
 	type="text"
 	bind:value={$textStore}

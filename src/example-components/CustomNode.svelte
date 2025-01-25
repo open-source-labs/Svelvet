@@ -5,21 +5,23 @@
 	const parameter = writable(10);
 </script>
 
-<Node let:grabHandle let:selected>
-	<div class="node" use:grabHandle class:selected>
-		<Slider parameterStore={parameter} />
-		<div class="input-anchors">
-			<Anchor
-				on:disconnection={() => console.log('disconnection')}
-				on:connection={() => console.log('connection')}
-				input
-				id="1"
-			/>
+<Node  >
+	{#snippet children({ grabHandle, selected })}
+		<div class="node" use:grabHandle class:selected>
+			<Slider parameterStore={parameter} />
+			<div class="input-anchors">
+				<Anchor
+					on:disconnection={() => console.log('disconnection')}
+					on:connection={() => console.log('connection')}
+					input
+					id="1"
+				/>
+			</div>
+			<div class="output-anchors">
+				<Anchor output id="5" />
+			</div>
 		</div>
-		<div class="output-anchors">
-			<Anchor output id="5" />
-		</div>
-	</div>
+	{/snippet}
 </Node>
 
 <style>

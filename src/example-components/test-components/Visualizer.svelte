@@ -1,11 +1,25 @@
 <script lang="ts">
-	export let size = 200;
-	export let strokeWidth = 4;
-	export let dashCount = 5;
-	export let scale = 30;
-	export let animation = 0;
-	export let color = 'red';
-	export let noise = 0; // Add noise parameter
+	import { run } from 'svelte/legacy';
+
+	interface Props {
+		size?: number;
+		strokeWidth?: number;
+		dashCount?: number;
+		scale?: number;
+		animation?: number;
+		color?: string;
+		noise?: number; // Add noise parameter
+	}
+
+	let {
+		size = 200,
+		strokeWidth = 4,
+		dashCount = 5,
+		scale = 30,
+		animation = 0,
+		color = 'red',
+		noise = 0
+	}: Props = $props();
 
 	interface Circle {
 		cx: number;
@@ -16,14 +30,10 @@
 		angle: number;
 	}
 
-	let circles: Array<Circle> = [];
+	let circles: Array<Circle> = $state([]);
 	let dashLength;
 	let gapLength;
-	$: animate = animation;
 
-	$: {
-		circles = generateCircles(size, strokeWidth, dashCount, scale, noise);
-	}
 
 	const random = Array(50)
 		.fill(null)
@@ -63,6 +73,10 @@
 		}
 		return generatedCircles;
 	}
+	let animate = $derived(animation);
+	run(() => {
+		circles = generateCircles(size, strokeWidth, dashCount, scale, noise);
+	});
 </script>
 
 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

@@ -2,9 +2,14 @@
 	import type { WritableEdge } from '$lib/types';
 	import { setContext } from 'svelte';
 
-	export let edge: WritableEdge;
+	interface Props {
+		edge: WritableEdge;
+		children?: import('svelte').Snippet;
+	}
+
+	let { edge, children }: Props = $props();
 
 	setContext('edge', edge);
 </script>
 
-<slot />
+{@render children?.()}
