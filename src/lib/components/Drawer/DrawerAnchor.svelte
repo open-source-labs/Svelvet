@@ -90,7 +90,8 @@
 			if (anchorPosition === 'addLeftAnchor') anchorsCreated.left.push(anchorProps);
 			else if (anchorPosition === 'addRightAnchor') anchorsCreated.right.push(anchorProps);
 			else if (anchorPosition === 'addTopAnchor') anchorsCreated.top.push(anchorProps);
-			else if (anchorPosition === 'addBottomAnchor') anchorsCreated.bottom.push(anchorProps);
+			else if (anchorPosition === 'addBottomAnchor')
+				anchorsCreated.bottom.push(anchorProps);
 			else if (anchorPosition === 'addSelfAnchor') anchorsCreated.self.push(anchorProps);
 		}
 		return;
@@ -203,7 +204,7 @@
 
 <div id="anchorContainer">
 	<!-- On submit resets all the values on the input field in the form to default -->
-	<form onsubmit="handleAnchorResetButtonClick(event)">
+	<form onreset={handleAnchorResetButtonClick}>
 		<ul aria-labelledby="select_props">
 			<li class="list-item">
 				<label for="anchorBgColor">Background: </label>
@@ -215,7 +216,7 @@
 					id="invisible"
 					type="checkbox"
 					bind:value={$state.invisible}
-					onchange="handleInvisibleButtonClick(event)"
+					onchange={handleInvisibleButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -224,12 +225,12 @@
 					id="nodeConnect"
 					type="checkbox"
 					bind:value={$state.nodeConnect}
-					onchange="handleNodeConnectButtonClick(event)"
+					onchange={handleNodeConnectButtonClick}
 				/>
 			</li>
 			<li class="list-item">
 				<label for="input">Input: </label>
-				<input id="input" type="checkbox" bind:value={$state.input} onchange="handleInputButtonClick(event)" />
+				<input id="input" type="checkbox" bind:value={$state.input} onchange={handleInputButtonClick} />
 			</li>
 			<li class="list-item">
 				<label for="output">Output: </label>
@@ -237,7 +238,7 @@
 					id="output"
 					type="checkbox"
 					bind:value={$state.output}
-					onchange="handleOutputButtonClick(event)"
+					onchange={handleOutputButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -246,7 +247,7 @@
 					id="multiple"
 					type="checkbox"
 					bind:value={$state.multiple}
-					onchange="handleMultipleButtonClick(event)"
+					onchange={handleMultipleButtonClick}
 				/>
 			</li>
 			<li class="list-item">
@@ -255,7 +256,7 @@
 					id="direction"
 					bind:this={$state.directionValue}
 					bind:value={$state.direction}
-					onchange="handleDirectionButtonClick(event)"
+					onchange={handleDirectionButtonClick}
 				>
 					<option value="">-</option>
 					<option value="north">North</option>
@@ -271,7 +272,7 @@
 					id="dynamic"
 					type="checkbox"
 					bind:value={$state.dynamic}
-					onchange="handleDynamicButtonClick(event)"
+					onchange={handleDynamicButtonClick}
 				/>
 			</li>
 
@@ -281,7 +282,7 @@
 					id="anchorLocked"
 					type="checkbox"
 					bind:value={$state.anchorLocked}
-					onchange="handleAnchorLockedButtonClick(event)"
+					onchange={handleAnchorLockedButtonClick}
 				/>
 			</li>
 
@@ -291,7 +292,7 @@
 					id="deleteSelfAnchor"
 					class="deleteAnchor"
 					type="button"
-					onclick="deleteAnchor(event)"
+					onclick={deleteAnchor}
 				>
 					<Icon icon="arrow_left" />
 				</button>
@@ -300,7 +301,7 @@
 					id="addSelfAnchor"
 					class="addAnchor"
 					type="button"
-					onclick="addAnchor(event)"
+					onclick={addAnchor}
 				>
 					<Icon icon="arrow_right" />
 				</button>
@@ -310,18 +311,18 @@
 				<p>Right</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" onclick="deleteAnchor(event)">
+				<button id="deleteLeftAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$leftAnchorCounter}</span>
-				<button id="addLeftAnchor" class="addAnchor" type="button" onclick="addAnchor(event)">
+				<button id="addLeftAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button id="deleteRightAnchor" class="deleteAnchor" type="button" onclick="deleteAnchor(event)">
+				<button id="deleteRightAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$rightAnchorCounter}</span>
-				<button id="addRightAnchor" class="addAnchor" type="button" onclick="addAnchor(event)">
+				<button id="addRightAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>
@@ -330,18 +331,18 @@
 				<p>Bottom</p>
 			</li>
 			<li class="list-item anchor-directions">
-				<button id="deleteTopAnchor" class="deleteAnchor" type="button" onclick="deleteAnchor(event)">
+				<button id="deleteTopAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$topAnchorCounter}</span>
-				<button id="addTopAnchor" class="addAnchor" type="button" onclick="addAnchor(event)">
+				<button id="addTopAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
-				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" onclick="deleteAnchor(event)">
+				<button id="deleteBottomAnchor" class="deleteAnchor" type="button" onclick={deleteAnchor}>
 					<Icon icon="arrow_left" />
 				</button>
 				<span class="list-item couter">{$bottomAnchorCounter}</span>
-				<button id="addBottomAnchor" class="addAnchor" type="button" onclick="addAnchor(event)">
+				<button id="addBottomAnchor" class="addAnchor" type="button" onclick={addAnchor}>
 					<Icon icon="arrow_right" />
 				</button>
 			</li>

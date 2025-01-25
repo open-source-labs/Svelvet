@@ -262,10 +262,10 @@
 		activeGroup={graph.activeGroup}
 		editing={graph.editing}
 		initialNodePositions={graph.initialNodePositions}
-		on:nodeClicked
-		on:nodeMount
-		on:nodeReleased
-		on:duplicate
+		onnodeClicked
+		onnodeMount
+		onnodeReleased
+		onduplicate
 		let:destroy
 		let:selected
 		let:grabHandle
@@ -273,7 +273,7 @@
 			{@render name="default"}
 			<slot {selected} {grabHandle} {disconnect} {connect} node={$state.node} {destroy}>
 				{#if $state.isDefault}
-					<DefaultNode {selected} on:connection on:disconnection />
+					<DefaultNode {selected} onconnection ondisconnection />
 				{/if}
 			</slot>
 		{@/render}

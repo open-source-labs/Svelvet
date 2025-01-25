@@ -27,30 +27,32 @@
 	export let trackpadPan: boolean;
 	export let toggle: boolean;
 
+	$props = {
+		width,
+		height,
+		minimap,
+		translation,
+		controls,
+		edge,
+		edgeStyle,
+		snapTo,
+		editable,
+		fitView,
+		locked,
+		zoom,
+		theme,
+		mermaid,
+		mermaidConfig,
+		TD,
+		disableSelection,
+		raiseEdgesOnSelect,
+		modifier,
+		trackpadPan,
+		toggle
+	};
+
 	$state = {
-		svelvetProps: {
-			width,
-			height,
-			minimap,
-			translation,
-			controls,
-			edge,
-			edgeStyle,
-			snapTo,
-			editable,
-			fitView,
-			locked,
-			zoom,
-			theme,
-			mermaid,
-			mermaidConfig,
-			TD,
-			disableSelection,
-			raiseEdgesOnSelect,
-			modifier,
-			trackpadPan,
-			toggle
-		},
+		svelvetProps: $props,
 		defaultNodes: [],
 		dropped_in: false
 	};

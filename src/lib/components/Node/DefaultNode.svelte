@@ -10,8 +10,9 @@
 	const dynamic = getContext<boolean>('dynamic');
 	const node = getContext<Node>('node');
 
-	// Props
-	export let selected: boolean;
+	$props = {
+		selected: false
+	};
 
 	// External stores
 	const label = node.label;
@@ -34,20 +35,20 @@
 <div class:selected class="default-node" style:border-radius="{$borderRadius}px">
 	{#if dynamic}
 		{#each { length: $inputs } as _}
-			<Anchor on:connection on:disconnection />
+			<Anchor onconnection ondisconnection />
 		{/each}
 		{#each { length: $outputs } as _}
-			<Anchor on:connection on:disconnection />
+			<Anchor onconnection ondisconnection />
 		{/each}
 	{:else}
 		<div class="input-anchors" class:top class:left>
 			{#each { length: $inputs } as _, i (i)}
-				<Anchor on:connection on:disconnection input direction={top ? 'north' : 'west'} />
+				<Anchor onconnection ondisconnection input direction={top ? 'north' : 'west'} />
 			{/each}
 		</div>
 		<div class="output-anchors" class:bottom class:right>
 			{#each { length: $outputs } as _, i (i)}
-				<Anchor on:connection on:disconnection output direction={top ? 'south' : 'east'} />
+				<Anchor onconnection ondisconnection output direction={top ? 'south' : 'east'} />
 			{/each}
 		</div>
 	{/if}

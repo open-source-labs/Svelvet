@@ -238,19 +238,19 @@
 </script>
 
 {#if $props.width}
-	<div use:resizeHandler={{ left: $state.left }} class:width class="left" />
-	<div use:resizeHandler={{ right: $state.right }} class:width class="right" />
+	<div {...resizeHandler({ left: $state.left })} class:width class="left" />
+	<div {...resizeHandler({ right: $state.right })} class:width class="right" />
 {/if}
 
 {#if $props.height}
-	<div use:resizeHandler={{ top: $state.top }} class:height class="top" />
-	<div use:resizeHandler={{ bottom: $state.bottom }} class:height class="bottom" />
+	<div {...resizeHandler({ top: $state.top })} class:height class="top" />
+	<div {...resizeHandler({ bottom: $state.bottom })} class:height class="bottom" />
 {/if}
 {#if $state.both}
-	<div use:resizeHandler={{ both: $state.both }} class:both />
+	<div {...resizeHandler({ both: $state.both })} class:both />
 {/if}
 {#if $props.rotation}
-	<div use:rotateHandler class:rotation />
+	<div {...rotateHandler} class:rotation />
 {/if}
 
 <style>
@@ -259,8 +259,7 @@
 		width: 9px;
 		height: 9px;
 		z-index: 0;
-		/* background-color: rgba(0, 0, 0, 0.419); */
-		pointer-events: auto;
+		 pointer-events: auto;
 	}
 
 	.width {
@@ -291,12 +290,10 @@
 		bottom: -3px;
 		right: -3px;
 		cursor: nwse-resize;
-		/* background-color: green; */
 	}
 	.rotation {
 		top: -3px;
 		left: -3px;
 		cursor: crosshair;
-		/* background-color: blue; */
 	}
 </style>
