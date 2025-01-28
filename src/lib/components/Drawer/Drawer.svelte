@@ -27,7 +27,7 @@
 	export let trackpadPan = false;
 	export let toggle = false;
 
-	// Store props in object to be passed to svelvet
+	// Store props in an object to be passed to Svelvet
 	const svelvetProps: SvelvetConfig = {
 		width,
 		height,
@@ -49,41 +49,77 @@
 		raiseEdgesOnSelect,
 		modifier,
 		trackpadPan,
-		toggle
+		toggle,
 	};
 
-	// Array of default and custom nodes, anchors
+	// Array to store nodes dynamically
 	let defaultNodes: NodeDrawerConfig[] = [];
-	let dropped_in: boolean;
+	let dropped_in = false;
 
-	// Drag and drop events
+	// Drag-and-drop event handlers with debugging logs
 	const handleDragEnter = (): void => {
-		if (!dropped_in) dropped_in = true;
+		dropped_in = true;
+		console.log('Drag entered canvas area.');
 	};
 
 	const handleDragLeave = (): void => {
 		dropped_in = false;
+		console.log('Drag left canvas area.');
 	};
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
+		console.log('Dragging over canvas area.');
 		return false;
 	};
 
-	const handleDrop = (e: MouseEvent): void => {
+	const handleDrop = (e: DragEvent): void => {
+		e.preventDefault();
 		e.stopPropagation();
-		//Issue click event
-		const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		const target = e.target as HTMLElement;
-		target.dispatchEvent(moveEvent);
 
-		defaultNodes = $defaultNodePropsStore;
+		// Get the drop position in canvas coordinates
+		const canvas = e.currentTarget as HTMLElement;
+		const rect = canvas.getBoundingClientRect();
+		const dropX = e.clientX - rect.left; // Convert to canvas X
+		const dropY = e.clientY - rect.top; // Convert to canvas Y
+
+		// Debugging: Log the drop position
+		console.log('Dropped at:', { x: dropX, y: dropY });
+
+		// Add a new node to the defaultNodes array
+		defaultNodes = [
+			...defaultNodes,
+			{
+				id: `node-${defaultNodes.length + 1}`,
+				x: dropX,
+				y: dropY,
+				width: 150,
+				height: 80,
+				label: `Node ${defaultNodes.length + 1}`,
+				anchors: {
+					top: [],
+					right: [],
+					bottom: [],
+					left: [],
+					self: [],
+				},
+			},
+		];
+
+		// Debugging: Log the updated nodes array
+		console.log('Updated nodes:', defaultNodes);
 	};
 </script>
+
+<style>
+	/* Styles for the drop zone to make it visually distinct */
+	.drop_zone {
+		width: 100%;
+		height: 100%;
+		border: 2px dashed #ddd;
+		position: relative;
+	}
+</style>
 
 <div
 	role="presentation"
@@ -159,7 +195,6 @@
 		<slot />
 		<slot name="minimap" slot="minimap" />
 		<slot name="controls" slot="controls" />
-		<!-- <slot name="background" slot='background'></slot>  -->
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
