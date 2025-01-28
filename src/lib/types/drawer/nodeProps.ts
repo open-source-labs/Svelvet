@@ -18,6 +18,8 @@ export interface NodeDrawerConfig {
 	nodeDirection?: string;
 	anchors?: { [key: string]: AnchorDrawerConfig[] };
 	edgeProps?: EdgeDrawerConfig;
+	id: string;
+	
 }
 
 export type NodeProps = [

@@ -8,9 +8,18 @@
 		NodeProps
 	} from '$lib/types';
 	import { addProps } from '$lib/utils';
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
 
 	// External stores
 	export const defaultNodePropsStore = writable<Array<NodeDrawerConfig>>([]);
+
+	// Node properties
+	let nodeProps: Partial<NodeDrawerConfig> = {
+		width: 200,
+		height: 100,
+		x: 0,
+		y: 0
+	};
 
 	// types for node creation
 	let bgColor: CSSColorString | undefined;
@@ -28,14 +37,20 @@
 	let LR: boolean | undefined;
 	let useDefaults: boolean | undefined;
 	let nodeDirection: string | undefined;
+	let x = 0;
+	let y = 0;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
 	export const createNodeProps = (
 		edgeProps?: EdgeDrawerConfig,
 		anchorProps?: { [key: string]: AnchorDrawerConfig[] }
 	): void => {
+		//Snap node position to grid
+		const snappedPosition = getSnappedPosition(x, y);
+		x = snappedPosition.x;
+		y = snappedPosition.y;
 		// Object that stores properties for the created node
-		const nodeProps: NodeDrawerConfig = {};
+		const nodeProps: NodeDrawerConfig = { x, y };
 		// Array of property names and values for node
 		const nodePropNames: string[] = [
 			'bgColor',
@@ -93,8 +108,10 @@
 		TD = undefined;
 		LR = undefined;
 		useDefaults = undefined;
+		x = 0;
+		y = 0;
 
-		const formElement = e.target as HTMLFormElement;
+		const formElement = e.currentTarget as HTMLFormElement;
 		formElement.reset();
 	};
 
