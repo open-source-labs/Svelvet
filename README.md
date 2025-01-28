@@ -14,7 +14,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@rathnaganjigunta/introducing-svelvet-8-new-features-for-a-user-friendly-svelte-component-library-c9b966c5eb75) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@julianb1212_35672/svelvet-10-0-new-features-for-accessibility-and-improved-performance-3caaab9e54e9) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 <br>
@@ -25,6 +25,34 @@ Shout out to our contributors! Here's what's new:
 
 ### Changelog
 
+<details>
+<summary>🛸 v10.0.0 🛸</summary>
+
+- **Features**:
+
+  - **Accessibility Enhancement**: Now users can navigate the canvas using the keyboard.
+    - Press `'l'` to turn on light/dark mode.
+    - Press `'d'` to show drawer component, and `'D'` to open/close drawer component.
+    - Press `Option + Tab || Ctrl + Tab` for Node selection.
+    - Press `'m'` to toggle the minimap component.
+    - Press `'c'` to toggle control component.
+    - Press `'e'` to bring up editor component.
+  - **Persistent Canvas State**: Added the ability to save the state persistently to local storage.
+  - **High Contrast Mode**: Introduced a new high contrast accessibility component tailored for the visually impaired.
+
+- **Refactoring**:
+
+  - **Improved Keyboard Accessibility**: Enhanced the keyboard accessibility of the drawer component through refactoring.
+
+- **Documentation**:
+
+  - **Updated Guidance**: Documentation now includes instructions on utilizing keyboard accessibility features.
+
+- **Miscellaneous**:
+  - **Test Enhancements**: Added comprehensive testing for drawer components.
+  - **Maintenance**: Updated Playwright tests and configuration for improved stability.
+
+</details>
 <details><summary>🚀 v9.0.0 🚀</summary>
   <ul>
     <li>feat: migrated Svelvet library from Svelte 3 to Svelte 4</li>
@@ -266,6 +294,10 @@ npm run test:unit [filename]
 
 ## The Svelvet Team
 
+- Mason Lee • [LinkedIn](https://www.linkedin.com/in/maysonlee/) • [Github](https://github.com/mayson124)
+- Isaac Bocage • [LinkedIn](https://www.linkedin.com/in/isaac-bocage-15711715a/) • [Github](https://github.com/isaacb0)
+- Julian Bos • [LinkedIn](https://www.linkedin.com/in/julian-bos-2ab287145/) • [Github](https://github.com/Julianb12)
+- Solomon Moon • [LinkedIn](https://www.linkedin.com/in/solomon-moon-aaab7818a/) • [Github](https://github.com/chobo91)
 - Henry Sweat • [LinkedIn](https://www.linkedin.com/in/henry-sweat/) • [Github](https://github.com/henry-sweat)
 - Jeremy David • [LinkedIn](https://www.linkedin.com/in/jeremy-david-66jc/) • [Github](https://github.com/Jdave1125)
 - John Costello • [LinkedIn](https://www.linkedin.com/in/johnlcostello/) • [Github](https://github.com/johnlcos)
@@ -309,7 +341,7 @@ npm run test:unit [filename]
 ## How to Contribute
 
 Please refer to the [roadmap](https://svelvet.mintlify.app/roadmap) for the full list of ideas for iteration. <br>
-Some ideas inspired by v9.0.0 include:
+Some ideas inspired by v10.0.0 include:
 
 - **Example Showcase:** we've added a new section to the documentation which will contain example sandboxes of features and potential usecases of Svelvet. If you would like to contribute to the showcase with an example of how you’re using Svelvet, reach out to the team with your project via [Github discussion](https://github.com/open-source-labs/Svelvet/discussions/categories/project-showcase).
 
@@ -317,7 +349,11 @@ Some ideas inspired by v9.0.0 include:
 
 - **Additional Data Input Components:** we plan on creating additional input/parameter components that integrate with our data flow system and can be used when composing custom Nodes.
 
-- **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon.
+- **Extensive Test Converage:** We expect to have full E2E and unit test coverage relatively soon. Especially the newly added features in contrast themes.
+
+- **Accessibility Linter:** We aim to ensure our components are accessible and compliant with accessibility standards. Implementation of an accessibility linter would streamline the process of identifying and rectifying accessibility issues within our components.
+
+- **Persistent Canvas State** saveStore.ts and reloadStore.ts lay the foundation for the save feature. They work together to get the state object of the canvas by turning it into a JSON string for storage and then parsing it into a JSON object for reconstruction. But they need further development as they only save the camera position and theme. Specifically, the traverse function in saveStore.ts needs to properly detect and expand each element inside the canvas (graph) state object. A good place to start on this would be addressing the anchors and edges property of the graph's state object. Use the "nodes" property on this object for reference on how this data should be unraveled and stored. Additionally, the createGraph function is used in reloadStore.ts to render a graph onMount of the Svelvet component according to the state object that was saved last in local storage on the user's browser. This implementation is simplified, however, so it only recreates the graph from partially saved data.
 
 GET CREATIVE!! Svelvet is an amazing project that has so much room to grow.
 

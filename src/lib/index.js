@@ -16,6 +16,7 @@ import ColorPicker from './components/data/ColorPicker/ColorWheel.svelte';
 import Resizer from './components/Resizer/Resizer.svelte';
 import { generateInput, generateOutput } from './utils/creators';
 import { getViewportCenter } from './utils/getters/getViewportCenter';
+import ContrastTheme from './components/ContrastTheme/ContrastTheme.svelte';
 export {
 	Svelvet,
 	Controls,
@@ -35,7 +36,8 @@ export {
 	Drawer,
 	generateInput,
 	generateOutput,
-	getViewportCenter
+	getViewportCenter,
+	ContrastTheme
 };
 
 export * from './types';
