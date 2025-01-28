@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Graph } from '$lib/types';
 	import { getContext } from 'svelte';
+	import { get } from 'svelte/store';
+
 	import { calculateFitView } from '$lib/utils';
 	import type { CSSColorString } from '$lib/types';
 	import { zoomAndTranslate } from '$lib/utils/movers/';
@@ -39,7 +41,7 @@
 
 	function fitView() {
 		tracking.set(true);
-		const { x, y, scale } = calculateFitView($dimensions, $nodeBounds);
+		const { x, y, scale } = calculateFitView(get(dimensions), get(nodeBounds));
 		translation.set({ x: x || 0, y: y || 0 });
 		transforms.scale.set(scale || 1);
 		tracking.set(false);
@@ -47,18 +49,20 @@
 
 	function lock() {
 		// Toggle lock boolean
-		$locked = !$locked;
+		locked.set(!$locked);
+		// $locked = !$locked;
 	}
 </script>
 
-<nav
+<nav class="graph-controls {corner}" aria-label="navigation">
+	<!-- <nav
 	class="graph-controls"
 	class:SW={corner === 'SW'}
 	class:NE={corner === 'NE'}
 	class:SE={corner === 'SE'}
 	class:NW={corner === 'NW'}
 	aria-label="navigation"
->
+> -->
 	<slot {zoomIn} {zoomOut} {fitView} {lock} {unhideAll}>
 		<div
 			class="controls-wrapper"
@@ -66,12 +70,14 @@
 			style:--prop-controls-background-color={bgColor}
 			style:--prop-controls-text-color={iconColor}
 		>
-			{#if $hidden.size > 0}
+			{#if get(hidden).size > 0}
+				<!-- {#if $hidden.size > 0} -->
 				<button class="unhide" on:mousedown|stopPropagation={unhideAll}>
 					<Icon icon="visibility_off" />
 				</button>
 			{/if}
-			<button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}>
+			<button class="zoom-in" on:pointerdown|stopPropagation={zoomIn}>
+				<!-- <button class="zoom-in" on:mousedown|stopPropagation={zoomIn} on:touchstart={zoomIn}> -->
 				<Icon icon="zoom_in" />
 			</button>
 			<button class="zoom-out" on:mousedown|stopPropagation={zoomOut} on:touchstart={zoomOut}>
@@ -81,7 +87,7 @@
 				<Icon icon="filter_center_focus" />
 			</button>
 			<button class="lock" on:mousedown|stopPropagation={lock} on:touchstart={lock}>
-				<Icon icon={$locked ? 'lock_open' : 'lock'} />
+				<Icon icon={$locked ? 'lock' : 'lock_open'} />
 			</button>
 		</div>
 	</slot>

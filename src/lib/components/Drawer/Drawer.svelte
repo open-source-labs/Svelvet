@@ -3,6 +3,7 @@
 	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
 
 	// Props
 	export let width = 0;
@@ -52,11 +53,20 @@
 		toggle
 	};
 
+	let droppedNodeId: string | null = null;
+
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in: boolean;
 
 	// Drag and drop events
+
+	// Update this function to set droppedNodeId when a node starts dragging
+	const handleDragStart = (e: DragEvent, nodeId: string): void => {
+		droppedNodeId = nodeId;
+		e.dataTransfer?.setData('application/json', JSON.stringify({ id: nodeId }));
+	};
+
 	const handleDragEnter = (): void => {
 		if (!dropped_in) dropped_in = true;
 	};
@@ -71,18 +81,37 @@
 	};
 
 	const handleDrop = (e: MouseEvent): void => {
+		e.preventDefault();
 		e.stopPropagation();
-		//Issue click event
-		const moveEvent = new MouseEvent('mousemove', {
-			clientX: e.clientX,
-			clientY: e.clientY,
-			bubbles: true
-		});
-		const target = e.target as HTMLElement;
-		target.dispatchEvent(moveEvent);
+		const dragEvent = e as DragEvent;
+		// Get the dropped node ID from dataTransfer
+		const nodeId = dragEvent.dataTransfer?.getData('application/json');
+		if (nodeId) {
+			// Issue click event
+			const moveEvent = new MouseEvent('mousemove', {
+				clientX: e.clientX,
+				clientY: e.clientY,
+				bubbles: true
+			});
+			const target = e.target as HTMLElement;
+			target.dispatchEvent(moveEvent);
 
-		defaultNodes = $defaultNodePropsStore;
+			// Get the snapped position based on the drop location
+			const snappedPosition = getSnappedPosition(e.clientX, e.clientY);
+
+			// Update the defaultNodes with the snapped position
+			defaultNodes = $defaultNodePropsStore.map((node) => {
+				if (node.id === nodeId) {
+					return {
+						...node,
+						position: snappedPosition // Update the position of the dropped node
+					};
+				}
+				return node;
+			});
+		}
 	};
+	// defaultNodes = $defaultNodePropsStore;
 </script>
 
 <div
