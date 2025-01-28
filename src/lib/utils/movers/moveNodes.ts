@@ -2,6 +2,7 @@ import type { Writable } from 'svelte/store';
 import type { Node, Graph, XYPair, GroupBox } from '$lib/types';
 import { get } from 'svelte/store';
 import { initialClickPosition, tracking } from '$lib/stores';
+import { getSnappedPosition } from '../snapGrid';
 
 const buffer = 10;
 
@@ -40,9 +41,15 @@ export function moveNodes(graph: Graph, snapTo: number) {
 		let newX = cursorPosition.x - initialClickX;
 		let newY = cursorPosition.y - initialClickY;
 
+		//Snap to grid Logic
 		if (snapTo) {
-			newX -= newX % snapTo;
-			newY -= newY % snapTo;
+			//snaps to nearest grid point
+			const snappedPosition = getSnappedPosition(newX, newY);
+			newX = snappedPosition.x;
+			newY = snappedPosition.y;
+
+			// newX -= newX % snapTo;
+			// newY -= newY % snapTo;
 		}
 
 		const delta = { x: newX, y: newY };

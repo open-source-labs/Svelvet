@@ -7,7 +7,7 @@
 	import { createEdgeProps } from './DrawerEdge.svelte';
 	import Icon from '$lib/assets/icons/Icon.svelte';
 	import { onMount, onDestroy } from 'svelte';
-
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
 	let isOpen = false;
 	let nodeContainerOpen = false;
 	let edgeContainerOpen = false;
@@ -21,6 +21,7 @@
 	let nodeContainer: HTMLElement;
 	let anchorContainer: HTMLElement;
 	let edgeContainer: HTMLElement;
+	let currentNode: HTMLElement | null = null;
 
 	const handleDragStart = (e: DragEvent) => {
 		if (!e.dataTransfer) return;
@@ -116,6 +117,44 @@
 				currentComponent = 'Node';
 			}
 		}
+	};
+	let offsetX = 0;
+	let offsetY = 0;
+
+	// Dragging logic for node
+	const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
+		if (!e.dataTransfer) return;
+
+		// Store the current node being dragged
+		currentNode = node;
+
+		// Store the initial offset relative to the mouse position
+		offsetX = e.clientX - node.offsetLeft;
+		offsetY = e.clientY - node.offsetTop;
+
+		node.style.position = 'absolute'; // To move freely within the container
+	};
+
+	const handleDragMove = (e: MouseEvent) => {
+		if (!currentNode) return;
+
+		// Calculate the new position based on mouse movement
+		const newX = e.clientX - offsetX;
+		const newY = e.clientY - offsetY;
+
+		// Snap the new position to the grid
+		const { x: snappedX, y: snappedY } = getSnappedPosition(newX, newY);
+
+		// Update the position of the node
+		currentNode.style.left = `${snappedX}px`;
+		currentNode.style.top = `${snappedY}px`;
+	};
+
+	const handleDragEnd = () => {
+		if (!currentNode) return;
+
+		// Perform any cleanup after the drag ends
+		currentNode = null;
 	};
 
 	// Add the event listener when the component mounts

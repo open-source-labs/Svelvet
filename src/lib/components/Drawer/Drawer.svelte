@@ -3,6 +3,7 @@
 	import type { SvelvetConfig, NodeConfig, XYPair, EdgeStyle, NodeDrawerConfig } from '$lib/types';
 	import type { ComponentType } from 'svelte';
 	import { defaultNodePropsStore } from './DrawerNode.svelte';
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
 
 	// Props
 	export let width = 0;
@@ -52,11 +53,14 @@
 		toggle,
 	};
 
-	// Array to store nodes dynamically
+
+
+	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in = false;
 
-	// Drag-and-drop event handlers with debugging logs
+	// Drag and drop events
+
 	const handleDragEnter = (): void => {
 		dropped_in = true;
 		console.log('Drag entered canvas area.');
@@ -73,42 +77,39 @@
 		return false;
 	};
 
-	const handleDrop = (e: DragEvent): void => {
+
+	const handleDrop = (e: MouseEvent): void => {
 		e.preventDefault();
 		e.stopPropagation();
+		const dragEvent = e as DragEvent;
+		// Get the dropped node ID from dataTransfer
+		const nodeId = dragEvent.dataTransfer?.getData('application/json');
+		if (nodeId) {
+			// Issue click event
+			const moveEvent = new MouseEvent('mousemove', {
+				clientX: e.clientX,
+				clientY: e.clientY,
+				bubbles: true
+			});
+			const target = e.target as HTMLElement;
+			target.dispatchEvent(moveEvent);
 
-		// Get the drop position in canvas coordinates
-		const canvas = e.currentTarget as HTMLElement;
-		const rect = canvas.getBoundingClientRect();
-		const dropX = e.clientX - rect.left; // Convert to canvas X
-		const dropY = e.clientY - rect.top; // Convert to canvas Y
+			// Get the snapped position based on the drop location
+			const snappedPosition = getSnappedPosition(e.clientX, e.clientY);
 
-		// Debugging: Log the drop position
-		console.log('Dropped at:', { x: dropX, y: dropY });
-
-		// Add a new node to the defaultNodes array
-		defaultNodes = [
-			...defaultNodes,
-			{
-				id: `node-${defaultNodes.length + 1}`,
-				x: dropX,
-				y: dropY,
-				width: 150,
-				height: 80,
-				label: `Node ${defaultNodes.length + 1}`,
-				anchors: {
-					top: [],
-					right: [],
-					bottom: [],
-					left: [],
-					self: [],
-				},
-			},
-		];
-
-		// Debugging: Log the updated nodes array
-		console.log('Updated nodes:', defaultNodes);
+			// Update the defaultNodes with the snapped position
+			defaultNodes = $defaultNodePropsStore.map((node) => {
+				if (node.id === nodeId) {
+					return {
+						...node,
+						position: snappedPosition // Update the position of the dropped node
+					};
+				}
+				return node;
+			});
+		}
 	};
+	// defaultNodes = $defaultNodePropsStore;
 </script>
 
 <style>

@@ -66,11 +66,14 @@
 			<input type="color" id="customTextColor" bind:value={textColor} />
 		</div>
 		<div>
-			<label for="customTextColor">Node</label>
+			<!-- changed to customNodeColor from customTextColor -->
+
+			<label for="customNodeColor">Node</label>
 			<input type="color" id="customNodeColor" bind:value={nodeColor} />
 		</div>
 		<div>
-			<label for="customTextColor">Edge</label>
+			<!-- changed to CustomEdgeColor from customTextColor -->
+			<label for="customEdgeColor">Edge</label>
 			<input type="color" id="customEdgeColor" bind:value={edgeColor} />
 		</div>
 		<button

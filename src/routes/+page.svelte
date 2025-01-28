@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
+	//gets snappedPosition
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
+
 	import Connector from '../example-components/Connector.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle/ThemeToggle.svelte';
 	import TextField from '$lib/components/data/TextField/TextField.svelte';
@@ -27,7 +30,7 @@
 		connect(totalNodes + 4);
 		totalNodes++;
 	}
-	let totalNodes = 0;
+	let totalNodes = 2;
 	let widthCount = 1;
 	let graph: any;
 
@@ -86,7 +89,12 @@
 			<Anchor nodeConnect />
 		</Node>
 		{#each { length: totalNodes } as node}
-			<Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} />
+			<!-- <Node let:connect useDefaults position={{ x: Math.random() * 200, y: Math.random() * 400 }} /> -->
+			<Node
+				let:connect
+				useDefaults
+				position={getSnappedPosition(Math.random() * 200, Math.random() * 400)}
+			/>
 		{/each}
 
 		<ThemeToggle slot="toggle" />
