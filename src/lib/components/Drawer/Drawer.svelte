@@ -28,7 +28,7 @@
 	export let trackpadPan = false;
 	export let toggle = false;
 
-	// Store props in object to be passed to svelvet
+	// Store props in an object to be passed to Svelvet
 	const svelvetProps: SvelvetConfig = {
 		width,
 		height,
@@ -50,35 +50,33 @@
 		raiseEdgesOnSelect,
 		modifier,
 		trackpadPan,
-		toggle
+		toggle,
 	};
 
-	let droppedNodeId: string | null = null;
+
 
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
-	let dropped_in: boolean;
+	let dropped_in = false;
 
 	// Drag and drop events
 
-	// Update this function to set droppedNodeId when a node starts dragging
-	const handleDragStart = (e: DragEvent, nodeId: string): void => {
-		droppedNodeId = nodeId;
-		e.dataTransfer?.setData('application/json', JSON.stringify({ id: nodeId }));
-	};
-
 	const handleDragEnter = (): void => {
-		if (!dropped_in) dropped_in = true;
+		dropped_in = true;
+		console.log('Drag entered canvas area.');
 	};
 
 	const handleDragLeave = (): void => {
 		dropped_in = false;
+		console.log('Drag left canvas area.');
 	};
 
 	const onDragOver = (e: DragEvent): boolean => {
 		e.preventDefault();
+		console.log('Dragging over canvas area.');
 		return false;
 	};
+
 
 	const handleDrop = (e: MouseEvent): void => {
 		e.preventDefault();
@@ -113,6 +111,16 @@
 	};
 	// defaultNodes = $defaultNodePropsStore;
 </script>
+
+<style>
+	/* Styles for the drop zone to make it visually distinct */
+	.drop_zone {
+		width: 100%;
+		height: 100%;
+		border: 2px dashed #ddd;
+		position: relative;
+	}
+</style>
 
 <div
 	role="presentation"
@@ -188,7 +196,6 @@
 		<slot />
 		<slot name="minimap" slot="minimap" />
 		<slot name="controls" slot="controls" />
-		<!-- <slot name="background" slot='background'></slot>  -->
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
