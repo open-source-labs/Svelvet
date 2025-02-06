@@ -28,17 +28,17 @@
 	const handleDragStart = (e: DragEvent, node: HTMLElement) => {
 		// const handleDragStart = (e: DragEvent) => {
 		if (!e.dataTransfer) return;
-		console.log('Dragging Node:', node); 
+		console.log('Dragging Node:', node);
 
 		e.dataTransfer.dropEffect = 'move';
-		e.dataTransfer.setData('text/plain', node.id); 
+		e.dataTransfer.setData('text/plain', node.id);
 
 		// Store the current node being dragged
 		currentNode = node;
 		offsetX = e.clientX - node.offsetLeft;
 		offsetY = e.clientY - node.offsetTop;
 
-		node.style.position = 'absolute'; 
+		node.style.position = 'absolute';
 
 		// Create props for anchor or edge if values were given
 		const anchorProps = createAnchorProps(true);
@@ -150,7 +150,7 @@
 
 	const handleDragMove = (e: MouseEvent) => {
 		if (!currentNode) return;
-		console.log("handleDragMove function called!");
+		console.log('handleDragMove function called!');
 
 		console.log('Dragging...', e.clientX, e.clientY); // ✅ Debugging log
 
