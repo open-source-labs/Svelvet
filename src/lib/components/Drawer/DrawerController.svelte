@@ -141,26 +141,30 @@
 	let offsetX = 0;
 	let offsetY = 0;
 
+	let draggedNodeType: string | null = null;
 	// Dragging logic for node
-	const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
+	const handleNodeDragStart = (e: DragEvent, nodeType: string) => {
+
+	// const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
 		if (!e.dataTransfer) return;
-		console.log('Dragging Node:', node.id);
+		console.log('Dragging Node:', nodeType);
 
 		e.dataTransfer.dropEffect = 'move';
-		e.dataTransfer.setData('text/plain', node.id);
+		e.dataTransfer.setData('text/plain', nodeType);
 
 		// Store the current node being dragged
-		currentNode = node;
+		draggedNodeType = nodeType
+		// currentNode = node;
 
 		// Store the initial offset relative to the mouse position
-		offsetX = e.clientX - node.offsetLeft;
-		offsetY = e.clientY - node.offsetTop;
+		// offsetX = e.clientX - node.offsetLeft;
+		// offsetY = e.clientY - node.offsetTop;
 
-		node.style.position = 'absolute'; // To move freely within the container
+		// node.style.position = 'absolute'; // To move freely within the container
 
-		// Add event listeners to track movement only while dragging
-		document.addEventListener('mousemove', handleDragMove);
-		document.addEventListener('mouseup', handleDragEnd);
+		// // Add event listeners to track movement only while dragging
+		// document.addEventListener('mousemove', handleDragMove);
+		// document.addEventListener('mouseup', handleDragEnd);
 	};
 
 	const handleDragMove = (e: MouseEvent) => {
