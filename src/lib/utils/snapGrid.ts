@@ -12,6 +12,8 @@ export const cell = { width: 200, height: 100 };
  */
 
 export function getSnappedPosition(x: number, y: number): { x: number; y: number } {
+	console.log('Snapping position:', { x, y }); // Debugging line
+
 	return {
 		x: Math.round(x / cell.width) * cell.width,
 		y: Math.round(y / cell.height) * cell.height
