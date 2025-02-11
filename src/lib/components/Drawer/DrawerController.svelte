@@ -143,9 +143,8 @@
 
 	let draggedNodeType: string | null = null;
 	// Dragging logic for node
-	const handleNodeDragStart = (e: DragEvent, nodeType: string) => {
-
-	// const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
+	const handleNodeDragStart = (e: DragEvent, node: HTMLElement, nodeType: string) => {
+		// const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
 		if (!e.dataTransfer) return;
 		console.log('Dragging Node:', nodeType);
 
@@ -153,8 +152,8 @@
 		e.dataTransfer.setData('text/plain', nodeType);
 
 		// Store the current node being dragged
-		draggedNodeType = nodeType
-		// currentNode = node;
+		draggedNodeType = nodeType;
+		currentNode = node;
 
 		// Store the initial offset relative to the mouse position
 		// offsetX = e.clientX - node.offsetLeft;

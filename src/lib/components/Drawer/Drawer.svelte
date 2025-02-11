@@ -50,10 +50,8 @@
 		raiseEdgesOnSelect,
 		modifier,
 		trackpadPan,
-		toggle,
+		toggle
 	};
-
-
 
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
@@ -77,7 +75,6 @@
 		return false;
 	};
 
-
 	const handleDrop = (e: MouseEvent): void => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -98,29 +95,25 @@
 			const snappedPosition = getSnappedPosition(e.clientX, e.clientY);
 
 			// Update the defaultNodes with the snapped position
-			defaultNodes = $defaultNodePropsStore.map((node) => {
-				if (node.id === nodeId) {
-					return {
-						...node,
-						position: snappedPosition // Update the position of the dropped node
-					};
-				}
-				return node;
+			defaultNodePropsStore.update((nodes) => {
+				console.log('Updating nodes:', nodes);
+				return nodes.map((node) =>
+					node.id === nodeId ? { ...node, position: snappedPosition } : node
+				);
 			});
+			// defaultNodes = $defaultNodePropsStore.map((node) => {
+			// 	if (node.id === nodeId) {
+			// 		return {
+			// 			...node,
+			// 			position: snappedPosition // Update the position of the dropped node
+			// 		};
+			// 	}
+			// 	return node;
+			// });
 		}
 	};
 	// defaultNodes = $defaultNodePropsStore;
 </script>
-
-<style>
-	/* Styles for the drop zone to make it visually distinct */
-	.drop_zone {
-		width: 100%;
-		height: 100%;
-		border: 2px dashed #ddd;
-		position: relative;
-	}
-</style>
 
 <div
 	role="presentation"
@@ -199,3 +192,13 @@
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
+
+<style>
+	/* Styles for the drop zone to make it visually distinct */
+	.drop_zone {
+		width: 100%;
+		height: 100%;
+		border: 2px dashed #ddd;
+		position: relative;
+	}
+</style>

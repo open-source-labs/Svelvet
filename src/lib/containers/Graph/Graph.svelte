@@ -151,7 +151,6 @@
 	setContext('nodeStore', graph.nodes);
 	setContext('mounted', mounted);
 
-
 	// Lifecycle methods
 	onMount(() => {
 		updateGraphDimensions();
@@ -258,7 +257,7 @@
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
 			nodeGroupArray.forEach((node) => {
 				const snappedPos = getSnappedPosition(get(node.position).x, get(node.position).y);
-				node.position.set(snappedPos); 
+				node.position.set(snappedPos);
 				node.moving.set(false);
 			});
 		}
@@ -411,67 +410,65 @@
 	}
 
 	function handleDrop(e: DragEvent) {
-  e.preventDefault();
+		e.preventDefault();
 
-  // Get the mouse position relative to the graph's DOM element
-  const graphRect = $graphDOMElement?.getBoundingClientRect();
-  if (!graphRect) return;
+		// Get the mouse position relative to the graph's DOM element
+		const graphRect = $graphDOMElement?.getBoundingClientRect();
+		if (!graphRect) return;
 
-  const mouseX = e.clientX - graphRect.left;
-  const mouseY = e.clientY - graphRect.top;
+		const mouseX = e.clientX - graphRect.left;
+		const mouseY = e.clientY - graphRect.top;
 
-  // Snap the position to the nearest grid point
-  const { x: snappedX, y: snappedY } = getSnappedPosition(mouseX, mouseY);
-  console.log(`Dropped Node at Snapped Position: (${snappedX}, ${snappedY})`);
+		// Snap the position to the nearest grid point
+		const { x: snappedX, y: snappedY } = getSnappedPosition(mouseX, mouseY);
+		console.log(`Dropped Node at Snapped Position: (${snappedX}, ${snappedY})`);
 
-  // Ensure that a node type is being dragged
-  if (!draggedNodeType) return;
+		// Ensure that a node type is being dragged
+		if (!draggedNodeType) return;
 
-  // Create a new node with the snapped position
-  const newNode = {
-  id: `node-${Date.now()}`,  // Unique ID based on timestamp
-  rotation: writable(0),  // Rotation angle
-  position: writable({ x: snappedX, y: snappedY }),  // Position as a writable store
-  moving: writable(false),  // Initial moving state
-  label: writable('New Node'),  // Default label
-  dimensions: {
-    width: writable(200),  // Default width as a writable store
-    height: writable(100),  // Default height as a writable store
-  },
-  inputs: writable(2),  // Default number of input anchors
-  outputs: writable(2),  // Default number of output anchors
-  anchors: writable([]),  // Empty anchors array (you may want to define this more specifically)
-  group: writable(null),  // Initially no group
-  collapsed: writable(false),  // Default collapsed state
-  resizingWidth: writable(false),  // Default resizing width state
-  resizingHeight: writable(false),  // Default resizing height state
-  rotating: writable(false),  // Default rotating state
-  editable: writable(true),  // Node is editable by default
-  locked: writable(false),  // Node is not locked by default
-  recalculateAnchors: (direction?: Direction) => { /* Implementation */ },  // Function for recalculating anchors
-  resizable: writable(true),  // Node is resizable by default
-  zIndex: writable(1),  // Default zIndex
-  edge: null,  // Default edge value (you can specify the type here)
-  direction: writable('TD'),  // Default direction (Top to Down)
-  borderRadius: writable(5),  // Default border radius
-  borderWidth: writable(1),  // Default border width
-  connections: writable([]),  // Empty connections array
-  bgColor: writable('#007bff'),  // Default background color
-  borderColor: writable('#000'),  // Default border color
-  selectionColor: writable('#ff0000'),  // Default selection color
-  textColor: writable('#fff'),  // Default text color
-};
+		// Create a new node with the snapped position
+		const newNode = {
+			id: `node-${Date.now()}`, // Unique ID based on timestamp
+			rotation: writable(0), // Rotation angle
+			position: writable({ x: snappedX, y: snappedY }), // Position as a writable store
+			moving: writable(false), // Initial moving state
+			label: writable('New Node'), // Default label
+			dimensions: {
+				width: writable(200), // Default width as a writable store
+				height: writable(100) // Default height as a writable store
+			},
+			inputs: writable(2), // Default number of input anchors
+			outputs: writable(2), // Default number of output anchors
+			anchors: writable([]), // Empty anchors array (you may want to define this more specifically)
+			group: writable(null), // Initially no group
+			collapsed: writable(false), // Default collapsed state
+			resizingWidth: writable(false), // Default resizing width state
+			resizingHeight: writable(false), // Default resizing height state
+			rotating: writable(false), // Default rotating state
+			editable: writable(true), // Node is editable by default
+			locked: writable(false), // Node is not locked by default
+			recalculateAnchors: (direction?: Direction) => {
+				/* Implementation */
+			}, // Function for recalculating anchors
+			resizable: writable(true), // Node is resizable by default
+			zIndex: writable(1), // Default zIndex
+			edge: null, // Default edge value (you can specify the type here)
+			direction: writable('TD'), // Default direction (Top to Down)
+			borderRadius: writable(5), // Default border radius
+			borderWidth: writable(1), // Default border width
+			connections: writable([]), // Empty connections array
+			bgColor: writable('#007bff'), // Default background color
+			borderColor: writable('#000'), // Default border color
+			selectionColor: writable('#ff0000'), // Default selection color
+			textColor: writable('#fff') // Default text color
+		};
 
-// Add the new node to the graph store
-graph.nodes.add(newNode, newNode.id);
+		// Add the new node to the graph store
+		graph.nodes.add(newNode, newNode.id);
 
-
-  // Reset the dragged node type
-  draggedNodeType = null;
-}
-
-
-
+		// Reset the dragged node type
+		draggedNodeType = null;
+	}
 
 	//This function handles selecting nodes
 	function selectNextNode() {
