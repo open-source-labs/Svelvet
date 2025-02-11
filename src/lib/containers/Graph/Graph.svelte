@@ -44,8 +44,11 @@
 	export let drawer = false;
 	export let contrast = false;
 
-	let animationFrameId: number;
+	// Log drawer prop initially
+    console.log("Initial Graph drawer prop:", drawer);
 
+	let animationFrameId: number;
+	
 	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
 	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
@@ -110,6 +113,9 @@
 	$: if (drawer && !drawerComponent) loadDrawer();
 	//load the contrast options
 	$: if (contrast && !contrastComponent) loadContrast();
+ 
+	// Log drawer prop when it changes
+ $: console.log("Reactive Graph drawer prop:", drawer);
 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
@@ -152,6 +158,7 @@
 
 	// Lifecycle methods
 	onMount(() => {
+		console.log('Graph component mounted with drawer1:', drawer); // Add this line
 		updateGraphDimensions();
 	});
 
@@ -182,6 +189,7 @@
 		drawerComponent = (await import('$lib/components/Drawer/DrawerController.svelte')).default;
 	}
 
+	
 	async function loadContrast() {
 		contrastComponent = (await import('$lib/components/ContrastTheme/ContrastTheme.svelte'))
 			.default;

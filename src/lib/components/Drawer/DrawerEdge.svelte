@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+	//  console.log('Drawer mounted from drawerEdge')
 	import type { CSSColorString, EdgeProps, EdgeDrawerConfig } from '$lib/types';
 	import { addProps } from '$lib/utils';
 

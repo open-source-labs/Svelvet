@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+	
 	import Graph from '../Graph/Graph.svelte';
 	import FlowChart from '$lib/components/FlowChart/FlowChart.svelte';
 	import { createEventDispatcher, onMount, setContext } from 'svelte';
@@ -15,9 +16,11 @@
 	} from '$lib/types';
 	import type { NodeConfig, GraphKey, CSSColorString, NodeKey } from '$lib/types';
 	import type { Node, Anchor } from '$lib/types';
+	import Drawer from '$lib/components/Drawer/Drawer.svelte';
 </script>
 
 <script lang="ts">
+	
 	// Props
 	export let mermaid = '';
 	/**
@@ -30,6 +33,10 @@
 	export let theme = 'light';
 	export let id: number | string = 0;
 	export let snapTo = 0;
+
+	
+   
+	
 	/**
 	 * @default 1
 	 * @description Sets initial zoom level of the graph. This value
@@ -44,8 +51,11 @@
 	export let minimap = false;
 	export let controls = false;
 	export let toggle = false;
-	export let drawer = false;
+	export let drawer: boolean = false;
 	export let contrast = false;
+
+	$: console.log("Svelvet drawer prop:", drawer);
+
 	/**
 	 * @default `false`
 	 * @description When `true`, the graph will automatically adjust translation
@@ -126,6 +136,7 @@
 	// function to load a graph from local storage
 	// occurs after Svelvet renders
 	onMount(() => {
+		console.log('Graph component mounted with drawer:', drawer);
 		const stateObject = localStorage.getItem('state');
 		// console.log('stateObject during onMount:', stateObject);
 		if (stateObject) {
@@ -185,11 +196,14 @@
 		const edgeKey = graph.edges.match(sourceAnchor, targetAnchor);
 		if (!edgeKey) return;
 		graph.edges.delete(edgeKey[0]);
+		
 	}
+	
 </script>
 
 {#if graph}
 	<Graph
+	
 		{width}
 		{height}
 		{toggle}
@@ -220,6 +234,7 @@
 		<slot name="toggle" slot="toggle" />
 		<slot name="drawer" slot="drawer" />
 		<slot name="contrast" slot="contrast" />
+		
 	</Graph>
 {:else}
 	<div

@@ -328,6 +328,7 @@
 </script>
 
 <div
+role="presentation"
 	id="drop_zone"
 	on:dragenter={handleDragEnter}
 	on:dragleave={handleDragLeave}
@@ -345,6 +346,8 @@
 				</Anchor>
 			</Node>
 		{/each}
+		<!-- <ThemeToggle slot="toggle" />
+		<ContrastTheme slot="contrast" /> -->
 		<ThemeToggle main="light" alt="dark" slot="toggle" />
 	</Svelvet>
 </div>

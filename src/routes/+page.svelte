@@ -1,4 +1,4 @@
-<script lang="ts">
+ <script lang="ts">
 	import { Svelvet, Node, Anchor, Resizer, Group } from '$lib';
 	//gets snappedPosition
 	import { getSnappedPosition } from '$lib/utils/snapGrid';
@@ -10,6 +10,7 @@
 	// maybe not needed here
 	import Controls from '$lib/components/Controls/Controls.svelte';
 	import Drawer from '$lib/components/Drawer/Drawer.svelte';
+    
 	import CircleColor from '../example-components/sandbox/CircleColor.svelte';
 	import DashCount from '../example-components/sandbox/DashCount.svelte';
 	import Noise from '../example-components/sandbox/Noise.svelte';
@@ -35,6 +36,7 @@
 	let graph: any;
 
 	graphStore.subscribe((graphMap) => {
+        // console.log("Graph Map:", graphMap);
 		const graphKey = 'G-1';
 		graph = graphMap.get(graphKey);
 		// console.log('Graph from store:', graph);
@@ -51,7 +53,9 @@
 </script>
 
 <body>
-	<Svelvet minimap title="test" controls>
+<!-- <Drawer/> -->
+	<Svelvet minimap title="test" controls >
+		
 		<!-- buttons on lower level node -->
 		<Connector />
 		<Node bgColor="red" inputs={4} position={{ x: 600, y: 200 }}>
@@ -99,6 +103,7 @@
 
 		<ThemeToggle slot="toggle" />
 		<ContrastTheme slot="contrast" />
+        
 	</Svelvet>
 </body>
 
@@ -127,4 +132,5 @@
 		--background-color: purple;
 		--node-color: green;
 	}
-</style>
+</style> 
+ 
