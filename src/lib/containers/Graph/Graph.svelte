@@ -462,6 +462,9 @@
 			selectionColor: writable('#ff0000'), // Default selection color
 			textColor: writable('#fff') // Default text color
 		};
+		let draggedNodeType: string | null = null;
+
+		type Direction = 'TD' | 'LR';
 
 		// Add the new node to the graph store
 		graph.nodes.add(newNode, newNode.id);
