@@ -125,24 +125,20 @@
 
 	// function to load a graph from local storage
 	// occurs after Svelvet renders
+	// updated by team v.11.0
 	onMount(() => {
 		const stateObject = localStorage.getItem('state');
-		// console.log('stateObject during onMount:', stateObject);
+		console.log('stateObject during onMount:', stateObject); // Aqui esta confirmado que localStorage.getItem('state') esta trayendo el grafico "PERFECTAMENTE BIEN" desde el localStorage
 		if (stateObject) {
 			graph = reloadStore(stateObject);
-			graphStore.add(graph, graph.id);
+			console.log('Este es el graph seteado mediante reloadStore(stateObject)', graph);
+			graphStore.add(graph, graph.id); //ERRROR: graphStore no se esta actuaklzando
+			console.log('graphStore actualizado', graph);
 		} else {
 			let graphKey: GraphKey = `G-${id || graphStore.count() + 1}`;
-
 			graph = createGraph(graphKey, { zoom, direction, editable, locked, translation });
-
 			graphStore.add(graph, graphKey);
 		}
-		// setContext('graph', graph)
-		// added console.log
-
-		// console.log('Graph after onMount:', graph);
-		// graphStore.set(graph);
 	});
 
 	$: backgroundExists = $$slots.background;
@@ -188,6 +184,7 @@
 	}
 </script>
 
+<!-- Aqui se renderiza el grafico -->
 {#if graph}
 	<Graph
 		{width}
