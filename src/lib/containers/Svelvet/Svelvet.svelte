@@ -54,7 +54,7 @@
 	export let drawer: boolean = false;
 	export let contrast = false;
 
-	$: console.log("Svelvet drawer prop:", drawer);
+	// $: console.log("Svelvet drawer prop:", drawer);
 
 	/**
 	 * @default `false`
