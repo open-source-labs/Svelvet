@@ -5,16 +5,18 @@
 	import { updateTranslation } from '$lib/utils';
 	import { get } from 'svelte/store';
 
-	const graph = getContext<Graph>('graph');
+	const graph = getContext<Graph>('graph'); //graph is an object with
+	//console.log('this is our graph', graph); Upon cl, we sa wthe graph object but it does not show the edges, transforms, nodes
 	const transforms = graph.transforms;
-	const scale = transforms.scale;
-	const translation = transforms.translation;
-	const cursor = graph.cursor;
+	const scale = transforms.scale; //zoom
+	const translation = transforms.translation; //x and y coordinates
+	const cursor = graph.cursor; //used to recognize dragging or dropping the graph
 
-	export let isMovable: boolean;
-	let animationFrameId: number;
-	let moving = false;
+	export let isMovable: boolean; //whether the graph can be moved or not
+	let animationFrameId: number; //stores the ID and is used for animations in the browser
+	let moving = false; //if graph is moved
 
+	//anything with the $ infront means REACTIVE STATE
 	$: graphTranslation = $translation;
 
 	// Reactive statement to update the transform attribute of the wrapper
@@ -22,7 +24,7 @@
 
 	$: if (isMovable && !moving) {
 		moving = true;
-		animationFrameId = requestAnimationFrame(translate);
+		animationFrameId = requestAnimationFrame(translate); //this works, we see the changes
 	} else if (!isMovable || !moving) {
 		moving = false;
 		cancelAnimationFrame(animationFrameId);

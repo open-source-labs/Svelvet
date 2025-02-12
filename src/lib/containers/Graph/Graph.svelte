@@ -16,6 +16,7 @@
 	import type { ComponentType } from 'svelte';
 	import type { Graph, GroupBox, GraphDimensions, CSSColorString } from '$lib/types';
 	import type { Arrow, GroupKey, Group, CursorAnchor, ActiveIntervals } from '$lib/types';
+	import { getSnappedPosition } from '$lib/utils/snapGrid';
 </script>
 
 <script lang="ts">
@@ -44,8 +45,11 @@
 	export let drawer = false;
 	export let contrast = false;
 
-	let animationFrameId: number;
+	// Log drawer prop initially
+    console.log("Initial Graph drawer prop:", drawer);
 
+	let animationFrameId: number;
+	
 	// creates a dispatch function using Svelte's createEventDispatcher. This function is used to dispatch custom events from the component. For example, if the component needs to notify parent components of certain actions or changes, dispatch can be used to emit these events.
 	const dispatch = createEventDispatcher();
 	// declares a variable activeIntervals with an initial empty object. This is likely used to keep track of active intervals (created with setInterval) that might be used in the component, allowing for better management and clearance of these intervals.
@@ -110,7 +114,10 @@
 	$: if (drawer && !drawerComponent) loadDrawer();
 	//load the contrast options
 	$: if (contrast && !contrastComponent) loadContrast();
-
+ 
+	// Log drawer prop when it changes
+ $: console.log("Reactive Graph drawer prop:", drawer);
+ 
 	// This is a temporary workaround for generating an edge where one of the anchors is the cursor
 	const cursorAnchor: CursorAnchor = {
 		id: null,
@@ -152,6 +159,7 @@
 
 	// Lifecycle methods
 	onMount(() => {
+		console.log('Graph component mounted with drawer1:', drawer); // Add this line
 		updateGraphDimensions();
 	});
 
@@ -254,13 +262,17 @@
 		// Set moving boolean on active group to false
 		if ($activeGroup) {
 			const nodeGroupArray = Array.from(get($groups[$activeGroup].nodes));
-			nodeGroupArray.forEach((node) => node.moving.set(false));
+			nodeGroupArray.forEach((node) => {
+				const snappedPos = getSnappedPosition(get(node.position).x, get(node.position).y);
+				node.position.set(snappedPos);
+				node.moving.set(false);
+			});
 		}
-		const cursorEdge = graph.edges.get('cursor');
 
+		const cursorEdge = graph.edges.get('cursor');
 		if (cursorEdge) {
 			graph.edges.delete('cursor');
-			if (!cursorEdge.disconnect)
+			if (!cursorEdge.disconnect) {
 				dispatch('edgeDrop', {
 					cursor: get(cursor),
 					source: {
@@ -268,7 +280,9 @@
 						anchor: $connectingFrom?.anchor.id.split('/')[0].slice(2)
 					}
 				});
+			}
 		}
+
 		$activeGroup = null;
 		$initialClickPosition = { x: 0, y: 0 };
 		$initialNodePositions = [];
@@ -402,6 +416,70 @@
 		e.preventDefault();
 	}
 
+	function handleDrop(e: DragEvent) {
+		e.preventDefault();
+
+		// Get the mouse position relative to the graph's DOM element
+		const graphRect = $graphDOMElement?.getBoundingClientRect();
+		if (!graphRect) return;
+
+		const mouseX = e.clientX - graphRect.left;
+		const mouseY = e.clientY - graphRect.top;
+
+		// Snap the position to the nearest grid point
+		const { x: snappedX, y: snappedY } = getSnappedPosition(mouseX, mouseY);
+		console.log(`Dropped Node at Snapped Position: (${snappedX}, ${snappedY})`);
+
+		// Ensure that a node type is being dragged
+		if (!draggedNodeType) return;
+
+		// Create a new node with the snapped position
+		const newNode = {
+			id: `node-${Date.now()}`, // Unique ID based on timestamp
+			rotation: writable(0), // Rotation angle
+			position: writable({ x: snappedX, y: snappedY }), // Position as a writable store
+			moving: writable(false), // Initial moving state
+			label: writable('New Node'), // Default label
+			dimensions: {
+				width: writable(200), // Default width as a writable store
+				height: writable(100) // Default height as a writable store
+			},
+			inputs: writable(2), // Default number of input anchors
+			outputs: writable(2), // Default number of output anchors
+			anchors: writable([]), // Empty anchors array (you may want to define this more specifically)
+			group: writable(null), // Initially no group
+			collapsed: writable(false), // Default collapsed state
+			resizingWidth: writable(false), // Default resizing width state
+			resizingHeight: writable(false), // Default resizing height state
+			rotating: writable(false), // Default rotating state
+			editable: writable(true), // Node is editable by default
+			locked: writable(false), // Node is not locked by default
+			recalculateAnchors: (direction?: Direction) => {
+				/* Implementation */
+			}, // Function for recalculating anchors
+			resizable: writable(true), // Node is resizable by default
+			zIndex: writable(1), // Default zIndex
+			edge: null, // Default edge value (you can specify the type here)
+			direction: writable('TD'), // Default direction (Top to Down)
+			borderRadius: writable(5), // Default border radius
+			borderWidth: writable(1), // Default border width
+			connections: writable([]), // Empty connections array
+			bgColor: writable('#007bff'), // Default background color
+			borderColor: writable('#000'), // Default border color
+			selectionColor: writable('#ff0000'), // Default selection color
+			textColor: writable('#fff') // Default text color
+		};
+		let draggedNodeType: string | null = null;
+
+		type Direction = 'TD' | 'LR';
+
+		// Add the new node to the graph store
+		graph.nodes.add(newNode, newNode.id);
+
+		// Reset the dragged node type
+		draggedNodeType = null;
+	}
+
 	//This function handles selecting nodes
 	function selectNextNode() {
 		const nodes = graph.nodes.getAll();
@@ -464,16 +542,21 @@
 		translation.set(newTranslation);
 	}
 
+	function handleDragOver(e: DragEvent) {
+		e.preventDefault(); // This is needed to allow dropping
+	}
+
 	//handles movement of camera in the canvas and the nodes
 	function handleArrowKey(key: Arrow, e: KeyboardEvent) {
 		const multiplier = e.shiftKey ? 2 : 1;
-		const start = performance.now();
+		// const start = performance.now();
 		const direction = key === 'ArrowLeft' || key === 'ArrowUp' ? 1 : -1;
 		const leftRight = key === 'ArrowLeft' || key === 'ArrowRight';
 		const startOffset = leftRight ? $translation.x : $translation.y;
 		const endOffset = startOffset + direction * PAN_INCREMENT * multiplier;
 
 		if (!activeIntervals[key]) {
+			const start = performance.now();
 			let interval = setInterval(() => {
 				const time = performance.now() - start;
 
@@ -504,7 +587,13 @@
 							const bounds = calculateRelativeBounds(groupBox, nodeWidth, nodeHeight);
 							moveElementWithBounds(currentPosition, delta, node.position, bounds);
 						} else {
-							moveElement(currentPosition, delta, node.position);
+							const newPos = {
+								x: currentPosition.x + delta.x,
+								y: currentPosition.y + delta.y
+							};
+							const snappedPos = getSnappedPosition(newPos.x, newPos.y);
+							node.position.set(snappedPos);
+							// moveElement(currentPosition, delta, node.position);
 						}
 					});
 				}
@@ -515,6 +604,23 @@
 	// // new definitions for Radio Group test
 	// let options = ['option 1', 'option 2', 'option 3'];
 	// let parameterStore = writable('default value');
+
+	// updated by team v.11.0
+	function handleDragOver(event: DragEvent) {
+		// Prevenir el comportamiento predeterminado para permitir el drop
+		event.preventDefault();
+	}
+
+	function handleDrop(event: DragEvent) {
+		// Manejar la lógica de lo que sucede cuando un elemento es soltado
+		event.preventDefault();
+		const jsonNodeFromDrawerController = event.dataTransfer?.getData('application/json');
+		
+		if (jsonNodeFromDrawerController) {// if true
+			const newNode = JSON.parse(jsonNodeFromDrawerController);
+			console.log('Elemento soltado:', newNode);
+		}
+	}
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
@@ -534,8 +640,12 @@
 	on:touchstart|preventDefault|self={onTouchStart}
 	on:keydown={handleKeyDown}
 	on:keyup={handleKeyUp}
+	on:dragover|preventDefault={handleDragOver}
+	on:drop={handleDrop}
 	bind:this={$graphDOMElement}
 	tabindex={0}
+	on:dragover|preventDefault={handleDragOver}
+	on:drop={handleDrop}
 >
 	<GraphRenderer {isMovable}>
 		{#if $editing}

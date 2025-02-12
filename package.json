@@ -1,6 +1,6 @@
 {
 	"name": "svelvet",
-	"version": "10.0.2",
+	"version": "11.0.2",
 	"description": "A lightweight Svelte component library for building dynamic, node-based user interfaces",
 	"keywords": [
 		"svelte",
@@ -36,6 +36,10 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
 		},
+		"./snapGrid": {
+			"types": "./dist/utils/snapGrid.d.ts",
+			"svelte": "./dist/utils/snapGrid.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -43,7 +47,7 @@
 	],
 	"devDependencies": {
 		"@playwright/test": "^1.41.2",
-		"@sveltejs/adapter-auto": "^2.1.0",
+		"@sveltejs/adapter-auto": "^2.1.1",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.1.0",
 		"@testing-library/svelte": "^4.0.2",
@@ -76,6 +80,7 @@
 		"svelte": ">=3.59.2 || ^4.0.0"
 	},
 	"dependencies": {
-		"svelvet": "^10.0.2"
+		"svelvet": "^10.0.2",
+		"uuid": "^11.0.5"
 	}
 }
