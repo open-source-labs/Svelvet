@@ -50,10 +50,8 @@
 		raiseEdgesOnSelect,
 		modifier,
 		trackpadPan,
-		toggle,
+		toggle
 	};
-
-
 
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
@@ -76,7 +74,6 @@
 		console.log('Dragging over canvas area.');
 		return false;
 	};
-
 
 	const handleDrop = (e: MouseEvent): void => {
 		e.preventDefault();
@@ -111,16 +108,6 @@
 	};
 	// defaultNodes = $defaultNodePropsStore;
 </script>
-
-<style>
-	/* Styles for the drop zone to make it visually distinct */
-	.drop_zone {
-		width: 100%;
-		height: 100%;
-		border: 2px dashed #ddd;
-		position: relative;
-	}
-</style>
 
 <div
 	role="presentation"
@@ -199,3 +186,13 @@
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
+
+<style>
+	/* Styles for the drop zone to make it visually distinct */
+	.drop_zone {
+		width: 100%;
+		height: 100%;
+		border: 2px dashed #ddd;
+		position: relative;
+	}
+</style>

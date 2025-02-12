@@ -21,9 +21,31 @@ Svelvet is a lightweight Svelte component library for building interactive node-
 
 ## Version Updates
 
-Shout out to our contributors! Here's what's new:
+Shout out to our contributors! We appreciate your continous efforts. Here's what's new:
 
 ### Changelog
+
+<details>
+<summary>💥V11.0.0💥</summary>
+
+- **Features**:
+  -Snap-grid functionality
+  -Padlock functionality
+
+- **Refactoring**:
+
+  - Save-button-Updated reloadStore and saveStore codebase to now capture the positions of nodes once they are dragged to the canvas.
+  - Initially capturing additional node properties was absent. Work is still needed on reloadstore to render the nodes again after a reload.
+  - We have recreated the Svelvet canvas by removing the default nodes.
+  - We added an "Add Node" button that allows for the creation of nodes with default anchors.
+  - dges can now be created and connected to nodes.
+  - Accesibility Enhancement by Svelvet 10 are mantained with the exception of 1; "Press `Option + Tab || Ctrl + Tab` for Node selection".
+
+- **Documentation**:
+  - We created an individual ReadMe file detailing our journey with Svelvet, our approach to this new technology, our trials, errors and our effortless attempts and contributions to Svelvet.
+  - Improved directions on how to navigate updating Documentation using Mintlify in original README.
+
+</details>
 
 <details>
 <summary>🛸 v10.0.0 🛸</summary>
@@ -294,6 +316,10 @@ npm run test:unit [filename]
 
 ## The Svelvet Team
 
+- Christopher Yhap • [Github](https://github.com/cyhap01)
+- Carlos Salcedo • [LinkedIn](www.linkedin.com/in/carlos-salcedo-203493215) • [Github](Carlaurence)
+- Salisu Ibrahim • [LinkedIn](linkedin.com/in/salisu-ibrahim2) • [Github](https://github.com/Ibraderoro)
+- Tyler Polite • [LinkedIn](https://www.linkedin.com/in/tylerpolite/) • [Github](https://github.com/Tpolite4)
 - Mason Lee • [LinkedIn](https://www.linkedin.com/in/maysonlee/) • [Github](https://github.com/mayson124)
 - Isaac Bocage • [LinkedIn](https://www.linkedin.com/in/isaac-bocage-15711715a/) • [Github](https://github.com/isaacb0)
 - Julian Bos • [LinkedIn](https://www.linkedin.com/in/julian-bos-2ab287145/) • [Github](https://github.com/Julianb12)
