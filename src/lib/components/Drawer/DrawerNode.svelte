@@ -41,10 +41,11 @@
 	let y = 0;
 
 	// Creates props and adds to customNodePropsStore if an anchor was created, defaultNodePropsStore if not
+	// Updated by team v.11.0 to test the store is being propertly updated
 	export const createNodeProps = (
 		edgeProps?: EdgeDrawerConfig,
 		anchorProps?: { [key: string]: AnchorDrawerConfig[] }
-	): void => {
+	): any => {
 		//Snap node position to grid
 		const snappedPosition = getSnappedPosition(x, y);
 		x = snappedPosition.x;
@@ -87,9 +88,20 @@
 
 		// Add props to node if they exist
 		addProps(nodePropNames, nodePropsArray, nodeProps);
+		console.log('Nodo antes de props insertado', nodeProps);
 		if (anchorProps) nodeProps.anchors = anchorProps;
 		if (edgeProps) nodeProps.edgeProps = edgeProps;
-		defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+		console.log('Nodo despues de props insertado', nodeProps);
+		// defaultNodePropsStore.update((nodes) => [...nodes, nodeProps]);
+		defaultNodePropsStore.update((nodes) => {
+			const updatedNodes = [...nodes, nodeProps];
+			/**Este log prueba que el store se esta aactualizando correctamente
+			 * cada vez que se crea un nodo, se agrega al store array de nodos*/
+			console.log('updated store:', updatedNodes); // Verifica el contenido del store
+			return updatedNodes;
+		});
+
+		return nodeProps;
 	};
 
 	// Button clicks for defaultNodes

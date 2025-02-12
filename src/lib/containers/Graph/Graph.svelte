@@ -597,6 +597,23 @@
 	// // new definitions for Radio Group test
 	// let options = ['option 1', 'option 2', 'option 3'];
 	// let parameterStore = writable('default value');
+
+	// updated by team v.11.0
+	function handleDragOver(event: DragEvent) {
+		// Prevenir el comportamiento predeterminado para permitir el drop
+		event.preventDefault();
+	}
+
+	function handleDrop(event: DragEvent) {
+		// Manejar la lógica de lo que sucede cuando un elemento es soltado
+		event.preventDefault();
+		const jsonNodeFromDrawerController = event.dataTransfer?.getData('application/json');
+		
+		if (jsonNodeFromDrawerController) {// if true
+			const newNode = JSON.parse(jsonNodeFromDrawerController);
+			console.log('Elemento soltado:', newNode);
+		}
+	}
 </script>
 
 <!-- <button on:click={() => getJSONState(graph)}>SAVE STATE</button> -->
@@ -620,6 +637,8 @@
 	on:drop={handleDrop}
 	bind:this={$graphDOMElement}
 	tabindex={0}
+	on:dragover|preventDefault={handleDragOver}
+	on:drop={handleDrop}
 >
 	<GraphRenderer {isMovable}>
 		{#if $editing}
