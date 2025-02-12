@@ -115,75 +115,84 @@ const svelvetProps: SvelvetConfig = {
 </script>
 
 <div
-	role="presentation"
-	class="drop_zone"
-	on:dragenter={handleDragEnter}
-	on:dragleave={handleDragLeave}
-	on:dragover={onDragOver}
-	on:drop={handleDrop}
+    role="presentation"
+    class="drop_zone"
+    on:dragenter={handleDragEnter}
+    on:dragleave={handleDragLeave}
+    on:dragover={onDragOver}
+    on:drop={handleDrop}
 >
-	<Svelvet {...svelvetProps} drawer>
-		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
-			{#if anchors}
-				<Node {...nodeProps} drop="cursor">
-					<slot slot="anchorWest">
-						{#each anchors.left as leftAnchorProps}
-							{#if edgeProps}
-								<Anchor {...leftAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...leftAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorEast">
-						{#each anchors.right as rightAnchorProps}
-							{#if edgeProps}
-								<Anchor {...rightAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...rightAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorNorth">
-						{#each anchors.top as topAnchorProps}
-							{#if edgeProps}
-								<Anchor {...topAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...topAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorSouth">
-						{#each anchors.bottom as bottomAnchorProps}
-							{#if edgeProps}
-								<Anchor {...bottomAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...bottomAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					{#each anchors.self as anchorProps}
-						{#if edgeProps}
-							<Anchor {...anchorProps}>
-								<Edge {...edgeProps} slot="edge" />
-							</Anchor>
-						{:else}
-							<Anchor {...anchorProps} />
-						{/if}
-					{/each}
-				</Node>
-			{:else}
-				<Node {...nodeProps} drop="cursor" />
-			{/if}
-		{/each}
+  
+    <Svelvet {...svelvetProps} >
+        
+        {#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
+            {#if anchors}
+                <Node {...nodeProps} drop="cursor">
+                    <slot slot="anchorWest">
+                        {#each anchors.left as leftAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...leftAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...leftAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorEast">
+                        {#each anchors.right as rightAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...rightAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...rightAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorNorth">
+                        {#each anchors.top as topAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...topAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...topAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorSouth">
+                        {#each anchors.bottom as bottomAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...bottomAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...bottomAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    {#each anchors.self as anchorProps}
+                        {#if edgeProps}
+                            <Anchor {...anchorProps}>
+                                <Edge {...edgeProps} slot="edge" />
+                            </Anchor>
+                        {:else}
+                            <Anchor {...anchorProps} />
+                        {/if}
+                    {/each}
+                </Node>
+            {:else}
+                <Node {...nodeProps} drop="cursor" />
+            {/if}
+        {/each}
+        <slot />
+        <slot name="minimap" slot="minimap" />
+        <slot name="controls" slot="controls" />
+        <!-- <slot name="background" slot='background'></slot>  -->
+        <slot name="toggle" slot="toggle" />
+    </Svelvet>
+</div>
 
 		<slot />
 		<slot name="minimap" slot="minimap" />
@@ -354,3 +363,4 @@ const svelvetProps: SvelvetConfig = {
 		position: relative;
 	}
 </style>
+

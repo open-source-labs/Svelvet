@@ -1,4 +1,5 @@
 <script lang="ts">
+	//  console.log('Drawer mounted from drawer contrller')
 	import DrawerNode from './DrawerNode.svelte';
 	import DrawerAnchor from './DrawerAnchor.svelte';
 	import DrawerEdge from './DrawerEdge.svelte';
@@ -7,7 +8,7 @@
 	import { createEdgeProps } from './DrawerEdge.svelte';
 	import Icon from '$lib/assets/icons/Icon.svelte';
 	import { onMount, onDestroy } from 'svelte';
-	import { getSnappedPosition } from '$lib/utils/snapGrid';
+
 	let isOpen = false;
 	let nodeContainerOpen = false;
 	let edgeContainerOpen = false;
@@ -21,7 +22,6 @@
 	let nodeContainer: HTMLElement;
 	let anchorContainer: HTMLElement;
 	let edgeContainer: HTMLElement;
-	let currentNode: HTMLElement | null = null;
 
 // updated by team v.11.0
 	let newNode: any;
@@ -125,6 +125,7 @@
 			}
 		}
 	};
+
 	let offsetX = 0;
 	let offsetY = 0;
 

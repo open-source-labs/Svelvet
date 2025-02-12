@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+// console.log('Drawer Mounted from DrawerNode');	
 	import { writable } from 'svelte/store';
 	import type {
 		NodeDrawerConfig,
