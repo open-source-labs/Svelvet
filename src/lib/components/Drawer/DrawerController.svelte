@@ -23,7 +23,7 @@
 	let edgeContainer: HTMLElement;
 	let currentNode: HTMLElement | null = null;
 
-	// updated by team v.11.0
+// updated by team v.11.0
 	let newNode: any;
 	//Add getelementById para buscar el lienzo despues al componente lienzo vamos a add un event listener on:Drop(newNode) para agregar neweNode a graphStore.
 	const handleDragStart = (e: DragEvent) => {
@@ -128,22 +128,36 @@
 	let offsetX = 0;
 	let offsetY = 0;
 
+	let draggedNodeType: string | null = null;
 	// Dragging logic for node
-	const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
+	const handleNodeDragStart = (e: DragEvent, node: HTMLElement, nodeType: string) => {
+		// const handleNodeDragStart = (e: DragEvent, node: HTMLElement) => {
 		if (!e.dataTransfer) return;
+		console.log('Dragging Node:', nodeType);
+
+		e.dataTransfer.dropEffect = 'move';
+		e.dataTransfer.setData('text/plain', nodeType);
 
 		// Store the current node being dragged
+		draggedNodeType = nodeType;
 		currentNode = node;
 
 		// Store the initial offset relative to the mouse position
-		offsetX = e.clientX - node.offsetLeft;
-		offsetY = e.clientY - node.offsetTop;
+		// offsetX = e.clientX - node.offsetLeft;
+		// offsetY = e.clientY - node.offsetTop;
 
-		node.style.position = 'absolute'; // To move freely within the container
+		// node.style.position = 'absolute'; // To move freely within the container
+
+		// // Add event listeners to track movement only while dragging
+		// document.addEventListener('mousemove', handleDragMove);
+		// document.addEventListener('mouseup', handleDragEnd);
 	};
 
 	const handleDragMove = (e: MouseEvent) => {
 		if (!currentNode) return;
+		console.log('handleDragMove function called!');
+
+		console.log('Dragging...', e.clientX, e.clientY);
 
 		// Calculate the new position based on mouse movement
 		const newX = e.clientX - offsetX;
@@ -151,15 +165,30 @@
 
 		// Snap the new position to the grid
 		const { x: snappedX, y: snappedY } = getSnappedPosition(newX, newY);
+		console.log('Snapped to:', snappedX, snappedY);
 
-		// Update the position of the node
-		currentNode.style.left = `${snappedX}px`;
-		currentNode.style.top = `${snappedY}px`;
+		//only update if the position actually changed
+		if (
+			parseInt(currentNode.style.left, 10) !== snappedX ||
+			parseInt(currentNode.style.top, 10) !== snappedY
+		) {
+			currentNode.style.left = `${snappedX}px`;
+			currentNode.style.top = `${snappedY}px`;
+		}
 	};
 
 	const handleDragEnd = () => {
 		if (!currentNode) return;
 
+		// Get final snapped position
+		const { x: snappedX, y: snappedY } = getSnappedPosition(
+			parseInt(currentNode.style.left, 10),
+			parseInt(currentNode.style.top, 10)
+		);
+
+		// Store the final snapped position (Example: Update store if needed)
+		currentNode.style.left = `${snappedX}px`;
+		currentNode.style.top = `${snappedY}px`;
 		// Perform any cleanup after the drag ends
 		currentNode = null;
 	};
@@ -167,11 +196,15 @@
 	// Add the event listener when the component mounts
 	onMount(() => {
 		window.addEventListener('keydown', handleKeyPress);
+		window.addEventListener('mousemove', handleDragMove);
+		window.addEventListener('mouseup', handleDragEnd);
 	});
 
 	// Remove the event listener when the component unmounts
 	onDestroy(() => {
 		window.removeEventListener('keydown', handleKeyPress);
+		window.removeEventListener('mousemove', handleDragMove); // ✅ Cleanup
+		window.removeEventListener('mouseup', handleDragEnd);
 	});
 </script>
 
@@ -237,7 +270,12 @@
 					role="presentation"
 					class="defaultNodes"
 					draggable="true"
-					on:dragstart={handleDragStart}
+					on:dragstart={(e) => {
+						const target = e.target;
+						if (target instanceof HTMLElement) {
+							handleNodeDragStart(e, target);
+						}
+					}}
 				>
 					Node
 				</div>
