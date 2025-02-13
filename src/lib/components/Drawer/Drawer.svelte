@@ -29,8 +29,29 @@
 	export let toggle = false;
 
 	// Store props in an object to be passed to Svelvet
-	const svelvetProps: SvelvetConfig = {width,height,minimap,translation,controls,edge,edgeStyle,snapTo,editable,fitView,locked,zoom,theme,mermaid,mermaidConfig,TD,disableSelection,raiseEdgesOnSelect,modifier,trackpadPan,toggle,};
-
+const svelvetProps: SvelvetConfig = {
+		width,
+		height,
+		minimap,
+		translation,
+		controls,
+		edge,
+		edgeStyle,
+		snapTo,
+		editable,
+		fitView,
+		locked,
+		zoom,
+		theme,
+		mermaid,
+		mermaidConfig,
+		TD,
+		disableSelection,
+		raiseEdgesOnSelect,
+		modifier,
+		trackpadPan,
+		toggle
+	};
 	// Array of default and custom nodes, anchors
 	let defaultNodes: NodeDrawerConfig[] = [];
 	let dropped_in = false;
@@ -53,7 +74,6 @@
 		return false;
 	};
 
-
 	const handleDrop = (e: MouseEvent): void => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -74,100 +94,105 @@
 			const snappedPosition = getSnappedPosition(e.clientX, e.clientY);
 
 			// Update the defaultNodes with the snapped position
-			defaultNodes = $defaultNodePropsStore.map((node) => {
-				if (node.id === nodeId) {
-					return {
-						...node,
-						position: snappedPosition // Update the position of the dropped node
-					};
-				}
-				return node;
+			defaultNodePropsStore.update((nodes) => {
+				console.log('Updating nodes:', nodes);
+				return nodes.map((node) =>
+					node.id === nodeId ? { ...node, position: snappedPosition } : node
+				);
 			});
+			// defaultNodes = $defaultNodePropsStore.map((node) => {
+			// 	if (node.id === nodeId) {
+			// 		return {
+			// 			...node,
+			// 			position: snappedPosition // Update the position of the dropped node
+			// 		};
+			// 	}
+			// 	return node;
+			// });
 		}
 	};
 	// defaultNodes = $defaultNodePropsStore;
 </script>
 
-<style>
-	/* Styles for the drop zone to make it visually distinct */
-	.drop_zone {
-		width: 100%;
-		height: 100%;
-		border: 2px dashed #ddd;
-		position: relative;
-	}
-</style>
-
 <div
-	role="presentation"
-	class="drop_zone"
-	on:dragenter={handleDragEnter}
-	on:dragleave={handleDragLeave}
-	on:dragover={onDragOver}
-	on:drop={handleDrop}
+    role="presentation"
+    class="drop_zone"
+    on:dragenter={handleDragEnter}
+    on:dragleave={handleDragLeave}
+    on:dragover={onDragOver}
+    on:drop={handleDrop}
 >
-	<Svelvet {...svelvetProps} drawer>
-		{#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
-			{#if anchors}
-				<Node {...nodeProps} drop="cursor">
-					<slot slot="anchorWest">
-						{#each anchors.left as leftAnchorProps}
-							{#if edgeProps}
-								<Anchor {...leftAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...leftAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorEast">
-						{#each anchors.right as rightAnchorProps}
-							{#if edgeProps}
-								<Anchor {...rightAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...rightAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorNorth">
-						{#each anchors.top as topAnchorProps}
-							{#if edgeProps}
-								<Anchor {...topAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...topAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					<slot slot="anchorSouth">
-						{#each anchors.bottom as bottomAnchorProps}
-							{#if edgeProps}
-								<Anchor {...bottomAnchorProps}>
-									<Edge {...edgeProps} slot="edge" />
-								</Anchor>
-							{:else}
-								<Anchor {...bottomAnchorProps} />
-							{/if}
-						{/each}
-					</slot>
-					{#each anchors.self as anchorProps}
-						{#if edgeProps}
-							<Anchor {...anchorProps}>
-								<Edge {...edgeProps} slot="edge" />
-							</Anchor>
-						{:else}
-							<Anchor {...anchorProps} />
-						{/if}
-					{/each}
-				</Node>
-			{:else}
-				<Node {...nodeProps} drop="cursor" />
-			{/if}
-		{/each}
+  
+    <Svelvet {...svelvetProps} >
+        
+        {#each defaultNodes as { anchors, edgeProps, ...nodeProps }}
+            {#if anchors}
+                <Node {...nodeProps} drop="cursor">
+                    <slot slot="anchorWest">
+                        {#each anchors.left as leftAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...leftAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...leftAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorEast">
+                        {#each anchors.right as rightAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...rightAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...rightAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorNorth">
+                        {#each anchors.top as topAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...topAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...topAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    <slot slot="anchorSouth">
+                        {#each anchors.bottom as bottomAnchorProps}
+                            {#if edgeProps}
+                                <Anchor {...bottomAnchorProps}>
+                                    <Edge {...edgeProps} slot="edge" />
+                                </Anchor>
+                            {:else}
+                                <Anchor {...bottomAnchorProps} />
+                            {/if}
+                        {/each}
+                    </slot>
+                    {#each anchors.self as anchorProps}
+                        {#if edgeProps}
+                            <Anchor {...anchorProps}>
+                                <Edge {...edgeProps} slot="edge" />
+                            </Anchor>
+                        {:else}
+                            <Anchor {...anchorProps} />
+                        {/if}
+                    {/each}
+                </Node>
+            {:else}
+                <Node {...nodeProps} drop="cursor" />
+            {/if}
+        {/each}
+        <slot />
+        <slot name="minimap" slot="minimap" />
+        <slot name="controls" slot="controls" />
+        <!-- <slot name="background" slot='background'></slot>  -->
+        <slot name="toggle" slot="toggle" />
+    </Svelvet>
+</div>
 
 		<slot />
 		<slot name="minimap" slot="minimap" />
@@ -328,3 +353,14 @@
 		<slot name="toggle" slot="toggle" />
 	</Svelvet>
 </div>
+
+<style>
+	/* Styles for the drop zone to make it visually distinct */
+	.drop_zone {
+		width: 100%;
+		height: 100%;
+		border: 2px dashed #ddd;
+		position: relative;
+	}
+</style>
+
