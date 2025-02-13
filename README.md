@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center"> 
 
 ![banner](https://i.imgur.com/pNIYDWO.png)
 
@@ -14,7 +14,7 @@
 
 Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams.
 
-[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@julianb1212_35672/svelvet-10-0-new-features-for-accessibility-and-improved-performance-3caaab9e54e9) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
+[⚡ Website](https://www.svelvet.io/) | [📚 Documentation](https://svelvet.mintlify.app) | [⌨️ Blog](https://medium.com/@tpolite4/svelvet-11-unveiling-powerful-new-features-and-enhanced-components-for-an-elevated-svelte-b4b0471683a1) | [💬 Twitter](https://twitter.com/SvelvetOSLabs) | [💼 LinkedIn](https://www.linkedin.com/company/svelvet/)
 
 </div>
 <br>
@@ -29,17 +29,22 @@ Shout out to our contributors! We appreciate your continous efforts. Here's what
 <summary>💥V11.0.0💥</summary>
 
 - **Features**:
-  -Snap-grid functionality
-  -Padlock functionality
+  -Snap-grid functionality- our new introduced feature allows users to toggle between free movement and snap-to-grid modes for precise node placement on the canvas. This functionality enhances flexibility by enabling easy drag-and-drop node positioning as well as alignment through keyboard controls.
+
+  -Padlock functionality-The padlock functionality was updated to ensure that locked nodes cannot be moved, providing a more intuitive and predictable behavior. The lock and unlock status is visually represented with a padlock icon, and users can easily toggle between locked and unlocked states to manage node positions.
+
+  -A new "Add Node" button was introduced within the Svelvet Graph Editor, allowing users to dynamically add new nodes to the graph. Clicking the button increments the total node count and places new nodes at randomized positions, with draggable functionality.
+
+  -Save-button-The saveStore and reloadStore were updated to improve canvas state capture, now saving complete node information (including positions and properties) for more accurate reconstruction. However, reloadStore still needs work to properly render nodes and rebuild the graph after a reload, requiring focus on better graph store integration in future development.
+
+
 
 - **Refactoring**:
-
-  - Save-button-Updated reloadStore and saveStore codebase to now capture the positions of nodes once they are dragged to the canvas.
-  - Initially capturing additional node properties was absent. Work is still needed on reloadstore to render the nodes again after a reload.
   - We have recreated the Svelvet canvas by removing the default nodes.
   - We added an "Add Node" button that allows for the creation of nodes with default anchors.
-  - dges can now be created and connected to nodes.
+  - Edges can now be created and connected to nodes.
   - Accesibility Enhancement by Svelvet 10 are mantained with the exception of 1; "Press `Option + Tab || Ctrl + Tab` for Node selection".
+  - In the main Svelvet canvas various issues were addressed, including ensuring graph initialization with local storage, tracking the drawer prop, improving edge management, and handling zoom/translation behavior more consistently. Specific fixes were made to event dispatching, edge removal, and ensuring reactivity for properties like zoom and drawer.
 
 - **Documentation**:
   - We created an individual ReadMe file detailing our journey with Svelvet, our approach to this new technology, our trials, errors and our effortless attempts and contributions to Svelvet.
