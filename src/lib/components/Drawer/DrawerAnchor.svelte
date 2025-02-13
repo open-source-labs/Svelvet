@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+	//  console.log('Drawer mounted DrawerAnchor')
 	import { writable } from 'svelte/store';
 	import type { CSSColorString, Direction, AnchorDrawerConfig, AnchorProps } from '$lib/types';
 	import { addProps } from '$lib/utils';

@@ -1,6 +1,7 @@
 <script lang="ts">
+	console.log('Componente ThemeToggle.svelte');
 	import type { CSSColorString } from '$lib/types';
-	import { getJSONState } from '$lib/utils/savers/saveStore';
+	import { getJSONState } from '$lib/utils/savers/saveStore'; // Esta es la función que guarda el estado de los nodos en el localStorage
 	import { onMount } from 'svelte';
 	import { graphStore } from '$lib/stores';
 	import { get } from 'svelte/store';
@@ -33,29 +34,37 @@
 		let newTheme;
 		if (!currentTheme || currentTheme === main) {
 			newTheme = alt;
-		}
-		// else if (currentTheme === alt) {
-		// 	newTheme = highContrast;
-		// }
-		else {
+		} else {
 			newTheme = main;
 		}
 		current = newTheme;
-		document.documentElement.setAttribute('svelvet-theme', currentTheme === main ? alt : main);
-
-		// Save the current theme to Local Storage
+		document.documentElement.setAttribute('svelvet-theme', newTheme);
 		localStorage.setItem('currentTheme', newTheme);
 	}
 
+	// Lógica para los nodos
+	// Updated by Team v.11.0 we add the logic to localStorage.getItem('state');
 	onMount(() => {
 		const savedTheme = localStorage.getItem('currentTheme');
 		if (savedTheme) {
 			document.documentElement.setAttribute('svelvet-theme', savedTheme);
 			current = savedTheme;
 		} else {
-			// If no theme is saved in Local Storage, set the default theme (main) as the initial theme
 			document.documentElement.setAttribute('svelvet-theme', main);
 			current = main;
+		}
+
+		// Aquí es donde restauras los nodos cuando la aplicación se monta
+		const savedGraphState = localStorage.getItem('state');
+		if (savedGraphState) {
+			console.log("Al renderizar la aplicacion este componente se ejecuta en este orden")
+			const parsedGraphState = JSON.parse(savedGraphState);
+			if (parsedGraphState && parsedGraphState.nodes) {
+				const graph = get(graphStore);
+				console.log(graph)
+				graph.set('G-1', parsedGraphState);
+				console.log('Restaurando nodos:', parsedGraphState.nodes);
+			}
 		}
 	});
 
@@ -64,7 +73,7 @@
 	graphStore.subscribe((graphMap) => {
 		const graphKey = 'G-1';
 		graph = graphMap.get(graphKey);
-		// console.log('Graph from store:', graph);
+		console.log('Graph from store:', graph);
 	});
 	function logCurrentGraphState() {
 		const currentGraphMap = get(graphStore);
@@ -74,6 +83,14 @@
 		// } else {
 		// 	console.log('No current graph found');
 		// }
+	}
+
+	// Función que se ejecuta al presionar el botón "Save"
+	//optional
+	function handleSaveButton() {
+		const graphState = get(graphStore).get('G-1'); // Obtiene el estado actual de los nodos
+		const jsonState = getJSONState(graphState); // Esto guarda el estado de los nodos
+		console.log('Estado de los nodos guardado:', jsonState);
 	}
 </script>
 

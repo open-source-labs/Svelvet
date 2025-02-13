@@ -28,7 +28,8 @@ module.exports = {
 		}
 	],
 	rules: {
-		'no-console': 2,
+		'no-console': 'off',
+		// 'no-console': 2,
 		'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
 	}
 };
