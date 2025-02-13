@@ -8,9 +8,19 @@ description: 'Priorities and future ideas for iteration'
 
 What we're working on and thinking about.
 
-### Persistent Canvas state
+### Persistent Canvas state V 11.0
 
-saveStore.ts and reloadStore.ts lay the foundation for the save feature. They work together to get the state object of the canvas by turning it into a JSON string for storage and then parsing it into a JSON object for reconstruction. But they need further development as they only save the camera position and theme. Specifically, the traverse function in saveStore.ts needs to properly detect and expand each element inside the canvas (graph) state object. A good place to start on this would be addressing the anchors and edges property of the graph's state object. Use the "nodes" property on this object for reference on how this data should be unraveled and stored. Additionally, the createGraph function is used in reloadStore.ts to render a graph onMount of the Svelvet component according to the state object that was saved last in local storage on the user's browser. This implementation is simplified, however, so it only recreates the graph from partially saved data.
+The saveStore.ts and reloadStore.ts modules work together to manage canvas state by converting and storing the canvas state as a JSON string (saveStore) and retrieving it to rebuild the canvas (reloadStore). In version 11.0, saveStore was enhanced to not only capture nodes but also store their complete properties for accurate reconstruction. Despite these improvements, reloadStore still faces challenges with correctly rebuilding the graph, especially in the createGraph() function. Future work should focus on fixing these issues to ensure proper graph restoration.
+
+
+### Main canvas state management V 11.0
+
+In regards to State Management and Reactivity woprk is needed to improve the persistence of graph state across components and ensure reactivity of props (e.g., drawer) and zoom/translation. Focus on fixing edge detection and event dispatching reliability. Further refactor the event system and improve edge handling to ensure a smoother user experience.
+
+### Snap To Grid Guide Lines V 11.0
+
+Snap-grid functionality was implemented in Svelvet 11 however refinement of the toggling mechanism between free movement and snap-to-grid modes to ensure seamless transitions is needed. Improvements might be needed to handle edge cases or to optimize the grid snapping behavior for various screen sizes and canvas configurations.
+
 
 ### Improving Window Resize Logic
 
@@ -28,10 +38,6 @@ A [Drawer](../components/drawer) component was released in version `8.0.0`. Ther
 ### Edge Drop Callback
 
 Allow for custom functions to be run when an Edge connection is started, but not completed. This currently exists on the Svelvet component, but needs to be added to Node and Anchor.
-
-### Snap To Grid Guide Lines
-
-Visual representation of Snap To Grid functionality a la Photoshop. Snap-grid functionality was implement in Svelvet 11.
 
 ### Additional Customization of Input Mechanism
 
