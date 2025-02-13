@@ -189,7 +189,7 @@ const svelvetProps: SvelvetConfig = {
         <slot />
         <slot name="minimap" slot="minimap" />
         <slot name="controls" slot="controls" />
-        <!-- <slot name="background" slot='background'></slot>  -->
+      
         <slot name="toggle" slot="toggle" />
     </Svelvet>
 </div>
@@ -238,7 +238,29 @@ const svelvetProps: SvelvetConfig = {
 	export let toggle = false;
 
 	// Store props in object to be passed to svelvet
-	const svelvetProps: SvelvetConfig = {width,height,minimap,translation,controls,edge,edgeStyle,snapTo,editable,fitView,locked,zoom,theme,mermaid,mermaidConfig,TD,disableSelection,raiseEdgesOnSelect,modifier,trackpadPan,toggle};
+	const svelvetProps: SvelvetConfig = {
+		width,
+		height,
+		minimap,
+		translation,
+		controls,
+		edge,
+		edgeStyle,
+		snapTo,
+		editable,
+		fitView,
+		locked,
+		zoom,
+		theme,
+		mermaid,
+		mermaidConfig,
+		TD,
+		disableSelection,
+		raiseEdgesOnSelect,
+		modifier,
+		trackpadPan,
+		toggle
+	};
 
 	// Suscripción reactiva al store
 	let defaultNodes = $defaultNodePropsStore;
@@ -363,4 +385,3 @@ const svelvetProps: SvelvetConfig = {
 		position: relative;
 	}
 </style>
-
