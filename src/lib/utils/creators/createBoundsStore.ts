@@ -10,6 +10,7 @@ export function createBoundsStore(
 	scale: Writable<number>,
 	translation: Writable<XYPair>
 ) {
+	//EL PROBLEMA QUE TENEMOS AQUI ES QUE NO ESTA LLEGANDO NADA EN EL ARGUMENTO nodes. SE ESPERA UN STORE DE NODES PERO NO HAY NADA
 	const graphBounds = writable({
 		top: Infinity,
 		left: Infinity,
@@ -60,9 +61,14 @@ export function createBoundsStore(
 		let newBottom = -Infinity;
 
 		for (const node of nodes.getAll()) {
-			const { x, y } = get(node.position);
-			const width = get(node.dimensions.width);
-			const height = get(node.dimensions.height);
+			console.log('dentro del for, este es e node:', node);
+			//ESTAS PROPIEDADES DEBEN CONSERVARSE DE TIPO STORE PORQUE OTROS COMPONENTES DEPENDEN DE ESTAS PROPIEDAES
+			const { x, y } = get(node.position); 
+			const width = get(node.dimensions.width); 
+			const height = get(node.dimensions.height); 
+			// const { x, y } = node.position;
+			// const width = node.dimensions.width;
+			// const height = node.dimensions.height;
 			newLeft = Math.min(newLeft, x);
 			newTop = Math.min(newTop, y);
 			newRight = Math.max(newRight, x + width);
@@ -74,7 +80,9 @@ export function createBoundsStore(
 		if (tracking) animationFrame = requestAnimationFrame(() => recalculateNodeBounds(tracking));
 	}
 
+	//AQUI nodes ES EL ARGUMENTO QUE RECIBE LA FUNCION PADRE, SE ESPERA UN STORE DE NODES PERO NO ESTA LLEGANDO NADA
 	nodes.subscribe(() => {
+		console.log('dentro del nodes.subscribe...........Aqui no estan llegando los nodes');
 		recalculateNodeBounds();
 	});
 

@@ -9,6 +9,10 @@
 	export let bgColor: CSSColorString | null;
 </script>
 
+<!-- //<div
+class="svelvet-anchor {output ? 'output' : ''} {input ? 'input' : ''} {connected ? 'connected' : ''} {connecting ? 'connecting' : ''} {hovering ? 'hovering' : ''}"
+style:--prop-anchor-color={bgColor}
+/>// -->
 <div
 	class="svelvet-anchor"
 	class:output
