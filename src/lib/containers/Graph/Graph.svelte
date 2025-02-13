@@ -460,6 +460,7 @@
 		);
 
 		// Apply transforms
+		//
 		scale.set(newScale);
 		translation.set(newTranslation);
 	}
@@ -526,8 +527,9 @@
 		// Manejar la lógica de lo que sucede cuando un elemento es soltado
 		event.preventDefault();
 		const jsonNodeFromDrawerController = event.dataTransfer?.getData('application/json');
-		
-		if (jsonNodeFromDrawerController) {// if true
+
+		if (jsonNodeFromDrawerController) {
+			// if true
 			const newNode = JSON.parse(jsonNodeFromDrawerController);
 			console.log('Elemento soltado:', newNode);
 		}
