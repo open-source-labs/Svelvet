@@ -21,7 +21,8 @@ export function createAnchor(
 	edgeColor?:
 		| Writable<CSSColorString | null>
 		| CustomWritable<CSSColorString>
-		| Readable<CSSColorString>
+		| Readable<CSSColorString>,
+	dataType?: string | string[] | null
 ): Anchor {
 	const { width, height } = dimensions;
 	const { x, y } = position;
@@ -70,6 +71,7 @@ export function createAnchor(
 		}
 	);
 	const rotation = derived([node.rotation], ([$rotation]) => $rotation);
+
 	return {
 		id,
 		position: anchorPosition,
@@ -86,6 +88,7 @@ export function createAnchor(
 		inputKey: key || null,
 		edgeColor: edgeColor || writable(null),
 		rotation,
-		node
+		node,
+		dataType: dataType || null
 	};
 }
