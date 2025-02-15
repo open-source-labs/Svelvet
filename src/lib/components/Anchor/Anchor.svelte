@@ -299,9 +299,10 @@
 
 		// If the anchor receiving the event has connections
 		// And it can't have multiple connections
+		// Or the anchor is locked
 		// Then this is an invalid connection
 		// Delete the cursor edge and clear the linking store
-		if ($connectedAnchors?.size && !multiple) {
+		if (locked || ($connectedAnchors?.size && !multiple)) {
 			edgeStore.delete('cursor');
 			if (!e.shiftKey) clearLinking(false);
 			return;
@@ -632,7 +633,7 @@
 	tabindex="0"
 	class:locked
 	title={title || ''}
-	on:mouseenter={() => (hovering = true)}
+	on:mouseenter={() => (hovering = true && !locked)}
 	on:mouseleave={() => (hovering = false)}
 	on:mousedown|stopPropagation|preventDefault={handleClick}
 	on:mouseup|stopPropagation={handleMouseUp}
